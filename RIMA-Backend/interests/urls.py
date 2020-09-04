@@ -16,6 +16,7 @@ urlpatterns = [
     ),
     path('interest-extraction/', views.PublicInterestExtractionView.as_view()),
     path('similarity/', views.PublicKeywordSimilarityView.as_view()),
+    path('interest-extraction/wiki-categories/', views.PublicKeywordCategoriesView.as_view()),
 
     path('short-term/user/<int:pk>/', views.UserShortTermInterestView.as_view()),
     path('long-term/user/<int:pk>/', views.UserLongTermInterestView.as_view()),

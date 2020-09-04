@@ -148,3 +148,7 @@ class KeywordSimilariySerializer(serializers.Serializer):
             ("WikiLinkMeasure", "WikiLinkMeasure"),
         ]
     )
+
+
+class WikiCategoriesSerializer(serializers.Serializer):
+    interests = serializers.ListField()

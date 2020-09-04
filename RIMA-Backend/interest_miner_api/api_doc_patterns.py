@@ -8,4 +8,5 @@ doc_patterns = [
         views.PublicInterestExtractionView.as_view(),
     ),
     path('api/interests/similarity/', views.PublicKeywordSimilarityView.as_view()),
+    path('api/interests/interest-extraction/wiki-categories/', views.PublicKeywordCategoriesView.as_view()),
 ]

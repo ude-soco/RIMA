@@ -28,7 +28,7 @@ schema_view = get_schema_view(
         default_version='v1',
         description="interest extraction tool",
     ),
-    url='http://0.0.0.0:8000',
+    url='http://127.0.0.1:8000',
     public=True,
     permission_classes=(permissions.AllowAny,),
     patterns=doc_patterns,
