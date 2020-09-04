@@ -12,7 +12,8 @@ import { TwitterTweetEmbed } from "react-twitter-embed";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale.css";
 import ReactWordcloud from "react-wordcloud";
 /* Chart code */
 // Themes begin
