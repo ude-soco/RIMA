@@ -1,12 +1,20 @@
-Steps to run using docker compose for the first time
+# RIMA-A Transparent Recommendation and Interest Modeling Application
+This is the backend of the RIMA web application.
+
+## Before running the application:
+
+Please download word embedding model([GloVe](http://nlp.stanford.edu/data/glove.6B.zip)) and convert it into word2vec format, refer [this link](https://radimrehurek.com/gensim/scripts/glove2word2vec.html).
+
+Please put the converted file in the root directory of this folder.
+
+
+## Steps to run application using docker:
+
+Install docker https://docs.docker.com/get-docker/
+
+Steps to run using docker-compose for the first time
 
 ```
-export TWITTER_CONSUMER_KEY="q3tv2FEcuhreRWO4WYtSAyJAj"
-export TWITTER_CONSUMER_SECRET="vxrXdz8TpiQQhQv7GSHMBliGQoMzGPNMdUpcVercmCYb8UqvzF"
-export TWITTER_ACCESS_TOKEN="1106978050850328578-2HjYKtDlRU3J88emRjV4TmkUapeJWl"
-export TWITTER_ACCESS_TOKEN_SECRET="doG0kjyHoD4tGBUnKTneUDZjUD392dRR3z8PwTJ2Autwm"
-export TWITTER_FETCH_DAYS=180
-
 docker-compose --compatibility up --build
 ```
 
