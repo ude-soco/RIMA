@@ -13,7 +13,7 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikifilter
+from interests.wikipedia_utils import wikifilter,wikicategory
 from interests.update_interests import normalize
 
 from .serializers import (
@@ -24,6 +24,7 @@ from .serializers import (
     LongTermInterestSerializer,
     InterestExtractionSerializer,
     KeywordSimilariySerializer,
+    WikiCategoriesSerializer
 )
 from .models import (
     Keyword,
@@ -196,6 +197,26 @@ class PublicKeywordSimilarityView(GenericAPIView):
             payload["keywords_1"], payload["keywords_2"], payload["algorithm"]
         )
         return Response({"score": round((score or 0) * 100, 2)})
+
+
+class PublicKeywordCategoriesView(GenericAPIView):
+    """
+    Returns the Wikipedia categories of interest terms
+    """
+
+    authentication_classes = ()
+    permission_classes = ()
+    serializer_class = WikiCategoriesSerializer
+
+    def post(self, request, *args, **kwargs):
+        inputs = self.serializer_class(data=request.data)
+        inputs.is_valid(raise_exception=True)
+        payload = inputs.validated_data
+        categories = {}
+        for interest in payload["interests"]:
+            category = wikicategory(interest)
+            categories[interest] = category
+        return Response(categories)
 
 
 class UserStreamGraphView(APIView):

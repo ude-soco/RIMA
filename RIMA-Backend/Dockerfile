@@ -21,8 +21,8 @@ EXPOSE 80
 
 COPY nginx_default.conf /etc/nginx/nginx.conf
 
-# ADD https://aakash-etl.s3-us-west-2.amazonaws.com/datatest_word2vec.zip /opt/
+
 ADD datatest_word2vec.txt /opt/
 ADD interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz /opt/
-# RUN unzip /opt/datatest_word2vec.zip -d /opt
+
 CMD bash start.sh
