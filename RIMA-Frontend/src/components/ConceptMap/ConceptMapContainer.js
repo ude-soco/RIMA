@@ -146,7 +146,7 @@ class ConceptMapContainer extends Component {
           (parseInt(this.categoryNodeSpacing / 2) + this.categoryNodeHeight);
       categoryCount += 1;
       categories[category].x = this.categoryNodeX;
-      categories[category].y = y;
+      categories[category].y = y + 50;
     }
 
     this.setState({ keywords, categories });
@@ -318,9 +318,6 @@ class ConceptMapContainer extends Component {
                 <Stage width={width} height={this.stageHeight}>
                   <Layer>{this.getNodes()}</Layer>
                 </Stage>
-                <div align="center">
-                  {highlighedCategory.length ? highlighedCategory[0] : ""}
-                </div>
               </div>
             </>
           ) : (
