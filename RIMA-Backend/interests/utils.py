@@ -52,18 +52,44 @@ def generate_long_term_model(user_id):
         long_term_model = LongTermInterest.objects.create(
             **{"user_id": user_id, "keyword": keyword_instance, "weight": weight}
         )
-        tweet_list = [
-            tweet
-            for tweet in Tweet.objects.filter(
-                user_id=user_id, full_text__icontains=keyword.lower()
-            )
-        ]
-        paper_list = [
-            paper
-            for paper in Paper.objects.filter(
-                Q(user_id=user_id) & (Q(abstract__icontains=keyword.lower()) | Q(title__icontains=keyword.lower()))
-            )
-        ]
+
+        originalinterests = json.loads(keyword_instance.original_keywords)
+        print(originalinterests)
+        tweet_list = []
+        paper_list = []
+
+        for interest in originalinterests:
+            print(interest)
+            tweets = [
+                tweet
+                for tweet in Tweet.objects.filter(
+                    user_id=user_id, full_text__icontains=interest.lower()
+                )   
+            ]
+            tweet_list += tweets
+
+            papers = [
+                paper
+                for paper in Paper.objects.filter(
+                    Q(user_id=user_id) & (Q(abstract__icontains=interest.lower()) | Q(title__icontains=interest.lower()))
+                )
+            ]
+            print(papers)
+            paper_list += papers
+            print(paper_list)
+
+        # tweet_list = [
+        #     tweet
+        #     for tweet in Tweet.objects.filter(
+        #         user_id=user_id, full_text__icontains=keyword.lower()
+        #     )
+        # ]
+        # paper_list = [
+        #     paper
+        #     for paper in Paper.objects.filter(
+        #         Q(user_id=user_id) & (Q(abstract__icontains=keyword.lower()) | Q(title__icontains=keyword.lower()))
+        #     )
+        # ]
         if tweet_list:
             long_term_model.tweets.add(*tweet_list)
             long_term_model.source = ShortTermInterest.TWITTER
