@@ -102,3 +102,16 @@ dist
 
 # TernJS port file
 .tern-port
+
+#ignore
+node_modules
+package-lock.json
+.DS_Store
+
+.idea
+.idea/*
+*.pyc
+*/__pycache__/*
+db.sqlite3
+static/*
+datatest_word2vec.txt
