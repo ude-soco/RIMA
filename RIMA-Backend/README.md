@@ -54,7 +54,7 @@ bcdedit /set hypervisorlaunchtype auto
 
 **Step 3 Formatting file**
 
-Open `start.sh` file using [Notepad++](https://notepad-plus-plus.org/), click edit tab, choose EOL conversion then select UNIX/OSX Format.
+Open `start.sh` file in the backend folder using [Notepad++](https://notepad-plus-plus.org/), click edit tab, choose EOL conversion then select UNIX/OSX Format.
 
 **Step 4 Using docker-compose to run the app**
 
@@ -71,6 +71,17 @@ to stop the server, you can run `docker-compose down`
 
 **Step 5 Check if the backend already start successfully**
 
-For checking that the backend part is working, type the following link in the browser: `127.0.0.1:8000`, it should take 10 to 15 min to load (because of the Glove model). You can also check the API docs via `127.0.0.1:8000/docs`.
+For checking that the backend part is working, type the following link in the browser: `127.0.0.1:8000/docs`, this page shows the api documentation of the web app, it should take 10 to 15 min to load (because of the Glove model). Once it's correctly loaded, the backend is running successfully.
+
+
+## To Enter the Django admin Panel
+
+Type the `127.0.0.1:8000/admin` in the browser, you can log in with a default superuser account.
+
+Username: admin_user
+
+Password: admin
+
+In the admin page you can manage all the data models and trigger a celery task manually.
 
 
