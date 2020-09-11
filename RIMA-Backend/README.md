@@ -1,87 +1,106 @@
-# RIMA-A Transparent Recommendation and Interest Modeling Application
+# RIMA- a transparent Recommendation and Interest Modeling Application
 This is the backend of the RIMA web application.
 
 ## Before running the application:
 
-Please download word embedding model[(GloVe)](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) .
+**Step 1:**  Download word embedding model [(GloVe)](https://drivegoogle.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) 
 
-Please put the model file in the root directory of this folder.
+**Step 2:** Put the model file in the root directory of this folder
 
+**Step 3 (For Windows users):** 
+- Open `start.sh` file in the backend folder using [Notepad++](https://notepad-plus-plus.org/) 
+- Click **edit** tab, choose **EOL conversion** then select **UNIX/OSX** format
+- Save it 
 
-## Steps to run application using Docker for Mac/Linux users:
+<br>
+<br>
+
+## Installation guide to run the application using Docker for **Mac/Linux** users:
 
 **Step 1 Install Docker**
 
-Install Docker from https://docs.docker.com/get-docker/
+- Install Docker from https://docs.docker.com/get-docker/
 
-Please make sure you have at least 10GB free space in your disk.
+- Make sure that there is at least 10GB free space available
 
-**Step 2 Using docker-compose to run the app**
 
-If you are running the app for the first time, run following command to build the and run:
+**Step 2 Use docker-compose to run the app**
+
+- For the first time, run the following command to build and run the application:
 
 ```
 docker-compose --compatibility up --build
 ```
-for subsequent runs:
+- For subsequent runs:
 
-to start the server, you can run `docker-compose up`
+    - To start the server, run `docker-compose up`
 
-to stop the server, you can run `docker-compose down`
+    - To stop the server,  run `docker-compose down`
 
 **Step 3 Check if the backend already start successfully**
 
-For checking that the backend part is working, type the following link in the browser: `127.0.0.1:8000`, it should take 10 to 15 min to load (because of the Glove model). You can also check the API docs via `127.0.0.1:8000/docs`.
+- For checking that the backend part is working, run the API docs via `127.0.0.1:8000/docs`
 
-## Steps to run application using Docker for Windows users:
+<br>
+<br>
+<br>
+
+## Installation guide to run the application using Docker for **Windows** users:
+
+### Requirements: 
+- Any Windows version except windows Home
+- Virtualisation should be enable in BIOS setup
+- At least 10GB free space in your disk
 
 **Step 1 Install Docker**
 
-Install Docker from https://docs.docker.com/get-docker/
-Please make sure you have at least 10GB free space in your disk.
+- Install Docker from https://docs.docker.com/get-docker/
+
 
 **Step 2 Enable Hyper-V**
 
-1. Right click on the Windows button and select ‘Apps and Features’.
-2. Select Programs and Features on the right under related settings.
-3. Select Turn Windows Features on or off.
-4. Select Hyper-V and click OK.
-
-(optional): if above steps don't work, try using following command(refer this [link](https://stackoverflow.com/questions/39684974/docker-for-windows-error-hardware-assisted-virtualization-and-data-execution-p)):
+- Right click on the Windows button and select **‘Apps and Features’**
+- Select **Programs and Features** on the right under **related settings**
+- Select **Turn Windows Features on or off**
+- Select **Hyper-V** and click OK
+<br> <br>
+- **(optional)**: if above steps don't work, try using following command (refer this [link](https://stackoverflow.com/questions/39684974/docker-for-windows-error-hardware-assisted-virtualization-and-data-execution-p)):
 ```
 bcdedit /set hypervisorlaunchtype auto
 ```
 
-**Step 3 Formatting file**
 
-Open `start.sh` file in the backend folder using [Notepad++](https://notepad-plus-plus.org/), click edit tab, choose EOL conversion then select UNIX/OSX Format.
 
-**Step 4 Using docker-compose to run the app**
+**Step 3 Use docker-compose to run the app**
 
-If you are running the app for the first time, run following command to build the and run:
+- For the first time, run the following command to build and run the application:
 
 ```
 docker-compose --compatibility up --build
 ```
-for subsequent runs:
+- For subsequent runs:
 
-to start the server, you can run `docker-compose up`
+    - To start the server, run `docker-compose up`
 
-to stop the server, you can run `docker-compose down`
+    - To stop the server, run `docker-compose down`
 
-**Step 5 Check if the backend already start successfully**
+**Step 4 Check if the backend already start successfully**
 
-For checking that the backend part is working, type the following link in the browser: `127.0.0.1:8000/docs`, this page shows the api documentation of the web app, it should take 10 to 15 min to load (because of the Glove model). Once it's correctly loaded, the backend is running successfully.
+- For checking that the backend part is working, run the API docs via `127.0.0.1:8000/docs`
 
+<br>
+<br>
+<br>
 
-## To Enter the Django admin Panel
+## Django admin Panel
 
-Type the `127.0.0.1:8000/admin` in the browser, you can log in with a default superuser account.
+- In the browser, run the following URL `127.0.0.1:8000/admin`  
+- Set the default user account to superuser account
 
-Username: admin_user
+    - **Username:** admin_user
 
-Password: admin
+    - **Password:** admin
 
-In the admin page you can manage all the data models and trigger a celery task manually.
+- In the admin page, all the data models can be managed, and a celery task can be triggered manually 
 
 
