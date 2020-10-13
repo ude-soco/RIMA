@@ -1,8 +1,21 @@
 import tweepy
 import pytz
 import os
+from tweepy.parsers import JSONParser
+
 
 utc = pytz.timezone('UTC')
+
+TWITTER_API_KEY         = "VHR72dG8nWMZBHYFeyDOlYvV5"
+TWITTER_API_SECRET      = "SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X"
+TWITTER_ACCESS          = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
+TWITTER_ACCESS_SECRET   = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
+
+
+AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
+
+API = tweepy.API(AUTH, parser=JSONParser())
 
 
 class TwitterAPI:
@@ -48,3 +61,82 @@ class TwitterAPI:
                 break
         print("Current Rate: {} (ending)".format(self.get_fetch_tweet_limit()))
         return tweets
+
+
+def extract_tweet_from_response(tweet, tag):
+    # with open("jsonlog.json", "a+") as f:
+    #     f.write(json.dumps(tweet)+",")
+
+    tweet_fields = [
+        "id_str",
+        "created_at",
+        # "text",
+        "full_text",
+        "retweet_count",
+        "favorite_count",
+    ]
+    user_fields = [
+        "id_str",
+        "name",
+        "screen_name",
+        "description",
+        "url",
+        "followers_count",
+        "friends_count",
+        "statuses_count",
+        "profile_image_url_https",
+        "profile_background_color",
+    ]
+    if "retweeted_status" in tweet.keys():
+        tweet = tweet["retweeted_status"]
+    try:
+        media= tweet["extended_entities"]["media"]
+    except KeyError:
+        try:
+            media = tweet["entities"]["media"]
+        except KeyError:
+            media = None
+    # with open("media.json", "a+") as f:
+    #     f.write(json.dumps(media))
+
+    result = {x: tweet[x] for x in tweet_fields}
+    if media:
+        result["media"] = media
+    result["user"] = {x: tweet["user"][x] for x in user_fields}
+    result["color"] = tag["color"]
+    result["tagId"] = tag["id"]
+    print(result)
+    return result
+
+
+def generate_geo_code(tag):
+    """returns the geo code for twitter api using lat, lang and km provided by the front-end"""
+    lat = tag.get("lat", None)
+    lang = tag.get("lang", None)
+    km = tag.get("km", None)
+    if (lat is not None) and (lang is not None) and (km is not None):
+        return f"{lat}, {lang}, {km}km"
+    else:
+        return None
+
+
+def get_recommended_tweets(tags):
+    full_result = []
+    for tag in tags:
+        extra_kwargs = {}
+        geo_code = generate_geo_code(tag)
+        if geo_code is not None:
+            extra_kwargs['geocode'] = geo_code
+        language = tag.get("lang", None)
+        if language is not None:
+            extra_kwargs['lang'] = language
+
+        response = API.search(
+            q=tag["text"],
+            tweet_mode="extended",
+            count=tag["n_tweets"],
+            **extra_kwargs
+            )
+        result = [extract_tweet_from_response(x, tag) for x in response["statuses"]]
+        full_result.extend(result)
+    return full_result

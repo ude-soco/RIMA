@@ -1,0 +1,87 @@
+.bg-second {
+  background-color: rgba(132, 200, 141, 0.2);
+}
+
+#tweet-card-container .card .card-body .card-text a div .highlight-keyword {
+  font-weight: bold;
+}
+
+#tweet-card-container .color-link {
+  color: #324cdd;
+}
+
+#tweet-card-container .card {
+  padding-left: 2em;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+#tweet-card-container .card .vline {
+  position: absolute;
+  background-color: tomato;
+  height: 100%;
+  width: 20px;
+  left: 2%;
+}
+
+#tweet-card-container .card .info-icon {
+  position: absolute;
+  bottom: 4%;
+  right: 2%;
+}
+
+#tweet-card-container .card .info-icon a svg {
+  width: 30px;
+  height: 30px;
+}
+
+#tweet-card-container .card .options-icon {
+  position: absolute;
+  right: 3%;
+  top: 3%;
+  width: 20px;
+}
+
+#tweet-card-container .card .card-body {
+  padding: 1em;
+}
+
+#tweet-card-container .card .twitter-action-icons {
+  padding-bottom: 0.5em;
+}
+
+#tweet-card-container .card .twitter-action-icons small {
+  margin-left: 9%;
+}
+
+#tweet-card-container .card .twitter-action-icons small svg {
+  width: 30px;
+  height: 30px;
+}
+
+#tweet-card-container .card h5.card-title {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: rgba(50, 76, 221, 0.8);
+  margin-bottom: 0;
+}
+
+#tweet-card-container .card h5.card-title span {
+  font-weight: normal;
+  font-size: 0.8em;
+}
+
+#tweet-card-container .card h5.card-title img {
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+#tweet-card-container .card .card-text {
+  font-size: 1.1em;
+  padding-left: 55px;
+  padding-top: 0;
+}
+
+.saved-tweet-container {
+  padding-left: 0 !important;
+  padding-right: 55px !important;
+}

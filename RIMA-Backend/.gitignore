@@ -19,3 +19,6 @@ package-lock.json
 db.sqlite3
 static/*
 datatest_word2vec.txt
+
+
+datatest_word2vec.txt

@@ -32,7 +32,7 @@ class Tweet(models.Model):
 
     full_text = models.TextField(null=True, blank=True)
     entities = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     used_in_calc = models.BooleanField(default=False)
     updated_on = models.DateTimeField(auto_now=True)

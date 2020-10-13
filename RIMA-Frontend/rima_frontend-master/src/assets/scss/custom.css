@@ -1,0 +1,91 @@
+.swal-modal {
+  width: 850px !important;
+}
+.flex {
+  display: flex;
+}
+.ml-80 {
+  margin-left: 80px;
+}
+.imgTooltip {
+  background-color: #ffffff;
+  color: #32325d;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid black;
+  position: absolute;
+  margin-top: -53px;
+  left: 235px;
+}
+.tooltips {
+  background-color: #ffffff;
+  color: #32325d;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid black;
+  margin-top: -55px;
+  position: absolute;
+}
+.bold {
+  font-weight: 400;
+}
+.highlight-keywords-1 {
+  border: 3px solid white;
+  background-color: yellow;
+  padding: 4px 10px;
+  margin: 2px 6px;
+  border-radius: 500px;
+  color: black;
+  text-align: center;
+}
+.highlight-keywords-1:hover {
+  border: 3px solid red;
+}
+
+.highlight-keywords {
+  border: 3px solid red;
+  background-color: yellow;
+  padding: 4px 10px;
+  margin: 2px 6px;
+  border-radius: 500px;
+  color: black;
+  text-align: center;
+}
+.h1-s {
+  text-align: center;
+  width: 600px;
+  font-weight: 700;
+  color: #32325d;
+  font-size: 18px;
+}
+
+.rtl {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  margin-top: -424px;
+  height: 400px;
+  margin-left: -18px;
+}
+.rtl-1 {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  margin-top: -265px;
+  height: 250px;
+}
+#chart-1 > .apexcharts-canvas {
+  margin-left: 50px !important;
+}
+.second-user {
+  color: #076ec6;
+  background: white;
+  padding: 6px;
+  border-radius: 500px;
+  width: 40%;
+  text-align: center;
+  margin: 15px auto;
+}
+#twitter .apexcharts-canvas {
+  margin: 0 auto;
+}

@@ -5,7 +5,7 @@ from .models import (
     BlacklistedKeyword,
     ShortTermInterest,
     LongTermInterest,
-    Category,
+    Category, Tweet,
 )
 from rest_framework import serializers
 
@@ -152,3 +152,11 @@ class KeywordSimilariySerializer(serializers.Serializer):
 
 class WikiCategoriesSerializer(serializers.Serializer):
     interests = serializers.ListField()
+
+
+class TweetSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault(),)
+
+    class Meta:
+        model = Tweet
+        fields = ('id_str', 'full_text', 'entities', 'user')
