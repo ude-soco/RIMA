@@ -3,7 +3,7 @@ This is the backend of the RIMA web application.
 
 ## Before running the application:
 
-**Step 1:**  Download word embedding model [(GloVe)](https://drivegoogle.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) 
+**Step 1:**  Download word embedding model [(GloVe)](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) 
 
 **Step 2:** Put the model file in the root directory of this folder
 
