@@ -306,7 +306,7 @@ const TweetInfoOption = (props) => {
           />
 
           <h3>Why I get this tweets?</h3>
-          <h3>Because this tweet related with your intrest</h3>
+          <h3>Because this tweet related to your interest</h3>
           <div className="info__inner--div">
             {state !== null ? (
               <>
@@ -353,7 +353,7 @@ const TweetInfoOption = (props) => {
           />
 
           <h3>Why I get this tweets?</h3>
-          <h3>Because this tweet related with your intrest</h3>
+          <h3>Because the extracted keywords from this tweet related to your interest</h3>
           <div className="info__inner--div">
             {state === null ? (
               <h2>No Keyword extract</h2>
@@ -410,13 +410,11 @@ const TweetInfoOption = (props) => {
               The relationship between the intrest keyword , and the extract
               keyword from tweet
             </h3>
-            {console.log(similarityKeyword)}
             {tags.map((value, Index) => {
-              console.log(lowercaseText);
               if (value.id === props.tag) {
                 return (
                   <h2>
-                    <san>Interest Keyword :</san>
+                    <span>Interest Keyword :</span>
                     <span
                       style={{
                         color: `${value.color}`,
@@ -435,7 +433,7 @@ const TweetInfoOption = (props) => {
             {similarityKeyword.length === state?.keywordArray.length
               ? similarityKeyword.map((value) => (
                 <div class="table--div1">
-                  <h3>{value.score}</h3>
+                  <h3>{value.score}{' '}%</h3>
                   <h5>{value.text}</h5>
                 </div>
               ))

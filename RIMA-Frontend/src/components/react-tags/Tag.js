@@ -51,7 +51,8 @@ class Tag extends Component {
       tag,
       classNames,
     } = props;
-    const tagId = this.props.id;
+    console.log({wwwwwwwwwwwwwwwwwww: this.props})
+    const tagId = this.props.tag.id;
     const { className = "" } = tag;
     const tagComponent = (
       <span

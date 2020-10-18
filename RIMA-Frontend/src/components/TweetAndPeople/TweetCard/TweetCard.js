@@ -72,6 +72,7 @@ export default class TweetCard extends Component {
       id_str: params.tweet.id_str,
       full_text: params.tweet.full_text,
       user: params.tweet.user.name,
+      screen_name: params.tweet.user.screen_name,
     };
     console.log(data);
     RestAPI.savedTweets(data)

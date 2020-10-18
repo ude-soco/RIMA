@@ -69,11 +69,14 @@ export default class SavedTweetCard extends Component {
   render() {
     const { countDown } = this.state;
     const { tweet } = this.props;
+    // const user = tweet["user"];
     // Tweet
     const id_str = tweet["id_str"];
     const text = tweet["full_text"];
 
     // console.log("TEXT: ", text);
+    // const screenName = convertUnicode(user["screen_name"]);
+    // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
 
     // Tags
     // Modift Tweet Text
@@ -141,7 +144,7 @@ export default class SavedTweetCard extends Component {
                 <svg
                   width="20"
                   height="4"
-                  viewBox="0 0 20 4"
+                  viewBox="0 0 20 4" 
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -159,7 +162,7 @@ export default class SavedTweetCard extends Component {
             </h5>
             <p className="card-text saved-tweet-container">
               <a
-                href="#"
+                href={`https://twitter.com/${tweet['screen_name']}/status/${tweet['id_str']}`}
                 target="_blank"
                 style={{ textDecoration: "none", color: "inherit" }}
                 rel="noopener noreferrer"

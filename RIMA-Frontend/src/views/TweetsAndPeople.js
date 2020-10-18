@@ -125,12 +125,12 @@ export default class TweetsAndPeople extends Component {
     this.setWeightOfkeyword = this.setWeightOfkeyword.bind(this);
   }
 
-  generateRandomRGB() {
+  generateRandomRGB() { 
     const randomBetween = (min, max) =>
       min + Math.floor(Math.random() * (max - min + 1));
-    const r = randomBetween(0, 255);
-    const g = randomBetween(0, 255);
-    const b = randomBetween(0, 255);
+    const r = randomBetween(100, 255);
+    const g = randomBetween(50, 200);
+    const b = randomBetween(100, 255);
     let rgb = `rgb(${r},${g},${b})`; // Collect all to a css color string
     return rgb;
   }
@@ -436,6 +436,7 @@ export default class TweetsAndPeople extends Component {
     console.info(`Search Clicked:Tags:${tags}`);
     RestAPI.extractTweetsFromTags(tags)
       .then((res) => {
+        console.log({tweet111: res.data.data})
         this.setState({ tweets: res.data.data, tweetsLoaded: true });
         this.extractUsersFromTweets(res.data.data);
       })
@@ -461,6 +462,7 @@ export default class TweetsAndPeople extends Component {
   }
 
   handleTagSettingsChange(id, name, value) {
+    console.log({id, name, value})
     let tag = this.state.tags.filter((tag) => tag.id === id)[0];
     tag[name] = value;
 
@@ -741,15 +743,14 @@ export default class TweetsAndPeople extends Component {
                   </TabPane>
                   <TabPane tabId="4">
                     <Container id="tweet-card-container">
-                      {this.state.savedTweets.length > 0
-                        ? this.state.savedTweets.slice(0).reverse().map((tweet) => (
+                      {this.state.savedTweets.length > 0 && this.state.tweets.length > 0 ?
+                        this.state.savedTweets.slice(0).reverse().map((tweet) => (
                             <SavedTweetCard
                               key={Math.random() * 99999999}
                               tweet={tweet}
                               deleteSavedTweet={this.deleteSavedTweet.bind(this)}
                             ></SavedTweetCard>
-                          ))
-                        : null}
+                          )) : null}
                     </Container>
                   </TabPane>
                 </TabContent>
