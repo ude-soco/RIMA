@@ -3204,7 +3204,7 @@ input[type="button"].btn-block {
 }
 
 .dropdown-toggle::after {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   margin-left: 0.255em;
@@ -3255,7 +3255,7 @@ input[type="button"].btn-block {
 }
 
 .dropup .dropdown-toggle::after {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   margin-left: 0.255em;
@@ -3280,7 +3280,7 @@ input[type="button"].btn-block {
 }
 
 .dropright .dropdown-toggle::after {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   margin-left: 0.255em;
@@ -3309,7 +3309,7 @@ input[type="button"].btn-block {
 }
 
 .dropleft .dropdown-toggle::after {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   margin-left: 0.255em;
@@ -3318,11 +3318,11 @@ input[type="button"].btn-block {
 }
 
 .dropleft .dropdown-toggle::after {
-  display: none;
+  display: none !important;
 }
 
 .dropleft .dropdown-toggle::before {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   margin-right: 0.255em;

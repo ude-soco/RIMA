@@ -48,7 +48,6 @@ class CloudChartPage extends Component {
     title: "",
     url: "",
     year: "",
-    abstract: "",
     papercount: null,
     word: "",
     abstract: "",

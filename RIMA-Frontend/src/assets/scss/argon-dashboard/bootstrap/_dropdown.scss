@@ -65,6 +65,7 @@
   .dropdown-toggle {
     @include caret(right);
     &::after {
+      display: none;
       vertical-align: 0;
     }
   }
@@ -163,4 +164,9 @@
   display: block;
   padding: $dropdown-item-padding-y $dropdown-item-padding-x;
   color: $dropdown-link-color;
+}
+
+
+a.nav-link.text-primary::after {
+  display: none !important;
 }

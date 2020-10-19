@@ -12,6 +12,7 @@ from rest_framework.generics import (
     RetrieveAPIView,
 )
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter,wikicategory
 from interests.update_interests import normalize
@@ -24,7 +25,7 @@ from .serializers import (
     LongTermInterestSerializer,
     InterestExtractionSerializer,
     KeywordSimilariySerializer,
-    WikiCategoriesSerializer
+    WikiCategoriesSerializer, TweetSerializer
 )
 from .models import (
     Keyword,
@@ -35,6 +36,7 @@ from .models import (
     LongTermInterest,
 )
 from accounts.models import User
+from .twitter_utils import get_recommended_tweets
 from .utils import get_interest_similarity_score, get_top_long_term_interest_by_weight, get_top_short_term_interest_by_weight, get_radar_similarity_data, get_heat_map_data, get_venn_chart_data
 from interests.tasks import import_user_data, import_user_paperdata
 
@@ -303,3 +305,42 @@ class UserActivityStatsView(APIView):
             key_name = tweet.created_at.strftime("%B %Y")
             tweet_data[key_name] = tweet_data.get(key_name, 0) + 1
         return Response({"papers": paper_data, "tweets": tweet_data})
+
+
+
+@api_view(["post"])
+def recommended_tweets(request, *args, **kwargs):
+    # print(request.data)
+    # [{'id': 'Thailand', 'text': 'Thailand'}, {'id': 'India', 'text': 'India'}]
+    tweets = get_recommended_tweets(request.data)
+    return Response(
+        {"message": "Hello, world!",
+        "data": tweets
+        }
+    )
+
+
+class TweetView(ListCreateAPIView):
+    serializer_class = TweetSerializer
+
+    def get_queryset(self):
+        return Tweet.objects.filter(user=self.request.user)
+
+    class Meta:
+        model = Tweet
+
+
+class DeleteTweetView(DestroyAPIView):
+    serializer_class = TweetSerializer
+    lookup_field = 'id_str'
+
+    def get_queryset(self):
+        return Tweet.objects.filter(user=self.request.user)
+
+    class Meta:
+        model = Tweet
+
+
+class HelloView(APIView):
+    def get(self):
+        return Response(data={"message": "hello world "})

@@ -6,7 +6,7 @@ const AppRouter = () => (
   <Fragment>
     <BrowserRouter>
       <Switch>
-        <Route path="/app" render={(props) => <AdminLayout {...props} />} />
+        <Route path={["/app", "/recommendation"]} render={(props) => <AdminLayout {...props} />} />
         <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
         <Redirect from="/" to="auth/login" />
       </Switch>

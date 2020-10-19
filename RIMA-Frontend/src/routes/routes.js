@@ -14,6 +14,7 @@ import Demo from "../views/Demo.js";
 import LoginRedirecting from "../views/LoginRedirecting";
 import PieChartPage from "../views/PieChart";
 import BarChartPage from "../views/BarChart";
+import TweetsAndPeople from "../views/TweetsAndPeople.js";
 
 var routes = [
   {
@@ -123,7 +124,14 @@ var routes = [
     layout: "/app",
     display: "none",
   },
-
+  {
+    path: "/twitter-scanner/:id",
+    name: "Tweets & People",
+    icon: "fas fa-bars text-primary",
+    component: TweetsAndPeople,
+    layout: "/recommendation",
+    // display: "none",
+  },
   {
     path: "/login",
     name: "Login",
@@ -154,5 +162,6 @@ var routes = [
     layout: "/app",
     display: "none",
   },
+
 ];
 export default routes;

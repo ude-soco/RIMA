@@ -152,6 +152,7 @@ class Sidebar extends React.Component {
   // creates the links that appear in the left menu / Sidebar
   createLinks = (routes) => {
     return routes.map((prop, key) => {
+      if (prop.layout === "/app") {
       return (
         <NavItem key={key} style={{ display: prop.display }}>
           <NavLink
@@ -165,6 +166,26 @@ class Sidebar extends React.Component {
           </NavLink>
         </NavItem>
       );
+    }
+    });
+  };
+  createRecommendationLinks = (routes) => {
+    return routes.map((prop, key) => {
+      if (prop.layout === "/recommendation") {
+        return (
+            <NavItem key={key} style={{ display: prop.display }}>
+              <NavLink
+                  to={prop.layout + prop.path.replace(":id", getItem("userId"))}
+                  tag={NavLinkRRD}
+                  onClick={this.closeCollapse}
+                  activeClassName="active"
+              >
+                <i className={prop.icon} />
+                {prop.name}
+              </NavLink>
+            </NavItem>
+        );
+      }
     });
   };
   render() {
@@ -389,6 +410,13 @@ class Sidebar extends React.Component {
                   Interest Trends
                 </NavLink>
               </NavItem>
+            </Nav>
+
+            <hr className="my-2" />
+            <h6 className="navbar-heading text-muted">My Recommendations</h6>
+            <hr className="my-2" />
+            <Nav navbar>
+              {this.createRecommendationLinks(routes)}
             </Nav>
           </Collapse>
         </Container>

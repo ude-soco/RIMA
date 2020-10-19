@@ -434,6 +434,63 @@ class RestAPI {
       },
     }).then((res) => res);
   }
+
+  // Tweets & People
+  // Get tweets for tags
+  static extractTweetsFromTags(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/recommended-tweets`,
+      // url: `${BASE_URL}/api/interests/recommended-tweets/${getItem("userId")}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+  static savedTweets(data) {
+    const TOKEN = getItem("accessToken");
+
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/tweets`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+  static getSavedTweets() {
+    const TOKEN = getItem("accessToken");
+
+    return axios({
+      method: "GET",
+      url: `${BASE_URL}/api/interests/tweets`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+  static hideSavedTweet(id) {
+    const TOKEN = getItem("accessToken");
+
+    return axios({
+      method: 'DELETE',
+      url: `${BASE_URL}/api/interests/tweets/${id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    })
+  }
 }
 
 export default RestAPI;

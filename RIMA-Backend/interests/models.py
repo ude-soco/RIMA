@@ -30,9 +30,10 @@ class Tweet(models.Model):
     user = models.ForeignKey(User, related_name="tweets", on_delete=models.CASCADE)
     id_str = models.CharField(max_length=2048, null=True, blank=True)
 
+    screen_name = models.CharField(max_length=50, null=True, blank=True)
     full_text = models.TextField(null=True, blank=True)
     entities = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     used_in_calc = models.BooleanField(default=False)
     updated_on = models.DateTimeField(auto_now=True)
