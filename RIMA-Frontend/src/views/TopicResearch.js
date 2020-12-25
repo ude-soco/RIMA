@@ -19,7 +19,6 @@ import LAKPie from "components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "components/LAKForms/LAKStackedAreaChart";
 import VennChart from "components/LAKForms/VennChart";
 import LAKStackedBarChart from "components/LAKForms/LAKStackedBarChart";
-import Topicbubble from "components/LAKForms/Topicbubble";
 
 
 class TopicResearch extends React.Component {

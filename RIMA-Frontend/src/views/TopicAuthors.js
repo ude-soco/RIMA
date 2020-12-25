@@ -18,7 +18,6 @@ import LAKBarPaperCount from "components/LAKForms/LAKBarPaperCount";
 import LAKPie from "components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "components/LAKForms/LAKStackedAreaChart";
 import VennChart from "components/LAKForms/VennChart";
-import SigmaNode from "components/LAKForms/SigmaNode";
 import LAKAuthorsbar from "components/LAKForms/LAKAuthorsbar";
 import AuthorNetwork from "components/LAKForms/AuthorNetwork";
 
