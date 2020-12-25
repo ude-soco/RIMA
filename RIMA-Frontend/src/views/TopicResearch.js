@@ -15,7 +15,6 @@ import swal from "@sweetalert/with-react";
 import "../assets/scss/custom.css";
 import LAKBar from "components/LAKForms/LAKBar";
 import LAKBarPaperCount from "components/LAKForms/LAKBarPaperCount";
-import LAKAreaChart from "components/LAKForms/LAKAreaChart";
 import LAKPie from "components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "components/LAKForms/LAKStackedAreaChart";
 import VennChart from "components/LAKForms/VennChart";
