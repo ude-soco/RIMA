@@ -15,7 +15,13 @@ import LoginRedirecting from "../views/LoginRedirecting";
 import PieChartPage from "../views/PieChart";
 import BarChartPage from "../views/BarChart";
 import TweetsAndPeople from "../views/TweetsAndPeople.js";
-
+import TopicFormPage from "../views/TopicForm";
+import TopicBar from "../views/TopicBar";
+import TopicComparisions from "../views/TopicComparisions";
+import AuthorVenn from "components/LAKForms/AuthorVenn.js";
+import RecommendTopic from "views/RecommendTopic.js";
+import TopicResearch from "views/TopicResearch";
+import TopicAuthors from "views/TopicAuthors";
 var routes = [
   {
     path: "/index",
@@ -159,6 +165,42 @@ var routes = [
   {
     path: "/redirect",
     component: LoginRedirecting,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicform",
+    component: TopicFormPage,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicbar",
+    component: TopicBar,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicscompare",
+    component: TopicComparisions,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicsrecommend",
+    component: RecommendTopic,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicsresearch",
+    component: TopicResearch,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicsauthors",
+    component: TopicAuthors,
     layout: "/app",
     display: "none",
   },

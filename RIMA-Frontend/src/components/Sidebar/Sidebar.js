@@ -23,6 +23,8 @@ import {
   NavItem,
   NavLink,
   Nav,
+  NavbarToggler,
+  UncontrolledCollapse,
   Container,
   Row,
   Col,
@@ -58,10 +60,13 @@ class Sidebar extends React.Component {
     suggestions: [],
     value: "",
     userView: false,
+    collapsed:true
+   
   };
   constructor(props) {
     super(props);
     this.activeRoute.bind(this);
+    this.toggleNavbar=this.toggleNavbar.bind(this)
   }
 
   _onBlur = () => {
@@ -89,6 +94,12 @@ class Sidebar extends React.Component {
   // };
 
   //** START SUGGESTION**//
+  toggleNavbar(){
+    this.setState({
+      collapsed:false
+    })
+    
+  }
   getInfo = (v) => {
     const TOKEN = getItem("accessToken");
     axios({
@@ -210,13 +221,16 @@ class Sidebar extends React.Component {
         target: "_blank",
       };
     }
+    const style = { width: "300px" };
     return (
+     
       <Navbar
         className="navbar-vertical fixed-left navbar-light bg-white"
         expand="md"
         id="sidenav-main"
+        style={style}
       >
-        <Container fluid>
+        <Container fluid >
           {/* Toggler */}
           <button
             className="navbar-toggler"
@@ -417,10 +431,89 @@ class Sidebar extends React.Component {
             <hr className="my-2" />
             <Nav navbar>
               {this.createRecommendationLinks(routes)}
+              <NavItem>
+                <NavLink
+                  to={"/app/topicsrecommend/" + getItem("userId")}
+                  tag={NavLinkRRD}
+                  onClick={this.closeCollapse}
+                  activeClassName="active"
+                >
+                  <i className="fas fa-book-reader text-green"></i>
+                  Publications
+                </NavLink>
+              </NavItem>
             </Nav>
+            <hr className="my-2" />
+            <h6 className="navbar-heading text-muted">Conference Insights</h6>
+            <hr className="my-2" />
+            {/* <Nav navbar>
+              <NavItem>
+                <NavLink
+                  to={"/app/topicform/" + getItem("userId")}
+                  tag={NavLinkRRD}
+                  onClick={this.closeCollapse}
+                  activeClassName="active"
+                >
+                  <i className="fas fa-atom text-blue"></i>
+                  Topic Cloud
+                </NavLink>
+              </NavItem>
+            </Nav> */}
+            <Nav navbar>
+              <NavItem>
+                <NavLink
+                  to={"/app/topicbar/" + getItem("userId")}
+                  tag={NavLinkRRD}
+                  onClick={this.closeCollapse}
+                  activeClassName="active"
+                >
+                  <i className="fas fa-chart-line text-pink"></i>
+                  Topic Trends
+                </NavLink>
+              </NavItem>
+            </Nav>
+            
+          
+          <Nav navbar>
+          <NavItem>
+            <NavLink href={"/app/topicsresearch/" + getItem("userId")}
+                  
+                 
+                >
+                  <i className="fas fa-handshake text-blue"></i>
+                  Compare Conference
+                </NavLink>
+            </NavItem>
+            <NavItem>
+            <NavLink href={"/app/topicsauthors/" + getItem("userId")}
+                 
+                >
+                  <i className="fas fa-user-friends text-green"></i>
+                  Compare Researcher
+                </NavLink>
+            </NavItem>
+           
+          </Nav>
+       
+      
+            {/* <Nav navbar>
+              <NavItem>
+                <NavLink
+                  to={"/app/topicscompare/" + getItem("userId")}
+                  tag={NavLinkRRD}
+                  onClick={this.closeCollapse}
+                  activeClassName="active"
+                >
+                  <i className="fas fa-align-center text-green"></i>
+                  Comparisons
+                </NavLink>
+              </NavItem>
+            </Nav> */}
+           
           </Collapse>
         </Container>
       </Navbar>
+      
     );
   }
 }
@@ -428,6 +521,7 @@ class Sidebar extends React.Component {
 Sidebar.defaultProps = {
   routes: [{}],
 };
+
 
 Sidebar.propTypes = {
   // links that will be displayed inside the component

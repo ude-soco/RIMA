@@ -38,6 +38,7 @@ class CloudChartPage extends React.Component {
     this.setState({ tooltipOpen: status });
   };
   handleToogle = (status) => {
+    console.log("called")
     this.setState({ imageTooltipOpen: status });
   };
   modalDetail = () => {

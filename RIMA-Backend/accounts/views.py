@@ -19,6 +19,8 @@ class RegisterView(APIView):
 
     def post(self, request, *args, **kwargs):
         user_data = request.data
+        #pchatti@test.de
+        print(request.data)
         user_data["username"] = user_data.get("email")
         serializer = accounts_serializers.UserRegistrationSerializer(data=user_data)
         serializer.is_valid(raise_exception=True)
@@ -26,6 +28,7 @@ class RegisterView(APIView):
         user.set_password(serializer.validated_data["password"])
         user.save()
         import_user_data.delay(user.id)
+        print(user)
         return Response(accounts_serializers.UserSerializer(instance=user).data)
 
 
@@ -34,6 +37,7 @@ class LoginView(APIView):
     authentication_classes = ()
 
     def post(self, request):
+        print(request.data)
         email = request.data.get("email")
         password = request.data.get("password")
 
@@ -71,6 +75,7 @@ class UserView(RetrieveUpdateAPIView):
     serializer_class = accounts_serializers.UserSerializer
 
     def get_object(self):
+
         return self.request.user
 
 
