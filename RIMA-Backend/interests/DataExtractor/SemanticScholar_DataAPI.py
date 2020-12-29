@@ -1,13 +1,12 @@
-#!/usr/bin/env python
-# coding: utf-8
 
-# In[374]:
+
 
 #Done by Swarna - Extracting data from Semantic Scholar
-#!pip install psycopg2
-#!pip install Django
-#!git clone https://github.com/rwalk/gsdmm.git
-#!pip install shorttext
+#Elephant SQL Details - just in case,if there is any problem,user can check by logging into the particular url
+#DB URL - https://api.elephantsql.com/console/9d1e1117-ddbf-47b0-a1cc-9afd7507a175/browser
+#login credentials - email:sampletestte@gmail.com
+#password- P86PZSaec8Hua@Q
+
 
 
 # In[298]:
@@ -46,7 +45,9 @@ def make_conflist(start,end):
 
 # In[242]:
 
-
+'''
+Parsing the dblp index here to get only LAK Conference data
+'''
 def fetch_raw_data(year):
     raw_request = Request(f'https://dblp.org/db/conf/lak/{year}')
 #raw_request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0')
@@ -152,6 +153,7 @@ len(extracted_dois)
 
 
 #DOI-https://api.semanticscholar.org/v1/paper/10.1038/nrn3241
+#fetching papers from semantic scholar API
 list_paperdata=[]
 for val in extracted_dois[0:100]:
     paper_data = requests.get(f"https://api.semanticscholar.org/v1/paper/{val}").json()
@@ -193,7 +195,7 @@ def convert_list_to_string(org_list, seperator=','):
 
 
 # In[525]:
-
+#Inserting data in the database
 
 i=0
 for val in list_paperdata[616:]:
