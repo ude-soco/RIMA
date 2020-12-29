@@ -15,6 +15,7 @@ from interests.update_interests import update_interest_models, normalize
 from itertools import combinations
 import mpld3
 import base64
+#from plotly.offline import plot
 from matplotlib_venn import venn2, venn2_circles,venn2_unweighted
 from matplotlib import pyplot as plt
 import matplotlib
@@ -23,6 +24,8 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler,Normalizer,RobustS
 matplotlib.use("SVG")
 from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
+#import plotly.graph_objects as go
+#import plotly.express as px
 from pprint import pprint
 
 

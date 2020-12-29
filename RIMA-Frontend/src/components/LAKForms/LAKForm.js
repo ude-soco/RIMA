@@ -12,7 +12,7 @@ import { BASE_URL,BASE_URL_INTEREST } from "../../constants";
 
 import { handleServerErrors } from "utils/errorHandler";
 
-import { Dropdown, Label, Modal, ModalBody, ModalFooter,ButtonGroup } from "reactstrap";
+import { Dropdown, Label, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { TwitterTweetEmbed } from "react-twitter-embed";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";

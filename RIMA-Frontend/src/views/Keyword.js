@@ -1,8 +1,8 @@
 import React from "react";
 // react plugin used to create google maps
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import Loader from "react-loader-spinner";
-import { handleServerErrors } from "utils/errorHandler";
+import {handleServerErrors} from "utils/errorHandler";
 import RestAPI from "../services/api";
 import swal from "sweetalert";
 
@@ -26,7 +26,7 @@ import Header from "components/Headers/Header.js";
 class Keyword extends React.Component {
   state = {
     keywordData: [],
-    rows: [{ name: "", weight: null, id: "" }],
+    rows: [{name: "", weight: null, id: ""}],
     name: "",
     Weight: null,
     isLoding: false,
@@ -34,7 +34,7 @@ class Keyword extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ isLoding: true }, () => {
+    this.setState({isLoding: true}, () => {
       this.getKeywords();
     });
   }
@@ -42,17 +42,17 @@ class Keyword extends React.Component {
   handleChangeWeight = (idx) => (e) => {
     const newKeywords = this.state.rows.map((data, sidx) => {
       if (idx !== sidx) return data;
-      return { ...data, weight: e.target.value };
+      return {...data, weight: e.target.value};
     });
-    this.setState({ rows: newKeywords });
+    this.setState({rows: newKeywords});
   };
 
   handleChangeKeyword = (idx) => (e) => {
     const newKeywords = this.state.rows.map((data, sidx) => {
       if (idx !== sidx) return data;
-      return { ...data, name: e.target.value };
+      return {...data, name: e.target.value};
     });
-    this.setState({ rows: newKeywords });
+    this.setState({rows: newKeywords});
   };
 
   handleAddRow = () => {
@@ -72,7 +72,7 @@ class Keyword extends React.Component {
     } else {
       const rows = [...this.state.rows];
       rows.splice(idx, 1);
-      this.setState({ rows });
+      this.setState({rows});
     }
   };
 
@@ -101,7 +101,7 @@ class Keyword extends React.Component {
         }
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({isLoding: false});
         handleServerErrors(error, toast.error);
       });
   };
@@ -117,10 +117,14 @@ class Keyword extends React.Component {
         window.location.href = "/app/cloud-chart";
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({isLoding: false});
         handleServerErrors(error, toast.error);
       });
   };
+
+  handleBack = () => {
+    window.location.href = "/app/cloud-chart/";
+  }
 
 
   //** DELETE A Keyword **//
@@ -161,7 +165,7 @@ class Keyword extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header/>
 
         <Container className="mt--7" fluid>
           <Row>
@@ -170,19 +174,19 @@ class Keyword extends React.Component {
                 <CardHeader className="bg-white border-0">
                   <Row className="align-items-center">
                     <Col xs="12">
-                      <h3 className="mb-0" >Manage Interest Page</h3>
+                      <h3 className="mb-0">Manage Interest Page</h3>
                       <p className="bold">
                         In this page you can add your interests which were not
                         explored or remove the interests which you think they are
-                        not related/correct. <br />You can rate for your interest from 1-5 to
+                        not related/correct. <br/>You can rate for your interest from 1-5 to
                         define the importance of your interests.</p>
-                        <p><i>(P.S: only top 15 interests will be visualized in the word cloud.)</i>
+                      <p><i>(P.S: only top 15 interests will be visualized in the word cloud.)</i>
                       </p>
                     </Col>
                   </Row>
                 </CardHeader>
                 {this.state.isLoding ? (
-                  <div className="text-center" style={{ padding: "20px" }}>
+                  <div className="text-center" style={{padding: "20px"}}>
                     <Loader
                       type="Puff"
                       color="#00BFFF"
@@ -191,85 +195,93 @@ class Keyword extends React.Component {
                     />
                   </div>
                 ) : (
-                    <CardBody>
-                      <Form onSubmit={this.handleSubmit} method="post">
-                        <div className="pl-lg-4">
-                          {this.state.rows.map((item, idx) => (
-                            <Row>
-                              <Col lg="5">
-                                <FormGroup>
-                                  <Input
-                                    className="form-control-alternative"
-                                    id="keyword"
-                                    name="name"
-                                    required
-                                    value={this.state.rows[idx].name}
-                                    onChange={this.handleChangeKeyword(idx)}
-                                    placeholder="Add Keyword"
-                                    type="text"
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg="5">
-                                <FormGroup>
-                                  <Input
-                                    className="form-control-alternative"
-                                    name="weight"
-                                    value={this.state.rows[idx].weight}
-                                    onChange={this.handleChangeWeight(idx)}
-                                    placeholder="Weight "
-                                    type="Number"
-                                    required
-                                    min="1"
-                                    max="5"
-                                    step="0.1"
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg="2">
-                                <FormGroup>
-                                  <Button
-                                    className="btn btn-outline-danger btn-sm"
-                                    style={{ marginTop: "8px" }}
-                                    onClick={this.handleRemoveSpecificRow(
-                                      this.state.rows[idx].id,
-                                      idx
-                                    )}
-                                  >
-                                    Remove
+                  <CardBody>
+                    <Form onSubmit={this.handleSubmit} method="post">
+                      <div className="pl-lg-4">
+                        {this.state.rows.map((item, idx) => (
+                          <Row>
+                            <Col lg="5">
+                              <FormGroup>
+                                <Input
+                                  className="form-control-alternative"
+                                  id="keyword"
+                                  name="name"
+                                  required
+                                  value={this.state.rows[idx].name}
+                                  onChange={this.handleChangeKeyword(idx)}
+                                  placeholder="Add Keyword"
+                                  type="text"
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg="5">
+                              <FormGroup>
+                                <Input
+                                  className="form-control-alternative"
+                                  name="weight"
+                                  value={this.state.rows[idx].weight}
+                                  onChange={this.handleChangeWeight(idx)}
+                                  placeholder="Weight "
+                                  type="Number"
+                                  required
+                                  min="1"
+                                  max="5"
+                                  step="0.1"
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg="2">
+                              <FormGroup>
+                                <Button
+                                  className="btn btn-outline-danger btn-sm"
+                                  style={{marginTop: "8px"}}
+                                  onClick={this.handleRemoveSpecificRow(
+                                    this.state.rows[idx].id,
+                                    idx
+                                  )}
+                                >
+                                  Remove
                                 </Button>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                          ))}
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            margin: " 0 53px 0 25px",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <div align="left">
-                            <Button
-                              style={{ color: "green" }}
-                              type="button"
-                              onClick={this.handleAddRow}
-                            >
-                              Add
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        ))}
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          margin: " 0 53px 0 25px",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div align="left">
+                          <Button
+                            style={{color: "green"}}
+                            type="button"
+                            onClick={this.handleAddRow}
+                          >
+                            Add
                           </Button>
-                          </div>
+                        </div>
 
+                        <div style={{margin: "32px 0px 0px 0px"}}>
                           <div align="right">
                             <Button color="primary" type="submit">
                               {" "}
-                            Save{" "}
+                              Save{" "}
+                            </Button>
+
+                            <Button color="secondary" onClick={this.handleBack}>
+                              {" "}
+                              Back{" "}
                             </Button>
                           </div>
                         </div>
-                      </Form>
-                    </CardBody>
-                  )}
+
+                      </div>
+                    </Form>
+                  </CardBody>
+                )}
               </Card>
             </Col>
           </Row>

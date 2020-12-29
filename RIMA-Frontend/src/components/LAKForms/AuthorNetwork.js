@@ -8,9 +8,6 @@ import {Label,Modal,ModalHeader,ModalBody,Button,ModalFooter,InputGroup,InputGro
 import swal from "@sweetalert/with-react";
 import SigmaLoader from "./Sigma/Loader";
 import NodeShapes from "./Sigma/NodeShapes";
-import userIcon from "./icons/user.png";
-import tabletIcon from "./icons/tablet.png";
-import ipadIcon from "./icons/ipad.png";
 import Select from "react-select";
 import "./styles.css";
 
