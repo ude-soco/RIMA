@@ -1,23 +1,12 @@
 //Done by Swarna
 import React from "react";
 import Chart from "chart.js";
-import LAKForm from "../components/LAKForms/LAKForm";
-import { Link } from "react-router-dom";
-
 import { Card, CardHeader, CardBody, Container, Row, Col,Label } from "reactstrap";
 import Select from 'react-select';
 // core components
 import { chartOptions, parseOptions } from "variables/charts.js";
-import { handleServerErrors } from "utils/errorHandler";
 import Header from "components/Headers/Header.js";
-import { getItem } from "utils/localStorage";
-import swal from "@sweetalert/with-react";
 import "../assets/scss/custom.css";
-import LAKBar from "components/LAKForms/LAKBar";
-import LAKBarPaperCount from "components/LAKForms/LAKBarPaperCount";
-import LAKPie from "components/LAKForms/LAKPie";
-import LAKStackedAreaChart from "components/LAKForms/LAKStackedAreaChart";
-import VennChart from "components/LAKForms/VennChart";
 import LAKAuthorsbar from "components/LAKForms/LAKAuthorsbar";
 import AuthorNetwork from "components/LAKForms/AuthorNetwork";
 

@@ -1,25 +1,20 @@
 //Done by Swarna
 import React from "react";
 import Chart from "chart.js";
-import LAKForm from "../components/LAKForms/LAKForm";
-import { Link } from "react-router-dom";
-
-import { Card, CardHeader, CardBody, Container, Row, Col,Label } from "reactstrap";
-import Select from 'react-select';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Container,
+  Row,
+  Col,
+  Label,
+} from "reactstrap";
+import Select from "react-select";
 // core components
 import { chartOptions, parseOptions } from "variables/charts.js";
-import { handleServerErrors } from "utils/errorHandler";
 import Header from "components/Headers/Header.js";
-import { getItem } from "utils/localStorage";
-import swal from "@sweetalert/with-react";
 import "../assets/scss/custom.css";
-import LAKBar from "components/LAKForms/LAKBar";
-import LAKBarPaperCount from "components/LAKForms/LAKBarPaperCount";
-import LAKPie from "components/LAKForms/LAKPie";
-import LAKStackedAreaChart from "components/LAKForms/LAKStackedAreaChart";
-import VennChart from "components/LAKForms/VennChart";
-import LAKStackedBarChart from "components/LAKForms/LAKStackedBarChart";
-
 
 class TopicResearch extends React.Component {
   constructor(props) {
@@ -34,18 +29,16 @@ class TopicResearch extends React.Component {
       parseOptions(Chart, chartOptions());
     }
   }
-  
-  
-  
- 
+
   render() {
-    const conference=[{
-      label:"LAK",
-      value:"LAK"
-    }];
+    const conference = [
+      {
+        label: "LAK",
+        value: "LAK",
+      },
+    ];
     return (
       <>
-       
         <Header />
         {/* Page content */}
         <Container className="mt--7" fluid>
@@ -59,35 +52,36 @@ class TopicResearch extends React.Component {
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        height:"1000",
-                        width:"5000"
+                        height: "1000",
+                        width: "5000",
                       }}
                     >
                       <div>
-                        <h2 className="text-white1 mb-0">Comparison of Conference(s)</h2>
+                        <h2 className="text-white1 mb-0">
+                          Comparison of Conference(s)
+                        </h2>
                         <p>
-                          The following visualizations compare the topics of conference over multiple years
-                         
-                          
-                          
-                          
+                          The following visualizations compare the topics of
+                          conference over multiple years
                         </p>
-                        <div style={{'marginLeft':'40px'}}>
+                        <div style={{ marginLeft: "40px" }}>
                           <Label>Select conference</Label>
                           <br></br>
-                          <div style={{width: '200px'}}>
-                        <Select   placeholder="Select conference" options={conference} value={conference.find(obj => obj.value === "LAK")} 
-                         />
-                         </div>
-                         </div>
+                          <div style={{ width: "200px" }}>
+                            <Select
+                              placeholder="Select conference"
+                              options={conference}
+                              value={conference.find(
+                                (obj) => obj.value === "LAK"
+                              )}
+                            />
+                          </div>
+                        </div>
                       </div>
-                     
                     </div>
-                    
                   </Row>
                   <Row>
-                 
-                  {/* <div className="main">
+                    {/* <div className="main">
             <div className="row mt-4" style={{'height':'900px' ,'width':'800px',
             'backgroundColor':'#F0F8FF','marginLeft':'50px',
             'borderRadius':'2px'}}>
@@ -106,8 +100,8 @@ class TopicResearch extends React.Component {
             </div>
            
           </div> */}
-          <br></br>
-          {/* <div className="main">
+                    <br></br>
+                    {/* <div className="main">
           <div className="row mt-4" style={{'height':'1000px' ,'width':'800px',
             'backgroundColor':'#F1F1F1','marginLeft':'50px',
             'borderRadius':'2px'}}>
@@ -116,22 +110,10 @@ class TopicResearch extends React.Component {
                </Col>
             </div>
           </div> */}
-          
-          
-         
-               
-            
-          
                   </Row>
-                  
                 </CardHeader>
 
-                <CardBody>
-                  
-                  
-                  
-                  
-                </CardBody>
+                <CardBody></CardBody>
               </Card>
             </Col>
           </Row>
