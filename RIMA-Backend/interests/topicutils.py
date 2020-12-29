@@ -15,7 +15,6 @@ from interests.update_interests import update_interest_models, normalize
 from itertools import combinations
 import mpld3
 import base64
-from plotly.offline import plot
 from matplotlib_venn import venn2, venn2_circles,venn2_unweighted
 from matplotlib import pyplot as plt
 import matplotlib
@@ -24,8 +23,6 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler,Normalizer,RobustS
 matplotlib.use("SVG")
 from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
-import plotly.graph_objects as go
-import plotly.express as px
 from pprint import pprint
 
 
@@ -241,6 +238,9 @@ def getTopTopics(year):
 
 
     return list_keywords,list_weights
+'''
+get top 10 topics in sorted order
+'''
 
 def getPaperswithTopics(year):
     query="select year,topics from Topics where year='"+year+"'"
@@ -251,10 +251,12 @@ def getPaperswithTopics(year):
     topics_list_ref = {i.split(': ')[0]: i.split(': ')[1] for i in topics_list.split(', ')}
     if "Result disambiguation" in topics_list_ref.keys():
         topics_list_ref.pop("Result disambiguation")
-    
     list_dictkeys=topics_list_ref.keys()
     list_dict = [{"value": key, "label": key} for key, val in topics_list_ref.items()]
     return list_dictkeys,list_dict
+'''
+get top 10 keywords in sorted order
+'''
 def getPaperswithKeys(year):
     query="select year,keywords from Topics where year='"+year+"'"
     lak_data=getTopics(year,query)
@@ -264,19 +266,44 @@ def getPaperswithKeys(year):
     topics_list_ref = {i.split(': ')[0]: i.split(': ')[1] for i in topics_list.split(', ')}
     if "Result disambiguation" in topics_list_ref.keys():
         topics_list_ref.pop("Result disambiguation")
-    
     list_dictkeys=topics_list_ref.keys()
     list_dict = [{"value": key, "label": key} for key, val in topics_list_ref.items()]
     return list_dictkeys,list_dict
+'''
+get the top 10 papers for the selected topic in LAK Bar Chart
+'''
 def getTopicDetails(topic,year):
+    lak_abstract=getText(year)
+    topic=topic.replace("%20"," ")
+    
+    lak_abstract["titleAndAbstract"]=lak_abstract["title"]+" "+lak_abstract["abstract"]
+    weights_list=[2]*len(list(lak_abstract['titleAndAbstract'].values))
+    dict_freqs={}
+    list_freqs=[]
+    for text,title in zip(list(lak_abstract['titleAndAbstract' ].values),list(lak_abstract['title'].values)):
+        count=0
+        
+        if ((text.lower()).count(topic.lower()) > 0):
+           
+            count=(text.lower()).count(topic.lower())
+           
+        dict_freqs.update({title:count})
+        list_freqs.append(dict_freqs)
+    for key in dict_freqs:
+        dict_freqs[key] = int(dict_freqs[key])
+    sorted_dict = dict(sorted(dict_freqs.items(), reverse=True,key=operator.itemgetter(1)))
+    sorted_dict = {k: sorted_dict[k] for k in list(sorted_dict)[:10]}
+    print("-------------------",sorted_dict)
+    
+    
+    return sorted_dict.keys(),sorted_dict.values()
+
+def getTopicDetails1(topic,year):
     print("*************************")
-    print(topic)
-    print(year)
     topic_list_search=getPaperswithTopics(year)[0]
     print(topic_list_search)
     lak_abstract=getText(year)
     lak_abstract["titleAndAbstract"]=lak_abstract["title"]+" "+lak_abstract["abstract"]
-    
     list_details=[]
     dict_vals={}
     list_tpcfreq=[]
@@ -316,9 +343,36 @@ def getTopicDetails(topic,year):
     return list_final,len(list_final),sorted_dict.keys(),sorted_dict.values()
 
 
+'''
+get the top 10 papers for the selected keyword in LAK Bar Chart
+'''
+def getKeyDetails(topic,year):
+    lak_abstract=getText(year)
+    topic=topic.replace("%20"," ")
+    
+    lak_abstract["titleAndAbstract"]=lak_abstract["title"]+" "+lak_abstract["abstract"]
+    weights_list=[2]*len(list(lak_abstract['titleAndAbstract'].values))
+    dict_freqs={}
+    list_freqs=[]
+    for text,title in zip(list(lak_abstract['titleAndAbstract' ].values),list(lak_abstract['title'].values)):
+        count=0
+        
+        if ((text.lower()).count(topic.lower()) > 0):
+           
+            count=(text.lower()).count(topic.lower())
+           
+        dict_freqs.update({title:count})
+        list_freqs.append(dict_freqs)
+    for key in dict_freqs:
+        dict_freqs[key] = int(dict_freqs[key])
+    sorted_dict = dict(sorted(dict_freqs.items(), reverse=True,key=operator.itemgetter(1)))
+    sorted_dict = {k: sorted_dict[k] for k in list(sorted_dict)[:10]}
+    print("-------------------",sorted_dict)
+    
+    
+    return sorted_dict.keys(),sorted_dict.values()
 
-
-def getKeyDetails(keyword,year):
+def getKeyDetails1(keyword,year):
     print("*************************")
     print(keyword)
     print(year)
@@ -366,7 +420,9 @@ def getKeyDetails(keyword,year):
        
     return list_final,len(list_final),sorted_dict.keys(),sorted_dict.values()    
     
-
+'''
+get all the LAK Data from database specific to a particular year
+'''
 def getText(year):
     try:
         up.uses_netloc.append("postgres")
@@ -634,6 +690,9 @@ def getPaperIDFromPaperTitle(title):
     paper_data = requests.get(f"https://api.semanticscholar.org/v1/paper/{val}").json()
     url=paper_data['url']
     return url
+'''
+get author specific collaboration based on the selected author
+'''
 def getAuthorFromAuthorName(author,topic,year):
     topic=topic.lower()
     query="select authors,authorids from LAKData where authors like '%"+author+"%' and year='"+year+"'"
@@ -709,7 +768,7 @@ def getAuthorsForYear(year):
     list_authors=list(authors['authors'].values)
     #list_authors=list_authors[0:5]
     for val in list_authors:
-        print("original val:",val)
+        
         if "," not in val:
             list_auth_single.append(val)
         if "," in val:
@@ -717,7 +776,7 @@ def getAuthorsForYear(year):
             list_temp=[]
             list_temp=val.split(",")
             for value in list_temp:
-                print("temp",value)
+                
                 list_auth_sub.append(value)
         
     list_auth_sub += list_auth_single
@@ -1623,10 +1682,21 @@ def insertData(query):
             conn.close()
             print("PostgreSQL connection is closed")
     return "success"
+def getAuthorIdfromAuthor(author):
+    query="select authors,authorids from LAKData where authors like '%"+author+"%'"
+    lak_authors=getTopics("",query)
+    val=list(lak_authors.values)[0]
+    val_authors=val[0].split(",")
+    val_ids=val[1].split(",")
+    index=val_authors.index(author)
+    return val_ids[index]
+
 '''
 Obtain topic details in author comparision bar chart
 '''
 def compareAuthors(author1,author2,year,key):
+    authorid1=getAuthorIdfromAuthor(author1)
+    authorid2=getAuthorIdfromAuthor(author2)
     keys=[]
     values=[]
     sorted_dict1={}
@@ -1647,7 +1717,7 @@ def compareAuthors(author1,author2,year,key):
     lak_query1=getTopics("",mainquery1)
     lak_query2=getTopics("",mainquery2)
     if len(list(lak_query1.values))!=0:
-        print("topics",convertStrtoDict(lak_query1['topics'].values[0]))
+        #print("topics",convertStrtoDict(lak_query1['topics'].values[0]))
         sorted_dict1 = dict(sorted(convertStrtoDict(lak_query1['topics'].values[0]), reverse=True,key=operator.itemgetter(1)))
         wikis_a1 = {k: sorted_dict1[k] for k in list(sorted_dict1)[0:10]}
         sorted_dict1=dict(sorted(convertStrtoDict(lak_query1['keywords'].values[0]), reverse=True,key=operator.itemgetter(1)))
@@ -1667,15 +1737,15 @@ def compareAuthors(author1,author2,year,key):
         keywords_noquotes=str(keywords_a1).replace("'","")
         keywords_noquotes=keywords_noquotes.replace("(","")
         keywords_noquotes=keywords_noquotes.replace(")","")
-        print("keys",keywords_a1)
+        #print("keys",keywords_a1)
         sorted_dict1 = dict(sorted(keywords_a1.items(), reverse=True,key=operator.itemgetter(1)))
         sorted_dict1 = {k: sorted_dict1[k] for k in list(sorted_dict1)[0:10]}
         wikis_a1=wikifilter(keywords_a1)[1]
-        print("wikis",wikis_a1)
+        #print("wikis",wikis_a1)
         wikis_noquotes=str(wikis_a1).replace("'","")
         wikis_noquotes=wikis_noquotes.replace("(","")
         wikis_noquotes=wikis_noquotes.replace(")","")
-        insert_query="INSERT INTO AuthorsTab (authorid, name,conference,year,keywords,topics) VALUES ('"+""+"','"+author1+"','"+"LAK"+"','"+year+"','"+str(keywords_noquotes)+"','"+str(wikis_noquotes)+"')"
+        insert_query="INSERT INTO AuthorsTab (authorid, name,conference,year,keywords,topics) VALUES ('"+str(authorid1)+"','"+author1+"','"+"LAK"+"','"+year+"','"+str(keywords_noquotes)+"','"+str(wikis_noquotes)+"')"
         insertData(insert_query)
 
     if len(list(lak_query2.values))!=0:
@@ -1698,15 +1768,15 @@ def compareAuthors(author1,author2,year,key):
         keywords_noquotes=str(keywords_a2).replace("'","")
         keywords_noquotes=keywords_noquotes.replace("(","")
         keywords_noquotes=keywords_noquotes.replace(")","")
-        print("keys",keywords_a2)
+        #print("keys",keywords_a2)
         sorted_dict2 = dict(sorted(keywords_a2.items(), reverse=True,key=operator.itemgetter(1)))
         sorted_dict2 = {k: sorted_dict2[k] for k in list(sorted_dict2)[0:10]}
         wikis_a2=wikifilter(keywords_a2)[1]
         wikis_noquotes=str(wikis_a2).replace("'","")
         wikis_noquotes=wikis_noquotes.replace("(","")
         wikis_noquotes=wikis_noquotes.replace(")","")
-        print("wikis",wikis_a2)
-        insert_query="INSERT INTO AuthorsTab (authorid, name,conference,year,keywords,topics) VALUES ('"+""+"','"+author2+"','"+"LAK"+"','"+year+"','"+str(keywords_noquotes)+"','"+str(wikis_noquotes)+"')"
+        #print("wikis",wikis_a2)
+        insert_query="INSERT INTO AuthorsTab (authorid, name,conference,year,keywords,topics) VALUES ('"+str(authorid2)+"','"+author2+"','"+"LAK"+"','"+year+"','"+str(keywords_noquotes)+"','"+str(wikis_noquotes)+"')"
         insertData(insert_query)
 
     set_intersect_key=list(set(keywords_a1.keys()).intersection(set(keywords_a2.keys())))
@@ -1908,8 +1978,8 @@ def compareLAKwithAuthortopics(author,year):
     ctx = image_data
     return ctx
     #For demo
-# def printText():
-#     return "Hello from Backend!"
+def printText():
+    return "Hello from Backend!"
 
     
 
