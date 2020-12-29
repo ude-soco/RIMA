@@ -18,8 +18,6 @@ import {
   FormGroup,
 } from "reactstrap";
 import swal from "@sweetalert/with-react";
-import SigmaLoader from "./Sigma/Loader";
-import NodeShapes from "./Sigma/NodeShapes";
 import Select from "react-select";
 import "./styles.css";
 

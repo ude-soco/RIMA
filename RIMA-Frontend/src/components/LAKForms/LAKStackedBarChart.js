@@ -1,9 +1,6 @@
 //Done by Swarna
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
-
-
-import {BASE_URL_INTEREST} from '../../constants';
+import { BASE_URL_INTEREST } from "../../constants";
 import Select from "react-select";
 import "./styles.css";
 import ReactApexChart from "react-apexcharts";
