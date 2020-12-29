@@ -221,7 +221,7 @@ class Sidebar extends React.Component {
         target: "_blank",
       };
     }
-    const style = { width: "300px" };
+    const style = { height: "1000px" };
     return (
      
       <Navbar

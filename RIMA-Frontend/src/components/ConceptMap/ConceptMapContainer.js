@@ -78,6 +78,7 @@ class ConceptMapContainer extends Component {
             },
             this.extractNodes
           );
+
         })
         .catch((error) => {
           this.setState({ isLoding: false });
@@ -315,9 +316,9 @@ class ConceptMapContainer extends Component {
           ) : this.state.isData ? (
             <>
               <div>
-                <Stage width={width} height={this.stageHeight}>
-                  <Layer>{this.getNodes()}</Layer>
-                </Stage>
+                {/*<Stage width={width} height={this.stageHeight}>*/}
+                {/*  <Layer>{this.getNodes()}</Layer>*/}
+                {/*</Stage>*/}
               </div>
             </>
           ) : (
