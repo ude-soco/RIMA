@@ -10,7 +10,7 @@ import {
   Col
 } from "reactstrap";
 // core components
-import { chartOptions, parseOptions } from "variables/charts.js";
+import {chartOptions, parseOptions} from "variables/charts.js";
 import Header from "components/Headers/Header.js";
 import "../assets/scss/custom.css";
 import VennChart from "components/LAKForms/VennChart";
@@ -36,7 +36,7 @@ class TopicComparisions extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header/>
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row>
@@ -56,7 +56,7 @@ class TopicComparisions extends React.Component {
                       <div>
                         <h2 className="text-white1 mb-0">Topic Overview</h2>
                         <p>
-                          The visualizatios gives an insight of topics through
+                          The visualizations gives an insight of topics through
                           different criteria
                           <CoolTabs
                             tabKey={"1"}
@@ -85,8 +85,8 @@ class TopicComparisions extends React.Component {
                               background: "#338EFF",
                               height: 4,
                             }}
-                            leftContentStyle={{ background: "white" }}
-                            rightContentStyle={{ background: "white" }}
+                            leftContentStyle={{background: "white"}}
+                            rightContentStyle={{background: "white"}}
                             leftTabTitle={"Conferences"}
                             rightTabTitle={"Researchers"}
                             leftContent={
@@ -103,7 +103,7 @@ class TopicComparisions extends React.Component {
                                     }}
                                   >
                                     <Col>
-                                      <VennChart />
+                                      <VennChart/>
                                     </Col>
                                   </div>
                                 </div>
@@ -120,7 +120,7 @@ class TopicComparisions extends React.Component {
                                     }}
                                   >
                                     <Col>
-                                      <LAKStackedBarChart />
+                                      <LAKStackedBarChart/>
                                     </Col>
                                   </div>
                                 </div>
@@ -137,7 +137,7 @@ class TopicComparisions extends React.Component {
                                   >
                                     <Row>
                                       <Col>
-                                       
+
                                       </Col>
                                     </Row>
                                   </div>
@@ -146,19 +146,19 @@ class TopicComparisions extends React.Component {
                             }
                             rightContent={
                               <div>
-                                <br></br>
+                                <br/>
                                 <h3>Researcher Collaboration Network</h3>
-                                <br></br>
+                                <br/>
                                 <Row>
                                   <Col>
-                                   
+
                                   </Col>
                                 </Row>
-                                <br></br>
+                                <br/>
 
                                 <Row>
                                   <Col>
-                                    <LAKAuthorsbar />
+                                    <LAKAuthorsbar/>
                                   </Col>
                                 </Row>
                               </div>
@@ -170,10 +170,10 @@ class TopicComparisions extends React.Component {
                       </div>
                     </div>
                   </Row>
-                  <Row></Row>
+                  <Row/>
                 </CardHeader>
 
-                <CardBody></CardBody>
+                <CardBody/>
               </Card>
             </Col>
           </Row>

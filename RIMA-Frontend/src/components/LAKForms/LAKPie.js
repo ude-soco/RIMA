@@ -1,8 +1,7 @@
 //Done by Swarna
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Select from "react-select";
 import {
-  ButtonGroup,
   Modal,
   ModalBody,
   ModalFooter,
@@ -12,7 +11,7 @@ import {
   Row,
 } from "reactstrap";
 import "d3-transition";
-import { BASE_URL_INTEREST } from "../../constants";
+import {BASE_URL_INTEREST} from "../../constants";
 import Highlighter from "react-highlight-words";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -20,7 +19,7 @@ import "tippy.js/animations/scale.css";
 /* Chart code */
 // Themes begin
 // Themes end
-import { Button, Label, FormGroup, Form } from "reactstrap";
+import {Button, Label, FormGroup, Form} from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 
 class LAKPie extends Component {
@@ -49,13 +48,14 @@ class LAKPie extends Component {
       options: {},
     };
   }
+
   displayAbstract(param) {
     fetch(
       `${BASE_URL_INTEREST}` +
-        "getabstractdetails/" +
-        param +
-        "/" +
-        this.state.selectyear
+      "getabstractdetails/" +
+      param +
+      "/" +
+      this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -78,11 +78,13 @@ class LAKPie extends Component {
         });
       });
   }
+
   toggle = (id) => {
     this.setState({
       modal: !this.state.modal,
     });
   };
+
   selectNumber(e) {
     this.setState({
       selectnum: e.value,
@@ -90,9 +92,10 @@ class LAKPie extends Component {
   }
 
   handleToogle = (status) => {
-    this.setState({ imageTooltipOpen: status });
+    this.setState({imageTooltipOpen: status});
     console.log(this.state.imageTooltipOpen);
   };
+
   componentDidMount() {
     //console.log("the json is ******************")
     const displayabstract = this.displayAbstract;
@@ -119,10 +122,9 @@ class LAKPie extends Component {
                 },
               },
             },
-
             labels: json.topics,
             tooltip: {
-              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+              custom: function ({series, seriesIndex, dataPointIndex, w}) {
                 console.log(w.config);
                 return (
                   '<div class="arrow_box">' +
@@ -133,7 +135,6 @@ class LAKPie extends Component {
                 );
               },
             },
-
             responsive: [
               {
                 breakpoint: 480,
@@ -148,25 +149,26 @@ class LAKPie extends Component {
               },
             ],
           },
-
           isLoaded: true,
         });
       });
   }
+
   selectYear(e) {
     this.setState({
       selectyear: e.value,
     });
   }
+
   selectValue(e) {
     const displayabstract = this.displayAbstract;
 
     fetch(
       BASE_URL_INTEREST +
-        "gettopicsforpie/" +
-        this.state.selectnum +
-        "/" +
-        this.state.selectyear
+      "gettopicsforpie/" +
+      this.state.selectnum +
+      "/" +
+      this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -191,7 +193,7 @@ class LAKPie extends Component {
             },
             labels: json.topics,
             tooltip: {
-              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+              custom: function ({series, seriesIndex, dataPointIndex, w}) {
                 return (
                   '<div class="arrow_box">' +
                   "<span>" +
@@ -201,7 +203,6 @@ class LAKPie extends Component {
                 );
               },
             },
-
             responsive: [
               {
                 breakpoint: 480,
@@ -216,19 +217,19 @@ class LAKPie extends Component {
               },
             ],
           },
-
           isLoaded: true,
         });
       });
   }
+
   selectKey(e) {
     const displayabstract = this.displayAbstract;
     fetch(
       BASE_URL_INTEREST +
-        "getkeysforpie/" +
-        this.state.selectnum +
-        "/" +
-        this.state.selectyear
+      "getkeysforpie/" +
+      this.state.selectnum +
+      "/" +
+      this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -253,12 +254,12 @@ class LAKPie extends Component {
             labels: json.keys,
             tooltip: {
               custom: function ({
-                labels,
-                series,
-                seriesIndex,
-                dataPointIndex,
-                w,
-              }) {
+                                  labels,
+                                  series,
+                                  seriesIndex,
+                                  dataPointIndex,
+                                  w,
+                                }) {
                 return (
                   '<div class="arrow_box">' +
                   "<span>" +
@@ -268,7 +269,6 @@ class LAKPie extends Component {
                 );
               },
             },
-
             responsive: [
               {
                 breakpoint: 480,
@@ -283,7 +283,6 @@ class LAKPie extends Component {
               },
             ],
           },
-
           isLoaded: true,
         });
       });
@@ -368,13 +367,13 @@ class LAKPie extends Component {
           <Form role="form" method="POST">
             <FormGroup>
               <h2>Topic distribution</h2>
-              <br></br>
+              <br/>
               <p>
                 The pie chart displays the distribution of top 5/10
                 topics/keywords for the selected conference
               </p>
               <Label>Select a year</Label>
-              <div style={{ width: "200px" }}>
+              <div style={{width: "200px"}}>
                 <Select
                   placeholder="Select Option"
                   options={yeardata}
@@ -382,10 +381,10 @@ class LAKPie extends Component {
                   onChange={this.selectYear}
                 />
               </div>
-              <br></br>
+              <br/>
               <Label>Select the number of topics/keywords</Label>
-              <br></br>
-              <div style={{ width: "200px" }}>
+              <br/>
+              <div style={{width: "200px"}}>
                 <Select
                   placeholder="Select Option"
                   options={numbers}
@@ -393,7 +392,7 @@ class LAKPie extends Component {
                   onChange={this.selectNumber}
                 />
               </div>
-              <br></br>
+              <br/>
 
               <Button
                 outline
@@ -415,7 +414,7 @@ class LAKPie extends Component {
                 className="fas fa-question-circle text-blue"
                 onMouseOver={() => this.handleToogle(true)}
                 onMouseOut={() => this.handleToogle(false)}
-              ></i>
+              />
               {this.state.imageTooltipOpen && (
                 <div
                   className="imgTooltip"
@@ -438,7 +437,6 @@ class LAKPie extends Component {
                             <p>Click on the bar of publications visualization to view the publication in semantic scholar</p> */}
                 </div>
               )}
-
               <ReactApexChart
                 options={this.state.options}
                 series={this.state.series}
@@ -468,44 +466,44 @@ class LAKPie extends Component {
               </h2>
             </ModalHeader>
             <ModalBody>
-              <br></br>
-              <br></br>
+              <br/>
+              <br/>
               <Table hover size="20">
                 <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Abstract</th>
-                  </tr>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Abstract</th>
+                </tr>
                 </thead>
                 <tbody>
-                  {console.log("the title is:", modalTitle)}
-                  {modalTitle.map((text, index) => {
-                    const image = modalBody[index];
-                    return (
-                      <tr>
-                        <td>{index + 1}</td>
-                        <td style={{ whiteSpace: "unset" }}>
-                          <p>
-                            <Highlighter
-                              highlightClassName="YourHighlightClass"
-                              searchWords={[highlightText]}
-                              autoEscape={true}
-                              textToHighlight={text}
-                            />
-                          </p>
-                        </td>
-                        <td style={{ whiteSpace: "unset" }}>
+                {console.log("the title is:", modalTitle)}
+                {modalTitle.map((text, index) => {
+                  const image = modalBody[index];
+                  return (
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td style={{whiteSpace: "unset"}}>
+                        <p>
                           <Highlighter
                             highlightClassName="YourHighlightClass"
                             searchWords={[highlightText]}
                             autoEscape={true}
-                            textToHighlight={image}
+                            textToHighlight={text}
                           />
-                        </td>
-                      </tr>
-                    );
-                  })}
+                        </p>
+                      </td>
+                      <td style={{whiteSpace: "unset"}}>
+                        <Highlighter
+                          highlightClassName="YourHighlightClass"
+                          searchWords={[highlightText]}
+                          autoEscape={true}
+                          textToHighlight={image}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
                 </tbody>
               </Table>
             </ModalBody>
@@ -514,25 +512,24 @@ class LAKPie extends Component {
                 <Col>
                   <Button color="info">
                     {" "}
-                    <a style={{ color: "white" }} href={url} target="_blank">
+                    <a style={{color: "white"}} href={url} target="_blank">
                       Search in Semantic Scholar
                     </a>
                   </Button>
                 </Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
+                <Col/>
                 <Col>
                   <Button color="secondary" onClick={this.toggle}>
                     Close
@@ -549,13 +546,13 @@ class LAKPie extends Component {
           <Form role="form" method="POST">
             <FormGroup>
               <h2>Topic distribution</h2>
-              <br></br>
+              <br/>
               <p>
                 The pie chart displays the distribution of top 5/10
                 topics/keywords for the selected conference
               </p>
               <Label>Select a year</Label>
-              <div style={{ width: "200px" }}>
+              <div style={{width: "200px"}}>
                 <Select
                   placeholder="Select Option"
                   options={yeardata}
@@ -563,10 +560,10 @@ class LAKPie extends Component {
                   onChange={this.selectYear}
                 />
               </div>
-              <br></br>
+              <br/>
               <Label>Select the number of topics/keywords</Label>
-              <br></br>
-              <div style={{ width: "200px" }}>
+              <br/>
+              <div style={{width: "200px"}}>
                 <Select
                   placeholder="Select Option"
                   options={numbers}
@@ -574,8 +571,7 @@ class LAKPie extends Component {
                   onChange={this.selectNumber}
                 />
               </div>
-              <br></br>
-
+              <br/>
               <Button
                 outline
                 color="primary"
@@ -596,7 +592,7 @@ class LAKPie extends Component {
                 className="fas fa-question-circle text-blue"
                 onMouseOver={() => this.handleToogle(true)}
                 onMouseOut={() => this.handleToogle(false)}
-              ></i>
+              />
               {this.state.imageTooltipOpen && (
                 <div
                   className="imgTooltip"
@@ -614,7 +610,6 @@ class LAKPie extends Component {
                     Click on a sector of pie chart to view more details or
                     double click the legend
                   </p>
-
                   {/* <p> Click on the bar to view publications related to topic/keyword</p>
                             <p>Click on the bar of publications visualization to view the publication in semantic scholar</p> */}
                 </div>

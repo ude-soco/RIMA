@@ -1,10 +1,10 @@
 //Done by Swarna
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Select from "react-select";
 import "d3-transition";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import { Button, Label, FormGroup, Form, Row, Col } from "reactstrap";
+import {Button, Label, FormGroup, Form, Row, Col} from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 
 class LAKBar extends Component {
@@ -32,16 +32,19 @@ class LAKBar extends Component {
       imageTooltipOpen: false,
     };
   }
+
   handleToogle = (status) => {
-    this.setState({ imageTooltipOpen: status });
+    this.setState({imageTooltipOpen: status});
     console.log(this.state.imageTooltipOpen);
   };
+
   changeColor(index) {
     this.setState({
       ...this.state.options,
       options: {},
     });
   }
+
   displayDocChart(topic, year) {
     var selectyear = "2011";
     fetch(
@@ -54,21 +57,17 @@ class LAKBar extends Component {
           numdocs: json.docs[1],
           //bardata:json.docs[2],
           //doctitle:json.docs[3],
-          series1: [{ name: "", data: json.docs[1] }],
+          series1: [{name: "", data: json.docs[1]}],
           options1: {
-            chart: {
-              type: "bar",
-              height: 350,
-            },
-
             dataLabels: {
               enabled: true,
             },
-
             title: {
               text: "Top 10 publications related to '" + topic + "'",
             },
             chart: {
+              type: "bar",
+              height: 350,
               events: {
                 dataPointSelection: function (event, chartContext, config) {
                   var title =
@@ -95,7 +94,7 @@ class LAKBar extends Component {
               categories: json.docs[0],
             },
             tooltip: {
-              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+              custom: function ({series, seriesIndex, dataPointIndex, w}) {
                 return (
                   '<div class="arrow_box">' +
                   "<span>" +
@@ -133,6 +132,7 @@ class LAKBar extends Component {
         });
       });
   }
+
   componentDidMount() {
     const display = this.displayDocChart;
     fetch("http://127.0.0.1:8000/api/interests/toptopics/2011")
@@ -177,7 +177,7 @@ class LAKBar extends Component {
                 categories: json.keywords[0],
               },
               tooltip: {
-                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                custom: function ({series, seriesIndex, dataPointIndex, w}) {
                   return (
                     '<div class="arrow_box">' +
                     "<span>" +
@@ -209,6 +209,7 @@ class LAKBar extends Component {
         );
       });
   }
+
   selectYear(e) {
     this.setState({
       selectyear: e.value,
@@ -223,7 +224,7 @@ class LAKBar extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        var { items, weights } = this.state;
+        var {items, weights} = this.state;
         console.log(items);
         console.log(weights);
         this.setState(
@@ -265,7 +266,7 @@ class LAKBar extends Component {
                 categories: json.keywords[0],
               },
               tooltip: {
-                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                custom: function ({series, seriesIndex, dataPointIndex, w}) {
                   return (
                     '<div class="arrow_box">' +
                     "<span>" +
@@ -285,6 +286,7 @@ class LAKBar extends Component {
         );
       });
   }
+
   selectValue(e) {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
@@ -424,7 +426,7 @@ class LAKBar extends Component {
 
               <Label>Select a year</Label>
               <br></br>
-              <div style={{ width: "200px" }}>
+              <div style={{width: "200px"}}>
                 <Select
                   placeholder="Select Option"
                   options={yeardata}
@@ -514,14 +516,15 @@ class LAKBar extends Component {
               </p>
               <Label> Select a year </Label>
               <br></br>
-              <div style={{ width: "200px" }}>
+              <div style={{width: "200px"}}>
                 <Select
                   placeholder="Select Option"
                   options={yeardata}
                   value={yeardata.find((obj) => obj.value === selectyear)}
                   onChange={this.selectYear}
                 />
-              </div>{" "}
+              </div>
+              {" "}
               <Button
                 outline
                 color="primary"
@@ -571,4 +574,5 @@ class LAKBar extends Component {
     }
   }
 }
+
 export default LAKBar;

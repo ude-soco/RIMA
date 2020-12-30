@@ -32,7 +32,6 @@ class LAKAuthorsbar extends Component {
       selectVal1: "",
       selectVal2: "",
       selectYear: "",
-      selectYear: "",
       keyvalue: "",
       url: "",
       isLoaded: false,

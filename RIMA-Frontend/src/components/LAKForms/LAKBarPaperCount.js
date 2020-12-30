@@ -1,24 +1,15 @@
-import React, { Component, Fragment,useState,useRef,useEffect} from "react";
-
-import RestAPI from "services/api";
-import axios from "axios";
+import React, { Component} from "react";
 import Select from 'react-select';
-import { select } from "d3";
 import "d3-transition";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-
-
-
 /* Chart code */
 // Themes begin
 // Themes end
 import {
-    Button,
     Label,
     FormGroup,
-    Form,Modal, ModalHeader, ModalBody, ModalFooter,Card, CardTitle, CardBody
-   
+    Form
   } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 
@@ -41,11 +32,7 @@ class LAKBarPaperCount extends Component {
         isLoaded:false,
         isEmpty:false,
         statelabel:"",
-        items:[],
-        weights:[],
         bardata:[],
-        isLoaded:false,
-          
         series: [],
         options: {
           
@@ -81,16 +68,9 @@ class LAKBarPaperCount extends Component {
           doctitle:json.docs[3],
           series: [{ name: "Docs", data: bardata }],
           options:{
-            chart: {
-              type: 'bar',
-              height: 350
-            },
-            
-            
             dataLabels: {
               enabled: true
             },
-           
             grid: {
               xaxis: {
                 show:false,
@@ -115,6 +95,8 @@ class LAKBarPaperCount extends Component {
               text:"Top 10 Documents with document Frequency"
           },
           chart: {
+            type: 'bar',
+            height: 350,
             events: {
               dataPointSelection: function(event, chartContext, config) {
                 var title=config.w.config.xaxis.categories[config.dataPointIndex]
