@@ -12,7 +12,6 @@ import {
   Col,
   Label,
 } from "reactstrap";
-// core components
 import { chartOptions, parseOptions } from "variables/charts.js";
 import Header from "components/Headers/Header.js";
 import "../assets/scss/custom.css";
