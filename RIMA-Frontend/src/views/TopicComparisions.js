@@ -16,8 +16,6 @@ import "../assets/scss/custom.css";
 import VennChart from "components/LAKForms/VennChart";
 import LAKStackedBarChart from "components/LAKForms/LAKStackedBarChart";
 import CoolTabs from "react-cool-tabs";
-import SigmaNode from "components/LAKForms/SigmaNode";
-import Topicbubble from "components/LAKForms/Topicbubble";
 import LAKAuthorsbar from "components/LAKForms/LAKAuthorsbar";
 
 class TopicComparisions extends React.Component {
