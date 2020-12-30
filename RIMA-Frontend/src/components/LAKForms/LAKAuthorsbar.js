@@ -233,6 +233,18 @@ class LAKAuthorsbar extends Component {
             xaxis: {
               categories: json.authortopics[2],
             },
+            tooltip: {
+              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                console.log(w.globals.seriesNames[seriesIndex])
+                return (
+                  '<div class="arrow_box">' +
+                  "<span>" +
+                  w.globals.seriesNames[seriesIndex] +
+                  "<br></br></span>" +
+                  "</div>"
+                );
+              },
+            },
             yaxis: {
               title: {
                 text: undefined,
@@ -336,6 +348,18 @@ class LAKAuthorsbar extends Component {
               categories: json.authortopics[2],
               labels: {
                 style: {},
+              },
+            },
+            tooltip: {
+              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                console.log(w.globals.seriesNames[seriesIndex])
+                return (
+                  '<div class="arrow_box">' +
+                  "<span>" +
+                  w.globals.seriesNames[seriesIndex] +
+                  "<br></br></span>" +
+                  "</div>"
+                );
               },
             },
 
