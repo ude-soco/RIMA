@@ -278,14 +278,13 @@ get the top 10 papers for the selected topic in LAK Bar Chart
 def getTopicDetails(topic,year):
     lak_abstract=getText(year)
     topic=topic.replace("%20"," ")
-    
     lak_abstract["titleAndAbstract"]=lak_abstract["title"]+" "+lak_abstract["abstract"]
     weights_list=[2]*len(list(lak_abstract['titleAndAbstract'].values))
     dict_freqs={}
     list_freqs=[]
     for text,title in zip(list(lak_abstract['titleAndAbstract' ].values),list(lak_abstract['title'].values)):
         count=0
-        
+
         if ((text.lower()).count(topic.lower()) > 0):
            
             count=(text.lower()).count(topic.lower())
@@ -297,9 +296,10 @@ def getTopicDetails(topic,year):
     sorted_dict = dict(sorted(dict_freqs.items(), reverse=True,key=operator.itemgetter(1)))
     sorted_dict = {k: sorted_dict[k] for k in list(sorted_dict)[:10]}
     print("-------------------",sorted_dict)
+    myDict = {key:val for key, val in sorted_dict.items() if val != 0}
     
     
-    return sorted_dict.keys(),sorted_dict.values()
+    return myDict.keys(),myDict.values()
 
 def getTopicDetails1(topic,year):
     print("*************************")
