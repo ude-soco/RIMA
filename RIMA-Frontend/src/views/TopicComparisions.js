@@ -137,7 +137,7 @@ class TopicComparisions extends React.Component {
                                   >
                                     <Row>
                                       <Col>
-                                        <Topicbubble />
+                                       
                                       </Col>
                                     </Row>
                                   </div>
@@ -151,7 +151,7 @@ class TopicComparisions extends React.Component {
                                 <br></br>
                                 <Row>
                                   <Col>
-                                    <SigmaNode />
+                                   
                                   </Col>
                                 </Row>
                                 <br></br>
