@@ -1,10 +1,10 @@
 //Done by Swarna
-import React, { Component } from "react";
-import { BASE_URL_INTEREST } from "../../constants";
+import React, {Component} from "react";
+import {BASE_URL_INTEREST} from "../../constants";
 import Select from "react-select";
 import "./styles.css";
 import ReactApexChart from "react-apexcharts";
-import { Button, Label } from "reactstrap";
+import {Button, Label} from "reactstrap";
 
 class LAKStackedBarChart extends Component {
   constructor(props) {
@@ -38,9 +38,10 @@ class LAKStackedBarChart extends Component {
   }
 
   handleToogle = (status) => {
-    this.setState({ imageTooltipOpen: status });
+    this.setState({imageTooltipOpen: status});
     console.log(this.state.imageTooltipOpen);
   };
+
   componentDidMount() {
     var text = ["2011", "2012"];
     fetch(BASE_URL_INTEREST + "getalltopiclist/" + "?" + text.join("&"))
@@ -50,7 +51,7 @@ class LAKStackedBarChart extends Component {
         console.log(json.Topiclist[0]);
         for (let i = 0; i < json.Topiclist[0].length; i++) {
           series = series.concat([
-            { name: json.Topiclist[1][i], data: json.Topiclist[0][i] },
+            {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
           ]);
           //selectInputRef1.current.chart.publicMethods.updateOptions({})
         }
@@ -112,6 +113,7 @@ class LAKStackedBarChart extends Component {
         });
       });
   }
+
   selectKey(e) {
     this.setState({
       active1: false,
@@ -121,6 +123,7 @@ class LAKStackedBarChart extends Component {
       key: e.target.value,
     });
   }
+
   compareTopic() {
     var key = this.state.key;
     if (key == "key") {
@@ -132,7 +135,7 @@ class LAKStackedBarChart extends Component {
           console.log(json.Topiclist[0]);
           for (let i = 0; i < json.Topiclist[0].length; i++) {
             series = series.concat([
-              { name: json.Topiclist[1][i], data: json.Topiclist[0][i] },
+              {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
@@ -203,7 +206,7 @@ class LAKStackedBarChart extends Component {
           console.log(json.Topiclist[0]);
           for (let i = 0; i < json.Topiclist[0].length; i++) {
             series = series.concat([
-              { name: json.Topiclist[1][i], data: json.Topiclist[0][i] },
+              {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
@@ -277,6 +280,7 @@ class LAKStackedBarChart extends Component {
       key: e.target.value,
     });
   }
+
   clearValues() {
     this.selectInputRef.current.select.clearValue();
     this.setState({
@@ -285,6 +289,7 @@ class LAKStackedBarChart extends Component {
       active3: false,
     });
   }
+
   selectyearValue(e) {
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
     this.setState({
@@ -293,6 +298,7 @@ class LAKStackedBarChart extends Component {
     });
     console.log("value is", this.state.selectedValue);
   }
+
   render() {
     var {
       keywords,
@@ -353,14 +359,14 @@ class LAKStackedBarChart extends Component {
 
     if (isLoaded) {
       return (
-        <div className="App" style={{ height: "1000px", width: "700px" }}>
+        <div className="App" style={{height: "1000px", width: "700px"}}>
           <h3>Topic distribution across years</h3>
-          <br></br>
+          <br/>
           <p>
             This visualization displays the comparison of topics/keywords over
             multiple years
           </p>
-          <br></br>
+          <br/>
           <Button
             outline
             value="topic"
@@ -383,7 +389,7 @@ class LAKStackedBarChart extends Component {
             className="fas fa-question-circle text-blue"
             onMouseOver={() => this.handleToogle(true)}
             onMouseOut={() => this.handleToogle(false)}
-          ></i>
+          />
           {this.state.imageTooltipOpen && (
             <div
               className="imgTooltip"
@@ -400,12 +406,12 @@ class LAKStackedBarChart extends Component {
               <p>Each part in a bar represent a specific topic/keyword</p>
             </div>
           )}
-          <br></br>
-          <br></br>
+          <br/>
+          <br/>
           <Label>Select years</Label>
           <br></br>
 
-          <div style={{ width: "600px" }}>
+          <div style={{width: "600px"}}>
             <Select
               ref={this.selectInputRef}
               isMulti
@@ -416,7 +422,7 @@ class LAKStackedBarChart extends Component {
               onChange={this.selectyearValue}
             />
           </div>
-          <br></br>
+          <br/>
 
           <Button
             outline
@@ -436,10 +442,10 @@ class LAKStackedBarChart extends Component {
           >
             Reset
           </Button>
-          <br></br>
+          <br/>
 
-          <br></br>
-          <div style={{ opacity: opacity }}>
+          <br/>
+          <div style={{opacity: opacity}}>
             <ReactApexChart
               options={this.state.options}
               series={this.state.series}
@@ -453,12 +459,12 @@ class LAKStackedBarChart extends Component {
       return (
         <>
           <h3>Topic distribution across years</h3>
-          <br></br>
+          <br/>
           <p>
             This visualization displays the comparison of topics/keywords over
             multiple years
           </p>
-          <br></br>
+          <br/>
           <Button
             outline
             value="topic"
@@ -481,7 +487,7 @@ class LAKStackedBarChart extends Component {
             className="fas fa-question-circle text-blue"
             onMouseOver={() => this.handleToogle(true)}
             onMouseOut={() => this.handleToogle(false)}
-          ></i>
+          />
           {this.state.imageTooltipOpen && (
             <div
               className="imgTooltip"
@@ -498,11 +504,11 @@ class LAKStackedBarChart extends Component {
               <p>Each part in a bar represent a specific topic/keyword</p>
             </div>
           )}
-          <br></br>
-          <br></br>
+          <br/>
+          <br/>
           <Label>Select years</Label>
-          <br></br>
-          <div style={{ width: "600px" }}>
+          <br/>
+          <div style={{width: "600px"}}>
             <Select
               ref={this.selectInputRef}
               isMulti
@@ -513,8 +519,7 @@ class LAKStackedBarChart extends Component {
               onChange={this.selectyearValue}
             />
           </div>
-
-          <br></br>
+          <br/>
           <Button
             outline
             active={active3}
@@ -533,9 +538,8 @@ class LAKStackedBarChart extends Component {
           >
             Reset
           </Button>
-          <br></br>
-
-          <br></br>
+          <br/>
+          <br/>
         </>
       );
     }

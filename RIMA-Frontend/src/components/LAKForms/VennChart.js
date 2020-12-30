@@ -1,9 +1,9 @@
 //Done by Swarna
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import "d3-transition";
-import { BASE_URL_INTEREST } from "../../constants";
+import {BASE_URL_INTEREST} from "../../constants";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -12,7 +12,8 @@ import "tippy.js/animations/scale.css";
 // Themes begin
 // Themes end
 
-import { Button, Row, Col,Label } from "reactstrap";
+import {Button, Row, Col, Label} from "reactstrap";
+
 window.$value = "";
 
 class VennChart extends Component {
@@ -23,7 +24,6 @@ class VennChart extends Component {
     this.selectValueYear1 = this.selectValueYear1.bind(this);
     this.selectTopic = this.selectTopic.bind(this);
     this.selectKey = this.selectKey.bind(this);
-
     this.state = {
       isLoaded: false,
       active1: true,
@@ -38,15 +38,15 @@ class VennChart extends Component {
       display1: "none",
       selectValue2: "",
       selectVal: "",
-
       data: [],
     };
   }
 
   handleToogle = (status) => {
-    this.setState({ imageTooltipOpen: status });
+    this.setState({imageTooltipOpen: status});
     console.log(this.state.imageTooltipOpen);
   };
+
   componentDidMount() {
     //console.log("the json is ******************")
     this.setState({
@@ -74,6 +74,7 @@ class VennChart extends Component {
       selectVal: e.value,
     });
   }
+
   selectKey(e) {
     this.setState({
       active1: false,
@@ -84,10 +85,10 @@ class VennChart extends Component {
     });
     fetch(
       BASE_URL_INTEREST +
-        "commonkeys/" +
-        this.state.selectVal +
-        "/" +
-        this.state.selectValue2
+      "commonkeys/" +
+      this.state.selectVal +
+      "/" +
+      this.state.selectValue2
     )
       .then((response) => response.json())
       .then((json) => {
@@ -102,6 +103,7 @@ class VennChart extends Component {
         });
       });
   }
+
   selectTopic(e) {
     this.setState({
       active1: true,
@@ -112,10 +114,10 @@ class VennChart extends Component {
     });
     fetch(
       BASE_URL_INTEREST +
-        "commontopics/" +
-        this.state.selectVal +
-        "/" +
-        this.state.selectValue2
+      "commontopics/" +
+      this.state.selectVal +
+      "/" +
+      this.state.selectValue2
     )
       .then((response) => response.json())
       .then((json) => {
@@ -129,6 +131,7 @@ class VennChart extends Component {
         });
       });
   }
+
   selectValue(e) {
     this.setState({
       selectValue2: e.value,
@@ -191,27 +194,22 @@ class VennChart extends Component {
         label: "2020",
       },
     ];
-
     //var{items,arr_keys,arr_vals}=this.state;
-
     if (isLoaded) {
       return (
         <>
-          <div></div>
+          <div/>
           {console.log(desc)}
-
-          <br></br>
-
+          <br/>
           <React.Fragment>
             <h2>Common topics/keywords</h2>
-            <br></br>
+            <br/>
             <p>
               This visualization provides common topics/keywords for the
               selected year
             </p>
-            <br></br>
+            <br/>
             <Label>Select two years to compare</Label>
-
             <Row>
               <Col>
                 <Select
@@ -230,8 +228,7 @@ class VennChart extends Component {
                 />
               </Col>
             </Row>
-            <br></br>
-
+            <br/>
             <Button
               outline
               color="primary"
@@ -254,7 +251,7 @@ class VennChart extends Component {
               className="fas fa-question-circle text-blue"
               onMouseOver={() => this.handleToogle(true)}
               onMouseOut={() => this.handleToogle(false)}
-            ></i>
+            />
             {this.state.imageTooltipOpen && (
               <div
                 className="imgTooltip"
@@ -271,8 +268,8 @@ class VennChart extends Component {
                 <p>Info about common topics between two years of conference</p>
               </div>
             )}
-            <br></br>
-            <br></br>
+            <br/>
+            <br/>
 
             <Row>
               <div
@@ -291,14 +288,14 @@ class VennChart extends Component {
                   color="#00BFFF"
                   height={100}
                   width={100}
-                ></Loader>
+                />
               </div>
 
-              <div style={{ display: display }}>
+              <div style={{display: display}}>
                 <img
                   src={`data:image/png;base64,${items_y1}`}
-                  style={{ marginLeft: "50px" }}
-                ></img>
+                  style={{marginLeft: "50px"}}
+                />
               </div>
             </Row>
           </React.Fragment>
@@ -308,12 +305,12 @@ class VennChart extends Component {
       return (
         <>
           <h2>Common topics/keywords</h2>
-          <br></br>
+          <br/>
           <p>
             This visualization provides common topics/keywords for the selected
             year
           </p>
-          <br></br>
+          <br/>
           <Label>Select two years to compare</Label>
           <Row>
             <Col>
@@ -334,7 +331,7 @@ class VennChart extends Component {
             </Col>
           </Row>
 
-          <br></br>
+          <br/>
           <Button
             outline
             color="primary"
@@ -357,7 +354,7 @@ class VennChart extends Component {
             className="fas fa-question-circle text-blue"
             onMouseOver={() => this.handleToogle(true)}
             onMouseOut={() => this.handleToogle(false)}
-          ></i>
+          />
           {this.state.imageTooltipOpen && (
             <div
               className="imgTooltip"
@@ -375,7 +372,7 @@ class VennChart extends Component {
             </div>
           )}
 
-          <br></br>
+          <br/>
           <br></br>
           <div
             style={{
@@ -393,7 +390,7 @@ class VennChart extends Component {
               color="#00BFFF"
               height={100}
               width={100}
-            ></Loader>
+            />
           </div>
         </>
       );

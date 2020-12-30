@@ -3,7 +3,7 @@ import React from "react";
 export default class SigmaLoader extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { loaded: false };
+    this.state = {loaded: false};
   }
 
   componentDidMount() {
@@ -12,7 +12,7 @@ export default class SigmaLoader extends React.PureComponent {
 
   componentWillReceiveProps(props) {
     if (props.graph !== this.props.sigma.graph) {
-      this.setState({ loaded: false });
+      this.setState({loaded: false});
       this._load(props.graph);
     }
   }
@@ -27,7 +27,7 @@ export default class SigmaLoader extends React.PureComponent {
     if (!this.state.loaded) return null;
     return (
       <div>
-        {this.embedProps(this.props.children, { sigma: this.props.sigma })}
+        {this.embedProps(this.props.children, {sigma: this.props.sigma})}
       </div>
     );
   }
@@ -42,6 +42,6 @@ export default class SigmaLoader extends React.PureComponent {
       this.props.sigma.graph.read(graph);
       this.props.sigma.refresh();
     }
-    this.setState({ loaded: true });
+    this.setState({loaded: true});
   }
 }

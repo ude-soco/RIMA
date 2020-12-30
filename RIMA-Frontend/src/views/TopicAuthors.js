@@ -1,10 +1,10 @@
 //Done by Swarna
 import React from "react";
 import Chart from "chart.js";
-import { Card, CardHeader, CardBody, Container, Row, Col,Label } from "reactstrap";
+import {Card, CardHeader, CardBody, Container, Row, Col, Label} from "reactstrap";
 import Select from 'react-select';
 // core components
-import { chartOptions, parseOptions } from "variables/charts.js";
+import {chartOptions, parseOptions} from "variables/charts.js";
 import Header from "components/Headers/Header.js";
 import "../assets/scss/custom.css";
 import LAKAuthorsbar from "components/LAKForms/LAKAuthorsbar";
@@ -24,19 +24,15 @@ class TopicAuthors extends React.Component {
       parseOptions(Chart, chartOptions());
     }
   }
-  
-  
-  
- 
+
   render() {
-    const conference=[{
-      label:"LAK",
-      value:"LAK"
+    const conference = [{
+      label: "LAK",
+      value: "LAK"
     }];
     return (
       <>
-      
-        <Header />
+        <Header/>
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row>
@@ -49,70 +45,52 @@ class TopicAuthors extends React.Component {
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        height:"1000",
-                        width:"5000"
+                        height: "1000",
+                        width: "5000"
                       }}
                     >
                       <div>
                         <h2 className="text-white1 mb-0">Comparison of Researchers</h2>
                         <p>
                           The following visualizations provide information related to the researchers of conference
-                         
-                          
-                          
-                          
                         </p>
-                        <div style={{'marginLeft':'40px'}}>
+                        <div style={{'marginLeft': '40px'}}>
                           <Label>Select conference</Label>
-                          <br></br>
+                          <br/>
                           <div style={{width: '200px'}}>
-                        <Select   placeholder="Select conference" options={conference} value={conference.find(obj => obj.value === "LAK")} 
-                         />
-                         </div>
-                         </div>
+                            <Select
+                              placeholder="Select conference"
+                              options={conference}
+                              value={conference.find(obj => obj.value === "LAK")}
+                            />
+                          </div>
+                        </div>
                       </div>
-                     
                     </div>
-                    
                   </Row>
                   <Row>
-                 
-                  <div>
-               <br></br>
-              
-                <Row>
-                  
-            <Col>
-           
-           
-            <AuthorNetwork/>
-           
-            
-           </Col></Row>
-           <br></br>
-          <div className="row mt-4" style={{'height':'900px' ,'width':'800px',
-      'backgroundColor':'#F0F8FF','marginLeft':'50px',
-      'borderRadius':'2px'}}>
-           <Row>
-                  
-            <Col>
-            <LAKAuthorsbar/>
-           </Col></Row>
-           </div>
-           </div>
-         
-               
-            
-          
+                    <div>
+                      <br/>
+                      <Row>
+                        <Col>
+                          <AuthorNetwork/>
+                        </Col>
+                      </Row>
+                      <br/>
+                      <div className="row mt-4" style={{
+                        'height': '900px', 'width': '800px',
+                        'backgroundColor': '#F0F8FF', 'marginLeft': '50px',
+                        'borderRadius': '2px'
+                      }}>
+                        <Row>
+                          <Col>
+                            <LAKAuthorsbar/>
+                          </Col></Row>
+                      </div>
+                    </div>
                   </Row>
-                  
                 </CardHeader>
-
                 <CardBody>
-                  
-                  
-                  
-                  
                 </CardBody>
               </Card>
             </Col>
