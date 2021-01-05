@@ -424,7 +424,7 @@ class LAKPie extends Component {
                     position: "relative",
                     width: "500px",
                     color: "#8E8E8E",
-                    height: "50px",
+                    height: "60px",
                     border: "1px solid #BDBDBD",
                   }}
                 >
@@ -602,7 +602,7 @@ class LAKPie extends Component {
                     position: "relative",
                     width: "500px",
                     color: "#8E8E8E",
-                    height: "50px",
+                    height: "55px",
                     border: "1px solid #BDBDBD",
                   }}
                 >
