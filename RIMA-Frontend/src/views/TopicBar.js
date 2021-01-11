@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Label,
+  Button
 } from "reactstrap";
 import { chartOptions, parseOptions } from "variables/charts.js";
 import Header from "components/Headers/Header.js";
@@ -24,6 +25,7 @@ import LAKStackedBarChart from "components/LAKForms/LAKStackedBarChart";
 class TopicBar extends React.Component {
   constructor(props) {
     super(props);
+    this.navigateTop=this.navigateTop.bind(this);
     this.state = {
       activeNav: 4,
       chartExample1Data: "data1",
@@ -34,7 +36,9 @@ class TopicBar extends React.Component {
       parseOptions(Chart, chartOptions());
     }
   }
-
+  navigateTop(){
+    window.scrollTo(0, 0)
+  }
   render() {
     const conference = [
       {
@@ -191,6 +195,20 @@ class TopicBar extends React.Component {
                         </Col>
                       </div>
                     </div>
+                  </Row>
+                  <Row>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    
+                    <Col><div><br></br><Button color="primary" onClick=
+                    {this.navigateTop}><i
+                    className="fas fa-arrow-up text-white"
+                    
+                  ></i></Button></div></Col>
                   </Row>
                 </CardHeader>
 
