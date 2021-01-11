@@ -205,7 +205,7 @@ class TopicBar extends React.Component {
                     <Col></Col>
                     
                     <Col><div><br></br><Button color="primary" onClick=
-                    {this.navigateTop}><i
+                    {this.navigateTop}><i title="Navigate to top of the page"
                     className="fas fa-arrow-up text-white"
                     
                   ></i></Button></div></Col>
