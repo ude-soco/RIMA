@@ -315,9 +315,9 @@ class ConceptMapContainer extends Component {
 					) : this.state.isData ? (
 						<>
 							<div>
-								{/* <Stage width={width} height={this.stageHeight}>
+								<Stage width={width} height={this.stageHeight}>
 									<Layer>{this.getNodes()}</Layer>
-								</Stage> */}
+								</Stage>
 							</div>
 						</>
 					) : (

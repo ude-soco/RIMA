@@ -91,6 +91,7 @@ def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0)
 
     elif embedding == "Glove":
         source_vec = glove_vectorize(source_doc)
+
         target_vec = glove_vectorize(target_doc)
         sim_score = cosine_sim(source_vec, target_vec)
 

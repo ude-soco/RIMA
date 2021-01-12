@@ -50,8 +50,7 @@ class BarChartPage extends React.Component {
 
                       <h2 className="text-white1 mb-0">Activities</h2>
                       <p>
-                        Here you can see the statistical result of how many
-                        papers/tweets you have published in the past times.
+                      These charts show the number of publications and tweets you have published over the last years.
                         &nbsp;
                         {/* <i
                           onClick={this.modalDetail}

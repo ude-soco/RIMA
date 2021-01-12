@@ -601,7 +601,7 @@ export default class TweetsAndPeople extends Component {
                       ></TagSearch>
                     </Col>
                     <ButtonGroup>
-                      <UncontrolledDropdown>
+ {/*                      <UncontrolledDropdown>
                         <DropdownToggle
                           // tag="a"
                           className="text-primary"
@@ -620,7 +620,7 @@ export default class TweetsAndPeople extends Component {
                           state={this.state}
                           changeHandler={this.changeHandler}
                         />
-                      </UncontrolledDropdown>
+                      </UncontrolledDropdown> */}
                       <Form
                         method="post"
                         onSubmit={this.handleSearchButtonClick}

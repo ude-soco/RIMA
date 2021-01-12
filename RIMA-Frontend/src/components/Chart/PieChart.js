@@ -98,7 +98,7 @@ class PieChart extends React.Component {
 
   render() {
     return (
-      <div id="chart">
+      <div align="center" id="chart">
         {this.state.isLoding ? (
           <div className="text-center" style={{ padding: "20px" }}>
             <Loader type="Puff" color="#00BFFF" height={100} width={100} />

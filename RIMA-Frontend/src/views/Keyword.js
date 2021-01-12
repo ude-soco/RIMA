@@ -174,13 +174,12 @@ class Keyword extends React.Component {
                 <CardHeader className="bg-white border-0">
                   <Row className="align-items-center">
                     <Col xs="12">
-                      <h3 className="mb-0">Manage Interest Page</h3>
+                      <h3 className="mb-0">Manage Interest</h3>
                       <p className="bold">
-                        In this page you can add your interests which were not
-                        explored or remove the interests which you think they are
-                        not related/correct. <br/>You can rate for your interest from 1-5 to
-                        define the importance of your interests.</p>
-                      <p><i>(P.S: only top 15 interests will be visualized in the word cloud.)</i>
+                      Here you can manage your interests. 
+                      You can rate/modify your interests on a scale from 1 to 5 (higher number means greater interest). 
+                      </p>
+                      <p><i>(P.S: Only top 15 interests will be visualized in the word cloud.)</i>
                       </p>
                     </Col>
                   </Row>

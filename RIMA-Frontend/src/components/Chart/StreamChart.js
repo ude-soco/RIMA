@@ -128,22 +128,25 @@ class StreamChart extends React.Component {
           </div>
         ) : (
           <>
-            <div align="center">Twitter Keyword Trends</div>
-            <div id="chart">
-              <Chart
-                type="area"
-                series={this.state.chartOptions.twitterSeries}
-                options={twitterGraphOptions}
-              />
-            </div>
-            <br />
             <div align="center">Paper Keyword Trends</div>
-            <div id="chart">
+            <div align="center" id="chart">
               <Chart
                 type="area"
                 series={this.state.chartOptions.paperSeries}
                 options={paperGraphOptions}
-                height={500}
+                height={300}
+                width={900}
+              />
+            </div>
+            <br /> <br />
+            <div align="center">Twitter Keyword Trends</div>
+            <div align="center" id="chart">
+              <Chart
+                type="area"
+                series={this.state.chartOptions.twitterSeries}
+                options={twitterGraphOptions}
+                height={300}
+                width={900}
               />
             </div>
           </>

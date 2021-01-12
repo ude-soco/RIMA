@@ -43,7 +43,7 @@ class PieChartPage extends React.Component {
                         {/* Overview */}
                       </h6>
                       <h2 className="text-white1 mb-0">Recent Interests</h2>
-                      <p>This chart shows your interests in the last month(Twitter)/last year(Paper).</p>
+                      <p>This chart shows your recent interests in the last year (for publications), and last month (for tweets). </p>
                     </div>
                   </Row>
                 </CardHeader>

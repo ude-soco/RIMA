@@ -23,7 +23,6 @@ const PopOver = styled.div`
     text-align: center;
     padding: 15px 0;
   }
-
   .popover__wrapper {
     position: relative;
     margin-top: 1.5rem;
@@ -77,7 +76,6 @@ const PopOver = styled.div`
     z-index: 10;
     opacity: 1;
     visibility: ${(props) => (props.popeover === true ? "visible" : "hidden")};
-
     transform: translate(0, -20px);
     transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
   }
@@ -98,7 +96,6 @@ const PopOver = styled.div`
 const StyledSpinner = styled(Spinner)`
   width: 3rem;
   height: 3rem;
-
   margin: auto;
   display: block;
 `;
@@ -288,14 +285,16 @@ const TweetInfoOption = (props) => {
   return (
     <PopOver popeover={popeover} more={more} more1={more1}>
       <div className="popover__wrapper">
-        <MdErrorOutline
+        <Span
           className="cursor--pointer"
           style={{
-            fontSize: "30px",
+            fontSize: "18px",
             color: "rgb(17, 137, 239)",
           }}
           onClick={openInfoAboutTweet}
-        />
+          >Why?
+        </Span>
+        
         <div className="popover__content">
           <MdHighlightOff
             style={{

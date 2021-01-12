@@ -85,30 +85,41 @@ class BarChart extends Component {
       <>
         {this.state.isLoding ? (
           <div className="text-center" style={{ padding: "20px" }}>
-            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
+            <Loader type="Puff" color="#00BFFF" height={80} width={80} />
           </div>
         ) : (
           <>
             <div className="mixed-chart">
-              <h2>Paper Information</h2>
-              <Chart
-                options={this.state.options}
-                series={this.state.series}
-                type="bar"
-                width="600"
-              />
-              <p className="h1-s rtl">Quantity</p>
-              <p className="h1-s">Year</p>
-              <hr />
-              <h1>Tweet Information</h1>
+              <div align="center" id="chart">
+                <h2>Publications</h2>
+                <Chart
+                  options={this.state.options}
+                  series={this.state.series}
+                  type="bar"
+                  width="400"
+                />
+                <p className="h1-s rtl">Quantity</p>
+                <p className="h1-s">Year</p>
+              </div>
+  
+              <hr/>
+              <div align="center" id="chart">
+              <h2>Tweets</h2>
               <Chart
                 options={this.state.tweetoptions}
                 series={this.state.tweetseries}
                 type="bar"
-                width="600"
+                width="400"
               />
               <p className="h1-s rtl">Quantity</p>
               <p className="h1-s">Year</p>
+              </div>
+           </div>
+
+           <hr/>
+
+            <div>  
+
             </div>
           </>
         )}

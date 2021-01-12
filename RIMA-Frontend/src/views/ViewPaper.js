@@ -200,7 +200,7 @@ class ViewPaper extends React.Component {
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">Papers tables</h3>
+                  <h3 className="mb-0">My Publications</h3>
                   <Button color="info" onClick={this.refreshPaper} style={{left:"1300px",}}>
                         Refresh Paper Data
                   </Button>
