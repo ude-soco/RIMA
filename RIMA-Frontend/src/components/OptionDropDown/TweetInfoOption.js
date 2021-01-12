@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
   MdErrorOutline,
   MdHighlightOff,
@@ -134,6 +134,10 @@ const TweetInfoOption = (props) => {
     color: item.color,
     weight: item.weight,
   }));
+
+  // useEffect(() => {
+    // Code comes here
+  // }, )
 
   function keywordExtractedfromtweet() {
     let data = {
@@ -285,15 +289,16 @@ const TweetInfoOption = (props) => {
   return (
     <PopOver popeover={popeover} more={more} more1={more1}>
       <div className="popover__wrapper">
-        <Span
+        <span
           className="cursor--pointer"
           style={{
             fontSize: "18px",
             color: "rgb(17, 137, 239)",
           }}
           onClick={openInfoAboutTweet}
-          >Why?
-        </Span>
+          >
+          Why?
+        </span>
         
         <div className="popover__content">
           <MdHighlightOff

@@ -125,6 +125,18 @@ export default class TweetsAndPeople extends Component {
     this.setWeightOfkeyword = this.setWeightOfkeyword.bind(this);
   }
 
+  componentDidMount() {
+    const { tags } = this.state;
+    console.log("success")
+    RestAPI.extractTweetsFromTags(tags)
+      .then((res) => {
+        console.log({tweet111: res.data.data})
+        this.setState({ tweets: res.data.data, tweetsLoaded: true });
+        this.extractUsersFromTweets(res.data.data);
+      })
+      .catch((err) => console.error("Error Getting Tweets:", err));
+  }
+
   generateRandomRGB() { 
     const randomBetween = (min, max) =>
       min + Math.floor(Math.random() * (max - min + 1));

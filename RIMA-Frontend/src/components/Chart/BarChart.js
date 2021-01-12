@@ -44,6 +44,7 @@ class BarChart extends Component {
           let value = Object.values(response.data.papers);
           let tweetscategorieList = Object.keys(response.data.tweets);
           let tweetsvalue = Object.values(response.data.tweets);
+          console.log(response.data.tweets);
           this.setState({
             isLoding: false,
             data: response.data,

@@ -31,7 +31,7 @@ class PieChart extends React.Component {
         "#0C56F3",
       ],
       chart: {
-        width: 380,
+        width: 900,
         type: "pie",
       },
       fill: {
@@ -58,17 +58,17 @@ class PieChart extends React.Component {
       labels: [],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 800,
           options: {
             chart: {
-              width: 50,
-            },
-            legend: {
-              position: "bottom",
+              width: 200,
             },
           },
         },
       ],
+      legend: {
+        position: 'bottom'
+      },
     },
   };
 
@@ -105,12 +105,15 @@ class PieChart extends React.Component {
           </div>
         ) : this.state.data.length ? (
           <>
-            <div style={{ maxWidth: "560px", margin: "35px auto" }}>
+            <div style={{
+              maxWidth: "800px",
+              margin: "35px auto"
+            }}>
               <Chart
                 options={this.state.options}
                 series={this.state.series}
                 type="pie"
-                width="400"
+                width="500"
               />
             </div>
           </>

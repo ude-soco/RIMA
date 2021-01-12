@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import "./tweets.css";
 import {
   convertUnicode,
   keywordHighlighter,
   UrlHighlighter,
 } from "../../../utils/unicodeCharacterEngine.js";
-import { MdErrorOutline } from "react-icons/md";
+import {MdErrorOutline} from "react-icons/md";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -33,7 +33,10 @@ const HideContainer = styled.div`
 class TweetContent extends Component {
   render() {
     return (
-      <span dangerouslySetInnerHTML={{ __html: this.props.modified_text }} />
+      <>
+        <h4>{this.props.name}</h4>
+        <span dangerouslySetInnerHTML={{__html: this.props.modified_text}}/>
+      </>
     );
   }
 }
@@ -47,6 +50,7 @@ export default class SavedTweetCard extends Component {
       countDown: 10,
     };
   }
+
   countDownFun = () => {
     this.myInterval = setInterval(() => {
       this.setState((prevState) => ({
@@ -61,18 +65,21 @@ export default class SavedTweetCard extends Component {
       timer: setTimeout(() => {
         console.log("This will run after 5 second!");
         this.props.deleteSavedTweet(this.props.tweet);
-        this.setState({ hide: false });
+        this.setState({hide: false});
       }, 10000),
     });
     this.countDownFun();
   };
+
   render() {
-    const { countDown } = this.state;
-    const { tweet } = this.props;
+    console.log(this.props);
+    const {countDown} = this.state;
+    const {tweet} = this.props;
     // const user = tweet["user"];
     // Tweet
     const id_str = tweet["id_str"];
     const text = tweet["full_text"];
+    const screen_name = tweet["screen_name"];
 
     // console.log("TEXT: ", text);
     // const screenName = convertUnicode(user["screen_name"]);
@@ -80,51 +87,52 @@ export default class SavedTweetCard extends Component {
 
     // Tags
     // Modift Tweet Text
+    // let modifiedScreenName = convertUnicode(screen_name);
     let modified_text = convertUnicode(text);
 
     return (
       <>
         <div
           className="card mt-4"
-          style={{ width: "100%", position: "relative" }}
+          style={{width: "100%", position: "relative"}}
         >
           <HideContainer hide={this.state.hide}>
             {/* <div style={{ textAlign: 'right' }}> */}
-              {/* <h2>Tweet Hidden</h2> */}
-              <Button
-                className="rounded-0"
-                style={{ fontSize: "20px" }}
-                color="primary"
-                size="sm"
-                onClick={() => {
-                  clearTimeout(this.state.timer);
-                  this.setState({
-                    hide: false,
-                  });
-                }}
-              >
-                Undo
-              </Button>
+            {/* <h2>Tweet Hidden</h2> */}
+            <Button
+              className="rounded-0"
+              style={{fontSize: "20px"}}
+              color="primary"
+              size="sm"
+              onClick={() => {
+                clearTimeout(this.state.timer);
+                this.setState({
+                  hide: false,
+                });
+              }}
+            >
+              Undo
+            </Button>
             {/* </div> */}
             <div className="d-flex justify-content-between">
               <div>
-            <h3>you won't see this tweet in your saved tweets list</h3>
+                <h3>you won't see this tweet in your saved tweets list</h3>
 
-            <h4>this tweet will delete after {countDown} seconds</h4>
+                <h4>this tweet will delete after {countDown} seconds</h4>
               </div>
               {/* position: absolute;
     right: 21px;
     bottom: 0; */}
-            <ReactSpinnerTimer
-              className="snipper-saved-tweets"
-              timeInSeconds={10}
-              totalLaps={10}
-              isRefresh={false}
-              onLapInteraction={(lap) => {
-                if (lap.isFinish) console.log("Finished!!");
-                else console.log("Running!! Lap:", lap.actualLap);
-              }}
-            />
+              <ReactSpinnerTimer
+                className="snipper-saved-tweets"
+                timeInSeconds={10}
+                totalLaps={10}
+                isRefresh={false}
+                onLapInteraction={(lap) => {
+                  if (lap.isFinish) console.log("Finished!!");
+                  else console.log("Running!! Lap:", lap.actualLap);
+                }}
+              />
             </div>
 
           </HideContainer>
@@ -144,17 +152,17 @@ export default class SavedTweetCard extends Component {
                 <svg
                   width="20"
                   height="4"
-                  viewBox="0 0 20 4" 
+                  viewBox="0 0 20 4"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <circle cx="2" cy="2" r="2" fill="#1D1D1D" />
-                  <circle cx="10" cy="2" r="2" fill="#1D1D1D" />
-                  <circle cx="18" cy="2" r="2" fill="#1D1D1D" />
+                  <circle cx="2" cy="2" r="2" fill="#1D1D1D"/>
+                  <circle cx="10" cy="2" r="2" fill="#1D1D1D"/>
+                  <circle cx="18" cy="2" r="2" fill="#1D1D1D"/>
                 </svg>
               </DropdownToggle>
 
-              <OptionDropDown HideHandler={this.HideHandler} saved />
+              <OptionDropDown HideHandler={this.HideHandler} saved/>
             </UncontrolledDropdown>
           </div>
           <div className="card-body">
@@ -164,10 +172,10 @@ export default class SavedTweetCard extends Component {
               <a
                 href={`https://twitter.com/${tweet['screen_name']}/status/${tweet['id_str']}`}
                 target="_blank"
-                style={{ textDecoration: "none", color: "inherit" }}
+                style={{textDecoration: "none", color: "inherit"}}
                 rel="noopener noreferrer"
               >
-                <TweetContent modified_text={modified_text} />
+                <TweetContent modified_text={modified_text} name={screen_name}/>
               </a>
               {/* <span className="highlight-keyword">highlight</span> the
               recommended keyword and color the link
@@ -216,7 +224,7 @@ export default class SavedTweetCard extends Component {
                           width="1"
                           height="1"
                         >
-                          <use xlinkHref="#image0" transform="scale(0.005)" />
+                          <use xlinkHref="#image0" transform="scale(0.005)"/>
                         </pattern>
                         <image
                           id="image0"

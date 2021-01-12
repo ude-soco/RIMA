@@ -7,31 +7,13 @@ import backgroundDragableText from "../../assets/img/backgrounds/tab1.png";
 import {
   MdErrorOutline,
   MdHighlightOff,
-  MdAddCircleOutline,
-  MdRemoveCircleOutline,
 } from "react-icons/md";
 import classnames from "classnames";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody,
-  CardImg,
-  CardSubtitle,
-  CardText,
-  Container,
   Row,
   Col,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownToggle,
-  DropdownItem,
-  ButtonGroup,
-  Button,
-  Form,
-  Alert,
   TabContent,
   TabPane,
   Nav,
@@ -41,6 +23,7 @@ import {
   UncontrolledCollapse,
 } from "reactstrap";
 import DragableImage from "../TweetAndPeople/TweetCard/DragableImage";
+import {ImPencil} from "react-icons/all";
 
 const DragableTextWrapper = styled.div`
   background-image: url("${backgroundDragableText}");
@@ -232,12 +215,13 @@ const AdvanceFilter = (props) => {
   return (
     <PopOver state={state}>
       <div className="popover__wrapper">
-        <MdErrorOutline
+        <ImPencil
           id="PopoverLegacy"
           className="cursor--pointer"
           style={{
-            fontSize: "30px",
+            fontSize: "24px",
             color: "rgb(17, 137, 239)",
+            marginRight: "8px"
           }}
           onClick={() => setstate(true)}
           />

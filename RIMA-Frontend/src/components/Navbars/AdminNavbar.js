@@ -129,8 +129,8 @@ class AdminNavbar extends React.Component {
               </FormGroup>
             </Form> */}
 
-            <Nav className="align-items-center d-none d-md-flex" navbar>
-              <UncontrolledDropdown nav>
+            <Nav className="align-items-center d-none d-md-flex ml-auto" navbar>
+              <UncontrolledDropdown nav >
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
                     <span className="avatar avatar-sm rounded-circle">

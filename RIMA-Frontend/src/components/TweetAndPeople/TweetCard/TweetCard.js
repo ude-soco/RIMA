@@ -17,6 +17,7 @@ import styled from "styled-components";
 import TweetInfoOption from "components/OptionDropDown/TweetInfoOption";
 import RestAPI from "services/api";
 import {Container, OverlayTrigger, Popover, Button, Image} from "react-bootstrap";
+import TweetCardRecommendation from "./TweetCardRecommendation";
 
 const HideContainer = styled.div`
   position: absolute;
@@ -306,34 +307,11 @@ export default class TweetCard extends Component {
             </small>
             {/* {console.log("keyword_tags", keyword_tags)} */}
             <div>
-              <OverlayTrigger
-                trigger="click"
-                placement="left"
-                overlay={
-                  <Popover style={{maxWidth: "48em", maxHeight: "48em"}}>
-                    <Popover.Title as="h3">Basic level of Explanation</Popover.Title>
-                    <Popover.Content>
-                      <Container>
-                        <Row style={{marginBottom: "16px"}}>
-                          <Image src={"/images/banner.jpg"} fluid style={{borderRadius: "4px"}}/>
-                        </Row>
-                        <Row>
-                          <h4>
-                            Bootstrap CSS sets the max-width of a popover to 276px in the popover class. If you want something
-                            wider you should override this. If using a local copy of Bootstrap CSS, just edit that file.
-                            Alternatively, if you are using the Bootstrap CDN, create a local CSS file with something like the
-                            following chunk in it, and place it in a folder called "assets" at the same level as your app
-                          </h4>
-                        </Row>
-                      </Container>
-                    </Popover.Content>
-                  </Popover>
-                }
-              >
-                <Button variant="link">
-                  Why am I getting this recommendation?
-                </Button>
-              </OverlayTrigger>
+              <TweetCardRecommendation
+                  tags={keyword_tags}
+                  text={text}
+                  tag={tweet["tagId"]}
+              />
 
               {/*<TweetInfoOption*/}
               {/*  tags={keyword_tags}*/}

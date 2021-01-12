@@ -1,10 +1,10 @@
 import React from "react";
 import user from "../services/api";
 // react plugin used to create google maps
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
 import Loader from "react-loader-spinner";
-import { handleServerErrors } from "utils/errorHandler";
+import {handleServerErrors} from "utils/errorHandler";
 
 // reactstrap components
 import {
@@ -49,7 +49,7 @@ class ViewPaper extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ isLoding: true }, this.getPaperData());
+    this.setState({isLoding: true}, this.getPaperData());
   }
 
   //** GET ALL PAPERS **//
@@ -62,14 +62,14 @@ class ViewPaper extends React.Component {
         });
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({isLoding: false});
         handleServerErrors(error, toast.error);
       });
   };
 
   //** DELETE A PAPERS **//
   deleteEnquiry = (id) => {
-    this.setState({ isLoding: true }, () => {
+    this.setState({isLoding: true}, () => {
       RestAPI.deletePaper(id)
         .then((response) => {
           const newvalue = this.state.data.filter((v, i) => v.id !== id);
@@ -84,7 +84,7 @@ class ViewPaper extends React.Component {
           });
         })
         .catch((error) => {
-          this.setState({ isLoding: false });
+          this.setState({isLoding: false});
           handleServerErrors(error, toast.error);
         });
     });
@@ -170,11 +170,11 @@ class ViewPaper extends React.Component {
   handleChange = (e) => {
     let getValue = e.target.value;
     let getName = e.target.name;
-    this.setState(() => ({ [getName]: getValue }));
+    this.setState(() => ({[getName]: getValue}));
   };
 
   refreshPaper = () => {
-    this.setState({ isLoding1: true }, () => {
+    this.setState({isLoding1: true}, () => {
       user
         .refreshPaper()
         .then((response) => {
@@ -184,7 +184,7 @@ class ViewPaper extends React.Component {
           });
         })
         .catch((error) => {
-          this.setState({ isLoding1: false });
+          this.setState({isLoding1: false});
           handleServerErrors(error, toast.error);
         });
     });
@@ -193,7 +193,7 @@ class ViewPaper extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header/>
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row>
@@ -201,101 +201,98 @@ class ViewPaper extends React.Component {
               <Card className="shadow">
                 <CardHeader className="border-0">
                   <h3 className="mb-0">My Publications</h3>
-                  <Button color="info" onClick={this.refreshPaper} style={{left:"1300px",}}>
-                        Refresh Paper Data
+                  <Button color="info" onClick={this.refreshPaper} style={{left: "1300px",}}>
+                    Refresh Paper Data
                   </Button>
                 </CardHeader>
 
                 <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
-                    <tr>
-                      <th scope="col">Title</th>
-                      <th scope="col">URL</th>
-                      <th scope="col">Year</th>
-                      <th scope="col">Authors</th>
-                      <th scope="col">Abstract</th>
-                      <th scope="col"></th>
-                    </tr>
+                  <tr>
+                    <th scope="col">Year</th>
+                    <th scope="col">Title</th>
+                    {/*<th scope="col">URL</th>*/}
+                    <th scope="col">Authors</th>
+                    <th scope="col" >Options</th>
+                    {/*<th scope="col"></th>*/}
+                  </tr>
                   </thead>
                   <tbody>
-                    {/* START LOADER */}
+                  {/* START LOADER */}
 
-                    {this.state.isLoding ? (
-                      <tr className="text-center" style={{ padding: "20px" }}>
-                        <td></td>
-                        <td></td>
-                        <td style={{ textAlign: "center" }}>
+                  {this.state.isLoding ? (
+                    <tr className="text-center" style={{padding: "20px"}}>
+                      <td></td>
+                      <td></td>
+                      <td style={{textAlign: "center"}}>
+                        {" "}
+                        <Loader
+                          type="Puff"
+                          color="#00BFFF"
+                          height={100}
+                          width={100}
+                        />
+                      </td>
+                    </tr>
+                  ) : this.state.data.length ? (
+                    this.state.data.map((value, index) => (
+                      <tr key={value.id}>
+                        <td>{value.year}</td>
+                        <th scope="row">
                           {" "}
-                          <Loader
-                            type="Puff"
-                            color="#00BFFF"
-                            height={100}
-                            width={100}
-                          />
-                        </td>
-                      </tr>
-                    ) : this.state.data.length ? (
-                      this.state.data.map((value, index) => (
-                        <tr key={value.id}>
-                          <th scope="row">
-                            {" "}
-                            {`${(value.title || "").slice(0, 35)} ...`}{" "}
-                          </th>
-                          <td><a href={value.url} target="_blank">Link</a></td>                          <td>{value.year}</td>
-                          <td>{`${(value.authors || "").slice(0, 35)} ...`}</td>
-                          <td>
-                            {" "}
-                            {`${(value.abstract || "").slice(0, 35)} ...`}
-                          </td>
+                          {`${(value.title || "").slice(0, 65)} ...`}{" "}
+                        </th>
+                        {/*<td><a href={value.url} target="_blank">Link</a></td>*/}
+                        <td style={{fontStyle: "italic"}}>{`${(value.authors || "").slice(0, 65)} ...`}</td>
 
-                          <td className="text-right">
-                            <UncontrolledDropdown>
-                              <DropdownToggle
-                                className="btn-icon-only text-light"
-                                href="#pablo"
-                                role="button"
-                                size="sm"
-                                color=""
-                                onClick={(e) => e.preventDefault()}
+                        <td className="text-center">
+                          <UncontrolledDropdown>
+                            <DropdownToggle
+                              className="btn-icon-only text-light"
+                              href="#pablo"
+                              role="button"
+                              size="sm"
+                              color=""
+                              onClick={(e) => e.preventDefault()}
+                            >
+                              <i className="fas fa-ellipsis-v"/>
+                            </DropdownToggle>
+                            <DropdownMenu
+                              className="dropdown-menu-arrow"
+                              right
+                            >
+                              <DropdownItem
+                                onClick={() => this.showEnquiry(value.id)}
                               >
-                                <i className="fas fa-ellipsis-v" />
-                              </DropdownToggle>
-                              <DropdownMenu
-                                className="dropdown-menu-arrow"
-                                right
-                              >
+                                View
+                              </DropdownItem>
+
+                              <Link to={`/app/edit-paper/${value.id}`}>
                                 <DropdownItem
-                                  onClick={() => this.showEnquiry(value.id)}
-                                >
-                                  View
-                                </DropdownItem>
-
-                                <Link to={`/app/edit-paper/${value.id}`}>
-                                  <DropdownItem
                                   //  onClick={()=>this.editEnquiry(value.id)}
-                                  >
-                                    Edit
-                                  </DropdownItem>
-                                </Link>
-                                <DropdownItem
-                                  onClick={() => this.deleteEnquiry(value.id)}
                                 >
-                                  Remove
+                                  Edit
                                 </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledDropdown>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr className="text-center1" style={{ padding: "20px" }}>
-                        <td></td>
-                        <td style={{ textAlign: "right" }}>
-                          {" "}
-                          <strong> No Papers Found</strong>
+                              </Link>
+                              <DropdownItem
+                                onClick={() => this.deleteEnquiry(value.id)}
+                              >
+                                Remove
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
                         </td>
                       </tr>
-                    )}
+                    ))
+                  ) : (
+                    <tr className="text-center1" style={{padding: "20px"}}>
+                      <td></td>
+                      <td style={{textAlign: "right"}}>
+                        {" "}
+                        <strong> No Papers Found</strong>
+                      </td>
+                    </tr>
+                  )}
                   </tbody>
                 </Table>
               </Card>
@@ -306,20 +303,21 @@ class ViewPaper extends React.Component {
                   <ModalBody>
                     <strong>Title: </strong>{" "}
                     {this.state.paperDetail && this.state.paperDetail.title}
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     <strong>Year: </strong>{" "}
                     {this.state.paperDetail && this.state.paperDetail.year}
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     <strong>Authors: </strong>{" "}
                     {this.state.paperDetail && this.state.paperDetail.authors}
-                    <br />
-                    <br />
-                    <strong>URL: </strong>{" "}
-                    {this.state.paperDetail && this.state.paperDetail.url}
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
+                    <strong>Source: </strong>{" "}
+                    <a href={this.state.paperDetail && this.state.paperDetail.url}>See paper on Semantic Scholar</a>
+
+                    <br/>
+                    <br/>
                     <strong>Abstract: </strong>
                     {this.state.paperDetail && this.state.paperDetail.abstract}
                   </ModalBody>
