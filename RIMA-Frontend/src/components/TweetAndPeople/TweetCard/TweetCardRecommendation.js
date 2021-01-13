@@ -1,21 +1,21 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, Image, OverlayTrigger, Popover, Row} from "react-bootstrap";
+import {Button, Col, Container, OverlayTrigger, Popover, Row} from "react-bootstrap";
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import RestAPI from "../../../services/api";
+import LineChartDummy from "./Charts/LineChartDummy";
 
 export default function TweetCardRecommendation(props) {
   // Props
-  const {userSelectedKeywords, tweetText, tag} = props;
-  console.log(props);
+  const {userSelectedKeywords, tweetText} = props;
+  console.log(userSelectedKeywords);
 
   // Local constants
   const [openOverlay, setOpenOverlay] = useState(false);
   const [step, setStep] = useState(0);
   const [tweetKeywords, setTweetKeywords] = useState(undefined);
-  console.log(tweetKeywords);
-  console.log(openOverlay);
+  const [series, setSeries] = useState([]);
   const explanation = [
     "First level of explanation",
     "Second level of explanation",
@@ -26,9 +26,8 @@ export default function TweetCardRecommendation(props) {
     "Second level of explanation description to let the users know how much do the keyword matches in heatmap representation",
     "Third level of explanation description to let the users know the similarity between the keywords"
   ]
-  const imageData = (
-    <Image src={"/images/banner.jpg"} fluid style={{borderRadius: "4px"}}/>
-  )
+
+  console.log(series);
 
   // Functions
   // Opens the Overlay Popover and requests keywords from tweet
@@ -42,13 +41,16 @@ export default function TweetCardRecommendation(props) {
   // Step to the next level of explanation
   const handleStepForward = () => {
     setStep(step + 1);
+    if (series) {
+      calculateSimilarity(userSelectedKeywords);
+    }
   }
   // Step back to the previous level of explanation
   const handleStepBackward = () => {
     setStep(step - 1);
   }
   // Step out of the explanation
-  const handleStepFinish = () => {
+  const handleClose = () => {
     setOpenOverlay(!openOverlay);
     setTimeout(() => {
       setStep(0);
@@ -77,6 +79,36 @@ export default function TweetCardRecommendation(props) {
     });
   }
 
+  const calculateSimilarity = (userSelectedKeywords) => {
+    let seriesData = [];
+    if (tweetKeywords !== undefined) {
+      userSelectedKeywords.forEach((userSelectedKeyword) => {
+        let data = [];
+        tweetKeywords.forEach((tweetKeyword) => {
+          let requestData = {
+            keywords_1: [userSelectedKeyword.text],
+            keywords_2: [tweetKeyword.text],
+            algorithm: "WordEmbedding"
+          }
+          RestAPI.computeSimilarity(requestData)
+            .then((response) => {
+              data.push({
+                x: tweetKeyword.text,
+                y: response.data.score,
+              });
+            }).catch((error) => {
+            console.log("err", error);
+          });
+        })
+        seriesData.push({
+          name: userSelectedKeyword.text,
+          data: data,
+        });
+      })
+      setSeries(seriesData);
+    }
+  }
+
   return (
     <>
       <OverlayTrigger
@@ -97,7 +129,7 @@ export default function TweetCardRecommendation(props) {
                     <IconButton
                       type="button"
                       style={{width: "48px"}}
-                      onClick={() => setOpenOverlay(!openOverlay)}
+                      onClick={handleClose}
                     >
                       <FontAwesomeIcon icon={faTimes}/>
                     </IconButton>
@@ -114,8 +146,9 @@ export default function TweetCardRecommendation(props) {
                   </h4>
                 </Row>
                 <Row>
-                  {/* Replace the imageData with the visualization component you would like to put at each step */}
-                  {step === 0 ? imageData : (step === 1 ? imageData : imageData)}
+                  {/* Replace the LineChartDummy with the visualization component you would like to put at each step */}
+                  {/* pass the series state variable as props for the HeatMapViz component */}
+                  {step === 0 ? <LineChartDummy /> : (step === 1 ? <LineChartDummy /> : <LineChartDummy />)}
                 </Row>
               </Container>
               <Container>
@@ -127,7 +160,7 @@ export default function TweetCardRecommendation(props) {
                   <Col md="auto" style={{paddingRight: "0px"}}>
                     {step < 2 ? <Button variant="link" onClick={handleStepForward}
                                         style={{fontSize: "16px"}}>More</Button>
-                      : (step === 2 ? <Button variant="link" onClick={handleStepFinish}
+                      : (step === 2 ? <Button variant="link" onClick={handleClose}
                                               style={{fontSize: "16px"}}>Finish</Button>
                         : <></>)
                     }
