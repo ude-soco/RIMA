@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, OverlayTrigger, Popover, Row} from "react-bootstrap";
+import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner} from "react-bootstrap";
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
@@ -148,7 +148,7 @@ export default function TweetCardRecommendation(props) {
                 <Row>
                   {/* Replace the LineChartDummy with the visualization component you would like to put at each step */}
                   {/* pass the series state variable as props for the HeatMapViz component */}
-                  {step === 0 ? <LineChartDummy /> : (step === 1 ? <LineChartDummy /> : <LineChartDummy />)}
+                  {step === 0 ? <LineChartDummy/> : (step === 1 ? <LineChartDummy/> : <LineChartDummy/>)}
                 </Row>
               </Container>
               <Container>
@@ -158,11 +158,15 @@ export default function TweetCardRecommendation(props) {
                                         style={{fontSize: "16px"}}>Less</Button> : <></>}
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>
-                    {step < 2 ? <Button variant="link" onClick={handleStepForward}
-                                        style={{fontSize: "16px"}}>More</Button>
+                    {(step < 2 && tweetKeywords) ? <Button variant="link" onClick={handleStepForward}
+                                                           style={{fontSize: "16px"}}>More</Button>
                       : (step === 2 ? <Button variant="link" onClick={handleClose}
                                               style={{fontSize: "16px"}}>Finish</Button>
-                        : <></>)
+                        : (
+                          <Spinner animation="border" role="status" style={{margin: "0px 24px 4px 0px"}}>
+                            <span className="sr-only">Loading...</span>
+                          </Spinner>
+                        ))
                     }
                   </Col>
                 </Row>
