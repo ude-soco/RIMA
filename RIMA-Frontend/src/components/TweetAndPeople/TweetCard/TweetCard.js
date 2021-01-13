@@ -308,8 +308,8 @@ export default class TweetCard extends Component {
             {/* {console.log("keyword_tags", keyword_tags)} */}
             <div>
               <TweetCardRecommendation
-                  tags={keyword_tags}
-                  text={text}
+                  userSelectedKeywords={keyword_tags}
+                  tweetText={text}
                   tag={tweet["tagId"]}
               />
 
