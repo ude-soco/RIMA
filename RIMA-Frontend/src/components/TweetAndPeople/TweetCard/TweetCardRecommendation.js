@@ -15,6 +15,7 @@ export default function TweetCardRecommendation(props) {
   const [step, setStep] = useState(0);
   const [tweetKeywords, setTweetKeywords] = useState(undefined);
   console.log(tweetKeywords);
+  console.log(openOverlay);
   const explanation = [
     "First level of explanation",
     "Second level of explanation",
@@ -34,6 +35,9 @@ export default function TweetCardRecommendation(props) {
   const tweetInfo = () => {
     setOpenOverlay(!openOverlay);
     extractKeywordFromTweet();
+    if (openOverlay) {
+      setStep(0);
+    }
   }
   // Step to the next level of explanation
   const handleStepForward = () => {
