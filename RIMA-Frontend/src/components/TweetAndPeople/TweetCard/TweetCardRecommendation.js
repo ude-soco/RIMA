@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner} from "react-bootstrap";
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTimes} from "@fortawesome/free-solid-svg-icons";
+import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
 import RestAPI from "../../../services/api";
 import LineChartDummy from "./Charts/LineChartDummy";
 
@@ -16,6 +16,7 @@ export default function TweetCardRecommendation(props) {
   const [step, setStep] = useState(0);
   const [tweetKeywords, setTweetKeywords] = useState(undefined);
   const [series, setSeries] = useState([]);
+  const [error, setError] = useState("");
   const explanation = [
     "First level of explanation",
     "Second level of explanation",
@@ -75,10 +76,13 @@ export default function TweetCardRecommendation(props) {
         }
         setTweetKeywords(keywordArray);
       }).catch((error) => {
-      console.log("err", error);
+      setError("Error loading, please refresh page.")
+      console.log(error);
     });
   }
 
+  // REST API request to compute similarity between tweet keywords and
+  // use selected keywords and output data format for HeatMapViz component
   const calculateSimilarity = () => {
     let seriesData = [];
     if (tweetKeywords !== undefined) {
@@ -97,7 +101,8 @@ export default function TweetCardRecommendation(props) {
                 y: response.data.score,
               });
             }).catch((error) => {
-            console.log("err", error);
+            setError("Error loading, please refresh page.")
+            console.log(error);
           });
         })
         seriesData.push({
@@ -154,20 +159,34 @@ export default function TweetCardRecommendation(props) {
               <Container>
                 <Row>
                   <Col style={{paddingLeft: "0px"}}>
-                    {step > 0 ? <Button variant="link" onClick={handleStepBackward}
-                                        style={{fontSize: "16px"}}>Previous</Button> : <></>}
+                    {step > 0 ?
+                      <Button variant="link" onClick={handleStepBackward} style={{fontSize: "16px"}}>
+                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "4px"}}/>
+                        Previous
+                      </Button>
+                      : <></>
+                    }
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>
-                    {(step < 2 && tweetKeywords) ? <Button variant="link" onClick={handleStepForward}
-                                                           style={{fontSize: "16px"}}>More</Button>
+                    {(step < 2 && tweetKeywords) ?
+                      <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
+                        More
+                        <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
+                      </Button>
                       : (step === 2 ? <Button variant="link" onClick={handleClose}
                                               style={{fontSize: "16px"}}>Finish</Button>
-                        : (
-                          <Button variant="link" disabled style={{fontSize: "16px"}}>
-                            <Spinner animation="border" role="status" size="sm" style={{margin: "0px 4px 3px 0px"}}/>
-                            Loading...
-                          </Button>
-                        ))
+                          : (error ?
+                              <Button variant="link" disabled style={{fontSize: "16px"}}>
+                                {error}
+                              </Button>
+                              :
+                              <Button variant="link" disabled style={{fontSize: "16px"}}>
+                                <Spinner animation="border" role="status" size="sm"
+                                         style={{margin: "0px 4px 3px 0px"}}/>
+                                Loading...
+                              </Button>
+                          )
+                      )
                     }
                   </Col>
                 </Row>
