@@ -9,7 +9,7 @@ import LineChartDummy from "./Charts/LineChartDummy";
 export default function TweetCardRecommendation(props) {
   // Props
   const {userSelectedKeywords, tweetText} = props;
-  console.log(userSelectedKeywords);
+  // console.log(userSelectedKeywords);
 
   // Local constants
   const [openOverlay, setOpenOverlay] = useState(false);
@@ -41,8 +41,8 @@ export default function TweetCardRecommendation(props) {
   // Step to the next level of explanation
   const handleStepForward = () => {
     setStep(step + 1);
-    if (series) {
-      calculateSimilarity(userSelectedKeywords);
+    if (series.length === 0) {
+      calculateSimilarity();
     }
   }
   // Step back to the previous level of explanation
@@ -54,7 +54,7 @@ export default function TweetCardRecommendation(props) {
     setOpenOverlay(!openOverlay);
     setTimeout(() => {
       setStep(0);
-    }, 1000);
+    }, 500);
   }
   // REST API request for keywords from tweet
   const extractKeywordFromTweet = () => {
@@ -79,7 +79,7 @@ export default function TweetCardRecommendation(props) {
     });
   }
 
-  const calculateSimilarity = (userSelectedKeywords) => {
+  const calculateSimilarity = () => {
     let seriesData = [];
     if (tweetKeywords !== undefined) {
       userSelectedKeywords.forEach((userSelectedKeyword) => {
@@ -115,7 +115,7 @@ export default function TweetCardRecommendation(props) {
         show={openOverlay}
         placement="bottom-end"
         overlay={
-          <Popover style={{maxWidth: "768px", maxHeight: "768px"}}>
+          <Popover style={{maxWidth: "768px"}}>
             <Popover.Title>
               <Container>
                 <Row style={{alignItems: "center"}}>
@@ -155,7 +155,7 @@ export default function TweetCardRecommendation(props) {
                 <Row>
                   <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ? <Button variant="link" onClick={handleStepBackward}
-                                        style={{fontSize: "16px"}}>Less</Button> : <></>}
+                                        style={{fontSize: "16px"}}>Previous</Button> : <></>}
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>
                     {(step < 2 && tweetKeywords) ? <Button variant="link" onClick={handleStepForward}
@@ -163,9 +163,10 @@ export default function TweetCardRecommendation(props) {
                       : (step === 2 ? <Button variant="link" onClick={handleClose}
                                               style={{fontSize: "16px"}}>Finish</Button>
                         : (
-                          <Spinner animation="border" role="status" style={{margin: "0px 24px 4px 0px"}}>
-                            <span className="sr-only">Loading...</span>
-                          </Spinner>
+                          <Button variant="link" disabled style={{fontSize: "16px"}}>
+                            <Spinner animation="border" role="status" size="sm" style={{margin: "0px 4px 3px 0px"}}/>
+                            Loading...
+                          </Button>
                         ))
                     }
                   </Col>
