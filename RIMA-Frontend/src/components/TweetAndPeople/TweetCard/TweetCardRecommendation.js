@@ -80,7 +80,6 @@ export default function TweetCardRecommendation(props) {
       console.log(error);
     });
   }
-
   // REST API request to compute similarity between tweet keywords and
   // use selected keywords and output data format for HeatMapViz component
   const calculateSimilarity = () => {
@@ -131,11 +130,7 @@ export default function TweetCardRecommendation(props) {
                     </h2>
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>
-                    <IconButton
-                      type="button"
-                      style={{width: "48px"}}
-                      onClick={handleClose}
-                    >
+                    <IconButton type="button" style={{width: "48px"}} onClick={handleClose}>
                       <FontAwesomeIcon icon={faTimes}/>
                     </IconButton>
                   </Col>
@@ -150,10 +145,26 @@ export default function TweetCardRecommendation(props) {
                     {step === 0 ? description[step] : (step === 1 ? description[step] : description[step])}
                   </h4>
                 </Row>
-                <Row>
+                <Row style={{justifyContent: "center"}}>
                   {/* Replace the LineChartDummy with the visualization component you would like to put at each step */}
                   {/* pass the series state variable as props for the HeatMapViz component */}
-                  {step === 0 ? <LineChartDummy/> : (step === 1 ? <LineChartDummy/> : <LineChartDummy/>)}
+                  {(step === 0 && tweetKeywords) ? <LineChartDummy/>
+                    : (step === 1 ? <LineChartDummy/>
+                        : (step === 2 ? <LineChartDummy/>
+                            : (error ?
+                                <Button variant="link" disabled style={{fontSize: "16px", color: "red"}}>
+                                  {error}
+                                </Button>
+                                :
+                                <Button variant="link" disabled style={{fontSize: "16px"}}>
+                                  <Spinner animation="border" role="status" size="sm"
+                                           style={{margin: "0px 4px 3px 0px"}}/>
+                                  Loading...
+                                </Button>
+                            )
+                        )
+                    )
+                  }
                 </Row>
               </Container>
               <Container>
@@ -161,8 +172,7 @@ export default function TweetCardRecommendation(props) {
                   <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?
                       <Button variant="link" onClick={handleStepBackward} style={{fontSize: "16px"}}>
-                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "4px"}}/>
-                        Previous
+                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "4px"}}/> Previous
                       </Button>
                       : <></>
                     }
@@ -170,22 +180,11 @@ export default function TweetCardRecommendation(props) {
                   <Col md="auto" style={{paddingRight: "0px"}}>
                     {(step < 2 && tweetKeywords) ?
                       <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
-                        More
-                        <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
+                        More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
                       </Button>
-                      : (step === 2 ? <Button variant="link" onClick={handleClose}
-                                              style={{fontSize: "16px"}}>Finish</Button>
-                          : (error ?
-                              <Button variant="link" disabled style={{fontSize: "16px"}}>
-                                {error}
-                              </Button>
-                              :
-                              <Button variant="link" disabled style={{fontSize: "16px"}}>
-                                <Spinner animation="border" role="status" size="sm"
-                                         style={{margin: "0px 4px 3px 0px"}}/>
-                                Loading...
-                              </Button>
-                          )
+                      : (step === 2 ?
+                          <Button variant="link" onClick={handleClose} style={{fontSize: "16px"}}>Finish</Button>
+                          : <></>
                       )
                     }
                   </Col>
