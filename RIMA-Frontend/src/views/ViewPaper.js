@@ -46,6 +46,7 @@ class ViewPaper extends React.Component {
     abstract: "",
     id: "",
     authors: "",
+    show: false,
   };
 
   componentDidMount() {
@@ -199,11 +200,20 @@ class ViewPaper extends React.Component {
           <Row>
             <div className="col">
               <Card className="shadow">
+                {/* TODO: fix the width*/}
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">My Publications</h3>
-                  <Button color="info" onClick={this.refreshPaper} style={{left: "1300px",}}>
-                    Refresh Paper Data
-                  </Button>
+                  <Container style={{justifyContent: "space-between"}}>
+                    <Row>
+                      <Col style={{padding: "0px"}}>
+                        <h3 className="mb-0">My Publications</h3>
+                      </Col>
+                      <Col md="auto" style={{padding: "0px"}}>
+                        <Button color="info" onClick={this.refreshPaper}>
+                          Refresh Paper Data
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Container>
                 </CardHeader>
 
                 <Table className="align-items-center table-flush" responsive>

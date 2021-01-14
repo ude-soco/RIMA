@@ -195,7 +195,7 @@ export default function TweetCardRecommendation(props) {
         }
       >
         <Button variant="link" onClick={tweetInfo}>
-          Why am I getting this recommendation?
+          Why this tweet?
         </Button>
       </OverlayTrigger>
     </>

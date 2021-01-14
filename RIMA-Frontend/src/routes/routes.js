@@ -33,7 +33,7 @@ var routes = [
   },
   {
     path: "/add-paper",
-    name: "Add Paper",
+    name: "Add Publication",
     icon: "ni ni-fat-add text-green",
     component: AddPaper,
     layout: "/app",
@@ -41,7 +41,7 @@ var routes = [
   },
   {
     path: "/edit-paper/:id",
-    name: "Edit Paper",
+    name: "Edit Publication",
     icon: "ni ni-fat-add text-orange",
     component: EditPaper,
     layout: "/app",
@@ -49,7 +49,7 @@ var routes = [
   },
   {
     path: "/view-paper",
-    name: "My Papers",
+    name: "My Publications",
     icon: "fas fa-tasks text-blue",
     component: ViewPaper,
     layout: "/app",

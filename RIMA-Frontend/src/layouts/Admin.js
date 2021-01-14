@@ -74,6 +74,10 @@ class Admin extends React.Component {
           <></>
         ) : (
           <>
+            <AdminNavbar
+              {...this.props}
+              brandText={this.getBrandText(this.props.location.pathname)}
+            />,
             <Sidebar
               {...this.props}
               routes={routes}
@@ -86,10 +90,6 @@ class Admin extends React.Component {
           </>
         )}
         <div className="main-content" ref="mainContent">
-          <AdminNavbar
-            {...this.props}
-            brandText={this.getBrandText(this.props.location.pathname)}
-          />
           <Switch>
             {this.getRoutes(routes)}
             <Redirect from="*" to="/app/PieChartPage"/>
