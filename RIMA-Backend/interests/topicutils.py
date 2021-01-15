@@ -1984,7 +1984,16 @@ def compareLAKwithAuthortopics(author,year):
 def printText():
     return "Hello from Backend!"
 
-    
+    #created by mouadh, sorting tweets based on similarity score
+def getsimilarity():
+    userinterest = ["Learning", "Massive open online course","Learning analytics","Analytics","Peer assessment"]
+
+    tweetkeyword = ["Educational technology","Knowledge transfer","Social network analysis","Learning"]
+
+    sim_scores = calculate_similarity(userinterest, tweetkeyword)
+
+    return sim_scores
+    # sim_scores = wikisim(s,t)
 
 
     

@@ -71,6 +71,8 @@ urlpatterns = [
     path('authorcomparison/<pk1>/<pk2>',views.AuthorComparisonData.as_view()),
     path('authorconfcomparison/<pk1>/<pk2>/<pk3>',views.AuthorConfComparisionView.as_view()),
     path('updatealltopics/',views.UpdateAllTopics.as_view()),
+    #added by mouadh
+    path('getsimilarity/',views.similartweets.as_view()),
     #for demo
     #path('updateprinttext/',views.printHelloBackend.as_view())
 

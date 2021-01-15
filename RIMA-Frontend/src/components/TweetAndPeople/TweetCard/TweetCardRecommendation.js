@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
-import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner} from "react-bootstrap";
-import {IconButton} from "@material-ui/core";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
+import { Button, Col, Container, OverlayTrigger, Popover, Row, Spinner } from "react-bootstrap";
+import { IconButton } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft, faAngleRight, faTimes } from "@fortawesome/free-solid-svg-icons";
 import RestAPI from "../../../services/api";
-import LineChartDummy from "./Charts/LineChartDummy";
+import LineChartDummy from "./Charts/LineChartDummy"; 
+import HeatmapTweet from  "./Charts/HeatmapTweet.js";
 
 export default function TweetCardRecommendation(props) {
   // Props
-  const {userSelectedKeywords, tweetText} = props;
-  // console.log(userSelectedKeywords);
+  const { userInterestModel, tweetText } = props;
+   console.log(userInterestModel);
 
   // Local constants
   const [openOverlay, setOpenOverlay] = useState(false);
@@ -18,14 +19,12 @@ export default function TweetCardRecommendation(props) {
   const [series, setSeries] = useState([]);
   const [error, setError] = useState("");
   const explanation = [
-    "First level of explanation",
-    "Second level of explanation",
-    "Third level of explanation"
+    "Intermediate explanation",
+    "Advanced explanation"
   ];
   const description = [
-    "First level of explanation description to let users know the keywords that matches with the recommended tweets",
-    "Second level of explanation description to let the users know how much do the keyword matches in heatmap representation",
-    "Third level of explanation description to let the users know the similarity between the keywords"
+    "This tweet is recommended to you because your interest keywords and the keywords extracted from the tweet are highly similar. Here you can see the exact similarity score between your interest and the tweet text",
+    "The inner logic of recommending this tweet is as follow:"
   ]
 
   console.log(series);
@@ -76,20 +75,21 @@ export default function TweetCardRecommendation(props) {
         }
         setTweetKeywords(keywordArray);
       }).catch((error) => {
-      setError("Error loading, please refresh page.")
-      console.log(error);
-    });
+        setError("Error loading, please refresh page.")
+        console.log(error);
+      });
   }
   // REST API request to compute similarity between tweet keywords and
   // use selected keywords and output data format for HeatMapViz component
   const calculateSimilarity = () => {
     let seriesData = [];
     if (tweetKeywords !== undefined) {
-      userSelectedKeywords.forEach((userSelectedKeyword) => {
+      userInterestModel.forEach((userSelectedKeyword) => {
         let data = [];
         tweetKeywords.forEach((tweetKeyword) => {
           let requestData = {
             keywords_1: [userSelectedKeyword.text],
+            
             keywords_2: [tweetKeyword.text],
             algorithm: "WordEmbedding"
           }
@@ -100,9 +100,9 @@ export default function TweetCardRecommendation(props) {
                 y: response.data.score,
               });
             }).catch((error) => {
-            setError("Error loading, please refresh page.")
-            console.log(error);
-          });
+              setError("Error loading, please refresh page.")
+              console.log(error);
+            });
         })
         seriesData.push({
           name: userSelectedKeyword.text,
@@ -119,72 +119,70 @@ export default function TweetCardRecommendation(props) {
         show={openOverlay}
         placement="bottom-end"
         overlay={
-          <Popover style={{maxWidth: "768px"}}>
+          <Popover style={{ maxWidth: "768px" }}>
             <Popover.Title>
               <Container>
-                <Row style={{alignItems: "center"}}>
-                  <Col style={{padding: "0px"}}>
-                    <h2 style={{marginBottom: "0px"}}>
+                <Row style={{ alignItems: "center" }}>
+                  <Col style={{ padding: "0px" }}>
+                    <h2 style={{ marginBottom: "0px" }}>
                       {/* Change the title of the level of explanation above */}
                       {step === 0 ? explanation[step] : (step === 1 ? explanation[step] : explanation[step])}
                     </h2>
                   </Col>
-                  <Col md="auto" style={{paddingRight: "0px"}}>
-                    <IconButton type="button" style={{width: "48px"}} onClick={handleClose}>
-                      <FontAwesomeIcon icon={faTimes}/>
+                  <Col md="auto" style={{ paddingRight: "0px" }}>
+                    <IconButton type="button" style={{ width: "48px" }} onClick={handleClose}>
+                      <FontAwesomeIcon icon={faTimes} />
                     </IconButton>
                   </Col>
                 </Row>
               </Container>
             </Popover.Title>
             <Popover.Content>
-              <Container style={{marginBottom: "16px"}}>
-                <Row style={{marginBottom: "16px"}}>
+              <Container style={{ marginBottom: "16px" }}>
+                <Row style={{ marginBottom: "16px" }}>
                   <h4>
                     {/* Change the description of the levels of explanation above */}
-                    {step === 0 ? description[step] : (step === 1 ? description[step] : description[step])}
+                    {description[step]}
                   </h4>
                 </Row>
-                <Row style={{justifyContent: "center"}}>
+                <Row style={{ justifyContent: "center" }}>
                   {/* Replace the LineChartDummy with the visualization component you would like to put at each step */}
                   {/* pass the series state variable as props for the HeatMapViz component */}
-                  {(step === 0 && tweetKeywords) ? <LineChartDummy/>
-                    : (step === 1 ? <LineChartDummy/>
-                        : (step === 2 ? <LineChartDummy/>
-                            : (error ?
-                                <Button variant="link" disabled style={{fontSize: "16px", color: "red"}}>
-                                  {error}
-                                </Button>
-                                :
-                                <Button variant="link" disabled style={{fontSize: "16px"}}>
-                                  <Spinner animation="border" role="status" size="sm"
-                                           style={{margin: "0px 4px 3px 0px"}}/>
-                                  Loading...
-                                </Button>
-                            )
-                        )
+                  {(step === 0 && tweetKeywords) ? <LineChartDummy />
+                    : (step === 1 ? <HeatmapTweet series = {series} />
+                      : (error ?
+                        <Button variant="link" disabled style={{ fontSize: "16px", color: "red" }}>
+                          {error}
+                        </Button>
+                        :
+                        <Button variant="link" disabled style={{ fontSize: "16px" }}>
+                          <Spinner animation="border" role="status" size="sm"
+                            style={{ margin: "0px 4px 3px 0px" }} />
+                              Loading...
+                            </Button>
+                      )
                     )
                   }
                 </Row>
               </Container>
               <Container>
                 <Row>
-                  <Col style={{paddingLeft: "0px"}}>
+                  <Col style={{ paddingLeft: "0px" }}>
                     {step > 0 ?
-                      <Button variant="link" onClick={handleStepBackward} style={{fontSize: "16px"}}>
-                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "4px"}}/> Previous
+                      <Button variant="link" onClick={handleStepBackward} style={{ fontSize: "16px" }}>
+                        <FontAwesomeIcon icon={faAngleLeft} style={{ marginRight: "4px" }} /> Previous
                       </Button>
                       : <></>
                     }
                   </Col>
-                  <Col md="auto" style={{paddingRight: "0px"}}>
-                    {(step < 2 && tweetKeywords) ?
-                      <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
-                        More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
+                  <Col md="auto" style={{ paddingRight: "0px" }}>
+                    {(step < 1 && tweetKeywords) ?
+                      <Button variant="link" onClick={handleStepForward} style={{ fontSize: "16px" }}>
+                        More <FontAwesomeIcon icon={faAngleRight} style={{ marginLeft: "4px" }} />
                       </Button>
-                      : (step === 2 ?
-                          <Button variant="link" onClick={handleClose} style={{fontSize: "16px"}}>Finish</Button>
-                          : <></>
+                      : (step === 1 ?
+                        <Button variant="link" onClick={handleClose} style={{ fontSize: "16px" }}>Finish</Button>
+                        : <></>
                       )
                     }
                   </Col>

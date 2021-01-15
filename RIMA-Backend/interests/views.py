@@ -23,7 +23,8 @@ from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter, wikicategory
 from interests.update_interests import normalize
 from .topicutils import (
-    applyTopicMiningTopic, applyTopicMiningKeyword, getTopKeywords,
+    #added by mouadh 'getsimilarity'
+    getsimilarity, applyTopicMiningTopic, applyTopicMiningKeyword, getTopKeywords,
     getPaperswithTopics, getTopicDetails, compareTopics, getAllTopics,
     getTopicWeightsAllYears, getDataForPieTopics, getDataForPieKeys,
     getMultipleYearTopicJourney, getPaperIDFromPaperTitle,
@@ -968,6 +969,16 @@ class AuthorConfComparisonData(APIView):
         return Response({
             "vals":
             compareLAKwithAuthortopics(topics_split[-2], topics_split[-1])
+        })
+
+
+ #created by mouadh, sorting tweets based on similarity score
+class similartweets(APIView):
+    def get(self, request, *args, **kwargs):
+        
+        return Response({
+            "vals":
+            getsimilarity()
         })
 
 

@@ -10,6 +10,8 @@ import { handleServerErrors } from "utils/errorHandler";
 class ConceptMapContainer extends Component {
 	constructor(props) {
 		super(props);
+		this.getsimilartweets = this.getsimilartweets.bind(this); //**created by mouadh */
+
 
 		this.stageHeight = 1200;
 		this.stageWidth = 900;
@@ -38,6 +40,7 @@ class ConceptMapContainer extends Component {
 			data: [],
 			isLoading: true,
 			isData: true,
+			score: [], //**created by mouadh */
 		};
 	}
 
@@ -84,7 +87,25 @@ class ConceptMapContainer extends Component {
 					handleServerErrors(error, toast.error);
 				});
 		});
+		this.getsimilartweets() //**added by mouadh */
 	}
+
+	
+
+	getsimilartweets() { //**added by mouadh */
+
+		fetch(
+			"http://127.0.0.1:8000/api/interests/getsimilarity/"
+		)
+			.then((response) => response.json())
+			.then((json) => {
+				console.log('similarity score:', json)
+				this.setState({})
+			}
+		)
+	}
+	//** */
+
 
 	extractNodes = () => {
 		const { data } = this.state;
@@ -123,7 +144,7 @@ class ConceptMapContainer extends Component {
 				keywordStartOffset +
 				parseInt(this.keywordNodeSpacing / 2) +
 				keywordCount *
-					(parseInt(this.keywordNodeSpacing / 2) + this.keywordNodeSize);
+				(parseInt(this.keywordNodeSpacing / 2) + this.keywordNodeSize);
 			keywordCount += 1;
 			keywords[keyword].x = this.KeywordNodeX;
 			keywords[keyword].y = y;
@@ -143,7 +164,7 @@ class ConceptMapContainer extends Component {
 				categoriesStartOffset +
 				parseInt(this.categoryNodeSpacing / 2) +
 				categoryCount *
-					(parseInt(this.categoryNodeSpacing / 2) + this.categoryNodeHeight);
+				(parseInt(this.categoryNodeSpacing / 2) + this.categoryNodeHeight);
 			categoryCount += 1;
 			categories[category].x = this.categoryNodeX;
 			categories[category].y = y + 50;
@@ -321,10 +342,10 @@ class ConceptMapContainer extends Component {
 							</div>
 						</>
 					) : (
-						<div style={{ textAlign: "center" }}>
-							No data is available at the moment
-						</div>
-					)}
+								<div style={{ textAlign: "center" }}>
+									No data is available at the moment
+								</div>
+							)}
 				</div>
 			</>
 		);
