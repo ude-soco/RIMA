@@ -16,7 +16,7 @@ class DragableText extends Component {
   constructor(props) {
     super(props);
     this.centerOfCircle = props.centerOfCircle;
-    console.log("PROPS OF DRAGGABLE TEXT", props);
+    // console.log("PROPS OF DRAGGABLE TEXT", props);
     this.setTagDistance();
   }
 
@@ -53,7 +53,7 @@ class DragableText extends Component {
       onKeywordDrag,
     } = this.props;
     // console.log("ACTUAL WEIGHT of", text, " is ", weight);
-    console.log(`${text} : ${weight * weightMultiplier}`);
+    // console.log(`${text} : ${weight * weightMultiplier}`);
     return (
       <Draggable
         bounds="parent"

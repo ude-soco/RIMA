@@ -185,7 +185,7 @@ const AdvanceFilter = (props) => {
   const onUserDrag = (event, dragData, tagId, id_str) => {
     const x = dragData.x;
     const y = dragData.y;
-    console.log("onDragStop :", x, ",", y);
+    // console.log("onDragStop :", x, ",", y);
 
     let fx = x - centerOfUserCircle["x"];
     let fy = y - centerOfUserCircle["y"];
@@ -200,8 +200,8 @@ const AdvanceFilter = (props) => {
     // });
     props.sortTweetsByUserDistance();
 
-    console.log(defaultChecked);
-    console.log("TagId: ", tagId);
+    // console.log(defaultChecked);
+    // console.log("TagId: ", tagId);
   };
   const weightMultiplier = 37.5;
 
@@ -277,9 +277,10 @@ const AdvanceFilter = (props) => {
 
                     <DragableTextWrapper>
                       {props.tags.map((tag) => {
-                        console.log('sssssssss ', tag.weight)
+                        // console.log('sssssssss ', tag.weight)
                         return (
                           <DragableText
+                            key={tag.id}
                             tagId={tag.id}
                             text={tag.text}
                             color={tag.color}
@@ -305,6 +306,7 @@ const AdvanceFilter = (props) => {
                           {props.tagsWithoutWeight.map((tag) => {
                               return (
                                 <KeywordRangeSlider
+                                  key={tag.id}
                                   tagId={tag.id}
                                   text={tag.text}
                                   color={tag.color}

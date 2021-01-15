@@ -5,7 +5,6 @@ import flow from "lodash/flow";
 import ClassNames from "classnames";
 import styled from "styled-components";
 import TestFilter from "../Filter/TestFilter";
-
 import {
   tagSource,
   tagTarget,
@@ -13,19 +12,10 @@ import {
   dropCollect,
 } from "./DragAndDropHelper";
 import { canDrag } from "./utils";
-
 import RemoveComponent from "./RemoveComponent";
 import {
   UncontrolledDropdown,
-  DropdownItem,
-  DropdownMenu,
   DropdownToggle,
-  Card,
-  CardBody,
-  CardText,
-  CardTitle,
-  CardSubtitle,
-  Button,
 } from "reactstrap";
 import { MdSettings } from "react-icons/md";
 
@@ -51,7 +41,7 @@ class Tag extends Component {
       tag,
       classNames,
     } = props;
-    console.log({wwwwwwwwwwwwwwwwwww: this.props})
+    // console.log({wwwwwwwwwwwwwwwwwww: this.props})
     const tagId = this.props.tag.id;
     const { className = "" } = tag;
     const tagComponent = (
@@ -68,7 +58,7 @@ class Tag extends Component {
         onKeyDown={props.onTagClicked}
         onTouchStart={props.onTagClicked}
       >
-        <i class="fas fa-grip-vertical" style={{ color: '#FFF' }} />
+        <i className="fas fa-grip-vertical" style={{ color: '#FFF' }} />
         {' '}
         {label}
         <UncontrolledDropdown direction="down" setActiveFromChild>

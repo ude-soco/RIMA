@@ -187,7 +187,7 @@ const Content = ({ onChange }) => {
   );
 };
 const Location = ({ onChange, updateInputs, state, onRadiusChange }) => {
-  console.log('location sttate',state)
+  // console.log('location sttate',state)
   return (
 
     <>
@@ -302,9 +302,9 @@ const Location = ({ onChange, updateInputs, state, onRadiusChange }) => {
 };
 
 const Engagment = ({ onChange, state }) => {
-  console.log("mellon");
-  console.log(state);
-  console.log(onChange);
+  // console.log("mellon");
+  // console.log(state);
+  // console.log(onChange);
 
   return (
     <>
@@ -458,7 +458,7 @@ export default class TestFilter extends Component {
     this.mode = this.props.mode;
     this.tagId = this.props.tagId;
     this.some = "kk"
-    console.log("props:", this.props);
+    // console.log("props:", this.props);
   }
 
   onRadiusChange(e) {
@@ -473,9 +473,9 @@ export default class TestFilter extends Component {
   onContentChange(e){
     this.some = e ;
 
-    console.log(e);
-    console.log(e.target.name, ":", e.target.value);
-    console.log("Filter Mode:", this.props.mode)
+    // console.log(e);
+    // console.log(e.target.name, ":", e.target.value);
+    // console.log("Filter Mode:", this.props.mode)
     if (!this.mode){
       this.props.changeHandler(e.target.name, e.target.value);
     }
@@ -487,7 +487,7 @@ export default class TestFilter extends Component {
 
   updateInputs = (x) => {
     this.some = x;
-    console.log("coord:", x.lat, x.lng);
+    // console.log("coord:", x.lat, x.lng);
     if (!this.mode){
       this.props.changeHandler("lat", x.lat);
       this.props.changeHandler("lng", x.lng);

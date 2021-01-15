@@ -127,10 +127,10 @@ export default class TweetsAndPeople extends Component {
 
   componentDidMount() {
     const { tags } = this.state;
-    console.log("success")
+    // console.log("success")
     RestAPI.extractTweetsFromTags(tags)
       .then((res) => {
-        console.log({tweet111: res.data.data})
+        // console.log({tweet111: res.data.data})
         this.setState({ tweets: res.data.data, tweetsLoaded: true });
         this.extractUsersFromTweets(res.data.data);
       })
@@ -432,7 +432,7 @@ export default class TweetsAndPeople extends Component {
       let tweets = this.state.savedTweets;
       const newTweets = tweets.filter((t) => t["id_str"] !== tweet["id_str"]);
       RestAPI.hideSavedTweet(tweet["id_str"]).then(() => {
-      console.log('test done done')
+      // console.log('test done done')
         this.setState({ savedTweets: newTweets });
       }).catch((err) => console.error("Error Getting Tweets:", err));
     }
@@ -448,7 +448,7 @@ export default class TweetsAndPeople extends Component {
     console.info(`Search Clicked:Tags:${tags}`);
     RestAPI.extractTweetsFromTags(tags)
       .then((res) => {
-        console.log({tweet111: res.data.data})
+        // console.log({tweet111: res.data.data})
         this.setState({ tweets: res.data.data, tweetsLoaded: true });
         this.extractUsersFromTweets(res.data.data);
       })
@@ -474,7 +474,7 @@ export default class TweetsAndPeople extends Component {
   }
 
   handleTagSettingsChange(id, name, value) {
-    console.log({id, name, value})
+    // console.log({id, name, value})
     let tag = this.state.tags.filter((tag) => tag.id === id)[0];
     tag[name] = value;
 
@@ -498,7 +498,7 @@ export default class TweetsAndPeople extends Component {
   }
 
   addNewTag(newTag) {
-    console.log('wwwwwwwwwwwww ', newTag, this.state.tags)
+    // console.log('wwwwwwwwwwwww ', newTag, this.state.tags)
   }
 
   componentDidMount() {
@@ -507,8 +507,8 @@ export default class TweetsAndPeople extends Component {
 
   render() {
     const { tweets, users } = this.state;
-    console.log("the state is");
-    console.log(this.state.place);
+    // console.log("the state is");
+    // console.log(this.state.place);
     return (
 
       <>

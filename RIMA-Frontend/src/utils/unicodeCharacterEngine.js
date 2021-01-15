@@ -7,7 +7,6 @@ export function convertUnicode(input) {
 
 export function keywordHighlighter(searchMask, text) {
   let regEx = new RegExp(searchMask, "ig");
-  console.log("regEx", regEx);
   let replaceMask = `<span style="font-weight:600">${searchMask}</span>`;
   if (typeof text !== "undefined") {
     text = unescape(text.replace(regEx, replaceMask));

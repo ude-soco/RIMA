@@ -40,6 +40,8 @@ export default function LineChartDummy() {
     <>
       <Line
         data={chartData}
+        width={610}
+        height={300}
         options={{
           maintainAspectRatio: true,
           legend: { display: true, position: "bottom" },

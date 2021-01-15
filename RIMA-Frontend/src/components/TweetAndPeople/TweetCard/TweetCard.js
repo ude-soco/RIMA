@@ -60,7 +60,6 @@ export default class TweetCard extends Component {
     this.setState({
       hide: true,
       timer: setTimeout(() => {
-        console.log("This will run after 5 second!");
         this.props.deleteTweet(this.props.tweet);
         this.setState({hide: false});
       }, 10000),
@@ -74,7 +73,6 @@ export default class TweetCard extends Component {
       user: params.tweet.user.name,
       screen_name: params.tweet.user.screen_name,
     };
-    console.log(data);
     RestAPI.savedTweets(data)
       .then((response) => {
         this.props.newSavedTweet(response.data);
@@ -117,7 +115,6 @@ export default class TweetCard extends Component {
 
     keyword_tags.map((tag) => {
       let searchMask = tag.text;
-      console.log(searchMask, modified_text);
       modified_text = keywordHighlighter(searchMask, modified_text);
       // modified_text = UrlHighlighter(modified_text);
     });
@@ -210,8 +207,6 @@ export default class TweetCard extends Component {
                 style={{textDecoration: "none", color: "inherit"}}
                 rel="noopener noreferrer"
               >
-                {console.log("modified_text", modified_text)}
-
                 <TweetContent modified_text={modified_text}/>
               </a>
               {/* <span className="highlight-keyword">highlight</span> the
