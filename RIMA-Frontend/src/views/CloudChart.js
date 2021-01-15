@@ -99,7 +99,7 @@ class CloudChartPage extends React.Component {
                                 </Tooltip>
                               }
                             >
-                              <Button color="info" > Manage Interests </Button>
+                              <Button variant="info" > Manage Interests </Button>
                             </OverlayTrigger>
                           </Link>
                         </div>

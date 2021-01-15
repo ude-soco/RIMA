@@ -74,10 +74,6 @@ class Admin extends React.Component {
           <></>
         ) : (
           <>
-            <AdminNavbar
-              {...this.props}
-              brandText={this.getBrandText(this.props.location.pathname)}
-            />,
             <Sidebar
               {...this.props}
               routes={routes}
@@ -87,17 +83,23 @@ class Admin extends React.Component {
                 imgAlt: "...",
               }}
             />
+            <div className="main-content" ref="mainContent">
+              <AdminNavbar
+                {...this.props}
+                brandText={this.getBrandText(this.props.location.pathname)}
+              />
+              <Switch>
+                {this.getRoutes(routes)}
+                <Redirect from="*" to="/app/PieChartPage"/>
+              </Switch>
+              <Container fluid>
+                <AdminFooter/>
+              </Container>
+            </div>
+
           </>
         )}
-        <div className="main-content" ref="mainContent">
-          <Switch>
-            {this.getRoutes(routes)}
-            <Redirect from="*" to="/app/PieChartPage"/>
-          </Switch>
-          <Container fluid>
-            <AdminFooter/>
-          </Container>
-        </div>
+
       </>
     );
   }

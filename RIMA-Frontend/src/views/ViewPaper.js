@@ -1,11 +1,11 @@
 import React from "react";
 import user from "../services/api";
 // react plugin used to create google maps
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
 import Loader from "react-loader-spinner";
-import { handleServerErrors } from "utils/errorHandler";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import {handleServerErrors} from "utils/errorHandler";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 // reactstrap components
 import {
@@ -33,6 +33,8 @@ import RestAPI from "../services/api";
 
 // core components
 import Header from "components/Headers/Header.js";
+import {faSyncAlt, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 class ViewPaper extends React.Component {
   state = {
@@ -41,6 +43,8 @@ class ViewPaper extends React.Component {
     isLoding: false,
     modal: false,
     editmodal: false,
+    deleteModal: false,
+    deletePaperId: "",
     title: "",
     url: "",
     year: "",
@@ -51,7 +55,7 @@ class ViewPaper extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ isLoding: true }, this.getPaperData());
+    this.setState({isLoding: true}, this.getPaperData());
   }
 
   //** GET ALL PAPERS **//
@@ -64,14 +68,25 @@ class ViewPaper extends React.Component {
         });
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({isLoding: false});
         handleServerErrors(error, toast.error);
       });
   };
 
-  //** DELETE A PAPERS **//
+  // Toggles the delete paper modal
+  toggleDeletePaper = (id) => {
+    this.setState({
+      deleteModal: !this.state.deleteModal,
+      deletePaperId: id,
+    })
+  }
+
+  //** DELETE A PAPER **//
   deleteEnquiry = (id) => {
-    this.setState({ isLoding: true }, () => {
+    this.setState({
+      isLoding: true,
+      deleteModal: !this.state.deleteModal,
+    }, () => {
       RestAPI.deletePaper(id)
         .then((response) => {
           const newvalue = this.state.data.filter((v, i) => v.id !== id);
@@ -86,7 +101,7 @@ class ViewPaper extends React.Component {
           });
         })
         .catch((error) => {
-          this.setState({ isLoding: false });
+          this.setState({isLoding: false});
           handleServerErrors(error, toast.error);
         });
     });
@@ -97,7 +112,6 @@ class ViewPaper extends React.Component {
     const paperdata = this.state.data.find((v, i) => {
       return v.id === id;
     });
-
     this.setState({
       modal: !this.state.modal,
       paperDetail: paperdata,
@@ -172,11 +186,11 @@ class ViewPaper extends React.Component {
   handleChange = (e) => {
     let getValue = e.target.value;
     let getName = e.target.name;
-    this.setState(() => ({ [getName]: getValue }));
+    this.setState(() => ({[getName]: getValue}));
   };
 
   refreshPaper = () => {
-    this.setState({ isLoding1: true }, () => {
+    this.setState({isLoding1: true}, () => {
       user
         .refreshPaper()
         .then((response) => {
@@ -186,7 +200,7 @@ class ViewPaper extends React.Component {
           });
         })
         .catch((error) => {
-          this.setState({ isLoding1: false });
+          this.setState({isLoding1: false});
           handleServerErrors(error, toast.error);
         });
     });
@@ -195,269 +209,292 @@ class ViewPaper extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header/>
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row>
             <div className="col">
               <Card className="shadow">
-                {/* TODO: fix the width*/}
                 <CardHeader className="border-0">
-                  <Container style={{ justifyContent: "space-between" }}>
-                    <Row>
-                      <Col style={{ padding: "0px" }}>
-                        <h3 className="mb-0">My Publications</h3>
-                      </Col>
-                      <Col md="auto" style={{ padding: "0px" }}>
-                        <OverlayTrigger
-                          placement="left"
-                          delay={{ show: 100, hide: 400 }}
-                          overlay={
-                            <Tooltip>
-                              update your publication list
-                            </Tooltip>
-                            }
-                          >
-                          <Button color="info" onClick={this.refreshPaper}> Update </Button>
-                        </OverlayTrigger>
-                     </Col>
-                    </Row>
-                  </Container>
+                  <Row style={{alignItems: "center"}}>
+                    <Col>
+                      <h2 className="mb-0">
+                        My Publications
+                      </h2>
+                    </Col>
+                    <Col md="auto">
+                      <OverlayTrigger
+                        placement="left"
+                        delay={{show: 100, hide: 400}}
+                        overlay={
+                          <Tooltip>
+                            Update your publication list
+                          </Tooltip>
+                        }
+                      >
+                        <Button color="info" onClick={this.refreshPaper}>
+                          <FontAwesomeIcon icon={faSyncAlt} style={{marginRight: "8px"}}/>
+                          Update
+                        </Button>
+                      </OverlayTrigger>
+                    </Col>
+                  </Row>
                 </CardHeader>
 
-                  <Table className="align-items-center table-flush" responsive>
-                    <thead className="thead-light">
-                      <tr>
-                        <th scope="col">Year</th>
-                        <th scope="col">Title</th>
-                        {/*<th scope="col">URL</th>*/}
-                        <th scope="col">Authors</th>
-                        <th scope="col" >Options</th>
-                        {/*<th scope="col"></th>*/}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* START LOADER */}
+                <Table className="align-items-center table-flush" responsive>
+                  <thead className="thead-light">
+                  <tr>
+                    <th scope="col">Year</th>
+                    <th scope="col">Title</th>
+                    {/*<th scope="col">URL</th>*/}
+                    <th scope="col">Authors</th>
+                    <th scope="col">Options</th>
+                    {/*<th scope="col"></th>*/}
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {/* START LOADER */}
 
-                      {this.state.isLoding ? (
-                        <tr className="text-center" style={{ padding: "20px" }}>
-                          <td></td>
-                          <td></td>
-                          <td style={{ textAlign: "center" }}>
-                            {" "}
-                            <Loader
-                              type="Puff"
-                              color="#00BFFF"
-                              height={100}
-                              width={100}
-                            />
-                          </td>
-                        </tr>
-                      ) : this.state.data.length ? (
-                        this.state.data.map((value, index) => (
-                          <tr key={value.id}>
-                            <td>{value.year}</td>
-                            <th scope="row">
-                              {" "}
-                              {`${(value.title || "").slice(0, 65)} ...`}{" "}
-                            </th>
-                            {/*<td><a href={value.url} target="_blank">Link</a></td>*/}
-                            <td style={{ fontStyle: "italic" }}> {`${(value.authors || " ").slice(0, 80)} ...`}</td>
+                  {this.state.isLoding ? (
+                    <tr className="text-center" style={{padding: "20px"}}>
+                      <td></td>
+                      <td></td>
+                      <td style={{textAlign: "center"}}>
+                        {" "}
+                        <Loader
+                          type="Puff"
+                          color="#00BFFF"
+                          height={100}
+                          width={100}
+                        />
+                      </td>
+                    </tr>
+                  ) : this.state.data.length ? (
+                    this.state.data.map((value, index) => (
+                      <tr key={value.id}>
+                        <td>{value.year}</td>
+                        <th scope="row">
+                          {" "}
+                          {`${(value.title || "").slice(0, 65)} ...`}{" "}
+                        </th>
+                        {/*<td><a href={value.url} target="_blank">Link</a></td>*/}
+                        <td style={{fontStyle: "italic"}}> {`${(value.authors || " ").slice(0, 80)} ...`}</td>
 
-                            <td className="text-center">
-                              <UncontrolledDropdown>
-                                <DropdownToggle
-                                  className="btn-icon-only text-light"
-                                  href="#pablo"
-                                  role="button"
-                                  size="sm"
-                                  color=""
-                                  onClick={(e) => e.preventDefault()}
-                                >
-                                  <i className="fas fa-ellipsis-v" />
-                                </DropdownToggle>
-                                <DropdownMenu
-                                  className="dropdown-menu-arrow"
-                                  right
-                                >
-                                  <DropdownItem
-                                    onClick={() => this.showEnquiry(value.id)}
-                                  >
-                                    View
+                        <td className="text-center">
+                          <UncontrolledDropdown>
+                            <DropdownToggle
+                              className="btn-icon-only text-light"
+                              href="#pablo"
+                              role="button"
+                              size="sm"
+                              color=""
+                              onClick={(e) => e.preventDefault()}
+                            >
+                              <i className="fas fa-ellipsis-v"/>
+                            </DropdownToggle>
+                            <DropdownMenu
+                              className="dropdown-menu-arrow"
+                              right
+                            >
+                              <DropdownItem
+                                onClick={() => this.showEnquiry(value.id)}
+                              >
+                                View
                               </DropdownItem>
 
-                                  <Link to={`/app/edit-paper/${value.id}`}>
-                                    <DropdownItem
-                                    //  onClick={()=>this.editEnquiry(value.id)}
-                                    >
-                                      Edit
+                              <Link to={`/app/edit-paper/${value.id}`}>
+                                <DropdownItem
+                                  //  onClick={()=>this.editEnquiry(value.id)}
+                                >
+                                  Edit
                                 </DropdownItem>
-                                  </Link>
-                                  <DropdownItem
-                                    onClick={() => this.deleteEnquiry(value.id)}
-                                  >
-                                    Remove
+                              </Link>
+                              <DropdownItem
+                                // onClick={() => this.deleteEnquiry(value.id)}
+                                onClick={() => this.toggleDeletePaper(value.id)}
+                              >
+                                Remove
                               </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledDropdown>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                            <tr className="text-center1" style={{ padding: "20px" }}>
-                              <td></td>
-                              <td style={{ textAlign: "right" }}>
-                                {" "}
-                                <strong> No Papers Found</strong>
-                              </td>
-                            </tr>
-                          )}
-                    </tbody>
-                  </Table>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="text-center1" style={{padding: "20px"}}>
+                      <td></td>
+                      <td style={{textAlign: "right"}}>
+                        {" "}
+                        <strong> No Papers Found</strong>
+                      </td>
+                    </tr>
+                  )}
+                  </tbody>
+                </Table>
               </Card>
-                {/* //  Start Modal */}
-                <div>
-                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg">
-                    <ModalHeader toggle={this.toggle}>Paper Detail</ModalHeader>
-                    <ModalBody>
-                      <strong>Title: </strong>{" "}
-                      {this.state.paperDetail && this.state.paperDetail.title}
-                      <br />
-                      <br />
-                      <strong>Year: </strong>{" "}
-                      {this.state.paperDetail && this.state.paperDetail.year}
-                      <br />
-                      <br />
-                      <strong>Authors: </strong>{" "}
-                      {this.state.paperDetail && this.state.paperDetail.authors}
-                      <br />
-                      <br />
-                      <strong>Source: </strong>{" "}
-                      <a href={this.state.paperDetail && this.state.paperDetail.url}>See paper on Semantic Scholar</a>
-
-                      <br />
-                      <br />
-                      <strong>Abstract: </strong>
-                      {this.state.paperDetail && this.state.paperDetail.abstract}
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button color="primary" onClick={this.toggle}>
-                        OK
+              {/* //  Start Modal */}
+              <div>
+                <Modal isOpen={this.state.deleteModal} toggle={() => this.toggleDeletePaper("")} size="lg">
+                  <ModalHeader toggle={() => this.toggleDeletePaper("")}>
+                    <h2>
+                      Remove paper?
+                    </h2>
+                  </ModalHeader>
+                  <ModalBody>
+                    <h4>You are about to delete the publication from the list! Are you sure?</h4>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button varian="link" onClick={() => this.toggleDeletePaper("")}>
+                      Cancel
                     </Button>
-                    </ModalFooter>
-                  </Modal>
-                </div>
-                {/* //  End Modal   */}
+                    <Button color="danger" onClick={() => this.deleteEnquiry(this.state.deletePaperId)}>
+                      Delete
+                    </Button>
+                  </ModalFooter>
+                </Modal>
+              </div>
+              <div>
+                <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg">
+                  <ModalHeader toggle={this.toggle}>Paper Detail</ModalHeader>
+                  <ModalBody>
+                    <strong>Title: </strong>{" "}
+                    {this.state.paperDetail && this.state.paperDetail.title}
+                    <br/>
+                    <br/>
+                    <strong>Year: </strong>{" "}
+                    {this.state.paperDetail && this.state.paperDetail.year}
+                    <br/>
+                    <br/>
+                    <strong>Authors: </strong>{" "}
+                    {this.state.paperDetail && this.state.paperDetail.authors}
+                    <br/>
+                    <br/>
+                    <strong>Source: </strong>{" "}
+                    <a href={this.state.paperDetail && this.state.paperDetail.url}>See paper on Semantic Scholar</a>
 
-                {/* // Edit Start Modal */}
-                <div>
-                  <Modal isOpen={this.state.editmodal} toggle={this.edittoggle}>
-                    <ModalHeader toggle={this.edittoggle}>
-                      <strong>Edit Paper information</strong>
-                    </ModalHeader>
-                    <ModalBody>
-                      <CardBody>
-                        <Form>
-                          <div className="pl-lg-4">
-                            <Row>
-                              <Col lg="12">
-                                <FormGroup>
-                                  <label
-                                    className="form-control-label"
-                                    htmlFor="input-username"
-                                  >
-                                    Title
+                    <br/>
+                    <br/>
+                    <strong>Abstract: </strong>
+                    {this.state.paperDetail && this.state.paperDetail.abstract}
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="primary" onClick={this.toggle}>
+                      OK
+                    </Button>
+                  </ModalFooter>
+                </Modal>
+              </div>
+              {/* //  End Modal   */}
+
+              {/* // Edit Start Modal */}
+              <div>
+                <Modal isOpen={this.state.editmodal} toggle={this.edittoggle}>
+                  <ModalHeader toggle={this.edittoggle}>
+                    <strong>Edit Paper information</strong>
+                  </ModalHeader>
+                  <ModalBody>
+                    <CardBody>
+                      <Form>
+                        <div className="pl-lg-4">
+                          <Row>
+                            <Col lg="12">
+                              <FormGroup>
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-username"
+                                >
+                                  Title
                                 </label>
-                                  <Input
-                                    className="form-control-alternative"
-                                    // defaultValue="lucky.jesse"
-                                    type="text"
-                                    id="input-username"
-                                    name="title"
-                                    defaultValue={this.state.title}
-                                    value={this.state.title}
-                                    onChange={this.handleChange}
-                                    placeholder="Title"
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg="12">
-                                <FormGroup>
-                                  <label
-                                    className="form-control-label"
-                                    htmlFor="input-email"
-                                  >
-                                    URL
+                                <Input
+                                  className="form-control-alternative"
+                                  // defaultValue="lucky.jesse"
+                                  type="text"
+                                  id="input-username"
+                                  name="title"
+                                  defaultValue={this.state.title}
+                                  value={this.state.title}
+                                  onChange={this.handleChange}
+                                  placeholder="Title"
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg="12">
+                              <FormGroup>
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-email"
+                                >
+                                  URL
                                 </label>
-                                  <Input
-                                    className="form-control-alternative"
-                                    id="input-email"
-                                    name="url"
-                                    defaultValue={this.state.url}
-                                    onChange={this.handleChange}
-                                    placeholder="https://www.zyz.com"
-                                    type="text"
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg="12">
-                                <FormGroup>
-                                  <label
-                                    className="form-control-label"
-                                    htmlFor="input-first-name"
-                                  >
-                                    Year
+                                <Input
+                                  className="form-control-alternative"
+                                  id="input-email"
+                                  name="url"
+                                  defaultValue={this.state.url}
+                                  onChange={this.handleChange}
+                                  placeholder="https://www.zyz.com"
+                                  type="text"
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col lg="12">
+                              <FormGroup>
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-first-name"
+                                >
+                                  Year
                                 </label>
-                                  <Input
-                                    className="form-control-alternative"
-                                    id="input-first-name"
-                                    name="year"
-                                    defaultValue={this.state.year}
-                                    onChange={this.handleChange}
-                                    placeholder="Year"
-                                    type="number"
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg="12">
-                                <FormGroup>
-                                  <label
-                                    className="form-control-label"
-                                    htmlFor="input-last-name"
-                                  >
-                                    Abstract
+                                <Input
+                                  className="form-control-alternative"
+                                  id="input-first-name"
+                                  name="year"
+                                  defaultValue={this.state.year}
+                                  onChange={this.handleChange}
+                                  placeholder="Year"
+                                  type="number"
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg="12">
+                              <FormGroup>
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-last-name"
+                                >
+                                  Abstract
                                 </label>
-                                  <Input
-                                    className="form-control-alternative"
-                                    // defaultValue="Jesse"
-                                    id="input-last-name"
-                                    name="abstract"
-                                    defaultValue={this.state.abstract}
-                                    onChange={this.handleChange}
-                                    placeholder="Abstract"
-                                    type="textarea"
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                          </div>
-                          <Button
-                            color="primary"
-                            type="button"
-                            onClick={() => this.handleUpdate()}
+                                <Input
+                                  className="form-control-alternative"
+                                  // defaultValue="Jesse"
+                                  id="input-last-name"
+                                  name="abstract"
+                                  defaultValue={this.state.abstract}
+                                  onChange={this.handleChange}
+                                  placeholder="Abstract"
+                                  type="textarea"
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        </div>
+                        <Button
+                          color="primary"
+                          type="button"
+                          onClick={() => this.handleUpdate()}
                           // size="md"
-                          >
-                            Save
+                        >
+                          Save
                         </Button>
-                        </Form>
-                      </CardBody>
-                    </ModalBody>
-                    <ModalFooter></ModalFooter>
-                  </Modal>
-                </div>
-                {/* // Edit End Modal   */}
+                      </Form>
+                    </CardBody>
+                  </ModalBody>
+                  <ModalFooter></ModalFooter>
+                </Modal>
+              </div>
+              {/* // Edit End Modal   */}
             </div>
           </Row>
         </Container>
