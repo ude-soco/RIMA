@@ -95,7 +95,7 @@ class ViewPaper extends React.Component {
             data: [...newvalue],
           });
 
-          toast.success("Delete Papaer !", {
+          toast.success("Paper deleted!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 2000,
           });
