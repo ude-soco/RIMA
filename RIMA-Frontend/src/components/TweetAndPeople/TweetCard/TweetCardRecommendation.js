@@ -47,13 +47,14 @@ export default function TweetCardRecommendation(props) {
   }
   // Step out of the explanation
   const handleClose = () => {
+    if (error) {
+      setError("")
+      setTweetKeywords([]);
+      setSeries([])
+    }
     setOpenOverlay(!openOverlay);
     setTimeout(() => {
       setStep(0);
-      if (error) {
-        setTweetKeywords(undefined);
-        setSeries([])
-      }
     }, 500);
   }
 
@@ -76,7 +77,7 @@ export default function TweetCardRecommendation(props) {
       }
       setTweetKeywords(keywordArray);
     } catch (error) {
-      setError("Error loading, please refresh page.")
+      setError("Error loading, please retry.")
       console.log(error);
     }
     let seriesData = [];
@@ -96,7 +97,7 @@ export default function TweetCardRecommendation(props) {
               y: response.data.score,
             });
           } catch (e) {
-            setError("Error loading, please refresh page.")
+            setError("Error loading, please retry.")
             console.log(error);
           }
         }
@@ -171,7 +172,7 @@ export default function TweetCardRecommendation(props) {
                     }
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>
-                    {(step < 1 && tweetKeywords.length !== 0) ?
+                    {(step < 1 && series.length !== 0) ?
                       <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
                         More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
                       </Button>
