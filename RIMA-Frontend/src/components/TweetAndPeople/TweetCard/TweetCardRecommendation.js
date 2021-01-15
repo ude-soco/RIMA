@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner} from "react-bootstrap";
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ export default function TweetCardRecommendation(props) {
   const [tweetKeywords, setTweetKeywords] = useState([]);
   const [series, setSeries] = useState([]);
   const [error, setError] = useState("");
+  const [count, setCount] = useState(0);
   const explanation = [
     "Intermediate explanation",
     "Advanced explanation"
@@ -24,13 +25,13 @@ export default function TweetCardRecommendation(props) {
   const description = [
     "This tweet is recommended to you because your interest keywords and the keywords extracted from the tweet are highly similar. Here you can see the exact similarity score between your interest and the tweet text",
     "The inner logic of recommending this tweet is as follow:"
-  ]
+  ];
 
   // Functions
   // Opens the Overlay Popover and requests keywords from tweet
   const tweetInfo = () => {
     if (tweetKeywords.length === 0) {
-      calculateSimilarity()
+      calculateSimilarity();
     }
     setOpenOverlay(!openOverlay);
     if (openOverlay) {
@@ -48,9 +49,10 @@ export default function TweetCardRecommendation(props) {
   // Step out of the explanation
   const handleClose = () => {
     if (error) {
-      setError("")
+      setCount(count + 1);
+      setError("");
       setTweetKeywords([]);
-      setSeries([])
+      setSeries([]);
     }
     setOpenOverlay(!openOverlay);
     setTimeout(() => {
@@ -77,32 +79,33 @@ export default function TweetCardRecommendation(props) {
       }
       setTweetKeywords(keywordArray);
     } catch (error) {
-      setError("Error loading, please retry.")
+      setError("Error loading, please retry.");
       console.log(error);
     }
+    // Calling the REST API to compute similarity between tweet keywords
     let seriesData = [];
     if (keywordArray.length !== 0) {
-      for (const userSelectedKeyword of userInterestModel) {
+      for (const userInterest of userInterestModel) {
         let data = [];
         for (const tweetKeyword of keywordArray) {
           let requestData = {
-            keywords_1: [userSelectedKeyword.text],
+            keywords_1: [userInterest.text],
             keywords_2: [tweetKeyword.text],
             algorithm: "WordEmbedding"
           }
           try {
-            let response = await RestAPI.computeSimilarity(requestData)
+            let response = await RestAPI.computeSimilarity(requestData);
             data.push({
               x: tweetKeyword.text,
               y: response.data.score,
             });
           } catch (e) {
-            setError("Error loading, please retry.")
+            setError("Error loading, please retry.");
             console.log(error);
           }
         }
         seriesData.push({
-          name: userSelectedKeyword.text,
+          name: userInterest.text,
           data: data,
         });
       }
@@ -123,7 +126,7 @@ export default function TweetCardRecommendation(props) {
                   <Col style={{padding: "0px"}}>
                     <h2 style={{marginBottom: "0px"}}>
                       {/* Change the title of the level of explanation above */}
-                      {step === 0 ? explanation[step] : (step === 1 ? explanation[step] : explanation[step])}
+                      {explanation[step]}
                     </h2>
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>
@@ -135,7 +138,7 @@ export default function TweetCardRecommendation(props) {
               </Container>
             </Popover.Title>
             <Popover.Content>
-              <Container style={{marginBottom: "16px"}}>
+              <Container >
                 <Row style={{marginBottom: "16px"}}>
                   <h4>
                     {/* Change the description of the levels of explanation above */}
@@ -148,7 +151,7 @@ export default function TweetCardRecommendation(props) {
                     : (step === 1 ? <LineChartDummy/>
                         : (error ?
                             <Button variant="link" disabled style={{fontSize: "16px", color: "red"}}>
-                              {error}
+                              {count >= 2 ? "Sorry, no data available for this tweet." : error}
                             </Button>
                             :
                             <Button variant="link" disabled style={{fontSize: "16px"}}>
@@ -160,8 +163,8 @@ export default function TweetCardRecommendation(props) {
                     )
                   }
                 </Row>
-              </Container>
-              <Container>
+              {/*</Container>*/}
+              {/*<Container>*/}
                 <Row>
                   <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?
@@ -176,10 +179,7 @@ export default function TweetCardRecommendation(props) {
                       <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
                         More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
                       </Button>
-                      : (step === 1 ?
-                          <Button variant="link" onClick={handleClose} style={{fontSize: "16px"}}>Finish</Button>
-                          : <></>
-                      )
+                      : <></>
                     }
                   </Col>
                 </Row>
