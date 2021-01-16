@@ -518,9 +518,9 @@ export default class TweetsAndPeople extends Component {
             <CardHeader className="bg-transparent">
               <Row className="align-items-center">
                 <Col>
-                  <h1 className="text-uppercase text-light1 ls-1 mb-1">
+                  <h2>
                     Tweets & People
-                  </h1>
+                  </h2>
                 </Col>
               </Row>
 

@@ -144,7 +144,7 @@ export default function TweetCardRecommendation(props) {
                     {description[step]}
                   </h4>
                 </Row>
-                <Row style={{justifyContent: "center"}}>
+                <Row className="justify-content-center">
                   {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series}/>
                     : (step === 1 ? <LineChartDummy/>
                         : (error ?
