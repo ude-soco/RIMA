@@ -14,6 +14,9 @@ import swal from "@sweetalert/with-react";
 import "../assets/scss/custom.css";
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
+import {faCog} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
 class CloudChartPage extends React.Component {
   constructor(props) {
     super(props);
@@ -99,7 +102,11 @@ class CloudChartPage extends React.Component {
                                 </Tooltip>
                               }
                             >
-                              <Button variant="info" > Manage Interests </Button>
+                            
+                              <Button variant="info" > 
+                              <FontAwesomeIcon icon={faCog} style={{marginRight: "8px"}}/>
+                              Manage Interests 
+                              </Button>
                             </OverlayTrigger>
                           </Link>
                         </div>

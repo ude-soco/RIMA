@@ -249,7 +249,7 @@ const AdvanceFilter = (props) => {
                     toggle("1");
                   }}
                 >
-                  keywords weight
+                  Your Interests 
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -259,7 +259,7 @@ const AdvanceFilter = (props) => {
                     toggle("2");
                   }}
                 >
-                  keywords Tweets
+                  Your Interest weight
                 </NavLink>
               </NavItem>
             </StyledNav>
@@ -271,8 +271,9 @@ const AdvanceFilter = (props) => {
                 <Row>
                   <Col sm="12">
                     <h4>
-                      You can adjust the position of the keyword based on its
-                      importance
+                      You can adjust the position of your interest based on its
+                      importance. The closer to the center the more important the interest. 
+                      
                     </h4>
 
                     <DragableTextWrapper>
