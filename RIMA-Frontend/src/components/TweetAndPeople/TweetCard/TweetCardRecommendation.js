@@ -6,6 +6,7 @@ import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-ic
 import RestAPI from "../../../services/api";
 import LineChartDummy from "./Charts/LineChartDummy";
 import HeatmapTweet from "../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
+import ReactApexChart from "react-apexcharts";
 
 export default function TweetCardRecommendation(props) {
   // Props
@@ -142,7 +143,7 @@ export default function TweetCardRecommendation(props) {
                   </h4>
                 </Row>
                 <Row className="justify-content-center">
-                  {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series}/>
+                  {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series} width={'550'} height={'280'}/>
                     : (step === 1 ? <LineChartDummy/>
                         : (error ?
                             <Button variant="link" disabled style={{fontSize: "16px", color: "red"}}>

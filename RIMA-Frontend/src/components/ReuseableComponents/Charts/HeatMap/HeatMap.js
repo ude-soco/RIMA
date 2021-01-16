@@ -2,7 +2,7 @@ import React from "react";
 import ReactApexChart from "react-apexcharts"
 
 export default function HeatMap(props) {
-  const {series} = props;
+  const {series, width, height} = props;
   const options = {
     dataLabels: {
       enabled: false,
@@ -16,8 +16,8 @@ export default function HeatMap(props) {
         options={options}
         series={series}
         type='heatmap'
-        width='550'
-        height='280'
+        width={width}
+        height={height}
       />
     </>
   )
