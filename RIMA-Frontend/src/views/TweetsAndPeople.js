@@ -30,7 +30,7 @@ import RestAPI from "services/api";
 import { COUNTRIES } from "../components/TweetAndPeople/countries";
 import AdvanceFilter from "components/OptionDropDown/AdvanceFilter.jsx";
 import SavedTweetCard from "components/TweetAndPeople/TweetCard/SavedTweetCard";
-import ScrollTopWrapper from "../components/TweetAndPeople/ScrollTopWrapper";
+import ScrollTopWrapper from "../components/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 
 const KeyCodes = {
   comma: 188,

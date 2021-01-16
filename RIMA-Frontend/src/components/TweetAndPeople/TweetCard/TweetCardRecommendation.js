@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
 import RestAPI from "../../../services/api";
 import LineChartDummy from "./Charts/LineChartDummy";
-import HeatmapTweet from "./Charts/HeatmapTweet.js";
+import HeatmapTweet from "../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
 
 export default function TweetCardRecommendation(props) {
   // Props

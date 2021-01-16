@@ -1,7 +1,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts"
 
-export default function HeatMapTweet(props) {
+export default function HeatMap(props) {
   const {series} = props;
   const options = {
     dataLabels: {
