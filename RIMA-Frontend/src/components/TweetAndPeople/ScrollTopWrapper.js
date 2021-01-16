@@ -34,7 +34,7 @@ export default function ScrollToTop() {
         delay={{show: 100, hide: 400}}
         overlay={
           <Tooltip>
-            Scroll top
+            Scroll to top
           </Tooltip>
         }
       >
