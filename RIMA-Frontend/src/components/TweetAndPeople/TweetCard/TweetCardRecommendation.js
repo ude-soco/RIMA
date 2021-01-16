@@ -6,7 +6,7 @@ import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-ic
 import RestAPI from "../../../services/api";
 import LineChartDummy from "./Charts/LineChartDummy";
 import HeatmapTweet from "../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
-import ReactApexChart from "react-apexcharts";
+
 
 export default function TweetCardRecommendation(props) {
   // Props
