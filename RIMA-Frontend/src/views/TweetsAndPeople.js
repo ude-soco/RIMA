@@ -1,33 +1,21 @@
 import React, { Component } from "react";
 import { toast } from "react-toastify";
 import { handleServerErrors } from "utils/errorHandler";
-
 import {
   Card,
   CardHeader,
-  CardTitle,
-  CardBody,
-  CardImg,
-  CardSubtitle,
-  CardText,
   Container,
   Row,
   Col,
-  UncontrolledDropdown,
   DropdownMenu,
-  DropdownToggle,
-  DropdownItem,
   ButtonGroup,
   Button,
   Form,
-  Alert,
   TabContent,
   TabPane,
   Nav,
   NavItem,
   NavLink,
-  Table,
-  UncontrolledCollapse,
 } from "reactstrap";
 import styled from "styled-components";
 
@@ -39,15 +27,10 @@ import TwitterUsers from "../components/TweetAndPeople/TwitterUserCard/TwitterUs
 import TwitterUserCard from "../components/TweetAndPeople/TwitterUserCard/TwitterUserCard.js";
 import TweetCard from "../components/TweetAndPeople/TweetCard/TweetCard.js";
 import RestAPI from "services/api";
-
 import { COUNTRIES } from "../components/TweetAndPeople/countries";
-import Collapse from "reactstrap/lib/Collapse";
-import Filter from "../components/Filter/TestFilter";
-import { MdErrorOutline } from "react-icons/md";
-import OptionDropDown from "../components/OptionDropDown";
-import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 import AdvanceFilter from "components/OptionDropDown/AdvanceFilter.jsx";
 import SavedTweetCard from "components/TweetAndPeople/TweetCard/SavedTweetCard";
+import ScrollTopWrapper from "../components/TweetAndPeople/ScrollTopWrapper";
 
 const KeyCodes = {
   comma: 188,
@@ -770,6 +753,7 @@ export default class TweetsAndPeople extends Component {
             </CardHeader>
           </Card>
         </Container>
+        <ScrollTopWrapper />
       </>
     );
   }
