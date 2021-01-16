@@ -14,7 +14,6 @@ export default function TweetCardRecommendation(props) {
   // Local constants
   const [openOverlay, setOpenOverlay] = useState(false);
   const [step, setStep] = useState(0);
-  const [tweetKeywords, setTweetKeywords] = useState([]);
   const [series, setSeries] = useState([]);
   const [error, setError] = useState("");
   const [count, setCount] = useState(0);
@@ -30,7 +29,7 @@ export default function TweetCardRecommendation(props) {
   // Functions
   // Opens the Overlay Popover and requests keywords from tweet
   const tweetInfo = () => {
-    if (tweetKeywords.length === 0) {
+    if (series.length === 0) {
       calculateSimilarity();
     }
     setOpenOverlay(!openOverlay);
@@ -51,7 +50,6 @@ export default function TweetCardRecommendation(props) {
     if (error) {
       setCount(count + 1);
       setError("");
-      setTweetKeywords([]);
       setSeries([]);
     }
     setOpenOverlay(!openOverlay);
@@ -77,7 +75,6 @@ export default function TweetCardRecommendation(props) {
           value: value[i],
         });
       }
-      setTweetKeywords(keywordArray);
     } catch (error) {
       setError("Error loading, please retry.");
       console.log(error);
