@@ -159,17 +159,21 @@ export default function TweetCardRecommendation(props) {
                     )
                   }
                 </Row>
-                <Row className="justify-content-md-end">
-                  <Col md="auto" style={{paddingRight: "0px"}}>
+                <Row>
+                  <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?
                       <Button variant="link" onClick={handleStepBackward} style={{fontSize: "16px"}}>
-                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "3px"}}/> Previous
+                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "4px"}}/> Less
                       </Button>
-                      : (step < 1 && series.length !== 0) ?
-                        <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
-                          More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "3px"}}/>
-                        </Button>
-                        : <></>
+                      : <></>
+                    }
+                  </Col>
+                  <Col md="auto" style={{paddingRight: "0px"}}>
+                    {(step < 1 && series.length !== 0) ?
+                      <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
+                        More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
+                      </Button>
+                      : <></>
                     }
                   </Col>
                 </Row>

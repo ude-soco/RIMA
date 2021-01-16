@@ -130,11 +130,11 @@ export default class TweetsAndPeople extends Component {
     return rgb;
   }
   getKeywords = () => {
-    RestAPI.pieChart()
+    RestAPI.cloudChart()
       .then((response) => {
         let rowArray = [];
         if (response && response.data) {
-          for (let i = 0; i < response.data.length; i++) {
+          for (let i = 0; i < 5; i++) {
             rowArray.push({
               text: response.data[i].keyword,
               weight: response.data[i].weight,
