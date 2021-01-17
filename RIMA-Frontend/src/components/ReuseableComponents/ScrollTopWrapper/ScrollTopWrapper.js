@@ -4,7 +4,7 @@ import {Button, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowUp} from "@fortawesome/free-solid-svg-icons";
 
-export default function ScrollToTop() {
+export default function ScrollTopWrapper() {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -31,7 +31,6 @@ export default function ScrollToTop() {
       {isVisible &&
       <OverlayTrigger
         placement="left"
-        delay={{show: 100, hide: 400}}
         overlay={
           <Tooltip>
             Scroll to top

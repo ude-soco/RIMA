@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image } from "react-bootstrap";
-import { IconButton } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight, faTimes } from "@fortawesome/free-solid-svg-icons";
+import React, {useState} from 'react';
+import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image} from "react-bootstrap";
+import {IconButton} from "@material-ui/core";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
 import RestAPI from "../../../services/api";
-import LineChartDummy from "./Charts/LineChartDummy";
 import HeatmapTweet from "../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
 
 
 export default function TweetCardRecommendation(props) {
   // Props
-  const { userInterestModel, tweetText } = props;
+  const {userInterestModel, tweetText} = props;
 
   // Local constants
   const [openOverlay, setOpenOverlay] = useState(false);
@@ -23,7 +22,9 @@ export default function TweetCardRecommendation(props) {
     "Advanced explanation"
   ];
   const description = [
-    "This tweet is recommended to you because your interest keywords and the keywords extracted from the tweet are highly similar. Here you can see the exact similarity score between your interest and the tweet text",
+    "This tweet is recommended to you because your interest keywords and the keywords " +
+    "extracted from the tweet are highly similar. Here you can see the exact similarity " +
+    "score between your interest and the tweet text",
     "The inner logic of recommending this tweet is as follow:"
   ];
 
@@ -48,13 +49,13 @@ export default function TweetCardRecommendation(props) {
   }
   // Step out of the explanation
   const handleClose = () => {
-    if (error) {
-      setCount(count + 1);
-      setError("");
-      setSeries([]);
-    }
     setOpenOverlay(!openOverlay);
     setTimeout(() => {
+      if (error) {
+        setCount(count + 1);
+        setError("");
+        setSeries([]);
+      }
       setStep(0);
     }, 500);
   }
@@ -117,19 +118,18 @@ export default function TweetCardRecommendation(props) {
         show={openOverlay}
         placement="bottom-end"
         overlay={
-          <Popover style={{ maxWidth: "600px" }}>
+          <Popover style={{maxWidth: "600px"}}>
             <Popover.Title>
               <Container>
-                <Row style={{ alignItems: "center" }}>
-                  <Col style={{ padding: "0px" }}>
-                    <h2 style={{ marginBottom: "0px" }}>
-                      {/* Change the title of the level of explanation above */}
+                <Row style={{alignItems: "center"}}>
+                  <Col style={{padding: "0px"}}>
+                    <h2 style={{marginBottom: "0px"}}>
                       {explanation[step]}
                     </h2>
                   </Col>
-                  <Col md="auto" style={{ paddingRight: "0px" }}>
-                    <IconButton type="button" style={{ width: "48px" }} onClick={handleClose}>
-                      <FontAwesomeIcon icon={faTimes} />
+                  <Col md="auto" style={{paddingRight: "0px"}}>
+                    <IconButton type="button" style={{width: "48px"}} onClick={handleClose}>
+                      <FontAwesomeIcon icon={faTimes}/>
                     </IconButton>
                   </Col>
                 </Row>
@@ -137,47 +137,46 @@ export default function TweetCardRecommendation(props) {
             </Popover.Title>
             <Popover.Content>
               <Container>
-                <Row style={{ marginBottom: "16px" }}>
+                <Row style={{marginBottom: "16px"}}>
                   <h4>
                     {description[step]}
                   </h4>
                 </Row>
                 <Row className="justify-content-center">
-                  {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series} width={'550'} height={'280'} />
+                  {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series} width={'550'} height={'280'}/>
                     : (step === 1 ? (
-                      <Row>
-                        <Col xs={6} md={4}>
-                          <Image src='/images/wikilink.png' width={'570'} rounded />
-                        </Col>
-                      </Row>
-                    )
-                      : (error ?
-                        <Button variant="link" disabled style={{ fontSize: "16px", color: "red" }}>
-                          {count >= 1 ? "Sorry, no data available for this tweet." : error}
-                        </Button>
-                        :
-                        <Button variant="link" disabled style={{ fontSize: "16px" }}>
-                          <Spinner animation="border" role="status" size="sm"
-                            style={{ margin: "0px 4px 3px 0px" }} />
-                              Loading...
-                            </Button>
+                        <Row style={{marginBottom: "22px"}}>
+                          <Col xs={6} md={4}>
+                            <Image src='/images/wikilink.png' width={'570'} rounded/>
+                          </Col>
+                        </Row>
+                      ) : (error ?
+                          <Button variant="link" disabled style={{fontSize: "16px", color: "red"}}>
+                            {count >= 1 ? "Sorry, no data available for this tweet." : error}
+                          </Button>
+                          :
+                          <Button variant="link" disabled style={{fontSize: "16px"}}>
+                            <Spinner animation="border" role="status" size="sm"
+                                     style={{margin: "0px 4px 3px 0px"}}/>
+                            Loading...
+                          </Button>
                       )
                     )
                   }
                 </Row>
                 <Row>
-                  <Col style={{ paddingLeft: "0px" }}>
+                  <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?
-                      <Button variant="link" onClick={handleStepBackward} style={{ fontSize: "16px" }}>
-                        <FontAwesomeIcon icon={faAngleLeft} style={{ marginRight: "4px" }} /> Less
+                      <Button variant="link" onClick={handleStepBackward} style={{fontSize: "16px"}}>
+                        <FontAwesomeIcon icon={faAngleLeft} style={{marginRight: "4px"}}/> Less
                       </Button>
                       : <></>
                     }
                   </Col>
-                  <Col md="auto" style={{ paddingRight: "0px" }}>
+                  <Col md="auto" style={{paddingRight: "0px"}}>
                     {(step < 1 && series.length !== 0) ?
-                      <Button variant="link" onClick={handleStepForward} style={{ fontSize: "16px" }}>
-                        More <FontAwesomeIcon icon={faAngleRight} style={{ marginLeft: "4px" }} />
+                      <Button variant="link" onClick={handleStepForward} style={{fontSize: "16px"}}>
+                        More <FontAwesomeIcon icon={faAngleRight} style={{marginLeft: "4px"}}/>
                       </Button>
                       : <></>
                     }
