@@ -1,27 +1,14 @@
 import React from "react";
-// react plugin used to create google maps
 import {toast} from "react-toastify";
 import Loader from "react-loader-spinner";
 import {handleServerErrors} from "utils/errorHandler";
 import RestAPI from "../services/api";
 import swal from "sweetalert";
-
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
-
-// core components
+import {Link} from "react-router-dom";
+import {Button, Card, CardHeader, CardBody, FormGroup, Form, Input, Container, Row, Col} from "reactstrap";
 import Header from "components/Headers/Header.js";
+import {getItem} from "../utils/localStorage";
+
 
 class Keyword extends React.Component {
   state = {
@@ -59,10 +46,10 @@ class Keyword extends React.Component {
     const item = {
       name: "",
       weight: null,
-      id: "",
+      id: ""
     };
     this.setState({
-      rows: [...this.state.rows, item],
+      rows: [...this.state.rows, item]
     });
   };
 
@@ -85,7 +72,7 @@ class Keyword extends React.Component {
             rowArray.push({
               name: response.data[i].keyword,
               weight: response.data[i].weight,
-              id: response.data[i].id,
+              id: response.data[i].id
             });
           }
         }
@@ -93,8 +80,8 @@ class Keyword extends React.Component {
           isLoding: false,
           rows: rowArray,
         });
-        var inputs = document.getElementsByTagName("Input");
-        for (var i = 0; i < inputs.length; i++) {
+        let inputs = document.getElementsByTagName("Input");
+        for (let i = 0; i < inputs.length; i++) {
           if (inputs[i].id === "keyword") {
             inputs[i].disabled = true;
           }
@@ -121,11 +108,6 @@ class Keyword extends React.Component {
         handleServerErrors(error, toast.error);
       });
   };
-
-  handleBack = () => {
-    window.location.href = "/app/cloud-chart/";
-  }
-
 
   //** DELETE A Keyword **//
   deleteKeyword = (id) => {
@@ -166,7 +148,6 @@ class Keyword extends React.Component {
     return (
       <>
         <Header/>
-
         <Container className="mt--7" fluid>
           <Row>
             <Col className="order-xl-1" xl="12">
@@ -176,22 +157,17 @@ class Keyword extends React.Component {
                     <Col xs="12">
                       <h3 className="mb-0">Manage Interest</h3>
                       <p className="bold">
-                      Here you can manage your interests. 
-                      You can rate/modify your interests on a scale from 1 to 5 (higher number means greater interest). 
+                        Here you can manage your interests.
+                        You can rate/modify your interests on a scale from 1 to 5 (higher number means greater
+                        interest).
                       </p>
-                      <p><i>(P.S: Only top 15 interests will be visualized in the word cloud.)</i>
-                      </p>
+                      <p><i>(P.S: Only top 15 interests will be visualized in the word cloud.)</i></p>
                     </Col>
                   </Row>
                 </CardHeader>
                 {this.state.isLoding ? (
                   <div className="text-center" style={{padding: "20px"}}>
-                    <Loader
-                      type="Puff"
-                      color="#00BFFF"
-                      height={100}
-                      width={100}
-                    />
+                    <Loader type="Puff" color="#00BFFF" height={100} width={100}/>
                   </div>
                 ) : (
                   <CardBody>
@@ -234,10 +210,11 @@ class Keyword extends React.Component {
                                 <Button
                                   className="btn btn-outline-danger btn-sm"
                                   style={{marginTop: "8px"}}
-                                  onClick={this.handleRemoveSpecificRow(
-                                    this.state.rows[idx].id,
-                                    idx
-                                  )}
+                                  onClick={
+                                    this.handleRemoveSpecificRow(
+                                      this.state.rows[idx].id,
+                                      idx
+                                    )}
                                 >
                                   Remove
                                 </Button>
@@ -246,37 +223,24 @@ class Keyword extends React.Component {
                           </Row>
                         ))}
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          margin: " 0 53px 0 25px",
-                          justifyContent: "space-between",
-                        }}
-                      >
+                      <div style={{display: "flex", margin: " 0 53px 0 25px", justifyContent: "space-between"}}>
                         <div align="left">
-                          <Button
-                            style={{color: "green"}}
-                            type="button"
-                            onClick={this.handleAddRow}
-                          >
+                          <Button style={{color: "green"}} type="button" onClick={this.handleAddRow}>
                             Add
                           </Button>
                         </div>
-
                         <div style={{margin: "32px 0px 0px 0px"}}>
                           <div align="right">
                             <Button color="primary" type="submit">
-                              {" "}
-                              Save{" "}
+                              Save
                             </Button>
-
-                            <Button color="secondary" onClick={this.handleBack}>
-                              {" "}
-                              Back{" "}
-                            </Button>
+                            <Link to={"/app/cloud-chart/" + getItem("userId")}>
+                              <Button color="secondary">
+                                Back
+                              </Button>
+                            </Link>
                           </div>
                         </div>
-
                       </div>
                     </Form>
                   </CardBody>
