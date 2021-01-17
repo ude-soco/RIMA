@@ -222,7 +222,7 @@ class ViewPaper extends React.Component {
                         My Publications
                       </h2>
                     </Col>
-                    <Col md="auto">
+                    {/* <Col md="auto">
                       <OverlayTrigger
                         placement="left"
                         delay={{show: 100, hide: 400}}
@@ -232,12 +232,12 @@ class ViewPaper extends React.Component {
                           </Tooltip>
                         }
                       >
-                        <Button color="info" onClick={this.refreshPaper}>
+                        { <Button color="info" onClick={this.refreshPaper}>
                           <FontAwesomeIcon icon={faSyncAlt} style={{marginRight: "8px"}}/>
                           Update
-                        </Button>
+                        </Button> }
                       </OverlayTrigger>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </CardHeader>
 
