@@ -102,6 +102,8 @@ export default class TweetCard extends Component {
     const text = tweet["full_text"];
     const color = tweet["color"];
 
+    const score = tweet["score"]
+
     // console.log("TEXT: ", text);
     const retweets = tweet["retweet_count"];
     const favorites = tweet["retweet_count"];
@@ -196,10 +198,14 @@ export default class TweetCard extends Component {
             </UncontrolledDropdown>
           </div>
           <div className="card-body">
-            <h5 className="card-title">
-              <img src={profileUrl} alt={name}/>
-              {name} <span>@{screenName}</span>
-            </h5>
+
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="card-title">
+                <img src={profileUrl} alt={name}/>
+                {name} <span>@{screenName}</span>
+              </h5>
+              <h4 style={{marginRight: "40px"}}>{score}%</h4>
+            </div>
             <p className="card-text">
               <a
                 href={tweet_url}

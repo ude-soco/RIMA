@@ -1,16 +1,18 @@
 import tweepy
 import pytz
 import os
+import random
 from tweepy.parsers import JSONParser
-
+from interests.Keyword_Extractor.extractor import getKeyword
+from interests.wikipedia_utils import wikifilter
+from .utils import get_interest_similarity_score
 
 utc = pytz.timezone('UTC')
 
-TWITTER_API_KEY         = "VHR72dG8nWMZBHYFeyDOlYvV5"
-TWITTER_API_SECRET      = "SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X"
-TWITTER_ACCESS          = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
-TWITTER_ACCESS_SECRET   = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
-
+TWITTER_API_KEY = "VHR72dG8nWMZBHYFeyDOlYvV5"
+TWITTER_API_SECRET = "SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X"
+TWITTER_ACCESS = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
+TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 
 AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
@@ -44,11 +46,11 @@ class TwitterAPI:
         tweets = []
         tweet_count = 0
         for tweet in tweepy.Cursor(
-            self.auth_api.user_timeline,
-            id=self.target,
-            tweet_mode="extended",
-            wait_on_rate_limit=True,
-            wait_on_rate_limit_notify=True,
+                self.auth_api.user_timeline,
+                id=self.target,
+                tweet_mode="extended",
+                wait_on_rate_limit=True,
+                wait_on_rate_limit_notify=True,
         ).items():
             tweet_count += 1
             tweet_ct = utc.localize(tweet.created_at)
@@ -90,7 +92,7 @@ def extract_tweet_from_response(tweet, tag):
     if "retweeted_status" in tweet.keys():
         tweet = tweet["retweeted_status"]
     try:
-        media= tweet["extended_entities"]["media"]
+        media = tweet["extended_entities"]["media"]
     except KeyError:
         try:
             media = tweet["entities"]["media"]
@@ -121,6 +123,7 @@ def generate_geo_code(tag):
 
 
 def get_recommended_tweets(tags):
+    user_interest_model_list = []  # creates a list of user interest model
     full_result = []
     for tag in tags:
         extra_kwargs = {}
@@ -130,13 +133,39 @@ def get_recommended_tweets(tags):
         language = tag.get("lang", None)
         if language is not None:
             extra_kwargs['lang'] = language
-
+        user_interest_model_list.append(tag["text"])
         response = API.search(
             q=tag["text"],
             tweet_mode="extended",
             count=tag["n_tweets"],
             **extra_kwargs
-            )
-        result = [extract_tweet_from_response(x, tag) for x in response["statuses"]]
-        full_result.extend(result)
-    return full_result
+        )
+
+        results = [extract_tweet_from_response(x, tag) for x in response["statuses"]]
+        full_result.extend(results)
+
+    # TODO:
+    #   1. Get five tweets for each user interest model and put it in an array
+    #   2. Take the full_text of each tweet and perform the keywords extraction function
+    #       2.1 use full_result[0].get("full_text") to get the text of the tweet
+    #       2.2 extracted_keywords = getKeyword("tweet full_text", "TopicRank")
+    #       -> returns an object { "Timesheet": "5" } -> need to use the key
+    #   3. Take the extracted_keywords and tags and calculate similarity
+    #   4. Sort the list according to score
+
+    for result in full_result:
+        text = result.get("full_text")
+        algorithm = "TopicRank"
+        extract_keywords_from_tweet = getKeyword(text, algorithm)
+        wiki_keyword_redirect_mapping, keywords_extracted = wikifilter(extract_keywords_from_tweet)
+        keywords_list = list(keywords_extracted.keys())
+        # uncomment "score" before DOCKER deployment
+        score = get_interest_similarity_score(user_interest_model_list, keywords_list, "WordEmbedding")
+
+        # comment "score" before DOCKER deployment
+        # score = random.random()
+        result["score"] = round((score or 0) * 100, 2)
+
+    sorted_list = sorted(full_result, key=lambda k: k['score'], reverse=True)
+
+    return sorted_list

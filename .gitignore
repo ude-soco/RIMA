@@ -116,3 +116,11 @@ db.sqlite3
 static/*
 datatest_word2vec.txt
 .vscode/*
+venv/*
+venv
+connect_to_server.sh
+deploy.sh
+build/*
+build
+node_modules/
+package-lock.json
