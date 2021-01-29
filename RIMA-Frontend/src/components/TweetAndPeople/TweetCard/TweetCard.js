@@ -16,7 +16,7 @@ import OptionDropDown from "../../OptionDropDown";
 import styled from "styled-components";
 import TweetInfoOption from "components/OptionDropDown/TweetInfoOption";
 import RestAPI from "services/api";
-import {Container, OverlayTrigger, Popover, Button, Image} from "react-bootstrap";
+import {Container, OverlayTrigger, Popover, Button, Image, Badge} from "react-bootstrap";
 import TweetCardRecommendation from "./TweetCardRecommendation";
 
 const HideContainer = styled.div`
@@ -204,7 +204,9 @@ export default class TweetCard extends Component {
                 <img src={profileUrl} alt={name}/>
                 {name} <span>@{screenName}</span>
               </h5>
-              <h4 style={{marginRight: "40px"}}>{score}%</h4>
+              <h2 style={{marginRight: "40px", marginBottom: "0px"}}>
+                <Badge pill variant="dark" style={{backgroundColor: "#f7f7f7"}}>Similarity: {score}%</Badge>
+              </h2>
             </div>
             <p className="card-text">
               <a
@@ -309,9 +311,10 @@ export default class TweetCard extends Component {
             {/* {console.log("keyword_tags", keyword_tags)} */}
             <div>
               <TweetCardRecommendation
-                  userInterestModel={keyword_tags}
-                  tweetText={text}
-                  tag={tweet["tagId"]}
+                userInterestModel={keyword_tags}
+                tweetText={text}
+                tag={tweet["tagId"]}
+                score={score}
               />
 
               {/*<TweetInfoOption*/}

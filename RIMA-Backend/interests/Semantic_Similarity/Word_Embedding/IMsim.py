@@ -4,6 +4,7 @@ from gensim.models.keyedvectors import KeyedVectors
 from gensim.models.wrappers import FastText
 from nltk.corpus import stopwords
 
+# from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 if os.environ.get("BACKGROUND_ENV") == "web":
     from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 
@@ -86,7 +87,6 @@ def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0)
         sim_score = cosine_sim(source_vec, target_vec)
 
         if sim_score > threshold:
-
             return sim_score
 
     elif embedding == "Glove":
@@ -96,7 +96,6 @@ def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0)
         sim_score = cosine_sim(source_vec, target_vec)
 
         if sim_score > threshold:
-
             return sim_score
 
     elif embedding == "FastText":
@@ -108,5 +107,4 @@ def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0)
         sim_score = cosine_sim(source_vec, target_vec)
 
         if sim_score > threshold:
-
             return sim_score

@@ -64,14 +64,15 @@ def generate_long_term_model(user_id):
                 tweet
                 for tweet in Tweet.objects.filter(
                     user_id=user_id, full_text__icontains=interest.lower()
-                )   
+                )
             ]
             tweet_list += tweets
 
             papers = [
                 paper
                 for paper in Paper.objects.filter(
-                    Q(user_id=user_id) & (Q(abstract__icontains=interest.lower()) | Q(title__icontains=interest.lower()))
+                    Q(user_id=user_id) & (
+                                Q(abstract__icontains=interest.lower()) | Q(title__icontains=interest.lower()))
                 )
             ]
             print(papers)
@@ -175,7 +176,6 @@ def generate_short_term_model(user_id, source):
                     s_interest.tweets.add(t)
         tweet_candidates.update(used_in_calc=True)
 
-
     if source == ShortTermInterest.SCHOLAR:
         paper_candidates = Paper.objects.filter(user_id=user_id, used_in_calc=False)
         year_wise_text = {}
@@ -240,12 +240,13 @@ def generate_short_term_model(user_id, source):
 
 
 def get_interest_similarity_score(
-    keyword_list_1, keyword_list_2, algorithm="WordEmbedding"
+        keyword_list_1, keyword_list_2, algorithm="WordEmbedding"
 ):
     if algorithm == "WordEmbedding":
         return calculate_similarity(keyword_list_1, keyword_list_2, embedding="Glove")
     else:
         return wikisim(keyword_list_1, keyword_list_2)
+
 
 def cosine_sim(vecA, vecB):
     """Find the cosine similarity distance between two vectors."""
@@ -254,12 +255,14 @@ def cosine_sim(vecA, vecB):
         return 0
     return csim
 
+
 def get_heat_map_data(user_1_interests, user_2_interests):
     data = {}
     for u_1_interest in user_1_interests:
         data[u_1_interest] = {}
         for u_2_interest in user_2_interests:
-            data[u_1_interest][u_2_interest] = round(get_interest_similarity_score([u_1_interest], [u_2_interest]) or 0, 2)
+            data[u_1_interest][u_2_interest] = round(get_interest_similarity_score([u_1_interest], [u_2_interest]) or 0,
+                                                     2)
     return data
 
 
@@ -269,7 +272,6 @@ def get_venn_chart_data(user_1_interests, user_2_interests):
     exclusive_user_1_interests = set(user_1_interests)
     exclusive_user_2_interests = set(user_2_interests)
     similar_interests = {"user_1": {}, "user_2": {}}
-
 
     for user_1_interest, user_2_interest_set in heat_map_data.items():
         for user_2_interest, sim_score in user_2_interest_set.items():
@@ -292,7 +294,6 @@ def get_venn_chart_data(user_1_interests, user_2_interests):
         "user_2_exclusive_interest": list(exclusive_user_2_interests),
         "similar_interests": similar_interests
     }
-
 
 
 def get_radar_similarity_data(user_1_interests, user_2_interests):
@@ -324,7 +325,6 @@ def get_radar_similarity_data(user_1_interests, user_2_interests):
                         user_interest_vector /= len(interest_phrases)
                     else:
                         keyword_vector = get_vector(user_1_interest)
-
 
                     weight += cosine_sim(keyword_vector, user_interest_vector)
                 except:
@@ -373,8 +373,8 @@ def get_top_short_term_interest_by_weight(user_id, count=10):
         ShortTermInterest.objects.filter(
             user_id=user_id
         )
-        .prefetch_related("tweets", "papers", "keyword")
-        .order_by("-model_year", "-model_month", "-weight")
+            .prefetch_related("tweets", "papers", "keyword")
+            .order_by("-model_year", "-model_month", "-weight")
     )
 
     keyword_id_map = {}
@@ -407,13 +407,15 @@ def get_top_short_term_interest_by_weight(user_id, count=10):
 
     return date_filtered_qs.filter(id__in=list(keyword_id_map.values()))
 
+
 def get_top_long_term_interest_by_weight(user_id, count=10):
     paper_weight = 0.6
     paper_limit = int(count * paper_weight)
     tweet_limit = count - paper_limit
 
     date_filtered_qs = (
-        LongTermInterest.objects.filter(user_id=user_id).prefetch_related("tweets", "papers", "keyword").order_by("-weight")
+        LongTermInterest.objects.filter(user_id=user_id).prefetch_related("tweets", "papers", "keyword").order_by(
+            "-weight")
     )
     tweet_model_ids = set(
         date_filtered_qs.filter(source__icontains=ShortTermInterest.TWITTER).values_list(
@@ -445,6 +447,7 @@ def get_top_long_term_interest_by_weight(user_id, count=10):
         )
 
     # add manual keyword
-    final_model_ids = final_model_ids.union(set(list(date_filtered_qs.filter(source=LongTermInterest.MANUAL).values_list("id", flat=True))))
+    final_model_ids = final_model_ids.union(
+        set(list(date_filtered_qs.filter(source=LongTermInterest.MANUAL).values_list("id", flat=True))))
 
     return date_filtered_qs.filter(id__in=final_model_ids)

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image} from "react-bootstrap";
+import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image, Badge} from "react-bootstrap";
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
@@ -9,7 +9,7 @@ import HeatmapTweet from "../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
 
 export default function TweetCardRecommendation(props) {
   // Props
-  const {userInterestModel, tweetText} = props;
+  const {userInterestModel, tweetText, score} = props;
 
   // Local constants
   const [openOverlay, setOpenOverlay] = useState(false);
@@ -121,10 +121,15 @@ export default function TweetCardRecommendation(props) {
           <Popover style={{maxWidth: "600px"}}>
             <Popover.Title>
               <Container>
-                <Row style={{alignItems: "center"}}>
+                <Row  className="align-items-center">
                   <Col style={{padding: "0px"}}>
                     <h2 style={{marginBottom: "0px"}}>
                       {explanation[step]}
+                    </h2>
+                  </Col>
+                  <Col md="auto" style={{paddingRight: "0px"}}>
+                    <h2 style={{marginBottom: "0px"}}>
+                      <Badge pill variant="dark" style={{backgroundColor: "#f7f7f7"}}>Similarity: {score}%</Badge>
                     </h2>
                   </Col>
                   <Col md="auto" style={{paddingRight: "0px"}}>

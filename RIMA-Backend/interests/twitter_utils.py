@@ -138,6 +138,7 @@ def get_recommended_tweets(tags):
             q=tag["text"],
             tweet_mode="extended",
             count=tag["n_tweets"],
+            # count=25,
             **extra_kwargs
         )
 
@@ -153,19 +154,28 @@ def get_recommended_tweets(tags):
     #   3. Take the extracted_keywords and tags and calculate similarity
     #   4. Sort the list according to score
 
-    for result in full_result:
+    # Extract unique tweets according to their IDs
+    unique_tweets = {each['id_str']: each for each in full_result}.values()
+
+    print(len(full_result))
+    print(len(unique_tweets))
+
+    tweets_with_scores = []
+    for result in unique_tweets:
         text = result.get("full_text")
-        algorithm = "TopicRank"
+        algorithm = "Yake"
         extract_keywords_from_tweet = getKeyword(text, algorithm)
-        wiki_keyword_redirect_mapping, keywords_extracted = wikifilter(extract_keywords_from_tweet)
-        keywords_list = list(keywords_extracted.keys())
-        # uncomment "score" before DOCKER deployment
-        score = get_interest_similarity_score(user_interest_model_list, keywords_list, "WordEmbedding")
+        # wiki_keyword_redirect_mapping, keywords_extracted = wikifilter(extract_keywords_from_tweet)
+        # keywords_list = list(keywords_extracted.keys())
+        keywords_list = list(extract_keywords_from_tweet.keys())
+        # # uncomment "score" before DOCKER deployment
+        score = round((get_interest_similarity_score(user_interest_model_list, keywords_list) or 0) * 100, 2)
 
-        # comment "score" before DOCKER deployment
-        # score = random.random()
-        result["score"] = round((score or 0) * 100, 2)
+        # # comment "score" before DOCKER deployment
+        # score = round((random.random() or 0) * 100, 2)
+        if score > 20:
+            result["score"] = score
+            tweets_with_scores.append(result)
 
-    sorted_list = sorted(full_result, key=lambda k: k['score'], reverse=True)
-
+    sorted_list = sorted(tweets_with_scores, key=lambda k: k['score'], reverse=True)
     return sorted_list
