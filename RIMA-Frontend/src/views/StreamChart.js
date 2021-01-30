@@ -53,7 +53,7 @@ class StreamChartPage extends React.Component {
                 <CardHeader className="bg-transparent">
                   <Row className="align-items-center">
                     <div className="col">
-                      <h2 className="text-white1 mb-0">Interest monitoring</h2>
+                      <h2 className="text-white1 mb-0">Interest Trends</h2>
                       <p>
                       These charts allow you to monitor your interests over the last years. 
                       The x-axis represents the years, and the larger the area the greater the interest.

@@ -22,10 +22,12 @@ export default function TweetCardRecommendation(props) {
     "Advanced explanation"
   ];
   const description = [
-    "This tweet is recommended to you because your interest keywords and the keywords " +
-    "extracted from the tweet are highly similar. Here you can see the exact similarity " +
-    "score between your interest and the tweet text",
-    "The inner logic of recommending this tweet is as follow:"
+  
+    ' In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.'+
+    ' On the X-axis we have the keywords extracted from the tweet, and on the Y-axis we have the interest profile'
+    ,
+    'In this figure, the inner logic of recommending this tweet is revealed.'+ 
+    'The steps from extracting interests/Tweet keywords and their embedding representations to compute similarity between the two embedding models are illustrated:'
   ];
 
   // Functions
@@ -152,7 +154,7 @@ export default function TweetCardRecommendation(props) {
                     : (step === 1 ? (
                         <Row style={{marginBottom: "22px"}}>
                           <Col xs={6} md={4}>
-                            <Image src='/images/wikilink.png' width={'570'} rounded/>
+                            <Image src='/images/adv X.png' width={'570'} rounded/>
                           </Col>
                         </Row>
                       ) : (error ?

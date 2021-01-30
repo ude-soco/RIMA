@@ -513,6 +513,14 @@ export default class TweetsAndPeople extends Component {
                   <h2>
                     Tweets & People
                   </h2>
+                  <p>Here you can get recommended Tweets relevant to your interests. 
+                  The interest set below represents the highest interests in your interest profile. 
+                 <br/>
+
+                  You can learn more about why/how this Tweet is recommended to you:
+                  <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity score</strong> show you how relevant the Tweet is to your interest profile (basic explanation)</li>
+                  <li> click on 'Why this tweet?' (intermediate and advanced explanations)</li>
+                  </p> 
                 </Col>
               </Row>
 
