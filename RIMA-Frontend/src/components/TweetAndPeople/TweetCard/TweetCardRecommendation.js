@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image, Badge} from "react-bootstrap";
+import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image, Badge, Modal} from "react-bootstrap";
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
@@ -17,16 +17,17 @@ export default function TweetCardRecommendation(props) {
   const [series, setSeries] = useState([]);
   const [error, setError] = useState("");
   const [count, setCount] = useState(0);
+  const [modal, setModal] = useState(false);
   const explanation = [
     "Intermediate explanation",
     "Advanced explanation"
   ];
   const description = [
-  
-    ' In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.'+
+
+    ' In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.' +
     ' On the X-axis we have the keywords extracted from the tweet, and on the Y-axis we have the interest profile'
     ,
-    'In this figure, the inner logic of recommending this tweet is revealed.'+ 
+    'In this figure, the inner logic of recommending this tweet is revealed.' +
     'The steps from extracting interests/Tweet keywords and their embedding representations to compute similarity between the two embedding models are illustrated:'
   ];
 
@@ -60,6 +61,10 @@ export default function TweetCardRecommendation(props) {
       }
       setStep(0);
     }, 500);
+  }
+
+  const handleEnlargeImage = () => {
+    setModal(!modal);
   }
 
   // REST API request for keywords from tweet and to compute similarity between tweet keywords
@@ -120,10 +125,10 @@ export default function TweetCardRecommendation(props) {
         show={openOverlay}
         placement="bottom-end"
         overlay={
-          <Popover style={{maxWidth: "600px"}}>
+          <Popover style={{maxWidth: "600px", zIndex: 5}}>
             <Popover.Title>
               <Container>
-                <Row  className="align-items-center">
+                <Row className="align-items-center">
                   <Col style={{padding: "0px"}}>
                     <h2 style={{marginBottom: "0px"}}>
                       {explanation[step]}
@@ -153,8 +158,19 @@ export default function TweetCardRecommendation(props) {
                   {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series} width={'550'} height={'280'}/>
                     : (step === 1 ? (
                         <Row style={{marginBottom: "22px"}}>
-                          <Col xs={6} md={4}>
-                            <Image src='/images/adv X.png' width={'570'} rounded/>
+                          <Col>
+                            <Image src='/images/adv X.png' width={'570'}
+                                   style={{cursor: "pointer"}} onClick={handleEnlargeImage}/>
+                            <Modal show={modal} onHide={handleEnlargeImage} size={"lg"}>
+                              <Modal.Header className="justify-content-end">
+                                <IconButton type="button" style={{width: "48px"}} onClick={handleEnlargeImage}>
+                                  <FontAwesomeIcon icon={faTimes}/>
+                                </IconButton>
+                              </Modal.Header>
+                              <Modal.Body>
+                                <Image fluid src='/images/adv X.png'/>
+                              </Modal.Body>
+                            </Modal>
                           </Col>
                         </Row>
                       ) : (error ?
@@ -198,6 +214,8 @@ export default function TweetCardRecommendation(props) {
           Why this tweet?
         </Button>
       </OverlayTrigger>
+      {/* Modal to show the enlarged image of advanced explanation */}
+
     </>
   )
 }
