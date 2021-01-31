@@ -173,7 +173,7 @@ def get_recommended_tweets(tags):
 
         # # comment "score" before DOCKER deployment
         # score = round((random.random() or 0) * 100, 2)
-        if score > 20:
+        if score > 40:
             result["score"] = score
             tweets_with_scores.append(result)
 

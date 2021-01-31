@@ -4,6 +4,7 @@ from gensim.models.keyedvectors import KeyedVectors
 from gensim.models.wrappers import FastText
 from nltk.corpus import stopwords
 
+# Uncomment line 8 and comment line 9 and 10, if you want to work without docker
 # from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 if os.environ.get("BACKGROUND_ENV") == "web":
     from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model

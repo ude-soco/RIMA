@@ -23,9 +23,7 @@ export default function TweetCardRecommendation(props) {
     "Advanced explanation"
   ];
   const description = [
-
-    ' In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.' +
-    ' On the X-axis we have the keywords extracted from the tweet, and on the Y-axis we have the interest profile'
+    ' In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.'
     ,
     'In this figure, the inner logic of recommending this tweet is revealed.' +
     'The steps from extracting interests/Tweet keywords and their embedding representations to compute similarity between the two embedding models are illustrated:'
@@ -71,7 +69,7 @@ export default function TweetCardRecommendation(props) {
   const calculateSimilarity = async () => {
     const data = {
       text: tweetText.trim(),
-      algorithm: "TopicRank"
+      algorithm: "Yake"
     };
     const keywordArray = [];
     try {
@@ -187,6 +185,16 @@ export default function TweetCardRecommendation(props) {
                     )
                   }
                 </Row>
+                {step === 0 && series.length !== 0 ? (
+                  <Row className="justify-content-space-between">
+                    <Col style={{margin: "auto"}}>
+                      <p style={{fontSize: "14px", margin: "auto"}}><strong>Y-AXIS:</strong> Keywords extracted from tweet</p>
+                    </Col>
+                    <Col style={{margin: "auto", textAlign: "center"}} >
+                      <p style={{fontSize: "14px", margin: "auto"}}><strong>X-AXIS:</strong> User interest profile</p>
+                    </Col>
+                  </Row>
+                ) : <></>}
                 <Row>
                   <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?

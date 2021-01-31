@@ -7,11 +7,16 @@ import ReactApexChart from "react-apexcharts"
 export default function HeatMap(props) {
   const {series, width, height} = props;
   const options = {
+    legend: {
+      show: true,
+      position: 'right',
+      horizontalAlign: 'center',
+    },
     dataLabels: {
-      enabled: false,
+      enabled: true,
     },
     colors: ["#008FFB"],
-   }
+  }
 
   return (
     <>
