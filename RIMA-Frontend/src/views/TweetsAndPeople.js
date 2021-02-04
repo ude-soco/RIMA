@@ -499,6 +499,10 @@ export default class TweetsAndPeople extends Component {
 
   render() {
     const {tweets, users} = this.state;
+
+    window.onload=function(){
+      document.getElementById("search").click();
+    };
     // console.log("the state is");
     // console.log(this.state.place);
     return (
@@ -514,12 +518,12 @@ export default class TweetsAndPeople extends Component {
                     Tweets & People
                   </h2>
                   <p>Here you can get recommended Tweets relevant to your interests. 
-                  The interest set below represents the highest interests in your interest profile. 
+                  The interest set below represents the top 5 interests in your interest profile. 
                  <br/>
 
                   You can learn more about why/how this Tweet is recommended to you:
                   <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity score</strong> show you how relevant the Tweet is to your interest profile (basic explanation)</li>
-                  <li> click on 'Why this tweet?' (intermediate and advanced explanations)</li>
+                  <li> click on <strong>'Why this tweet?'</strong> to get more details  (intermediate and advanced explanations)</li>
                   </p> 
                 </Col>
               </Row>
@@ -560,7 +564,7 @@ export default class TweetsAndPeople extends Component {
                       }}
                     /> */}
 
-                    <AdvanceFilter
+                    {/* <AdvanceFilter
                       setWeightOfkeyword={this.setWeightOfkeyword}
                       tags={this.state.tags}
                       filterUsers={this.filterUsers.bind(this)}
@@ -574,7 +578,7 @@ export default class TweetsAndPeople extends Component {
                       tweets={this.state.tweets}
                       tagsWithoutWeight={this.state.tagsWithoutWeight}
                       makeBorder={this.makeBorder.bind(this)}
-                    />
+                    /> */}
 
                     {/* <UncontrolledPopover
                       trigger="legacy"
@@ -633,14 +637,18 @@ export default class TweetsAndPeople extends Component {
                           changeHandler={this.changeHandler}
                         />
                       </UncontrolledDropdown> */}
+
                       <Form
                         method="post"
-                        onSubmit={this.handleSearchButtonClick}
+                        onSubmit={this.handleSearchButtonClick} // should be triggered automatically
                       >
-                        <Button className="bg-primary" type="submit">
+                       <div style={{padding: '15px'}}>
+                        <Button id="search" className="bg-primary" type="submit">
                           <i className="fas fa-search text-white"></i>
                         </Button>
+                        </div>
                       </Form>
+
                     </ButtonGroup>
                   </Row>
                 </Container>
@@ -733,6 +741,7 @@ export default class TweetsAndPeople extends Component {
                   </Nav>
                 </Col>
               </Row>
+
               <Container style={{paddingTop: "20px"}}>
                 <TabContent activeTab={this.state.activeTab}>
                   <TabPane tabId="1">
@@ -822,6 +831,7 @@ const Tabs = () => {
           </NavLink>
         </NavItem>
       </Nav>
+      
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
           <Row>

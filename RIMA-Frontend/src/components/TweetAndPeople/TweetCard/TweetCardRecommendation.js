@@ -23,10 +23,10 @@ export default function TweetCardRecommendation(props) {
     "Advanced explanation"
   ];
   const description = [
-    ' In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.'
+    'In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.'+'\n'+ 'The X axis represents the keywords extacted from the tweet, and the Y axis represent the your interests'
     ,
-    'In this figure, the inner logic of recommending this tweet is revealed.' +
-    'The steps from extracting interests/Tweet keywords and their embedding representations to compute similarity between the two embedding models are illustrated:'
+    'In this figure, the inner logic of recommending this tweet is Explained. ' +
+    'The steps from extracting interests/Tweet keywords and generating their embedding representations to compute similarity between the two embedding models are illustrated:'
   ];
 
   // Functions
@@ -185,16 +185,16 @@ export default function TweetCardRecommendation(props) {
                     )
                   }
                 </Row>
-                {step === 0 && series.length !== 0 ? (
+{/*                 {step === 0 && series.length !== 0 ? (
                   <Row className="justify-content-space-between">
                     <Col style={{margin: "auto"}}>
-                      <p style={{fontSize: "14px", margin: "auto"}}><strong>Y-AXIS:</strong> Keywords extracted from tweet</p>
+                      <p style={{fontSize: "14px", margin: "auto"}}><strong>X-AXIS:</strong> Keywords extracted from tweet</p>
                     </Col>
                     <Col style={{margin: "auto", textAlign: "center"}} >
-                      <p style={{fontSize: "14px", margin: "auto"}}><strong>X-AXIS:</strong> User interest profile</p>
+                      <p style={{fontSize: "14px", margin: "auto"}}><strong>Y-AXIS:</strong> User interest profile</p>
                     </Col>
                   </Row>
-                ) : <></>}
+                ) : <></>} */}
                 <Row>
                   <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?

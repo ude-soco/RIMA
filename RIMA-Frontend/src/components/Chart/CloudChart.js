@@ -171,12 +171,12 @@ class CloudChartPage extends Component {
       getWordTooltip: (word) =>
         `${
           word.source == "Scholar"
-            ? "Extracted from Paper"
+            ? "Extracted from publications"
             : word.source == "Twitter"
-            ? "Extracted from Twitter"
+            ? "Extracted from tweets"
             : word.source == "Manual"
             ? "Manually added"
-            : "Extracted from Paper & Twitter"
+            : "Extracted from publications & tweets"
         }`,
       onWordClick: this.getCallback("onWordClick"),
     };
@@ -208,10 +208,12 @@ class CloudChartPage extends Component {
         >
           <ModalBody>
             <Tabs>
+
               <TabList>
-                <Tab>Papers</Tab>
+                <Tab>Publications</Tab>
                 <Tab>Tweets</Tab>
               </TabList>
+
               <TabPanel>
                 {this.state.isModalLoader ? (
                   <div className="text-center" style={{ padding: "20px" }}>
@@ -228,14 +230,13 @@ class CloudChartPage extends Component {
                     {this.state.isPaperData ? (
                       <>
                         <p>
-                          {this.state.papercount} Papers Contain this interest
+                          Number of publications containing this interest: {this.state.papercount}
                         </p>
-                        <p>The weight of interest :{this.state.weight} </p>
+                        <p>The weight of this interest: {this.state.weight} </p>
                         <p>
-                          Interest keywords before Wikipedia filter related to
-                          this interest : {this.state.original_keywords.join(',')}
+                          Keywords used to generate this interest before applying the Wikipedia filter: {this.state.original_keywords.join(',')}
                         </p>
-                        <p>Algorithm used to extract keywords : Singlerank</p>
+                        <p>Algorithm used to extract the keywords: Singlerank</p>
 
                         {this.state.userPageIDs.map((data, idx) => (
                           <>
@@ -278,12 +279,13 @@ class CloudChartPage extends Component {
                       </p>
                     ) : (
                       <p style={{ textAlign: "center" }}>
-                        No Matching Papers Found{" "}
+                        No Matching Publications Found{" "}
                       </p>
                     )}
                   </>
                 )}
               </TabPanel>
+
               <TabPanel>
                 {this.state.isModalLoader ? (
                   <div className="text-center" style={{ padding: "20px" }}>
@@ -299,12 +301,9 @@ class CloudChartPage extends Component {
                   <>
                     {this.state.isTweetData ? (
                       <>
-                        <p>The weight of interest :{this.state.weight} </p>
-                        <p>
-                          Interest keywords before Wikipedia filter related to
-                          this interest : {this.state.original_keyword}
-                        </p>
-                        <p>Algorithm used to extract keywords : YAKE</p>
+                        <p>The weight of this interest: {this.state.weight} </p>
+                        <p>Keywords used to generate this interest before applying the Wikipedia filter: {this.state.original_keyword} </p>
+                        <p>Algorithm used to extract the keywords: YAKE</p>
                         {this.state.tweetIds.map((data, idx) => (
                           <div
                             style={{
@@ -335,7 +334,7 @@ class CloudChartPage extends Component {
                       </p>
                     ) : (
                       <p style={{ textAlign: "center" }}>
-                        No Matching Papers Found{" "}
+                        No Matching Publications Found{" "}
                       </p>
                     )}
                   </>

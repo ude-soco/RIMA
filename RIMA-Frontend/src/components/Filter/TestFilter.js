@@ -503,10 +503,10 @@ export default class TestFilter extends Component {
     return (
       <StyledDropdownMenu>
         {this.props.children}
-        <div>
+{/*         <div>
           <Content state={this.props.state} onChange={this.onContentChange.bind(this)} />
-        </div>
-        {this.props.state?
+        </div> */}
+{/*         {this.props.state?
            <><div>
            <Location onRadiusChange={this.onRadiusChange.bind(this)} updateInputs={this.updateInputs} state={this.props.state} onChange={this.props.changeHandler} />
          </div>
@@ -514,7 +514,7 @@ export default class TestFilter extends Component {
            <Engagment onChange={this.onContentChange.bind(this)} state={this.props.state} />
          </div>
          </>
-        :<></>}
+        :<></>} */}
 
       </StyledDropdownMenu>
     );

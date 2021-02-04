@@ -67,7 +67,11 @@ class Register extends React.Component {
   };
 
   toogle = (status) => {
-    this.setState({ tooltipOpen: status });
+    this.setState({tooltipOpen: status});
+  };
+
+  toogle1 = (status) => {
+    this.setState({tooltipOpen1: status});
   };
 
   render() {
@@ -164,6 +168,30 @@ class Register extends React.Component {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input placeholder="Twitter Account" type="text" autoComplete="new-email" name="twitterId" value={this.state.twitterId} onChange={this.handleChange} />
+                        <i
+                            className="fa fa-question-circle"
+                            style={{ lineHeight: "3" }}
+                            onMouseOver={() => this.toogle1(true)}
+                            onMouseOut={() => this.toogle1(false)}
+                          />
+                          {this.state.tooltipOpen1 && (
+                            <div
+                              style={{
+                                backgroundColor: "#ffffff",
+                                color: "#8E8E8E",
+                                borderRadius: "8px",
+                                padding: "6px",
+                                fontSize: "11px",
+                                border: "1px solid #ffffff",
+                                position: "static",
+                                marginTop: "8px",
+                                right: "32px",
+                              }}
+                            >
+                              Twitter ID used to get your tweets information.<br />
+                               You can use you Twitter ID or your account name.
+                            </div>
+                          )} 
                       </InputGroup>
                     </FormGroup>
                     <Row className="my-4">
