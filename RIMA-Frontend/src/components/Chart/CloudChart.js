@@ -90,9 +90,7 @@ class CloudChartPage extends Component {
         });
     });
 
-    if (this.state.isTweetData && !this.state.isPaperData) {
-      this.handleTabSelection("tweet")
-    }
+
   }
 
   getMarkedAbstract = (text, words) => {
@@ -100,10 +98,8 @@ class CloudChartPage extends Component {
       return text;
     }
     words = JSON.parse(JSON.stringify(words))
-    console.log("words original: ", words)
     words.sort(word => word.length);
     words.reverse();
-    console.log("words changed: ", words)
     text = text || "";
     for (let index = 0; index < words.length; index++) {
       let word = words[index];
@@ -124,6 +120,7 @@ class CloudChartPage extends Component {
       if (word.tweet_ids) {
         reactRef.setState({
           isTweetData: true,
+          tabSelection: "tweet",
           tweetIds: word.tweet_ids,
           weight: word.value,
           original_keyword: word.original_keyword,
@@ -138,6 +135,7 @@ class CloudChartPage extends Component {
       if (word.papers) {
         reactRef.setState({
           isPaperData: true,
+          tabSelection: "publications",
           userPageIDs: word.papers,
           papercount: word.papers.length,
           word: word.text,
@@ -163,6 +161,7 @@ class CloudChartPage extends Component {
       let str = word.papers.abstract;
       let res = str;
     };
+
   };
 
   toggle = (id) => {
@@ -277,13 +276,7 @@ class CloudChartPage extends Component {
               <Tab eventKey="tweet" title="Tweet">
                 {this.state.isModalLoader ? (
                   <div className="text-center" style={{padding: "20px"}}>
-                    <Loader
-                      type="Puff"
-                      color="#00BFFF"
-                      height={100}
-                      width={100}
-                      timeout={3000}
-                    />
+                    <Loader type="Puff" color="#00BFFF" height={100} width={100} timeout={3000}/>
                   </div>
                 ) : (
                   <>
