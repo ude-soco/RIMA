@@ -22,12 +22,6 @@ export default function TweetCardRecommendation(props) {
     "Intermediate explanation",
     "Advanced explanation"
   ];
-  const description = [
-    'In this chart, you can see the  similarity score between your interests and keywords extracted from the tweet by hovering over the areas of the heatmap.'+'\n'+ 'The X axis represents the keywords extacted from the tweet, and the Y axis represent the your interests'
-    ,
-    'In this figure, the inner logic of recommending this tweet is Explained. ' +
-    'The steps from extracting interests/Tweet keywords and generating their embedding representations to compute similarity between the two embedding models are illustrated:'
-  ];
 
   // Functions
   // Opens the Overlay Popover and requests keywords from tweet
@@ -148,9 +142,19 @@ export default function TweetCardRecommendation(props) {
             <Popover.Content>
               <Container>
                 <Row style={{marginBottom: "16px"}}>
-                  <h4>
-                    {description[step]}
-                  </h4>
+                  {step === 0 ? (
+                      <>
+                        <h4>In this chart, you can see the similarity score between your interests and keywords extracted
+                          from the tweet by hovering over the areas of the heatmap.</h4>
+                        <h4>The X axis represents the keywords extracted from the tweet, and the Y axis represent the your
+                          interests</h4>
+                      </>)
+                    : (<>
+                        <h4>In this figure, the inner logic of recommending this tweet is Explained. </h4>
+                        <h4>The steps from extracting interests/Tweet keywords and generating their embedding
+                          representations to compute similarity between the two embedding models are illustrated: </h4>
+                      </>
+                    )}
                 </Row>
                 <Row className="justify-content-center">
                   {(step === 0 && series.length !== 0) ? <HeatmapTweet series={series} width={'550'} height={'280'}/>
@@ -159,6 +163,7 @@ export default function TweetCardRecommendation(props) {
                           <Col>
                             <Image src='/images/adv X.png' width={'570'}
                                    style={{cursor: "pointer"}} onClick={handleEnlargeImage}/>
+                            {/* Modal to show the enlarged image of advanced explanation */}
                             <Modal show={modal} onHide={handleEnlargeImage} size={"lg"}>
                               <Modal.Header className="justify-content-end">
                                 <IconButton type="button" style={{width: "48px"}} onClick={handleEnlargeImage}>
@@ -185,16 +190,6 @@ export default function TweetCardRecommendation(props) {
                     )
                   }
                 </Row>
-{/*                 {step === 0 && series.length !== 0 ? (
-                  <Row className="justify-content-space-between">
-                    <Col style={{margin: "auto"}}>
-                      <p style={{fontSize: "14px", margin: "auto"}}><strong>X-AXIS:</strong> Keywords extracted from tweet</p>
-                    </Col>
-                    <Col style={{margin: "auto", textAlign: "center"}} >
-                      <p style={{fontSize: "14px", margin: "auto"}}><strong>Y-AXIS:</strong> User interest profile</p>
-                    </Col>
-                  </Row>
-                ) : <></>} */}
                 <Row>
                   <Col style={{paddingLeft: "0px"}}>
                     {step > 0 ?
@@ -222,8 +217,6 @@ export default function TweetCardRecommendation(props) {
           Why this tweet?
         </Button>
       </OverlayTrigger>
-      {/* Modal to show the enlarged image of advanced explanation */}
-
     </>
   )
 }
