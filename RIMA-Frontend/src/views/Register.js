@@ -133,8 +133,8 @@ class Register extends React.Component {
                         <OverlayTrigger trigger="click" placement="right" overlay={
                           <Popover style={{maxWidth: "300px"}}>
                             <Popover.Content>
-                              Semantic Scholar ID used to get your paper information.<br/>
-                              You can find your ID at the end of URL in <a href='http://www.semanticscholar.org' target="_blank"> www.semanticscholar.org</a>
+                              Semantic Scholar ID is used to get your paper information.<br/>
+                              You can find your ID at the end of URL in <a href='http://www.semanticscholar.org' target="_blank"> Semantic Scholar</a>
                             </Popover.Content>
                           </Popover>
                         }>
@@ -157,8 +157,8 @@ class Register extends React.Component {
                         <OverlayTrigger trigger="click" placement="right" overlay={
                           <Popover style={{maxWidth: "300px"}}>
                             <Popover.Content>
-                              Twitter ID used to get your tweets information.<br/>
-                              You can use you Twitter ID or your account name.
+                              Twitter username is used to get your tweets information.<br/>
+                              Open<a href='https://twitter.com/' target="_blank"> Twitter</a> and get your username 'e.g. @username'.
                             </Popover.Content>
                           </Popover>
                         }>

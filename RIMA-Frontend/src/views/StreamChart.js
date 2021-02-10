@@ -56,7 +56,7 @@ class StreamChartPage extends React.Component {
                       <h2 className="text-white1 mb-0">Interest Trends</h2>
                       <p>
                       These charts allow you to monitor your interests over the last years. 
-                      The x-axis represents the years, and the larger the area the greater the interest.
+                      The x-axis represents the years, and the y-axis represents the importance of the interest (the larger the area the greater the interest).
                       </p>
                     </div>
 

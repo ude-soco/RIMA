@@ -100,7 +100,7 @@ class CloudChartPage extends React.Component {
                                 <Tooltip>
                                   If you’re not satisfied with the interest modeling
                                   results, click here to generate a better interest
-                                  model yourself.
+                                  profile yourself.
                                 </Tooltip>
                               }
                             >

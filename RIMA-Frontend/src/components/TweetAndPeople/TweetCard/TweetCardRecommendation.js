@@ -146,13 +146,13 @@ export default function TweetCardRecommendation(props) {
                       <>
                         <h4>In this chart, you can see the similarity score between your interests and keywords extracted
                           from the tweet by hovering over the areas of the heatmap.</h4>
-                        <h4>The X axis represents the keywords extracted from the tweet, and the Y axis represent the your
-                          interests</h4>
+                        <h4>The x-axis represents the keywords extracted from the tweet, and the y-axis represents your
+                          interests.</h4>
                       </>)
                     : (<>
-                        <h4>In this figure, the inner logic of recommending this tweet is Explained. </h4>
-                        <h4>The steps from extracting interests/Tweet keywords and generating their embedding
-                          representations to compute similarity between the two embedding models are illustrated: </h4>
+                        <h4>In this figure, the inner logic of recommending this tweet is explained. It shows the
+                        steps of extracting interests and tweet keywords, generating their embedding
+                        representations, and computing similarity between them. </h4>
                       </>
                     )}
                 </Row>

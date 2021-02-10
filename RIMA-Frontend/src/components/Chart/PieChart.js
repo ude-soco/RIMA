@@ -80,10 +80,15 @@ class PieChart extends React.Component {
           let values = [];
           // let mydata = response.data.map((val) => val.keyword);
           // let values = response.data.map((val) => val.weight);
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < response.data.length; i++) {
             myData.push(response.data[i].keyword);
             values.push(response.data[i].weight);
+            if (i === 4) {
+              console.log(i);
+              break;
+              }
           }
+          console.log(myData);
           this.setState({
             isLoding: false,
             data: response.data,
@@ -99,8 +104,10 @@ class PieChart extends React.Component {
           this.setState({isLoding: false});
           handleServerErrors(error, toast.error);
         });
+
     });
   }
+
 
   render() {
     return (

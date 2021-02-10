@@ -23,6 +23,7 @@ class BarChart extends Component {
           categories: [],
         },
       },
+
       series: [],
       tweetoptions: {
         chart: {
@@ -34,6 +35,7 @@ class BarChart extends Component {
 
 
       },
+      
       tweetseries: [],
     };
   }
@@ -93,6 +95,7 @@ class BarChart extends Component {
         ) : (
           <>
             <div className="mixed-chart">
+
               <div align="center" id="chart">
                 <h2>Publications</h2>
                 <Chart 
@@ -106,6 +109,7 @@ class BarChart extends Component {
               </div>
   
               <hr/>
+
               <div align="center" id="chart">
               <h2>Tweets</h2>
               <Chart 
@@ -117,6 +121,7 @@ class BarChart extends Component {
               <p className="h1-s rtl">Quantity</p>
               <p className="h1-s">Year</p>
               </div>
+
            </div>
 
            <hr/>

@@ -137,7 +137,7 @@ export default class TweetsAndPeople extends Component {
       .then((response) => {
         let rowArray = [];
         if (response && response.data) {
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < response.data.length; i++) {
             rowArray.push({
               text: response.data[i].keyword,
               weight: response.data[i].weight,
@@ -159,6 +159,9 @@ export default class TweetsAndPeople extends Component {
                 radius: 0,
               },
             });
+            if (i === 4) {
+               break;
+               }
           }
         }
         const finalRowArray = [...rowArray].sort((a, b) => b.weight - a.weight);
@@ -517,13 +520,13 @@ export default class TweetsAndPeople extends Component {
                   <h2>
                     Tweets & People
                   </h2>
-                  <p>Here you can get recommended Tweets relevant to your interests. 
+                  <p>Here you can get recommended tweets relevant to your interests. 
                   The interest set below represents the top 5 interests in your interest profile. 
                  <br/>
 
-                  You can learn more about why/how this Tweet is recommended to you:
-                  <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity score</strong> show you how relevant the Tweet is to your interest profile (basic explanation)</li>
-                  <li> click on <strong>'Why this tweet?'</strong> to get more details  (intermediate and advanced explanations)</li>
+                  You can learn more about why/how a tweet is recommended to you:
+                  <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity score</strong> show you how relevant is the tweet to your interest profile <i>(basic explanation)</i></li>
+                  <li> Click on <strong>'Why this tweet?'</strong> to get more details  <i>(intermediate and advanced explanations)</i></li>
                   </p> 
                 </Col>
               </Row>
