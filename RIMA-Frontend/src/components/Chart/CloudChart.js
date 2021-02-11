@@ -145,7 +145,7 @@ class CloudChartPage extends Component {
       if (word.papers) {
         reactRef.setState({
           isPaperData: true,
-          tabSelection: "publications",
+          // tabSelection: "publications",
           userPageIDs: word.papers,
           papercount: word.papers.length,
           word: word.text,
@@ -157,6 +157,17 @@ class CloudChartPage extends Component {
         if (word.papers.length === 0) {
           reactRef.setState({
             isPaperData: false,
+           // tabSelection: "tweet",
+          });
+        }
+
+        if (word.source == "Scholar") {
+          reactRef.setState({
+            tabSelection: "publications",
+          })
+        }
+        else if (word.source == "Twitter")  {
+          reactRef.setState({
             tabSelection: "tweet",
           });
         }
@@ -287,7 +298,7 @@ class CloudChartPage extends Component {
                         </p>
                       ) : (
                             <p style={{ textAlign: "center" }}>
-                              No Matching Publications Found{" "}
+                              No matching publications found{" "}
                             </p>
                           )}
                     </>
@@ -338,7 +349,7 @@ class CloudChartPage extends Component {
                         </p>
                       ) : (
                             <p style={{ textAlign: "center" }}>
-                              No Matching Publications Found{" "}
+                              No matching tweets found{" "}
                             </p>
                           )}
                     </>
