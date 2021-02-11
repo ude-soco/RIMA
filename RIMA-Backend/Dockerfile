@@ -14,15 +14,13 @@ COPY requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 RUN python -m spacy download en
 
-COPY . /opt/app/
-WORKDIR /opt/app/
-
-EXPOSE 80
-
 COPY nginx_default.conf /etc/nginx/nginx.conf
-
 
 ADD datatest_word2vec.txt /opt/
 ADD interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz /opt/
 
+COPY . /opt/app/
+WORKDIR /opt/app/
+
+EXPOSE 80
 CMD bash start.sh
