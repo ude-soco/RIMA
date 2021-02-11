@@ -161,7 +161,7 @@ class Profile extends React.Component {
                           <span className="heading">
                             {this.state.data && paper_count}
                           </span>
-                          <span className="description">Papers</span>
+                          <span className="description">Publications</span>
                         </div>
 
                         {/* <div>
@@ -174,7 +174,7 @@ class Profile extends React.Component {
                           <span className="heading">
                             {this.state.data && tweet_count}
                           </span>
-                          <span className="description">Tweet Count</span>
+                          <span className="description">Tweets</span>
                         </div>
                       </div>
                     </div>
@@ -192,6 +192,9 @@ class Profile extends React.Component {
                 </CardBody>
               </Card>
             </Col>
+
+
+
             <Col className="order-xl-1" xl="8">
               <Card className="bg-secondary shadow">
                 <CardHeader className="bg-white border-0">
@@ -330,7 +333,7 @@ class Profile extends React.Component {
                         </div>
                         <hr className="my-4" />
                         <Button color="info" type="submit">
-                          Edit profile
+                          Save
                         </Button>
                       </Form>
                     </>

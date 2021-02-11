@@ -7,7 +7,7 @@ export const KEYS = {
   ESCAPE: 27,
 };
 
-export const DEFAULT_PLACEHOLDER = 'Add new tag';
+export const DEFAULT_PLACEHOLDER = 'Add new Interest';
 
 export const DEFAULT_LABEL_FIELD = 'text';
 

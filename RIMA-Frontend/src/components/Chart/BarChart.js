@@ -23,6 +23,7 @@ class BarChart extends Component {
           categories: [],
         },
       },
+
       series: [],
       tweetoptions: {
         chart: {
@@ -31,7 +32,10 @@ class BarChart extends Component {
         xaxis: {
           categories: [],
         },
+
+
       },
+      
       tweetseries: [],
     };
   }
@@ -44,6 +48,7 @@ class BarChart extends Component {
           let value = Object.values(response.data.papers);
           let tweetscategorieList = Object.keys(response.data.tweets);
           let tweetsvalue = Object.values(response.data.tweets);
+          console.log(response.data.tweets);
           this.setState({
             isLoding: false,
             data: response.data,
@@ -90,18 +95,24 @@ class BarChart extends Component {
         ) : (
           <>
             <div className="mixed-chart">
-              <h2>Paper Information</h2>
-              <Chart
-                options={this.state.options}
-                series={this.state.series}
-                type="bar"
-                width="600"
-              />
-              <p className="h1-s rtl">Quantity</p>
-              <p className="h1-s">Year</p>
-              <hr />
-              <h1>Tweet Information</h1>
-              <Chart
+
+              <div align="center" id="chart">
+                <h2>Publications</h2>
+                <Chart 
+                  options={this.state.options}
+                  series={this.state.series}
+                  type="bar"
+                  width="600"
+                />
+                <p className="h1-s rtl">Quantity</p>
+                <p className="h1-s">Year</p>
+              </div>
+  
+              <hr/>
+
+              <div align="center" id="chart">
+              <h2>Tweets</h2>
+              <Chart 
                 options={this.state.tweetoptions}
                 series={this.state.tweetseries}
                 type="bar"
@@ -109,6 +120,14 @@ class BarChart extends Component {
               />
               <p className="h1-s rtl">Quantity</p>
               <p className="h1-s">Year</p>
+              </div>
+
+           </div>
+
+           <hr/>
+
+            <div>  
+
             </div>
           </>
         )}

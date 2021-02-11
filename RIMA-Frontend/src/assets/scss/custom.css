@@ -62,7 +62,8 @@
 }
 
 .rtl {
-  writing-mode: vertical-lr;
+  writing-mode: vertical-rl;
+  transform: rotate(+180deg);
   text-orientation: mixed;
   margin-top: -424px;
   height: 400px;

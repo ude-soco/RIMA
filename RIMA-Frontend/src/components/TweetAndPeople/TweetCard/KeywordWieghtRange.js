@@ -120,7 +120,11 @@ export class KeywordRangeSlider extends Component {
           onChange={this.checkHandler}
         />{" "}
         {"  "} */}
-        <label for={text}>{text}</label>
+        <label
+          // for={text}
+        >
+          {text}
+        </label>
         <SliderContainer>
           <Slider
             type="range"

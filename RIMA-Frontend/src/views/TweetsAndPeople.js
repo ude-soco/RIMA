@@ -1,33 +1,21 @@
-import React, { Component } from "react";
-import { toast } from "react-toastify";
-import { handleServerErrors } from "utils/errorHandler";
-
+import React, {Component} from "react";
+import {toast} from "react-toastify";
+import {handleServerErrors} from "utils/errorHandler";
 import {
   Card,
   CardHeader,
-  CardTitle,
-  CardBody,
-  CardImg,
-  CardSubtitle,
-  CardText,
   Container,
   Row,
   Col,
-  UncontrolledDropdown,
   DropdownMenu,
-  DropdownToggle,
-  DropdownItem,
   ButtonGroup,
   Button,
   Form,
-  Alert,
   TabContent,
   TabPane,
   Nav,
   NavItem,
   NavLink,
-  Table,
-  UncontrolledCollapse,
 } from "reactstrap";
 import styled from "styled-components";
 
@@ -39,15 +27,11 @@ import TwitterUsers from "../components/TweetAndPeople/TwitterUserCard/TwitterUs
 import TwitterUserCard from "../components/TweetAndPeople/TwitterUserCard/TwitterUserCard.js";
 import TweetCard from "../components/TweetAndPeople/TweetCard/TweetCard.js";
 import RestAPI from "services/api";
-
-import { COUNTRIES } from "../components/TweetAndPeople/countries";
-import Collapse from "reactstrap/lib/Collapse";
-import Filter from "../components/Filter/TestFilter";
-import { MdErrorOutline } from "react-icons/md";
-import OptionDropDown from "../components/OptionDropDown";
-import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
+import {COUNTRIES} from "../components/TweetAndPeople/countries";
 import AdvanceFilter from "components/OptionDropDown/AdvanceFilter.jsx";
 import SavedTweetCard from "components/TweetAndPeople/TweetCard/SavedTweetCard";
+import ScrollTopWrapper from "../components/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import {Spinner} from "react-bootstrap";
 
 const KeyCodes = {
   comma: 188,
@@ -114,6 +98,7 @@ export default class TweetsAndPeople extends Component {
       users: [],
       activeTab: "1",
       weight: 1,
+      loading: false,
     };
     this.handleSearchButtonClick = this.handleSearchButtonClick.bind(this);
     this.handleDeleteTag = this.handleDeleteTag.bind(this);
@@ -125,7 +110,19 @@ export default class TweetsAndPeople extends Component {
     this.setWeightOfkeyword = this.setWeightOfkeyword.bind(this);
   }
 
-  generateRandomRGB() { 
+  componentDidMount() {
+    const {tags} = this.state;
+    // console.log("success")
+    RestAPI.extractTweetsFromTags(tags)
+      .then((res) => {
+        // console.log({tweet111: res.data.data})
+        this.setState({tweets: res.data.data, tweetsLoaded: true});
+        this.extractUsersFromTweets(res.data.data);
+      })
+      .catch((err) => console.error("Error Getting Tweets:", err));
+  }
+
+  generateRandomRGB() {
     const randomBetween = (min, max) =>
       min + Math.floor(Math.random() * (max - min + 1));
     const r = randomBetween(100, 255);
@@ -134,8 +131,9 @@ export default class TweetsAndPeople extends Component {
     let rgb = `rgb(${r},${g},${b})`; // Collect all to a css color string
     return rgb;
   }
+
   getKeywords = () => {
-    RestAPI.pieChart()
+    RestAPI.cloudChart()
       .then((response) => {
         let rowArray = [];
         if (response && response.data) {
@@ -161,6 +159,9 @@ export default class TweetsAndPeople extends Component {
                 radius: 0,
               },
             });
+            if (i === 4) {
+               break;
+               }
           }
         }
         const finalRowArray = [...rowArray].sort((a, b) => b.weight - a.weight);
@@ -177,7 +178,7 @@ export default class TweetsAndPeople extends Component {
         }
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({isLoding: false});
         handleServerErrors(error, toast.error);
       });
   };
@@ -189,7 +190,7 @@ export default class TweetsAndPeople extends Component {
       if (tag.id === id) tag.weight = newWeight;
       newTags.push(tag);
     });
-    this.setState({ tags: newTags });
+    this.setState({tags: newTags});
     this.sortTagsByWeight();
   };
   filterUsers = (e, tagId, action) => {
@@ -217,7 +218,7 @@ export default class TweetsAndPeople extends Component {
           }
         }
       });
-      this.setState({ filteredUsers: filteredUsers });
+      this.setState({filteredUsers: filteredUsers});
     } else if (action === "delete") {
       let newFilteredUsers = [];
       filteredUsers.map((user) => {
@@ -225,7 +226,7 @@ export default class TweetsAndPeople extends Component {
           newFilteredUsers.push(user);
         }
       });
-      this.setState({ filteredUsers: newFilteredUsers });
+      this.setState({filteredUsers: newFilteredUsers});
     }
   };
 
@@ -248,15 +249,17 @@ export default class TweetsAndPeople extends Component {
     }
   };
   tabToggle = (tab) => {
-    if (this.state.activeTab !== tab) this.setState({ activeTab: tab });
+    if (this.state.activeTab !== tab) this.setState({activeTab: tab});
   };
+
   handleDeleteTag(i) {
-    const { tags } = this.state;
+    const {tags} = this.state;
     this.setState({
       tags: tags.filter((tag, index) => index !== i),
       tagsWithoutWeight: tags.filter((tag, index) => index !== i),
     });
   }
+
   makeTagId(length) {
     var result = "";
     var characters =
@@ -269,7 +272,7 @@ export default class TweetsAndPeople extends Component {
   }
 
   handleTagAddition(tag) {
-    this.setState({ weight: this.state.weight - 0.5 })
+    this.setState({weight: this.state.weight - 0.5})
     tag.id = this.makeTagId(10);
     tag.color = this.generateRandomRGB();
     tag.n_tweets = 5;
@@ -287,7 +290,7 @@ export default class TweetsAndPeople extends Component {
       radius: tag.radius,
     };
 
-    this.setState((state) => ({ tags: [...state.tags, tag], tagsWithoutWeight: [...state.tags, tag] }));
+    this.setState((state) => ({tags: [...state.tags, tag], tagsWithoutWeight: [...state.tags, tag]}));
   }
 
   setTagDistance(distance, tagId) {
@@ -297,7 +300,7 @@ export default class TweetsAndPeople extends Component {
         tag["distance"] = distance;
       }
     });
-    this.setState({ tags: tags });
+    this.setState({tags: tags});
   }
 
   setUserDistance(distance, id_str) {
@@ -307,11 +310,11 @@ export default class TweetsAndPeople extends Component {
         user["distance"] = distance;
       }
     });
-    this.setState({ filteredUsers: users });
+    this.setState({filteredUsers: users});
   }
 
   makeBorder(newTweets) {
-    this.setState({ tweets: newTweets })
+    this.setState({tweets: newTweets})
   }
 
   sortTagsByDistance() {
@@ -330,7 +333,7 @@ export default class TweetsAndPeople extends Component {
       });
     });
     const newTweets1 = [...newTweets].sort((a, b) => b.distance - a.distance);
-    this.setState({ tweets: newTweets1, newTags: newTags });
+    this.setState({tweets: newTweets1, newTags: newTags});
   }
 
   sortTagsByWeight() {
@@ -346,7 +349,7 @@ export default class TweetsAndPeople extends Component {
         }
       });
     });
-    this.setState({ tweets: newTweets, tags: newTags });
+    this.setState({tweets: newTweets, tags: newTags});
   }
 
   sortTweetsByTagOrder() {
@@ -361,7 +364,7 @@ export default class TweetsAndPeople extends Component {
           }
         });
       });
-      this.setState({ tweets: newTweets });
+      this.setState({tweets: newTweets});
     }
   }
 
@@ -378,7 +381,7 @@ export default class TweetsAndPeople extends Component {
       });
     });
     tweets.sort((a, b) => (a.user.distance < b.user.distance ? 1 : -1));
-    this.setState({ tweets: tweets });
+    this.setState({tweets: tweets});
   }
 
   handleDragTag(tag, currPos, newPos) {
@@ -389,7 +392,7 @@ export default class TweetsAndPeople extends Component {
     newTags.splice(newPos, 0, tag);
 
     // re-render
-    this.setState({ tags: newTags });
+    this.setState({tags: newTags});
     this.sortTweetsByTagOrder();
   }
 
@@ -399,7 +402,7 @@ export default class TweetsAndPeople extends Component {
       let user = tweet["user"];
       users.push(user);
     });
-    this.setState({ users: users });
+    this.setState({users: users});
   }
 
   deleteTweet(tweet) {
@@ -411,7 +414,7 @@ export default class TweetsAndPeople extends Component {
           newTweets.push(t);
         }
       });
-      this.setState({ tweets: newTweets });
+      this.setState({tweets: newTweets});
     }
   }
 
@@ -420,31 +423,35 @@ export default class TweetsAndPeople extends Component {
       let tweets = this.state.savedTweets;
       const newTweets = tweets.filter((t) => t["id_str"] !== tweet["id_str"]);
       RestAPI.hideSavedTweet(tweet["id_str"]).then(() => {
-      console.log('test done done')
-        this.setState({ savedTweets: newTweets });
+        // console.log('test done done')
+        this.setState({savedTweets: newTweets});
       }).catch((err) => console.error("Error Getting Tweets:", err));
     }
   }
 
   newSavedTweet(newTweet) {
-    this.setState({ savedTweets: [...this.state.savedTweets, newTweet] })
+    this.setState({savedTweets: [...this.state.savedTweets, newTweet]})
   }
 
   handleSearchButtonClick(e) {
     e.preventDefault();
-    const { tags } = this.state;
+    const {tags} = this.state;
     console.info(`Search Clicked:Tags:${tags}`);
+    this.setState({
+      loading: true,
+      tweets: [],
+    })
     RestAPI.extractTweetsFromTags(tags)
       .then((res) => {
-        console.log({tweet111: res.data.data})
-        this.setState({ tweets: res.data.data, tweetsLoaded: true });
+        // console.log({tweet111: res.data.data})
+        this.setState({tweets: res.data.data, tweetsLoaded: true});
         this.extractUsersFromTweets(res.data.data);
       })
       .catch((err) => console.error("Error Getting Tweets:", err));
 
     RestAPI.getSavedTweets()
       .then((res) => {
-        this.setState({ savedTweets: res.data });
+        this.setState({savedTweets: res.data});
       })
       .catch((err) => console.error("Error Getting Tweets:", err));
   }
@@ -458,11 +465,11 @@ export default class TweetsAndPeople extends Component {
       }
       newTags.push(tag);
     });
-    this.setState({ tags: newTags });
+    this.setState({tags: newTags});
   }
 
   handleTagSettingsChange(id, name, value) {
-    console.log({id, name, value})
+    // console.log({id, name, value})
     let tag = this.state.tags.filter((tag) => tag.id === id)[0];
     tag[name] = value;
 
@@ -486,7 +493,7 @@ export default class TweetsAndPeople extends Component {
   }
 
   addNewTag(newTag) {
-    console.log('wwwwwwwwwwwww ', newTag, this.state.tags)
+    // console.log('wwwwwwwwwwwww ', newTag, this.state.tags)
   }
 
   componentDidMount() {
@@ -494,21 +501,33 @@ export default class TweetsAndPeople extends Component {
   }
 
   render() {
-    const { tweets, users } = this.state;
-    console.log("the state is");
-    console.log(this.state.place);
+    const {tweets, users} = this.state;
+
+    window.onload=function(){
+      document.getElementById("search").click();
+    };
+    // console.log("the state is");
+    // console.log(this.state.place);
     return (
 
       <>
-        <Header />
+        <Header/>
         <Container className="mt--7" xl="12">
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">
               <Row className="align-items-center">
                 <Col>
-                  <h1 className="text-uppercase text-light1 ls-1 mb-1">
+                  <h2>
                     Tweets & People
-                  </h1>
+                  </h2>
+                  <p>Here you can get recommended tweets relevant to your interests. 
+                  The interest set below represents the top 5 interests in your interest profile. 
+                 <br/>
+
+                  You can learn more about why/how a tweet is recommended to you:
+                  <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity score</strong> show you how relevant is the tweet to your interest profile <i>(basic explanation)</i></li>
+                  <li> Click on <strong>'Why this tweet?'</strong> to get more details  <i>(intermediate and advanced explanations)</i></li>
+                  </p> 
                 </Col>
               </Row>
 
@@ -548,7 +567,7 @@ export default class TweetsAndPeople extends Component {
                       }}
                     /> */}
 
-                    <AdvanceFilter
+                    {/* <AdvanceFilter
                       setWeightOfkeyword={this.setWeightOfkeyword}
                       tags={this.state.tags}
                       filterUsers={this.filterUsers.bind(this)}
@@ -562,7 +581,7 @@ export default class TweetsAndPeople extends Component {
                       tweets={this.state.tweets}
                       tagsWithoutWeight={this.state.tagsWithoutWeight}
                       makeBorder={this.makeBorder.bind(this)}
-                    />
+                    /> */}
 
                     {/* <UncontrolledPopover
                       trigger="legacy"
@@ -588,7 +607,7 @@ export default class TweetsAndPeople extends Component {
                     <Col>
                       <TagSearch
                         tags={this.state.tags}
-                        newTags={this.state.newTags}  
+                        newTags={this.state.newTags}
                         // suggestions={this.state.suggestions} 
                         delimiters={delimiters}
                         handleDelete={this.handleDeleteTag}
@@ -601,7 +620,7 @@ export default class TweetsAndPeople extends Component {
                       ></TagSearch>
                     </Col>
                     <ButtonGroup>
-                      <UncontrolledDropdown>
+                      {/*                      <UncontrolledDropdown>
                         <DropdownToggle
                           // tag="a"
                           className="text-primary"
@@ -620,15 +639,19 @@ export default class TweetsAndPeople extends Component {
                           state={this.state}
                           changeHandler={this.changeHandler}
                         />
-                      </UncontrolledDropdown>
+                      </UncontrolledDropdown> */}
+
                       <Form
                         method="post"
-                        onSubmit={this.handleSearchButtonClick}
+                        onSubmit={this.handleSearchButtonClick} // should be triggered automatically
                       >
-                        <Button className="bg-primary" type="submit">
+                       <div style={{padding: '15px'}}>
+                        <Button id="search" className="bg-primary" type="submit">
                           <i className="fas fa-search text-white"></i>
                         </Button>
+                        </div>
                       </Form>
+
                     </ButtonGroup>
                   </Row>
                 </Container>
@@ -721,21 +744,39 @@ export default class TweetsAndPeople extends Component {
                   </Nav>
                 </Col>
               </Row>
-              <Container style={{ paddingTop: "20px" }}>
+
+              <Container style={{paddingTop: "20px"}}>
                 <TabContent activeTab={this.state.activeTab}>
                   <TabPane tabId="1">
                     <Container id="tweet-card-container">
                       {tweets.length > 0
-                        ? tweets.map((tweet) => (
-                            <TweetCard
-                              key={Math.random() * 99999999}
-                              tweet={tweet}
-                              keyword_tags={this.state.tags}
-                              deleteTweet={this.deleteTweet.bind(this)}
-                              newSavedTweet={this.newSavedTweet.bind(this)}
-                            ></TweetCard>
-                          ))
-                        : null}
+                        ? (
+                          tweets.map((tweet) => {
+                            if (this.state.loading === true) {
+                              this.setState({
+                                loading: false
+                              })
+                            }
+                            return (
+                              <TweetCard
+                                key={Math.random() * 99999999}
+                                tweet={tweet}
+                                keyword_tags={this.state.tags}
+                                deleteTweet={this.deleteTweet.bind(this)}
+                                newSavedTweet={this.newSavedTweet.bind(this)}
+                              />
+                            )
+                          }
+                        ))
+                        : (this.state.loading ? (
+                          <div style={{marginTop: "8px"}}>
+                            <h1 className="d-flex justify-content-center align-items-center">
+                              <Spinner animation="border" role="status" size="lg"
+                                       style={{margin: "4px 4px 3px 0px"}}/>
+                              Loading tweets.. please wait
+                            </h1>
+                          </div>
+                        ) : null)}
                     </Container>
                   </TabPane>
                   <TabPane tabId="2">
@@ -745,12 +786,12 @@ export default class TweetsAndPeople extends Component {
                     <Container id="tweet-card-container">
                       {this.state.savedTweets.length > 0 && this.state.tweets.length > 0 ?
                         this.state.savedTweets.slice(0).reverse().map((tweet) => (
-                            <SavedTweetCard
-                              key={Math.random() * 99999999}
-                              tweet={tweet}
-                              deleteSavedTweet={this.deleteSavedTweet.bind(this)}
-                            ></SavedTweetCard>
-                          )) : null}
+                          <SavedTweetCard
+                            key={Math.random() * 99999999}
+                            tweet={tweet}
+                            deleteSavedTweet={this.deleteSavedTweet.bind(this)}
+                          ></SavedTweetCard>
+                        )) : null}
                     </Container>
                   </TabPane>
                 </TabContent>
@@ -758,6 +799,7 @@ export default class TweetsAndPeople extends Component {
             </CardHeader>
           </Card>
         </Container>
+        <ScrollTopWrapper/>
       </>
     );
   }
@@ -773,7 +815,7 @@ const Tabs = () => {
       <Nav tabs className="popover--tabs">
         <NavItem className="cursor--pointer--2">
           <NavLink
-            className={classnames({ active: activeTab === "1" })}
+            className={classnames({active: activeTab === "1"})}
             onClick={() => {
               toggle("1");
             }}
@@ -783,7 +825,7 @@ const Tabs = () => {
         </NavItem>
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === "2" })}
+            className={classnames({active: activeTab === "2"})}
             onClick={() => {
               toggle("2");
             }}
@@ -792,6 +834,7 @@ const Tabs = () => {
           </NavLink>
         </NavItem>
       </Nav>
+      
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
           <Row>

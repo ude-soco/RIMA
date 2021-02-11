@@ -1,10 +1,10 @@
 import React from "react";
 import Chart from "react-apexcharts";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import Loader from "react-loader-spinner";
 import RestAPI from "services/api";
 
-import { handleServerErrors } from "utils/errorHandler";
+import {handleServerErrors} from "utils/errorHandler";
 
 class PieChart extends React.Component {
   state = {
@@ -31,7 +31,7 @@ class PieChart extends React.Component {
         "#0C56F3",
       ],
       chart: {
-        width: 380,
+        width: 900,
         type: "pie",
       },
       fill: {
@@ -58,59 +58,75 @@ class PieChart extends React.Component {
       labels: [],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 800,
           options: {
             chart: {
-              width: 50,
-            },
-            legend: {
-              position: "bottom",
+              width: 200,
             },
           },
         },
       ],
+      legend: {
+        position: 'bottom'
+      },
     },
   };
 
   componentDidMount() {
-    this.setState({ isLoding: true }, () => {
-      RestAPI.pieChart()
+    this.setState({isLoding: true}, () => {
+      RestAPI.cloudChart()
         .then((response) => {
-          let mydata = response.data.map((val) => val.keyword);
-          let values = response.data.map((val) => val.weight);
-
+          let myData = [];
+          let values = [];
+          // let mydata = response.data.map((val) => val.keyword);
+          // let values = response.data.map((val) => val.weight);
+          for (let i = 0; i < response.data.length; i++) {
+            myData.push(response.data[i].keyword);
+            values.push(response.data[i].weight);
+            if (i === 4) {
+              console.log(i);
+              break;
+              }
+          }
+          console.log(myData);
           this.setState({
             isLoding: false,
             data: response.data,
             series: values,
             options: {
               ...this.state.options,
-              labels: mydata,
+              labels: myData,
             },
           });
+
         })
         .catch((error) => {
-          this.setState({ isLoding: false });
+          this.setState({isLoding: false});
           handleServerErrors(error, toast.error);
         });
+
     });
   }
 
+
   render() {
     return (
-      <div id="chart">
+      <div align="center" id="chart">
         {this.state.isLoding ? (
-          <div className="text-center" style={{ padding: "20px" }}>
-            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
+          <div className="text-center" style={{padding: "20px"}}>
+            <Loader type="Puff" color="#00BFFF" height={100} width={100}/>
           </div>
         ) : this.state.data.length ? (
           <>
-            <div style={{ maxWidth: "560px", margin: "35px auto" }}>
+            <div style={{
+              maxWidth: "800px",
+              margin: "35px auto"
+            }}>
               <Chart
                 options={this.state.options}
                 series={this.state.series}
                 type="pie"
-                width="400"
+                width="500"
               />
             </div>
           </>

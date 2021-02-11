@@ -1,7 +1,7 @@
 import React from "react";
 import Chart from "chart.js";
 import ConceptMapContainer from "../components/ConceptMap/";
-import { Card, CardHeader, CardBody, Container, Row, Col } from "reactstrap";
+import { Card, CardHeader, CardBody, Container, Row, Col, CardImg, CardTitle, CardSubtitle, CardText, Button } from "reactstrap";
 
 // core components
 import { chartOptions, parseOptions } from "variables/charts.js";
@@ -52,7 +52,7 @@ class ConceptPage extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <ConceptMapContainer />
+                 <ConceptMapContainer />
                 </CardBody>
               </Card>
             </Col>

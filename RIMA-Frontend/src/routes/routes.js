@@ -15,7 +15,13 @@ import LoginRedirecting from "../views/LoginRedirecting";
 import PieChartPage from "../views/PieChart";
 import BarChartPage from "../views/BarChart";
 import TweetsAndPeople from "../views/TweetsAndPeople.js";
-
+import TopicFormPage from "../views/TopicForm";
+import TopicBar from "../views/TopicBar";
+import TopicComparisions from "../views/TopicComparisions";
+import AuthorVenn from "components/LAKForms/AuthorVenn.js";
+import RecommendTopic from "views/RecommendTopic.js";
+import TopicResearch from "views/TopicResearch";
+import TopicAuthors from "views/TopicAuthors";
 var routes = [
   {
     path: "/index",
@@ -27,7 +33,7 @@ var routes = [
   },
   {
     path: "/add-paper",
-    name: "Add Paper",
+    name: "Add Publication",
     icon: "ni ni-fat-add text-green",
     component: AddPaper,
     layout: "/app",
@@ -35,7 +41,7 @@ var routes = [
   },
   {
     path: "/edit-paper/:id",
-    name: "Edit Paper",
+    name: "Edit Publication",
     icon: "ni ni-fat-add text-orange",
     component: EditPaper,
     layout: "/app",
@@ -43,7 +49,7 @@ var routes = [
   },
   {
     path: "/view-paper",
-    name: "My Papers",
+    name: "My Publications",
     icon: "fas fa-tasks text-blue",
     component: ViewPaper,
     layout: "/app",
@@ -159,6 +165,42 @@ var routes = [
   {
     path: "/redirect",
     component: LoginRedirecting,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicform",
+    component: TopicFormPage,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicbar",
+    component: TopicBar,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicscompare",
+    component: TopicComparisions,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicsrecommend",
+    component: RecommendTopic,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicsresearch",
+    component: TopicResearch,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/topicsauthors",
+    component: TopicAuthors,
     layout: "/app",
     display: "none",
   },

@@ -1,8 +1,7 @@
-
 import React from "react";
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import Loader from 'react-loader-spinner'
-import { handleServerErrors } from "utils/errorHandler";
+import {handleServerErrors} from "utils/errorHandler";
 import RestAPI from '../services/api';
 
 // reactstrap components
@@ -19,6 +18,7 @@ import {
   Row,
   Col
 } from "reactstrap";
+import {OverlayTrigger, Popover, Tooltip} from "react-bootstrap";
 
 class Register extends React.Component {
 
@@ -36,7 +36,7 @@ class Register extends React.Component {
   handleChange = e => {
     let getValue = e.target.value;
     let getName = e.target.name;
-    this.setState(() => ({ [getName]: getValue }))
+    this.setState(() => ({[getName]: getValue}))
   };
 
   _handleSubmit = e => {
@@ -50,24 +50,18 @@ class Register extends React.Component {
       author_id: this.state.authorId,
     };
 
-    this.setState({ isLoding: true })
+    this.setState({isLoding: true})
 
     RestAPI.userSignup(data).then(response => {
-      this.setState({ isLoding: false })
-      this.props.history.push("/auth/login");
+        this.setState({isLoding: false})
+        this.props.history.push("/auth/login");
 
-    }
+      }
     ).catch(error => {
-      this.setState({ isLoding: false })
-      handleServerErrors(error, toast.error)
-
-    }
+        this.setState({isLoding: false})
+        handleServerErrors(error, toast.error)
+      }
     )
-
-  };
-
-  toogle = (status) => {
-    this.setState({ tooltipOpen: status });
   };
 
   render() {
@@ -81,89 +75,98 @@ class Register extends React.Component {
                 <small>Or sign up with credentials</small>
               </div>
               {
-                this.state.isLoding ? <div className="text-center"><Loader type="Puff" color="#00BFFF" height={100} width={100} /></div>
+                this.state.isLoding ?
+                  <div className="text-center"><Loader type="Puff" color="#00BFFF" height={100} width={100}/></div>
                   :
                   <Form role="form" onSubmit={this._handleSubmit} method="post">
                     <FormGroup>
                       <InputGroup className="input-group-alternative mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="ni ni-single-02" />
+                            <i className="ni ni-single-02"/>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="First Name" type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} />
+                        <Input placeholder="First Name" type="text" name="firstName" value={this.state.firstName}
+                               onChange={this.handleChange}/>
                       </InputGroup>
                       <InputGroup className="input-group-alternative mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="ni ni-circle-08" />
+                            <i className="ni ni-circle-08"/>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Last Name" type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} />
+                        <Input placeholder="Last Name" type="text" name="lastName" value={this.state.lastName}
+                               onChange={this.handleChange}/>
                       </InputGroup>
                     </FormGroup>
                     <FormGroup>
                       <InputGroup className="input-group-alternative mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="ni ni-email-83" />
+                            <i className="ni ni-email-83"/>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Email" type="email" autoComplete="new-email" name="email" value={this.state.email} onChange={this.handleChange} />
+                        <Input placeholder="Email" type="email" autoComplete="new-email" name="email"
+                               value={this.state.email} onChange={this.handleChange}/>
                       </InputGroup>
                     </FormGroup>
                     <FormGroup>
                       <InputGroup className="input-group-alternative">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="ni ni-lock-circle-open" />
+                            <i className="ni ni-lock-circle-open"/>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Password" type="password" autoComplete="new-password" name="password" value={this.state.password} onChange={this.handleChange} />
+                        <Input placeholder="Password" type="password" autoComplete="new-password" name="password"
+                               value={this.state.password} onChange={this.handleChange}/>
                       </InputGroup>
                     </FormGroup>
                     <FormGroup>
                       <InputGroup className="input-group-alternative mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="ni ni-hat-3" />
+                            <i className="ni ni-hat-3"/>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Semantic Scholar Id" type="text" autoComplete="new-email" name="authorId" value={this.state.authorId} onChange={this.handleChange} />                       
-                        <i
+                        <Input placeholder="Semantic Scholar Id" type="text" autoComplete="new-email" name="authorId"
+                               value={this.state.authorId} onChange={this.handleChange}/>
+                        <OverlayTrigger trigger="click" placement="right" overlay={
+                          <Popover style={{maxWidth: "300px"}}>
+                            <Popover.Content>
+                              Semantic Scholar ID is used to get your paper information.<br/>
+                              You can find your ID at the end of URL in <a href='http://www.semanticscholar.org' target="_blank"> Semantic Scholar</a>
+                            </Popover.Content>
+                          </Popover>
+                        }>
+                          <i
                             className="fa fa-question-circle"
-                            style={{ lineHeight: "3" }}
-                            onMouseOver={() => this.toogle(true)}
-                            onMouseOut={() => this.toogle(false)}
+                            style={{cursor: "pointer", lineHeight: "3", backgroundColor: "#fff", paddingRight: "8px", borderRadius: "0px 5px 5px 0px"}}
                           />
-                          {this.state.tooltipOpen && (
-                            <div
-                              style={{
-                                backgroundColor: "#ffffff",
-                                color: "#8E8E8E",
-                                borderRadius: "8px",
-                                padding: "6px",
-                                fontSize: "11px",
-                                border: "1px solid #ffffff",
-                                position: "static",
-                                marginTop: "8px",
-                                right: "32px",
-                              }}
-                            >
-                                Semantic Scholar ID used to get your paper information.<br />
-                               You can find your ID at the end of URL in 'https://www.semanticscholar.org/'
-                            </div>
-                          )} 
+                        </OverlayTrigger>
                       </InputGroup>
                     </FormGroup>
                     <FormGroup>
                       <InputGroup className="input-group-alternative mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="fab fa-twitter" />
+                            <i className="fab fa-twitter"/>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Twitter Account" type="text" autoComplete="new-email" name="twitterId" value={this.state.twitterId} onChange={this.handleChange} />
+                        <Input placeholder="Twitter Account" type="text" autoComplete="new-email" name="twitterId"
+                               value={this.state.twitterId} onChange={this.handleChange}/>
+                        <OverlayTrigger trigger="click" placement="right" overlay={
+                          <Popover style={{maxWidth: "300px"}}>
+                            <Popover.Content>
+                              Twitter username is used to get your tweets information.<br/>
+                              Open<a href='https://twitter.com/' target="_blank"> Twitter</a> and get your username 'e.g. @username'.
+                            </Popover.Content>
+                          </Popover>
+                        }>
+                          <i
+                            className="fa fa-question-circle"
+                            style={{cursor: "pointer", lineHeight: "3", backgroundColor: "#fff", paddingRight: "8px", borderRadius: "0px 5px 5px 0px"}}
+                          />
+                        </OverlayTrigger>
                       </InputGroup>
                     </FormGroup>
                     <Row className="my-4">
@@ -174,7 +177,7 @@ class Register extends React.Component {
                     <div className="text-center">
                       <Button className="mt-4" color="primary" type="submit">
                         Create account
-                  </Button>
+                      </Button>
                     </div>
                   </Form>
               }

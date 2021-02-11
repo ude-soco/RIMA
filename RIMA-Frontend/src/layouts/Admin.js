@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Switch, Redirect } from "react-router-dom";
 // reactstrap components
@@ -29,29 +28,29 @@ class Admin extends React.Component {
     document.scrollingElement.scrollTop = 0;
     this.refs.mainContent.scrollTop = 0;
   }
-    getRoutes = routes => {
-        return routes.map((prop, key) => {
-            if (prop.layout === "/app") {
-                return (
-                    <PrivateRoute
-                        path={prop.layout + prop.path}
-                        component={prop.component}
-                        key={key}
-                    />
-                );
-            } else if(prop.layout === "/recommendation") {
-                return (
-                    <RecommendationRoute
-                        path={prop.layout + prop.path.replace(":id", getItem("userId"))}
-                        component={prop.component}
-                        key={key}
-                    />
-                )
-            } else {
-                return null;
-            }
-        });
-    };
+  getRoutes = routes => {
+    return routes.map((prop, key) => {
+      if (prop.layout === "/app") {
+        return (
+          <PrivateRoute
+            path={prop.layout + prop.path}
+            component={prop.component}
+            key={key}
+          />
+        );
+      } else if(prop.layout === "/recommendation") {
+        return (
+          <RecommendationRoute
+            path={prop.layout + prop.path.replace(":id", getItem("userId"))}
+            component={prop.component}
+            key={key}
+          />
+        )
+      } else {
+        return null;
+      }
+    });
+  };
 
   getBrandText = (path) => {
     for (let i = 0; i < routes.length; i++) {
@@ -68,9 +67,7 @@ class Admin extends React.Component {
   render() {
     return (
       <>
-        {this.state.isredirect ? (
-          <></>
-        ) : (
+        {this.state.isredirect ? <></> : (
           <Sidebar
             {...this.props}
             routes={routes}
@@ -82,10 +79,12 @@ class Admin extends React.Component {
           />
         )}
         <div className="main-content" ref="mainContent">
-          <AdminNavbar
+          {this.state.isredirect ? <></> : (
+            <AdminNavbar
               {...this.props}
               brandText={this.getBrandText(this.props.location.pathname)}
-          />
+            />
+          )}
           <Switch>
             {this.getRoutes(routes)}
             <Redirect from="*" to="/app/PieChartPage" />

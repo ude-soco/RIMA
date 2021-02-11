@@ -42,7 +42,7 @@ div.ReactTags__selected span.ReactTags__tag {
   font-size: 14px;
   display: inline-block;
   padding: 5px;
-  margin: 0 5px;
+  margin: 5px 5px;
   cursor: move;
   border-radius: 2px;
   background-color: rgb(94, 114, 228, 0.6);

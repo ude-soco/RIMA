@@ -6,7 +6,7 @@ import { Route, Redirect } from 'react-router-dom';
 
 const RecommendationRoute = ({ component: Component, auth, ...rest }) => {
   const TOKEN = getItem("accessToken");
-  console.info("Token: ", TOKEN);
+  // console.info("Token: ", TOKEN);
   return (
     <Route
       {...rest}

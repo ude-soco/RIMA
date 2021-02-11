@@ -491,6 +491,47 @@ class RestAPI {
       },
     })
   }
+   //LAK Form
+   static topicForm() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/laktopics/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+  //** STREAM DATA API FOR USER PROFILE **//
+  static topicFormUser() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/laktopics/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+//**added by mouadh */
+static getsimilartweets() {
+  const TOKEN = getItem("accessToken");
+  return axios({
+    method: "get",
+    url: `${BASE_URL}/api/interests/getsimilarity/`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Token ${TOKEN}`,
+    },
+  }).then((res) => res);
 }
+}
+
 
 export default RestAPI;

@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 import Loader from "react-loader-spinner";
-import { handleServerErrors } from "utils/errorHandler";
+import {handleServerErrors} from "utils/errorHandler";
 import RestAPI from "../services/api";
 
 // reactstrap components
@@ -19,6 +19,8 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import {Container} from "react-bootstrap";
+
 class Login extends React.Component {
   state = {
     email: "",
@@ -30,7 +32,7 @@ class Login extends React.Component {
   handleChange = (e) => {
     let getValue = e.target.value;
     let getName = e.target.name;
-    this.setState(() => ({ [getName]: getValue }));
+    this.setState(() => ({[getName]: getValue}));
   };
 
   _handleSubmit = (e) => {
@@ -40,10 +42,10 @@ class Login extends React.Component {
       password: this.state.password,
     };
 
-    this.setState({ isLoding: true });
+    this.setState({isLoding: true});
     RestAPI.userSignIn(data)
       .then((response) => {
-        this.setState({ isLoding: false, modal: true });
+        this.setState({isLoding: false, modal: true});
         if (response.status === 200) {
           localStorage.setItem("accessToken", response.data.token);
           localStorage.setItem("name", response.data.first_name);
@@ -59,7 +61,7 @@ class Login extends React.Component {
       })
       .catch((error) => {
         console.log("Login Api Response", error);
-        this.setState({ isLoding: false });
+        this.setState({isLoding: false});
         handleServerErrors(error, toast.error);
       });
   };
@@ -86,7 +88,7 @@ class Login extends React.Component {
                     <InputGroup className="input-group-alternative">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="ni ni-email-83" />
+                          <i className="ni ni-email-83"/>
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
@@ -102,7 +104,7 @@ class Login extends React.Component {
                     <InputGroup className="input-group-alternative">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="ni ni-lock-circle-open" />
+                          <i className="ni ni-lock-circle-open"/>
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
@@ -114,23 +116,22 @@ class Login extends React.Component {
                       />
                     </InputGroup>
                   </FormGroup>
-                  <div className="text-center">
-                    <Button className="my-4" color="primary" type="submit">
-                      Sign in
-                    </Button>
+                  <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <div style={{marginTop: "32px"}}>
+                      <Link style={{color: "black"}} to="/auth/register">
+                        <medium>Create new account</medium>
+                      </Link>
+                    </div>
+                    <div>
+                      <Button className="my-4" color="primary" type="submit">
+                        Sign in
+                      </Button>
+                    </div>
                   </div>
                 </Form>
               )}
             </CardBody>
           </Card>
-          <Row className="mt-3">
-            <Col xs="6"></Col>
-            <Col className="text-right" xs="6">
-              <Link className="text-light" to="/auth/register">
-                <small>Create new account</small>
-              </Link>
-            </Col>
-          </Row>
         </Col>
       </>
     );

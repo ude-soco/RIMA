@@ -7,31 +7,13 @@ import backgroundDragableText from "../../assets/img/backgrounds/tab1.png";
 import {
   MdErrorOutline,
   MdHighlightOff,
-  MdAddCircleOutline,
-  MdRemoveCircleOutline,
 } from "react-icons/md";
 import classnames from "classnames";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody,
-  CardImg,
-  CardSubtitle,
-  CardText,
-  Container,
   Row,
   Col,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownToggle,
-  DropdownItem,
-  ButtonGroup,
-  Button,
-  Form,
-  Alert,
   TabContent,
   TabPane,
   Nav,
@@ -41,6 +23,7 @@ import {
   UncontrolledCollapse,
 } from "reactstrap";
 import DragableImage from "../TweetAndPeople/TweetCard/DragableImage";
+import {ImPencil} from "react-icons/all";
 
 const DragableTextWrapper = styled.div`
   background-image: url("${backgroundDragableText}");
@@ -202,7 +185,7 @@ const AdvanceFilter = (props) => {
   const onUserDrag = (event, dragData, tagId, id_str) => {
     const x = dragData.x;
     const y = dragData.y;
-    console.log("onDragStop :", x, ",", y);
+    // console.log("onDragStop :", x, ",", y);
 
     let fx = x - centerOfUserCircle["x"];
     let fy = y - centerOfUserCircle["y"];
@@ -217,8 +200,8 @@ const AdvanceFilter = (props) => {
     // });
     props.sortTweetsByUserDistance();
 
-    console.log(defaultChecked);
-    console.log("TagId: ", tagId);
+    // console.log(defaultChecked);
+    // console.log("TagId: ", tagId);
   };
   const weightMultiplier = 37.5;
 
@@ -232,12 +215,13 @@ const AdvanceFilter = (props) => {
   return (
     <PopOver state={state}>
       <div className="popover__wrapper">
-        <MdErrorOutline
+        <ImPencil
           id="PopoverLegacy"
           className="cursor--pointer"
           style={{
-            fontSize: "30px",
+            fontSize: "24px",
             color: "rgb(17, 137, 239)",
+            marginRight: "8px"
           }}
           onClick={() => setstate(true)}
           />
@@ -265,7 +249,7 @@ const AdvanceFilter = (props) => {
                     toggle("1");
                   }}
                 >
-                  keywords weight
+                  Your Interests 
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -275,7 +259,7 @@ const AdvanceFilter = (props) => {
                     toggle("2");
                   }}
                 >
-                  keywords Tweets
+                  Your Interest weight
                 </NavLink>
               </NavItem>
             </StyledNav>
@@ -287,15 +271,17 @@ const AdvanceFilter = (props) => {
                 <Row>
                   <Col sm="12">
                     <h4>
-                      You can adjust the position of the keyword based on its
-                      importance
+                      You can adjust the position of your interest based on its
+                      importance. The closer to the center the more important the interest. 
+                      
                     </h4>
 
                     <DragableTextWrapper>
                       {props.tags.map((tag) => {
-                        console.log('sssssssss ', tag.weight)
+                        // console.log('sssssssss ', tag.weight)
                         return (
                           <DragableText
+                            key={tag.id}
                             tagId={tag.id}
                             text={tag.text}
                             color={tag.color}
@@ -321,6 +307,7 @@ const AdvanceFilter = (props) => {
                           {props.tagsWithoutWeight.map((tag) => {
                               return (
                                 <KeywordRangeSlider
+                                  key={tag.id}
                                   tagId={tag.id}
                                   text={tag.text}
                                   color={tag.color}
