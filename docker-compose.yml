@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  frontend:
+    build: RIMA-Frontend
+    image: ${IMAGE_NAME_PREFIX:-soco/}rima-frontend:${IMAGE_TAG:-latest}
+    ports:
+    - "80:80"
+
+  api:
+    build: RIMA-Backend
+    image: ${IMAGE_NAME_PREFIX:-soco/}rima-backend:${IMAGE_TAG:-latest}
+    command: bin/web.sh
+    env_file:
+    - backend.env
+    depends_on:
+    - db
+    - redis
+    ports:
+    - 8000:8080
+
+  worker:
+    build: RIMA-Backend
+    image: ${IMAGE_NAME_PREFIX:-soco/}rima-backend:${IMAGE_TAG:-latest}
+    command: bin/worker.sh
+    env_file:
+    - backend.env
+    depends_on:
+    - db
+    - redis
+
+  db:
+    image: postgres
+    env_file:
+    - db.env
+    volumes:
+    - database-data:/var/lib/postgresql/data/
+
+  redis:
+    image: redis
+    ports:
+    - 6379:6379
+
+volumes:
+  database-data:
