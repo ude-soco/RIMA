@@ -2,11 +2,11 @@ FROM node:8.9 as build
 WORKDIR /app
 
 COPY package*.json .
-RUN  npm install
+RUN  npm install --production 2>&1
 
 ADD . ./
 RUN mv exampe.env .env &&\
-    npm run build
+    npm run build 2>&1
 
 
 FROM nginx:1.19
