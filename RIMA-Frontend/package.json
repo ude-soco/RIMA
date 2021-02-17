@@ -30,7 +30,8 @@
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "compile-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css",
     "minify-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.min.css --output-style compressed",
-    "map-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css --source-map true"
+    "map-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css --source-map true",
+    "fix-memory-limit": "cross-env LIMIT=2048 increase-memory-limit"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -114,6 +115,8 @@
     "webpack-dev-server": "^3.10.3"
   },
   "devDependencies": {
+    "increase-memory-limit": "^1.0.3",
+    "cross-env": "^5.0.5",
     "@types/googlemaps": "3.39.2",
     "@types/markerclustererplus": "2.1.33",
     "@types/react": "16.9.19",
