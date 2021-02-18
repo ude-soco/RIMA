@@ -9,5 +9,6 @@ RUN mv exampe.env .env &&\
     NODE_OPTIONS=--max_old_space_size=4096 npm run build 2>&1
 
 
-FROM nginx:1.19
+FROM nginxinc/nginx-unprivileged:1.19
 COPY --from=build /app/build/ /usr/share/nginx/html
+EXPOSE 8080
