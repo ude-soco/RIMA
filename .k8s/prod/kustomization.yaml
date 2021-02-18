@@ -19,3 +19,5 @@ images:
   newTag: latest
 - name: inko/soco-rima-backend
   newTag: latest
+- name: redis
+  newTag: "6.0"
