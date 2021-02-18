@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app.kubernetes.io/component: web
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: web
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: web
+        image: inko/soco-rima-frontend
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        env:
+        - name: BASE_PATH
+          value: $(BACKEND_URL)
+        resources:
+          requests:
+            memory: 110Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 1
