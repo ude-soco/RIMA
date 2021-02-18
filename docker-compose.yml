@@ -3,13 +3,13 @@ version: '3'
 services:
   frontend:
     build: RIMA-Frontend
-    image: ${IMAGE_NAME_PREFIX:-soco/}rima-frontend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-frontend:${IMAGE_TAG:-latest}
     ports:
     - 8080:8080
 
   api:
     build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-soco/}rima-backend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/web.sh
     env_file:
     - backend.env
