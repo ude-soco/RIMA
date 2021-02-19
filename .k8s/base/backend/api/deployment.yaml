@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app.kubernetes.io/component: api
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: web
+        image: inko/soco-rima-backend
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /docs
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /docs
+            port: 8080
+        env:
+        - name: REDIS_HOST
+          value: $(REDIS_SERVICE)
+        # resources:
+        #   requests:
+        #     memory: 110Mi
+        #     cpu: 100m
+        #   limits:
+        #     memory: 256Mi
+        #     cpu: 1

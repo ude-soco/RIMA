@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
+  name: api
   labels:
-    app.kubernetes.io/component: web
+    app.kubernetes.io/component: api
 spec:
   ports:
   - protocol: TCP
     port: 8080
     targetPort: 8080
   selector:
-    app.kubernetes.io/component: web
+    app.kubernetes.io/component: api

@@ -7,5 +7,8 @@ commonLabels:
   tier: backend
 
 resources:
+- api/deployment.yaml
+- api/service.yaml
+- api/ingress.yaml
 - redis/deployment.yaml
 - redis/service.yaml

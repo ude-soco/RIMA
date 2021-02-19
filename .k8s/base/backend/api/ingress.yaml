@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: web
+  name: api
   annotations:
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
@@ -9,13 +9,13 @@ metadata:
     description: RIMA
 spec:
   rules:
-  - host: rima.sc.inko.cloud
+  - host: api.rima.sc.inko.cloud
     http:
       paths:
       - backend:
-          serviceName: web
+          serviceName: api
           servicePort: 8080
   tls:
   - hosts:
-    - rima.sc.inko.cloud
-    secretName: web-tls-crt
+    - api.rima.sc.inko.cloud
+    secretName: api-tls-crt
