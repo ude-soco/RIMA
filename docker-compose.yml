@@ -21,7 +21,7 @@ services:
 
   worker:
     build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-soco/}rima-backend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker.sh
     env_file:
     - backend.env
