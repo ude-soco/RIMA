@@ -22,9 +22,6 @@ from six import string_types
 
 from builtins import str
 
-nltk.download('stopwords')
-nltk.download('punkt')
-
 ISO_to_language = {
     'en': 'english',
     'pt': 'portuguese',
@@ -407,8 +404,8 @@ class LoadFile(object):
         if grammar is None:
             grammar = r"""
                 NBAR:
-                    {<NOUN|PROPN|ADJ>*<NOUN|PROPN>} 
-                    
+                    {<NOUN|PROPN|ADJ>*<NOUN|PROPN>}
+
                 NP:
                     {<NBAR>}
                     {<NBAR><ADP><NBAR>}
@@ -475,7 +472,7 @@ class LoadFile(object):
         keep the candidates containing alpha-numeric characters (if the
         non_latin_filter is set to True) and those length exceeds a given
         number of characters.
-            
+
         Args:
             stoplist (list): list of strings, defaults to None.
             minimum_length (int): minimum number of characters for a

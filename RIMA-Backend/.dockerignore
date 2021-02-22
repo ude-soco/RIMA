@@ -1,0 +1,5 @@
+.DS_Store
+.dockerignore
+datatest_word2vec.txt
+Dockerfile
+README.md

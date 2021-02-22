@@ -1,26 +1,33 @@
-# This handles our server API
+FROM python:3.6.13-slim
 
-FROM python:3.6
+ENV PYTHONUNBUFFERED 1
 
-RUN apt update -y && apt upgrade -y && apt install postgresql postgresql-contrib nginx -y
+RUN apt-get update -qq &&\
+    apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx &&\
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade setuptools
+RUN ln -sf /dev/stdout /var/log/nginx/access.log &&\
+    ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN rm -rf /var/cache/apk/*
-RUN mkdir -p /tmp/nginx/client-body
-RUN mkdir -p /run/nginx
+RUN adduser --disabled-login -u 1000 app
+USER 1000
+WORKDIR /home/app
 
-COPY requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
-RUN python -m spacy download en
+COPY nginx.conf .
+RUN  nginx -t -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
 
-COPY nginx_default.conf /etc/nginx/nginx.conf
+ENV  PATH "$PATH:/home/app/.local/bin"
+COPY --chown=app:app requirements.txt requirements.txt
+RUN  pip install --user --no-color --quiet -r requirements.txt &&\
+     python -m spacy download en &&\
+     python -m nltk.downloader stopwords &&\
+     python -m nltk.downloader punkt
 
-ADD datatest_word2vec.txt /opt/
 ADD interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz /opt/
 
-COPY . /opt/app/
-WORKDIR /opt/app/
+COPY --chown=app:app . ./
+RUN  python manage.py collectstatic --no-input
 
-EXPOSE 80
-CMD bash start.sh
+EXPOSE 8080
+CMD ["./bin/web.sh"]
+# CMD ["./bin/worker.sh"]
