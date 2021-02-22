@@ -15,4 +15,4 @@ else
 fi &&\
 
   echo "Starting Celery job queue ..." &&\
-  celery --pidfile=/opt/celeryd.pid worker --app=interest_miner_api -l info
+  celery worker --app=interest_miner_api -l info
