@@ -1,3 +1,4 @@
+.dockerignore
 CHANGELOG.md
 Dockerfile
 node_modules
