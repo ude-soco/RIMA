@@ -5,7 +5,7 @@ set -o nounset
 : $GLOVE_MODEL_FILE_PATH
 
 echo "Migrating database ..." &&\
-  python manage.py migrate &&\
+  python manage.py migrate &
 
 if [ -f "GLOVE_MODEL_FILE_PATH" ]; then
   echo "GloVe model present: $GLOVE_MODEL_FILE_PATH"
