@@ -20,8 +20,8 @@ ENV  PATH "$PATH:/home/app/.local/bin"
 COPY --chown=app:app requirements.txt requirements.txt
 RUN  pip install --user --no-color --quiet -r requirements.txt &&\
      python -m spacy download en &&\
-     python -m nltk.downloader stopwords &&\
-     python -m nltk.downloader punkt
+     python -c "import nltk;nltk.download('stopwords')" &&\
+     python -c "import nltk;nltk.download('punkt')"
 
 ADD interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz /opt/
 
