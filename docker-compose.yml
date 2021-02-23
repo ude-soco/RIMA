@@ -4,6 +4,8 @@ services:
   frontend:
     build: RIMA-Frontend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-frontend:${IMAGE_TAG:-latest}
+    environment:
+    - API_BASE_URL=http://127.0.0.1:8000/api/
     ports:
     - 8080:8080
 
@@ -11,8 +13,11 @@ services:
     build: RIMA-Backend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/web.sh
+    environment:
+    - REDIS_HOST=redis
+    - POSTGRES_HOST=db
     env_file:
-    - backend.env
+    - configuration.env
     depends_on:
     - db
     - redis
@@ -23,8 +28,11 @@ services:
     build: RIMA-Backend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker.sh
+    environment:
+    - REDIS_HOST=redis
+    - POSTGRES_HOST=db
     env_file:
-    - backend.env
+    - configuration.env
     volumes:
     - ./RIMA-Backend/.model_cache:/home/app/.model_cache
     depends_on:
@@ -34,7 +42,7 @@ services:
   db:
     image: postgres
     env_file:
-    - db.env
+    - configuration.env
     volumes:
     - database-data:/var/lib/postgresql/data/
 
