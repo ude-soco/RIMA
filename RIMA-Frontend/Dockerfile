@@ -11,4 +11,5 @@ RUN mv exampe.env .env &&\
 
 FROM nginxinc/nginx-unprivileged:1.19
 COPY --from=build /app/build/ /usr/share/nginx/html
+COPY ./nginx/docker-entrypoint.d/* /docker-entrypoint.d/
 EXPOSE 8080
