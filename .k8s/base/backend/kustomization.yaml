@@ -6,9 +6,26 @@ namePrefix: backend-
 commonLabels:
   tier: backend
 
+vars:
+- name: DB_SERVICE
+  objref:
+    apiVersion: v1
+    kind: Service
+    name: db
+- name: REDIS_SERVICE
+  objref:
+    apiVersion: v1
+    kind: Service
+    name: redis
+
 resources:
 - api/deployment.yaml
 - api/service.yaml
 - api/ingress.yaml
+- worker/deployment.yaml
+- worker/pvc.yaml
+- db/deployment.yaml
+- db/service.yaml
+- db/pvc.yaml
 - redis/deployment.yaml
 - redis/service.yaml
