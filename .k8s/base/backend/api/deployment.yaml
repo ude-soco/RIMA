@@ -29,10 +29,15 @@ spec:
           httpGet:
             path: /docs
             port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 15
         livenessProbe:
           httpGet:
             path: /docs
             port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
         env:
         - name: REDIS_HOST
           value: $(REDIS_SERVICE)
