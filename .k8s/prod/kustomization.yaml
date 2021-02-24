@@ -4,7 +4,7 @@ kind: Kustomization
 bases:
 - ../base
 
-namespace:  sc
+namespace:  sc-rima-prod
 namePrefix: soco-
 commonLabels:
   owner: sc
@@ -19,9 +19,9 @@ secretGenerator:
   env: configuration.env
 images:
 - name: inko/soco-rima-frontend
-  newTag: latest
+  newTag: "0.0.1"
 - name: inko/soco-rima-backend
-  newTag: latest
+  newTag: "0.0.1"
 - name: redis
   newTag: "6.0"
 - name: postgres
