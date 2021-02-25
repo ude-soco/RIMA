@@ -103,24 +103,16 @@ dist
 # TernJS port file
 .tern-port
 
-#ignore
-node_modules
-package-lock.json
-.DS_Store
 
-.idea
+.DS_Store
 .idea/*
 *.pyc
 */__pycache__/*
-db.sqlite3
+*.sqlite3
 static/*
 datatest_word2vec.txt
 .vscode/*
 venv/*
-venv
 connect_to_server.sh
 deploy.sh
 build/*
-build
-node_modules/
-package-lock.json
