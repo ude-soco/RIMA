@@ -4,7 +4,7 @@ metadata:
   name: worker
   labels:
     app.kubernetes.io/component: worker
-    keel.sh/policy: force
+    keel.sh/policy: patch
     keel.sh/match-tag: "true"
 spec:
   replicas: 1
@@ -37,6 +37,13 @@ spec:
         envFrom:
         - secretRef:
             name: configuration
+        # resources:
+        #   requests:
+        #     memory: 110Mi
+        #     cpu: 100m
+        #   limits:
+        #     memory: 256Mi
+        #     cpu: 1
         volumeMounts:
         - name: model-cache
           mountPath: /home/app/.model_cache

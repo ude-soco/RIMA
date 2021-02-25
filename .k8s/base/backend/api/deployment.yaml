@@ -4,7 +4,7 @@ metadata:
   name: api
   labels:
     app.kubernetes.io/component: api
-    keel.sh/policy: force
+    keel.sh/policy: patch
     keel.sh/match-tag: "true"
 spec:
   replicas: 2
