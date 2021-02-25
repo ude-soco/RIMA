@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+- ../base
+
+namespace:  sc-rima-dev
+namePrefix: soco-
+commonLabels:
+  owner: sc
+  stage: dev
+  app.kubernetes.io/instance: rima-sc-dev
+  app.kubernetes.io/version: master
+commonAnnotations:
+  contact: "Ralf Berger <ralf.berger@uni-due.de>"
+
+patchesJson6902:
+- target:
+    group: networking.k8s.io
+    version: v1beta1
+    kind: Ingress
+    name: api
+  path: ingress/api.patch.yaml
+- target:
+    group: networking.k8s.io
+    version: v1beta1
+    kind: Ingress
+    name: web
+  path: ingress/web.patch.yaml
+
+secretGenerator:
+- name: configuration
+  env: configuration.env
+
+images:
+- name: inko/soco-rima-frontend
+  newTag: latest
+- name: inko/soco-rima-backend
+  newTag: latest
+- name: redis
+  newTag: "6.0"
+- name: postgres
+  newName: bitnami/postgresql
+  newTag: "13.2.0"
