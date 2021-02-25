@@ -25,4 +25,5 @@ images:
 - name: redis
   newTag: "6.0"
 - name: postgres
-  newTag: "13.2"
+  newName: bitnami/postgresql
+  newTag: "13.2.0"
