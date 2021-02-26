@@ -22,14 +22,16 @@ class RegisterView(APIView):
         #pchatti@test.de
         print(request.data)
         user_data["username"] = user_data.get("email")
-        serializer = accounts_serializers.UserRegistrationSerializer(data=user_data)
+        serializer = accounts_serializers.UserRegistrationSerializer(
+            data=user_data)
         serializer.is_valid(raise_exception=True)
         user = serializer.create(serializer.validated_data)
         user.set_password(serializer.validated_data["password"])
         user.save()
         import_user_data.delay(user.id)
         print(user)
-        return Response(accounts_serializers.UserSerializer(instance=user).data)
+        return Response(
+            accounts_serializers.UserSerializer(instance=user).data)
 
 
 class LoginView(APIView):
@@ -42,30 +44,29 @@ class LoginView(APIView):
         password = request.data.get("password")
 
         if email and password:
-            user = accounts_models.User.objects.filter(email__iexact=email).first()
+            user = accounts_models.User.objects.filter(
+                email__iexact=email).first()
             if user and user.check_password(password):
                 token, _ = Token.objects.get_or_create(user=user)
                 response = accounts_serializers.UserSerializer(user).data
                 response["token"] = token.key
-                response["data_being_loaded"] = import_in_process_for_user(user.id)
+                response["data_being_loaded"] = import_in_process_for_user(
+                    user.id)
                 return Response(response)
-        return Response(
-            {"detail": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"detail": "Invalid credentials"},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class DataLoadStatusView(APIView):
     def get(self, request, *args, **kwargs):
-        return Response({
-            "data_being_loaded": import_in_process_for_user(request.user.id)
-        })
+        return Response(
+            {"data_being_loaded": import_in_process_for_user(request.user.id)})
 
 
 class LogoutView(APIView):
     """
     Invalidate auth token
     """
-
     def post(self, request):
         Token.objects.filter(user=request.user).delete()
         return Response({})
@@ -87,8 +88,7 @@ class UserSuggestionView(ListAPIView):
         return accounts_models.User.objects.filter(
             Q(email__icontains=term)
             | Q(first_name__icontains=term)
-            | Q(last_name__icontains=term)
-        )
+            | Q(last_name__icontains=term))
 
 
 class PublicProfileView(RetrieveAPIView):

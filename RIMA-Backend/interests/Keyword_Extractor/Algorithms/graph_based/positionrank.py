@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Author: Florian Boudin
-
-
 """PositionRank keyphrase extraction model.
 
 PositionRank is an unsupervised model for keyphrase extraction from scholarly
@@ -33,7 +31,10 @@ class PositionRank(SingleRank):
         self.positions = defaultdict(float)
         """Container the sums of word's inverse positions."""
 
-    def candidate_selection(self, grammar=None, maximum_word_number=3, **kwargs):
+    def candidate_selection(self,
+                            grammar=None,
+                            maximum_word_number=3,
+                            **kwargs):
         """Candidate selection heuristic using a syntactic PoS pattern for
         noun phrase extraction.
 

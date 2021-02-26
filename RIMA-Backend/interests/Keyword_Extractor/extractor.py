@@ -6,7 +6,6 @@ from .Algorithms.graph_based.positionrank import PositionRank
 from .Algorithms.graph_based.single_tpr import TopicalPageRank
 from .Algorithms.graph_based.textrank import TextRank
 
-
 from .Algorithms.statistics_based.rake import Rake
 from .Algorithms.statistics_based import yake
 
@@ -61,9 +60,7 @@ def getKeyword(text, model, num=10):
         extractor = TopicalPageRank()
         extractor.load_document(input=text, language='en')
         extractor.candidate_selection(grammar=grammar)
-        extractor.candidate_weighting(
-            window=10, pos=pos
-        )
+        extractor.candidate_weighting(window=10, pos=pos)
         keyphrases = extractor.get_n_best(n=num)
 
         keyphrase = []
@@ -96,7 +93,9 @@ def getKeyword(text, model, num=10):
         stoplist += stopwords.words('english')
         extractor.candidate_selection(pos=pos, stoplist=stoplist)
 
-        extractor.candidate_weighting(alpha=1.1, threshold=0.74, method='average')
+        extractor.candidate_weighting(alpha=1.1,
+                                      threshold=0.74,
+                                      method='average')
 
         keyphrases = extractor.get_n_best(n=num)
 

@@ -29,9 +29,9 @@ class TwitterAPI:
 
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
-        self.auth_api = tweepy.API(
-            auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True
-        )
+        self.auth_api = tweepy.API(auth,
+                                   wait_on_rate_limit=True,
+                                   wait_on_rate_limit_notify=True)
         self.target = user_account_id
 
         self.end_date = end_date
@@ -42,7 +42,8 @@ class TwitterAPI:
         return response['resources']['statuses']['/statuses/user_timeline']
 
     def fetch_tweets(self):
-        print("Current Rate: {} (starting)".format(self.get_fetch_tweet_limit()))
+        print("Current Rate: {} (starting)".format(
+            self.get_fetch_tweet_limit()))
         tweets = []
         tweet_count = 0
         for tweet in tweepy.Cursor(
@@ -56,9 +57,8 @@ class TwitterAPI:
             tweet_ct = utc.localize(tweet.created_at)
             if tweet_ct > self.end_date:
                 tweets.append(tweet._json)
-                print(
-                    "Imported {} tweets for account {}".format(tweet_count, self.target)
-                )
+                print("Imported {} tweets for account {}".format(
+                    tweet_count, self.target))
             else:
                 break
         print("Current Rate: {} (ending)".format(self.get_fetch_tweet_limit()))
@@ -139,10 +139,11 @@ def get_recommended_tweets(tags):
             tweet_mode="extended",
             count=tag["n_tweets"],
             # count=25,
-            **extra_kwargs
-        )
+            **extra_kwargs)
 
-        results = [extract_tweet_from_response(x, tag) for x in response["statuses"]]
+        results = [
+            extract_tweet_from_response(x, tag) for x in response["statuses"]
+        ]
         full_result.extend(results)
 
     # TODO:
@@ -169,7 +170,8 @@ def get_recommended_tweets(tags):
         # keywords_list = list(keywords_extracted.keys())
         keywords_list = list(extract_keywords_from_tweet.keys())
         # # uncomment "score" before DOCKER deployment
-        score = round((get_interest_similarity_score(user_interest_model_list, keywords_list) or 0) * 100, 2)
+        score = round((get_interest_similarity_score(
+            user_interest_model_list, keywords_list) or 0) * 100, 2)
 
         # # comment "score" before DOCKER deployment
         # score = round((random.random() or 0) * 100, 2)
@@ -177,5 +179,7 @@ def get_recommended_tweets(tags):
             result["score"] = score
             tweets_with_scores.append(result)
 
-    sorted_list = sorted(tweets_with_scores, key=lambda k: k['score'], reverse=True)
+    sorted_list = sorted(tweets_with_scores,
+                         key=lambda k: k['score'],
+                         reverse=True)
     return sorted_list

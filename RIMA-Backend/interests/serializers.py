@@ -5,7 +5,8 @@ from .models import (
     BlacklistedKeyword,
     ShortTermInterest,
     LongTermInterest,
-    Category, Tweet,
+    Category,
+    Tweet,
 )
 from rest_framework import serializers
 
@@ -13,7 +14,7 @@ from rest_framework import serializers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ("name",)
+        fields = ("name", )
 
 
 class PaperSerializer(serializers.ModelSerializer):
@@ -58,7 +59,8 @@ class ShortTermInterestSerializer(serializers.ModelSerializer):
         return list(instance.papers.values_list("id", flat=True))
 
     def get_categories(self, instance):
-        return CategorySerializer(instance.keyword.categories.all(), many=True).data
+        return CategorySerializer(instance.keyword.categories.all(),
+                                  many=True).data
 
     def get_keyword(self, instance):
         return instance.keyword.name
@@ -92,7 +94,8 @@ class LongTermInterestSerializer(serializers.ModelSerializer):
         return []
 
     def get_categories(self, instance):
-        return CategorySerializer(instance.keyword.categories.all(), many=True).data
+        return CategorySerializer(instance.keyword.categories.all(),
+                                  many=True).data
 
     def get_keyword(self, instance):
         return instance.keyword.name
@@ -116,8 +119,9 @@ class KeywordCreateSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=1000)
     weight = serializers.FloatField(max_value=5, min_value=1)
 
+
 class TopicSerializer(serializers.Serializer):
-    key=serializers.ListField()
+    key = serializers.ListField()
     #value=serializers.CharField(max_length=1000)
 
 
@@ -127,18 +131,16 @@ class ListDataSerializer(serializers.Serializer):
 
 class InterestExtractionSerializer(serializers.Serializer):
     text = serializers.CharField()
-    algorithm = serializers.ChoiceField(
-        choices=[
-            ("Yake", "Yake"),
-            ("SingleRank", "SingleRank"),
-            ("TopicRank", "TopicRank"),
-            ("TextRank", "TextRank"),
-            ("PositionRank", "PositionRank"),
-            ("Rake", "Rake"),
-            ("MultipartiteRank", "MultipartiteRank"),
-            ("TopicalPageRank", "TopicalPageRank"),
-        ]
-    )
+    algorithm = serializers.ChoiceField(choices=[
+        ("Yake", "Yake"),
+        ("SingleRank", "SingleRank"),
+        ("TopicRank", "TopicRank"),
+        ("TextRank", "TextRank"),
+        ("PositionRank", "PositionRank"),
+        ("Rake", "Rake"),
+        ("MultipartiteRank", "MultipartiteRank"),
+        ("TopicalPageRank", "TopicalPageRank"),
+    ])
     wiki_filter = serializers.BooleanField(default=True)
     num_of_keywords = serializers.IntegerField(default=20)
 
@@ -146,12 +148,10 @@ class InterestExtractionSerializer(serializers.Serializer):
 class KeywordSimilariySerializer(serializers.Serializer):
     keywords_1 = serializers.ListField()
     keywords_2 = serializers.ListField()
-    algorithm = serializers.ChoiceField(
-        choices=[
-            ("WordEmbedding", "WordEmbedding"),
-            ("WikiLinkMeasure", "WikiLinkMeasure"),
-        ]
-    )
+    algorithm = serializers.ChoiceField(choices=[
+        ("WordEmbedding", "WordEmbedding"),
+        ("WikiLinkMeasure", "WikiLinkMeasure"),
+    ])
 
 
 class WikiCategoriesSerializer(serializers.Serializer):
@@ -159,14 +159,17 @@ class WikiCategoriesSerializer(serializers.Serializer):
 
 
 class TweetSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault(),)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault(), )
 
     class Meta:
         model = Tweet
         fields = ('id_str', 'full_text', 'entities', 'user', "screen_name")
+
+
 class JSONSerialize(serializers.Serializer):
-    intetest=serializers.CharField()
+    intetest = serializers.CharField()
+
+
 class DictSerializer(serializers.Serializer):
-    keywords=serializers.ListField()
-    weights=serializers.ListField()
- 
+    keywords = serializers.ListField()
+    weights = serializers.ListField()

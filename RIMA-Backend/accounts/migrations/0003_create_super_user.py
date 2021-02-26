@@ -8,10 +8,16 @@ def create_user(apps, schema_editor):
     # version than this migration expects. We use the historical version.
     User = apps.get_model('accounts', 'User')
     #username=admin_user password=admin
-    user = User.objects.create(username='admin_user', email='admin_user@example.com', password='pbkdf2_sha256$150000$nCXiTCF66fuM$jmpRLkV9RRCcuybpTEtEqqWq5BHDNkp7Wwaf7GZp3cg=')
+    user = User.objects.create(
+        username='admin_user',
+        email='admin_user@example.com',
+        password=
+        'pbkdf2_sha256$150000$nCXiTCF66fuM$jmpRLkV9RRCcuybpTEtEqqWq5BHDNkp7Wwaf7GZp3cg='
+    )
     user.is_superuser = True
     user.is_staff = True
     user.save()
+
 
 class Migration(migrations.Migration):
 
@@ -19,6 +25,4 @@ class Migration(migrations.Migration):
         ('accounts', '0002_auto_20200411_1140'),
     ]
 
-    operations = [
-        migrations.RunPython(create_user)
-    ]
+    operations = [migrations.RunPython(create_user)]

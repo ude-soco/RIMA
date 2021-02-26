@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-
 """Data structures for the pke module."""
 
 
 class Sentence(object):
     """The sentence data structure."""
-
     def __init__(self, words):
 
         self.words = words
@@ -56,7 +54,6 @@ class Sentence(object):
 
 class Candidate(object):
     """The keyphrase candidate data structure."""
-
     def __init__(self):
 
         self.surface_forms = []
@@ -77,7 +74,6 @@ class Candidate(object):
 
 class Document(object):
     """The Document data structure."""
-
     def __init__(self):
 
         self.input_file = None

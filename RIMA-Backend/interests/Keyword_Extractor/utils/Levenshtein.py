@@ -25,9 +25,9 @@ class Levenshtein(object):
         for x in range(1, size_x):
             for y in range(1, size_y):
                 if seq1[x - 1] == seq2[y - 1]:
-                    matrix[x, y] = min(
-                        matrix[x - 1, y] + 1, matrix[x - 1, y - 1], matrix[x, y - 1] + 1
-                    )
+                    matrix[x, y] = min(matrix[x - 1, y] + 1, matrix[x - 1,
+                                                                    y - 1],
+                                       matrix[x, y - 1] + 1)
                 else:
                     matrix[x, y] = min(
                         matrix[x - 1, y] + 1,

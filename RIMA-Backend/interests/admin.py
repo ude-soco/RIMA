@@ -18,7 +18,7 @@ class BlacklistedKeywordAdmin(admin.ModelAdmin):
 
 class PageAdmin(admin.ModelAdmin):
     list_display = ("title", "year", "user", "used_in_calc")
-    list_filter = ("user",)
+    list_filter = ("user", )
 
     class Meta:
         model = Paper
@@ -26,7 +26,7 @@ class PageAdmin(admin.ModelAdmin):
 
 class TweetAdmin(admin.ModelAdmin):
     list_display = ("id_str", "created_at", "user", "used_in_calc")
-    list_filter = ("user",)
+    list_filter = ("user", )
 
     class Meta:
         model = Tweet
@@ -34,7 +34,7 @@ class TweetAdmin(admin.ModelAdmin):
 
 class ShortTermInterestAdmin(admin.ModelAdmin):
     list_display = ("keyword", "user", "weight", "created_on")
-    list_filter = ("user",)
+    list_filter = ("user", )
 
     class Meta:
         model = ShortTermInterest
@@ -42,7 +42,7 @@ class ShortTermInterestAdmin(admin.ModelAdmin):
 
 class LongTermInterestAdmin(admin.ModelAdmin):
     list_display = ("keyword", "user", "weight", "created_on")
-    list_filter = ("user",)
+    list_filter = ("user", )
 
     class Meta:
         model = LongTermInterest

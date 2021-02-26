@@ -22,8 +22,10 @@ class Migration(migrations.Migration):
                 ),
                 ('task_type', models.CharField(max_length=255)),
                 ('user_id', models.IntegerField(blank=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, db_index=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
+                ('updated_at',
+                 models.DateTimeField(auto_now=True, db_index=True)),
+                ('created_at',
+                 models.DateTimeField(auto_now_add=True, db_index=True)),
             ],
         )
     ]

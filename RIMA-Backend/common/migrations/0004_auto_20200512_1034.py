@@ -13,6 +13,19 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='triggertask',
             name='task_type',
-            field=models.CharField(choices=[('IMPORT_TWEETS', 'IMPORT_TWEETS'), ('IMPORT_PAPERS', 'IMPORT_PAPERS'), ('IMPORT_TWEETS_FOR_USER', 'IMPORT_TWEETS_FOR_USER'), ('IMPORT_PAPERS_FOR_USER', 'IMPORT_PAPERS_FOR_USER'), ('UPDATE_SHORT_TERM_MODEL', 'UPDATE_SHORT_TERM_MODEL'), ('UPDATE_LONG_TERM_MODEL', 'UPDATE_LONG_TERM_MODEL'), ('UPDATE_SHORT_TERM_MODEL_FOR_USER', 'UPDATE_SHORT_TERM_MODEL_FOR_USER'), ('UPDATE_LONG_TERM_MODEL_FOR_USER', 'UPDATE_LONG_TERM_MODEL_FOR_USER'), ('IMPORT_ALL_DATA', 'IMPORT_ALL_DATA')], max_length=255),
+            field=models.CharField(choices=[
+                ('IMPORT_TWEETS', 'IMPORT_TWEETS'),
+                ('IMPORT_PAPERS', 'IMPORT_PAPERS'),
+                ('IMPORT_TWEETS_FOR_USER', 'IMPORT_TWEETS_FOR_USER'),
+                ('IMPORT_PAPERS_FOR_USER', 'IMPORT_PAPERS_FOR_USER'),
+                ('UPDATE_SHORT_TERM_MODEL', 'UPDATE_SHORT_TERM_MODEL'),
+                ('UPDATE_LONG_TERM_MODEL', 'UPDATE_LONG_TERM_MODEL'),
+                ('UPDATE_SHORT_TERM_MODEL_FOR_USER',
+                 'UPDATE_SHORT_TERM_MODEL_FOR_USER'),
+                ('UPDATE_LONG_TERM_MODEL_FOR_USER',
+                 'UPDATE_LONG_TERM_MODEL_FOR_USER'),
+                ('IMPORT_ALL_DATA', 'IMPORT_ALL_DATA')
+            ],
+                                   max_length=255),
         ),
     ]

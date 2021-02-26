@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Author: Florian Boudin
-
-
 """Multipartite graph keyphrase extraction model.
 
 Graph-based ranking approach to keyphrase extraction described in:
@@ -72,13 +70,10 @@ class MultipartiteRank(TopicRank):
 
         # for each cluster id
         for cluster_id in range(1, max(clusters) + 1):
-            self.topics.append(
-                [
-                    candidates[j]
-                    for j in range(len(clusters))
-                    if clusters[j] == cluster_id
-                ]
-            )
+            self.topics.append([
+                candidates[j] for j in range(len(clusters))
+                if clusters[j] == cluster_id
+            ])
 
         # assign cluster identifiers to candidates
         for i, cluster_id in enumerate(clusters):
@@ -94,7 +89,8 @@ class MultipartiteRank(TopicRank):
         for node_i, node_j in combinations(self.candidates.keys(), 2):
 
             # discard intra-topic edges
-            if self.topic_identifiers[node_i] == self.topic_identifiers[node_j]:
+            if self.topic_identifiers[node_i] == self.topic_identifiers[
+                    node_j]:
                 continue
 
             weights = []
@@ -164,7 +160,8 @@ class MultipartiteRank(TopicRank):
             node_i, node_j = nodes
             position_i = 1.0 / (1 + self.candidates[node_i].offsets[0])
             position_i = math.exp(position_i)
-            self.graph[node_j][node_i]['weight'] += boosters * alpha * position_i
+            self.graph[node_j][node_i][
+                'weight'] += boosters * alpha * position_i
 
     def candidate_weighting(self, threshold=0.74, method='average', alpha=1.1):
         """ Candidate weight calculation using random walk.

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Author: Florian Boudin
-
-
 """TopicRank keyphrase extraction model.
 
 Graph-based ranking approach to keyphrase extraction described in:
@@ -66,10 +64,8 @@ class TopicRank(LoadFile):
 
         # filter candidates containing stopwords or punctuation marks
         self.candidate_filtering(
-            stoplist=list(string.punctuation)
-            + ['-lrb-', '-rrb-', '-lcb-', '-rcb-', '-lsb-', '-rsb-']
-            + stoplist
-        )
+            stoplist=list(string.punctuation) +
+            ['-lrb-', '-rrb-', '-lcb-', '-rcb-', '-lsb-', '-rsb-'] + stoplist)
 
     def vectorize_candidates(self):
         """Vectorize the keyphrase candidates.
@@ -129,13 +125,10 @@ class TopicRank(LoadFile):
 
         # for each topic identifier
         for cluster_id in range(1, max(clusters) + 1):
-            self.topics.append(
-                [
-                    candidates[j]
-                    for j in range(len(clusters))
-                    if clusters[j] == cluster_id
-                ]
-            )
+            self.topics.append([
+                candidates[j] for j in range(len(clusters))
+                if clusters[j] == cluster_id
+            ])
 
     def build_topic_graph(self):
         """Build topic graph."""
@@ -152,12 +145,17 @@ class TopicRank(LoadFile):
                         for p_j in self.candidates[c_j].offsets:
                             gap = abs(p_i - p_j)
                             if p_i < p_j:
-                                gap -= len(self.candidates[c_i].lexical_form) - 1
+                                gap -= len(
+                                    self.candidates[c_i].lexical_form) - 1
                             if p_j < p_i:
-                                gap -= len(self.candidates[c_j].lexical_form) - 1
+                                gap -= len(
+                                    self.candidates[c_j].lexical_form) - 1
                             self.graph[i][j]['weight'] += 1.0 / gap
 
-    def candidate_weighting(self, threshold=0.74, method='average', heuristic=None):
+    def candidate_weighting(self,
+                            threshold=0.74,
+                            method='average',
+                            heuristic=None):
         """Candidate ranking using random walk.
 
         Args:

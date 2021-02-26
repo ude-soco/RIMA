@@ -41,9 +41,8 @@ class SemanticScholarAPI:
         print("Getting {}".format(method))
         method_types = ['paper', 'author']
         if method not in method_types:
-            raise ValueError(
-                'Invalid method type. Expected one of: {}'.format(method_types)
-            )
+            raise ValueError('Invalid method type. Expected one of: {}'.format(
+                method_types))
 
         url = '{}/{}/{}'.format(self.API_URL, method, id)
         if include_unknown_references:
@@ -60,7 +59,6 @@ class SemanticScholarAPI:
             raise ConnectionRefusedError('HTTP status 429 Too Many Requests.')
 
         return data
-
 
     def get_user_papers(self, user, start_year, end_year):
         if not user.author_id:

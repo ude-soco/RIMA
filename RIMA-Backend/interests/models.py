@@ -13,8 +13,13 @@ class Category(models.Model):
 
 
 class Paper(models.Model):
-    user = models.ForeignKey(User, related_name="papers", on_delete=models.CASCADE)
-    paper_id = models.CharField(max_length=255, null=True, blank=True, default="manual")
+    user = models.ForeignKey(User,
+                             related_name="papers",
+                             on_delete=models.CASCADE)
+    paper_id = models.CharField(max_length=255,
+                                null=True,
+                                blank=True,
+                                default="manual")
     title = models.CharField(max_length=2048, null=True, blank=True)
     authors = models.CharField(max_length=2048, null=True, blank=True)
     url = models.CharField(max_length=1024, null=True, blank=True)
@@ -27,7 +32,9 @@ class Paper(models.Model):
 
 
 class Tweet(models.Model):
-    user = models.ForeignKey(User, related_name="tweets", on_delete=models.CASCADE)
+    user = models.ForeignKey(User,
+                             related_name="tweets",
+                             on_delete=models.CASCADE)
     id_str = models.CharField(max_length=2048, null=True, blank=True)
 
     screen_name = models.CharField(max_length=50, null=True, blank=True)
@@ -62,20 +69,22 @@ class ShortTermInterest(models.Model):
     SCHOLAR = "Scholar"
     MANUAL = "Manual"
 
-    keyword = models.ForeignKey(
-        Keyword, related_name="short_term_models", on_delete=models.CASCADE
-    )
+    keyword = models.ForeignKey(Keyword,
+                                related_name="short_term_models",
+                                on_delete=models.CASCADE)
     weight = models.FloatField(default=1)
     source = models.CharField(
         max_length=512,
         choices=[(TWITTER, TWITTER), (SCHOLAR, SCHOLAR), (MANUAL, MANUAL)],
         default=MANUAL,
     )
-    user = models.ForeignKey(
-        User, related_name="short_term_interests", on_delete=models.CASCADE
-    )
-    tweets = models.ManyToManyField(Tweet, related_name="tweet_short_term_models")
-    papers = models.ManyToManyField(Paper, related_name="paper_short_term_models")
+    user = models.ForeignKey(User,
+                             related_name="short_term_interests",
+                             on_delete=models.CASCADE)
+    tweets = models.ManyToManyField(Tweet,
+                                    related_name="tweet_short_term_models")
+    papers = models.ManyToManyField(Paper,
+                                    related_name="paper_short_term_models")
 
     model_month = models.IntegerField()
     model_year = models.IntegerField()
@@ -90,28 +99,30 @@ class LongTermInterest(models.Model):
     SCHOLAR = "Scholar"
     MANUAL = "Manual"
 
-    keyword = models.ForeignKey(
-        Keyword, related_name="long_term_models", on_delete=models.CASCADE
-    )
+    keyword = models.ForeignKey(Keyword,
+                                related_name="long_term_models",
+                                on_delete=models.CASCADE)
     weight = models.FloatField(default=1)
     source = models.CharField(max_length=512, default=MANUAL)
-    user = models.ForeignKey(
-        User, related_name="long_term_interests", on_delete=models.CASCADE
-    )
-    tweets = models.ManyToManyField(Tweet, related_name="tweet_long_term_models")
-    papers = models.ManyToManyField(Paper, related_name="paper_long_term_models")
+    user = models.ForeignKey(User,
+                             related_name="long_term_interests",
+                             on_delete=models.CASCADE)
+    tweets = models.ManyToManyField(Tweet,
+                                    related_name="tweet_long_term_models")
+    papers = models.ManyToManyField(Paper,
+                                    related_name="paper_long_term_models")
 
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class BlacklistedKeyword(models.Model):
-    keyword = models.ForeignKey(
-        Keyword, related_name="blacklisted_preference", on_delete=models.CASCADE
-    )
-    user = models.ForeignKey(
-        User, related_name="blacklisted_keywords", on_delete=models.CASCADE
-    )
+    keyword = models.ForeignKey(Keyword,
+                                related_name="blacklisted_preference",
+                                on_delete=models.CASCADE)
+    user = models.ForeignKey(User,
+                             related_name="blacklisted_keywords",
+                             on_delete=models.CASCADE)
 
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Author: Florian Boudin
-
-
 """SingleRank keyphrase extraction model.
 
 Simple extension of the TextRank model described in:
@@ -49,11 +47,8 @@ class SingleRank(TextRank):
             pos = {'NOUN', 'PROPN', 'ADJ'}
 
         # flatten document as a sequence of (word, pass_syntactic_filter) tuples
-        text = [
-            (word, sentence.pos[i] in pos)
-            for sentence in self.sentences
-            for i, word in enumerate(sentence.stems)
-        ]
+        text = [(word, sentence.pos[i] in pos) for sentence in self.sentences
+                for i, word in enumerate(sentence.stems)]
 
         # add nodes to the graph
         self.graph.add_nodes_from([word for word, valid in text if valid])
@@ -93,7 +88,10 @@ class SingleRank(TextRank):
         self.build_word_graph(window=window, pos=pos)
 
         # compute the word scores using random walk
-        w = nx.pagerank_scipy(self.graph, alpha=0.85, tol=0.0001, weight='weight')
+        w = nx.pagerank_scipy(self.graph,
+                              alpha=0.85,
+                              tol=0.0001,
+                              weight='weight')
 
         # loop through the candidates
         for k in self.candidates.keys():

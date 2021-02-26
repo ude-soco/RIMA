@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """Base classes for the pke module."""
 
 from collections import defaultdict
@@ -44,7 +43,6 @@ escaped_punctuation = {
 
 class LoadFile(object):
     """The LoadFile class that provides base functions."""
-
     def __init__(self):
         """Initializer for LoadFile class."""
 
@@ -93,8 +91,8 @@ class LoadFile(object):
         # test whether the language is known, otherwise fall back to english
         if language not in ISO_to_language:
             logging.warning(
-                "ISO 639 code {} is not supported, switching to 'en'.".format(language)
-            )
+                "ISO 639 code {} is not supported, switching to 'en'.".format(
+                    language))
             language = 'en'
 
         # initialize document
@@ -175,9 +173,8 @@ class LoadFile(object):
             stemmer = SnowballStemmer("porter")
         else:
             # create a new instance of a porter stemmer
-            stemmer = SnowballStemmer(
-                ISO_to_language[self.language], ignore_stopwords=True
-            )
+            stemmer = SnowballStemmer(ISO_to_language[self.language],
+                                      ignore_stopwords=True)
 
         # iterate throughout the sentences
         for i, sentence in enumerate(self.sentences):
@@ -199,7 +196,8 @@ class LoadFile(object):
         for i, sentence in enumerate(self.sentences):
             for j, word in enumerate(sentence.words):
                 l_word = word.lower()
-                self.sentences[i].words[j] = escaped_punctuation.get(l_word, word)
+                self.sentences[i].words[j] = escaped_punctuation.get(
+                    l_word, word)
 
     def is_redundant(self, candidate, prev, minimum_length=1):
         """Test if one candidate is redundant with respect to a list of already
@@ -227,7 +225,7 @@ class LoadFile(object):
         # loop through the already selected candidates
         for prev_candidate in prev:
             for i in range(len(prev_candidate) - len(candidate) + 1):
-                if candidate == prev_candidate[i : i + len(candidate)]:
+                if candidate == prev_candidate[i:i + len(candidate)]:
                     return True
         return False
 
@@ -270,20 +268,16 @@ class LoadFile(object):
             best = non_redundant_best
 
         # get the list of best candidates as (lexical form, weight) tuples
-        n_best = [(u, self.weights[u]) for u in best[: min(n, len(best))]]
+        n_best = [(u, self.weights[u]) for u in best[:min(n, len(best))]]
 
         # replace with surface forms if no stemming
         if not stemming:
-            n_best = [
-                (' '.join(self.candidates[u].surface_forms[0]).lower(), self.weights[u])
-                for u in best[: min(n, len(best))]
-            ]
+            n_best = [(' '.join(self.candidates[u].surface_forms[0]).lower(),
+                       self.weights[u]) for u in best[:min(n, len(best))]]
 
         if len(n_best) < n:
-            logging.warning(
-                'Not enough candidates to choose from '
-                '({} requested, {} given)'.format(n, len(n_best))
-            )
+            logging.warning('Not enough candidates to choose from '
+                            '({} requested, {} given)'.format(n, len(n_best)))
 
         # return the list of best candidates
         return n_best
@@ -346,10 +340,12 @@ class LoadFile(object):
                     )
 
     def longest_pos_sequence_selection(self, valid_pos=None):
-        self.longest_sequence_selection(key=lambda s: s.pos, valid_values=valid_pos)
+        self.longest_sequence_selection(key=lambda s: s.pos,
+                                        valid_values=valid_pos)
 
     def longest_keyword_sequence_selection(self, keywords):
-        self.longest_sequence_selection(key=lambda s: s.stems, valid_values=keywords)
+        self.longest_sequence_selection(key=lambda s: s.stems,
+                                        valid_values=keywords)
 
     def longest_sequence_selection(self, key, valid_values):
         """Select the longest sequences of given POS tags as candidates.
@@ -382,9 +378,9 @@ class LoadFile(object):
 
                     # add the ngram to the candidate container
                     self.add_candidate(
-                        words=sentence.words[seq[0] : seq[-1] + 1],
-                        stems=sentence.stems[seq[0] : seq[-1] + 1],
-                        pos=sentence.pos[seq[0] : seq[-1] + 1],
+                        words=sentence.words[seq[0]:seq[-1] + 1],
+                        stems=sentence.stems[seq[0]:seq[-1] + 1],
+                        pos=sentence.pos[seq[0]:seq[-1] + 1],
                         offset=shift + seq[0],
                         sentence_id=i,
                     )
@@ -421,7 +417,8 @@ class LoadFile(object):
             shift = sum([s.length for s in self.sentences[0:i]])
 
             # convert sentence as list of (offset, pos) tuples
-            tuples = [(str(j), sentence.pos[j]) for j in range(sentence.length)]
+            tuples = [(str(j), sentence.pos[j])
+                      for j in range(sentence.length)]
 
             # parse sentence
             tree = chunker.parse(tuples)
@@ -437,9 +434,9 @@ class LoadFile(object):
 
                     # add the NP to the candidate container
                     self.add_candidate(
-                        words=sentence.words[first : last + 1],
-                        stems=sentence.stems[first : last + 1],
-                        pos=sentence.pos[first : last + 1],
+                        words=sentence.words[first:last + 1],
+                        stems=sentence.stems[first:last + 1],
+                        pos=sentence.pos[first:last + 1],
                         offset=shift + first,
                         sentence_id=i,
                     )
@@ -530,7 +527,8 @@ class LoadFile(object):
 
             # discard if not containing only alpha-numeric characters
             if only_alphanum and k in self.candidates:
-                if not all(
-                    [self._is_alphanum(w, valid_punctuation_marks) for w in words]
-                ):
+                if not all([
+                        self._is_alphanum(w, valid_punctuation_marks)
+                        for w in words
+                ]):
                     del self.candidates[k]

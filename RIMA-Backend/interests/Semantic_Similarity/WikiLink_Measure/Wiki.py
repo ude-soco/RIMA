@@ -25,9 +25,9 @@ def wikisim(source_doc, target_doc):
         if len(common) == 0:
             googleMeasure = 1.0
         else:
-            googleMeasure = ((math.log(max(lenx, leny))) - (math.log(len(common)))) / (
-                math.log(5944399) - math.log(min(lenx, leny))
-            )
+            googleMeasure = ((math.log(max(lenx, leny))) -
+                             (math.log(len(common)))) / (
+                                 math.log(5944399) - math.log(min(lenx, leny)))
 
         if googleMeasure >= 1:
             return 0
@@ -80,7 +80,8 @@ def wikisim(source_doc, target_doc):
 
     def cosine_sim(vecA, vecB):
         """Find the cosine similarity distance between two vectors."""
-        csim = np.dot(vecA, vecB) / (np.linalg.norm(vecA) * np.linalg.norm(vecB))
+        csim = np.dot(vecA,
+                      vecB) / (np.linalg.norm(vecA) * np.linalg.norm(vecB))
         if np.isnan(np.sum(csim)):
             return 0
         return csim

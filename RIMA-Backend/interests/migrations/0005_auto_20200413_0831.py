@@ -11,8 +11,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='paper',
             name='paper_id',
-            field=models.CharField(
-                blank=True, default='manual', max_length=255, null=True
-            ),
+            field=models.CharField(blank=True,
+                                   default='manual',
+                                   max_length=255,
+                                   null=True),
         )
     ]

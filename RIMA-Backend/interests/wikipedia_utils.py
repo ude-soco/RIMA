@@ -26,10 +26,8 @@ def wikifilter(keyword):
 
     for ca in candidate:
         query = requests.get(
-            r'https://en.wikipedia.org/w/api.php?action=query&titles={}&&redirects&format=json'.format(
-                ca
-            )
-        )
+            r'https://en.wikipedia.org/w/api.php?action=query&titles={}&&redirects&format=json'
+            .format(ca))
         data = json.loads(query.text)
         PAGES = data["query"]["pages"]
         for v in PAGES.values():

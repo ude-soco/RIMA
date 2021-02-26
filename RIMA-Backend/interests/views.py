@@ -24,21 +24,48 @@ from interests.wikipedia_utils import wikifilter, wikicategory
 from interests.update_interests import normalize
 from .topicutils import (
     #added by mouadh 'getsimilarity'
-    getsimilarity, applyTopicMiningTopic, applyTopicMiningKeyword, getTopKeywords,
-    getPaperswithTopics, getTopicDetails, compareTopics, getAllTopics,
-    getTopicWeightsAllYears, getDataForPieTopics, getDataForPieKeys,
-    getMultipleYearTopicJourney, getPaperIDFromPaperTitle,
-    getMultipleYearKeyJourney, getTopicEvoultion, generateVennData,
-    generateVennDataKeys, getAllAuthorsDict, getAllAuthors, getAllKeywords,
-    getAllTopicsAllYears, getTopKeysForAllYear, getAllKeywordsAllYears,
-    searchForKeyword, searchForTopics, getTopTopicsForAllYears,
-    getAuthorFromAuthorName, getFlowChartDataTopics, getFlowChartDataKeywords,
-    getAbstractbasedonKeyword, getDataAuthorComparisonTopics,
-    getAuthorsForYear, authorConfTopicComparison,
-    getDataAuthorComparisonKeywords, fetchTopicsuserID, getTopTopics,
-    compareAuthors, getKeyDetails, getPaperswithKeys,
-    compareLAKwithAuthortopics, getAuthorComparisionData,
-    getAuthorsDict) #printText
+    getsimilarity,
+    applyTopicMiningTopic,
+    applyTopicMiningKeyword,
+    getTopKeywords,
+    getPaperswithTopics,
+    getTopicDetails,
+    compareTopics,
+    getAllTopics,
+    getTopicWeightsAllYears,
+    getDataForPieTopics,
+    getDataForPieKeys,
+    getMultipleYearTopicJourney,
+    getPaperIDFromPaperTitle,
+    getMultipleYearKeyJourney,
+    getTopicEvoultion,
+    generateVennData,
+    generateVennDataKeys,
+    getAllAuthorsDict,
+    getAllAuthors,
+    getAllKeywords,
+    getAllTopicsAllYears,
+    getTopKeysForAllYear,
+    getAllKeywordsAllYears,
+    searchForKeyword,
+    searchForTopics,
+    getTopTopicsForAllYears,
+    getAuthorFromAuthorName,
+    getFlowChartDataTopics,
+    getFlowChartDataKeywords,
+    getAbstractbasedonKeyword,
+    getDataAuthorComparisonTopics,
+    getAuthorsForYear,
+    authorConfTopicComparison,
+    getDataAuthorComparisonKeywords,
+    fetchTopicsuserID,
+    getTopTopics,
+    compareAuthors,
+    getKeyDetails,
+    getPaperswithKeys,
+    compareLAKwithAuthortopics,
+    getAuthorComparisionData,
+    getAuthorsDict)  #printText
 from .TopicExtractor import fetchAllTopics, fetchAbstracts_author, updateAllTopics
 from .serializers import (
     PaperSerializer, ListDataSerializer, BlacklistedKeywordSerializer,
@@ -972,14 +999,11 @@ class AuthorConfComparisonData(APIView):
         })
 
 
- #created by mouadh, sorting tweets based on similarity score
+#created by mouadh, sorting tweets based on similarity score
 class similartweets(APIView):
     def get(self, request, *args, **kwargs):
-        
-        return Response({
-            "vals":
-            getsimilarity()
-        })
+
+        return Response({"vals": getsimilarity()})
 
 
 #For demo

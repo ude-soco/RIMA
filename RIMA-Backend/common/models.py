@@ -13,9 +13,10 @@ class TaskLog(models.Model):
     )
     started_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     ended_on = models.DateTimeField(auto_now=True, null=True, blank=True)
-    duration_seconds = models.DecimalField(
-        max_digits=6, decimal_places=1, null=True, blank=True
-    )
+    duration_seconds = models.DecimalField(max_digits=6,
+                                           decimal_places=1,
+                                           null=True,
+                                           blank=True)
     args = models.TextField(null=True, blank=True)
     kwargs = models.TextField(null=True, blank=True)
     error_stack = models.TextField(null=True, blank=True)
@@ -48,7 +49,8 @@ class TriggerTask(models.Model):
             (IMPORT_PAPERS_FOR_USER, IMPORT_PAPERS_FOR_USER),
             (UPDATE_SHORT_TERM_MODEL, UPDATE_SHORT_TERM_MODEL),
             (UPDATE_LONG_TERM_MODEL, UPDATE_LONG_TERM_MODEL),
-            (UPDATE_SHORT_TERM_MODEL_FOR_USER, UPDATE_SHORT_TERM_MODEL_FOR_USER),
+            (UPDATE_SHORT_TERM_MODEL_FOR_USER,
+             UPDATE_SHORT_TERM_MODEL_FOR_USER),
             (UPDATE_LONG_TERM_MODEL_FOR_USER, UPDATE_LONG_TERM_MODEL_FOR_USER),
             (IMPORT_ALL_DATA, IMPORT_ALL_DATA),
             (IMPORT_PAPER_DATA, IMPORT_PAPER_DATA),
@@ -80,8 +82,10 @@ class TriggerTask(models.Model):
             self.IMPORT_PAPERS_FOR_USER: import_papers_for_user,
             self.UPDATE_SHORT_TERM_MODEL: update_short_term_interest_model,
             self.UPDATE_LONG_TERM_MODEL: update_long_term_interest_model,
-            self.UPDATE_SHORT_TERM_MODEL_FOR_USER: update_short_term_interest_model_for_user,
-            self.UPDATE_LONG_TERM_MODEL_FOR_USER: update_long_term_interest_model_for_user,
+            self.UPDATE_SHORT_TERM_MODEL_FOR_USER:
+            update_short_term_interest_model_for_user,
+            self.UPDATE_LONG_TERM_MODEL_FOR_USER:
+            update_long_term_interest_model_for_user,
             self.IMPORT_ALL_DATA: import_user_data,
             self.IMPORT_PAPER_DATA: import_user_paperdata,
         }

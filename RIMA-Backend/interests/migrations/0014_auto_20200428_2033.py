@@ -8,10 +8,10 @@ class Migration(migrations.Migration):
     dependencies = [('interests', '0013_auto_20200428_2014')]
 
     operations = [
-        migrations.RenameField(
-            model_name='shortterminterest', old_name='paper', new_name='papers'
-        ),
-        migrations.RenameField(
-            model_name='shortterminterest', old_name='tweet', new_name='tweets'
-        ),
+        migrations.RenameField(model_name='shortterminterest',
+                               old_name='paper',
+                               new_name='papers'),
+        migrations.RenameField(model_name='shortterminterest',
+                               old_name='tweet',
+                               new_name='tweets'),
     ]

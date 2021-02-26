@@ -2,7 +2,8 @@ def normalize(dic):
     '''
     This function is used to map the weight of the interests to [1,5]
     '''
-    maxnum = sorted(dic.items(), key=lambda items: items[1], reverse=True)[:1][0][1]
+    maxnum = sorted(dic.items(), key=lambda items: items[1],
+                    reverse=True)[:1][0][1]
     for k, v in dic.items():
         f = v / maxnum * 5
         dic[k] = round(f, 1)
@@ -28,7 +29,8 @@ def update_interest_models(x, y):
             y[k] = v
     # print(y)
 
-    interest_tuples = sorted(y.items(), key=lambda item: item[1], reverse=True)[:15]
+    interest_tuples = sorted(y.items(), key=lambda item: item[1],
+                             reverse=True)[:15]
     updated = {}
     for tuples in interest_tuples:
         updated[tuples[0]] = tuples[1]

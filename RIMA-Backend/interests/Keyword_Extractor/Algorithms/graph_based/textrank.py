@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Authors: Ygor Gallina, Florian Boudin
-
-
 """TextRank keyphrase extraction model.
 
 Implementation of the TextRank model for keyword extraction described in:
@@ -53,11 +51,8 @@ class TextRank(LoadFile):
             pos = {'NOUN', 'PROPN', 'ADJ'}
 
         # flatten document as a sequence of (word, pass_syntactic_filter) tuples
-        text = [
-            (word, sentence.pos[i] in pos)
-            for sentence in self.sentences
-            for i, word in enumerate(sentence.stems)
-        ]
+        text = [(word, sentence.pos[i] in pos) for sentence in self.sentences
+                for i, word in enumerate(sentence.stems)]
 
         # add nodes to the graph
         self.graph.add_nodes_from([word for word, valid in text if valid])
@@ -74,9 +69,11 @@ class TextRank(LoadFile):
                 if is_in_graph2 and node1 != node2:
                     self.graph.add_edge(node1, node2)
 
-    def candidate_weighting(
-        self, window=2, pos=None, top_percent=None, normalized=False
-    ):
+    def candidate_weighting(self,
+                            window=2,
+                            pos=None,
+                            top_percent=None,
+                            normalized=False):
         """Tailored candidate ranking method for TextRank. Keyphrase candidates
         are either composed from the T-percent highest-ranked words as in the
         original paper or extracted using the `candidate_selection()` method.
@@ -106,7 +103,8 @@ class TextRank(LoadFile):
         if top_percent is not None:
 
             # warn user as this is not the pke way of doing it
-            logging.warning("Candidates are generated using {}-top".format(top_percent))
+            logging.warning(
+                "Candidates are generated using {}-top".format(top_percent))
 
             # computing the number of top keywords
             nb_nodes = self.graph.number_of_nodes()
@@ -116,7 +114,7 @@ class TextRank(LoadFile):
             top_words = sorted(w, key=w.get, reverse=True)
 
             # creating keyphrases from the T-top words
-            self.longest_keyword_sequence_selection(top_words[: int(to_keep)])
+            self.longest_keyword_sequence_selection(top_words[:int(to_keep)])
 
         # weight candidates using the sum of their word scores
         for k in self.candidates.keys():

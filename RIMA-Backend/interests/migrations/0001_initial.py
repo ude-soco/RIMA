@@ -22,7 +22,8 @@ class Migration(migrations.Migration):
                         verbose_name='ID',
                     ),
                 ),
-                ('name', models.CharField(blank=True, max_length=1024, null=True)),
+                ('name',
+                 models.CharField(blank=True, max_length=1024, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -37,7 +38,8 @@ class Migration(migrations.Migration):
                         verbose_name='ID',
                     ),
                 ),
-                ('keyword', models.CharField(blank=True, max_length=1024, null=True)),
+                ('keyword',
+                 models.CharField(blank=True, max_length=1024, null=True)),
                 ('weight', models.IntegerField(default=1)),
                 (
                     'source',
@@ -55,9 +57,8 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 (
                     'categories',
-                    models.ManyToManyField(
-                        related_name='short_term_interests', to='interests.Category'
-                    ),
+                    models.ManyToManyField(related_name='short_term_interests',
+                                           to='interests.Category'),
                 ),
             ],
         ),
@@ -73,7 +74,8 @@ class Migration(migrations.Migration):
                         verbose_name='ID',
                     ),
                 ),
-                ('keyword', models.CharField(blank=True, max_length=1024, null=True)),
+                ('keyword',
+                 models.CharField(blank=True, max_length=1024, null=True)),
                 ('weight', models.IntegerField(default=1)),
                 (
                     'source',
@@ -91,9 +93,8 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 (
                     'categories',
-                    models.ManyToManyField(
-                        related_name='long_term_interests', to='interests.Category'
-                    ),
+                    models.ManyToManyField(related_name='long_term_interests',
+                                           to='interests.Category'),
                 ),
             ],
         ),

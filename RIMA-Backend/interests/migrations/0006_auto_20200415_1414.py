@@ -25,17 +25,19 @@ class Migration(migrations.Migration):
                         verbose_name='ID',
                     ),
                 ),
-                ('name', models.CharField(blank=True, max_length=1024, null=True)),
+                ('name',
+                 models.CharField(blank=True, max_length=1024, null=True)),
                 (
                     'categories',
-                    models.ManyToManyField(
-                        related_name='keywords', to='interests.Category'
-                    ),
+                    models.ManyToManyField(related_name='keywords',
+                                           to='interests.Category'),
                 ),
             ],
         ),
-        migrations.RemoveField(model_name='longterminterest', name='categories'),
-        migrations.RemoveField(model_name='shortterminterest', name='categories'),
+        migrations.RemoveField(model_name='longterminterest',
+                               name='categories'),
+        migrations.RemoveField(model_name='shortterminterest',
+                               name='categories'),
         migrations.AlterField(
             model_name='longterminterest',
             name='keyword',

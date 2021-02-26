@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """Main module."""
 from __future__ import absolute_import
 import string
@@ -25,7 +24,8 @@ class KeywordExtractor(object):
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
 
-        local_path = os.path.join("StopwordsList", "stopwords_%s.txt" % lan[:2].lower())
+        local_path = os.path.join("StopwordsList",
+                                  "stopwords_%s.txt" % lan[:2].lower())
         resource_path = os.path.join(dir_path, local_path)
         try:
             with open(resource_path, encoding='utf-8') as stop_fil:
@@ -42,7 +42,8 @@ class KeywordExtractor(object):
         self.windowsSize = windowsSize
         if dedupFunc == 'jaro_winkler' or dedupFunc == 'jaro':
             self.dedu_function = self.jaro
-        elif dedupFunc.lower() == 'sequencematcher' or dedupFunc.lower() == 'seqm':
+        elif dedupFunc.lower() == 'sequencematcher' or dedupFunc.lower(
+        ) == 'seqm':
             self.dedu_function = self.seqm
         else:
             self.dedu_function = self.levs
@@ -52,8 +53,7 @@ class KeywordExtractor(object):
 
     def levs(self, cand1, cand2):
         return 1.0 - jellyfish.levenshtein_distance(cand1, cand2) / max(
-            len(cand1), len(cand2)
-        )
+            len(cand1), len(cand2))
 
     def seqm(self, cand1, cand2):
         return Levenshtein.ratio(cand1, cand2)
@@ -69,12 +69,11 @@ class KeywordExtractor(object):
         dc.build_single_terms_features(features=self.features)
         dc.build_mult_terms_features(features=self.features)
         resultSet = []
-        todedup = sorted(
-            [cc for cc in dc.candidates.values() if cc.isValid()], key=lambda c: c.H
-        )
+        todedup = sorted([cc for cc in dc.candidates.values() if cc.isValid()],
+                         key=lambda c: c.H)
 
         if self.dedupLim >= 1.0:
-            return ([(cand.H, cand.unique_kw) for cand in todedup])[: self.top]
+            return ([(cand.H, cand.unique_kw) for cand in todedup])[:self.top]
 
         for cand in todedup:
             toadd = True

@@ -10,9 +10,11 @@ if os.environ.get("BACKGROUND_ENV") == "web":
     from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 
 
-def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0):
+def calculate_similarity(source_doc,
+                         target_doc,
+                         embedding="Glove",
+                         threshold=0):
     """Calculates & returns similarity scores between given source document & all the target documents."""
-
     def w2v_vectorize(doc):
         """Identify the vector values for each word in the given document"""
         doc = [i.lower().split() for i in doc]
@@ -73,7 +75,8 @@ def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0)
 
     def cosine_sim(vecA, vecB):
         """Find the cosine similarity distance between two vectors."""
-        csim = np.dot(vecA, vecB) / (np.linalg.norm(vecA) * np.linalg.norm(vecB))
+        csim = np.dot(vecA,
+                      vecB) / (np.linalg.norm(vecA) * np.linalg.norm(vecB))
         if np.isnan(np.sum(csim)):
             return 0
         return csim
@@ -101,8 +104,7 @@ def calculate_similarity(source_doc, target_doc, embedding="Glove", threshold=0)
 
     elif embedding == "FastText":
         fasttext_model = FastText.load_fasttext_format(
-            'Semantic_Similarity/Word_Embedding/data/cc.en.300.bin'
-        )
+            'Semantic_Similarity/Word_Embedding/data/cc.en.300.bin')
         source_vec = fasttext_vectorize(source_doc)
         target_vec = fasttext_vectorize(target_doc)
         sim_score = cosine_sim(source_vec, target_vec)
