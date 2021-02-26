@@ -13,9 +13,6 @@ RUN adduser --disabled-login -u 1000 app
 USER 1000
 WORKDIR /home/app
 
-COPY nginx.conf .
-RUN  nginx -t -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
-
 ENV  PATH "$PATH:/home/app/.local/bin"
 COPY --chown=app:app requirements.txt requirements.txt
 RUN  pip install --user --no-color --quiet -r requirements.txt &&\
@@ -23,7 +20,10 @@ RUN  pip install --user --no-color --quiet -r requirements.txt &&\
      python -c "import nltk;nltk.download('stopwords')" &&\
      python -c "import nltk;nltk.download('punkt')"
 
-ADD interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz /opt/
+ENV LDA_MODEL_FILE_PATH="/home/app/interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz"
+
+COPY nginx.conf .
+RUN  nginx -t -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
 
 COPY --chown=app:app . ./
 RUN  python manage.py collectstatic --no-input

@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 's%@4^(t8&xdlj(nzd3(wnk1czjbf@^jhz24_od8&^)o!6jic_f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get("DOCKER_ENV") else True
+DEBUG = True if os.environ.get("DEBUG") else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -97,16 +97,16 @@ WSGI_APPLICATION = 'interest_miner_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = bool(os.environ.get("DOCKER_ENV", False))
+USE_POSTGRESQ = bool(os.environ.get("POSTGRES_HOST", False))
 
-if DOCKER:
+if USE_POSTGRESQ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'interest_miner_db',
-            'USER': 'interest_miner',
-            'PASSWORD': 'interest_miner',
-            'HOST': 'db',
+            'NAME':     os.environ.get("POSTGRES_DB"),
+            'USER':     os.environ.get("POSTGRES_USER"),
+            'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+            'HOST':     os.environ.get("POSTGRES_HOST"),
             'PORT': 5432,
         }
     }
@@ -169,3 +169,6 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 60  # 1 hour timeout
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
+
+GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH", ".model_cache/datatest_word2vec.txt")
+LDA_MODEL_FILE_PATH   = os.environ.get("LDA_MODEL_FILE_PATH", "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
