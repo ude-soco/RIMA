@@ -32,8 +32,6 @@ spec:
           value: $(DB_SERVICE)
         - name: REDIS_HOST
           value: $(REDIS_SERVICE)
-        - name: PRELOAD_GLOVE_MODEL
-          value: "true"
         envFrom:
         - secretRef:
             name: configuration
