@@ -1,3 +1,4 @@
+.depcheckrc
 .dockerignore
 CHANGELOG.md
 Dockerfile

@@ -1,0 +1,6 @@
+skip-missing: true
+ignores:
+- react-scripts
+- "@fortawesome/fontawesome-svg-core"
+specials:
+- webpacker
