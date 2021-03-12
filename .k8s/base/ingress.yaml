@@ -6,14 +6,19 @@ metadata:
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/redirect-entry-point: https
-    description: RIMA-Frontend
+    description: RIMA
 spec:
   rules:
   - host: rima.sc.inko.cloud
     http:
       paths:
-      - backend:
+      - path: /
+        backend:
           serviceName: web
+          servicePort: 8080
+      - path: /api
+        backend:
+          serviceName: api
           servicePort: 8080
   tls:
   - hosts:

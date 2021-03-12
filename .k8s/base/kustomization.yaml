@@ -5,6 +5,9 @@ bases:
 - backend
 - frontend
 
+resources:
+- ingress.yaml
+
 namePrefix: rima-
 
 commonLabels:

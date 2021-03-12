@@ -19,14 +19,8 @@ patchesJson6902:
     group: networking.k8s.io
     version: v1beta1
     kind: Ingress
-    name: api
-  path: ingress/api.patch.yaml
-- target:
-    group: networking.k8s.io
-    version: v1beta1
-    kind: Ingress
     name: web
-  path: ingress/web.patch.yaml
+  path: ingress.patch.yaml
 
 secretGenerator:
 - name: configuration

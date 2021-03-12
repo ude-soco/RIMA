@@ -21,7 +21,6 @@ vars:
 resources:
 - api/deployment.yaml
 - api/service.yaml
-- api/ingress.yaml
 - worker/deployment.yaml
 - worker/pvc.yaml
 - db/deployment.yaml
