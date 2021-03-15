@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,16 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 's%@4^(t8&xdlj(nzd3(wnk1czjbf@^jhz24_od8&^)o!6jic_f'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get("DEBUG") else False
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
+DEBUG = os.getenv('DJANGO_DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,8 +52,6 @@ REST_FRAMEWORK = {
     #This line needs to be commented only for conference Insights and doesn't work with docker at the moment
     #'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
 }
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -89,9 +86,7 @@ WSGI_APPLICATION = 'interest_miner_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-USE_POSTGRESQ = bool(os.environ.get("POSTGRES_HOST", False))
-
-if USE_POSTGRESQ:
+if bool(os.environ.get("POSTGRES_HOST", False)):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -99,7 +94,10 @@ if USE_POSTGRESQ:
             'USER': os.environ.get("POSTGRES_USER"),
             'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
             'HOST': os.environ.get("POSTGRES_HOST"),
-            'PORT': 5432,
+            'PORT': os.environ.get("POSTGRES_PORT", 5432),
+            'OPTIONS': json.loads(
+                os.getenv('POSTGRES_OPTIONS', '{}')
+            ),
         }
     }
 else:
@@ -112,7 +110,6 @@ else:
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
@@ -134,15 +131,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
@@ -150,9 +142,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-TWITTER_FETCH_DAYS = int(os.environ.get(
+# No of days for which the tweets needs to be imported
+TWITTER_FETCH_DAYS = int(os.getenv(
     "TWITTER_FETCH_DAYS",
-    180))  # No of days for which the tweets needs to be imported
+    180))
 
 # Celery settings
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")

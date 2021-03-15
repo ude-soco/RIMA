@@ -14,6 +14,7 @@ services:
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/web.sh
     environment:
+    - DJANGO_DEBUG="False"
     - REDIS_HOST=redis
     - POSTGRES_HOST=db
     env_file:
@@ -29,6 +30,7 @@ services:
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker.sh
     environment:
+    - DJANGO_DEBUG="False"
     - REDIS_HOST=redis
     - POSTGRES_HOST=db
     env_file:
