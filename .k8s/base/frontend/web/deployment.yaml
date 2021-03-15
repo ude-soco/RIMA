@@ -38,9 +38,9 @@ spec:
           preStop:
             exec:
               command: [ "sh", "-c", "sleep 5" ]
-        env:
-        - name: BASE_URL
-          value: /
+        envFrom:
+        - secretRef:
+            name: configuration
         resources:
           requests:
             memory: 110Mi
