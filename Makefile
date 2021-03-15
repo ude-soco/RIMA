@@ -1,7 +1,7 @@
 all: clean build up
 
 up:
-	@docker-compose up --force-recreate
+	@docker-compose up --force-recreate --abort-on-container-exit
 
 down:
 	@docker-compose down
