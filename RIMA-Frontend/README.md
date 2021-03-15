@@ -1,17 +1,20 @@
-# RIMA-A Transparent Recommendation and Interest Modeling Application
-This is the frontend for the RIMA web application.
+# RIMA-Frontend
 
-<br>
-
-## Installation guide to start the application:
-
-<br>
+This is the frontend for RIMA (a transparent Recommendation and Interest Modeling Application). It is a React app based on the [Argon Dashboard React](https://www.creative-tim.com/product/argon-dashboard-react) template, built with Node.js and served via nginx.
 
 
-- Install npm https://www.npmjs.com/get-npm
+## Development environment
 
--  Rename `example.env` file to `.env`
+Requirements: Node.js (14.15.x), npm
 
--  Run `npm install`
+```sh
+cd nodejs
+mv .env.example .env
+npm install
+npm start
+```
 
--  Run `npm start`
+
+## Production build
+
+See `Dockerfile` for build steps
