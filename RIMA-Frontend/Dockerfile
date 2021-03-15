@@ -18,5 +18,6 @@ RUN chown -R nginx:nginx .
 
 USER 101
 COPY --from=build --chown=101 /app/build/ ./
+COPY ./nginx/conf.d/* /etc/nginx/conf.d/
 COPY ./nginx/docker-entrypoint.d/* /docker-entrypoint.d/
 EXPOSE 8080
