@@ -20,6 +20,22 @@ spec:
         backend:
           serviceName: api
           servicePort: 8080
+      - path: /docs
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /swagger
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /admin
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /reset-app-data
+        backend:
+          serviceName: api
+          servicePort: 8080
   tls:
   - hosts:
     - rima.sc.inko.cloud
