@@ -15,7 +15,7 @@ WORKDIR /home/app
 
 ENV  PATH "$PATH:/home/app/.local/bin"
 COPY --chown=app:app requirements.txt requirements.txt
-RUN  pip install --user --no-color --quiet -r requirements.txt &&\
+RUN  pip install --no-color --quiet --no-cache-dir --user -r requirements.txt &&\
      python -m spacy download en &&\
      python -c "import nltk;nltk.download('stopwords')" &&\
      python -c "import nltk;nltk.download('punkt')"
