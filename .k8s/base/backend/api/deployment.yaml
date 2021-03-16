@@ -29,8 +29,8 @@ spec:
           httpGet:
             path: /api/accounts/data-import-status/
             port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 15
+          initialDelaySeconds: 5
+          periodSeconds: 5
         livenessProbe:
           httpGet:
             path: /api/accounts/data-import-status/
@@ -39,8 +39,14 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 5
         env:
+        - name: POSTGRES_HOST
+          value: $(DB_SERVICE)
         - name: REDIS_HOST
           value: $(REDIS_SERVICE)
+        envFrom:
+        - secretRef:
+            name: configuration
+
         # resources:
         #   requests:
         #     memory: 110Mi
