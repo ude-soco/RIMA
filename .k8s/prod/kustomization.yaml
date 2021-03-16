@@ -19,11 +19,11 @@ secretGenerator:
   env: configuration.env
 images:
 - name: inko/soco-rima-frontend
-  newTag: "0.0.6"
+  newTag: "0.0.7"
 - name: inko/soco-rima-backend
-  newTag: "0.0.6"
+  newTag: "0.0.7"
 - name: redis
-  newTag: "6.0"
+  newTag: "6.2.1-alpine"
 - name: postgres
   newName: bitnami/postgresql
   newTag: "13.2.0"
