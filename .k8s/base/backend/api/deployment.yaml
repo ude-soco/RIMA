@@ -27,13 +27,13 @@ spec:
         - containerPort: 8080
         readinessProbe:
           httpGet:
-            path: /docs
+            path: /api/accounts/data-import-status/
             port: 8080
           initialDelaySeconds: 15
           periodSeconds: 15
         livenessProbe:
           httpGet:
-            path: /docs
+            path: /api/accounts/data-import-status/
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 30
