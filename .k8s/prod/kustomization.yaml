@@ -19,9 +19,9 @@ secretGenerator:
   env: configuration.env
 images:
 - name: inko/soco-rima-frontend
-  newTag: "0.0.7"
+  newTag: "0.0.9"
 - name: inko/soco-rima-backend
-  newTag: "0.0.7"
+  newTag: "0.0.9"
 - name: redis
   newTag: "6.2.1-alpine"
 - name: postgres
