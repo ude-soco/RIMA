@@ -54,6 +54,15 @@ spec:
         #   limits:
         #     memory: 256Mi
         #     cpu: 1
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - celery inspect ping -b redis://$REDIS_HOST
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 10
         volumeMounts:
         - name: model-cache
           mountPath: /home/app/.tmp
