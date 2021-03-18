@@ -33,10 +33,11 @@ services:
     - DJANGO_DEBUG="False"
     - REDIS_HOST=redis
     - POSTGRES_HOST=db
+    - TEMP_DIR=/home/app/.tmp
     env_file:
     - configuration.env
     volumes:
-    - ./tmp/models:/home/app/.model_cache
+    - ./tmp:/home/app/.tmp
     depends_on:
     - db
     - redis

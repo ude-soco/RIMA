@@ -27,6 +27,7 @@ from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 #import plotly.graph_objects as go
 #import plotly.express as px
 from pprint import pprint
+from django.conf import settings
 
 
 def getTopics(year, query):
@@ -1154,8 +1155,8 @@ def generateVennDataKeys(year1, year2):
     label3 = v.get_label_by_id('11')
     label3.set_fontsize(7)
     plt.axis('off')
-    plt.savefig('/venn.png')
-    with open('/venn.png', "rb") as image_file:
+    plt.savefig(settings.TEMP_DIR + '/venn.png')
+    with open(settings.TEMP_DIR + '/venn.png', "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
     ctx = image_data
@@ -1241,8 +1242,8 @@ def generateVennData(year1, year2):
     label3 = v.get_label_by_id('11')
     label3.set_fontsize(7)
     plt.axis('off')
-    plt.savefig('/venn.png')
-    with open('/venn.png', "rb") as image_file:
+    plt.savefig(settings.TEMP_DIR + '/venn.png')
+    with open(settings.TEMP_DIR + '/venn.png', "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
     ctx = image_data
@@ -2059,8 +2060,8 @@ def fetchTopicsuserID(ssuserid, year):
     label3.set_fontsize(7)
 
     plt.axis('off')
-    plt.savefig('/recommend.png')
-    with open('/recommend.png', "rb") as image_file:
+    plt.savefig(settings.TEMP_DIR + '/recommend.png')
+    with open(settings.TEMP_DIR + '/recommend.png', "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
     ctx = image_data
@@ -2361,8 +2362,8 @@ def authorConfTopicComparison(key, author, year):
     label3 = v.get_label_by_id('11')
     label3.set_fontsize(7)
     plt.axis('off')
-    plt.savefig('/recommend.png')
-    with open('/recommend.png', "rb") as image_file:
+    plt.savefig(settings.TEMP_DIR + '/recommend.png')
+    with open(settings.TEMP_DIR + '/recommend.png', "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
     ctx = image_data
@@ -2490,8 +2491,8 @@ def compareLAKwithAuthortopics(author, year):
     label3.set_fontsize(7)
 
     plt.axis('off')
-    plt.savefig('/recommend.png')
-    with open('/recommend.png', "rb") as image_file:
+    plt.savefig(settings.TEMP_DIR + '/recommend.png')
+    with open(settings.TEMP_DIR + '/recommend.png', "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
     ctx = image_data

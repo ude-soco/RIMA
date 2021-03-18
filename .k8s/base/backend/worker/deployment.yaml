@@ -32,6 +32,8 @@ spec:
           value: $(DB_SERVICE)
         - name: REDIS_HOST
           value: $(REDIS_SERVICE)
+        - name: TEMP_DIR
+          value: /tmp
         envFrom:
         - secretRef:
             name: configuration

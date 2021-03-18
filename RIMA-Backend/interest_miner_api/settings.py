@@ -187,6 +187,8 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
+TEMP_DIR = os.environ.get("TEMP_DIR", "../tmp")
+
 GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH",
                                        "../tmp/models/datatest_word2vec.txt")
 LDA_MODEL_FILE_PATH = os.environ.get(
