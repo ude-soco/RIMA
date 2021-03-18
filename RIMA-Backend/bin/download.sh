@@ -10,4 +10,9 @@ else
   echo "GloVe model missing; downloading now ..."
   mkdir -p -- "${GLOVE_MODEL_FILE_PATH%/*}"
   $HOME/.local/bin/gdown --id $GLOVE_MODEL_GDRIVE_ID -O $GLOVE_MODEL_FILE_PATH
+
+  if [ ! -f "$GLOVE_MODEL_FILE_PATH" ]; then
+    >&2 echo "GloVe model not downloaded, aborting."
+    exit 1
+  fi
 fi
