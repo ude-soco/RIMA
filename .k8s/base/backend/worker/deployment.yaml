@@ -23,6 +23,16 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
+      initContainers:
+      - name: download
+        image: inko/soco-rima-backend
+        command: ['./bin/download.sh']
+        envFrom:
+        - secretRef:
+            name: configuration
+        volumeMounts:
+        - name: model-cache
+          mountPath: /home/app/.tmp
       containers:
       - name: worker
         image: inko/soco-rima-backend
