@@ -46,7 +46,7 @@ spec:
         #     cpu: 1
         volumeMounts:
         - name: model-cache
-          mountPath: /home/app/.model_cache
+          mountPath: /home/app/.tmp
       volumes:
       - name: model-cache
         persistentVolumeClaim:
