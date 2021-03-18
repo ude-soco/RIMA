@@ -106,13 +106,14 @@ dist
 
 .DS_Store
 .idea/*
-*.pyc
-*/__pycache__/*
-*.sqlite3
-static/*
-datatest_word2vec.txt
 .vscode/*
-venv/*
-connect_to_server.sh
-deploy.sh
+*.pyc
+*.sqlite3
+*/__pycache__/*
+/tmp/*
 build/*
+connect_to_server.sh
+datatest_word2vec.txt
+deploy.sh
+static/*
+venv/*

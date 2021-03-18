@@ -36,7 +36,7 @@ services:
     env_file:
     - configuration.env
     volumes:
-    - ./RIMA-Backend/.model_cache:/home/app/.model_cache
+    - ./tmp/models:/home/app/.model_cache
     depends_on:
     - db
     - redis

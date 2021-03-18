@@ -1,5 +1,4 @@
 .dockerignore
 .DS_Store
-/.model_cache/*.txt
 /*.md
 Dockerfile
