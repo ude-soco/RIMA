@@ -16,10 +16,17 @@ Developed by ... at ... for ... since ...
   * web: User-facing React (Node.js) UI, offering ...
 
 
-## Container images
+## Official builds and deployments
+
+### Container images
 
 * [RIMA-Backend](https://hub.docker.com/repository/docker/inko/soco-rima-backend)
 * [RIMA-Frontend](https://hub.docker.com/repository/docker/inko/soco-rima-frontend)
+
+### Live deployments
+
+* [Development](https://rima-dev.sc.inko.cloud/)
+* [Production](https://rima.sc.inko.cloud/)
 
 
 ## Run on Docker Compose
