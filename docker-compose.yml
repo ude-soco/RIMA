@@ -12,7 +12,7 @@ services:
   api:
     build: RIMA-Backend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
-    command: bin/web.sh
+    command: bin/web
     environment:
     - DJANGO_DEBUG="False"
     - REDIS_HOST=redis
@@ -28,7 +28,7 @@ services:
   worker:
     build: RIMA-Backend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
-    command: bin/worker.sh
+    command: bin/worker
     environment:
     - DJANGO_DEBUG="False"
     - REDIS_HOST=redis

@@ -29,5 +29,4 @@ COPY --chown=app:app . ./
 RUN  python manage.py collectstatic --no-input
 
 EXPOSE 8080
-CMD ["./bin/web.sh"]
-# CMD ["./bin/worker.sh"]
+CMD ["bin/web"]
