@@ -189,8 +189,11 @@ SWAGGER_SETTINGS = {
 
 TEMP_DIR = os.environ.get("TEMP_DIR", "../tmp")
 
-GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH",
-                                       "../tmp/datatest_word2vec.txt")
 LDA_MODEL_FILE_PATH = os.environ.get(
     "LDA_MODEL_FILE_PATH",
     "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
+GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH")
+
+# Pre-load data models
+if GLOVE_MODEL_FILE_PATH:
+    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
