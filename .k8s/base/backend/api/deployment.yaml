@@ -55,11 +55,10 @@ spec:
         envFrom:
         - secretRef:
             name: configuration
-
-        # resources:
-        #   requests:
-        #     memory: 110Mi
-        #     cpu: 100m
-        #   limits:
-        #     memory: 256Mi
-        #     cpu: 1
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 100m
+          limits:
+            memory: 800Mi
+            cpu: 1

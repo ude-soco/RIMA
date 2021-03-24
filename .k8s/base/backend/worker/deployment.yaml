@@ -47,13 +47,13 @@ spec:
         envFrom:
         - secretRef:
             name: configuration
-        # resources:
-        #   requests:
-        #     memory: 110Mi
-        #     cpu: 100m
-        #   limits:
-        #     memory: 256Mi
-        #     cpu: 1
+        resources:
+          requests:
+            memory: 1100Mi
+            cpu: 100m
+          limits:
+            memory: 1500Mi
+            cpu: 1
         readinessProbe:
           exec:
             command:
