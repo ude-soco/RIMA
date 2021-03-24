@@ -1,7 +1,10 @@
 version: '3'
 
+volumes:
+  database-data:
+
 services:
-  frontend:
+  frontend-web:
     build: RIMA-Frontend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-frontend:${IMAGE_TAG:-latest}
     environment:
@@ -9,48 +12,50 @@ services:
     ports:
     - 8080:8080
 
-  api:
+  backend-api:
     build: RIMA-Backend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/web
+    restart: always
     environment:
     - DJANGO_DEBUG="False"
-    - REDIS_HOST=redis
-    - POSTGRES_HOST=db
+    - REDIS_HOST=backend-redis
+    - POSTGRES_HOST=backend-db
     env_file:
     - configuration.env
     depends_on:
-    - db
-    - redis
+    - backend-db
+    - backend-redis
     ports:
     - 8000:8080
 
-  worker:
+  backend-worker:
     build: RIMA-Backend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker
+    restart: always
     environment:
     - DJANGO_DEBUG="False"
-    - REDIS_HOST=redis
-    - POSTGRES_HOST=db
+    - REDIS_HOST=backend-redis
+    - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
     env_file:
     - configuration.env
     volumes:
     - ./tmp:/home/app/.tmp
     depends_on:
-    - db
-    - redis
+    - backend-db
+    - backend-redis
 
-  db:
+  backend-db:
     image: postgres
+    restart: on-failure
     env_file:
     - configuration.env
     volumes:
     - database-data:/var/lib/postgresql/data/
 
-  redis:
+  backend-redis:
     image: redis
+    restart: on-failure
 
-volumes:
-  database-data:

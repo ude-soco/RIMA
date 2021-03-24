@@ -113,7 +113,6 @@ dist
 /tmp/*
 build/*
 connect_to_server.sh
-datatest_word2vec.txt
 deploy.sh
 static/*
 venv/*

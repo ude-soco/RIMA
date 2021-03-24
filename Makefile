@@ -1,7 +1,7 @@
 all: clean build up
 
 up:
-	@docker-compose up --force-recreate --abort-on-container-exit
+	@docker-compose up --force-recreate
 
 down:
 	@docker-compose down
@@ -19,4 +19,7 @@ k8s:
 	@kubectl apply -k .k8s/dev
 	@kubectl apply -k .k8s/prod
 
-.PHONY: up build clean push all
+tilt:
+	@tilt up; tilt down
+
+.PHONY: up build clean push k8s tilt all
