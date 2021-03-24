@@ -22,7 +22,6 @@ resources:
 - api/deployment.yaml
 - api/service.yaml
 - worker/deployment.yaml
-- worker/pvc.yaml
 - db/deployment.yaml
 - db/service.yaml
 - db/pvc.yaml

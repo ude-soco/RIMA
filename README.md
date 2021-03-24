@@ -14,6 +14,9 @@ Developed by ... at ... for ... since ...
   * redis: Redis key-value cache, used for ...
 * RIMA-Frontend
   * web: User-facing React (Node.js) UI, offering ...
+* model:
+  * downloader: Python, fetches GloVe model from Google Drive
+  * server: nginx, serves GloVe model to RIMA-Backend via HTTP
 
 
 ## Official builds and deployments
@@ -22,6 +25,7 @@ Developed by ... at ... for ... since ...
 
 * [RIMA-Backend](https://hub.docker.com/repository/docker/inko/soco-rima-backend)
 * [RIMA-Frontend](https://hub.docker.com/repository/docker/inko/soco-rima-frontend)
+* [model-downloader](https://hub.docker.com/repository/docker/inko/soco-rima-model-downloader)
 
 ### Live deployments
 

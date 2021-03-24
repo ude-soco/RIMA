@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
+      initContainers:
+      - name: downloader
+        image: inko/soco-rima-model-downloader
+        env:
+        - name: GLOVE_MODEL_FILE_PATH
+          value: /storage/datatest_word2vec.txt
+        envFrom:
+        - secretRef:
+            name: configuration
+        volumeMounts:
+        - name: storage
+          mountPath: /storage
+      containers:
+      - name: server
+        image: inko/soco-rima-model-server
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: storage
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: storage

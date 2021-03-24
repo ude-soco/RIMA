@@ -4,6 +4,7 @@ kind: Kustomization
 bases:
 - backend
 - frontend
+- model
 
 resources:
 - ingress.yaml

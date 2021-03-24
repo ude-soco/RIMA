@@ -1,10 +1,7 @@
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: model-cache
-  labels:
-    app.kubernetes.io/component: worker
+  name: storage
 spec:
   accessModes:
   - ReadWriteOnce

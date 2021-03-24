@@ -52,6 +52,10 @@ spec:
           value: $(REDIS_SERVICE)
         - name: TEMP_DIR
           value: /tmp
+        - name: GLOVE_MODEL_URL
+          value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
+        - name: GLOVE_MODEL_FILE_PATH
+          value: /tmp/datatest_word2vec.txt
         envFrom:
         - secretRef:
             name: configuration

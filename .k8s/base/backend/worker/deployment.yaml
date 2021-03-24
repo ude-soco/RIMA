@@ -23,20 +23,10 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-      initContainers:
-      - name: download
-        image: inko/soco-rima-backend
-        command: ['./bin/download.sh']
-        envFrom:
-        - secretRef:
-            name: configuration
-        volumeMounts:
-        - name: model-cache
-          mountPath: /home/app/.tmp
       containers:
       - name: worker
         image: inko/soco-rima-backend
-        command: ['./bin/worker.sh']
+        command: ['bin/worker']
         env:
         - name: POSTGRES_HOST
           value: $(DB_SERVICE)
@@ -44,6 +34,10 @@ spec:
           value: $(REDIS_SERVICE)
         - name: TEMP_DIR
           value: /tmp
+        - name: GLOVE_MODEL_URL
+          value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
+        - name: GLOVE_MODEL_FILE_PATH
+          value: /tmp/datatest_word2vec.txt
         envFrom:
         - secretRef:
             name: configuration
@@ -63,10 +57,3 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 60
           timeoutSeconds: 10
-        volumeMounts:
-        - name: model-cache
-          mountPath: /home/app/.tmp
-      volumes:
-      - name: model-cache
-        persistentVolumeClaim:
-          claimName: model-cache

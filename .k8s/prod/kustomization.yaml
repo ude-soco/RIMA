@@ -22,6 +22,11 @@ images:
   newTag: "0.0.9"
 - name: inko/soco-rima-backend
   newTag: "0.0.9"
+- name: inko/soco-rima-model-downloader
+  newTag: "0.0.9"
+- name: inko/soco-rima-model-server
+  newName: nginxinc/nginx-unprivileged
+  newTag: "1.19.7"
 - name: redis
   newTag: "6.2.1-alpine"
 - name: postgres
