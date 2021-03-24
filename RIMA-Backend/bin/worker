@@ -4,7 +4,7 @@ set -euo pipefail
 echo "Migrating database ..."
 python manage.py migrate
 
-source "${BASH_SOURCE%/*}/download.sh"
+source "${BASH_SOURCE%/*}/download"
 
 echo "Starting Celery job queue ..."
 celery worker --app=interest_miner_api -l info

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "${BASH_SOURCE%/*}/download"
+
 echo "Starting Nginx ..."
 nginx -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
 

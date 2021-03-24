@@ -3,7 +3,7 @@ FROM python:3.6.13-slim
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update -qq &&\
-    apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx &&\
+    apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx curl &&\
     rm -rf /var/lib/apt/lists/*
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log &&\

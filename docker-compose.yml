@@ -21,8 +21,13 @@ services:
     - DJANGO_DEBUG="False"
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
+    - TEMP_DIR=/home/app/.tmp
+    - GLOVE_MODEL_URL=http://model-server:8080/datatest_word2vec.txt
+    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
     env_file:
     - configuration.env
+    volumes:
+    - ./tmp/backend/api:/home/app/.tmp
     depends_on:
     - backend-db
     - backend-redis
@@ -39,10 +44,12 @@ services:
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
+    - GLOVE_MODEL_URL=http://model-server:8080/datatest_word2vec.txt
+    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
     env_file:
     - configuration.env
     volumes:
-    - ./tmp:/home/app/.tmp
+    - ./tmp/backend/worker:/home/app/.tmp
     depends_on:
     - backend-db
     - backend-redis
@@ -59,3 +66,21 @@ services:
     image: redis
     restart: on-failure
 
+  model-downloader:
+    build: model/downloader
+    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-model-downloader:${IMAGE_TAG:-latest}
+    restart: on-failure
+    environment:
+    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    env_file:
+    - configuration.env
+    volumes:
+    - ./tmp/model:/home/app/.tmp
+
+  model-server:
+    image: nginxinc/nginx-unprivileged:1.19
+    restart: on-failure
+    volumes:
+    - ./tmp/model:/usr/share/nginx/html
+    ports:
+    - 8001:8080
