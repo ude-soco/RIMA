@@ -7,6 +7,7 @@ services:
   frontend-web:
     build: RIMA-Frontend
     image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-frontend:${IMAGE_TAG:-latest}
+    command: bin/api
     environment:
     - BASE_URL=http://127.0.0.1:8000
     ports:

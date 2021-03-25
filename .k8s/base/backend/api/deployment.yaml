@@ -23,6 +23,7 @@ spec:
       containers:
       - name: web
         image: inko/soco-rima-backend
+        command: ['bin/api']
         ports:
         - containerPort: 8080
         startupProbe:
