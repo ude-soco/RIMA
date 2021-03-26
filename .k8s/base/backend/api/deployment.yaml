@@ -20,6 +20,18 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+      initContainers:
+      - name: setup
+        image: inko/soco-rima-backend
+        command: ['bin/download']
+        env:
+        - name: GLOVE_MODEL_URL
+          value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
+        - name: GLOVE_MODEL_FILE_PATH
+          value: /tmp/models/datatest_word2vec.txt
+        volumeMounts:
+        - mountPath: /tmp/models
+          name: tmp
       containers:
       - name: web
         image: inko/soco-rima-backend
@@ -55,7 +67,7 @@ spec:
         - name: GLOVE_MODEL_URL
           value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
         - name: GLOVE_MODEL_FILE_PATH
-          value: /tmp/datatest_word2vec.txt
+          value: /tmp/models/datatest_word2vec.txt
         envFrom:
         - secretRef:
             name: configuration
@@ -66,3 +78,9 @@ spec:
           limits:
             memory: 800Mi
             cpu: 1
+        volumeMounts:
+        - mountPath: /tmp/models
+          name: tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
