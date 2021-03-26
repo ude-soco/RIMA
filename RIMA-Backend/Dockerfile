@@ -17,7 +17,8 @@ COPY --chown=app:app requirements.txt requirements.txt
 RUN  pip install --no-color --quiet --no-cache-dir --user -r requirements.txt
 RUN  python -m spacy download en &&\
      python -c "import nltk;nltk.download('stopwords')" &&\
-     python -c "import nltk;nltk.download('punkt')"
+     python -c "import nltk;nltk.download('punkt')" &&\
+     python -c "import nltk;nltk.download('sentiwordnet')"
 
 COPY nginx.conf .
 RUN  nginx -t -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
