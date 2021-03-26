@@ -1,25 +1,43 @@
-all: clean build up
+help:
+	@cat $(MAKEFILE_LIST) | docker run --rm -i xanders/make-help
 
-up:
+# Clean, rebuild and run
+all: clean build run
+
+##
+## Run the application locally
+##
+
+# Start all containers
+run:
 	@docker-compose up --force-recreate
 
-down:
-	@docker-compose down
-
-build:
-	@docker-compose build --parallel
-
+# Remove services, volumes, and images
 clean:
 	@docker-compose down --volumes --remove-orphans --rmi local
 
+##
+## Build container images locally
+##
+
+# Build all container images
+build:
+	@BUILDKIT_PROGRESS=plain docker-compose build --parallel
+
+# Push container images to remote registry
 push:
 	@docker-compose push
 
-k8s:
+##
+## Deploy the application to Kubernetes
+##
+
+# Deploy dev overlay
+dev:
 	@kubectl apply -k .k8s/dev
+
+# Deploy prod overlay
+prod:
 	@kubectl apply -k .k8s/prod
 
-tilt:
-	@tilt up; tilt down
-
-.PHONY: up build clean push k8s tilt all
+.PHONY: help all run clean build push dev prod
