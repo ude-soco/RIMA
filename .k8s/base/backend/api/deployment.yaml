@@ -38,24 +38,11 @@ spec:
         command: ['bin/api']
         ports:
         - containerPort: 8080
-        startupProbe:
-          httpGet:
-            path: /api/accounts/data-import-status/
-            port: 8080
-          initialDelaySeconds: 300
-          periodSeconds: 15
-          failureThreshold: 40
-        livenessProbe:
-          httpGet:
-            path: /api/accounts/data-import-status/
-            port: 8080
-          initialDelaySeconds: 300
-          periodSeconds: 15
-          failureThreshold: 40
         readinessProbe:
           httpGet:
             path: /api/accounts/data-import-status/
             port: 8080
+          initialDelaySeconds: 300
           periodSeconds: 15
         env:
         - name: POSTGRES_HOST
@@ -71,13 +58,6 @@ spec:
         envFrom:
         - secretRef:
             name: configuration
-        resources:
-          requests:
-            memory: 500Mi
-            cpu: 100m
-          limits:
-            memory: 800Mi
-            cpu: 1
         volumeMounts:
         - mountPath: /tmp/models
           name: tmp

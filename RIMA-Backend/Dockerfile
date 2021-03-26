@@ -26,5 +26,7 @@ COPY --chown=app:app . ./
 RUN  python manage.py collectstatic --no-input
 
 ENV LDA_MODEL_FILE_PATH /home/app/interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz
+ENV GUNICORN_LOG_LEVEL info
+
 EXPOSE 8080
 CMD ["bin/api"]

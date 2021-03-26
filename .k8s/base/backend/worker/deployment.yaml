@@ -20,9 +20,6 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       initContainers:
       - name: setup
         image: inko/soco-rima-backend
@@ -66,7 +63,7 @@ spec:
             - /bin/bash
             - -c
             - celery inspect ping -b redis://$REDIS_HOST
-          initialDelaySeconds: 30
+          initialDelaySeconds: 300
           periodSeconds: 60
           timeoutSeconds: 10
         volumeMounts:
