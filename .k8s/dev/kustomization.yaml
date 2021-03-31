@@ -33,6 +33,18 @@ patchesJson6902:
     kind: Deployment
     name: web
   path: deployment.patch.yaml
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: api
+  path: deployment.patch.yaml
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: worker
+  path: deployment.patch.yaml
 
 secretGenerator:
 - name: configuration
