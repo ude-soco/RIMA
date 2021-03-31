@@ -28,6 +28,10 @@ spec:
         backend:
           serviceName: api
           servicePort: 8080
+      - path: /static
+        backend:
+          serviceName: api
+          servicePort: 8080
       - path: /admin
         backend:
           serviceName: api
