@@ -38,6 +38,20 @@ spec:
         command: ['bin/api']
         ports:
         - containerPort: 8080
+        # startupProbe:
+        #   httpGet:
+        #     path: /api/accounts/data-import-status/
+        #     port: 8080
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 15
+        #   failureThreshold: 40
+        # livenessProbe:
+        #   httpGet:
+        #     path: /api/accounts/data-import-status/
+        #     port: 8080
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 15
+        #   failureThreshold: 40
         readinessProbe:
           httpGet:
             path: /api/accounts/data-import-status/
@@ -68,6 +82,15 @@ spec:
           limits:
             memory: 2Gi
             cpu: 2
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: api
+              topologyKey: kubernetes.io/hostname
       volumes:
       - name: tmp
         emptyDir: {}

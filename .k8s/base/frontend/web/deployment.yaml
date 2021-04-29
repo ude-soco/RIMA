@@ -48,3 +48,12 @@ spec:
           limits:
             memory: 256Mi
             cpu: 1
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: web
+              topologyKey: kubernetes.io/hostname

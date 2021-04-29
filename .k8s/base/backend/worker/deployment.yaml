@@ -69,6 +69,15 @@ spec:
         volumeMounts:
         - mountPath: /tmp/models
           name: tmp
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: worker
+              topologyKey: kubernetes.io/hostname
       volumes:
       - name: tmp
         emptyDir: {}
