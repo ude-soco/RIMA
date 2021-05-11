@@ -50,8 +50,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    #This line needs to be commented only for conference Insights and doesn't work with docker at the moment
-    #'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    # This line needs to be commented only for conference Insights and doesn't work with docker at the moment
+    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
 }
 
 AUTH_USER_MODEL = "accounts.User"
@@ -105,7 +105,7 @@ logging.config.dictConfig({
     'loggers': {
         '': {
             'level': LOGLEVEL,
-            'handlers': ['console',],
+            'handlers': ['console', ],
         },
     },
 })
@@ -138,20 +138,16 @@ else:
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator'
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator'
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator'
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
     },
 ]
 
@@ -189,11 +185,10 @@ SWAGGER_SETTINGS = {
 
 TEMP_DIR = os.environ.get("TEMP_DIR", "../tmp")
 
-LDA_MODEL_FILE_PATH = os.environ.get(
-    "LDA_MODEL_FILE_PATH",
-    "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
+LDA_MODEL_FILE_PATH = os.environ.get("LDA_MODEL_FILE_PATH",
+                                     "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
 GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH")
 
 # Pre-load data models
-if GLOVE_MODEL_FILE_PATH:
-    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
+# if GLOVE_MODEL_FILE_PATH:
+#     from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model

@@ -1,106 +1,243 @@
-# RIMA- a transparent Recommendation and Interest Modeling Application
-This is the backend of the RIMA web application.
+# RIMA - Backend
 
-## Before running the application:
+## Table of Contents
 
-**Step 1:**  Download word embedding model [(GloVe)](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) 
+* [Project Info](#project-info)
+* [Project structure](#project-structure)
+* [Technologies](#technologies)
+* [Additional applications](#Additional-applications)
+* [Setup](#setup)
 
-**Step 2:** Put the model file in the root directory of this folder
+## Project Info
 
-**Step 3 (For Windows users):** 
-- Open `start.sh` file in the backend folder using [Notepad++](https://notepad-plus-plus.org/) 
-- Click **edit** tab, choose **EOL conversion** then select **UNIX/OSX** format
-- Save it 
+This consists of the web server made with Django for RIMA project.
 
-<br>
-<br>
+## Project structure
+```
+│   .dockerignore
+│   .env.example
+│   Dockerfile
+│   manage.py
+│   nginx.conf
+│   README.md
+│   requirements.txt
+│
+├───accounts
+│   │   admin.py
+│   │   apps.py
+│   │   models.py
+│   │   serializers.py
+│   │   tests.py
+│   │   urls.py
+│   │   utils.py
+│   │   views.py
+│   │   __init__.py
+│   │
+│   ├───migrations
+│   │   │
+│   │   └───__pycache__
+│   │
+│   └───__pycache__
+│
+├───bin
+│       api
+│       download
+│       worker
+│
+├───common
+│   │   admin.py
+│   │   apps.py
+│   │   config.py
+│   │   models.py
+│   │   tests.py
+│   │   views.py
+│   │   __init__.py
+│   │
+│   ├───migrations
+│   │   │   0001_initial.py
+│   │   │   0002_triggertask.py
+│   │   │   0003_auto_20200418_2043.py
+│   │   │   0004_auto_20200512_1034.py
+│   │   │   0005_auto_20201103_1614.py
+│   │   │   __init__.py
+│   │   │
+│   │   └───__pycache__
+│   │
+│   └───__pycache__
+│
+├───interests
+│   │   admin.py
+│   │   apps.py
+│   │   models.py
+│   │   picture.html
+│   │   semantic_scholar.py
+│   │   serializers.py
+│   │   tasks.py
+│   │   tests.py
+│   │   TopicExtractor.py
+│   │   topicutils.py
+│   │   tweet_preprocessing.py
+│   │   twitter_utils.py
+│   │   update_interests.py
+│   │   urls.py
+│   │   utils.py
+│   │   views.py
+│   │   wikipedia_utils.py
+│   │   __init__.py
+│   │
+│   ├───DataExtractor
+│   │       SemanticScholar_DataAPI.py
+│   │
+│   ├───Keyword_Extractor
+│   │   │   extractor.py
+│   │   │   __init__.py
+│   │   │
+│   │   ├───Algorithms
+│   │   │   │   __init__.py
+│   │   │   │
+│   │   │   ├───graph_based
+│   │   │   │   │   multipartiterank.py
+│   │   │   │   │   positionrank.py
+│   │   │   │   │   singlerank.py
+│   │   │   │   │   single_tpr.py
+│   │   │   │   │   textrank.py
+│   │   │   │   │   topicrank.py
+│   │   │   │   │   __init__.py
+│   │   │   │   │
+│   │   │   │   └───__pycache__
+│   │   │   │
+│   │   │   ├───statistics_based
+│   │   │   │   │   rake.py
+│   │   │   │   │   tfidf.py
+│   │   │   │   │   yake.py
+│   │   │   │   │   __init__.py
+│   │   │   │   │
+│   │   │   │   ├───StopwordsList
+│   │   │   │   │
+│   │   │   │   └───__pycache__
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │
+│   │   ├───models
+│   │   │       lda-1000-semeval2010.py3.pickle.gz
+│   │   │
+│   │   ├───utils
+│   │   │   │   base.py
+│   │   │   │   datarepresentation.py
+│   │   │   │   data_structures.py
+│   │   │   │   highlight.py
+│   │   │   │   Levenshtein.py
+│   │   │   │   readers.py
+│   │   │   │   utils.py
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │
+│   │   └───__pycache__
+│   │
+│   ├───migrations
+│   │   │
+│   │   └───__pycache__
+│   │
+│   ├───Semantic_Similarity
+│   │   ├───WikiLink_Measure
+│   │   │   │   Wiki.py
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │
+│   │   └───Word_Embedding
+│   │       │   data_models.py
+│   │       │   IMsim.py
+│   │       │
+│   │       ├───data
+│   │       │       .gitignore
+│   │       │
+│   │       └───__pycache__
+│   │
+│   └───__pycache__
+│
+└───interest_miner_api
+    │   api_doc_patterns.py
+    │   asgi.py
+    │   celery.py
+    │   settings.py
+    │   urls.py
+    │   wsgi.py
+    │   __init__.py
+    │
+    └───__pycache__
+```
 
-## Installation guide to run the application using Docker for **Mac/Linux** users:
+## Technologies
 
-**Step 1 Install Docker**
+Project is created with:
 
-- Install Docker from https://docs.docker.com/get-docker/
+- [Python (v3.7.1)](https://www.python.org/downloads/release/python-371/)
+- Django (v2.2.3)
 
-- Make sure that there is at least 10GB free space available
+## Additional applications
+
+- [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download)
 
 
-**Step 2 Use docker-compose to run the app**
+## Setup
 
-- For the first time, run the following command to build and run the application:
+Step 1:- Download Python from [the official website](https://www.python.org/downloads/release/python-371/)
+
+Step 2:- Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
+
+Step 3:- Install and activate python virtual environment
+
+- Move to the directory ``RIMA-Backend``
+  
+- Open a command prompt/terminal and type the following commands
 
 ```
-docker-compose --compatibility up --build
-```
-- For subsequent runs:
-
-    - To start the server, run `docker-compose up`
-
-    - To stop the server,  run `docker-compose down`
-
-**Step 3 Check if the backend already start successfully**
-
-- For checking that the backend part is working, run the API docs via `127.0.0.1:8000/docs`
-
-<br>
-<br>
-<br>
-
-## Installation guide to run the application using Docker for **Windows** users:
-
-### Requirements: 
-- Any Windows version except windows Home
-- Virtualisation should be enable in BIOS setup
-- At least 10GB free space in your disk
-
-**Step 1 Install Docker**
-
-- Install Docker from https://docs.docker.com/get-docker/
-
-
-**Step 2 Enable Hyper-V**
-
-- Right click on the Windows button and select **‘Apps and Features’**
-- Select **Programs and Features** on the right under **related settings**
-- Select **Turn Windows Features on or off**
-- Select **Hyper-V** and click OK
-<br> <br>
-- **(optional)**: if above steps don't work, try using following command (refer this [link](https://stackoverflow.com/questions/39684974/docker-for-windows-error-hardware-assisted-virtualization-and-data-execution-p)):
-```
-bcdedit /set hypervisorlaunchtype auto
+$ pip install virtualenv
+$ pip install virtualenv-wrapper
 ```
 
-
-
-**Step 3 Use docker-compose to run the app**
-
-- For the first time, run the following command to build and run the application:
+IF the following warning appears,
 
 ```
-docker-compose --compatibility up --build
+WARNING: The script virtualenv.exe is installed in 'C:\Users\<user_name>\AppData\Roaming\Python\Python37\Scripts' which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 ```
-- For subsequent runs:
 
-    - To start the server, run `docker-compose up`
+Add the path ``'C:\Users\<user_name>\AppData\Roaming\Python\Python37\Scripts'`` to your system environment variable ``Path``, where ``<user_name>`` is your username in the operating system
 
-    - To stop the server, run `docker-compose down`
+- Type ``virtualenv venv`` to create the virtual environment in command prompt
 
-**Step 4 Check if the backend already start successfully**
+- Type ``.\venv\Script\activate`` to activate the virtual environment
 
-- For checking that the backend part is working, run the API docs via `127.0.0.1:8000/docs`
+Step 4:- Install the packages by typing ``pip install -r requirements.txt``
 
-<br>
-<br>
-<br>
+Step 5:- Rename the environment variable from ``.env.example`` to ``.env``
 
-## Django admin Panel
+Step 6:- Edit the environment file to add additional environment variables
 
-- In the browser, run the following URL `127.0.0.1:8000/admin`  
-- Set the default user account to superuser account
+Step 7:- Make sure to open another command prompt with admin rights
 
-    - **Username:** admin_user
+- Locate the virtual environment and activate 
+- Move to the directory ``RIMA-Backend`` 
+- Type the following commands
 
-    - **Password:** admin
+```
+$ python -m spacy download en
 
-- In the admin page, all the data models can be managed, and a celery task can be triggered manually 
+$ python -c "import nltk;nltk.download('stopwords')"
+$ python -c "import nltk;nltk.download('punkt')"
+$ python -c "import nltk;nltk.download('sentiwordnet')"
 
+$ pip install eventlet
+```
+
+Step 8:- Type ``python manage.py migrate`` to create the database
+
+Step 9:- Type ``python manage.py runserver`` to run the django server
+
+Step 10:- Open another command prompt/terminal
+
+- Locate the virtual environment and activate
+- Move to the directory ``RIMA-Backend``
+- Type ``celery worker --app=interest_miner_api -l info -P eventlet`` to start the celery workers
 

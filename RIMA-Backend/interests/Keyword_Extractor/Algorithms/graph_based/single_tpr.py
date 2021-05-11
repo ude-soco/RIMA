@@ -101,7 +101,9 @@ class TopicalPageRank(SingleRank):
 
         # set the default LDA model if none provided
         if lda_model is None:
-            lda_model = "/opt/lda-1000-semeval2010.py3.pickle.gz"
+            # TODO: Uncomment this line before deployment
+            # lda_model = "/opt/lda-1000-semeval2010.py3.pickle.gz"
+            lda_model = "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz"
             logging.warning('LDA model is hard coded to {}'.format(lda_model))
 
         # load parameters from file

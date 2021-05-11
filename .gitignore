@@ -69,7 +69,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+RIMA-Backend/.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -116,3 +116,5 @@ connect_to_server.sh
 deploy.sh
 static/*
 venv/*
+/RIMA-Backend/datatest_word2vec.txt
+/RIMA-Backend/venv/
