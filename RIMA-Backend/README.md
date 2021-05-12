@@ -231,11 +231,13 @@ $ python -c "import nltk;nltk.download('sentiwordnet')"
 $ pip install eventlet
 ```
 
-Step 8:- Type ``python manage.py migrate`` to create the database
+Step 8:- Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) ([MacOS](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298) and [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-de))
 
-Step 9:- Type ``python manage.py runserver`` to run the django server
+Step 9:- Type ``python manage.py migrate`` to create the database
 
-Step 10:- Open another command prompt/terminal
+Step 1:- Type ``python manage.py runserver`` to run the django server
+
+Step 11:- Open another command prompt/terminal
 
 - Locate the virtual environment and activate
 - Move to the directory ``RIMA-Backend``
