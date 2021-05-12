@@ -235,7 +235,7 @@ Step 8:- Download and install Redis for [Windows](https://github.com/MicrosoftAr
 
 Step 9:- Type ``python manage.py migrate`` to create the database
 
-Step 1:- Type ``python manage.py runserver`` to run the django server
+Step 10:- Type ``python manage.py runserver`` to run the django server
 
 Step 11:- Open another command prompt/terminal
 
