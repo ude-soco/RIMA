@@ -185,7 +185,7 @@ Step 1:- Download Python from [the official website](https://www.python.org/down
 
 Step 2:- Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-Step 3:- Install and activate python virtual environment
+Step 3:- Install and activate python virtual environment for Windows (for [MacOS](https://programwithus.com/learn/python/pip-virtualenv-mac) and [Ubuntu](https://linuxize.com/post/how-to-create-python-virtual-environments-on-ubuntu-18-04/))
 
 - Move to the directory ``RIMA-Backend``
   
@@ -211,7 +211,7 @@ Add the path ``'C:\Users\<user_name>\AppData\Roaming\Python\Python37\Scripts'`` 
 
 Step 4:- Install the packages by typing ``pip install -r requirements.txt``
 
-Step 5:- Rename the environment variable from ``.env.example`` to ``.env``
+Step 5:- Rename the environment variable file from ``.env.example`` to ``.env``
 
 Step 6:- Edit the environment file to add additional environment variables
 
