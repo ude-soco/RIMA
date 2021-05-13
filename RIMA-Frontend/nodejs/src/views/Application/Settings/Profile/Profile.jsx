@@ -6,7 +6,7 @@ import UserHeader from "../../../../components/Headers/UserHeader";
 import {Button, Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Input, Row} from "reactstrap";
 import Loader from "react-loader-spinner";
 
-export default function ProfileNew() {
+export default function Profile() {
   const [details, setDetails] = useState({
     data: [],
     id: "",

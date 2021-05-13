@@ -17,6 +17,7 @@ import {
 } from "reactstrap";
 import Loader from "react-loader-spinner";
 import {OverlayTrigger, Popover} from "react-bootstrap";
+import {useHistory} from "react-router-dom";
 
 
 export default function Register() {
@@ -25,10 +26,11 @@ export default function Register() {
     lastName: '',
     email: '',
     password: '',
-    twitterId: '',
-    authorId: '',
+    twitterID: '',
+    authorID: '',
   })
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
 
 
   const handleChange = (e) => {
@@ -47,19 +49,19 @@ export default function Register() {
       last_name: details.lastName,
       email: details.email,
       password: details.password,
-      twitter_account_id: details.twitterId,
-      author_id: details.authorId,
+      twitter_account_id: details.twitterID,
+      author_id: details.authorID,
     };
 
-    setLoading(true);
+    setIsLoading(true);
 
-    RestAPI.userSignup(data).then(() => {
-        setLoading(false);
-        this.props.history.push("/auth/login");
+    RestAPI.userSignup(data).then((res) => {
+          setIsLoading(false);
+          history.push("/auth/login");
       }
-    ).catch(error => {
-        setLoading(false);
-        handleServerErrors(error, toast.error)
+    ).catch(err => {
+        setIsLoading(false);
+        handleServerErrors(err, toast.error)
       }
     )
   };
@@ -155,8 +157,8 @@ export default function Register() {
                       placeholder="Semantic Scholar Id"
                       type="text"
                       autoComplete="new-email"
-                      name="authorId"
-                      value={details.authorId}
+                      name="authorID"
+                      value={details.authorID}
                       onChange={handleChange}
                     />
                     <OverlayTrigger trigger="click" placement="right" overlay={
@@ -192,8 +194,8 @@ export default function Register() {
                       placeholder="Twitter Account"
                       type="text"
                       autoComplete="new-email"
-                      name="twitterId"
-                      value={details.twitterId}
+                      name="twitterID"
+                      value={details.twitterID}
                       onChange={handleChange}
                     />
 

@@ -11,7 +11,7 @@ import {
   InputGroupText
 } from "reactstrap";
 import Loader from "react-loader-spinner";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import RestAPI from "../../../services/api";
 import {handleServerErrors} from "../../../utils/errorHandler";
@@ -24,6 +24,7 @@ export default function Login() {
     password: ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
 
 
   const handleChange = (e) => {
@@ -56,7 +57,7 @@ export default function Login() {
           if (data_being_loaded) {
             window.location.href = "/app/redirect";
           } else {
-            this.props.history.push("/app/cloud-chart/" + response.data.id);
+            history.push("/app/cloud-chart/" + response.data.id);
           }
         }
       })

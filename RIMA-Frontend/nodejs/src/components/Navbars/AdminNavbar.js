@@ -1,13 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { logout } from "../../helper/index";
-import { getItem } from "utils/localStorage";
-import { BASE_URL } from "../../constants";
+import {Link} from "react-router-dom";
+import {logout} from "../../helper/index";
+import {getItem} from "utils/localStorage";
+import {BASE_URL} from "../../constants";
 import axios from "axios";
 import Autosuggest from "react-autosuggest";
 import "./AdminNav.css";
-
-// reactstrap components
 import {
   DropdownMenu,
   DropdownItem,
@@ -17,11 +15,10 @@ import {
   FormGroup,
   InputGroupAddon,
   InputGroup,
-  Navbar,
-  Nav,
-  Container,
-  Media,
+  Media
 } from "reactstrap";
+import SearchUserHeader from "../Headers/SearchUserHeader";
+import {Navbar, Nav, Col, Container, Row} from "react-bootstrap";
 
 function getSuggestionValue(suggestion) {
   // debugger;
@@ -34,7 +31,7 @@ function renderSuggestion(suggestion) {
   return (
     <Link to={`/app/profile/${suggestion.id}`}>
       <div
-        style={{ padding: "10px 20px" }}
+        style={{padding: "10px 20px"}}
       >{`${suggestion.first_name} ${suggestion.last_name}`}</div>
     </Link>
   );
@@ -58,7 +55,7 @@ class AdminNavbar extends React.Component {
         Accept: "application/json",
         Authorization: `Token ${TOKEN}`,
       },
-    }).then(({ data }) => {
+    }).then(({data}) => {
       this.setState({
         suggestions: data,
         popupVisible: !this.state.popupVisible,
@@ -72,13 +69,13 @@ class AdminNavbar extends React.Component {
     });
   };
 
-  onChange = (event, { newValue, method }) => {
+  onChange = (event, {newValue, method}) => {
     this.setState({
       value: newValue,
     });
   };
 
-  onSuggestionsFetchRequested = ({ value }) => {
+  onSuggestionsFetchRequested = ({value}) => {
     this.getInfo(value);
   };
 
@@ -90,7 +87,7 @@ class AdminNavbar extends React.Component {
 
   //**END SUGGESTION *//
   render() {
-    const { value, suggestions } = this.state;
+    const {value, suggestions} = this.state;
     const inputProps = {
       placeholder: "Search for users..",
       value,
@@ -100,67 +97,75 @@ class AdminNavbar extends React.Component {
     return (
       <>
         <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
-          <Container fluid>
-            {/* <Link
-              className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
-              to="/"
-            >
-              {this.props.brandText}
-            </Link>*/}
-            {/* <SearchUserHeader/> */}
-{/*             <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-              <FormGroup className="mb-0">
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend"></InputGroupAddon>
+          {/*<Link*/}
+          {/*  className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"*/}
+          {/*  to="/"*/}
+          {/*>*/}
+          {/*  {this.props.brandText}*/}
+          {/*</Link>*/}
+          {/*<SearchUserHeader/>*/}
+          <Nav className="ml-auto">
+            <Container>
+              <Row>
+                <Col>
+                  <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+                    <FormGroup className="mb-0">
+                      <InputGroup className="input-group-alternative">
+                        <InputGroupAddon addonType="prepend"/>
 
-                  <Autosuggest
-                    suggestions={suggestions}
-                    onSuggestionsFetchRequested={
-                      this.onSuggestionsFetchRequested
-                    }
-                    onSuggestionsClearRequested={
-                      this.onSuggestionsClearRequested
-                    }
-                    getSuggestionValue={getSuggestionValue}
-                    renderSuggestion={renderSuggestion}
-                    inputProps={inputProps}
-                  />
-                </InputGroup>
-              </FormGroup>
-            </Form> */}
-
-            <Nav className="align-items-center d-none d-md-flex ml-auto" navbar>
-              <UncontrolledDropdown nav >
-                <DropdownToggle className="pr-0" nav>
-                  <Media className="align-items-center">
+                        <Autosuggest
+                          suggestions={suggestions}
+                          onSuggestionsFetchRequested={
+                            this.onSuggestionsFetchRequested
+                          }
+                          onSuggestionsClearRequested={
+                            this.onSuggestionsClearRequested
+                          }
+                          getSuggestionValue={getSuggestionValue}
+                          renderSuggestion={renderSuggestion}
+                          inputProps={inputProps}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </Form>
+                </Col>
+                <Col className="mr-4">
+                  <Nav className="align-items-center d-none d-md-flex ml-auto" navbar>
+                    <UncontrolledDropdown nav>
+                      <DropdownToggle className="pr-0" nav>
+                        <Media className="align-items-center">
                     <span className="avatar avatar-sm rounded-circle">
-                      <i className="fas fa-user-tie"></i>
+                      <i className="fas fa-user-tie" />
                     </span>
-                    <Media className="ml-2 d-none d-lg-block">
+                          <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
                         {getItem("name") ? getItem("name") : "User"}
                       </span>
-                    </Media>
-                  </Media>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-menu-arrow" right>
-                  <DropdownItem className="noti-title" header tag="div">
-                    <h6 className="text-overflow m-0">Welcome!</h6>
-                  </DropdownItem>
-                  <DropdownItem to="/app/user-profile" tag={Link}>
-                    <i className="ni ni-single-02" />
-                    <span>My profile</span>
-                  </DropdownItem>
+                          </Media>
+                        </Media>
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-menu-arrow" right>
+                        <DropdownItem className="noti-title" header tag="div">
+                          <h6 className="text-overflow m-0">Welcome!</h6>
+                        </DropdownItem>
+                        <DropdownItem to="/app/user-profile" tag={Link}>
+                          <i className="ni ni-single-02"/>
+                          <span>My profile</span>
+                        </DropdownItem>
 
-                  <DropdownItem divider />
-                  <DropdownItem to="/" onClick={(e) => logout()}>
-                    <i className="ni ni-user-run" />
-                    <span>Logout</span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
-          </Container>
+                        <DropdownItem divider/>
+                        <DropdownItem to="/" onClick={(e) => logout()}>
+                          <i className="ni ni-user-run"/>
+                          <span>Logout</span>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </Nav>
+                </Col>
+              </Row>
+            </Container>
+
+          </Nav>
         </Navbar>
       </>
     );
