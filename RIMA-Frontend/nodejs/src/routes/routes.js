@@ -1,28 +1,30 @@
-import Profile from "../views/Profile.js";
-import Register from "../views/Register.js";
-import Login from "../views/Login.js";
+import Profile from "../views/Application/Settings/Profile/Profile";
+import Login from "../views/Website/Login/Login";
 import AddPaper from "../views/AddPaper.js";
-import ViewPaper from "../views/ViewPaper.js";
-import EditPaper from "../views/EditPaper.js";
+import ViewPaper from "../views/ViewPaper";
+import EditPaper from "../views/EditPaper";
 import CloudChartPage from "../views/CloudChart";
 import ConceptChartPage from "../views/ConceptChart";
 import StreamChartPage from "../views/StreamChart";
 import SearchUserProfile from "../views/SearchUserProfile";
 import Keyword from "../views/Keyword.js";
-import BlacklistedKeywords from "../views/BlacklistedKeywords.js";
-import Demo from "../views/Demo.js";
+import BlacklistedKeywords from "../views/BlacklistedKeywords";
+import Demo from "../views/Demo";
 import LoginRedirecting from "../views/LoginRedirecting";
 import PieChartPage from "../views/PieChart";
 import BarChartPage from "../views/BarChart";
-import TweetsAndPeople from "../views/TweetsAndPeople.js";
+import TweetsAndPeople from "../views/TweetsAndPeople";
 import TopicFormPage from "../views/TopicForm";
 import TopicBar from "../views/TopicBar";
 import TopicComparisions from "../views/TopicComparisions";
-import AuthorVenn from "components/LAKForms/AuthorVenn.js";
-import RecommendTopic from "views/RecommendTopic.js";
+import AuthorVenn from "components/LAKForms/AuthorVenn";
+import RecommendTopic from "views/RecommendTopic";
 import TopicResearch from "views/TopicResearch";
 import TopicAuthors from "views/TopicAuthors";
-var routes = [
+import Register from "../views/Website/Register/Register";
+
+
+let routes = [
   {
     path: "/index",
     name: "Dashboard",

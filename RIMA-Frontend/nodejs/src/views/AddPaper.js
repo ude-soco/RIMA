@@ -1,11 +1,8 @@
 import React from "react";
-// react plugin used to create google maps
 import { toast } from "react-toastify";
 import Loader from "react-loader-spinner";
 import { handleServerErrors } from "utils/errorHandler";
 import RestAPI from "../services/api";
-
-// reactstrap components
 import {
 	Button,
 	Card,
@@ -18,8 +15,6 @@ import {
 	Row,
 	Col,
 } from "reactstrap";
-
-// core components
 import Header from "components/Headers/Header.js";
 
 class AddPaper extends React.Component {
