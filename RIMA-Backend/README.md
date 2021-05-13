@@ -233,13 +233,14 @@ $ pip install eventlet
 
 Step 8:- Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) ([MacOS](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298) and [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-de))
 
-Step 9:- Type ``python manage.py migrate`` to create the database
+Step 9:- Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and move the model inside the ``RIMA-Backend``
 
-Step 10:- Type ``python manage.py runserver`` to run the django server
+Step 10:- Type ``python manage.py migrate`` to create the database
 
-Step 11:- Open another command prompt/terminal
+Step 11:- Type ``python manage.py runserver`` to run the django server
+
+Step 12:- Open another command prompt/terminal
 
 - Locate the virtual environment and activate
 - Move to the directory ``RIMA-Backend``
 - Type ``celery worker --app=interest_miner_api -l info -P eventlet`` to start the celery workers
-
