@@ -35,7 +35,7 @@ Step 1:- Download and install [Node.js](https://nodejs.org/dist/v8.9.0/) from th
 
 Step 2:- Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-Step 3:- Open a command prompt/terminal and move to the ``RIMA-Frontend`` directory
+Step 3:- Open a command prompt/terminal and move to the ``RIMA-Frontend/nodejs`` directory
 
 Step 4:- Type ``npm install`` to install the necessary dependencies for the project
 
