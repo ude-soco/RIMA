@@ -37,10 +37,10 @@ Step 2:- Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/downl
 
 Step 3:- Open a command prompt/terminal and move to the ``RIMA-Frontend/nodejs`` directory
 
-Step 4:- Type ``npm install`` to install the necessary dependencies for the project
+Step 4:- Rename the ``.env.example`` file to ``.env``
 
-Step 5:- Type ``npm start`` to run the project
+Step 5:- Type ``npm install`` to install the necessary dependencies for the project
 
-Step 6:- Open [http://localhost:3000](http://localhost:3000/) in a browser
+Step 6:- Type ``npm start`` to run the project
 
-
+Step 7:- Open [http://localhost:3000](http://localhost:3000/) in a browser
