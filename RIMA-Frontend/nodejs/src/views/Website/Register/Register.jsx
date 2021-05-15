@@ -44,7 +44,7 @@ export default function Register() {
 
     setIsLoading(true);
 
-    RestAPI.userSignup(data).then((res) => {
+    RestAPI.userSignup(data).then(() => {
         setIsLoading(false);
         history.push("/auth/login");
       }

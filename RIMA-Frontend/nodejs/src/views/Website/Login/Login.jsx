@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import RestAPI from "../../../services/api";
 import {handleServerErrors} from "../../../utils/errorHandler";
 import {toast} from "react-toastify";
-import {Container, Form, Row, Button, Col, Card} from "react-bootstrap";
+import {Button, Card, Col, Container, Form, Row} from "react-bootstrap";
 
 
 export default function Login() {
@@ -34,19 +34,20 @@ export default function Login() {
     setIsLoading(true)
 
     RestAPI.userSignIn(data)
-      .then((response) => {
+      .then((res) => {
         setIsLoading(false);
-        if (response.status === 200) {
-          localStorage.setItem("accessToken", response.data.token);
-          localStorage.setItem("name", response.data.first_name);
-          localStorage.setItem("lastname", response.data.last_name);
-          localStorage.setItem("userId", response.data.id);
-          localStorage.setItem("mId", response.data.id);
-          let {data: data_being_loaded} = response;
+        console.log(res.data)
+        if (res.status === 200) {
+          localStorage.setItem("accessToken", res.data.token);
+          localStorage.setItem("name", res.data.first_name);
+          localStorage.setItem("lastname", res.data.last_name);
+          localStorage.setItem("userId", res.data.id);
+          localStorage.setItem("mId", res.data.id);
+          const {data: {data_being_loaded}} = res;
           if (data_being_loaded) {
             window.location.href = "/app/redirect";
           } else {
-            history.push("/app/cloud-chart/" + response.data.id);
+            history.push("/app/cloud-chart/" + res.data.id);
           }
         }
       })

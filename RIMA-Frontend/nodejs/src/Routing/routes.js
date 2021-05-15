@@ -10,7 +10,7 @@ import SearchUserProfile from "../views/SearchUserProfile";
 import Keyword from "../views/Keyword.js";
 import BlacklistedKeywords from "../views/BlacklistedKeywords";
 import Demo from "../views/Website/Demo/Demo";
-import LoginRedirecting from "../views/LoginRedirecting";
+import LoginRedirecting from "../views/Website/Login/LoginRedirecting";
 import PieChartPage from "../views/PieChart";
 import BarChartPage from "../views/BarChart";
 import TweetsAndPeople from "../views/TweetsAndPeople";
