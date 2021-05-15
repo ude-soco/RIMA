@@ -1,14 +1,13 @@
 import React from "react";
 import { Switch, Redirect } from "react-router-dom";
 import { Container } from "reactstrap";
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import AdminFooter from "components/Footers/AdminFooter.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import AdminNavbar from "Views/components/Navbars/AdminNavbar.js";
+import AdminFooter from "Views/components/Footers/AdminFooter.js";
+import Sidebar from "Views/components/Sidebar/Sidebar.js";
 import PrivateRoute from "./PrivateRoute";
 import RecommendationRoute from './RecommendationRoute';
-
 import routes from "./routes";
-import {getItem} from "../utils/localStorage";
+import {getItem} from "../Services/utils/localStorage";
 
 class Admin extends React.Component {
   state = {

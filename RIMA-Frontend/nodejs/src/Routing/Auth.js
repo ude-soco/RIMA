@@ -4,11 +4,11 @@ import { Switch, Redirect } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 
 // core components
-import AuthNavbar from "components/Navbars/AuthNavbar.js";
-import AuthFooter from "components/Footers/AuthFooter.js";
+import AuthNavbar from "Views/components/Navbars/AuthNavbar.js";
+import AuthFooter from "Views/components/Footers/AuthFooter.js";
 import routes from "./routes";
 import PublicRoute from "./PublicRoute";
-import NavigationBar from "../views/Website/NavigationBar/NavigationBar";
+import NavigationBar from "../Views/Website/NavigationBar/NavigationBar";
 
 // import routes from "routes";
 
