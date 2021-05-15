@@ -22,7 +22,8 @@ class LoginRedirecting extends React.Component {
     RestAPI.dataimportstatus()
       .then((response) => {
         console.log(response);
-        if (!response.data.data_being_loaded) {
+        let {data: data_being_loaded} = response;
+        if (!data_being_loaded) {
           window.location.href = "/app/cloud-chart/" + getItem("mId");
         }
       })

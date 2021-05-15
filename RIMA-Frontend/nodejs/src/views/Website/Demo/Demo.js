@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import Loader from "react-loader-spinner";
 import { handleServerErrors } from "utils/errorHandler";
-import RestAPI from "../services/api";
+import RestAPI from "../../../services/api";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -70,35 +70,30 @@ class Demo extends React.Component {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.algorithm === "") {
       toast.error("Please Select Algorithm", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.algorithm === "null") {
       toast.error("Please Select Algorithm", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.weight === null) {
       toast.error("Please Enter Keywords Count", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.weight === "") {
       toast.error("Please Enter Keywords Count", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     } else {
       let data = {
         num_of_keywords: this.state.weight,
@@ -143,28 +138,24 @@ class Demo extends React.Component {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.keywords_2.length === 0) {
       toast.error("Please Add Keyword (Set 2)", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.algorithm === "") {
       toast.error("Please Select Algorithm", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     }
     if (this.state.algorithm === "null") {
       toast.error("Please Select Algorithm", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
-      return;
     } else {
       let keyword1 = this.state.keywords_1.trim().split(",");
       let keyword2 = this.state.keywords_2.trim().split(",");
@@ -216,7 +207,7 @@ class Demo extends React.Component {
         <Col lg="10" md="12">
           <Card className="bg-secondary shadow border-0">
             <CardBody className="px-lg-5 py-lg-5">
-              <div className="text-center text-muted mb-4"></div>
+              <div className="text-center text-muted mb-4"/>
               {this.state.isLoding ? (
                 <div className="text-center">
                   <Loader
@@ -270,7 +261,7 @@ class Demo extends React.Component {
                                   value={this.state.keywords}
                                   type="text"
                                   onChange={this.handleChange}
-                                ></textarea>
+                                />
                               </FormGroup>
                             </Col>
                             <Col lg="4">
@@ -323,7 +314,7 @@ class Demo extends React.Component {
                                       onChange={this.handleWikipedia}
                                       placeholder="Use Wikipedia"
                                       value={this.state.wiki}
-                                      checked={this.state.wiki ? true : false}
+                                      checked={this.state.wiki}
                                       inputProps={{
                                         "aria-label": "secondary checkbox",
                                       }}
@@ -408,7 +399,7 @@ class Demo extends React.Component {
                                   type="text"
                                   value={this.state.keywords_1}
                                   onChange={this.handleChange}
-                                ></textarea>
+                                />
                               </FormGroup>
                             </Col>
                             <Col lg="6">
@@ -426,7 +417,7 @@ class Demo extends React.Component {
                                   placeholder="Keywords (Set 2)"
                                   type="text"
                                   onChange={this.handleChange}
-                                ></textarea>
+                                />
                               </FormGroup>
                             </Col>
                             <Col lg="12">

@@ -1,22 +1,20 @@
-
 import React, { Fragment } from "react";
-import AppRoute from "./routes/index";
 import { getItem } from "./utils/localStorage";
 import { ToastContainer } from 'react-toastify';
+import Routing from "./Routing/Routing"
+
 
 export const Theme = React.createContext();
 
-const App = () => {
+export default function App () {
     const TOKEN = getItem("accessToken");
     const state = {
         TOKEN
     }
     return (<Fragment>
         <Theme.Provider value={state}>
-            <AppRoute />
+            <Routing />
             <ToastContainer autoClose={8000} />
         </Theme.Provider>
     </Fragment>)
 };
-
-export default App

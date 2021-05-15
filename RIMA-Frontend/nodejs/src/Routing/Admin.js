@@ -1,33 +1,36 @@
 import React from "react";
 import { Switch, Redirect } from "react-router-dom";
-// reactstrap components
 import { Container } from "reactstrap";
-// core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import PrivateRoute from "../routes/PrivateRoute";
-import RecommendationRoute from '../routes/RecommendationRoute';
+import PrivateRoute from "./PrivateRoute";
+import RecommendationRoute from './RecommendationRoute';
 
-import routes from "../routes/routes";
+import routes from "./routes";
 import {getItem} from "../utils/localStorage";
 
 class Admin extends React.Component {
   state = {
-    isredirect: false,
+    isRedirect: false,
   };
 
+
   componentDidMount() {
-    if (this.props.location.pathname == "/app/redirect") {
+    if (this.props.location.pathname === "/app/redirect") {
       console.log(1);
-      this.setState({ isredirect: true });
+      this.setState({ isRedirect: true });
     }
   }
+
+
   componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.mainContent.scrollTop = 0;
   }
+
+
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.layout === "/app") {
@@ -52,6 +55,7 @@ class Admin extends React.Component {
     });
   };
 
+
   getBrandText = (path) => {
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -64,10 +68,12 @@ class Admin extends React.Component {
     }
     return "";
   };
+
+
   render() {
     return (
       <>
-        {this.state.isredirect ? <></> : (
+        {this.state.isRedirect ? <></> : (
           <Sidebar
             {...this.props}
             routes={routes}
@@ -79,7 +85,7 @@ class Admin extends React.Component {
           />
         )}
         <div className="main-content" ref="mainContent">
-          {this.state.isredirect ? <></> : (
+          {this.state.isRedirect ? <></> : (
             <AdminNavbar
               {...this.props}
               brandText={this.getBrandText(this.props.location.pathname)}

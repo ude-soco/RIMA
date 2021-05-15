@@ -6,8 +6,9 @@ import { Container, Row, Col } from "reactstrap";
 // core components
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import AuthFooter from "components/Footers/AuthFooter.js";
-import routes from "../routes/routes";
-import PublicRoute from "../routes/PublicRoute";
+import routes from "./routes";
+import PublicRoute from "./PublicRoute";
+import NavigationBar from "../views/Website/NavigationBar/NavigationBar";
 
 // import routes from "routes";
 
@@ -38,6 +39,9 @@ class Auth extends React.Component {
       <>
         <div className="main-content">
           <AuthNavbar />
+          {/*<NavigationBar />*/}
+
+
           <div className="header bg-gradient-info py-7 py-lg-8">
             <Container>
               <div className="header-body text-center mb-7">

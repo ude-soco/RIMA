@@ -21,7 +21,7 @@ import LAKPie from "components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "components/LAKForms/LAKStackedAreaChart";
 import VennChart from "components/LAKForms/VennChart";
 import LAKStackedBarChart from "components/LAKForms/LAKStackedBarChart";
-import ScrollTopWrapper from "../components/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import ScrollTopWrapper from "./Application/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 
 class TopicBar extends React.Component {
   constructor(props) {

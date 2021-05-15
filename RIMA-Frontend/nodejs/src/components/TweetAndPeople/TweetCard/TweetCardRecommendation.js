@@ -4,7 +4,7 @@ import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
 import RestAPI from "../../../services/api";
-import HeatmapTweet from "../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
+import HeatmapTweet from "../../../views/Application/ReuseableComponents/Charts/HeatMap/HeatMap.js";
 
 
 export default function TweetCardRecommendation(props) {

@@ -30,7 +30,7 @@ import RestAPI from "services/api";
 import {COUNTRIES} from "../components/TweetAndPeople/countries";
 import AdvanceFilter from "components/OptionDropDown/AdvanceFilter.jsx";
 import SavedTweetCard from "components/TweetAndPeople/TweetCard/SavedTweetCard";
-import ScrollTopWrapper from "../components/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import ScrollTopWrapper from "./Application/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import {Spinner} from "react-bootstrap";
 
 const KeyCodes = {

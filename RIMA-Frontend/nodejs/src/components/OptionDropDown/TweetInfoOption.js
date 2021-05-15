@@ -9,7 +9,7 @@ import { Spinner } from "reactstrap";
 import styled from "styled-components";
 import ReactWordcloud from "react-wordcloud";
 import RestAPI from "services/api";
-import routes from "routes/routes";
+import routes from "Routing/routes";
 import { handleServerErrors } from "utils/errorHandler";
 import './style.css';
 import ReactTooltip from "react-tooltip";

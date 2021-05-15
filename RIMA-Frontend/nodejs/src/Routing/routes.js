@@ -9,7 +9,7 @@ import StreamChartPage from "../views/StreamChart";
 import SearchUserProfile from "../views/SearchUserProfile";
 import Keyword from "../views/Keyword.js";
 import BlacklistedKeywords from "../views/BlacklistedKeywords";
-import Demo from "../views/Demo";
+import Demo from "../views/Website/Demo/Demo";
 import LoginRedirecting from "../views/LoginRedirecting";
 import PieChartPage from "../views/PieChart";
 import BarChartPage from "../views/BarChart";
