@@ -2,22 +2,11 @@ import React, {useState} from "react";
 import RestAPI from "../../../services/api";
 import {handleServerErrors} from "../../../utils/errorHandler";
 import {toast} from "react-toastify";
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Row
-} from "reactstrap";
 import Loader from "react-loader-spinner";
-import {OverlayTrigger, Popover} from "react-bootstrap";
-import {useHistory} from "react-router-dom";
+import {Card, Button, Container, Form, OverlayTrigger, Popover, Col, Row} from "react-bootstrap";
+import {Link, useHistory} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 
 
 export default function Register() {
@@ -56,8 +45,8 @@ export default function Register() {
     setIsLoading(true);
 
     RestAPI.userSignup(data).then((res) => {
-          setIsLoading(false);
-          history.push("/auth/login");
+        setIsLoading(false);
+        history.push("/auth/login");
       }
     ).catch(err => {
         setIsLoading(false);
@@ -66,174 +55,149 @@ export default function Register() {
     )
   };
 
+  const customStyles = {
+    gutterBottom: {
+      marginBottom: 16
+    },
+    icon: {
+      cursor: "pointer",
+      marginLeft: 8
+    },
+    popover: {
+      maxWidth: "300px"
+    }
+  }
 
   return (
     <>
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
-
-          <CardBody className="px-lg-5 py-lg-5">
-            <div className="text-center text-muted mb-4">
-              <small>Or sign up with credentials</small>
-            </div>
+          <Card.Body className="px-lg-5 py-lg-5">
             {isLoading ?
               <div className="text-center">
                 <Loader type="Puff" color="#00BFFF" height={100} width={100}/>
               </div>
               :
-              <Form role="form" onSubmit={handleSubmit} method="post">
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-single-02"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="First Name"
-                      type="text"
-                      name="firstName"
-                      value={details.firstName}
-                      onChange={handleChange}
-                    />
-                  </InputGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-circle-08"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Last Name"
-                      type="text"
-                      name="lastName"
-                      value={details.lastName}
-                      onChange={handleChange}
-                    />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-email-83"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Email"
+              <>
+                <Container style={customStyles.gutterBottom}>
+                  <Row className="justify-content-center">
+                    <h1 className="text-muted">Sign-up</h1>
+                  </Row>
+                </Container>
+
+                <Form onSubmit={handleSubmit}>
+                  <Form.Row>
+                    <Form.Group as={Col} md="6" controlId="formFirstName">
+                      <Form.Label>Firstname</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter firstname"
+                        name="firstName"
+                        value={details.firstName}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} md="6" controlId="formLastName">
+                      <Form.Label>Lastname</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter lastname"
+                        name="lastName"
+                        value={details.lastName}
+                        onChange={handleChange}
+                      />
+                    </Form.Group>
+                  </Form.Row>
+
+
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
                       type="email"
-                      autoComplete="new-email"
+                      placeholder="Enter email"
                       name="email"
                       value={details.email}
                       onChange={handleChange}
                     />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-lock-circle-open"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Password"
+                  </Form.Group>
+
+                  <Form.Group controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
                       type="password"
-                      autoComplete="new-password"
+                      placeholder="Enter password"
                       name="password"
                       value={details.password}
                       onChange={handleChange}
                     />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-hat-3"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Semantic Scholar Id"
-                      type="text"
-                      autoComplete="new-email"
-                      name="authorID"
-                      value={details.authorID}
-                      onChange={handleChange}
-                    />
-                    <OverlayTrigger trigger="click" placement="right" overlay={
-                      <Popover style={{maxWidth: "300px"}}>
-                        <Popover.Content>
-                          Semantic Scholar ID is used to get your paper information.<br/>
-                          You can find your ID at the end of URL in <a href='https://www.semanticscholar.org'
-                                                                       target="_blank"> Semantic Scholar</a>
-                        </Popover.Content>
-                      </Popover>
-                    }>
-                      <i
-                        className="fa fa-question-circle"
-                        style={{
-                          cursor: "pointer",
-                          lineHeight: "3",
-                          backgroundColor: "#fff",
-                          paddingRight: "8px",
-                          borderRadius: "0px 5px 5px 0px"
-                        }}
-                      />
-                    </OverlayTrigger>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="fab fa-twitter"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Twitter Account"
-                      type="text"
-                      autoComplete="new-email"
-                      name="twitterID"
-                      value={details.twitterID}
-                      onChange={handleChange}
-                    />
+                  </Form.Group>
 
-                    <OverlayTrigger trigger="click" placement="right" overlay={
-                      <Popover style={{maxWidth: "300px"}}>
-                        <Popover.Content>
-                          Twitter username is used to get your tweets information.<br/>
-                          Open<a href='https://twitter.com/' target="_blank"> Twitter</a> and get your username 'e.g.
-                          @username'.
-                        </Popover.Content>
-                      </Popover>
-                    }>
-                      <i
-                        className="fa fa-question-circle"
-                        style={{
-                          cursor: "pointer",
-                          lineHeight: "3",
-                          backgroundColor: "#fff",
-                          paddingRight: "8px",
-                          borderRadius: "0px 5px 5px 0px"
-                        }}
+                  <Form.Row>
+                    <Form.Group as={Col} md="6" controlId="formAuthorID">
+                      <Form.Label>
+                        Semantic Scholar ID
+                        <OverlayTrigger delay={{hide: 1500}} placement="right" overlay={
+                          <Popover style={customStyles.popover}>
+                            <Popover.Content>
+                              Semantic Scholar ID is used to get your paper information.<br/>
+                              You can find your ID at the end of URL in <a href='https://www.semanticscholar.org'
+                                                                           target="_blank"> Semantic Scholar</a>
+                            </Popover.Content>
+                          </Popover>
+                        }>
+                          <FontAwesomeIcon icon={faQuestionCircle} style={customStyles.icon}/>
+                        </OverlayTrigger>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter ID"
+                        name="authorID"
+                        value={details.authorID}
+                        onChange={handleChange}
                       />
-                    </OverlayTrigger>
-                  </InputGroup>
-                </FormGroup>
-                <Row className="my-4">
-                  <Col xs="12">
+                    </Form.Group>
 
-                  </Col>
-                </Row>
-                <div className="text-center">
-                  <Button className="mt-4" color="primary" type="submit">
-                    Create account
+                    <Form.Group as={Col} md="6" controlId="formTwitterID">
+                      <Form.Label>
+                        Twitter ID
+                        <OverlayTrigger delay={{hide: 1500}} placement="right" overlay={
+                          <Popover style={customStyles.popover}>
+                            <Popover.Content>
+                              Twitter username is used to get your tweets information.<br/>
+                              Open<a href='https://twitter.com/' target="_blank"> Twitter</a> and get your username
+                              'e.g.
+                              @username'.
+                            </Popover.Content>
+                          </Popover>
+                        }>
+                          <FontAwesomeIcon icon={faQuestionCircle} style={customStyles.icon}/>
+                        </OverlayTrigger>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter ID"
+                        name="twitterID"
+                        value={details.twitterID}
+                        onChange={handleChange}
+                      />
+
+                    </Form.Group>
+                  </Form.Row>
+
+                  <Button variant="primary" type="submit" block style={customStyles.gutterBottom}>
+                    Register
                   </Button>
-                </div>
-              </Form>
+
+                  <Container>
+                    <Row className="justify-content-end">
+                      <Link to="/auth/login">Already registered? Sign-in!</Link>
+                    </Row>
+                  </Container>
+                </Form>
+              </>
             }
-          </CardBody>
+          </Card.Body>
         </Card>
       </Col>
     </>

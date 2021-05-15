@@ -1,21 +1,10 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText
-} from "reactstrap";
 import Loader from "react-loader-spinner";
 import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import RestAPI from "../../../services/api";
 import {handleServerErrors} from "../../../utils/errorHandler";
 import {toast} from "react-toastify";
+import {Container, Form, Row, Button, Col, Card} from "react-bootstrap";
 
 
 export default function Login() {
@@ -68,13 +57,17 @@ export default function Login() {
       });
   };
 
+  const customStyles = {
+    gutterBottom: {
+      marginBottom: 16
+    }
+  }
 
   return (
     <>
-      <Col lg="5" md="7">
+      <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
-          <CardBody className="px-lg-5 py-lg-5">
-            <div className="text-center text-muted mb-4"/>
+          <Card.Body className="px-lg-5 py-lg-5">
             {isLoading ? (
               <div className="text-center">
                 <Loader
@@ -85,54 +78,49 @@ export default function Login() {
                 />
               </div>
             ) : (
-              <Form role="form" onSubmit={handleSubmit} method="post">
-                <FormGroup className="mb-3">
-                  <InputGroup className="input-group-alternative">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-email-83"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Email"
+              <>
+                <Container style={customStyles.gutterBottom}>
+                  <Row className="justify-content-center">
+                    <h1 className="text-muted">Sign-in</h1>
+                  </Row>
+                </Container>
+
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
                       type="email"
+                      placeholder="Enter email"
                       name="email"
                       value={details.email}
                       onChange={handleChange}
                     />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-lock-circle-open"/>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Password"
+                  </Form.Group>
+
+                  <Form.Group controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
                       type="password"
+                      placeholder="Password"
                       name="password"
                       value={details.password}
                       onChange={handleChange}
                     />
-                  </InputGroup>
-                </FormGroup>
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                  <div style={{marginTop: "32px"}}>
-                    <Link style={{color: "black"}} to="/auth/register">
-                      <medium>Create new account</medium>
-                    </Link>
-                  </div>
-                  <div>
-                    <Button className="my-4" color="primary" type="submit">
-                      Sign in
-                    </Button>
-                  </div>
-                </div>
-              </Form>
+                  </Form.Group>
+
+                  <Button variant="primary" type="submit" block style={customStyles.gutterBottom}>
+                    Sign-in
+                  </Button>
+
+                  <Container>
+                    <Row className="justify-content-end">
+                      <Link to="/auth/register">Don't have an account? Sign-up</Link>
+                    </Row>
+                  </Container>
+                </Form>
+              </>
             )}
-          </CardBody>
+          </Card.Body>
         </Card>
       </Col>
     </>
