@@ -11,13 +11,22 @@ import SideBar from "./SideBar";
 
 export default function NavigationBar() {
   const [suggestions, setSuggestions] = useState([]);
-  const [value, setValue] = useState("");
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
 
 
   const toggleOpen = () => {
     setOpen(!open);
+  };
+
+
+  const onChange = (event) => {
+    let {value} = event.target;
+    if (value.replace(/\s+/g, '').length > 1) {
+      getInfo(value);
+    } else {
+      setSuggestions([]);
+    }
   };
 
 
@@ -36,29 +45,7 @@ export default function NavigationBar() {
     });
   };
 
-
-  const onBlur = () => {
-    setValue("");
-  };
-
-
-  const onChange = (event) => {
-    let {value} = event.target;
-    if (value.replace(/\s+/g, '').length > 1) {
-      setValue(value);
-      getInfo(value);
-    } else {
-      setValue(value)
-      setSuggestions([]);
-    }
-  };
-
-
-  const getSuggestionValue = (suggestion) => {
-    return suggestion.first_name;
-  }
-
-
+  
   const customStyle = {
     brand: {
       color: '#fff',
@@ -73,6 +60,7 @@ export default function NavigationBar() {
       width: 250
     }
   }
+
 
   return (
     <>
@@ -109,8 +97,11 @@ export default function NavigationBar() {
             </ListGroup>
           }>
           <Form inline>
-            <FormControl type="text" placeholder="Search for users..." className="mr-sm-2"
-                         onChange={(e) => onChange(e)}/>
+            <FormControl
+              type="text"
+              placeholder="Search for users..."
+              className="mr-sm-2"
+              onChange={(e) => onChange(e)}/>
           </Form>
         </OverlayTrigger>
 

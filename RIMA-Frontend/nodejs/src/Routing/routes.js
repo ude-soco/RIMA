@@ -1,8 +1,8 @@
 import Profile from "../Views/Application/Settings/Profile/Profile";
 import Login from "../Views/Website/Login/Login";
-import AddPaper from "../Views/Application/Publications/AddPaper/AddPaper.jsx";
-import ViewPaper from "../Views/ViewPaper";
-import EditPaper from "../Views/EditPaper";
+import AddPaper from "../Views/Application/Publications/Paper/AddPaper.jsx";
+import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
+import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
 import CloudChartPage from "../Views/CloudChart";
 import ConceptChartPage from "../Views/ConceptChart";
 import StreamChartPage from "../Views/StreamChart";
@@ -13,14 +13,14 @@ import Demo from "../Views/Website/Demo/Demo";
 import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
 import PieChartPage from "../Views/PieChart";
 import BarChartPage from "../Views/BarChart";
-import TweetsAndPeople from "../Views/TweetsAndPeople";
-import TopicFormPage from "../Views/TopicForm";
-import TopicBar from "../Views/TopicBar";
-import TopicComparisions from "../Views/TopicComparisions";
+import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
+import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
+import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
+import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
 import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";
-import TopicResearch from "Views/TopicResearch";
-import TopicAuthors from "Views/TopicAuthors";
+import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
+import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
 
 

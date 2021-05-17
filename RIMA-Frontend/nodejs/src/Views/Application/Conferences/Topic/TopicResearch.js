@@ -13,8 +13,8 @@ import {
 import Select from "react-select";
 // core components
 import { chartOptions, parseOptions } from "Services/variables/charts.js";
-import Header from "./components/Headers/Header.js";
-import "../assets/scss/custom.css";
+import Header from "../../../components/Headers/Header.js";
+import "../../../../assets/scss/custom.css";
 
 class TopicResearch extends React.Component {
   constructor(props) {

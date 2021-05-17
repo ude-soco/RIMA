@@ -21,16 +21,16 @@ import styled from "styled-components";
 
 import classnames from "classnames";
 
-import Header from "./components/Headers/Header.js";
-import TagSearch from "./components/TweetAndPeople/TagSearch.js";
-import TwitterUsers from "./components/TweetAndPeople/TwitterUserCard/TwitterUsers.js";
-import TwitterUserCard from "./components/TweetAndPeople/TwitterUserCard/TwitterUserCard.js";
-import TweetCard from "./components/TweetAndPeople/TweetCard/TweetCard.js";
+import Header from "../../components/Headers/Header.js";
+import TagSearch from "../../components/TweetAndPeople/TagSearch.js";
+import TwitterUsers from "../../components/TweetAndPeople/TwitterUserCard/TwitterUsers.js";
+import TwitterUserCard from "../../components/TweetAndPeople/TwitterUserCard/TwitterUserCard.js";
+import TweetCard from "../../components/TweetAndPeople/TweetCard/TweetCard.js";
 import RestAPI from "Services/api";
-import {COUNTRIES} from "./components/TweetAndPeople/countries";
-import AdvanceFilter from "./components/OptionDropDown/AdvanceFilter.jsx";
-import SavedTweetCard from "./components/TweetAndPeople/TweetCard/SavedTweetCard";
-import ScrollTopWrapper from "./Application/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import {COUNTRIES} from "../../components/TweetAndPeople/countries";
+import AdvanceFilter from "../../components/OptionDropDown/AdvanceFilter.jsx";
+import SavedTweetCard from "../../components/TweetAndPeople/TweetCard/SavedTweetCard";
+import ScrollTopWrapper from "../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import {Spinner} from "react-bootstrap";
 
 const KeyCodes = {

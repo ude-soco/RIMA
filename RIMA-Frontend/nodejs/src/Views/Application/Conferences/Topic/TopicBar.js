@@ -2,7 +2,7 @@
 import React from "react";
 import Chart from "chart.js";
 import Select from "react-select";
-import LAKForm from "./components/LAKForms/LAKForm";
+import LAKForm from "../../../components/LAKForms/LAKForm";
 import {
   Card,
   CardHeader,
@@ -14,14 +14,14 @@ import {
   Button
 } from "reactstrap";
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
-import Header from "./components/Headers/Header.js";
-import "../assets/scss/custom.css";
-import LAKBar from "./components/LAKForms/LAKBar";
-import LAKPie from "./components/LAKForms/LAKPie";
-import LAKStackedAreaChart from "./components/LAKForms/LAKStackedAreaChart";
-import VennChart from "./components/LAKForms/VennChart";
-import LAKStackedBarChart from "./components/LAKForms/LAKStackedBarChart";
-import ScrollTopWrapper from "./Application/ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import Header from "../../../components/Headers/Header.js";
+import "../../../../assets/scss/custom.css";
+import LAKBar from "../../../components/LAKForms/LAKBar";
+import LAKPie from "../../../components/LAKForms/LAKPie";
+import LAKStackedAreaChart from "../../../components/LAKForms/LAKStackedAreaChart";
+import VennChart from "../../../components/LAKForms/VennChart";
+import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
+import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 
 class TopicBar extends React.Component {
   constructor(props) {

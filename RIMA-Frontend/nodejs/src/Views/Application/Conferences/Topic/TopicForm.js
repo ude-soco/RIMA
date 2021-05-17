@@ -4,9 +4,9 @@ import Chart from "chart.js";
 import { Card, CardHeader, CardBody, Container, Row, Col } from "reactstrap";
 // core components
 import { chartOptions, parseOptions } from "Services/variables/charts.js";
-import Header from "./components/Headers/Header.js";
-import "../assets/scss/custom.css";
-import AuthorVenn from "./components/LAKForms/AuthorVenn";
+import Header from "../../../components/Headers/Header.js";
+import "../../../../assets/scss/custom.css";
+import AuthorVenn from "../../../components/LAKForms/AuthorVenn";
 
 class TopicFormPage extends React.Component {
   constructor(props) {

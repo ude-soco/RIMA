@@ -11,12 +11,12 @@ import {
 } from "reactstrap";
 // core components
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
-import Header from "./components/Headers/Header.js";
-import "../assets/scss/custom.css";
-import VennChart from "./components/LAKForms/VennChart";
-import LAKStackedBarChart from "./components/LAKForms/LAKStackedBarChart";
+import Header from "../../../components/Headers/Header.js";
+import "../../../../assets/scss/custom.css";
+import VennChart from "../../../components/LAKForms/VennChart";
+import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
 import CoolTabs from "react-cool-tabs";
-import LAKAuthorsbar from "./components/LAKForms/LAKAuthorsbar";
+import LAKAuthorsbar from "../../../components/LAKForms/LAKAuthorsbar";
 
 class TopicComparisions extends React.Component {
   constructor(props) {

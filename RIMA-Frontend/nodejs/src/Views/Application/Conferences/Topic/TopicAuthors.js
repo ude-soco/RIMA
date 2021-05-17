@@ -5,10 +5,10 @@ import {Card, CardHeader, CardBody, Container, Row, Col, Label} from "reactstrap
 import Select from 'react-select';
 // core components
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
-import Header from "./components/Headers/Header.js";
-import "../assets/scss/custom.css";
-import LAKAuthorsbar from "./components/LAKForms/LAKAuthorsbar";
-import AuthorNetwork from "./components/LAKForms/AuthorNetwork";
+import Header from "../../../components/Headers/Header.js";
+import "../../../../assets/scss/custom.css";
+import LAKAuthorsbar from "../../../components/LAKForms/LAKAuthorsbar";
+import AuthorNetwork from "../../../components/LAKForms/AuthorNetwork";
 
 
 class TopicAuthors extends React.Component {

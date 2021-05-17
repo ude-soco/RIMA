@@ -3,7 +3,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import Loader from "react-loader-spinner";
 import { handleServerErrors } from "Services/utils/errorHandler";
-import RestAPI from "../Services/api";
+import RestAPI from "../../../../Services/api";
 
 // reactstrap components
 import {
@@ -19,8 +19,6 @@ import {
   Col,
 } from "reactstrap";
 
-// core components
-import Header from "./components/Headers/Header.js";
 
 class EditPaper extends React.Component {
   state = {

@@ -1,12 +1,12 @@
 import React from "react";
-import user from "../Services/api";
+import user from "../../../../Services/api";
 // react plugin used to create google maps
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import { handleServerErrors } from "Services/utils/errorHandler";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { getItem } from "../Services/utils/localStorage";
+import { getItem } from "../../../../Services/utils/localStorage";
 
 
 
@@ -32,10 +32,10 @@ import {
   Input,
   Col,
 } from "reactstrap";
-import RestAPI from "../Services/api";
+import RestAPI from "../../../../Services/api";
 
 // core components
-import Header from "./components/Headers/Header.js";
+import Header from "../../../components/Headers/Header.js";
 import { faSyncAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
