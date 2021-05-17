@@ -51,7 +51,7 @@ class TopicBar extends React.Component {
     ];
     return (
       <>
-        <Header/>
+
         {/* Page content */}
         <Container className="mt--7" fluid style={{maxWidth: "1400px"}}>
           <Card className="bg-gradient-default1 shadow">

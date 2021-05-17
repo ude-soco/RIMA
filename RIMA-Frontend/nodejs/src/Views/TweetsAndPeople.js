@@ -509,9 +509,7 @@ export default class TweetsAndPeople extends Component {
     // console.log("the state is");
     // console.log(this.state.place);
     return (
-
       <>
-        <Header/>
         <Container className="mt--7" xl="12">
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">

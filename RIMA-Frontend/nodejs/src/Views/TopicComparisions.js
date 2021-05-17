@@ -36,7 +36,7 @@ class TopicComparisions extends React.Component {
   render() {
     return (
       <>
-        <Header/>
+
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row>

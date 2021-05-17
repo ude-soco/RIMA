@@ -1,36 +1,26 @@
-import React from "react";
-import { Switch, Redirect } from "react-router-dom";
-import { Container } from "reactstrap";
-import AdminNavbar from "Views/components/Navbars/AdminNavbar.js";
+import React, {useEffect, useState} from "react";
+import {Redirect, Switch} from "react-router-dom";
+import {Container} from "reactstrap";
 import AdminFooter from "Views/components/Footers/AdminFooter.js";
-import Sidebar from "Views/components/Sidebar/Sidebar.js";
 import PrivateRoute from "./PrivateRoute";
 import RecommendationRoute from './RecommendationRoute';
 import routes from "./routes";
 import {getItem} from "../Services/utils/localStorage";
+import NavigationBar from "../Views/Application/ReuseableComponents/NavigationBar/NavigationBar";
 
-class Admin extends React.Component {
-  state = {
-    isRedirect: false,
-  };
+export default function Admin(props) {
+  const [isRedirect, setIsRedirect] = useState(false);
 
-
-  componentDidMount() {
-    if (this.props.location.pathname === "/app/redirect") {
-      console.log(1);
-      this.setState({ isRedirect: true });
+  useEffect(() => {
+    if (props.location.pathname === "/app/redirect") {
+      setIsRedirect(true);
     }
-  }
 
-
-  componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    this.refs.mainContent.scrollTop = 0;
-  }
+  });
 
-
-  getRoutes = routes => {
+  const getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.layout === "/app") {
         return (
@@ -40,7 +30,7 @@ class Admin extends React.Component {
             key={key}
           />
         );
-      } else if(prop.layout === "/recommendation") {
+      } else if (prop.layout === "/recommendation") {
         return (
           <RecommendationRoute
             path={prop.layout + prop.path.replace(":id", getItem("userId"))}
@@ -54,11 +44,10 @@ class Admin extends React.Component {
     });
   };
 
-
-  getBrandText = (path) => {
+  const getBrandText = () => {
     for (let i = 0; i < routes.length; i++) {
       if (
-        this.props.location.pathname.indexOf(
+        props.location.pathname.indexOf(
           routes[i].layout + routes[i].path
         ) !== -1
       ) {
@@ -68,39 +57,44 @@ class Admin extends React.Component {
     return "";
   };
 
-
-  render() {
-    return (
-      <>
-        {this.state.isRedirect ? <></> : (
-          <Sidebar
-            {...this.props}
-            routes={routes}
-            logo={{
-              innerLink: "/app/index",
-              imgSrc: require("assets/img/brand/argon-react.png"),
-              imgAlt: "...",
-            }}
-          />
-        )}
-        <div className="main-content" ref="mainContent">
-          {this.state.isRedirect ? <></> : (
-            <AdminNavbar
-              {...this.props}
-              brandText={this.getBrandText(this.props.location.pathname)}
-            />
-          )}
-          <Switch>
-            {this.getRoutes(routes)}
-            <Redirect from="*" to="/app/PieChartPage" />
-          </Switch>
-          <Container fluid>
-            <AdminFooter />
-          </Container>
-        </div>
-      </>
-    );
+  const customStyles = {
+    mainContainer: {
+      position: "relative",
+      minHeight: "100vh"
+    },
   }
-}
 
-export default Admin;
+  return (
+    <>
+      {isRedirect ? <></> :
+        <>
+          <NavigationBar/>
+          {/*<Sidebar*/}
+          {/*  {...props}*/}
+          {/*  routes={routes}*/}
+          {/*  logo={{*/}
+          {/*    innerLink: "/app/index",*/}
+          {/*    imgSrc: require("assets/img/brand/argon-react.png"),*/}
+          {/*    imgAlt: "...",*/}
+          {/*  }}*/}
+          {/*/>*/}
+        </>
+      }
+      {/*<div >*/}
+      {/*{isRedirect ? <></> : (*/}
+      {/*  <AdminNavbar*/}
+      {/*    {...props}*/}
+      {/*    brandText={getBrandText(props.location.pathname)}*/}
+      {/*  />*/}
+      {/*)}*/}
+      <div className="header bg-gradient-info mb-14 pt-14 pt-md-8" style={customStyles.mainContainer}>
+
+          <Switch>
+            {getRoutes(routes)}
+            <Redirect from="*" to="/app/PieChartPage"/>
+          </Switch>
+
+      </div>
+    </>
+  );
+}

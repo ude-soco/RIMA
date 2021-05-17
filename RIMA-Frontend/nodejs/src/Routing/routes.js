@@ -1,6 +1,6 @@
 import Profile from "../Views/Application/Settings/Profile/Profile";
 import Login from "../Views/Website/Login/Login";
-import AddPaper from "../Views/AddPaper.js";
+import AddPaper from "../Views/Application/Publications/AddPaper/AddPaper.jsx";
 import ViewPaper from "../Views/ViewPaper";
 import EditPaper from "../Views/EditPaper";
 import CloudChartPage from "../Views/CloudChart";
