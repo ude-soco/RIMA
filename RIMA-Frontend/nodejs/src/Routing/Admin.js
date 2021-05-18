@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Redirect, Switch} from "react-router-dom";
-import {Container} from "reactstrap";
-import AdminFooter from "Views/components/Footers/AdminFooter.js";
 import PrivateRoute from "./PrivateRoute";
 import RecommendationRoute from './RecommendationRoute';
 import routes from "./routes";
 import {getItem} from "../Services/utils/localStorage";
 import NavigationBar from "../Views/Application/ReuseableComponents/NavigationBar/NavigationBar";
+import {Col, Row} from "react-bootstrap";
 
 export default function Admin(props) {
   const [isRedirect, setIsRedirect] = useState(false);
@@ -88,12 +87,16 @@ export default function Admin(props) {
       {/*  />*/}
       {/*)}*/}
       <div className="header bg-gradient-info mb-14 pt-14 pt-md-8" style={customStyles.mainContainer}>
-
-          <Switch>
-            {getRoutes(routes)}
-            <Redirect from="*" to="/app/PieChartPage"/>
-          </Switch>
-
+        <Row>
+          <Col md={1}/>
+          <Col md={10}>
+            <Switch>
+              {getRoutes(routes)}
+              <Redirect from="*" to="/app/PieChartPage"/>
+            </Switch>
+          </Col>
+          <Col md={1}/>
+        </Row>
       </div>
     </>
   );

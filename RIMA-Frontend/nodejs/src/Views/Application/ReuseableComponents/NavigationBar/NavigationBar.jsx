@@ -45,7 +45,7 @@ export default function NavigationBar() {
     });
   };
 
-  
+
   const customStyle = {
     brand: {
       color: '#fff',
