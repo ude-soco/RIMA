@@ -1,47 +1,44 @@
 import React, {Component} from "react";
+import {toast} from 'react-toastify';
+import ReactSpinnerTimer from "react-spinner-timer";
+
 import "./tweets.css";
 import {
   convertUnicode,
   keywordHighlighter,
-  UrlHighlighter,
-} from "../../../../Services/utils/unicodeCharacterEngine.js";
-import {MdErrorOutline} from "react-icons/md";
+} from "../../../../../Services/utils/unicodeCharacterEngine.js";
 import {
   UncontrolledDropdown,
   DropdownToggle,
   Row,
-  Col,
-  Button,
 } from "reactstrap";
-import OptionDropDown from "../../OptionDropDown";
+import OptionDropDown from "../../../../components/OptionDropDown";
 import styled from "styled-components";
 import TweetInfoOption from "Views/components/OptionDropDown/TweetInfoOption";
-import ReactSpinnerTimer from "react-spinner-timer";
+import RestAPI from "Services/api";
+import {Container, OverlayTrigger, Popover, Button, Image, Badge} from "react-bootstrap";
+import TweetCardRecommendation from "./TweetCardRecommendation";
 
 const HideContainer = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  left: 0px;
+  left: 0;
   z-index: 1;
   background: white;
   padding: 20px;
   display: ${(props) => (props.hide ? "block" : "none")};
 `;
 
-
 class TweetContent extends Component {
   render() {
     return (
-      <>
-        <h4>{this.props.name}</h4>
-        <span dangerouslySetInnerHTML={{__html: this.props.modified_text}}/>
-      </>
+      <span dangerouslySetInnerHTML={{__html: this.props.modified_text}}/>
     );
   }
 }
 
-export default class SavedTweetCard extends Component {
+export default class TweetCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,80 +60,111 @@ export default class SavedTweetCard extends Component {
     this.setState({
       hide: true,
       timer: setTimeout(() => {
-        console.log("This will run after 5 second!");
-        this.props.deleteSavedTweet(this.props.tweet);
+        this.props.deleteTweet(this.props.tweet);
         this.setState({hide: false});
       }, 10000),
     });
     this.countDownFun();
   };
+  saveHandler = (params) => {
+    let data = {
+      id_str: params.tweet.id_str,
+      full_text: params.tweet.full_text,
+      user: params.tweet.user.name,
+      screen_name: params.tweet.user.screen_name,
+    };
+    RestAPI.savedTweets(data)
+      .then((response) => {
+        this.props.newSavedTweet(response.data);
+        toast.success("Tweet saved!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 2000
+        });
+      })
+      .catch((error) => {
+        console.log("err", error);
+      });
+  };
+
 
   render() {
-    console.log(this.props);
     const {countDown} = this.state;
+
     const {tweet} = this.props;
-    // const user = tweet["user"];
+    const user = tweet["user"];
+    // User
+    const profileUrl = user["profile_image_url_https"];
+    const name = convertUnicode(user["name"]);
+    const screenName = convertUnicode(user["screen_name"]);
     // Tweet
     const id_str = tweet["id_str"];
+    const createdAt = tweet["created_at"];
     const text = tweet["full_text"];
-    const screen_name = tweet["screen_name"];
+    const color = tweet["color"];
+
+    const score = tweet["score"]
 
     // console.log("TEXT: ", text);
-    // const screenName = convertUnicode(user["screen_name"]);
-    // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
+    const retweets = tweet["retweet_count"];
+    const favorites = tweet["retweet_count"];
+    const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
 
     // Tags
+    const {keyword_tags} = this.props;
     // Modift Tweet Text
-    // let modifiedScreenName = convertUnicode(screen_name);
+
     let modified_text = convertUnicode(text);
 
+    keyword_tags.map((tag) => {
+      let searchMask = tag.text;
+      modified_text = keywordHighlighter(searchMask, modified_text);
+      // modified_text = UrlHighlighter(modified_text);
+    });
     return (
       <>
         <div
           className="card mt-4"
-          style={{width: "100%", position: "relative"}}
+          id={tweet.border ? 'border' : '#'}
+          style={{
+            width: "100%",
+            position: "relative",
+            border: tweet.border ? '3px solid' : 'none',
+            borderColor: tweet.color
+          }}
         >
           <HideContainer hide={this.state.hide}>
-            {/* <div style={{ textAlign: 'right' }}> */}
-            {/* <h2>Tweet Hidden</h2> */}
-            <Button
-              className="rounded-0"
-              style={{fontSize: "20px"}}
-              color="primary"
-              size="sm"
-              onClick={() => {
-                clearTimeout(this.state.timer);
-                this.setState({
-                  hide: false,
-                });
-              }}
-            >
-              Undo
-            </Button>
-            {/* </div> */}
             <div className="d-flex justify-content-between">
-              <div>
-                <h3>you won't see this tweet in your saved tweets list</h3>
-
-                <h4>this tweet will delete after {countDown} seconds</h4>
-              </div>
-              {/* position: absolute;
-    right: 21px;
-    bottom: 0; */}
-              <ReactSpinnerTimer
-                className="snipper-saved-tweets"
-                timeInSeconds={10}
-                totalLaps={10}
-                isRefresh={false}
-                onLapInteraction={(lap) => {
-                  if (lap.isFinish) console.log("Finished!!");
-                  else console.log("Running!! Lap:", lap.actualLap);
+              <h2>Tweet Hidden</h2>
+              <Button
+                className="rounded-0"
+                style={{fontSize: "20px"}}
+                color="primary"
+                size="sm"
+                onClick={() => {
+                  clearTimeout(this.state.timer);
+                  this.setState({
+                    hide: false,
+                  });
                 }}
-              />
+              >
+                Undo
+              </Button>
             </div>
 
+            <h3>you won't see this tweet in your recommendation list</h3>
+
+            <h4>this tweet will delete after {countDown} seconds</h4>
+            <ReactSpinnerTimer
+              timeInSeconds={10}
+              totalLaps={10}
+              isRefresh={false}
+              onLapInteraction={(lap) => {
+                if (lap.isFinish) console.log("Finished!!");
+                else console.log("Running!! Lap:", lap.actualLap);
+              }}
+            />
           </HideContainer>
-          {/* <div className="vline"></div>*/}
+          <div className="vline" style={{backgroundColor: color}}></div>
           <div className="options-icon">
             <UncontrolledDropdown>
               <DropdownToggle
@@ -162,20 +190,32 @@ export default class SavedTweetCard extends Component {
                 </svg>
               </DropdownToggle>
 
-              <OptionDropDown HideHandler={this.HideHandler} saved/>
+              <OptionDropDown
+                data={this.props}
+                HideHandler={this.HideHandler}
+                saveHandler={this.saveHandler}
+              />
             </UncontrolledDropdown>
           </div>
           <div className="card-body">
-            <h5 className="card-title">
-            </h5>
-            <p className="card-text saved-tweet-container">
+
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="card-title">
+                <img src={profileUrl} alt={name}/>
+                {name} <span>@{screenName}</span>
+              </h5>
+              <h2 style={{marginRight: "40px", marginBottom: "0px"}}>
+                <Badge pill variant="dark" style={{backgroundColor: "#f7f7f7"}}>Similarity: {score}%</Badge>
+              </h2>
+            </div>
+            <p className="card-text">
               <a
-                href={`https://twitter.com/${tweet['screen_name']}/status/${tweet['id_str']}`}
+                href={tweet_url}
                 target="_blank"
                 style={{textDecoration: "none", color: "inherit"}}
                 rel="noopener noreferrer"
               >
-                <TweetContent modified_text={modified_text} name={screen_name}/>
+                <TweetContent modified_text={modified_text}/>
               </a>
               {/* <span className="highlight-keyword">highlight</span> the
               recommended keyword and color the link
@@ -238,6 +278,51 @@ export default class SavedTweetCard extends Component {
                 ))
                 : null}
             </p>
+          </div>
+          <div className="container twitter-action-icons d-flex align-items-center justify-content-between">
+            <small>
+              <svg
+                className="ml-2 mr-2"
+                style={{width: "20px", height: "20px"}}
+                viewBox="0 0 24 24"
+              >
+                <g>
+                  <path
+                    style={{fill: "#BDC3C7"}}
+                    d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"
+                  ></path>
+                </g>
+              </svg>
+              {retweets} retweets
+              <svg
+                viewBox="0 0 24 24"
+                style={{width: "20px", height: "20px"}}
+                className="ml-2 mr-2"
+              >
+                <g>
+                  <path
+                    style={{fill: "#BDC3C7"}}
+                    d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"
+                  ></path>
+                </g>
+              </svg>
+              {favorites} Likes
+            </small>
+            {/* {console.log("keyword_tags", keyword_tags)} */}
+            <div>
+              <TweetCardRecommendation
+                userInterestModel={keyword_tags}
+                tweetText={text}
+                tag={tweet["tagId"]}
+                score={score}
+              />
+
+              {/*<TweetInfoOption*/}
+              {/*  tags={keyword_tags}*/}
+              {/*  text={text}*/}
+              {/*  tag={tweet["tagId"]}*/}
+              {/*/>*/}
+            </div>
           </div>
         </div>
       </>

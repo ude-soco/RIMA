@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
-import { KeywordRangeSlider } from "../TweetAndPeople/TweetCard/KeywordWieghtRange";
-import DrabableImage from "../TweetAndPeople/TweetCard/DragableImage";
-import DragableText from "../TweetAndPeople/TweetCard/DragableText";
+import { KeywordRangeSlider } from "../../Application/Twitter/TweetAndPeople/TweetCard/KeywordWieghtRange";
+import DrabableImage from "../../Application/Twitter/TweetAndPeople/TweetCard/DragableImage";
+import DragableText from "../../Application/Twitter/TweetAndPeople/TweetCard/DragableText";
 import backgroundImage from "../../../assets/img/backgrounds/circule1.png";
 import backgroundDragableText from "../../../assets/img/backgrounds/tab1.png";
 import {
@@ -22,7 +22,7 @@ import {
   Table,
   UncontrolledCollapse,
 } from "reactstrap";
-import DragableImage from "../TweetAndPeople/TweetCard/DragableImage";
+import DragableImage from "../../Application/Twitter/TweetAndPeople/TweetCard/DragableImage";
 import {ImPencil} from "react-icons/all";
 
 const DragableTextWrapper = styled.div`

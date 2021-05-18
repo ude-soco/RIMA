@@ -43,18 +43,18 @@ export default function Admin(props) {
     });
   };
 
-  const getBrandText = () => {
-    for (let i = 0; i < routes.length; i++) {
-      if (
-        props.location.pathname.indexOf(
-          routes[i].layout + routes[i].path
-        ) !== -1
-      ) {
-        return routes[i].name;
-      }
-    }
-    return "";
-  };
+  // const getBrandText = () => {
+  //   for (let i = 0; i < routes.length; i++) {
+  //     if (
+  //       props.location.pathname.indexOf(
+  //         routes[i].layout + routes[i].path
+  //       ) !== -1
+  //     ) {
+  //       return routes[i].name;
+  //     }
+  //   }
+  //   return "";
+  // };
 
   const customStyles = {
     mainContainer: {
@@ -88,14 +88,14 @@ export default function Admin(props) {
       {/*)}*/}
       <div className="header bg-gradient-info mb-14 pt-14 pt-md-8" style={customStyles.mainContainer}>
         <Row>
-          <Col md={1}/>
-          <Col md={10}>
+          <Col md={1} xs={0}/>
+          <Col md={10} xs={12}>
             <Switch>
               {getRoutes(routes)}
               <Redirect from="*" to="/app/PieChartPage"/>
             </Switch>
           </Col>
-          <Col md={1}/>
+          <Col md={1} xs={0}/>
         </Row>
       </div>
     </>

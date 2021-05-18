@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import RestAPI from "../../../../Services/api";
 import {handleServerErrors} from "../../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
-import UserHeader from "../../../components/Headers/UserHeader";
 import {Button, Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Input, Row} from "reactstrap";
 import Loader from "react-loader-spinner";
 
@@ -93,10 +92,7 @@ export default function Profile() {
 
   return (
     <>
-      <UserHeader />
-      {/* Page content */}
-
-      <Container className="mt--7" fluid>
+      <Container className="mt--14" fluid>
         <Row>
           <Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
             <Card className="card-profile shadow">

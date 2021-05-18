@@ -79,7 +79,6 @@ class SearchUserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
       id: "",
       email: "",
       first_name: "",

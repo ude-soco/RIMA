@@ -3,8 +3,8 @@ import {Button, Col, Container, OverlayTrigger, Popover, Row, Spinner, Image, Ba
 import {IconButton} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight, faTimes} from "@fortawesome/free-solid-svg-icons";
-import RestAPI from "../../../../Services/api";
-import HeatmapTweet from "../../../Application/ReuseableComponents/Charts/HeatMap/HeatMap.js";
+import RestAPI from "../../../../../Services/api";
+import HeatmapTweet from "../../../ReuseableComponents/Charts/HeatMap/HeatMap.js";
 
 
 export default function TweetCardRecommendation(props) {

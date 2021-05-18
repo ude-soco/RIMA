@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactTags from "../react-tags/ReactTags.js";
+import ReactTags from "../../../components/react-tags/ReactTags.js";
 import "./styles.css";
 
 class TagSearch extends React.Component {
