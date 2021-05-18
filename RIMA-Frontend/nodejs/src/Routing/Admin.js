@@ -65,27 +65,7 @@ export default function Admin(props) {
 
   return (
     <>
-      {isRedirect ? <></> :
-        <>
-          <NavigationBar/>
-          {/*<Sidebar*/}
-          {/*  {...props}*/}
-          {/*  routes={routes}*/}
-          {/*  logo={{*/}
-          {/*    innerLink: "/app/index",*/}
-          {/*    imgSrc: require("assets/img/brand/argon-react.png"),*/}
-          {/*    imgAlt: "...",*/}
-          {/*  }}*/}
-          {/*/>*/}
-        </>
-      }
-      {/*<div >*/}
-      {/*{isRedirect ? <></> : (*/}
-      {/*  <AdminNavbar*/}
-      {/*    {...props}*/}
-      {/*    brandText={getBrandText(props.location.pathname)}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {isRedirect ? <></> : <NavigationBar/>}
       <div className="header bg-gradient-info mb-14 pt-14 pt-md-8" style={customStyles.mainContainer}>
         <Row>
           <Col md={1} xs={0}/>
