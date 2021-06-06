@@ -1,18 +1,15 @@
 import React from "react";
 import Chart from "chart.js";
 import CloudChart from "./components/Chart/CloudChart";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
-import { Card, CardHeader, CardBody, Container, Row, Col } from "reactstrap";
+import {Card, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 
 // core components
-import { chartOptions, parseOptions } from "Services/variables/charts.js";
-
-import Header from "./components/Headers/Header.js";
-import { getItem } from "Services/utils/localStorage";
+import {chartOptions, parseOptions} from "Services/variables/charts.js";
 import swal from "@sweetalert/with-react";
 import "../assets/scss/custom.css";
-import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {Button, OverlayTrigger, Tooltip} from "react-bootstrap";
 
 import {faCog} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -89,7 +86,6 @@ class CloudChartPage extends React.Component {
                         
                       </div>
 
-                      {getItem("mId") === getItem("userId") ? (
                         <div>
                           <Link to="/app/Keyword">
                             <OverlayTrigger
@@ -111,9 +107,6 @@ class CloudChartPage extends React.Component {
                             </OverlayTrigger>
                           </Link>
                         </div>
-                      ) : (
-                          <></>
-                        )}
                     </div>
                   </Row>
                 </CardHeader>

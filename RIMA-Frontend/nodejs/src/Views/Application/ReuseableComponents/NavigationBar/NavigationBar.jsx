@@ -17,12 +17,16 @@ import {
   Grid,
   Hidden,
   IconButton,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
   Menu,
   MenuItem,
+  Paper,
+  Popper,
+  TextField,
   Toolbar,
   Tooltip,
   Typography,
@@ -32,6 +36,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from '@material-ui/icons/Person';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import MenuIcon from "@material-ui/icons/Menu";
+import * as PropTypes from "prop-types";
 
 function getRandomColor() {
   let letters = '012345'.split('');
@@ -93,10 +98,26 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  popper: {
+    zIndex: 9,
+    width: 220
+  }
 }));
 
+function Autocomplete(props) {
+  return null;
+}
+
+Autocomplete.propTypes = {
+  renderInput: PropTypes.func,
+  style: PropTypes.shape({width: PropTypes.number}),
+  id: PropTypes.string,
+  getOptionLabel: PropTypes.func,
+  options: PropTypes.arrayOf(PropTypes.any)
+};
 export default function NavigationBar() {
   const [suggestions, setSuggestions] = useState([]);
+  const [openAuthors, setOpenAuthors] = useState(null);
   const [openHelp, setOpenHelp] = useState(null);
   const [openProfile, setOpenProfile] = useState(null);
   const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
@@ -132,13 +153,14 @@ export default function NavigationBar() {
   const handleLogout = () => {
     setOpenProfile(null);
     setLoggingOut(!loggingOut);
-    setTimeout(()=>{
+    setTimeout(() => {
       logout();
     }, 2000)
   }
 
 
-  const onChange = (event) => {
+  const handleSearchAuthors = (event) => {
+    setOpenAuthors(event.currentTarget)
     let {value} = event.target;
     if (value.replace(/\s+/g, '').length > 1) {
       getInfo(value);
@@ -146,6 +168,12 @@ export default function NavigationBar() {
       setSuggestions([]);
     }
   };
+
+  const handleSelectAuthorComparison = (author) => {
+    setSelection(null)
+    setSuggestions([]);
+    history.push(`/app/profile/${author}`)
+  }
 
 
   const getInfo = (v) => {
@@ -162,8 +190,6 @@ export default function NavigationBar() {
       setSuggestions(data);
     });
   };
-
-
 
   return (
     <>
@@ -187,6 +213,33 @@ export default function NavigationBar() {
               <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
             </Grid>
 
+
+            <Grid item component={Paper} style={{marginRight: 24}}>
+              <TextField
+                label="Search for authors"
+                variant="filled"
+                size="small"
+                onChange={handleSearchAuthors}
+
+              />
+
+              <Popper open={suggestions.length} anchorEl={openAuthors} className={classes.popper}>
+                <Paper>
+                  <List>
+                    {suggestions.map((suggestion, index) => {
+                      localStorage.setItem("userId", suggestion.id);
+                      return (
+                        <ListItem key={index} button onClick={() => handleSelectAuthorComparison(suggestion.id)}>
+                          <ListItemText primary={`${suggestion.first_name} ${suggestion.last_name}`}/>
+                        </ListItem>
+                      )
+                    })}
+                  </List>
+                </Paper>
+              </Popper>
+
+            </Grid>
+
             {/* Help button */}
             <Grid item>
               <Tooltip arrow title="Support">
@@ -206,7 +259,7 @@ export default function NavigationBar() {
                 onClose={() => setOpenHelp(null)}
               >
                 <MenuItem>
-                  <ListItemText primary='Tour' secondary="Start here for a quick overview of OpenLAP"/>
+                  <ListItemText primary='Tour' secondary="Start here for a quick overview of RIMA"/>
                 </MenuItem>
                 <MenuItem>
                   <ListItemText primary='FAQ' secondary="Frequently Asked Questions"/>
@@ -244,7 +297,7 @@ export default function NavigationBar() {
                 </ListItem>
 
                 <Divider/>
-                
+
                 <MenuItem onClick={openSettings}>
                   <ListItemIcon> <PersonIcon color="primary"/> </ListItemIcon>
                   <ListItemText primary='My Profile'/>

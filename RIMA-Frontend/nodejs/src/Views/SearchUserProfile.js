@@ -291,7 +291,7 @@ class SearchUserProfile extends React.Component {
 
           <br />
           <Row>
-          <h1>&nbsp;&nbsp;&nbsp;Intermediate  explanation</h1>
+          <h1>&nbsp;&nbsp;&nbsp;Intermediate explanation</h1>
             </Row>
 
           <Row>
@@ -330,7 +330,7 @@ class SearchUserProfile extends React.Component {
           </Row>
           <br />
           <Row>
-          <h1>&nbsp;&nbsp;&nbsp;Advanced  explanation</h1>
+          <h1>&nbsp;&nbsp;&nbsp;Advanced explanation</h1>
             </Row>
           <Row>
           <Col className="order-xl-2" xl="6">
