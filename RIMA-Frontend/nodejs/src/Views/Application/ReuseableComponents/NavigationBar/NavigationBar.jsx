@@ -29,7 +29,7 @@ import {
   useTheme
 } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SettingsIcon from '@material-ui/icons/Settings';
+import PersonIcon from '@material-ui/icons/Person';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -125,7 +125,7 @@ export default function NavigationBar() {
 
   const openSettings = () => {
     setOpenProfile(null);
-    setSelection("settings")
+    setSelection("myProfile")
     history.push('/app/user-profile');
   }
 
@@ -244,12 +244,14 @@ export default function NavigationBar() {
                 </ListItem>
 
                 <Divider/>
+                
                 <MenuItem onClick={openSettings}>
-                  <ListItemIcon> <SettingsIcon color="primary"/> </ListItemIcon>
-                  <ListItemText primary='Settings'/>
+                  <ListItemIcon> <PersonIcon color="primary"/> </ListItemIcon>
+                  <ListItemText primary='My Profile'/>
                 </MenuItem>
 
                 <Divider/>
+
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon> <ExitToAppIcon color="primary"/> </ListItemIcon>
                   <ListItemText primary='Sign-out'/>

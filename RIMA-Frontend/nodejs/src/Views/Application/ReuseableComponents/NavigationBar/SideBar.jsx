@@ -8,7 +8,7 @@ import {
   faChartPie,
   faCloud, faCogs, faHandshake,
   faPlus,
-  faTasks, faUserFriends,
+  faTasks, faUser, faUserFriends,
   faWaveSquare
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -97,7 +97,7 @@ export default function SideBar({selection, setSelection}) {
       case "compareResearchers":
         history.push("/app/topicsauthors/" + getItem("userId"));
         break;
-      case "settings":
+      case "myProfile":
         history.push('/app/user-profile');
         break;
     }
@@ -227,13 +227,13 @@ export default function SideBar({selection, setSelection}) {
 
         <Divider className={classes.divider}/>
 
-        <ListItem button id="settings"
-                  selected={selection === "settings"}
+        <ListItem button id="myProfile"
+                  selected={selection === "myProfile"}
                   onClick={handleSelect}>
           <ListItemIcon className={classes.listIcon}>
-            <FontAwesomeIcon icon={faCogs}/>
+            <FontAwesomeIcon icon={faUser}/>
           </ListItemIcon>
-          <ListItemText primary="Settings"/>
+          <ListItemText primary="My Profile"/>
         </ListItem>
 
       </List>
