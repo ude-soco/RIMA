@@ -209,7 +209,7 @@ Add the path ``'C:\Users\<user_name>\AppData\Roaming\Python\Python37\Scripts'`` 
 
 - Type ``.\venv\Script\activate`` to activate the virtual environment
 
-Step 4:- Install the packages by typing ``pip install -r requirements.txt``
+Step 4:- Install the packages by typing ``pip install -r requirements-offline.txt``
 
 Step 5:- Rename the environment variable file from ``.env.example`` to ``.env``
 

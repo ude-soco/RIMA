@@ -5,11 +5,23 @@ import RecommendationRoute from './RecommendationRoute';
 import routes from "./routes";
 import {getItem} from "../Services/utils/localStorage";
 import NavigationBar from "../Views/Application/ReuseableComponents/NavigationBar/NavigationBar";
-import {Col, Row} from "react-bootstrap";
+import {makeStyles} from "@material-ui/core";
+
+const drawerWidth = 300;
+const useStyles = makeStyles(theme => ({
+  toolbar: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    [theme.breakpoints.up("md")]: {
+      marginLeft: drawerWidth,
+    },
+  },
+}))
 
 export default function Admin(props) {
   const [isRedirect, setIsRedirect] = useState(false);
-
+  const classes = useStyles();
   useEffect(() => {
     if (props.location.pathname === "/app/redirect") {
       setIsRedirect(true);
@@ -66,17 +78,16 @@ export default function Admin(props) {
   return (
     <>
       {isRedirect ? <></> : <NavigationBar/>}
-      <div className="header bg-gradient-info mb-14 pt-14 pt-md-8" style={customStyles.mainContainer}>
-        <Row>
-          <Col md={1} xs={0}/>
-          <Col md={10} xs={12}>
-            <Switch>
-              {getRoutes(routes)}
-              <Redirect from="*" to="/app/PieChartPage"/>
-            </Switch>
-          </Col>
-          <Col md={1} xs={0}/>
-        </Row>
+      <div className="header bg-gradient-info mb-14 pt-14 pt-md-8"
+           style={customStyles.mainContainer}>
+        <main className={classes.content}>
+          <div className={classes.toolbar}/>
+          <Switch>
+            {getRoutes(routes)}
+            <Redirect from="*" to="/app/PieChartPage"/>
+          </Switch>
+        </main>
+
       </div>
     </>
   );

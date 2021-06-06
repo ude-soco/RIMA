@@ -1,44 +1,52 @@
 import React from "react";
-import {Nav, Navbar} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSignInAlt, faLaptop} from "@fortawesome/free-solid-svg-icons";
 import {useHistory} from "react-router-dom";
+import {AppBar, Button, Grid, makeStyles, Toolbar, Typography} from "@material-ui/core";
+
+const useStyle = makeStyles(theme => ({
+  appBar: {
+    backgroundColor: "#172B4D",
+  },
+  buttonSpacing: {
+    textTransform: "none",
+    marginRight: theme.spacing(2)
+  },
+  button: {
+    textTransform: "none"
+  },
+}))
 
 export default function NavigationBar() {
   const history = useHistory();
+  const styles = useStyle();
 
-  const customStyle = {
-    brand: {
-      color: '#fff',
-      marginBottom: 0
-    },
-    icon: {
-      marginRight: 8
-    },
-    bgColor:{
-      backgroundColor: "#172B4D"
-    }
-  }
   return (
     <>
-      <Navbar variant="dark" expand="lg" sticky="top" shadow style={customStyle.bgColor}>
-        <Navbar.Brand className="mr-auto" onClick={() => history.push("/")} style={{cursor: "pointer"}}>
-          <h1 style={customStyle.brand}>RIMA</h1>
-          <h6 className="text-uppercase" style={customStyle.brand}>
-            A transparent Recommendation and Interest Modeling Application
-          </h6>
-        </Navbar.Brand>
-        <Nav>
-          <Nav.Link onClick={() => history.push("/auth/demo")}>
-            <FontAwesomeIcon icon={faLaptop} style={customStyle.icon}/>
-            Demo
-          </Nav.Link>
-          <Nav.Link onClick={() => history.push("/auth/login")}>
-            <FontAwesomeIcon icon={faSignInAlt} style={customStyle.icon}/>
-            Sign-in
-          </Nav.Link>
-        </Nav>
-      </Navbar>
+      <AppBar className={styles.appBar}>
+        <Toolbar>
+          <Grid container alignItems="center">
+            <Grid item xs>
+              <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
+            </Grid>
+
+
+            <Button
+              color="inherit"
+              onClick={() => history.push("/auth/demo")}
+              className={styles.buttonSpacing}
+            >
+              Demo
+            </Button>
+
+            <Button
+              color="primary" variant="contained"
+              className={styles.button}
+              onClick={() => history.push("/auth/login")}>
+              Sign in
+            </Button>
+
+          </Grid>
+        </Toolbar>
+      </AppBar>
     </>
   );
 }

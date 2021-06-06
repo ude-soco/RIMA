@@ -1,11 +1,57 @@
-import Loader from "react-loader-spinner";
 import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import RestAPI from "../../../Services/api";
 import {handleServerErrors} from "../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
-import {Button, Card, Col, Container, Form, Row} from "react-bootstrap";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  CssBaseline,
+  Grid,
+  makeStyles,
+  Paper,
+  TextField,
+  Typography
+} from "@material-ui/core";
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <a href='https://www.uni-due.de/soco' target="_blank">Social Computing Group </a>
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    maxWidth: theme.spacing(60),
+  },
+  paper: {
+    margin: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+
+}))
 
 export default function Login() {
   const [details, setDetails] = useState({
@@ -14,6 +60,7 @@ export default function Login() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
+  const classes = useStyles();
 
 
   const handleChange = (e) => {
@@ -58,72 +105,76 @@ export default function Login() {
       });
   };
 
-  const customStyles = {
-    gutterBottom: {
-      marginBottom: 16
-    }
-  }
-
   return (
     <>
-      <Col lg="6" md="8">
-        <Card className="bg-secondary shadow border-0">
-          <Card.Body className="px-lg-5 py-lg-5">
-            {isLoading ? (
-              <div className="text-center">
-                <Loader
-                  type="Puff"
-                  color="#00BFFF"
-                  height={100}
-                  width={100}
-                />
-              </div>
-            ) : (
-              <>
-                <Container style={customStyles.gutterBottom}>
-                  <Row className="justify-content-center">
-                    <h1 className="text-muted">Sign-in</h1>
-                  </Row>
-                </Container>
-
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="Enter email"
-                      name="email"
-                      value={details.email}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                      value={details.password}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-
-                  <Button variant="primary" type="submit" block style={customStyles.gutterBottom}>
-                    Sign-in
+      <Grid container justify="center">
+        <CssBaseline/>
+        <Grid item xs={12} sm={6} md={6} lg={4} component={Paper} className={classes.root}>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon/>
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} noValidate onSubmit={handleSubmit}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                type="email"
+                value={details.email}
+                autoComplete="email"
+                autoFocus
+                onChange={handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={handleChange}
+              />
+              {isLoading ?
+                <Grid container justify="center" className={classes.submit}>
+                  <CircularProgress/>
+                </Grid>
+                :
+                <>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    Sign In
                   </Button>
+                  <Grid container justify="flex-end">
+                    <Grid item>
+                      <Link href="#" variant="body2" onClick={() => history.push('/auth/register')}>
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </>}
 
-                  <Container>
-                    <Row className="justify-content-end">
-                      <Link to="/auth/register">Don't have an account? Sign-up</Link>
-                    </Row>
-                  </Container>
-                </Form>
-              </>
-            )}
-          </Card.Body>
-        </Card>
-      </Col>
+              <Box mt={5}>
+                <Copyright/>
+              </Box>
+            </form>
+          </div>
+        </Grid>
+      </Grid>
     </>
   );
 }

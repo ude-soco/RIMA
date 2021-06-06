@@ -1,23 +1,141 @@
 import React, {useState} from "react";
-import {Button, Form, FormControl, ListGroup, Nav, Navbar, NavDropdown, OverlayTrigger} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import {getItem} from "../../../../Services/utils/localStorage";
 import axios from "axios";
 import {BASE_URL} from "../../../../Services/constants";
 import {logout} from "../../../../Services/helper";
-import {faBars} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import SideBar from "./SideBar";
+import {
+  AppBar,
+  Avatar,
+  Backdrop,
+  Box,
+  CircularProgress,
+  CssBaseline,
+  Divider,
+  Drawer,
+  Grid,
+  Hidden,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+  useTheme
+} from "@material-ui/core";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import SettingsIcon from '@material-ui/icons/Settings';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import MenuIcon from "@material-ui/icons/Menu";
+
+function getRandomColor() {
+  let letters = '012345'.split('');
+  let color = '#';
+  color += letters[Math.round(Math.random() * 5)];
+  letters = '0123456789ABCDEF'.split('');
+  for (let i = 0; i < 5; i++) {
+    color += letters[Math.round(Math.random() * 15)];
+  }
+  return color;
+}
+
+function toFirstLetter(name) {
+  return ((name || "").charAt(0) || "").toUpperCase()
+}
+
+const drawerWidth = 300;
+let avatarColor = getRandomColor();
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex"
+  },
+  drawer: {
+    [theme.breakpoints.up("md")]: {
+      width: drawerWidth,
+      flexShrink: 0
+    },
+  },
+  appBar: {
+    backgroundColor: "#172B4D",
+    zIndex: 7,
+  },
+  menuButton: {
+    [theme.breakpoints.up("md")]: {
+      display: "none"
+    },
+    color: theme.palette.common.white,
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    // backgroundColor: "#172B4D",
+    width: drawerWidth,
+    zIndex: 6
+  },
+  buttonSettings: {
+    color: theme.palette.common.white,
+  },
+  avatarName: {
+    cursor: "pointer",
+    backgroundColor: avatarColor,
+    color: theme.palette.common.white,
+    marginLeft: theme.spacing(3)
+  },
+  avatarProfile: {
+    backgroundColor: avatarColor,
+    color: theme.palette.common.white,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
 
 export default function NavigationBar() {
   const [suggestions, setSuggestions] = useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [openHelp, setOpenHelp] = useState(null);
+  const [openProfile, setOpenProfile] = useState(null);
+  const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [selection, setSelection] = useState("interestOverview");
+  const firstname = localStorage.getItem('name');
+  const lastname = localStorage.getItem('lastname');
+  const userName = toFirstLetter(firstname) + toFirstLetter(lastname);
+  const welcome = firstname + " " + lastname;
   const history = useHistory();
+  const theme = useTheme();
+  const classes = useStyles();
 
 
-  const toggleOpen = () => {
-    setOpen(!open);
-  };
+  const toggleDrawer = () => {
+    setOpenLeftDrawer(!openLeftDrawer);
+  }
+
+  const toggleHelpList = (e) => {
+    setOpenHelp(e.currentTarget);
+  }
+
+  const toggleProfileList = (e) => {
+    setOpenProfile(e.currentTarget);
+  }
+
+  const openSettings = () => {
+    setOpenProfile(null);
+    setSelection("settings")
+    history.push('/app/user-profile');
+  }
+
+  const handleLogout = () => {
+    setOpenProfile(null);
+    setLoggingOut(!loggingOut);
+    setTimeout(()=>{
+      logout();
+    }, 2000)
+  }
 
 
   const onChange = (event) => {
@@ -46,82 +164,143 @@ export default function NavigationBar() {
   };
 
 
-  const customStyle = {
-    brand: {
-      color: '#fff',
-      marginBottom: 0
-    },
-    bgColor: {
-      backgroundColor: "#172B4D",
-      zIndex: 9
-    },
-    listGroup: {
-      zIndex: 10,
-      width: 250
-    }
-  }
-
 
   return (
     <>
-      <Navbar variant="dark" expand="lg" sticky="top" style={customStyle.bgColor}>
+      <CssBaseline/>
 
-        <Button variant="link" style={customStyle.bgColor} onClick={toggleOpen}>
-          <FontAwesomeIcon icon={faBars} size="lg" color="white"/>
-        </Button>
+      <AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            aria-label="open drawer"
+            edge="start"
+            onClick={toggleDrawer}
+            className={classes.menuButton}
+          >
+            <MenuIcon/>
+          </IconButton>
 
-        <Navbar.Brand className="mr-auto" onClick={() => history.push("/")} style={{cursor: "pointer"}}>
-          <h1 style={customStyle.brand}>RIMA</h1>
-          <h6 className="text-uppercase" style={customStyle.brand}>
-            A transparent Recommendation and Interest Modeling Application
-          </h6>
-        </Navbar.Brand>
+          <Grid container alignItems="center">
 
-        <OverlayTrigger
-          placement="bottom"
-          delay={{show: 250, hide: 400}}
-          show={setSuggestions.length}
-          overlay={
-            <ListGroup style={customStyle.listGroup}>
-              {suggestions.map((suggestion, index) => {
-                localStorage.setItem("userId", suggestion.id);
-                return (
-                  <ListGroup.Item
-                    style={{cursor: "pointer"}}
-                    key={index}
-                    onClick={() => history.push(`/app/profile/${suggestion.id}`)}>
-                    {`${suggestion.first_name} ${suggestion.last_name}`}
-                  </ListGroup.Item>
-                )
-              })}
-            </ListGroup>
-          }>
-          <Form inline>
-            <FormControl
-              type="text"
-              placeholder="Search for users..."
-              className="mr-sm-2"
-              onChange={(e) => onChange(e)}/>
-          </Form>
-        </OverlayTrigger>
+            {/* Logo */}
+            <Grid item xs>
+              <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
+            </Grid>
 
-        <Nav>
-          <NavDropdown title="Settings" id="basic-nav-dropdown" alignRight>
-            <NavDropdown.Item onClick={() => history.push("/app/user-profile")}>
-              Profile
-            </NavDropdown.Item>
-            <NavDropdown.Divider/>
-            <NavDropdown.Item onClick={logout}>
-              Log-out
-            </NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </Navbar>
+            {/* Help button */}
+            <Grid item>
+              <Tooltip arrow title="Support">
+                <IconButton className={classes.buttonSettings}
+                            onClick={toggleHelpList}>
+                  <HelpOutlineIcon/>
+                </IconButton>
+              </Tooltip>
 
-      <SideBar
-        open={open}
-        toggleOpen={toggleOpen}
-      />
+              <Menu
+                id="simple-menu"
+                anchorEl={openHelp}
+                getContentAnchorEl={null}
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                transformOrigin={{vertical: "top", horizontal: "right"}}
+                open={Boolean(openHelp)}
+                onClose={() => setOpenHelp(null)}
+              >
+                <MenuItem>
+                  <ListItemText primary='Tour' secondary="Start here for a quick overview of OpenLAP"/>
+                </MenuItem>
+                <MenuItem>
+                  <ListItemText primary='FAQ' secondary="Frequently Asked Questions"/>
+                </MenuItem>
+                <Divider/>
+                <MenuItem>
+                  <ListItemText primary='Feedback' secondary="Send your opinions about our platform"/>
+                </MenuItem>
+              </Menu>
+            </Grid>
+
+
+            {/* Avatar to show username*/}
+            <Grid item>
+              <Avatar className={classes.avatarName} onClick={toggleProfileList}>
+                {userName}
+              </Avatar>
+
+              <Menu
+                id="simple-menu"
+                anchorEl={openProfile}
+                getContentAnchorEl={null}
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                transformOrigin={{vertical: "top", horizontal: "right"}}
+                open={Boolean(openProfile)}
+                onClose={() => setOpenProfile(null)}
+              >
+                <ListItem>
+                  <ListItemIcon>
+                    <Avatar className={classes.avatarProfile}>
+                      {userName}
+                    </Avatar>
+                  </ListItemIcon>
+                  <ListItemText primary={<b>{welcome}</b>}/>
+                </ListItem>
+
+                <Divider/>
+                <MenuItem onClick={openSettings}>
+                  <ListItemIcon> <SettingsIcon color="primary"/> </ListItemIcon>
+                  <ListItemText primary='Settings'/>
+                </MenuItem>
+
+                <Divider/>
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon> <ExitToAppIcon color="primary"/> </ListItemIcon>
+                  <ListItemText primary='Sign-out'/>
+                </MenuItem>
+              </Menu>
+            </Grid>
+
+          </Grid>
+
+        </Toolbar>
+
+      </AppBar>
+
+
+      <Box className={classes.drawer} aria-label="side panel">
+        <Hidden mdUp implementation="css">
+          <Drawer
+            variant="temporary"
+            anchor={theme.direction === "rtl" ? "right" : "left"}
+            open={openLeftDrawer}
+            onClose={toggleDrawer}
+            classes={{paper: classes.drawerPaper}}
+            ModalProps={{keepMounted: true}}
+          >
+            <SideBar selection={selection} setSelection={setSelection}/>
+          </Drawer>
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <Drawer
+            classes={{
+              paper: classes.drawerPaper
+            }}
+            variant="permanent"
+            open
+          >
+            <SideBar selection={selection} setSelection={setSelection}/>
+          </Drawer>
+        </Hidden>
+      </Box>
+
+      {/*Animation for logging out*/}
+      <Backdrop className={classes.backdrop} open={loggingOut}>
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Grid item>
+            <CircularProgress color="inherit"/>
+          </Grid>
+          <Grid item>
+            <Typography>Logging out</Typography>
+          </Grid>
+        </Grid>
+      </Backdrop>
     </>
   );
 }

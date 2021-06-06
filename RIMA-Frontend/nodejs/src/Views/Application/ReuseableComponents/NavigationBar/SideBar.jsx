@@ -1,178 +1,243 @@
-import React from "react";
-import {Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
+import React, {useState} from "react";
+import {Divider, Grid, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
 import {
   faBars,
   faBookReader,
   faBrain,
-  faChartBar,
-  faChartLine,
+  faChartBar, faChartLine,
   faChartPie,
-  faCloud,
-  faHandshake,
+  faCloud, faCogs, faHandshake,
   faPlus,
-  faTasks,
-  faUserFriends,
+  faTasks, faUserFriends,
   faWaveSquare
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Col, Container, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import {getItem} from "../../../../Services/utils/localStorage";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-  drawer: {
-    marginTop: 32,
-    width: drawerWidth,
-    flexShrink: 0,
+  toolBar: theme.mixins.toolbar,
+  listIcon: {
+    paddingLeft: theme.spacing(2),
+    color: theme.palette.primary.main,
   },
   drawerPaper: {
     width: drawerWidth,
-    background: "#172B4D",
-    color: theme.palette.common.white
-  },
-  icons: {
-    marginLeft: 16,
-    color: theme.palette.common.white
   },
   divider: {
-    backgroundColor: '#fff',
-    margin: theme.spacing(1, 0, 1, 0)
-  },
-  logo: {
-    margin: theme.spacing(3, 0, 2, 0)
+    backgroundColor: theme.palette.grey[300],
   },
   text: {
-    textAlign: "center",
-    color: '#fff'
-  }
+    color: theme.palette.grey[700],
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    // padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  nestedIndicators: {
+    paddingLeft: theme.spacing(6)
+  },
+  nestedSaved: {
+    paddingLeft: theme.spacing(4)
+  },
+  root: {
+    width: '100%',
+    maxWidth: drawerWidth,
+  },
 }));
 
 
-export default function SideBar(props) {
+export default function SideBar({selection, setSelection}) {
   const classes = useStyles();
-  const history = useHistory();
+  const history = useHistory()
+
+
+  const handleSelect = (e) => {
+    setSelection(e.currentTarget.id);
+    switch (e.currentTarget.id) {
+      case "addPublication":
+        history.push("/app/add-paper")
+        break;
+      case "myPublications":
+        history.push("/app/view-paper");
+        break;
+      case "interestOverview":
+        history.push("/app/cloud-chart/");
+        break;
+      case "recentInterest":
+        history.push("/app/pie-chart/");
+        break;
+      case "activities":
+        history.push("/app/bar-chart/");
+        break;
+      case "potentialInterest":
+        history.push("/app/concept-chart/");
+        break;
+      case "interestTrends":
+        history.push("/app/stream-chart/");
+        break;
+      case "tweetsAndPeople":
+        history.push("/recommendation/twitter-scanner/" + getItem("userId"))
+        break;
+      case "publications":
+        history.push("/app/topicsrecommend/" + getItem("userId"))
+        break;
+      case "topicTrends":
+        history.push("/app/topicbar/" + getItem("userId"))
+        break;
+      case "compareConferences":
+        history.push("/app/topicsresearch/" + getItem("userId"));
+        break;
+      case "compareResearchers":
+        history.push("/app/topicsauthors/" + getItem("userId"));
+        break;
+      case "settings":
+        history.push('/app/user-profile');
+        break;
+    }
+  }
 
   return (
     <>
-      <Drawer
-        className={classes.drawer}
-        anchor="left"
-        open={props.open}
-        onClose={props.toggleOpen}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div
-          role="presentation"
-          onKeyDown={props.toggleOpen}
-        >
-          <Container className={classes.logo}>
-            <Row className="align-items-center">
-              <Col>
-                <h1 className={classes.text}><b>RIMA</b></h1>
-              </Col>
-            </Row>
-          </Container>
+      <Grid container justify="center" alignItems="center" className={classes.toolBar}>
+        <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
+      </Grid>
+      <Divider className={classes.divider}/>
 
-          <Divider className={classes.divider}/>
+      <List className={classes.text}>
+        <ListItem button id="addPublication"
+                  selected={selection === "addPublication"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faPlus} />
+          </ListItemIcon>
+          <ListItemText primary="Add Publication" />
+        </ListItem>
 
-          <List>
-            <ListItem button onClick={() => history.push("/app/add-paper")}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faPlus} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Add Publication"/>
-            </ListItem>
+        <ListItem button id="myPublications"
+                  selected={selection === "myPublications"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faTasks}/>
+          </ListItemIcon>
+          <ListItemText primary="My Publications"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/view-paper")}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faTasks} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="My Publication"/>
-            </ListItem>
+        <Divider className={classes.divider}/>
 
-            <Divider className={classes.divider}/>
+        <ListItem button id="interestOverview"
+                  selected={selection === "interestOverview"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faCloud}/>
+          </ListItemIcon>
+          <ListItemText primary="Interest Overview"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/cloud-chart/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faCloud} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Interest Overview"/>
-            </ListItem>
+        <ListItem button id="recentInterest"
+                  selected={selection === "recentInterest"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faChartPie}/>
+          </ListItemIcon>
+          <ListItemText primary="Recent Interest"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/pie-chart/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faChartPie} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Recent Interest"/>
-            </ListItem>
+        <ListItem button id="activities"
+                  selected={selection === "activities"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faChartBar}/>
+          </ListItemIcon>
+          <ListItemText primary="Activities"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/bar-chart/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faChartBar} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Activities"/>
-            </ListItem>
+        <ListItem button id="potentialInterest"
+                  selected={selection === "potentialInterest"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faBrain}/>
+          </ListItemIcon>
+          <ListItemText primary="Potential Interest"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/concept-chart/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faBrain} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Potential Interest"/>
-            </ListItem>
+        <ListItem button id="interestTrends"
+                  selected={selection === "interestTrends"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faWaveSquare}/>
+          </ListItemIcon>
+          <ListItemText primary="Interest Trends"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/stream-chart/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faWaveSquare} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Interest Trends"/>
-            </ListItem>
+        <Divider className={classes.divider}/>
 
-            <Divider className={classes.divider}/>
+        <ListItem button id="tweetsAndPeople"
+                  selected={selection === "tweetsAndPeople"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faBars}/>
+          </ListItemIcon>
+          <ListItemText primary="Tweets and People"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/recommendation/twitter-scanner/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faBars} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Tweets & People"/>
-            </ListItem>
+        <ListItem button id="publications"
+                  selected={selection === "publications"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faBookReader}/>
+          </ListItemIcon>
+          <ListItemText primary="Publications"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/topicsrecommend/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faBookReader} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Publications"/>
-            </ListItem>
+        <Divider className={classes.divider}/>
 
-            <Divider className={classes.divider}/>
+        <ListItem button id="topicTrends"
+                  selected={selection === "topicTrends"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faChartLine}/>
+          </ListItemIcon>
+          <ListItemText primary="Topic Trends"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/topicbar/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faChartLine} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Topic Trends"/>
-            </ListItem>
+        <ListItem button id="compareConferences"
+                  selected={selection === "compareConferences"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faHandshake}/>
+          </ListItemIcon>
+          <ListItemText primary="Compare Conferences"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/topicsresearch/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faHandshake} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Compare Conference"/>
-            </ListItem>
+        <ListItem button id="compareResearchers"
+                  selected={selection === "compareResearchers"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faUserFriends}/>
+          </ListItemIcon>
+          <ListItemText primary="Compare Researchers"/>
+        </ListItem>
 
-            <ListItem button onClick={() => history.push("/app/topicsauthors/" + getItem("userId"))}>
-              <ListItemIcon>
-                <FontAwesomeIcon icon={faUserFriends} className={classes.icons}/>
-              </ListItemIcon>
-              <ListItemText primary="Compare Researcher"/>
-            </ListItem>
+        <Divider className={classes.divider}/>
 
-          </List>
-        </div>
-      </Drawer>
+        <ListItem button id="settings"
+                  selected={selection === "settings"}
+                  onClick={handleSelect}>
+          <ListItemIcon className={classes.listIcon}>
+            <FontAwesomeIcon icon={faCogs}/>
+          </ListItemIcon>
+          <ListItemText primary="Settings"/>
+        </ListItem>
+
+      </List>
+
     </>
   );
 }
