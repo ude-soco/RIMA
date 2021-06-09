@@ -78,7 +78,7 @@ export default function Admin(props) {
   return (
     <>
       {isRedirect ? <></> : <NavigationBar/>}
-      <div className="header bg-gradient-info mb-14 pt-14 pt-md-8"
+      <div className="header bg-gradient-info "
            style={customStyles.mainContainer}>
         <main className={classes.content}>
           <div className={classes.toolbar}/>

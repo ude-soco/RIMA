@@ -160,8 +160,8 @@ export default class TweetsAndPeople extends Component {
               },
             });
             if (i === 4) {
-               break;
-               }
+              break;
+            }
           }
         }
         const finalRowArray = [...rowArray].sort((a, b) => b.weight - a.weight);
@@ -503,14 +503,14 @@ export default class TweetsAndPeople extends Component {
   render() {
     const {tweets, users} = this.state;
 
-    window.onload=function(){
+    window.onload = function () {
       document.getElementById("search").click();
     };
     // console.log("the state is");
     // console.log(this.state.place);
     return (
       <>
-        <Container className="mt--7" xl="12">
+        <Container>
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">
               <Row className="align-items-center">
@@ -518,14 +518,17 @@ export default class TweetsAndPeople extends Component {
                   <h2>
                     Tweets & People
                   </h2>
-                  <p>Here you can get recommended tweets relevant to your interests. 
-                  The interest set below represents the top 5 interests in your interest profile. 
-                 <br/>
+                  <p>Here you can get recommended tweets relevant to your interests.
+                    The interest set below represents the top 5 interests in your interest profile.
+                    <br/>
 
-                  You can learn more about why/how a tweet is recommended to you:
-                  <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity score</strong> show you how relevant is the tweet to your interest profile <i>(basic explanation)</i></li>
-                  <li> Click on <strong>'Why this tweet?'</strong> to get more details  <i>(intermediate and advanced explanations)</i></li>
-                  </p> 
+                    You can learn more about why/how a tweet is recommended to you:
+                    <li> The <strong>color band</strong>, the <strong>highlighted words</strong> and the <strong>similarity
+                      score</strong> show you how relevant is the tweet to your interest profile <i>(basic
+                      explanation)</i></li>
+                    <li> Click on <strong>'Why this tweet?'</strong> to get more details <i>(intermediate and advanced
+                      explanations)</i></li>
+                  </p>
                 </Col>
               </Row>
 
@@ -615,7 +618,7 @@ export default class TweetsAndPeople extends Component {
                         handleTagSettingsChange={this.handleTagSettingsChange}
                         addNewTag={this.addNewTag}
                         //   changeHandler={this.changeHandler}
-                      ></TagSearch>
+                      />
                     </Col>
                     <ButtonGroup>
                       {/*                      <UncontrolledDropdown>
@@ -643,10 +646,10 @@ export default class TweetsAndPeople extends Component {
                         method="post"
                         onSubmit={this.handleSearchButtonClick} // should be triggered automatically
                       >
-                       <div style={{padding: '15px'}}>
-                        <Button id="search" className="bg-primary" type="submit">
-                          <i className="fas fa-search text-white"></i>
-                        </Button>
+                        <div style={{padding: '15px'}}>
+                          <Button id="search" className="bg-primary" type="submit">
+                            <i className="fas fa-search text-white"></i>
+                          </Button>
                         </div>
                       </Form>
 
@@ -750,22 +753,22 @@ export default class TweetsAndPeople extends Component {
                       {tweets.length > 0
                         ? (
                           tweets.map((tweet) => {
-                            if (this.state.loading === true) {
-                              this.setState({
-                                loading: false
-                              })
+                              if (this.state.loading === true) {
+                                this.setState({
+                                  loading: false
+                                })
+                              }
+                              return (
+                                <TweetCard
+                                  key={Math.random() * 99999999}
+                                  tweet={tweet}
+                                  keyword_tags={this.state.tags}
+                                  deleteTweet={this.deleteTweet.bind(this)}
+                                  newSavedTweet={this.newSavedTweet.bind(this)}
+                                />
+                              )
                             }
-                            return (
-                              <TweetCard
-                                key={Math.random() * 99999999}
-                                tweet={tweet}
-                                keyword_tags={this.state.tags}
-                                deleteTweet={this.deleteTweet.bind(this)}
-                                newSavedTweet={this.newSavedTweet.bind(this)}
-                              />
-                            )
-                          }
-                        ))
+                          ))
                         : (this.state.loading ? (
                           <div style={{marginTop: "8px"}}>
                             <h1 className="d-flex justify-content-center align-items-center">
@@ -832,7 +835,7 @@ const Tabs = () => {
           </NavLink>
         </NavItem>
       </Nav>
-      
+
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
           <Row>

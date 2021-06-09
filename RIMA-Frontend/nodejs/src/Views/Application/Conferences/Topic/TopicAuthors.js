@@ -34,9 +34,9 @@ class TopicAuthors extends React.Component {
       <>
 
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container  fluid>
           <Row>
-            <Col className="mb-5 mb-xl-0" xl="12">
+            <Col className="mb-5 mb-xl-0" >
               <Card className="bg-gradient-default1 shadow">
                 <CardHeader className="bg-transparent">
                   <Row className="align-items-center">

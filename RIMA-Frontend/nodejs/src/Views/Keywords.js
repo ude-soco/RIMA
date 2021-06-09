@@ -119,7 +119,7 @@ class Keywords extends React.Component {
       <>
 
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container  fluid>
           <Row>
             <Col className="order-xl-1" xl="12">
               <Card className="bg-secondary shadow">

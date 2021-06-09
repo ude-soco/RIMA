@@ -231,7 +231,7 @@ class ViewPaper extends React.Component {
       <>
 
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container  fluid>
           <Row>
             <div className="col">
               <Card className="shadow">

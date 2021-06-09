@@ -85,7 +85,6 @@ class ComparisonSlider extends React.Component {
       },
     },
     tweetseries: [],
-    data: [],
     series: [],
 
     coloroptions: {

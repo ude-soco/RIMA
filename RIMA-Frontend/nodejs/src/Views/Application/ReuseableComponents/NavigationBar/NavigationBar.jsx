@@ -216,10 +216,11 @@ export default function NavigationBar() {
 
             <Grid item component={Paper} style={{marginRight: 24}}>
               <TextField
-                label="Search for authors"
+                label="Compare with authors"
                 variant="filled"
                 size="small"
                 onChange={handleSearchAuthors}
+
 
               />
 
@@ -229,9 +230,12 @@ export default function NavigationBar() {
                     {suggestions.map((suggestion, index) => {
                       localStorage.setItem("userId", suggestion.id);
                       return (
-                        <ListItem key={index} button onClick={() => handleSelectAuthorComparison(suggestion.id)}>
-                          <ListItemText primary={`${suggestion.first_name} ${suggestion.last_name}`}/>
-                        </ListItem>
+                        <>
+                          <ListItem key={index} button onClick={() => handleSelectAuthorComparison(suggestion.id)}>
+                            <ListItemText primary={`${suggestion.first_name} ${suggestion.last_name}`}/>
+                          </ListItem>
+                          {index !== suggestions.length - 1 ? <Divider/> : <></>}
+                        </>
                       )
                     })}
                   </List>

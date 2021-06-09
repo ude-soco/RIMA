@@ -53,7 +53,7 @@ class TopicBar extends React.Component {
       <>
 
         {/* Page content */}
-        <Container className="mt--7" fluid style={{maxWidth: "1400px"}}>
+        <Container  fluid >
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">
               <Row className="align-items-center">

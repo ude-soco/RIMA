@@ -39,7 +39,7 @@ class BarChartPage extends React.Component {
     return (
       <>
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container  fluid>
           <Row>
             <Col className="mb-5 mb-xl-0" xl="12">
               <Card className="bg-gradient-default1 shadow">

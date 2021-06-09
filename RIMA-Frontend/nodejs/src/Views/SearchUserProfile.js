@@ -243,7 +243,7 @@ class SearchUserProfile extends React.Component {
           last_name={this.state.last_name}
           score={this.state.score}
         />
-        <Container className="mt--7" fluid>
+        <Container  fluid>
         <ComparisonSlider
             first_name={this.state.first_name}
             last_name={this.state.last_name}
