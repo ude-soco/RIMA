@@ -153,9 +153,7 @@ export default function NavigationBar() {
   const handleLogout = () => {
     setOpenProfile(null);
     setLoggingOut(!loggingOut);
-    setTimeout(() => {
-      logout();
-    }, 2000)
+    logout();
   }
 
 
