@@ -195,9 +195,6 @@ Step 3:- Install and activate python virtual environment for Windows (for [MacOS
 $ python -m venv venv                       # Installs a python virtual environment
 $ .\venv\Scripts\activate                   # Activates the python virtual environment 
 $ python -m pip install --upgrade pip       # Upgrades pip version
-
-$ cd RIMA-Backend                           # Move to RIMA-Backend directory
-
 $ pip install -r requirements-offline.txt   # Installs the required packages
 ```
 
