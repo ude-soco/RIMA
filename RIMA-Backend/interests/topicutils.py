@@ -1430,7 +1430,7 @@ method to get keyword data for stacked bar chart across years
 
 
 def getTopKeysForAllYear(list_of_years):
-    query = "select keywords,year from Topics where year in" + str(
+    query = "select DISTINCT keywords,year from Topics where year in" + str(
         tuple(list_of_years))
     lak_data = getTopics("", query)
     list_dicts = []
@@ -1472,7 +1472,7 @@ method to get topic data for stacked bar chart across years
 
 
 def getTopTopicsForAllYears(list_of_years):
-    query = "select topics,year from Topics where year in" + str(
+    query = "select DISTINCT topics,year from Topics where year in" + str(
         tuple(list_of_years))
     lak_data = getTopics("", query)
     list_dicts = []
