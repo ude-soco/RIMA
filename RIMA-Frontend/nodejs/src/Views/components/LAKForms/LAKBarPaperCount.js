@@ -56,7 +56,7 @@ class LAKBarPaperCount extends Component {
     selectTopic=e1.value;
     console.log("the topic is:",selectTopic)
     console.log("the value is:",this.state.selectVal)
-    fetch("http://127.0.0.1:8000/api/interests/topicdetails/"+e1.value+"/"+this.state.selectVal)
+    fetch("http://127.0.0.1:8000/api/conferences/topicdetails/"+e1.value+"/"+this.state.selectVal)
     .then(response =>  response.json())
     .then(json => {
         
@@ -101,7 +101,7 @@ class LAKBarPaperCount extends Component {
               dataPointSelection: function(event, chartContext, config) {
                 var title=config.w.config.xaxis.categories[config.dataPointIndex]
                 var url;
-                fetch("http://127.0.0.1:8000/api/interests/fetchpaper/"+title)
+                fetch("http://127.0.0.1:8000/api/conferences/fetchpaper/"+title)
                 .then(response =>  response.json())
                 .then(json => {
                   url=json.url;
@@ -141,7 +141,7 @@ class LAKBarPaperCount extends Component {
     selectVal=e.value;
     console.log("the selected value:",selectVal)
     if(this.state.selectkey=='topic'){
-    fetch("http://127.0.0.1:8000/api/interests/populatetopics/"+e.value)
+    fetch("http://127.0.0.1:8000/api/conferences/populatetopics/"+e.value)
     .then(response =>  response.json())
     .then(json => {
         
@@ -156,7 +156,7 @@ class LAKBarPaperCount extends Component {
   selectVal=e.value;
 }
 else{
-  fetch("http://127.0.0.1:8000/api/interests/populatekeys/"+e.value)
+  fetch("http://127.0.0.1:8000/api/conferences/populatekeys/"+e.value)
     .then(response =>  response.json())
     .then(json => {
         

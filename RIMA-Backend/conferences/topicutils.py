@@ -1,4 +1,5 @@
 #Done by Swarna
+# Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 import json
 import urllib.parse as up
 import psycopg2
@@ -30,7 +31,34 @@ from pprint import pprint
 from django.conf import settings
 
 
-def getTopics(year, query):
+
+'''
+BAB get conf events/years
+'''
+# BAB 08.06.2021:: Extension for other conferences other than LAK 
+
+def getConfEvents(conferenceName):
+    print("start")
+    query = "select distinct year from Topics"
+    #print(createConcatenatedColumn())
+    lak_data = getTopics(conferenceName,"", query)
+    events_list = lak_data['year']
+    
+    print(
+        "******************************************************************************"
+    )
+    
+    print(events_list)
+    list_confEvents = [{
+        "value": a,
+        "label": a
+    } for a in events_list]
+
+    print('list_confEvents', list_confEvents)
+    return list_confEvents
+
+#BAB 08.06.2021
+def getTopics(conferenceName,year, query):
     try:
         up.uses_netloc.append("postgres")
         url = up.urlparse(
@@ -43,10 +71,13 @@ def getTopics(year, query):
                                 port=url.port)
         cursor = conn.cursor()
         postgreSQL_select_Query = query
-        cursor.execute(postgreSQL_select_Query)
-        lak_records = cursor.fetchall()
+        #cursor.execute(postgreSQL_select_Query)
+        #lak_records = cursor.fetchall()
         #sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
         data_lak = pd.read_sql(postgreSQL_select_Query, conn)
+        print('getTopics data_lak')
+        print(data_lak)
+        print(type(data_lak))
     #for val in mobile_records:
     #print(val)
     except (Exception, psycopg2.Error) as error:
@@ -64,12 +95,13 @@ def getTopics(year, query):
 method to get top 5/10 keywords for topic cloud
 '''
 
+#BAB 08.06.2021
 
-def applyTopicMiningKeyword(year, number):
+def applyTopicMiningKeyword(conferenceName,year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
     #print(createConcatenatedColumn())
-    lak_data = getTopics(year, query)
+    lak_data = getTopics(conferenceName,year, query)
     topics_list = lak_data['keywords'].values[0]
     topics_list = topics_list.replace("{", "")
     topics_list = topics_list.replace("}", "")
@@ -113,12 +145,13 @@ def applyTopicMiningKeyword(year, number):
 method to fetch top 5/10 topics for the topiccloud
 '''
 
+#BAB 08.06.2021
 
-def applyTopicMiningTopic(year, number):
+def applyTopicMiningTopic(conferenceName,year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
     #print(createConcatenatedColumn())
-    lak_data = getTopics(year, query)
+    lak_data = getTopics(conferenceName,year, query)
     topics_list = lak_data['topics'].values[0]
     topics_list = topics_list.replace("{", "")
     topics_list = topics_list.replace("}", "")
@@ -172,11 +205,11 @@ def listToString(s):
 get top 10 keywords for the bar chart
 '''
 
-
-def getTopKeywords(year):
+#BAB
+def getTopKeywords(conferenceName, year):
     query = "select t.keywords,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
         year) + "'"
-    lak_data = getTopics(year, query)
+    lak_data = getTopics(conferenceName,year, query)
     lak_data[
         "titleandabstract"] = lak_data["title"] + " " + lak_data["abstract"]
     topics_list = lak_data['keywords'].values[0]
@@ -234,11 +267,11 @@ top 10 topics for bar chart and also the data as per the bar chart
 '''
 
 
-def getTopTopics(year):
+def getTopTopics(conferenceName,year):
     print("Bar chart...")
     query = "select t.topics,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
         year) + "'"
-    lak_data = getTopics(year, query)
+    lak_data = getTopics(conferenceName,year, query)
     lak_data[
         "titleandabstract"] = lak_data["title"] + " " + lak_data["abstract"]
     topics_list = lak_data['topics'].values[0]
@@ -593,10 +626,10 @@ def compareTopics(year1, year2):
     print(calculate_similarity(["learning analytics"], ["learning analytics"]))
     return "success"
 
-
-def getAllKeywordsAllYears():
+#BAB
+def getAllKeywordsAllYears(conferenceName):
     query = "select keywords from Topics"
-    topics = getTopics("", query)
+    topics = getTopics(conferenceName,"", query)
     list_topics = []
     list_topics_flat = []
     print(len(topics["keywords"].values))
@@ -620,9 +653,9 @@ def getAllKeywordsAllYears():
     return list_dict
 
 
-def getAllTopicsAllYears():
+def getAllTopicsAllYears(conferenceName):
     query = "select topics from Topics"
-    topics = getTopics("", query)
+    topics = getTopics(conferenceName,"", query)
     list_topics = []
     list_topics_flat = []
     print(len(topics["topics"].values))
@@ -646,11 +679,11 @@ def getAllTopicsAllYears():
     return list_dict
 
 
-def getKeyWeightsAllYears(topic):
+def getKeyWeightsAllYears(conferenceName,topic):
     topic1 = topic
     topic = topic.lower()
     query = "select distinct(t.keywords),t.year from Topics t join LAKData l on t.year=l.year where lower(t.keywords) like '%" + topic + "%'"
-    topics_yearwise = getTopics("", query)
+    topics_yearwise = getTopics(conferenceName,"", query)
     list_dicts = []
     for val in topics_yearwise["keywords"].values:
         topics_list_year1 = val.replace("{", "")
@@ -678,13 +711,13 @@ def getKeyWeightsAllYears(topic):
     print(df_singletopic)
     return df_singletopic['weight'].values, df_singletopic['year'].values
 
-
-def getTopicWeightsAllYears(topic):
+#BAB
+def getTopicWeightsAllYears(conferenceName,topic):
 
     topic1 = topic
     topic = topic.lower()
     query = "select distinct(t.topics),t.year from Topics t join LAKData l on t.year=l.year where lower(t.topics) like '%" + topic + "%'"
-    topics_yearwise = getTopics("", query)
+    topics_yearwise = getTopics(conferenceName,"", query)
     list_dicts = []
     for val in topics_yearwise["topics"].values:
         topics_list_year1 = val.replace("{", "")
@@ -717,10 +750,10 @@ def getTopicWeightsAllYears(topic):
 method to get keyword data for pie chart
 '''
 
-
-def getDataForPieKeys(year, number):
+#BAB
+def getDataForPieKeys(conferenceName,year, number):
     query = "select distinct(t.keywords) from Topics t join LAKData l on t.year=l.year where t.year='" + year + "'"
-    topics_yearwise = getTopics("", query)
+    topics_yearwise = getTopics(conferenceName,"", query)
     list_dicts = []
     for val in topics_yearwise["keywords"].values:
         topics_list_year1 = val.replace("{", "")
@@ -766,10 +799,10 @@ method to get data for pie chart - topics
 '''
 
 
-def getDataForPieTopics(year, number):
+def getDataForPieTopics(conferenceName,year, number):
     print(year, number)
     query = "select distinct(t.topics) from Topics t join LAKData l on t.year=l.year where t.year='" + year + "'"
-    topics_yearwise = getTopics("", query)
+    topics_yearwise = getTopics(conferenceName,"", query)
     list_dicts = []
     for val in topics_yearwise["topics"].values:
         topics_list_year1 = val.replace("{", "")
@@ -815,8 +848,8 @@ def getDataForPieTopics(year, number):
 method to get keyword weights over all years
 '''
 
-
-def getMultipleYearKeyJourney(listoftopics):
+#BAB
+def getMultipleYearKeyJourney(conferenceName,listoftopics):
     try:
         list_weights = []
         list_years = []
@@ -825,7 +858,7 @@ def getMultipleYearKeyJourney(listoftopics):
             '2019', '2020'
         ]
         for val in listoftopics:
-            weights, years = getKeyWeightsAllYears(val)
+            weights, years = getKeyWeightsAllYears(conferenceName,val)
             list_weights.append(list(weights))
             list_years.append(list(years))
 
@@ -846,9 +879,8 @@ def getMultipleYearKeyJourney(listoftopics):
 '''
 method to get topic weights over all years
 '''
-
-
-def getMultipleYearTopicJourney(listoftopics):
+#BAB
+def getMultipleYearTopicJourney(conferenceName,listoftopics):
 
     list_weights = []
     list_years = []
@@ -857,7 +889,7 @@ def getMultipleYearTopicJourney(listoftopics):
         '2020'
     ]
     for val in listoftopics:
-        weights, years = getTopicWeightsAllYears(val)
+        weights, years = getTopicWeightsAllYears(conferenceName,val)
         list_weights.append(list(weights))
         list_years.append(list(years))
     print(list_weights)
@@ -869,14 +901,13 @@ def getMultipleYearTopicJourney(listoftopics):
             next(l1) if str(index + 2011) in l2 else '0' for index in range(10)
         ]
         list1_modified.append(sub_list)
-    print(list1_modified)
     return list1_modified, lak_years
 
 
 def getPaperIDFromPaperTitle(title):
     #title="Towards visual analytics for teachers dynamic diagnostic pedagogical decision-making"
     query = "select id from LAKData where title like'" + title + "%'"
-    lak_id = getTopics("", query)
+    lak_id = getTopics("","", query)
     print(lak_id)
     val = lak_id['id'].values[0]
     paper_data = requests.get(
@@ -1082,9 +1113,9 @@ obtain common keywords for conference venn diagram
 '''
 
 
-def generateVennDataKeys(year1, year2):
+def generateVennDataKeys(conferenName,year1, year2):
     query_year1 = "select keywords from Topics where year='" + year1 + "'"
-    topics_yearwise1 = getTopics("", query_year1)
+    topics_yearwise1 = getTopics(conferenName,"", query_year1)
     list_dicts = []
     for val in list(topics_yearwise1["keywords"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1106,7 +1137,7 @@ def generateVennDataKeys(year1, year2):
     list_topics_y1 = keys[0:10]
     print(list_topics_y1)
     query_year2 = "select keywords from Topics where year='" + year2 + "'"
-    topics_yearwise2 = getTopics("", query_year2)
+    topics_yearwise2 = getTopics(conferenName,"", query_year2)
     list_dicts = []
     for val in list(topics_yearwise2["keywords"].values):
         topics_list_year2 = val.replace("{", "")
@@ -1169,9 +1200,9 @@ Obtain common topics for conference venn data
 '''
 
 
-def generateVennData(year1, year2):
+def generateVennData(conferenName,year1, year2):
     query_year1 = "select topics from Topics where year='" + year1 + "'"
-    topics_yearwise1 = getTopics("", query_year1)
+    topics_yearwise1 = getTopics(conferenName,"", query_year1)
     list_dicts = []
     for val in list(topics_yearwise1["topics"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1193,7 +1224,7 @@ def generateVennData(year1, year2):
     list_topics_y1 = keys[0:10]
     print(list_topics_y1)
     query_year2 = "select topics from Topics where year='" + year2 + "'"
-    topics_yearwise2 = getTopics("", query_year2)
+    topics_yearwise2 = getTopics(conferenName,"", query_year2)
     list_dicts = []
     for val in list(topics_yearwise2["topics"].values):
         topics_list_year2 = val.replace("{", "")
@@ -1429,10 +1460,11 @@ method to get keyword data for stacked bar chart across years
 '''
 
 
-def getTopKeysForAllYear(list_of_years):
-    query = "select keywords,year from Topics where year in" + str(
+def getTopKeysForAllYear(conferenceName,list_of_years):
+    # BAB DISTINCT
+    query = "select DISTINCT keywords,year from Topics where year in" + str(
         tuple(list_of_years))
-    lak_data = getTopics("", query)
+    lak_data = getTopics(conferenceName,"", query)
     list_dicts = []
     for val in list(lak_data["keywords"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1470,11 +1502,14 @@ def getTopKeysForAllYear(list_of_years):
 method to get topic data for stacked bar chart across years
 '''
 
-
-def getTopTopicsForAllYears(list_of_years):
-    query = "select topics,year from Topics where year in" + str(
+#BAB
+def getTopTopicsForAllYears(conferenceName,list_of_years):
+    # BAB DISTINCT
+    query = "select DISTINCT topics,year from Topics where year in" + str(
         tuple(list_of_years))
-    lak_data = getTopics("", query)
+    lak_data = getTopics(conferenceName,"", query)
+    print('tuple',str(tuple(list_of_years)))
+    print('BAB', lak_data)
     list_dicts = []
     for val in list(lak_data["topics"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1503,7 +1538,10 @@ def getTopTopicsForAllYears(list_of_years):
                                                  index=lak_data.index)
     lak_data = lak_data[['topic', 'weight', 'year']]
     matrix = lak_data.set_index(['topic', 'year']).unstack(fill_value=0)
-    print(matrix)
+    """
+     BAB matrix = lak_data.set_index(['topic', 'year']).unstack(fill_value=0)
+    """
+    print('BAB',matrix)
     return [matrix.values.tolist()] + [matrix.index.tolist()
                                        ] + [matrix.columns.levels[1].tolist()]
 
@@ -1724,11 +1762,12 @@ def getFlowChartDataKeywords(year, searchword):
     dict_nodes = {"nodes": list_nodedata, "links": list_edges}
     return dict_nodes
 
+#BAB 08.06.2021
 
-def getAbstractbasedonKeyword(year, keyword):
+def getAbstractbasedonKeyword(conferenceName,year, keyword):
     keyword = keyword.lower()
     query = "select abstract,title from LAKData where (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%') and year='" + year + "'"
-    LakAbstract = getTopics("", query)
+    LakAbstract = getTopics(conferenceName,"", query)
     LakAbstract["titleAndAbstract"] = LakAbstract[
         "title"] + "\n" + LakAbstract["abstract"]
     dict_lists = []

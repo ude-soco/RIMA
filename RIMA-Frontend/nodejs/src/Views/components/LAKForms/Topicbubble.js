@@ -73,7 +73,7 @@ class Topicbubble extends Component {
     // window.alert(`Clicked node ${nodeId}`);
 
     fetch(
-      "http://127.0.0.1:8000/api/interests/getabstractdetails/" +
+      "http://127.0.0.1:8000/api/conferences/getabstractdetails/" +
       nodeId +
       "/" +
       this.state.selectYear
@@ -111,7 +111,7 @@ class Topicbubble extends Component {
   selectValue(e) {
     if (e.value === "topic") {
       fetch(
-        "http://127.0.0.1:8000/api/interests/getoverviewtopicdetails/" +
+        "http://127.0.0.1:8000/api/conferences/getoverviewtopicdetails/" +
         e.value +
         "/" +
         this.state.selectYear
@@ -126,7 +126,7 @@ class Topicbubble extends Component {
     }
     if (e.value === "keyword") {
       fetch(
-        "http://127.0.0.1:8000/api/interests/getoverviewkeydetails/" +
+        "http://127.0.0.1:8000/api/conferences/getoverviewkeydetails/" +
         e.value +
         "/" +
         this.state.selectYear

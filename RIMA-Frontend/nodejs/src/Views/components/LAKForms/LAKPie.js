@@ -11,7 +11,7 @@ import {
   Row,
 } from "reactstrap";
 import "d3-transition";
-import {BASE_URL_INTEREST} from "../../../Services/constants";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 import Highlighter from "react-highlight-words";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -51,8 +51,8 @@ class LAKPie extends Component {
 
   displayAbstract(param) {
     fetch(
-      `${BASE_URL_INTEREST}` +
-      "getabstractdetails/" +
+      `${BASE_URL_CONFERENCE}` +
+      "getabstractdetails/" + this.props.conferenceName + "/"+
       param +
       "/" +
       this.state.selectyear
@@ -99,7 +99,7 @@ class LAKPie extends Component {
   componentDidMount() {
     //console.log("the json is ******************")
     const displayabstract = this.displayAbstract;
-    fetch(BASE_URL_INTEREST + "gettopicsforpie/10/2011")
+    fetch(BASE_URL_CONFERENCE + "gettopicsforpie/lak/10/2011")
       .then((response) => response.json())
 
       .then((json) => {
@@ -164,8 +164,8 @@ class LAKPie extends Component {
     const displayabstract = this.displayAbstract;
 
     fetch(
-      BASE_URL_INTEREST +
-      "gettopicsforpie/" +
+      BASE_URL_CONFERENCE +
+      "gettopicsforpie/" + this.props.conferenceName + "/"+
       this.state.selectnum +
       "/" +
       this.state.selectyear
@@ -225,8 +225,8 @@ class LAKPie extends Component {
   selectKey(e) {
     const displayabstract = this.displayAbstract;
     fetch(
-      BASE_URL_INTEREST +
-      "getkeysforpie/" +
+      BASE_URL_CONFERENCE +
+      "getkeysforpie/" + this.props.conferenceName + "/"+
       this.state.selectnum +
       "/" +
       this.state.selectyear
@@ -304,6 +304,9 @@ class LAKPie extends Component {
       modalBody,
     } = this.state;
 
+    const yeardata =  this.props.confEvents; // BAB 09.06.2021  years/data can be passed in props with the conference name. 
+
+
     const numbers = [
       {
         value: "5",
@@ -314,48 +317,7 @@ class LAKPie extends Component {
         label: "10",
       },
     ];
-    const yeardata = [
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+
 
     //var{items,arr_keys,arr_vals}=this.state;
 
