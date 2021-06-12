@@ -188,58 +188,38 @@ Step 2:- Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/downl
 Step 3:- Install and activate python virtual environment for Windows (for [MacOS](https://programwithus.com/learn/python/pip-virtualenv-mac) and [Ubuntu](https://linuxize.com/post/how-to-create-python-virtual-environments-on-ubuntu-18-04/))
 
 - Move to the directory ``RIMA-Backend``
-  
-- Open a command prompt/terminal and type the following commands
+
+- Open a command prompt with admin rights or terminal and type the following commands
 
 ```
-$ pip install virtualenv
-$ pip install virtualenv-wrapper
+$ python -m venv venv                       # Installs a python virtual environment
+$ .\venv\Scripts\activate                   # Activates the python virtual environment 
+$ python -m pip install --upgrade pip       # Upgrades pip version
+
+$ cd RIMA-Backend                           # Move to RIMA-Backend directory
+
+$ pip install -r requirements-offline.txt   # Installs the required packages
 ```
 
-IF the following warning appears,
+Step 4:- Rename the environment variable file from ``.env.example`` to ``.env``
 
-```
-WARNING: The script virtualenv.exe is installed in 'C:\Users\<user_name>\AppData\Roaming\Python\Python37\Scripts' which is not on PATH.
-Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-```
+Step 5:- Edit the environment file to add additional environment variables
 
-Add the path ``'C:\Users\<user_name>\AppData\Roaming\Python\Python37\Scripts'`` to your system environment variable ``Path``, where ``<user_name>`` is your username in the operating system
-
-- Type ``virtualenv venv`` to create the virtual environment in command prompt
-
-- Type ``.\venv\Script\activate`` to activate the virtual environment
-
-Step 4:- Install the packages by typing ``pip install -r requirements-offline.txt``
-
-Step 5:- Rename the environment variable file from ``.env.example`` to ``.env``
-
-Step 6:- Edit the environment file to add additional environment variables
-
-Step 7:- Make sure to open another command prompt with admin rights
-
-- Locate the virtual environment and activate 
-- Move to the directory ``RIMA-Backend`` 
-- Type the following commands
-
+Step 6:- Type the following commands to install spacy and its libraries
 ```
 $ python -m spacy download en
-
-$ python -c "import nltk;nltk.download('stopwords')"
-$ python -c "import nltk;nltk.download('punkt')"
-$ python -c "import nltk;nltk.download('sentiwordnet')"
-
-$ pip install eventlet
+$ python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
 ```
 
-Step 8:- Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) ([MacOS](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298) and [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-de))
+Step 7:- Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) ([MacOS](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298) and [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-de))
 
-Step 9:- Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and move the model inside the ``RIMA-Backend``
+Step 8:- Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the ``RIMA-Backend``
 
-Step 10:- Type ``python manage.py migrate`` to create the database
+Step 9:- Type ``python manage.py migrate`` to create the database
 
-Step 11:- Type ``python manage.py runserver`` to run the django server
+Step 10:- Type ``python manage.py runserver`` to run the django server
 
-Step 12:- Open another command prompt/terminal
+Step 11:- Open another command prompt with admin rights or terminal
 
 - Locate the virtual environment and activate
 - Move to the directory ``RIMA-Backend``
