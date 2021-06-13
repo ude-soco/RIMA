@@ -140,7 +140,7 @@ class PotentialInterests extends React.Component {
                       larger the area the greater the interest).
                     </Typography>
                   } arrow style={{cursor: "pointer"}}>
-                    <HelpIcon color="disabled"/>
+                    <HelpIcon />
                   </Tooltip>
                 </Grid>
               </Grid>
@@ -177,7 +177,7 @@ class PotentialInterests extends React.Component {
                       larger the area the greater the interest).
                     </Typography>
                   } arrow style={{cursor: "pointer"}}>
-                    <HelpIcon color="disabled"/>
+                    <HelpIcon />
                   </Tooltip>
                 </Grid>
               </Grid>
