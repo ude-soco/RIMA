@@ -3,8 +3,13 @@ import {Grid, makeStyles} from "@material-ui/core";
 import InterestOverview from "./InterestOverview/InterestOverview";
 import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
+import ConceptPage from "../../ConceptChart";
+import StreamChart from "../../components/Chart/StreamChart";
 
 const useStyles = makeStyles(theme => ({
+  spacing: {
+    padding: theme.spacing(2)
+  },
   cardHeight: {
     height: "100%",
     padding: theme.spacing(2)
@@ -22,13 +27,23 @@ export default function Dashboard() {
         </Grid>
 
         <Grid item>
-          <Grid container spacing={2} >
-            <Grid item lg={4} >
+          <Grid container spacing={2}>
+            <Grid item lg={4}>
               <RecentInterest classes={classes}/>
             </Grid>
 
             <Activities classes={classes}/>
           </Grid>
+        </Grid>
+
+        <Grid item>
+          <Grid container spacing={2}>
+            <StreamChart classes={classes}/>
+          </Grid>
+        </Grid>
+
+        <Grid item lg={8}>
+          <ConceptPage/>
         </Grid>
 
       </Grid>

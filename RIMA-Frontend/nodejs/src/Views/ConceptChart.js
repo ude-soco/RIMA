@@ -1,65 +1,50 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Chart from "chart.js";
 import ConceptMapContainer from "./components/ConceptMap/";
-import { Card, CardHeader, CardBody, Container, Row, Col, CardImg, CardTitle, CardSubtitle, CardText, Button } from "reactstrap";
+import {Card, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 
 // core components
-import { chartOptions, parseOptions } from "Services/variables/charts.js";
+import {chartOptions, parseOptions} from "Services/variables/charts.js";
+import {CardContent, Typography} from "@material-ui/core";
 
-import Header from "./components/Headers/Header.js";
+export default function ConceptPage() {
 
-class ConceptPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeNav: 1,
-      chartExample1Data: "data1",
-    };
+  const [state, setState] = useState({
+    activeNav: 1,
+    chartExample1Data: "data1",
+  });
+
+  useEffect(() => {
     if (window.Chart) {
       parseOptions(Chart, chartOptions());
     }
-  }
-  toggleNavs = (e, index) => {
+  })
+  const toggleNavs = (e, index) => {
     e.preventDefault();
-    this.setState({
+    setState({
+      ...state,
       activeNav: index,
       chartExample1Data:
         this.state.chartExample1Data === "data1" ? "data2" : "data1",
     });
   };
-  render() {
-    return (
-      <>
+
+  return (
+    <>
         {/* Page content */}
-        <Container  fluid>
-          <Row>
-            <Col className="mb-5 mb-xl-0" xl="12">
-              <Card className="bg-gradient-default1 shadow">
-                <CardHeader className="bg-transparent">
-                  <Row className="align-items-center">
-                    <div className="col">
-                      <h6 className="text-uppercase text-light1 ls-1 mb-1">
-                        {/* Overview */}
-                      </h6>
-                      <h2 className="text-white1 mb-0">Potential Interests</h2>
-                      <p>
-                        This chart uses your top 5 interests to infer your
-                        potential interests. You can see them on the right side
-                        of the graph.
-                      </p>
-                    </div>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                 <ConceptMapContainer />
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+      <Card>
+        <CardContent>
+          <Typography variant="h5" gutterBottom> Potential Interest </Typography>
+          <Typography gutterBottom>
+            This chart uses your top 5 interests to infer your
+            potential interests. You can see them on the right side
+            of the graph.
+          </Typography>
+
+          <ConceptMapContainer />
+        </CardContent>
+      </Card>
       </>
     );
-  }
-}
 
-export default ConceptPage;
+}

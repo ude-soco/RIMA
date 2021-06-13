@@ -74,14 +74,16 @@ export default function InterestOverview({classes}) {
             <Grid item>
               <Grid container justify="flex-end" alignItems="center">
                 <Grid item>
-                  <Tooltip title={!openDrawer ? "Show description" : "Show only tag cloud"} arrow>
+                  <Tooltip title={!openDrawer ?
+                    <Typography> Show description </Typography> :
+                    <Typography> Show only tag cloud </Typography>} arrow>
                     <Grid item>
                       <Switch color="primary" checked={openDrawer} onChange={() => setOpenDrawer(!openDrawer)}/>
                     </Grid>
                   </Tooltip>
                 </Grid>
                 <Grid item>
-                  <Tooltip title="Manage interests" arrow>
+                  <Tooltip title={<Typography>Manage interests</Typography>} arrow>
                     <IconButton onClick={() => history.push("/app/Keyword")}>
                       <Settings color="primary"/>
                     </IconButton>

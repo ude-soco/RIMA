@@ -84,21 +84,21 @@ export default function SideBar({selection, setSelection}) {
       case "myPublications":
         history.push("/app/view-paper");
         break;
-      case "interestOverview":
-        history.push("/app/cloud-chart/");
-        break;
-      case "recentInterest":
-        history.push("/app/pie-chart/");
-        break;
-      case "activities":
-        history.push("/app/bar-chart/");
-        break;
-      case "potentialInterest":
-        history.push("/app/concept-chart/");
-        break;
-      case "interestTrends":
-        history.push("/app/stream-chart/");
-        break;
+      // case "interestOverview":
+      //   history.push("/app/cloud-chart/");
+      //   break;
+      // case "recentInterest":
+      //   history.push("/app/pie-chart/");
+      //   break;
+      // case "activities":
+      //   history.push("/app/bar-chart/");
+      //   break;
+      // case "potentialInterest":
+      //   history.push("/app/concept-chart/");
+      //   break;
+      // case "interestTrends":
+      //   history.push("/app/stream-chart/");
+      //   break;
       case "tweetsAndPeople":
         history.push("/recommendation/twitter-scanner/" + getItem("userId"))
         break;
@@ -177,25 +177,25 @@ export default function SideBar({selection, setSelection}) {
         {/*  <ListItemText primary="Activities"/>*/}
         {/*</ListItem>*/}
 
-        <ListItem button id="potentialInterest"
-                  selected={selectedList("potentialInterest")}
-                  onClick={handleSelect}
-                  className={selectedList("potentialInterest")}>
-          <ListItemIcon className={classes.listIconNested}>
-            <TimelineIcon className={selectedList("potentialInterest")}/>
-          </ListItemIcon>
-          <ListItemText primary="Potential Interest"/>
-        </ListItem>
+        {/*<ListItem button id="potentialInterest"*/}
+        {/*          selected={selectedList("potentialInterest")}*/}
+        {/*          onClick={handleSelect}*/}
+        {/*          className={selectedList("potentialInterest")}>*/}
+        {/*  <ListItemIcon className={classes.listIconNested}>*/}
+        {/*    <TimelineIcon className={selectedList("potentialInterest")}/>*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText primary="Potential Interest"/>*/}
+        {/*</ListItem>*/}
 
-        <ListItem button id="interestTrends"
-                  selected={selectedList("interestTrends")}
-                  onClick={handleSelect}
-                  className={selectedList("interestTrends")}>
-          <ListItemIcon className={classes.listIconNested}>
-            <TrendingUpIcon className={selectedList("interestTrends")}/>
-          </ListItemIcon>
-          <ListItemText primary="Interest Trends"/>
-        </ListItem>
+        {/*<ListItem button id="interestTrends"*/}
+        {/*          selected={selectedList("interestTrends")}*/}
+        {/*          onClick={handleSelect}*/}
+        {/*          className={selectedList("interestTrends")}>*/}
+        {/*  <ListItemIcon className={classes.listIconNested}>*/}
+        {/*    <TrendingUpIcon className={selectedList("interestTrends")}/>*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText primary="Interest Trends"/>*/}
+        {/*</ListItem>*/}
 
 
         {/* RECOMMENDATION */}

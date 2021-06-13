@@ -108,14 +108,14 @@ let routes = [
     layout: "/app",
     display: "none",
   },
-  {
-    path: "/concept-chart",
-    name: "Concept Chart",
-    icon: "fas fa-cloud text-info",
-    component: ConceptChartPage,
-    layout: "/app",
-    display: "none",
-  },
+  // {
+  //   path: "/concept-chart",
+  //   name: "Concept Chart",
+  //   icon: "fas fa-cloud text-info",
+  //   component: ConceptChartPage,
+  //   layout: "/app",
+  //   display: "none",
+  // },
   {
     path: "/stream-chart",
     name: "Stream Chart",
