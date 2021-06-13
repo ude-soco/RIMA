@@ -3,7 +3,7 @@ import React from "react";
 import Chart from "chart.js";
 import PieChart from "./components/Chart/PieChart"
 import BarChart from "./components/Chart/BarChart"
-import CloudChart from "./components/Chart/CloudChart"
+import CloudChart from "./Application/ReuseableComponents/Charts/CloudChart/CloudChart"
 
 
 import {

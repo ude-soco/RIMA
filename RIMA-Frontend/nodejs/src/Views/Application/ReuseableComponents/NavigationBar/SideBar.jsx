@@ -75,6 +75,9 @@ export default function SideBar({selection, setSelection}) {
   const handleSelect = (e) => {
     setSelection(e.currentTarget.id);
     switch (e.currentTarget.id) {
+      case "dashboard":
+        history.push("/app/dashboard")
+        break;
       case "addPublication":
         history.push("/app/add-paper")
         break;
@@ -133,67 +136,66 @@ export default function SideBar({selection, setSelection}) {
 
       {/* DASHBOARD */}
       <List className={classes.text}>
-        <ListItem button onClick={() => setOpenDashboard(!openDashboard)}>
+        <ListItem button id="dashboard"
+                  selected={selectedList("dashboard")}
+                  onClick={handleSelect}
+                  className={selectedList("dashboard")}>
           <ListItemIcon className={classes.listIcon}>
-            <DashboardIcon/>
+            <DashboardIcon className={selectedList("dashboard")}/>
           </ListItemIcon>
           <ListItemText primary="Dashboard"/>
-          {openDashboard ? <ExpandLess/> : <ExpandMore/>}
         </ListItem>
 
-        <Collapse in={openDashboard} unmountOnExit>
+        {/* TODO: To be removed */}
+        {/*<ListItem button id="interestOverview"*/}
+        {/*          selected={selectedList("interestOverview")}*/}
+        {/*          onClick={handleSelect}*/}
+        {/*          className={selectedList("interestOverview")}>*/}
+        {/*  <ListItemIcon className={classes.listIconNested}>*/}
+        {/*    <CloudIcon className={selectedList("interestOverview")}/>*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText primary="Interest Overview"/>*/}
+        {/*</ListItem>*/}
 
-          <ListItem button id="interestOverview"
-                    selected={selectedList("interestOverview")}
-                    onClick={handleSelect}
-                    className={selectedList("interestOverview")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <CloudIcon className={selectedList("interestOverview")}/>
-            </ListItemIcon>
-            <ListItemText primary="Interest Overview"/>
-          </ListItem>
+        {/*<ListItem button id="recentInterest"*/}
+        {/*          selected={selectedList("recentInterest")}*/}
+        {/*          onClick={handleSelect}*/}
+        {/*          className={selectedList("recentInterest")}>*/}
+        {/*  <ListItemIcon className={classes.listIconNested}>*/}
+        {/*    <PieChartIcon className={selectedList("recentInterest")}/>*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText primary="Recent Interest" className={selectedList("recentInterest")}/>*/}
+        {/*</ListItem>*/}
 
-          <ListItem button id="recentInterest"
-                    selected={selectedList("recentInterest")}
-                    onClick={handleSelect}
-                    className={selectedList("recentInterest")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <PieChartIcon className={selectedList("recentInterest")}/>
-            </ListItemIcon>
-            <ListItemText primary="Recent Interest" className={selectedList("recentInterest")}/>
-          </ListItem>
+        <ListItem button id="activities"
+                  selected={selectedList("activities")}
+                  onClick={handleSelect}
+                  className={selectedList("activities")}>
+          <ListItemIcon className={classes.listIconNested}>
+            <BarChartIcon className={selectedList("activities")}/>
+          </ListItemIcon>
+          <ListItemText primary="Activities"/>
+        </ListItem>
 
-          <ListItem button id="activities"
-                    selected={selectedList("activities")}
-                    onClick={handleSelect}
-                    className={selectedList("activities")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <BarChartIcon className={selectedList("activities")}/>
-            </ListItemIcon>
-            <ListItemText primary="Activities"/>
-          </ListItem>
+        <ListItem button id="potentialInterest"
+                  selected={selectedList("potentialInterest")}
+                  onClick={handleSelect}
+                  className={selectedList("potentialInterest")}>
+          <ListItemIcon className={classes.listIconNested}>
+            <TimelineIcon className={selectedList("potentialInterest")}/>
+          </ListItemIcon>
+          <ListItemText primary="Potential Interest"/>
+        </ListItem>
 
-          <ListItem button id="potentialInterest"
-                    selected={selectedList("potentialInterest")}
-                    onClick={handleSelect}
-                    className={selectedList("potentialInterest")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <TimelineIcon className={selectedList("potentialInterest")}/>
-            </ListItemIcon>
-            <ListItemText primary="Potential Interest"/>
-          </ListItem>
-
-          <ListItem button id="interestTrends"
-                    selected={selectedList("interestTrends")}
-                    onClick={handleSelect}
-                    className={selectedList("interestTrends")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <TrendingUpIcon className={selectedList("interestTrends")}/>
-            </ListItemIcon>
-            <ListItemText primary="Interest Trends"/>
-          </ListItem>
-
-        </Collapse>
+        <ListItem button id="interestTrends"
+                  selected={selectedList("interestTrends")}
+                  onClick={handleSelect}
+                  className={selectedList("interestTrends")}>
+          <ListItemIcon className={classes.listIconNested}>
+            <TrendingUpIcon className={selectedList("interestTrends")}/>
+          </ListItemIcon>
+          <ListItemText primary="Interest Trends"/>
+        </ListItem>
 
 
         {/* RECOMMENDATION */}
@@ -270,7 +272,6 @@ export default function SideBar({selection, setSelection}) {
         </Collapse>
 
 
-        
         {/* SETTINGS */}
         <ListItem button onClick={() => setOpenSettings(!openSettings)}>
           <ListItemIcon className={classes.listIcon}>

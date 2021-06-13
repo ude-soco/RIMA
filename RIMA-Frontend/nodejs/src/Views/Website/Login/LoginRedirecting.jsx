@@ -21,7 +21,8 @@ export default function LoginRedirecting() {
       .then((res) => {
         const {data: {data_being_loaded}} = res;
         if (!data_being_loaded) {
-          window.location.href = "/app/cloud-chart/" + getItem("mId");
+          // window.location.href = "/app/cloud-chart/" + getItem("mId");
+          window.location.href = "/app/dashboard";
         }
       })
       .catch((error) => {

@@ -3,7 +3,7 @@ import Login from "../Views/Website/Login/Login";
 import AddPaper from "../Views/Application/Publications/Paper/AddPaper.jsx";
 import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
 import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
-import CloudChartPage from "../Views/CloudChart";
+import InterestOverview from "../Views/Application/Dashboard/InterestOverview/InterestOverview";
 import ConceptChartPage from "../Views/ConceptChart";
 import StreamChartPage from "../Views/StreamChart";
 import SearchUserProfile from "../Views/SearchUserProfile";
@@ -11,7 +11,7 @@ import Keyword from "../Views/Keyword.js";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
 import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
-import PieChartPage from "../Views/PieChart";
+import RecentInterest from "../Views/Application/Dashboard/RecentInterest/RecentInterest";
 import BarChartPage from "../Views/BarChart";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
@@ -22,9 +22,18 @@ import RecommendTopic from "Views/RecommendTopic";
 import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
 import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
+import Dashboard from "../Views/Application/Dashboard/Dashboard";
 
 
 let routes = [
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "ni ni-tv-2 text-primary",
+    component: Dashboard,
+    layout: "/app",
+    display: "none",
+  },
   {
     path: "/index",
     name: "Dashboard",
@@ -79,7 +88,7 @@ let routes = [
     path: "/pie-chart",
     name: "Pie Chart",
     icon: "fas fa-chart-pie text-orange",
-    component: PieChartPage,
+    component: RecentInterest,
     layout: "/app",
     display: "none",
   },
@@ -95,7 +104,7 @@ let routes = [
     path: "/cloud-chart",
     name: "Cloud Chart",
     icon: "fas fa-cloud text-info",
-    component: CloudChartPage,
+    component: InterestOverview,
     layout: "/app",
     display: "none",
   },

@@ -9,7 +9,7 @@ import Carousel from "react-bootstrap/Carousel";
 import { handleServerErrors } from "Services/utils/errorHandler";
 import RestAPI from "../Services/api";
 import Chart from "react-apexcharts";
-import CloudChart from "./components/Chart/CloudChart";
+import CloudChart from "./Application/ReuseableComponents/Charts/CloudChart/CloudChart";
 import PieChart from "./components/Chart/PieChart";
 import PaperBar from "./components/UserCharts/PaperBarCharts";
 import TweetBar from "./components/UserCharts/TweetBarChart";

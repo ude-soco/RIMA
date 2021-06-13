@@ -84,7 +84,8 @@ export default function Admin(props) {
           <div className={classes.toolbar}/>
           <Switch>
             {getRoutes(routes)}
-            <Redirect from="*" to="/app/PieChartPage"/>
+            {/*<Redirect from="*" to="/app/PieChartPage"/>*/}
+            <Redirect from="*" to="/app/dashboard"/>
           </Switch>
         </main>
 

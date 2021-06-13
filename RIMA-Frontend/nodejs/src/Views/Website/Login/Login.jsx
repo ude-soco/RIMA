@@ -94,7 +94,8 @@ export default function Login() {
           if (data_being_loaded) {
             window.location.href = "/app/redirect";
           } else {
-            history.push("/app/cloud-chart/" + res.data.id);
+            // history.push("/app/cloud-chart/" + res.data.id);
+            history.push("/app/dashboard");
           }
         }
       })

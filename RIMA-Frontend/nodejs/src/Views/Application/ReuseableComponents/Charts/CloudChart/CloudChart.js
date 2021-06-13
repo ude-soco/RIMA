@@ -39,7 +39,7 @@ const options = {
   transitionDuration: 1000
 };
 
-class CloudChartPage extends Component {
+class CloudChart extends Component {
   state = {
     mydata: [],
     wordArray: [],
@@ -369,4 +369,4 @@ class CloudChartPage extends Component {
   }
 }
 
-export default CloudChartPage;
+export default CloudChart;
