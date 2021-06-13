@@ -5,12 +5,9 @@ import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
 
 const useStyles = makeStyles(theme => ({
-  spacing: {
-    padding: theme.spacing(4)
-  },
   cardHeight: {
     height: "100%",
-    width: "100%"
+    padding: theme.spacing(2)
   }
 }))
 
