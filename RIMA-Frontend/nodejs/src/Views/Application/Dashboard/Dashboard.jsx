@@ -4,7 +4,7 @@ import InterestOverview from "./InterestOverview/InterestOverview";
 import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
 import ConceptPage from "../../ConceptChart";
-import StreamChart from "../../components/Chart/StreamChart";
+import PotentialInterests from "./PotentialInterests/PotentialInterests";
 
 const useStyles = makeStyles(theme => ({
   spacing: {
@@ -38,7 +38,7 @@ export default function Dashboard() {
 
         <Grid item>
           <Grid container spacing={2}>
-            <StreamChart classes={classes}/>
+            <PotentialInterests classes={classes}/>
           </Grid>
         </Grid>
 

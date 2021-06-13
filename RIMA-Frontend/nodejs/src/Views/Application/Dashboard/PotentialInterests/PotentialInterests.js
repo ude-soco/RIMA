@@ -7,7 +7,7 @@ import {handleServerErrors} from "Services/utils/errorHandler";
 import {Card, CardContent, CircularProgress, Grid, Tooltip, Typography} from "@material-ui/core";
 import HelpIcon from '@material-ui/icons/Help';
 
-class StreamChart extends React.Component {
+class PotentialInterests extends React.Component {
   state = {
     chartOptions: {
       twitterXaxis: {},
@@ -223,4 +223,4 @@ class StreamChart extends React.Component {
   }
 }
 
-export default StreamChart;
+export default PotentialInterests;
