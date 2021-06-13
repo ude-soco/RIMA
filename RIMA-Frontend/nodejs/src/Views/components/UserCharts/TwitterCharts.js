@@ -8,7 +8,6 @@ import "react-tabs/style/react-tabs.css";
 
 class TwitterCharts extends Component {
   state = {
-    data: [],
     id: "",
     email: "",
     first_name: "",
@@ -34,7 +33,6 @@ class TwitterCharts extends Component {
         categories: [],
       },
     },
-    series: [],
     tweetoptions: {
       chart: {
         id: "basic-bar",

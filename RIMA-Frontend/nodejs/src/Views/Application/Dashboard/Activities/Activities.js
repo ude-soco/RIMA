@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Chart from "react-apexcharts";
-import { toast } from "react-toastify";
-import Loader from "react-loader-spinner";
+import {toast} from "react-toastify";
 import RestAPI from "Services/api";
 
-import { handleServerErrors } from "Services/utils/errorHandler";
+import {handleServerErrors} from "Services/utils/errorHandler";
+import {Card, CardContent, CircularProgress, Grid, Typography} from "@material-ui/core";
 
-class BarChart extends Component {
+export default class Activities extends Component {
   constructor(props) {
     super(props);
 
@@ -15,7 +15,6 @@ class BarChart extends Component {
         chart: {
           id: "basic-bar",
         },
-
         fill: {
           colors: ["#9C27B0"],
         },
@@ -23,7 +22,6 @@ class BarChart extends Component {
           categories: [],
         },
       },
-
       series: [],
       tweetoptions: {
         chart: {
@@ -32,16 +30,13 @@ class BarChart extends Component {
         xaxis: {
           categories: [],
         },
-
-
       },
-      
       tweetseries: [],
     };
   }
 
   componentDidMount() {
-    this.setState({ isLoding: true }, () => {
+    this.setState({isLoading: true}, () => {
       RestAPI.barChart()
         .then((response) => {
           let categorieList = Object.keys(response.data.papers);
@@ -50,10 +45,10 @@ class BarChart extends Component {
           let tweetsvalue = Object.values(response.data.tweets);
           console.log(response.data.tweets);
           this.setState({
-            isLoding: false,
+            isLoading: false,
             data: response.data,
-            series: [{ name: "Paper", data: [...value] }],
-            tweetseries: [{ name: "Tweet", data: [...tweetsvalue] }],
+            series: [{name: "Paper", data: [...value]}],
+            tweetseries: [{name: "Tweet", data: [...tweetsvalue]}],
             // options: { ...this.state.options, ...this.state.options.xaxis, ...this.state.options.xaxis.categories = categorieList },
             // tweetoptions: { ...this.state.tweetoptions, ...this.state.tweetoptions.xaxis, ...this.state.tweetoptions.xaxis.categories = tweetscategorieList },
             options: {
@@ -79,7 +74,7 @@ class BarChart extends Component {
           });
         })
         .catch((error) => {
-          this.setState({ isLoding: false });
+          this.setState({isLoading: false});
           handleServerErrors(error, toast.error);
         });
     });
@@ -87,53 +82,50 @@ class BarChart extends Component {
 
   render() {
     return (
+
       <>
-        {this.state.isLoding ? (
-          <div className="text-center" style={{ padding: "20px" }}>
-            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-          </div>
-        ) : (
-          <>
-            <div className="mixed-chart">
-
-              <div align="center" id="chart">
-                <h2>Publications</h2>
-                <Chart 
-                  options={this.state.options}
-                  series={this.state.series}
-                  type="bar"
-                  width="600"
-                />
-                <p className="h1-s rtl">Quantity</p>
-                <p className="h1-s">Year</p>
-              </div>
-  
-              <hr/>
-
-              <div align="center" id="chart">
-              <h2>Tweets</h2>
-              <Chart 
-                options={this.state.tweetoptions}
-                series={this.state.tweetseries}
-                type="bar"
-                width="600"
-              />
+        <Grid item lg={4}>
+          <Card className={this.props.classes.cardHeight}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom> Activities: Publications </Typography>
+              <Typography gutterBottom> The number of publications published in the last 5 years </Typography>
+              {this.state.isLoading ?
+                <CircularProgress/> :
+                <Grid item xs={12}>
+                  <Chart
+                    options={this.state.options}
+                    series={this.state.series}
+                    type="bar"
+                    // width="600"
+                  />
+                </Grid>
+              }
               <p className="h1-s rtl">Quantity</p>
               <p className="h1-s">Year</p>
-              </div>
+            </CardContent>
+          </Card>
+        </Grid>
 
-           </div>
-
-           <hr/>
-
-            <div>  
-
-            </div>
-          </>
-        )}
+        <Grid item lg={4}>
+          <Card className={this.props.classes.cardHeight}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom> Activities: Twitter </Typography>
+              <Typography gutterBottom> The number of tweets in the last 6 months.</Typography>
+              {this.state.isLoading ?
+                <CircularProgress/> :
+                <Grid item>
+                  <Chart
+                    options={this.state.tweetoptions}
+                    series={this.state.tweetseries}
+                    type="bar"
+                    // width="600"
+                  />
+                </Grid>
+              }
+            </CardContent>
+          </Card>
+        </Grid>
       </>
     );
   }
 }
-
-export default BarChart;

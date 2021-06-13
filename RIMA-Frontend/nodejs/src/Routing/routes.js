@@ -12,7 +12,7 @@ import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
 import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
 import RecentInterest from "../Views/Application/Dashboard/RecentInterest/RecentInterest";
-import BarChartPage from "../Views/BarChart";
+// import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
 import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
@@ -92,14 +92,14 @@ let routes = [
     layout: "/app",
     display: "none",
   },
-  {
-    path: "/bar-chart",
-    name: "Bar Chart",
-    icon: "fas fa-chart-bar text-pink",
-    component: BarChartPage,
-    layout: "/app",
-    display: "none",
-  },
+  // {
+  //   path: "/bar-chart",
+  //   name: "Bar Chart",
+  //   icon: "fas fa-chart-bar text-pink",
+  //   component: Activities,
+  //   layout: "/app",
+  //   display: "none",
+  // },
   {
     path: "/cloud-chart",
     name: "Cloud Chart",

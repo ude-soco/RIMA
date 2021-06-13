@@ -56,16 +56,16 @@ class PieChart extends React.Component {
       },
 
       labels: [],
-      responsive: [
-        {
-          breakpoint: 800,
-          options: {
-            chart: {
-              width: 200,
-            },
-          },
-        },
-      ],
+      // responsive: [
+      //   {
+      //     breakpoint: 800,
+      //     options: {
+      //       chart: {
+      //         width: 200,
+      //       },
+      //     },
+      //   },
+      // ],
       legend: {
         position: 'bottom'
       },
@@ -119,14 +119,14 @@ class PieChart extends React.Component {
         ) : this.state.data.length ? (
           <>
             <div style={{
-              maxWidth: "800px",
-              margin: "35px auto"
+              // maxWidth: "800px",
+              // margin: "35px auto"
             }}>
               <Chart
                 options={this.state.options}
                 series={this.state.series}
                 type="pie"
-                width="500"
+                // width="500"
               />
             </div>
           </>

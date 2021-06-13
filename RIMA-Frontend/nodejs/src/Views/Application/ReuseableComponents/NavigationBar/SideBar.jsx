@@ -167,15 +167,15 @@ export default function SideBar({selection, setSelection}) {
         {/*  <ListItemText primary="Recent Interest" className={selectedList("recentInterest")}/>*/}
         {/*</ListItem>*/}
 
-        <ListItem button id="activities"
-                  selected={selectedList("activities")}
-                  onClick={handleSelect}
-                  className={selectedList("activities")}>
-          <ListItemIcon className={classes.listIconNested}>
-            <BarChartIcon className={selectedList("activities")}/>
-          </ListItemIcon>
-          <ListItemText primary="Activities"/>
-        </ListItem>
+        {/*<ListItem button id="activities"*/}
+        {/*          selected={selectedList("activities")}*/}
+        {/*          onClick={handleSelect}*/}
+        {/*          className={selectedList("activities")}>*/}
+        {/*  <ListItemIcon className={classes.listIconNested}>*/}
+        {/*    <BarChartIcon className={selectedList("activities")}/>*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText primary="Activities"/>*/}
+        {/*</ListItem>*/}
 
         <ListItem button id="potentialInterest"
                   selected={selectedList("potentialInterest")}

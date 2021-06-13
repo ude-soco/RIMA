@@ -2,7 +2,7 @@
 import React from "react";
 import Chart from "chart.js";
 import PieChart from "./components/Chart/PieChart"
-import BarChart from "./components/Chart/BarChart"
+import Activities from "./Application/Dashboard/Activities/Activities"
 import CloudChart from "./Application/ReuseableComponents/Charts/CloudChart/CloudChart"
 
 
@@ -65,7 +65,7 @@ class Visualization extends React.Component {
                   <div style={{ paddingLeft: '30%' }}>
                     <PieChart />
 
-                    <BarChart />
+                    <Activities />
                   </div>
                   <CloudChart />
                 </CardBody>
