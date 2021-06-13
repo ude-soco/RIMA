@@ -92,6 +92,7 @@ let routes = [
     layout: "/app",
     display: "none",
   },
+  // TODO: to be removed
   // {
   //   path: "/bar-chart",
   //   name: "Bar Chart",
@@ -100,14 +101,14 @@ let routes = [
   //   layout: "/app",
   //   display: "none",
   // },
-  {
-    path: "/cloud-chart",
-    name: "Cloud Chart",
-    icon: "fas fa-cloud text-info",
-    component: InterestOverview,
-    layout: "/app",
-    display: "none",
-  },
+  // {
+  //   path: "/cloud-chart",
+  //   name: "Cloud Chart",
+  //   icon: "fas fa-cloud text-info",
+  //   component: InterestOverview,
+  //   layout: "/app",
+  //   display: "none",
+  // },
   // {
   //   path: "/concept-chart",
   //   name: "Concept Chart",
@@ -116,14 +117,14 @@ let routes = [
   //   layout: "/app",
   //   display: "none",
   // },
-  {
-    path: "/stream-chart",
-    name: "Stream Chart",
-    icon: "fas fa-cloud text-info",
-    component: StreamChartPage,
-    layout: "/app",
-    display: "none",
-  },
+  // {
+  //   path: "/stream-chart",
+  //   name: "Stream Chart",
+  //   icon: "fas fa-cloud text-info",
+  //   component: StreamChartPage,
+  //   layout: "/app",
+  //   display: "none",
+  // },
 
   {
     path: "/user-profile",
