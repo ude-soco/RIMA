@@ -12,7 +12,7 @@ from interests.update_interests import update_interest_models, normalize
 
 from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
-from .topicutils import listToString
+from interests.topicutils import listToString
 
 
 def getData():

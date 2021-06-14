@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Select from 'react-select';
-import {BASE_URL_CONFERENCE} from '../../../Services/constants';
+import {BASE_URL_INTEREST} from '../../../Services/constants';
 import "d3-transition";
 import {
   Label,
@@ -52,7 +52,7 @@ class LAKAreaChart extends Component {
   }
 
   componentDidMount() {
-    fetch(BASE_URL_CONFERENCE + "/api/interests/getalltopics/")
+    fetch(BASE_URL_INTEREST + "/api/interests/getalltopics/")
       .then(response => response.json())
       .then(json => {
         var {items, weights} = this.state;
@@ -68,7 +68,7 @@ class LAKAreaChart extends Component {
     var isDisplayed = this.state.isDisplayed;
     console.log("the val is:", e.value)
     selectValue = e.value;
-    fetch("http://127.0.0.1:8000/api/conferences/gettopicsyearwise/" + e.value)
+    fetch("http://127.0.0.1:8000/api/interests/gettopicsyearwise/" + e.value)
       .then(response => response.json())
       .then(json => {
         var {years, weights} = this.state;

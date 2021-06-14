@@ -1,10 +1,9 @@
-// Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 import React, {Component} from "react";
 import Select from 'react-select';
 import Highlighter from "react-highlight-words";
 import "d3-transition";
 import {select} from "d3-selection";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import {BASE_URL_INTEREST} from "../../../Services/constants";
 import {Label, Modal, ModalBody, ModalFooter} from "reactstrap";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
@@ -80,7 +79,6 @@ class LAKForm extends Component {
       active2: false,
       isActive: false,
       imageTooltipOpen: false,
-      
     }
   }
 
@@ -92,7 +90,7 @@ class LAKForm extends Component {
 
   componentDidMount() {
     //console.log("the json is ******************")   
-    fetch(`${BASE_URL_CONFERENCE}` + "laktopics/lak/10/2011")
+    fetch(`${BASE_URL_INTEREST}` + "laktopics/10/2011")
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -124,9 +122,9 @@ class LAKForm extends Component {
     console.log(this.state.selectValue)
   }
 
-  // BAB 08.06.2021 
   selectValue(e) {
-    fetch(`${BASE_URL_CONFERENCE}` + "laktopics/" + this.props.conferenceName + "/" + this.state.count + "/" + this.state.selectValue)
+
+    fetch(`${BASE_URL_INTEREST}` + "laktopics/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -137,15 +135,11 @@ class LAKForm extends Component {
           active2: false
         })
       });
-      console.log("BAB");
-      console.log(this.props.conferenceName);
-      console.log("BAB");
   }
-  // BAB 08.06.2021 
 
   selectKeyword(e) {
     console.log("count", this.state.count)
-    fetch(`${BASE_URL_CONFERENCE}` + "lakkeywords/" + this.props.conferenceName + "/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_INTEREST}` + "lakkeywords/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -158,10 +152,9 @@ class LAKForm extends Component {
       });
 
   }
-  // BAB 08.06.2021 
 
   displayAbstract(param) {
-    fetch(`${BASE_URL_CONFERENCE}` + "getabstractdetails/" + this.props.conferenceName + "/" +  param + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_INTEREST}` + "getabstractdetails/" + param + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -204,11 +197,50 @@ class LAKForm extends Component {
         `click to view details`,
       onWordClick: getCallback("onWordClick"),
     };
-    
 
-    const data = this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
+    const data = [
+      {
+        value: "2011",
+        label: "2011"
+      },
+      {
+        value: "2012",
+        label: "2012"
+      },
+      {
+        value: "2013",
+        label: "2013"
+      },
+      {
+        value: "2014",
+        label: "2014"
+      },
+      {
+        value: "2015",
+        label: "2015"
+      },
+      {
+        value: "2016",
+        label: "2016"
+      },
+      {
+        value: "2017",
+        label: "2017"
+      },
+      {
+        value: "2018",
+        label: "2018"
+      },
+      {
+        value: "2019",
+        label: "2019"
+      },
+      {
+        value: "2020",
+        label: "2020"
+      }
+    ];
 
- 
     const numbers = [
       {
         value: "5",
@@ -239,7 +271,6 @@ class LAKForm extends Component {
                 placeholder="Select Option"
                 options={data} value={data.find(obj => obj.value === selectValue)}
                 onChange={this.getYearValue}
-                 
               />
             </div>
             <br/>
