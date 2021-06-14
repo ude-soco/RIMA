@@ -95,7 +95,7 @@ export default function Login() {
             window.location.href = "/app/redirect";
           } else {
             // history.push("/app/cloud-chart/" + res.data.id);
-            history.push("/app/dashboard");
+            history.push("/app/interest-profile");
           }
         }
       })

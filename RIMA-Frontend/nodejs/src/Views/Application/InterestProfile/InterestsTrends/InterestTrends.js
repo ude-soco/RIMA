@@ -7,7 +7,7 @@ import {handleServerErrors} from "Services/utils/errorHandler";
 import {Card, CardContent, CircularProgress, Grid, Tooltip, Typography} from "@material-ui/core";
 import HelpIcon from '@material-ui/icons/Help';
 
-class PotentialInterests extends React.Component {
+class InterestTrends extends React.Component {
   state = {
     chartOptions: {
       twitterXaxis: {},
@@ -130,7 +130,7 @@ class PotentialInterests extends React.Component {
             <CardContent>
               <Grid container justify="space-between">
                 <Grid item>
-                  <Typography variant="h5" gutterBottom> Potential Interest: Paper Keywords Trend </Typography>
+                  <Typography variant="h5" gutterBottom> Paper Keywords Trend </Typography>
                 </Grid>
                 <Grid item>
                   <Tooltip title={
@@ -167,7 +167,7 @@ class PotentialInterests extends React.Component {
             <CardContent>
               <Grid container justify="space-between">
                 <Grid item>
-                  <Typography variant="h5" gutterBottom> Potential Interest: Twitter Keywords Trend </Typography>
+                  <Typography variant="h5" gutterBottom> Twitter Keywords Trend </Typography>
                 </Grid>
                 <Grid item>
                   <Tooltip title={
@@ -223,4 +223,4 @@ class PotentialInterests extends React.Component {
   }
 }
 
-export default PotentialInterests;
+export default InterestTrends;

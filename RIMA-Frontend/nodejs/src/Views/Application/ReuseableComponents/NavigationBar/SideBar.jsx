@@ -66,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SideBar({selection, setSelection}) {
   const classes = useStyles();
   const history = useHistory()
-  const [openDashboard, setOpenDashboard] = useState(true);
   const [openSettings, setOpenSettings] = useState(true);
   const [openRecommendation, setOpenRecommendation] = useState(true);
   const [openConference, setOpenConference] = useState(true);
@@ -75,8 +74,8 @@ export default function SideBar({selection, setSelection}) {
   const handleSelect = (e) => {
     setSelection(e.currentTarget.id);
     switch (e.currentTarget.id) {
-      case "dashboard":
-        history.push("/app/dashboard")
+      case "interestOverview":
+        history.push("/app/interest-profile")
         break;
       case "addPublication":
         history.push("/app/add-paper")
@@ -111,7 +110,7 @@ export default function SideBar({selection, setSelection}) {
       case "compareConferences":
         history.push("/app/topicsresearch/" + getItem("userId"));
         break;
-      case "compareResearchers":
+      case "conferenceNetwork":
         history.push("/app/topicsauthors/" + getItem("userId"));
         break;
       case "myProfile":
@@ -134,16 +133,16 @@ export default function SideBar({selection, setSelection}) {
       <Divider className={classes.divider}/>
 
 
-      {/* DASHBOARD */}
+      {/* INTEREST PROFILE */}
       <List className={classes.text}>
-        <ListItem button id="dashboard"
-                  selected={selectedList("dashboard")}
+        <ListItem button id="interestOverview"
+                  selected={selectedList("interestOverview")}
                   onClick={handleSelect}
-                  className={selectedList("dashboard")}>
+                  className={selectedList("interestOverview")}>
           <ListItemIcon className={classes.listIcon}>
-            <DashboardIcon className={selectedList("dashboard")}/>
+            <CloudIcon className={selectedList("interestOverview")}/>
           </ListItemIcon>
-          <ListItemText primary="Dashboard"/>
+          <ListItemText primary="Interest Profile"/>
         </ListItem>
 
         {/* TODO: To be removed */}
@@ -218,6 +217,40 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Tweets and People"/>
           </ListItem>
 
+        {/* Publications and Researchers (Jaleh's thesis) */}
+        </Collapse>
+
+
+        {/* CONFERENCES */}
+        <ListItem button onClick={() => setOpenConference(!openConference)}>
+          <ListItemIcon className={classes.listIcon}>
+            <BusinessIcon/>
+          </ListItemIcon>
+          <ListItemText primary="Conference Insights"/>
+          {openConference ? <ExpandLess/> : <ExpandMore/>}
+        </ListItem>
+
+        <Collapse in={openConference} unmountOnExit>
+          <ListItem button id="topicTrends"
+                    selected={selectedList("topicTrends")}
+                    onClick={handleSelect}
+                    className={selectedList("topicTrends")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <MultilineChartIcon className={selectedList("topicTrends")}/>
+            </ListItemIcon>
+            <ListItemText primary="Topics and Trends"/>
+          </ListItem>
+
+          <ListItem button id="conferenceNetwork"
+                    selected={selectedList("conferenceNetwork")}
+                    onClick={handleSelect}
+                    className={selectedList("conferenceNetwork")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <GroupIcon className={selectedList("conferenceNetwork")}/>
+            </ListItemIcon>
+            <ListItemText primary="Conference Network"/>
+          </ListItem>
+
           <ListItem button id="topicRecommendation"
                     selected={selectedList("topicRecommendation")}
                     onClick={handleSelect}
@@ -228,28 +261,6 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Topic Recommendation"/>
           </ListItem>
 
-          <ListItem button id="topicTrends"
-                    selected={selectedList("topicTrends")}
-                    onClick={handleSelect}
-                    className={selectedList("topicTrends")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <MultilineChartIcon className={selectedList("topicTrends")}/>
-            </ListItemIcon>
-            <ListItemText primary="Topic Trends"/>
-          </ListItem>
-        </Collapse>
-
-
-        {/* CONFERENCES */}
-        <ListItem button onClick={() => setOpenConference(!openConference)}>
-          <ListItemIcon className={classes.listIcon}>
-            <BusinessIcon/>
-          </ListItemIcon>
-          <ListItemText primary="Conferences"/>
-          {openConference ? <ExpandLess/> : <ExpandMore/>}
-        </ListItem>
-
-        <Collapse in={openConference} unmountOnExit>
           <ListItem button id="compareConferences"
                     selected={selectedList("compareConferences")}
                     onClick={handleSelect}
@@ -260,15 +271,6 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Compare Conferences"/>
           </ListItem>
 
-          <ListItem button id="compareResearchers"
-                    selected={selectedList("compareResearchers")}
-                    onClick={handleSelect}
-                    className={selectedList("compareResearchers")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <GroupIcon className={selectedList("compareResearchers")}/>
-            </ListItemIcon>
-            <ListItemText primary="Compare Researchers"/>
-          </ListItem>
         </Collapse>
 
 
@@ -289,7 +291,17 @@ export default function SideBar({selection, setSelection}) {
             <ListItemIcon className={classes.listIconNested}>
               <PersonIcon className={selectedList("myProfile")}/>
             </ListItemIcon>
-            <ListItemText primary="My Profile"/>
+            <ListItemText primary="Manage Profile"/>
+          </ListItem>
+
+          <ListItem button id="myPublications"
+                    selected={selectedList("myPublications")}
+                    onClick={handleSelect}
+                    className={selectedList("myPublications")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <LocalLibraryIcon className={selectedList("myPublications")}/>
+            </ListItemIcon>
+            <ListItemText primary="Manage Publications"/>
           </ListItem>
 
           <ListItem button id="addPublication"
@@ -302,15 +314,7 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Add Publication"/>
           </ListItem>
 
-          <ListItem button id="myPublications"
-                    selected={selectedList("myPublications")}
-                    onClick={handleSelect}
-                    className={selectedList("myPublications")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <LocalLibraryIcon className={selectedList("myPublications")}/>
-            </ListItemIcon>
-            <ListItemText primary="My Publications"/>
-          </ListItem>
+
         </Collapse>
 
       </List>

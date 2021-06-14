@@ -3,8 +3,8 @@ import {Grid, makeStyles} from "@material-ui/core";
 import InterestOverview from "./InterestOverview/InterestOverview";
 import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
-import ConceptPage from "../../ConceptChart";
 import PotentialInterests from "./PotentialInterests/PotentialInterests";
+import InterestTrends from "./InterestsTrends/InterestTrends";
 
 const useStyles = makeStyles(theme => ({
   spacing: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Dashboard() {
+export default function InterestProfile() {
   const classes = useStyles();
 
   return (
@@ -38,12 +38,12 @@ export default function Dashboard() {
 
         <Grid item>
           <Grid container spacing={2}>
-            <PotentialInterests classes={classes}/>
+            <InterestTrends classes={classes}/>
           </Grid>
         </Grid>
 
         <Grid item lg={8}>
-          <ConceptPage/>
+          <PotentialInterests/>
         </Grid>
 
       </Grid>

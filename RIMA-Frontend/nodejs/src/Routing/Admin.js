@@ -85,7 +85,7 @@ export default function Admin(props) {
           <Switch>
             {getRoutes(routes)}
             {/*<Redirect from="*" to="/app/PieChartPage"/>*/}
-            <Redirect from="*" to="/app/dashboard"/>
+            <Redirect from="*" to="/app/interest-profile"/>
           </Switch>
         </main>
 

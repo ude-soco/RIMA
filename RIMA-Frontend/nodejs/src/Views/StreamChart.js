@@ -1,7 +1,7 @@
 
 import React from "react";
 import Chart from "chart.js";
-import PotentialInterests from "./Application/Dashboard/PotentialInterests/PotentialInterests"
+import InterestTrends from "./Application/InterestProfile/InterestsTrends/InterestTrends"
 
 
 
@@ -63,7 +63,7 @@ class StreamChartPage extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <PotentialInterests />
+                  <InterestTrends />
 
                 </CardBody>
               </Card>

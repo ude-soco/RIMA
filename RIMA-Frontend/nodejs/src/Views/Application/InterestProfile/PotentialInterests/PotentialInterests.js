@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import Chart from "chart.js";
-import ConceptMapContainer from "./components/ConceptMap/";
+import ConceptMapContainer from "../../../components/ConceptMap";
 import {Card, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 
 // core components
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
 import {CardContent, Typography} from "@material-ui/core";
 
-export default function ConceptPage() {
+export default function PotentialInterests() {
 
   const [state, setState] = useState({
     activeNav: 1,

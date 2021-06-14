@@ -22,7 +22,7 @@ export default function LoginRedirecting() {
         const {data: {data_being_loaded}} = res;
         if (!data_being_loaded) {
           // window.location.href = "/app/cloud-chart/" + getItem("mId");
-          window.location.href = "/app/dashboard";
+          window.location.href = "/app/interest-profile";
         }
       })
       .catch((error) => {
