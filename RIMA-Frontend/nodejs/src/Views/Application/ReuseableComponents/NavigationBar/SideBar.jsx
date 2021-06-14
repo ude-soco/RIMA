@@ -227,16 +227,6 @@ export default function SideBar({selection, setSelection}) {
             </ListItemIcon>
             <ListItemText primary="Topic Recommendation"/>
           </ListItem>
-
-          <ListItem button id="topicTrends"
-                    selected={selectedList("topicTrends")}
-                    onClick={handleSelect}
-                    className={selectedList("topicTrends")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <MultilineChartIcon className={selectedList("topicTrends")}/>
-            </ListItemIcon>
-            <ListItemText primary="Topic Trends"/>
-          </ListItem>
         </Collapse>
 
 
@@ -250,6 +240,20 @@ export default function SideBar({selection, setSelection}) {
         </ListItem>
 
         <Collapse in={openConference} unmountOnExit>
+
+
+        
+        <ListItem button id="topicTrends"
+                    selected={selectedList("topicTrends")}
+                    onClick={handleSelect}
+                    className={selectedList("topicTrends")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <MultilineChartIcon className={selectedList("topicTrends")}/>
+            </ListItemIcon>
+            <ListItemText primary="Topic Trends"/>
+          </ListItem>
+
+
           <ListItem button id="compareConferences"
                     selected={selectedList("compareConferences")}
                     onClick={handleSelect}
