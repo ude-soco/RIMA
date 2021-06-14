@@ -120,8 +120,8 @@ class KeywordCreateSerializer(serializers.Serializer):
     weight = serializers.FloatField(max_value=5, min_value=1)
 
 
-class TopicSerializer(serializers.Serializer):
-    key = serializers.ListField()
+#class TopicSerializer(serializers.Serializer):
+ #   key = serializers.ListField()
     #value=serializers.CharField(max_length=1000)
 
 
@@ -165,7 +165,8 @@ class TweetSerializer(serializers.ModelSerializer):
         model = Tweet
         fields = ('id_str', 'full_text', 'entities', 'user', "screen_name")
 
-
+"""
+BAB 
 class JSONSerialize(serializers.Serializer):
     intetest = serializers.CharField()
 
@@ -173,3 +174,4 @@ class JSONSerialize(serializers.Serializer):
 class DictSerializer(serializers.Serializer):
     keywords = serializers.ListField()
     weights = serializers.ListField()
+"""
