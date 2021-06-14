@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import "d3-transition";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import {BASE_URL_INTEREST} from "../../../Services/constants";
 import {Label} from "reactstrap";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
@@ -56,7 +56,7 @@ class AuthorVenn extends Component {
   };
 
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "fetchallauthorsdict/")
+    fetch(BASE_URL_INTEREST + "fetchallauthorsdict/")
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -98,7 +98,7 @@ class AuthorVenn extends Component {
     });
     var selectVal = this.state.selectVal;
     fetch(
-      BASE_URL_CONFERENCE +
+      BASE_URL_INTEREST +
       "authorconfcomparison/" +
       e.target.value +
       "/" +
@@ -129,7 +129,7 @@ class AuthorVenn extends Component {
     });
 
     fetch(
-      BASE_URL_CONFERENCE +
+      BASE_URL_INTEREST +
       "authorconfcomparison/" +
       e.target.value +
       "/" +

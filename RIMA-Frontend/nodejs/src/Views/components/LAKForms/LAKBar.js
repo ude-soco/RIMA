@@ -48,7 +48,7 @@ class LAKBar extends Component {
   displayDocChart(topic, year) {
     var selectyear = "2011";
     fetch(
-      "http://127.0.0.1:8000/api/conferences/topicdetails/"  + topic + "/" + year
+      "http://127.0.0.1:8000/api/interests/topicdetails/" + topic + "/" + year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -74,7 +74,7 @@ class LAKBar extends Component {
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
                   fetch(
-                    "http://127.0.0.1:8000/api/conferences/fetchpaper/?!"  +  title
+                    "http://127.0.0.1:8000/api/interests/fetchpaper/?!" + title
                   )
                     .then((response) => response.json())
                     .then((json) => {
@@ -135,7 +135,7 @@ class LAKBar extends Component {
 
   componentDidMount() {
     const display = this.displayDocChart;
-    fetch("http://127.0.0.1:8000/api/conferences/toptopics/lak/2011")
+    fetch("http://127.0.0.1:8000/api/interests/toptopics/2011")
       .then((response) => response.json())
       .then((json) => {
         this.setState(
@@ -220,7 +220,7 @@ class LAKBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/conferences/topkeywords/" + this.props.conferenceName + "/"+ this.state.selectyear
+      "http://127.0.0.1:8000/api/interests/topkeywords/" + this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -291,7 +291,7 @@ class LAKBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/conferences/toptopics/" + this.props.conferenceName + "/"+ this.state.selectyear
+      "http://127.0.0.1:8000/api/interests/toptopics/" + this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -360,8 +360,48 @@ class LAKBar extends Component {
       imageTooltipOpen,
     } = this.state;
 
-    const yeardata =  this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
-
+    const yeardata = [
+      {
+        value: "2011",
+        label: "2011",
+      },
+      {
+        value: "2012",
+        label: "2012",
+      },
+      {
+        value: "2013",
+        label: "2013",
+      },
+      {
+        value: "2014",
+        label: "2014",
+      },
+      {
+        value: "2015",
+        label: "2015",
+      },
+      {
+        value: "2016",
+        label: "2016",
+      },
+      {
+        value: "2017",
+        label: "2017",
+      },
+      {
+        value: "2018",
+        label: "2018",
+      },
+      {
+        value: "2019",
+        label: "2019",
+      },
+      {
+        value: "2020",
+        label: "2020",
+      },
+    ];
     const topics = [
       {
         value: "topic",

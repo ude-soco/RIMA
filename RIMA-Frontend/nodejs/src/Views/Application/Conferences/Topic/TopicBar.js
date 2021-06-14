@@ -1,5 +1,4 @@
 //Done by Swarna
-// Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 import React from "react";
 import Chart from "chart.js";
 import Select from "react-select";
@@ -24,18 +23,6 @@ import VennChart from "../../../components/LAKForms/VennChart";
 import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 
-// BAB:BEGIN 08/06/2021 :: cover other conferences.
-import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
-
-// years and conferences' names should be fetched later from a customed endpoint
-const conference = [
-  { value: 'LAK', label: 'LAK' },
-  { value: 'edm', label: 'edm' },
-  { value: 'aied', label: 'aied'},
-];
-// BAB:END 08/06/2021 :: cover other conferences.
-
-
 class TopicBar extends React.Component {
   constructor(props) {
     super(props);
@@ -45,52 +32,6 @@ class TopicBar extends React.Component {
       chartExample1Data: "data1",
       tooltipOpen: false,
       imageTooltipOpen: false,
-      // BAB:BEGIN 08/06/2021 :: cover other conferences
-      selectedOption: { label: 'LAK', value: 'LAK' },  
-      confEvents: [
-        {
-          value: "2011",
-          label: "2011"
-        },
-        {
-          value: "2012",
-          label: "2012"
-        },
-        {
-          value: "2013",
-          label: "2013"
-        },
-        {
-          value: "2014",
-          label: "2014"
-        },
-        {
-          value: "2015",
-          label: "2015"
-        },
-        {
-          value: "2016",
-          label: "2016"
-        },
-        {
-          value: "2017",
-          label: "2017"
-        },
-        {
-          value: "2018",
-          label: "2018"
-        },
-        {
-          value: "2019",
-          label: "2019"
-        },
-        {
-          value: "2020",
-          label: "2020"
-        }
-      ],
-  
-      // BAB:END 08/06/2021 :: cover other conferences.
     };
     if (window.Chart) {
       parseOptions(Chart, chartOptions());
@@ -101,26 +42,16 @@ class TopicBar extends React.Component {
     window.scrollTo(0, 0)
   }
 
-   // BAB:BEGIN 08/06/2021 :: cover other conferences.
-  handleChange = selectedOption => {
-    this.forceUpdate();
-    this.setState({ selectedOption });
-    console.log("updated");
-    console.log(`Option selected:`, selectedOption);
-    fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
-    .then(response => response.json())
-    .then(json => {
-      this.setState({
-        confEvents: json.years,
-      })
-    });
-  };
-  // BAB:END 08/06/2021 :: cover other conferences.
-
   render() {
-    const { selectedOption } = this.state;   // BAB 08/06/2021 :: cover other conferences.
+    const conference = [
+      {
+        label: "LAK",
+        value: "LAK",
+      },
+    ];
     return (
       <>
+
         {/* Page content */}
         <Container  fluid >
           <Card className="bg-gradient-default1 shadow">
@@ -146,12 +77,11 @@ class TopicBar extends React.Component {
                       <br></br>
                       <div style={{width: "200px"}}>
                         <Select
-                        // BAB:BEGIN 08/06/2021 :: cover other conferences.
                           placeholder="Select conference"
                           options={conference}
-                          value={selectedOption}
-                          onChange={this.handleChange}
-                        // BAB:END 08/06/2021 :: cover other conferences.
+                          value={conference.find(
+                            (obj) => obj.value === "LAK"
+                          )}
                         />
                       </div>
                     </div>
@@ -170,10 +100,9 @@ class TopicBar extends React.Component {
                       borderRadius: "2px",
                     }}
                   >
-                    {/*  BAB 08.06.2021 */ }
                     <Col>
-                      <LAKForm conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />        {/*  BAB 08.06.2021 */ } 
-                     </Col>
+                      <LAKForm/>
+                    </Col>
                   </div>
                 </div>
                 <div className="main">
@@ -187,10 +116,8 @@ class TopicBar extends React.Component {
                       borderRadius: "2px",
                     }}
                   >
-                                        
-
                     <Col>
-                      <LAKBar conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />          {/*  BAB 08.06.2021 */ }
+                      <LAKBar/>
                     </Col>
                   </div>
                 </div>
@@ -216,7 +143,7 @@ class TopicBar extends React.Component {
                     }}
                   >
                     <Col>
-                      <LAKPie conferenceName = {selectedOption.value}  confEvents = {this.state.confEvents}/>       {/*  BAB 08.06.2021 */ } 
+                      <LAKPie/>
                     </Col>
                   </div>
                 </div>
@@ -233,7 +160,7 @@ class TopicBar extends React.Component {
                     }}
                   >
                     <Col>
-                      <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {this.state.confEvents}/>    {/*  BAB 08.06.2021 */ }
+                      <LAKStackedBarChart/>
                     </Col>
                   </div>
                 </div>
@@ -249,7 +176,7 @@ class TopicBar extends React.Component {
                   }}
                 >
                   <Col>
-                    <LAKStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                    <LAKStackedAreaChart/>
                   </Col>
                 </div>
 
@@ -265,7 +192,7 @@ class TopicBar extends React.Component {
                     }}
                   >
                     <Col>
-                      <VennChart  conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} page = 'topicbar' conferences = {this.conference}/>     {/*  BAB 08.06.2021 */ } 
+                      <VennChart/>
                     </Col>
                   </div>
                 </div>
@@ -289,7 +216,6 @@ class TopicBar extends React.Component {
             <ScrollTopWrapper/>
           </Card>
         </Container>
-
       </>
     );
   }

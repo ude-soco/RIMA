@@ -2,7 +2,7 @@
 import React, {Component} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import {BASE_URL_INTEREST} from "../../../Services/constants";
 import "d3-transition";
 import {Button, Label, FormGroup, Form} from "reactstrap";
 import ReactApexChart from "react-apexcharts";
@@ -58,7 +58,7 @@ class LAKStackedAreaChart extends Component {
     this.onClear();
 
     console.log(e.target.value);
-    fetch(BASE_URL_CONFERENCE + "getallkeysresults/"  + this.props.conferenceName)
+    fetch(BASE_URL_INTEREST + "getallkeysresults/")
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -67,14 +67,13 @@ class LAKStackedAreaChart extends Component {
           active2: true,
           soptions: json.topics.sort((a, b) => (a.label > b.label ? 1 : -1)),
           key: "key",
-          
         });
       });
   }
 
   selectTopic(e) {
     this.onClear();
-    fetch(BASE_URL_CONFERENCE + "getalltopicsresults/" + this.props.conferenceName)
+    fetch(BASE_URL_INTEREST + "getalltopicsresults/")
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -161,10 +160,10 @@ class LAKStackedAreaChart extends Component {
       var {series} = this.state;
 
       fetch(
-        BASE_URL_CONFERENCE +
+        BASE_URL_INTEREST +
         "getalltopicsevolution/" +
         "?" +
-        selectedValues.join("&") + "/" + this.props.conferenceName
+        selectedValues.join("&")
       )
         .then((response) => response.json())
         .then((json) => {
@@ -175,10 +174,6 @@ class LAKStackedAreaChart extends Component {
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
-          console.log(BASE_URL_CONFERENCE +
-            "getalltopicsevolution/" +
-            "?" +
-            selectedValues.join("&"));
           console.log("series", series);
           this.setState({
             selectTopic: selectedValues,
@@ -224,10 +219,10 @@ class LAKStackedAreaChart extends Component {
       var {series} = this.state;
 
       fetch(
-        BASE_URL_CONFERENCE +
+        BASE_URL_INTEREST +
         "getallkeysevolution/" +
         "?" +
-        selectedValues.join("&") + "/" + this.props.conferenceName
+        selectedValues.join("&")
       )
         .then((response) => response.json())
         .then((json) => {
