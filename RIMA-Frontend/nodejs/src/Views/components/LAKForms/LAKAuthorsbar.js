@@ -5,7 +5,7 @@ import Select from "react-select";
 import "./styles.css";
 import ReactApexChart from "react-apexcharts";
 import { Row, Col, Label, Badge, Button } from "reactstrap";
-import { BASE_URL_INTEREST } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 
 class LAKAuthorsbar extends Component {
   constructor(props) {
@@ -61,7 +61,7 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      BASE_URL_INTEREST +
+      BASE_URL_CONFERENCE +
         "getauthortopicdetails/?" +
         this.state.selectVal1 +
         "&" +
@@ -155,7 +155,7 @@ class LAKAuthorsbar extends Component {
       });
   }
   componentWillMount() {
-    fetch(BASE_URL_INTEREST + "getauthorsyearlist/all years")
+    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/all years")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -172,7 +172,7 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      BASE_URL_INTEREST +
+      BASE_URL_CONFERENCE +
         "getauthortopicdetails/?A. A. Economides&A. Ammari&all years&topic"
     )
       .then((response) => response.json())
@@ -280,7 +280,7 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      BASE_URL_INTEREST +
+      BASE_URL_CONFERENCE +
         "getauthortopicdetails/?" +
         this.state.selectVal1 +
         "&" +
@@ -400,7 +400,7 @@ class LAKAuthorsbar extends Component {
   }
 
   selectyearValue(e) {
-    fetch(BASE_URL_INTEREST + "getauthorsyearlist/" + e.value)
+    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + e.value)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
