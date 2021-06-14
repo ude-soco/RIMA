@@ -84,6 +84,9 @@ export default function SideBar({selection, setSelection}) {
       case "myPublications":
         history.push("/app/view-paper");
         break;
+      case "addConference":
+        history.push("/app/add-conference");
+        break;
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -241,7 +244,15 @@ export default function SideBar({selection, setSelection}) {
 
         <Collapse in={openConference} unmountOnExit>
 
-
+        <ListItem button id="addConference"
+                    selected={selectedList("addConference")}
+                    onClick={handleSelect}
+                    className={selectedList("addConference")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <AddIcon className={selectedList("addConference")}/>
+            </ListItemIcon>
+            <ListItemText primary="Add Conference"/>
+          </ListItem>
         
         <ListItem button id="topicTrends"
                     selected={selectedList("topicTrends")}
@@ -252,8 +263,7 @@ export default function SideBar({selection, setSelection}) {
             </ListItemIcon>
             <ListItemText primary="Topic Trends"/>
           </ListItem>
-
-
+      
           <ListItem button id="compareConferences"
                     selected={selectedList("compareConferences")}
                     onClick={handleSelect}

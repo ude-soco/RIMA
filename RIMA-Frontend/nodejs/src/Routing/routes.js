@@ -24,6 +24,9 @@ import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
 import Dashboard from "../Views/Application/Dashboard/Dashboard";
 
+import addConference from "../Views/Application/Conferences/addConference.jsx";
+
+
 
 let routes = [
   {
@@ -47,6 +50,14 @@ let routes = [
     name: "Add Publication",
     icon: "ni ni-fat-add text-green",
     component: AddPaper,
+    layout: "/app",
+    // display: "none"
+  },
+  {
+    path: "/add-conference",
+    name: "Add Conference",
+    icon: "ni ni-fat-add text-green",
+    component: addConference,
     layout: "/app",
     // display: "none"
   },
