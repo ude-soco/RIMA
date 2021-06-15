@@ -5,13 +5,12 @@ import RestAPI from "../../../../Services/api";
 import {handleServerErrors} from "../../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
 
+const height = 400
+
 export default function RecentInterest({classes, loading}) {
   const [state, setState] = useState({
     series: [],
     options: {
-      chart: {
-        type: "pie",
-      },
       labels: [],
       legend: {
         position: 'bottom'
@@ -20,28 +19,31 @@ export default function RecentInterest({classes, loading}) {
   });
 
   useEffect(() => {
-    RestAPI.cloudChart()
-      .then((response) => {
-        let myData = [];
-        let values = [];
-        for (let i = 0; i < response.data.length; i++) {
-          myData.push(response.data[i].keyword);
-          values.push(response.data[i].weight);
-          if (i === 4) break;
-        }
-        setState({
-          ...state,
-          series: values,
-          options: {
-            ...state.options,
-            labels: myData,
-          },
-        });
+    if (!state.series.length) {
+      RestAPI.cloudChart()
+        .then((response) => {
+          let myData = [];
+          let values = [];
+          for (let i = 0; i < response.data.length; i++) {
+            myData.push(response.data[i].keyword);
+            values.push(response.data[i].weight);
+            if (i === 4) break;
+          }
+          setState({
+            ...state,
+            series: values,
+            options: {
+              ...state.options,
+              labels: myData,
+            },
+          });
 
-      })
-      .catch((error) => {
-        handleServerErrors(error, toast.error);
-      });
+        })
+        .catch((error) => {
+          handleServerErrors(error, toast.error);
+        });
+    }
+
   }, [])
 
 
@@ -54,7 +56,10 @@ export default function RecentInterest({classes, loading}) {
             This chart shows your recent interests in the last year (for publications), and last month (for tweets).
           </Typography>
 
-          {state.series.length ? <Chart options={state.options} series={state.series} type="pie"/> : <> {loading} </>}
+          {state.series.length ?
+            <Chart options={state.options} series={state.series} type="pie" height={height}/> :
+            <> {loading} </>
+          }
         </CardContent>
       </Card>
     </>

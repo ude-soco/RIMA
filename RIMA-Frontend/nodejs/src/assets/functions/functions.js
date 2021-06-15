@@ -15,13 +15,8 @@ export function toFirstLetter(name) {
 
 export function getColorArray(length) {
   let array = []
-  let letters = '0123456789ABCDEF';
   for (let n = 0; n < length; n++) {
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    array.push(color);
+    array.push(getRandomColor());
   }
   return array;
 }

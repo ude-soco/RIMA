@@ -214,10 +214,19 @@ export default function SideBar({selection, setSelection}) {
             <ListItemIcon className={classes.listIconNested}>
               <TwitterIcon className={selectedList("tweetsAndPeople")}/>
             </ListItemIcon>
-            <ListItemText primary="Tweets and People"/>
+            <ListItemText primary="Tweets"/>
           </ListItem>
 
-        {/* Publications and Researchers (Jaleh's thesis) */}
+          <ListItem button id="publicationRecommendation"
+                    selected={selectedList("publicationRecommendation")}
+                    onClick={handleSelect}
+                    className={selectedList("publicationRecommendation")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <LocalLibraryIcon className={selectedList("publicationRecommendation")}/>
+            </ListItemIcon>
+            <ListItemText primary="Publications"/>
+          </ListItem>
+        {/* TODO: Publications and Researchers (Jaleh's thesis) */}
         </Collapse>
 
 
@@ -248,7 +257,7 @@ export default function SideBar({selection, setSelection}) {
             <ListItemIcon className={classes.listIconNested}>
               <GroupIcon className={selectedList("conferenceNetwork")}/>
             </ListItemIcon>
-            <ListItemText primary="Conference Network"/>
+            <ListItemText primary="Author Networks"/>
           </ListItem>
 
           <ListItem button id="topicRecommendation"

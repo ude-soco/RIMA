@@ -46,7 +46,7 @@ export default function InterestProfile() {
               <RecentInterest classes={classes} loading={loading}/>
             </Grid>
 
-            <Activities classes={classes}/>
+            <Activities classes={classes} loading={loading}/>
           </Grid>
         </Grid>
 
