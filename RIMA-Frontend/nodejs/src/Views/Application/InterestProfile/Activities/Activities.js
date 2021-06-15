@@ -84,44 +84,46 @@ export default class Activities extends Component {
     return (
 
       <>
-        <Grid item lg={4}>
+        <Grid item xs={12} lg={8}>
           <Card className={this.props.classes.cardHeight}>
             <CardContent>
-              <Typography variant="h5" gutterBottom> Activities: Publications </Typography>
-              <Typography gutterBottom> The number of publications published in the last 5 years </Typography>
-              {this.state.isLoading ?
-                <CircularProgress/> :
-                <Grid item xs={12}>
-                  <Chart
-                    options={this.state.options}
-                    series={this.state.series}
-                    type="bar"
-                    // width="600"
-                  />
-                </Grid>
-              }
-              <p className="h1-s rtl">Quantity</p>
-              <p className="h1-s">Year</p>
-            </CardContent>
-          </Card>
-        </Grid>
+              <Typography variant="h5" gutterBottom> Activities: Publications and Twitter </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} lg={6}>
 
-        <Grid item lg={4}>
-          <Card className={this.props.classes.cardHeight}>
-            <CardContent>
-              <Typography variant="h5" gutterBottom> Activities: Twitter </Typography>
-              <Typography gutterBottom> The number of tweets in the last 6 months.</Typography>
-              {this.state.isLoading ?
-                <CircularProgress/> :
-                <Grid item>
-                  <Chart
-                    options={this.state.tweetoptions}
-                    series={this.state.tweetseries}
-                    type="bar"
-                    // width="600"
-                  />
+                  <Typography gutterBottom> The number of publications published in the last 5 years </Typography>
+                  {this.state.isLoading ?
+                    <CircularProgress/> :
+                    <Grid item xs={12}>
+                      <Chart
+                        options={this.state.options}
+                        series={this.state.series}
+                        type="bar"
+                        // width="600"
+                      />
+                    </Grid>
+                  }
+                  <p className="h1-s rtl">Quantity</p>
+                  <p className="h1-s">Year</p>
                 </Grid>
-              }
+
+                <Grid item xs={12} lg={6}>
+                  <Typography gutterBottom> The number of tweets in the last 6 months.</Typography>
+                  {this.state.isLoading ?
+                    <CircularProgress/> :
+                    <Grid item>
+                      <Chart
+                        options={this.state.tweetoptions}
+                        series={this.state.tweetseries}
+                        type="bar"
+                        // width="600"
+                      />
+                    </Grid>
+                  }
+
+                </Grid>
+              </Grid>
+
             </CardContent>
           </Card>
         </Grid>

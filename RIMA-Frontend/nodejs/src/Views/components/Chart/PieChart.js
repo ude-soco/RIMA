@@ -5,6 +5,7 @@ import Loader from "react-loader-spinner";
 import RestAPI from "Services/api";
 
 import {handleServerErrors} from "Services/utils/errorHandler";
+import {getColorArray} from "../../../assets/functions/functions";
 
 class PieChart extends React.Component {
   state = {
@@ -13,22 +14,22 @@ class PieChart extends React.Component {
 
     options: {
       colors: [
-        "#5ec9db",
-        "#fdc765",
-        "#f27d51",
-        "#6462cc",
-        "#FFE633",
-        "#5ae2f2",
-        "#707a9d",
-        "#ad2aba",
-        "#4c4bb4",
-        "#b49b0a",
-        "#FF5733",
-        "#FFE633",
-        "#D4FF33",
-        "#33FFA8",
-        "#0CF3E1",
-        "#0C56F3",
+        // "#5ec9db",
+        // "#fdc765",
+        // "#f27d51",
+        // "#6462cc",
+        // "#FFE633",
+        // "#5ae2f2",
+        // "#707a9d",
+        // "#ad2aba",
+        // "#4c4bb4",
+        // "#b49b0a",
+        // "#FF5733",
+        // "#FFE633",
+        // "#D4FF33",
+        // "#33FFA8",
+        // "#0CF3E1",
+        // "#0C56F3",
       ],
       chart: {
         width: 900,
@@ -36,22 +37,22 @@ class PieChart extends React.Component {
       },
       fill: {
         colors: [
-          "#5ec9db",
-          "#fdc765",
-          "#f27d51",
-          "#6462cc",
-          "#FFE633",
-          "#5ae2f2",
-          "#707a9d",
-          "#ad2aba",
-          "#4c4bb4",
-          "#b49b0a",
-          "#FF5733",
-          "#FFE633",
-          "#D4FF33",
-          "#33FFA8",
-          "#0CF3E1",
-          "#0C56F3",
+          // "#5ec9db",
+          // "#fdc765",
+          // "#f27d51",
+          // "#6462cc",
+          // "#FFE633",
+          // "#5ae2f2",
+          // "#707a9d",
+          // "#ad2aba",
+          // "#4c4bb4",
+          // "#b49b0a",
+          // "#FF5733",
+          // "#FFE633",
+          // "#D4FF33",
+          // "#33FFA8",
+          // "#0CF3E1",
+          // "#0C56F3",
         ],
       },
 
@@ -73,7 +74,7 @@ class PieChart extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({isLoding: true}, () => {
+    this.setState({isLoading: true}, () => {
       RestAPI.cloudChart()
         .then((response) => {
           let myData = [];
@@ -88,20 +89,25 @@ class PieChart extends React.Component {
               break;
               }
           }
-          console.log(myData);
+          console.log(response.data);
+          let colors = getColorArray(myData.length)
           this.setState({
-            isLoding: false,
+            isLoading: false,
             data: response.data,
             series: values,
             options: {
               ...this.state.options,
+              colors: colors,
+              fill: {
+                colors: colors
+              },
               labels: myData,
             },
           });
 
         })
         .catch((error) => {
-          this.setState({isLoding: false});
+          this.setState({isLoading: false});
           handleServerErrors(error, toast.error);
         });
 
@@ -109,10 +115,12 @@ class PieChart extends React.Component {
   }
 
 
+
   render() {
+    console.log(getColorArray(5));
     return (
       <div align="center" id="chart">
-        {this.state.isLoding ? (
+        {this.state.isLoading ? (
           <div className="text-center" style={{padding: "20px"}}>
             <Loader type="Puff" color="#00BFFF" height={100} width={100}/>
           </div>

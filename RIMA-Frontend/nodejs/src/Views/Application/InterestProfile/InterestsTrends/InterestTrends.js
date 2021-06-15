@@ -4,8 +4,7 @@ import {toast} from "react-toastify";
 import RestAPI from "Services/api";
 
 import {handleServerErrors} from "Services/utils/errorHandler";
-import {Card, CardContent, CircularProgress, Grid, Tooltip, Typography} from "@material-ui/core";
-import HelpIcon from '@material-ui/icons/Help';
+import {Card, CardContent, CircularProgress, Grid, Typography} from "@material-ui/core";
 
 class InterestTrends extends React.Component {
   state = {
@@ -125,25 +124,17 @@ class InterestTrends extends React.Component {
 
     return (
       <>
-        <Grid item lg={12}>
+        <Grid item xs={12}>
           <Card className={this.props.classes.spacing}>
             <CardContent>
-              <Grid container justify="space-between">
-                <Grid item>
-                  <Typography variant="h5" gutterBottom> Paper Keywords Trend </Typography>
-                </Grid>
-                <Grid item>
-                  <Tooltip title={
-                    <Typography gutterBottom>
-                      These charts allow you to monitor your interests over the last
-                      years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
-                      larger the area the greater the interest).
-                    </Typography>
-                  } arrow style={{cursor: "pointer"}}>
-                    <HelpIcon />
-                  </Tooltip>
-                </Grid>
-              </Grid>
+
+              <Typography variant="h5" gutterBottom> Paper Keywords Trend </Typography>
+              <Typography gutterBottom>
+                This charts allow you to monitor your interests over the last
+                years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
+                larger the area the greater the interest).
+              </Typography>
+
               {this.state.isLoading ?
                 <CircularProgress/> :
                 <Grid item xs={12}>
@@ -162,25 +153,17 @@ class InterestTrends extends React.Component {
           </Card>
         </Grid>
 
-        <Grid item lg={12}>
+        <Grid item xs={12}>
           <Card className={this.props.classes.cardHeight}>
             <CardContent>
-              <Grid container justify="space-between">
-                <Grid item>
-                  <Typography variant="h5" gutterBottom> Twitter Keywords Trend </Typography>
-                </Grid>
-                <Grid item>
-                  <Tooltip title={
-                    <Typography gutterBottom>
-                      These charts allow you to monitor your interests over the last
-                      years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
-                      larger the area the greater the interest).
-                    </Typography>
-                  } arrow style={{cursor: "pointer"}}>
-                    <HelpIcon />
-                  </Tooltip>
-                </Grid>
-              </Grid>
+
+              <Typography variant="h5" gutterBottom> Twitter Keywords Trend </Typography>
+              <Typography gutterBottom>
+                This charts allow you to monitor your interests over the last
+                years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
+                larger the area the greater the interest).
+              </Typography>
+
               {this.state.isLoading ?
                 <CircularProgress/> :
                 <Grid item>

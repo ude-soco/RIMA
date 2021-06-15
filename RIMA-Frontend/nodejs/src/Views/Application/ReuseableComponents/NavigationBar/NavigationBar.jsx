@@ -36,22 +36,9 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from '@material-ui/icons/Person';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import MenuIcon from "@material-ui/icons/Menu";
-import * as PropTypes from "prop-types";
+import {getRandomColor, toFirstLetter} from "../../../../assets/functions/functions";
 
-function getRandomColor() {
-  let letters = '012345'.split('');
-  let color = '#';
-  color += letters[Math.round(Math.random() * 5)];
-  letters = '0123456789ABCDEF'.split('');
-  for (let i = 0; i < 5; i++) {
-    color += letters[Math.round(Math.random() * 15)];
-  }
-  return color;
-}
 
-function toFirstLetter(name) {
-  return ((name || "").charAt(0) || "").toUpperCase()
-}
 
 const drawerWidth = 300;
 let avatarColor = getRandomColor();
@@ -60,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex"
   },
   drawer: {
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       width: drawerWidth,
       flexShrink: 0
     },
@@ -70,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 7,
   },
   menuButton: {
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       display: "none"
     },
     color: theme.palette.common.white,
@@ -104,17 +91,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Autocomplete(props) {
-  return null;
-}
 
-Autocomplete.propTypes = {
-  renderInput: PropTypes.func,
-  style: PropTypes.shape({width: PropTypes.number}),
-  id: PropTypes.string,
-  getOptionLabel: PropTypes.func,
-  options: PropTypes.arrayOf(PropTypes.any)
-};
 export default function NavigationBar() {
   const [suggestions, setSuggestions] = useState([]);
   const [openAuthors, setOpenAuthors] = useState(null);
@@ -122,7 +99,7 @@ export default function NavigationBar() {
   const [openProfile, setOpenProfile] = useState(null);
   const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [selection, setSelection] = useState("dashboard");
+  const [selection, setSelection] = useState("interestOverview");
   const firstname = localStorage.getItem('name');
   const lastname = localStorage.getItem('lastname');
   const userName = toFirstLetter(firstname) + toFirstLetter(lastname);

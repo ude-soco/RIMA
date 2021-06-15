@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid, makeStyles} from "@material-ui/core";
+import {CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
 import InterestOverview from "./InterestOverview/InterestOverview";
 import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
@@ -13,36 +13,50 @@ const useStyles = makeStyles(theme => ({
   cardHeight: {
     height: "100%",
     padding: theme.spacing(2)
+  },
+  padding: {
+    margin: theme.spacing(15, 0, 15, 0)
   }
 }))
 
 export default function InterestProfile() {
   const classes = useStyles();
 
+  const loading =
+    <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
+      <Grid item>
+        <CircularProgress/>
+      </Grid>
+      <Grid item>
+        <Typography variant="overline"> Loading data </Typography>
+      </Grid>
+    </Grid>
+
+
   return (
     <>
       <Grid container direction="column" spacing={2}>
-        <Grid item>
+        <Grid item xs={12}>
           <InterestOverview classes={classes}/>
         </Grid>
 
-        <Grid item>
+        <Grid item xs={12}>
           <Grid container spacing={2}>
-            <Grid item lg={4}>
-              <RecentInterest classes={classes}/>
+            <Grid item xs={12} lg={4}>
+              <RecentInterest classes={classes} loading={loading}/>
             </Grid>
 
             <Activities classes={classes}/>
           </Grid>
         </Grid>
 
-        <Grid item>
+        <Grid item xs={12}>
           <Grid container spacing={2}>
-            <InterestTrends classes={classes}/>
+            <InterestTrends classes={classes} />
           </Grid>
         </Grid>
 
-        <Grid item lg={8}>
+        <Grid item xs={12} lg={8}>
           <PotentialInterests/>
         </Grid>
 

@@ -1,32 +1,50 @@
 import React, {useEffect, useState} from "react";
-import Chart from "chart.js";
-import PieChart from "../../../components/Chart/PieChart";
+import Chart from "react-apexcharts";
+import {Card, CardContent, Typography} from "@material-ui/core";
+import RestAPI from "../../../../Services/api";
+import {handleServerErrors} from "../../../../Services/utils/errorHandler";
+import {toast} from "react-toastify";
 
-// core components
-import {chartOptions, parseOptions} from "Services/variables/charts.js";
-import {Card, CardContent, Grid, Paper, Typography} from "@material-ui/core";
-
-export default function RecentInterest({classes}) {
+export default function RecentInterest({classes, loading}) {
   const [state, setState] = useState({
-    activeNav: 1,
-    chartExample1Data: "data1",
+    series: [],
+    options: {
+      chart: {
+        type: "pie",
+      },
+      labels: [],
+      legend: {
+        position: 'bottom'
+      },
+    },
   });
 
   useEffect(() => {
-    if (window.Chart) {
-      parseOptions(Chart, chartOptions());
-    }
+    RestAPI.cloudChart()
+      .then((response) => {
+        let myData = [];
+        let values = [];
+        for (let i = 0; i < response.data.length; i++) {
+          myData.push(response.data[i].keyword);
+          values.push(response.data[i].weight);
+          if (i === 4) break;
+        }
+        setState({
+          ...state,
+          series: values,
+          options: {
+            ...state.options,
+            labels: myData,
+          },
+        });
+
+      })
+      .catch((error) => {
+        handleServerErrors(error, toast.error);
+      });
   }, [])
 
-  const toggleNavs = (e, index) => {
-    e.preventDefault();
-    setState({
-      ...state,
-      activeNav: index,
-      chartExample1Data:
-        this.state.chartExample1Data === "data1" ? "data2" : "data1",
-    });
-  };
+
   return (
     <>
       <Card className={classes.cardHeight}>
@@ -35,7 +53,8 @@ export default function RecentInterest({classes}) {
           <Typography gutterBottom>
             This chart shows your recent interests in the last year (for publications), and last month (for tweets).
           </Typography>
-          <PieChart/>
+
+          {state.series.length ? <Chart options={state.options} series={state.series} type="pie"/> : <> {loading} </>}
         </CardContent>
       </Card>
     </>
