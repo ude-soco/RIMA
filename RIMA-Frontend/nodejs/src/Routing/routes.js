@@ -6,7 +6,7 @@ import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
 import InterestOverview from "../Views/Application/InterestProfile/InterestOverview/InterestOverview";
 import ConceptChartPage from "../Views/Application/InterestProfile/PotentialInterests/PotentialInterests";
 import StreamChartPage from "../Views/StreamChart";
-import SearchUserProfile from "../Views/SearchUserProfile";
+import SearchUserProfile from "../Views/Application/CompareAuthors/SearchUserProfile";
 import Keyword from "../Views/Keyword.js";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
@@ -23,6 +23,7 @@ import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
 import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
 import InterestProfile from "../Views/Application/InterestProfile/InterestProfile";
+import CompareAuthors from "../Views/Application/CompareAuthors/CompareAuthors";
 
 
 let routes = [
@@ -31,6 +32,14 @@ let routes = [
     name: "InterestProfile",
     icon: "ni ni-tv-2 text-primary",
     component: InterestProfile,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/compare-authors",
+    name: "CompareAuthors",
+    icon: "ni ni-tv-2 text-primary",
+    component: CompareAuthors,
     layout: "/app",
     display: "none",
   },

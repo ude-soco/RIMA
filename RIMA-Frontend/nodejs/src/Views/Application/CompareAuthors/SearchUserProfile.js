@@ -11,22 +11,22 @@ import {
   Col,
 } from "reactstrap";
 // core components
-import SearchUserHeader from "./components/Headers/SearchUserHeader.js";
+import SearchUserHeader from "../../components/Headers/SearchUserHeader.js";
 import { toast } from "react-toastify";
 import Loader from "react-loader-spinner";
 import { handleServerErrors } from "Services/utils/errorHandler";
-import RestAPI from "../Services/api";
+import RestAPI from "../../../Services/api";
 import ReactApexChart from "react-apexcharts";
-import BarChart from "./components/UserCharts/BarChart";
+import BarChart from "../../components/UserCharts/BarChart";
 import "d3-transition";
-import ComparisonSlider from ".//ComparisonSlider.js";
-import VennDiagram from "./components/UserCharts/VennDiagram.js";
-import HeatMap from "./components/UserCharts/HeatMap.js";
+import VennDiagram from "../../components/UserCharts/VennDiagram.js";
+import HeatMap from "../../components/UserCharts/HeatMap.js";
 import "react-tabs/style/react-tabs.css";
-import "../assets/scss/custom.css";
+import "../../../assets/scss/custom.css";
 import swal from "@sweetalert/with-react";
 import { setItem } from "Services/utils/localStorage";
 import { ThemeProvider } from "@material-ui/core";
+import ComparisonSlider from "./ComparisonSlider";
 
 const SimilarityComponent = (props) => {
   if (props.showLoader) {
@@ -108,6 +108,7 @@ class SearchUserProfile extends React.Component {
     this.setState({ isLoding: true }, () => {
       RestAPI.getScore(this.props.match.params.id)
         .then((response) => {
+          console.log(response.data)
           this.setState({
             score: response.data.score,
             venn_chart_data: response.data.venn_chart_data,
@@ -141,41 +142,37 @@ class SearchUserProfile extends React.Component {
     });
   }
 
-  componentDidUpdate(prevPro) {
-    if (prevPro.match.params.id !== this.props.match.params.id) {
-      this.setState({ isLoding: true }, () => {
-        RestAPI.getUserProfile(this.props.match.params.id)
-          .then((response) => {
-            setItem("userId", response.data.id);
-            window.location.reload();
-            this.setState({
-              isLoding: false,
-              id: response.data.id,
-              first_name: response.data.first_name,
-              email: response.data.email,
-              last_name: response.data.last_name,
-              twitter_account_id: response.data.twitter_account_id,
-              author_id: response.data.author_id,
-              paper_count: response.data.paper_count,
-              tweet_count: response.data.tweet_count,
-              keyword_count: response.data.keyword_count,
-              paramid: this.props.match.params.id,
-              radarChartData: {},
-            });
-          })
-          .catch((error) => {
-            this.setState({ isLoding: false });
-            handleServerErrors(error, toast.error);
-          });
-      });
-    }
-  }
-
-  toggle = (id) => {
-    this.setState({
-      modal: !this.state.modal,
-    });
-  };
+  // componentDidUpdate(prevPro) {
+  //   if (prevPro.match.params.id !== this.props.match.params.id) {
+  //     console.log("called this component did update")
+  //     this.setState({ isLoding: true }, () => {
+  //       RestAPI.getUserProfile(this.props.match.params.id)
+  //         .then((response) => {
+  //           setItem("userId", response.data.id);
+  //           window.location.reload();
+  //           this.setState({
+  //             isLoding: false,
+  //             id: response.data.id,
+  //             first_name: response.data.first_name,
+  //             email: response.data.email,
+  //             last_name: response.data.last_name,
+  //             twitter_account_id: response.data.twitter_account_id,
+  //             author_id: response.data.author_id,
+  //             paper_count: response.data.paper_count,
+  //             tweet_count: response.data.tweet_count,
+  //             keyword_count: response.data.keyword_count,
+  //             paramid: this.props.match.params.id,
+  //             radarChartData: {},
+  //           });
+  //         })
+  //         .catch((error) => {
+  //           this.setState({ isLoding: false });
+  //           handleServerErrors(error, toast.error);
+  //         });
+  //     });
+  //   }
+  // }
+  
 
   // handleChange = (e) => {
   //   let getValue = e.target.value;
@@ -217,12 +214,9 @@ class SearchUserProfile extends React.Component {
   //       });
   //   });
   // };
+  
 
-  toogle = (status) => {
-    this.setState({ tooltipOpen: status });
-  };
-
-  handleToogle = (status) => {
+  handleToggle = (status) => {
     this.setState({ imageTooltipOpen: status });
   };
 
@@ -230,7 +224,7 @@ class SearchUserProfile extends React.Component {
     swal(
       <div>
         <h1>How the bar chart generated?</h1>
-        <img src={require("../assets/img/barchart.png")} />
+        <img src={require("../../../assets/img/barchart.png")} />
       </div>
     );
   };
@@ -249,6 +243,7 @@ class SearchUserProfile extends React.Component {
             last_name={this.state.last_name}
           />
           <br />
+          
           <Row>
             <h1>&nbsp;&nbsp;&nbsp;Basic explanation</h1>
           </Row>
@@ -344,8 +339,8 @@ class SearchUserProfile extends React.Component {
                       style={{ cursor: "pointer" }}
                       onClick={this.modalDetail}
                       className="fa fa-question-circle"
-                      onMouseOver={() => this.handleToogle(true)}
-                      onMouseOut={() => this.handleToogle(false)}
+                      onMouseOver={() => this.handleToggle(true)}
+                      onMouseOut={() => this.handleToggle(false)}
                     />
                     {this.state.imageTooltipOpen && (
                             <b

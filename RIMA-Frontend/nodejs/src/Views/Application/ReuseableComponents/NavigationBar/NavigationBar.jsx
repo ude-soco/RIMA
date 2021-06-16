@@ -93,8 +93,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function NavigationBar() {
-  const [suggestions, setSuggestions] = useState([]);
-  const [openAuthors, setOpenAuthors] = useState(null);
+  // const [suggestions, setSuggestions] = useState([]);
+  // const [openAuthors, setOpenAuthors] = useState(null);
   const [openHelp, setOpenHelp] = useState(null);
   const [openProfile, setOpenProfile] = useState(null);
   const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
@@ -134,37 +134,37 @@ export default function NavigationBar() {
   }
 
 
-  const handleSearchAuthors = (event) => {
-    setOpenAuthors(event.currentTarget)
-    let {value} = event.target;
-    if (value.replace(/\s+/g, '').length > 1) {
-      getInfo(value);
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const handleSelectAuthorComparison = (author) => {
-    setSelection(null)
-    setSuggestions([]);
-    history.push(`/app/profile/${author}`)
-  }
-
-
-  const getInfo = (v) => {
-    const TOKEN = getItem("accessToken");
-    axios({
-      method: "get",
-      url: `${BASE_URL}/api/accounts/user-search/${v}/`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-    }).then(({data}) => {
-      setSuggestions(data);
-    });
-  };
+  // const handleSearchAuthors = (event) => {
+  //   setOpenAuthors(event.currentTarget)
+  //   let {value} = event.target;
+  //   if (value.replace(/\s+/g, '').length > 1) {
+  //     getInfo(value);
+  //   } else {
+  //     setSuggestions([]);
+  //   }
+  // };
+  //
+  // const handleSelectAuthorComparison = (author) => {
+  //   setSelection(null)
+  //   setSuggestions([]);
+  //   history.push(`/app/profile/${author}`)
+  // }
+  //
+  //
+  // const getInfo = (v) => {
+  //   const TOKEN = getItem("accessToken");
+  //   axios({
+  //     method: "get",
+  //     url: `${BASE_URL}/api/accounts/user-search/${v}/`,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //       Authorization: `Token ${TOKEN}`,
+  //     },
+  //   }).then(({data}) => {
+  //     setSuggestions(data);
+  //   });
+  // };
 
   return (
     <>
@@ -190,32 +190,30 @@ export default function NavigationBar() {
 
 
             <Grid item component={Paper} style={{marginRight: 24}}>
-              <TextField
-                label="Compare with authors"
-                variant="filled"
-                size="small"
-                onChange={handleSearchAuthors}
+              {/*<TextField*/}
+              {/*  label="Compare with authors"*/}
+              {/*  variant="filled"*/}
+              {/*  size="small"*/}
+              {/*  onChange={handleSearchAuthors}*/}
+              {/*/>*/}
 
-
-              />
-
-              <Popper open={suggestions.length} anchorEl={openAuthors} className={classes.popper}>
-                <Paper>
-                  <List>
-                    {suggestions.map((suggestion, index) => {
-                      localStorage.setItem("userId", suggestion.id);
-                      return (
-                        <>
-                          <ListItem key={index} button onClick={() => handleSelectAuthorComparison(suggestion.id)}>
-                            <ListItemText primary={`${suggestion.first_name} ${suggestion.last_name}`}/>
-                          </ListItem>
-                          {index !== suggestions.length - 1 ? <Divider/> : <></>}
-                        </>
-                      )
-                    })}
-                  </List>
-                </Paper>
-              </Popper>
+              {/*<Popper open={suggestions.length} anchorEl={openAuthors} className={classes.popper}>*/}
+              {/*  <Paper>*/}
+              {/*    <List>*/}
+              {/*      {suggestions.map((suggestion, index) => {*/}
+              {/*        localStorage.setItem("userId", suggestion.id);*/}
+              {/*        return (*/}
+              {/*          <>*/}
+              {/*            <ListItem key={index} button onClick={() => handleSelectAuthorComparison(suggestion.id)}>*/}
+              {/*              <ListItemText primary={`${suggestion.first_name} ${suggestion.last_name}`}/>*/}
+              {/*            </ListItem>*/}
+              {/*            {index !== suggestions.length - 1 ? <Divider/> : <></>}*/}
+              {/*          </>*/}
+              {/*        )*/}
+              {/*      })}*/}
+              {/*    </List>*/}
+              {/*  </Paper>*/}
+              {/*</Popper>*/}
 
             </Grid>
 

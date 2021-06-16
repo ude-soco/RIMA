@@ -77,6 +77,9 @@ export default function SideBar({selection, setSelection}) {
       case "interestOverview":
         history.push("/app/interest-profile")
         break;
+      case "compareAuthors":
+        history.push("/app/compare-authors")
+        break;
       case "addPublication":
         history.push("/app/add-paper")
         break;
@@ -143,6 +146,16 @@ export default function SideBar({selection, setSelection}) {
             <CloudIcon className={selectedList("interestOverview")}/>
           </ListItemIcon>
           <ListItemText primary="Interest Profile"/>
+        </ListItem>
+
+        <ListItem button id="compareAuthors"
+                  selected={selectedList("compareAuthors")}
+                  onClick={handleSelect}
+                  className={selectedList("compareAuthors")}>
+          <ListItemIcon className={classes.listIcon}>
+            <GroupIcon className={selectedList("compareAuthors")}/>
+          </ListItemIcon>
+          <ListItemText primary="Compare Authors"/>
         </ListItem>
 
         {/* TODO: To be removed */}
