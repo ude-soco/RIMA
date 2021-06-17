@@ -7,7 +7,7 @@ import {Card, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
 import {CardContent, Typography} from "@material-ui/core";
 
-export default function PotentialInterests() {
+export default function PotentialInterests({classes}) {
 
   const [state, setState] = useState({
     activeNav: 1,
@@ -32,7 +32,7 @@ export default function PotentialInterests() {
   return (
     <>
         {/* Page content */}
-      <Card>
+      <Card className={classes.cardHeight}>
         <CardContent>
           <Typography variant="h5" gutterBottom> Potential Interest </Typography>
           <Typography gutterBottom>

@@ -22,12 +22,8 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import "../../../assets/scss/custom.css";
 import UserPieChart from "../../components/Chart/UserPieChart";
-
 import ReactWordcloud from "react-wordcloud";
-import {Grid, Paper} from "@material-ui/core";
-/* Chart code */
-// Themes begin
-// Themes end
+
 const options = {
   colors: ["#aab5f0", "#99ccee", "#a0ddff", "#00ccff", "#00ccff", "#90c5f0"],
   enableTooltip: true,
@@ -419,13 +415,6 @@ class ComparisonSlider extends React.Component {
     };
     return (
       <>
-
-
-        <Grid container component={Paper}>
-
-        </Grid>
-
-
         <Card className="card-profile shadow" style={{padding: "15px"}}>
           <Row>
             <CardHeader className="bg-white border-0">

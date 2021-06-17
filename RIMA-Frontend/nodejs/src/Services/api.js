@@ -1,29 +1,71 @@
-import { getItem } from "./utils/localStorage";
-import { BASE_URL } from "./constants";
+import {BASE_URL} from "./constants";
 import axios from "axios";
+import {getUserInfo} from "./utils/functions";
+
+const currentUser = getUserInfo();
 
 class RestAPI {
-  static refreshData(data) {
+  // SEARCH FOR USERS BY NAME TO COMPARE
+  static searchAuthors(data) {
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/accounts/user-search/${data}/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res)
+  }
+
+  // LONG TERM INTEREST
+  static longTermInterest(data) {
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/long-term/user/${data.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
+
+  // SHORT TERM INTEREST
+  static shortTermInterest(data) {
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/short-term/user/${data.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
+
+
+  static refreshData() {
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/trigger-data-updata/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${getItem("accessToken")}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: {},
     }).then((res) => res);
   }
 
-  static refreshPaper(data) {
+  static refreshPaper() {
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/trigger-paper-updata/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${getItem("accessToken")}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: {},
     }).then((res) => res);
@@ -49,14 +91,13 @@ class RestAPI {
 
   //** ADD PAPER API **//
   static addPaper(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/papers/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: data,
     }).then((res) => res);
@@ -64,69 +105,64 @@ class RestAPI {
 
   //** GET LIST PAPER API **//
   static getListPaper() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/papers/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** GET A PAPER API **//
   static getPaper(id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/papers/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** DELETE A PAPER API **//
   static deletePaper(id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "DELETE",
       url: `${BASE_URL}/api/interests/papers/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   static deletekeyword(id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "DELETE",
       url: `${BASE_URL}/api/interests/long-term/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** UPDATE PAPER API **//
   static updatePaper(data, id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "patch",
       url: `${BASE_URL}/api/interests/papers/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: data,
     }).then((res) => res);
@@ -134,29 +170,29 @@ class RestAPI {
 
   //** GET USER PROFILE DATA API **//
   static getUserData() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/accounts/profile/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       //   data: data
     }).then((res) => res);
   }
 
+
+
   //** UPDATE USER PROFILE API **//
-  static updateUserProfile(data, id) {
-    const TOKEN = getItem("accessToken");
+  static updateUserProfile(data) {
     return axios({
       method: "patch",
       url: `${BASE_URL}/api/accounts/profile/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: data,
     }).then((res) => res);
@@ -164,14 +200,13 @@ class RestAPI {
 
   //** GET KEYWORD DATA API **//
   static getKeyword() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/keywords/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       //   data: data
     }).then((res) => res);
@@ -179,14 +214,14 @@ class RestAPI {
 
   //** ADD KEYWORD DATA API **//
   static addKeyword(data) {
-    const TOKEN = getItem("accessToken");
+
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/long-term/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
 
       data: {
@@ -197,14 +232,14 @@ class RestAPI {
 
   //** GET BLACK KEYWORD  API **//
   static getBlackKeyword() {
-    const TOKEN = getItem("accessToken");
+
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/black-listed-keywords/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       //   data: data
     }).then((res) => res);
@@ -212,14 +247,13 @@ class RestAPI {
 
   //** ADD BLACK KEYWORD API **//
   static addBlackKeyword(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/black-listed-keywords/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: {
         keywords: [data],
@@ -229,97 +263,92 @@ class RestAPI {
 
   //** DELETE BLACK KEYWORD API **//
   static deleteBlackKeyword(id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "delete",
       url: `${BASE_URL}/api/interests/black-listed-keywords/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** PIE DATA API **//
   static pieChart(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${getItem("userId")}`,
+      url: `${BASE_URL}/api/interests/short-term/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       keywords: data,
     }).then((res) => res);
   }
   //** PIE DATA API FOR USER PROFILE **//
   static pieChartUser(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${getItem("mId")}`,
+      url: `${BASE_URL}/api/interests/short-term/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       keywords: data,
     }).then((res) => res);
   }
+
   //** STREAM DATA API **//
   static streamChart() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/stream-graph/user/${getItem("userId")}`,
+      url: `${BASE_URL}/api/interests/stream-graph/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
+
   //** STREAM DATA API FOR USER PROFILE **//
   static streamChartUser() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/stream-graph/user/${getItem("mId")}`,
+      url: `${BASE_URL}/api/interests/stream-graph/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** CONCEPT DATA API **//
   static conceptChart() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/long-term/user/${getItem("userId")}`,
+      url: `${BASE_URL}/api/interests/long-term/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** BAR DATA API **//
   static barChart(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/activity-stats/user/${getItem("userId")}`,
+      url: `${BASE_URL}/api/interests/activity-stats/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       keywords: data,
     }).then((res) => res);
@@ -327,14 +356,13 @@ class RestAPI {
 
   //** BAR DATA API FOR USER PROFILE **//
   static barChartUser(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/activity-stats/user/${getItem("mId")}`,
+      url: `${BASE_URL}/api/interests/activity-stats/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       keywords: data,
     }).then((res) => res);
@@ -342,14 +370,13 @@ class RestAPI {
 
   //** CLOUD DATA API **//
   static cloudChart(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/long-term/user/${getItem("userId")}`,
+      url: `${BASE_URL}/api/interests/long-term/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       keywords: data,
     }).then((res) => res);
@@ -357,14 +384,13 @@ class RestAPI {
 
   //** CLOUD DATA API FOR USER PROFILE **//
   static cloudChartUser(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/long-term/user/${getItem("mId")}`,
+      url: `${BASE_URL}/api/interests/long-term/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       keywords: data,
     }).then((res) => res);
@@ -393,44 +419,42 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+
   //** GET SEARCH USER PROFILE DATA API **//
   static getUserProfile(id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/accounts/public-profile/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** GET SCORE SEARCH USER PROFILE DATA API **//
   static getScore(id) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/similarity/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
   //** GET DATA STATUS API **//
   static dataImportStatus() {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/accounts/data-import-status/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
@@ -438,7 +462,6 @@ class RestAPI {
   // Tweets & People
   // Get tweets for tags
   static extractTweetsFromTags(data) {
-    const TOKEN = getItem("accessToken");
     return axios({
       method: "POST",
       url: `${BASE_URL}/api/interests/recommended-tweets`,
@@ -446,91 +469,87 @@ class RestAPI {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: data,
     }).then((res) => res);
   }
-  static savedTweets(data) {
-    const TOKEN = getItem("accessToken");
 
+  static savedTweets(data) {
     return axios({
       method: "POST",
       url: `${BASE_URL}/api/interests/tweets`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
       data: data,
     }).then((res) => res);
   }
-  static getSavedTweets() {
-    const TOKEN = getItem("accessToken");
 
+  static getSavedTweets() {
     return axios({
       method: "GET",
       url: `${BASE_URL}/api/interests/tweets`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
-  static hideSavedTweet(id) {
-    const TOKEN = getItem("accessToken");
 
+  static hideSavedTweet(id) {
     return axios({
       method: 'DELETE',
       url: `${BASE_URL}/api/interests/tweets/${id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     })
   }
-   //LAK Form
-   static topicForm() {
-    const TOKEN = getItem("accessToken");
+
+  // LAK Form
+  static topicForm() {
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/laktopics/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-    }).then((res) => res);
-  }
-  //** STREAM DATA API FOR USER PROFILE **//
-  static topicFormUser() {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/laktopics/`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
+        Authorization: `Token ${currentUser.token}`,
       },
     }).then((res) => res);
   }
 
-//**added by mouadh */
-static getsimilartweets() {
-  const TOKEN = getItem("accessToken");
-  return axios({
-    method: "get",
-    url: `${BASE_URL}/api/interests/getsimilarity/`,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Token ${TOKEN}`,
-    },
-  }).then((res) => res);
-}
+  //** STREAM DATA API FOR USER PROFILE **//
+  static topicFormUser() {
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/laktopics/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
+
+  //**added by mouadh */
+  static getsimilartweets() {
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/getsimilarity/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
 }
 
 

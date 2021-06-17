@@ -20,3 +20,7 @@ export function getColorArray(length) {
   }
   return array;
 }
+
+export const getUserInfo = () => {
+  return JSON.parse(localStorage.getItem("rimaUser"))
+}

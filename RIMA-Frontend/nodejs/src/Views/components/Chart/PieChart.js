@@ -5,7 +5,7 @@ import Loader from "react-loader-spinner";
 import RestAPI from "Services/api";
 
 import {handleServerErrors} from "Services/utils/errorHandler";
-import {getColorArray} from "../../../assets/functions/functions";
+import {getColorArray} from "../../../Services/utils/functions";
 
 class PieChart extends React.Component {
   state = {

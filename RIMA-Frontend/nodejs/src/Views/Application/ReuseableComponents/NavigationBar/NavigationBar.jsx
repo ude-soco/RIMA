@@ -1,8 +1,5 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import {getItem} from "../../../../Services/utils/localStorage";
-import axios from "axios";
-import {BASE_URL} from "../../../../Services/constants";
 import {logout} from "../../../../Services/helper";
 import SideBar from "./SideBar";
 import {
@@ -17,16 +14,12 @@ import {
   Grid,
   Hidden,
   IconButton,
-  List,
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
   Menu,
   MenuItem,
-  Paper,
-  Popper,
-  TextField,
   Toolbar,
   Tooltip,
   Typography,
@@ -36,8 +29,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from '@material-ui/icons/Person';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import MenuIcon from "@material-ui/icons/Menu";
-import {getRandomColor, toFirstLetter} from "../../../../assets/functions/functions";
-
+import {getRandomColor, toFirstLetter} from "../../../../Services/utils/functions";
 
 
 const drawerWidth = 300;
@@ -93,8 +85,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function NavigationBar() {
-  // const [suggestions, setSuggestions] = useState([]);
-  // const [openAuthors, setOpenAuthors] = useState(null);
   const [openHelp, setOpenHelp] = useState(null);
   const [openProfile, setOpenProfile] = useState(null);
   const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
@@ -133,39 +123,6 @@ export default function NavigationBar() {
     logout();
   }
 
-
-  // const handleSearchAuthors = (event) => {
-  //   setOpenAuthors(event.currentTarget)
-  //   let {value} = event.target;
-  //   if (value.replace(/\s+/g, '').length > 1) {
-  //     getInfo(value);
-  //   } else {
-  //     setSuggestions([]);
-  //   }
-  // };
-  //
-  // const handleSelectAuthorComparison = (author) => {
-  //   setSelection(null)
-  //   setSuggestions([]);
-  //   history.push(`/app/profile/${author}`)
-  // }
-  //
-  //
-  // const getInfo = (v) => {
-  //   const TOKEN = getItem("accessToken");
-  //   axios({
-  //     method: "get",
-  //     url: `${BASE_URL}/api/accounts/user-search/${v}/`,
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //       Authorization: `Token ${TOKEN}`,
-  //     },
-  //   }).then(({data}) => {
-  //     setSuggestions(data);
-  //   });
-  // };
-
   return (
     <>
       <CssBaseline/>
@@ -188,34 +145,6 @@ export default function NavigationBar() {
               <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
             </Grid>
 
-
-            <Grid item component={Paper} style={{marginRight: 24}}>
-              {/*<TextField*/}
-              {/*  label="Compare with authors"*/}
-              {/*  variant="filled"*/}
-              {/*  size="small"*/}
-              {/*  onChange={handleSearchAuthors}*/}
-              {/*/>*/}
-
-              {/*<Popper open={suggestions.length} anchorEl={openAuthors} className={classes.popper}>*/}
-              {/*  <Paper>*/}
-              {/*    <List>*/}
-              {/*      {suggestions.map((suggestion, index) => {*/}
-              {/*        localStorage.setItem("userId", suggestion.id);*/}
-              {/*        return (*/}
-              {/*          <>*/}
-              {/*            <ListItem key={index} button onClick={() => handleSelectAuthorComparison(suggestion.id)}>*/}
-              {/*              <ListItemText primary={`${suggestion.first_name} ${suggestion.last_name}`}/>*/}
-              {/*            </ListItem>*/}
-              {/*            {index !== suggestions.length - 1 ? <Divider/> : <></>}*/}
-              {/*          </>*/}
-              {/*        )*/}
-              {/*      })}*/}
-              {/*    </List>*/}
-              {/*  </Paper>*/}
-              {/*</Popper>*/}
-
-            </Grid>
 
             {/* Help button */}
             <Grid item>
@@ -297,7 +226,7 @@ export default function NavigationBar() {
 
 
       <Box className={classes.drawer} aria-label="side panel">
-        <Hidden mdUp implementation="css">
+        <Hidden lgUp implementation="css">
           <Drawer
             variant="temporary"
             anchor={theme.direction === "rtl" ? "right" : "left"}
@@ -309,7 +238,7 @@ export default function NavigationBar() {
             <SideBar selection={selection} setSelection={setSelection}/>
           </Drawer>
         </Hidden>
-        <Hidden smDown implementation="css">
+        <Hidden mdDown implementation="css">
           <Drawer
             classes={{
               paper: classes.drawerPaper

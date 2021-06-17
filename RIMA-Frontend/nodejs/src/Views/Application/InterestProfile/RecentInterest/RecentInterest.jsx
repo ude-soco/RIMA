@@ -1,13 +1,10 @@
 import React, {useEffect, useState} from "react";
 import Chart from "react-apexcharts";
-import {Card, CardContent, Typography} from "@material-ui/core";
 import RestAPI from "../../../../Services/api";
 import {handleServerErrors} from "../../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
 
-const height = 400
-
-export default function RecentInterest({classes, loading}) {
+export default function RecentInterest({loading, height, user}) {
   const [state, setState] = useState({
     series: [],
     options: {
@@ -18,9 +15,12 @@ export default function RecentInterest({classes, loading}) {
     },
   });
 
+
   useEffect(() => {
     if (!state.series.length) {
-      RestAPI.cloudChart()
+      // TODO: this should be short term interest
+      // RestAPI.shortTermInterest(user)
+      RestAPI.longTermInterest(user)
         .then((response) => {
           let myData = [];
           let values = [];
@@ -37,31 +37,20 @@ export default function RecentInterest({classes, loading}) {
               labels: myData,
             },
           });
-
         })
         .catch((error) => {
           handleServerErrors(error, toast.error);
         });
     }
-
   }, [])
 
 
   return (
     <>
-      <Card className={classes.cardHeight}>
-        <CardContent>
-          <Typography variant="h5" gutterBottom> Recent Interest </Typography>
-          <Typography gutterBottom>
-            This chart shows your recent interests in the last year (for publications), and last month (for tweets).
-          </Typography>
-
-          {state.series.length ?
-            <Chart options={state.options} series={state.series} type="pie" height={height}/> :
-            <> {loading} </>
-          }
-        </CardContent>
-      </Card>
+      {state.series.length ?
+        <Chart options={state.options} series={state.series} type="pie" height={height}/> :
+        <> {loading} </>
+      }
     </>
   );
 }

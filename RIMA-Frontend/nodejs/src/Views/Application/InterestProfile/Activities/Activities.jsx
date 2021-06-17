@@ -5,7 +5,7 @@ import RestAPI from "Services/api";
 
 import {handleServerErrors} from "Services/utils/errorHandler";
 import {Card, CardContent, Grid, Typography} from "@material-ui/core";
-import {getColorArray} from "../../../../assets/functions/functions";
+import {getColorArray} from "../../../../Services/utils/functions";
 
 const height = 400
 
@@ -67,7 +67,7 @@ export default function Activities({classes, loading}) {
       <Grid item xs={12} lg={8}>
         <Card className={classes.cardHeight}>
           <CardContent>
-            <Typography variant="h5" gutterBottom> Activities: Publications and Twitter </Typography>
+            <Typography variant="h5" gutterBottom> Activities: Publications and Tweets </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={6}>
                 <Typography gutterBottom> The number of publications published in the last 5 years </Typography>

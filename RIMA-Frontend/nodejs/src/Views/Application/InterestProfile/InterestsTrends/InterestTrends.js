@@ -125,7 +125,7 @@ class InterestTrends extends React.Component {
     return (
       <>
         <Grid item xs={12}>
-          <Card className={this.props.classes.spacing}>
+          <Card className={this.props.classes.cardHeight}>
             <CardContent>
 
               <Typography variant="h5" gutterBottom> Paper Keywords Trend </Typography>
