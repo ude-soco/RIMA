@@ -7,15 +7,19 @@ import {handleServerErrors} from "Services/utils/errorHandler";
 import {Card, CardContent, CircularProgress, Grid, Typography} from "@material-ui/core";
 
 class InterestTrends extends React.Component {
-  state = {
-    chartOptions: {
-      twitterXaxis: {},
-      paperXaxis: {},
-      twitterSeries: [],
-      paperSeries: [],
-    },
-    isLoading: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      chartOptions: {
+        twitterXaxis: {},
+        paperXaxis: {},
+        twitterSeries: [],
+        paperSeries: [],
+      },
+      isLoading: true,
+    };
+  }
+
 
   getChartOptions = (data) => {
     let chartOptions = {};
@@ -47,12 +51,12 @@ class InterestTrends extends React.Component {
         data: monthRank,
       });
     }
-    return { xAxis: xAxisOptions, series: seriesData };
+    return {xAxis: xAxisOptions, series: seriesData};
   };
 
   componentDidMount() {
     this.setState({isLoading: true}, () => {
-      RestAPI.streamChart()
+      RestAPI.interestTrends(this.props.user)
         .then((response) => {
           let twitterData = this.getChartOptions(response.data.twitter_data);
           let paperData = this.getChartOptions(response.data.paper_data);
@@ -74,6 +78,7 @@ class InterestTrends extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     let graphOptions = {
       chart: {
         toolbar: {
@@ -108,12 +113,12 @@ class InterestTrends extends React.Component {
         "#F56464",
         "#86C79A",
       ],
-      dataLabels: { enabled: false },
+      dataLabels: {enabled: false},
       stroke: {
         curve: "smooth",
         width: 1,
       },
-      fill: { type: "solid" },
+      fill: {type: "solid"},
       xaxis: {},
     };
     let twitterGraphOptions = JSON.parse(JSON.stringify(graphOptions));
@@ -125,15 +130,18 @@ class InterestTrends extends React.Component {
     return (
       <>
         <Grid item xs={12}>
-          <Card className={this.props.classes.cardHeight}>
+          <Card className={this.props.classes.cardHeight} elevation={this.props.elevation? 1: 0}>
             <CardContent>
 
               <Typography variant="h5" gutterBottom> Paper Keywords Trend </Typography>
-              <Typography gutterBottom>
-                This charts allow you to monitor your interests over the last
-                years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
-                larger the area the greater the interest).
-              </Typography>
+              {this.props.show ?
+                <Typography gutterBottom>
+                  This charts allow you to monitor your interests over the last
+                  years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
+                  larger the area the greater the interest).
+                </Typography>
+                : <></>}
+
 
               {this.state.isLoading ?
                 <CircularProgress/> :
@@ -153,16 +161,18 @@ class InterestTrends extends React.Component {
           </Card>
         </Grid>
 
-        <Grid item xs={12}>
-          <Card className={this.props.classes.cardHeight}>
+        {this.state.chartOptions.twitterSeries.length ? <Grid item xs={12}>
+          <Card className={this.props.classes.cardHeight} elevation={this.props.elevation ? 1 : 0}>
             <CardContent>
 
               <Typography variant="h5" gutterBottom> Twitter Keywords Trend </Typography>
-              <Typography gutterBottom>
-                This charts allow you to monitor your interests over the last
-                years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
-                larger the area the greater the interest).
-              </Typography>
+              {this.props.show ?
+                <Typography gutterBottom>
+                  This charts allow you to monitor your interests over the last
+                  years. The x-axis represents the years, and the y-axis represents the importance of the interest (the
+                  larger the area the greater the interest).
+                </Typography>
+                : <></>}
 
               {this.state.isLoading ?
                 <CircularProgress/> :
@@ -178,7 +188,7 @@ class InterestTrends extends React.Component {
               }
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> : <></>}
         {/*<div align="center">Paper Keyword Trends</div>*/}
         {/*<div align="center" id="chart">*/}
         {/*  <Chart*/}

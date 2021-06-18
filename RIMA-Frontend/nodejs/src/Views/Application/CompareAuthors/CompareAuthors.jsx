@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import {CircularProgress, Grid, makeStyles, Paper, TextField, Typography} from "@material-ui/core";
+import {Box, CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import RestAPI from "../../../Services/api";
 import {handleServerErrors} from "../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
 import RecentInterestComparison from "./RecentInterestComparison/RecentInterestComparison";
-import {getUserInfo} from "../../../Services/utils/functions";
+import InterestOverviewComparison from "./InterestOverviewComparison/InterestOverviewComparison";
+import InterestTrendsComparison from "./InterestTrendsComparison/InterestTrendsComparison";
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,10 +20,22 @@ const useStyles = makeStyles(theme => ({
   gutterLarge: {
     marginBottom: theme.spacing(6)
   },
+  tabPanel: {
+    // backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    borderRadius: theme.spacing(4),
+    // marginBottom: theme.spacing(2)
+  },
   cardHeight: {
     height: "100%",
     padding: theme.spacing(4),
     borderRadius: theme.spacing(4),
+    marginBottom: 24
+  },
+  cardHeightAlt: {
+    height: "100%",
+    padding: theme.spacing(4, 4, 0, 4),
+    borderRadius: theme.spacing(4, 4, 0, 0),
     marginBottom: 24
   },
 }));
@@ -42,8 +55,12 @@ export default function CompareAuthors() {
   //   paper_count: 77,
   //   tweet_count: 21,
   // });
-  const currentUser = getUserInfo();
   const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChangeTab = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const loading =
     <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
@@ -106,29 +123,62 @@ export default function CompareAuthors() {
         </Grid>
       </Grid>
 
-      {values === undefined ? <></> : <>
-        <Grid container direction="column" component={Paper} className={classes.cardHeight} alignItems="center">
-          <Grid item xs>
-            <Typography variant="h4">
-              Similarity score between you and {compareAuthor.first_name} {compareAuthor.last_name} is {values.score}%.
-            </Typography>
+      {values === undefined ? <></>
+
+
+        : <>
+          <Grid container direction="column" component={Paper} className={classes.cardHeightAlt} alignItems="center">
+            <Grid item xs>
+              <Typography variant="h4" gutterBottom>
+                Similarity score between you
+                and {compareAuthor.first_name} {compareAuthor.last_name} is {values.score}%.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs>
+                  <Tabs
+                    value={value}
+                    onChange={handleChangeTab}
+                    variant="fullWidth"
+                    aria-label="simple tabs example"
+
+                  >
+                    <Tab label="Interest Overview Comparison"/>
+                    <Tab label="Explanations"/>
+                  </Tabs>
+                </Grid>
+
+              </Grid>
+
+            </Grid>
+
           </Grid>
 
-          {/*<Grid item xs={12}>*/}
-          {/*  <ComparisonSlider*/}
-          {/*    first_name={compareAuthor.first_name}*/}
-          {/*    last_name={compareAuthor.last_name}*/}
-          {/*  />*/}
-          {/*</Grid>*/}
-        </Grid>
 
-        <RecentInterestComparison
-          classes={classes}
-          loading={loading}
-          currentUser={currentUser}
-          compareAuthor={compareAuthor}
-        />
-      </>
+          {value === 0 ?
+            <>
+              <InterestOverviewComparison
+                classes={classes}
+                compareAuthor={compareAuthor}
+              />
+
+              <RecentInterestComparison
+                classes={classes}
+                loading={loading}
+                compareAuthor={compareAuthor}
+              />
+
+              <InterestTrendsComparison
+                classes={classes}
+                compareAuthor={compareAuthor}
+              />
+            </> :
+            <>
+              <Typography>Works</Typography>
+            </>}
+        </>
+
       }
 
 

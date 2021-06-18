@@ -1,10 +1,9 @@
-import React from "react";
-import {Card, CardContent, Grid, Typography} from "@material-ui/core";
-import RecentInterest from "../../InterestProfile/RecentInterest/RecentInterest";
+import React from 'react';
 import {getUserInfo} from "../../../../Services/utils/functions";
+import {Card, CardContent, Grid, Typography} from "@material-ui/core";
+import InterestTrends from "../../InterestProfile/InterestsTrends/InterestTrends";
 
-
-export default function RecentInterestComparison({classes, loading, compareAuthor}) {
+export default function InterestTrendsComparison({classes, compareAuthor}) {
   const currentUser = getUserInfo();
 
   return (
@@ -13,7 +12,7 @@ export default function RecentInterestComparison({classes, loading, compareAutho
         <Grid container justify="center" className={classes.gutterLarge}>
           <Grid item>
             <Typography variant="h5" >
-              <b> Recent Interests </b>
+              <b> Interest Trends </b>
             </Typography>
           </Grid>
         </Grid>
@@ -25,7 +24,7 @@ export default function RecentInterestComparison({classes, loading, compareAutho
                 {currentUser.first_name} {currentUser.last_name}
               </Typography>
 
-              <RecentInterest loading={loading} height={600}/>
+              <InterestTrends classes={classes} elevation={false}/>
             </Grid>
           </Grid>
           <Grid item xs={6}>
@@ -35,7 +34,7 @@ export default function RecentInterestComparison({classes, loading, compareAutho
                 {compareAuthor.first_name} {compareAuthor.last_name}
               </Typography>
 
-              <RecentInterest loading={loading} height={600} user={compareAuthor}/>
+              <InterestTrends classes={classes} user={compareAuthor} show={false} elevation={false}/>
             </Grid>
           </Grid>
         </Grid>

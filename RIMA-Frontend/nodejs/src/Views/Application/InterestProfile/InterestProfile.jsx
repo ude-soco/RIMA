@@ -5,7 +5,6 @@ import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
 import PotentialInterests from "./PotentialInterests/PotentialInterests";
 import InterestTrends from "./InterestsTrends/InterestTrends";
-import {getUserInfo} from "../../../Services/utils/functions";
 
 const useStyles = makeStyles(theme => ({
   spacing: {
@@ -23,7 +22,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function InterestProfile() {
   const classes = useStyles();
-  const currentUser = getUserInfo();
 
   const loading =
     <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
@@ -38,7 +36,6 @@ export default function InterestProfile() {
 
   return (
     <>
-
       <Grid container direction="column" spacing={2}>
         <Grid item xs={12}>
           <InterestOverview classes={classes}/>
@@ -65,7 +62,8 @@ export default function InterestProfile() {
 
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            <InterestTrends classes={classes}/>
+
+            <InterestTrends classes={classes} show={true} elevation={true}/>
           </Grid>
         </Grid>
 
@@ -74,7 +72,6 @@ export default function InterestProfile() {
         </Grid>
 
       </Grid>
-
     </>
   );
 }
