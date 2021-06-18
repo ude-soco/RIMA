@@ -106,7 +106,7 @@ class SearchUserProfile extends React.Component {
 
   componentDidMount() {
     this.setState({ isLoding: true }, () => {
-      RestAPI.getScore(this.props.match.params.id)
+      RestAPI.getScore(this.props.compareAuthor.id)
         .then((response) => {
           console.log(response.data)
           this.setState({
@@ -120,7 +120,7 @@ class SearchUserProfile extends React.Component {
           this.setState({ isLoding1: false });
           handleServerErrors(error, toast.error);
         });
-      RestAPI.getUserProfile(this.props.match.params.id)
+      RestAPI.getUserProfile(this.props.compareAuthor.id)
         .then((response) => {
           this.setState({
             id: response.data.id,
@@ -132,7 +132,7 @@ class SearchUserProfile extends React.Component {
             paper_count: response.data.paper_count,
             tweet_count: response.data.tweet_count,
             keyword_count: response.data.keyword_count,
-            paramid: this.props.match.params.id,
+            paramid: this.props.compareAuthor.id,
           });
         })
         .catch((error) => {
@@ -232,16 +232,16 @@ class SearchUserProfile extends React.Component {
   render() {
     return (
       <>
-        <SearchUserHeader
-          first_name={this.state.first_name}
-          last_name={this.state.last_name}
-          score={this.state.score}
-        />
+        {/*<SearchUserHeader*/}
+        {/*  first_name={this.state.first_name}*/}
+        {/*  last_name={this.state.last_name}*/}
+        {/*  score={this.state.score}*/}
+        {/*/>*/}
         <Container  fluid>
-        <ComparisonSlider
-            first_name={this.state.first_name}
-            last_name={this.state.last_name}
-          />
+        {/*<ComparisonSlider*/}
+        {/*    first_name={this.state.first_name}*/}
+        {/*    last_name={this.state.last_name}*/}
+        {/*  />*/}
           <br />
           
           <Row>

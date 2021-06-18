@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 import RecentInterestComparison from "./RecentInterestComparison/RecentInterestComparison";
 import InterestOverviewComparison from "./InterestOverviewComparison/InterestOverviewComparison";
 import InterestTrendsComparison from "./InterestTrendsComparison/InterestTrendsComparison";
+import SearchUserProfile from "./SearchUserProfile";
 
 
 const useStyles = makeStyles(theme => ({
@@ -18,13 +19,12 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   gutterLarge: {
-    marginBottom: theme.spacing(6)
+    margin: theme.spacing(3, 0, 6, 0)
   },
   tabPanel: {
     // backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    borderRadius: theme.spacing(4),
-    // marginBottom: theme.spacing(2)
+    color: theme.palette.primary.main,
+
   },
   cardHeight: {
     height: "100%",
@@ -35,7 +35,8 @@ const useStyles = makeStyles(theme => ({
   cardHeightAlt: {
     height: "100%",
     padding: theme.spacing(4, 4, 0, 4),
-    borderRadius: theme.spacing(4, 4, 0, 0),
+    // borderRadius: theme.spacing(4, 4, 0, 0),
+    borderRadius: theme.spacing(4),
     marginBottom: 24
   },
 }));
@@ -128,29 +129,26 @@ export default function CompareAuthors() {
 
         : <>
           <Grid container direction="column" component={Paper} className={classes.cardHeightAlt} alignItems="center">
-            <Grid item xs>
-              <Typography variant="h4" gutterBottom>
+            <Grid item xs className={classes.gutterLarge}>
+              <Typography variant="h4">
                 Similarity score between you
-                and {compareAuthor.first_name} {compareAuthor.last_name} is {values.score}%.
+                and {compareAuthor.first_name} {compareAuthor.last_name} is <b>{values.score}%</b>.
               </Typography>
             </Grid>
-            <Grid item xs={12}>
-              <Grid container>
-                <Grid item xs>
-                  <Tabs
-                    value={value}
-                    onChange={handleChangeTab}
-                    variant="fullWidth"
-                    aria-label="simple tabs example"
 
-                  >
-                    <Tab label="Interest Overview Comparison"/>
-                    <Tab label="Explanations"/>
-                  </Tabs>
-                </Grid>
-
+            <Grid container>
+              <Grid item xs>
+                <Tabs
+                  value={value}
+                  onChange={handleChangeTab}
+                  variant="fullWidth"
+                  aria-label="simple tabs example"
+                  className={classes.tabPanel}
+                >
+                  <Tab label={<Typography variant="h6"><b> Interest Overview Comparison </b></Typography>}/>
+                  <Tab label={<Typography variant="h6"><b> Explanations </b></Typography>}/>
+                </Tabs>
               </Grid>
-
             </Grid>
 
           </Grid>
@@ -175,7 +173,7 @@ export default function CompareAuthors() {
               />
             </> :
             <>
-              <Typography>Works</Typography>
+              <SearchUserProfile compareAuthor={compareAuthor}/>
             </>}
         </>
 

@@ -12,31 +12,28 @@ export default function RecentInterestComparison({classes, loading, compareAutho
       <CardContent>
         <Grid container justify="center" className={classes.gutterLarge}>
           <Grid item>
-            <Typography variant="h5" >
+            <Typography variant="h5">
               <b> Recent Interests </b>
             </Typography>
           </Grid>
         </Grid>
 
         <Grid container>
-          <Grid item xs={6}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant="h5">
-                {currentUser.first_name} {currentUser.last_name}
-              </Typography>
+          <Grid container direction="column" alignItems="center" xs>
+            <Typography variant="h5">
+              {currentUser.first_name} {currentUser.last_name}
+            </Typography>
 
-              <RecentInterest loading={loading} height={600}/>
-            </Grid>
+            <RecentInterest loading={loading} height={600}/>
           </Grid>
-          <Grid item xs={6}>
-            <Grid container direction="column" alignItems="center">
 
-              <Typography variant="h5">
-                {compareAuthor.first_name} {compareAuthor.last_name}
-              </Typography>
+          <Grid container direction="column" alignItems="center" xs>
 
-              <RecentInterest loading={loading} height={600} user={compareAuthor}/>
-            </Grid>
+            <Typography variant="h5">
+              {compareAuthor.first_name} {compareAuthor.last_name}
+            </Typography>
+
+            <RecentInterest loading={loading} height={600} user={compareAuthor}/>
           </Grid>
         </Grid>
       </CardContent>
