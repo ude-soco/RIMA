@@ -38,6 +38,7 @@ export default function InterestProfile() {
 
   return (
     <>
+
       <Grid container direction="column" spacing={2}>
         <Grid item xs={12}>
           <InterestOverview classes={classes}/>
@@ -53,7 +54,7 @@ export default function InterestProfile() {
                     This chart shows your recent interests in the last year (for publications), and last month (for
                     tweets).
                   </Typography>
-                  <RecentInterest loading={loading} height={400} user={currentUser}/>
+                  <RecentInterest loading={loading} height={400} />
                 </CardContent>
               </Card>
             </Grid>

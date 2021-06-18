@@ -19,8 +19,8 @@ export default function RecentInterest({loading, height, user}) {
   useEffect(() => {
     if (!state.series.length) {
       // TODO: this should be short term interest
-      // RestAPI.shortTermInterest(user)
-      RestAPI.longTermInterest(user)
+      RestAPI.shortTermInterest(user)
+      // RestAPI.longTermInterest(user)
         .then((response) => {
           let myData = [];
           let values = [];
