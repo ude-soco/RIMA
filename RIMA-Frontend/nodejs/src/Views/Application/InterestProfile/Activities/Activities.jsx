@@ -9,7 +9,7 @@ import {getColorArray} from "../../../../Services/utils/functions";
 
 const height = 400
 
-export default function Activities({classes, loading}) {
+export default function Activities({classes, loading, user, elevation, showTitle, vertical}) {
   const [publications, setPublications] = useState({
     series: [],
     options: {
@@ -31,7 +31,7 @@ export default function Activities({classes, loading}) {
 
   useEffect(() => {
     if (!publications.series.length) {
-      RestAPI.barChart()
+      RestAPI.activities(user)
         .then((response) => {
           let paperList = Object.keys(response.data.papers);
           let paperValues = Object.values(response.data.papers);
@@ -64,35 +64,33 @@ export default function Activities({classes, loading}) {
 
   return (
     <>
-      <Grid item xs={12} lg={8}>
-        <Card className={classes.cardHeight}>
-          <CardContent>
-            <Typography variant="h5" gutterBottom> Activities: Publications and Tweets </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} lg={6}>
-                <Typography gutterBottom> The number of publications published in the last 5 years </Typography>
-                {publications.series.length ?
-                  <Grid item xs={12}>
-                    <Chart options={publications.options} series={publications.series} type="bar" height={height}/>
-                  </Grid> :
-                  <> {loading} </>
-                }
-              </Grid>
+      <Card className={classes.cardHeight} elevation={elevation ? 1 : 0}>
+        <CardContent>
+          {showTitle ? <Typography variant="h5" gutterBottom> Activities: Publications and Tweets </Typography> : <></>}
+          <Grid container direction={vertical ? "column" : "row"} spacing={2}>
+            <Grid item xs={12} lg={vertical ? 12 : 6}>
+              <Typography gutterBottom> The number of publications published in the last 5 years </Typography>
+              {publications.series.length ?
+                <Grid item xs={12}>
+                  <Chart options={publications.options} series={publications.series} type="bar" height={height}/>
+                </Grid> :
+                <> {loading} </>
+              }
+            </Grid>
 
-              <Grid item xs={12} lg={6}>
-                <Typography gutterBottom> The number of tweets in the last 6 months.</Typography>
-                {tweets.series.length ?
-                  <Grid item>
-                    <Chart options={tweets.options} series={tweets.series} type="bar" height={height}/>
-                  </Grid> :
-                  <> {loading} </>
+            <Grid item xs={12} lg={vertical ? 12 : 6}>
+              <Typography gutterBottom> The number of tweets in the last 6 months.</Typography>
+              {tweets.series.length ?
+                <Grid item>
+                  <Chart options={tweets.options} series={tweets.series} type="bar" height={height}/>
+                </Grid> :
+                <> {loading} </>
                 }
               </Grid>
             </Grid>
 
           </CardContent>
         </Card>
-      </Grid>
     </>
   );
 }

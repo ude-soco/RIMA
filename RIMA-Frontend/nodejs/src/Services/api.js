@@ -60,6 +60,19 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  static activities(userData) {
+    let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/activity-stats/user/${!userData ? currentUser.id : userData.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      }
+    }).then((res) => res);
+  }
+
 
   // OLD APIS
 

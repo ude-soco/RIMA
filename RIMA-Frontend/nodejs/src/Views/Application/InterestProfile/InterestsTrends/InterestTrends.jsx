@@ -139,7 +139,6 @@ export default function InterestTrends({classes, elevation, show, user}) {
               </>
             }
 
-
             {paper.series.length ?
               <>
                 <Grid item xs={12}>
@@ -172,7 +171,6 @@ export default function InterestTrends({classes, elevation, show, user}) {
                 </Typography>
               </>
             }
-
 
             {tweets.series.length ?
               <>

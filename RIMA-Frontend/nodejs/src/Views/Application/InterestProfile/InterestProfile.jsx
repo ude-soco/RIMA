@@ -51,12 +51,14 @@ export default function InterestProfile() {
                     This chart shows your recent interests in the last year (for publications), and last month (for
                     tweets).
                   </Typography>
-                  <RecentInterest loading={loading} height={400} />
+                  <RecentInterest loading={loading} height={400}/>
                 </CardContent>
               </Card>
             </Grid>
 
-            <Activities classes={classes} loading={loading}/>
+            <Grid item xs={12} lg={8}>
+              <Activities classes={classes} loading={loading} showTitle={true} />
+            </Grid>
           </Grid>
         </Grid>
 

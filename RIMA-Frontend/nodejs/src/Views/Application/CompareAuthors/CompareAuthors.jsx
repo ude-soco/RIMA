@@ -8,6 +8,7 @@ import RecentInterestComparison from "./RecentInterestComparison/RecentInterestC
 import InterestOverviewComparison from "./InterestOverviewComparison/InterestOverviewComparison";
 import SearchUserProfile from "./SearchUserProfile";
 import InterestTrendsComparison from "./InterestTrendsComparison/InterestTrendsComparison";
+import ActivitiesComparison from "./ActivitiesComparison/ActivitiesComparison";
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   gutterLarge: {
-    marginBottom: theme.spacing(14)
+    marginBottom: theme.spacing(11)
   },
   tabPanel: {
     marginBottom: theme.spacing(7),
@@ -168,6 +169,12 @@ export default function CompareAuthors() {
                   loading={loading}
                   compareAuthor={compareAuthor}
                 />
+
+                <ActivitiesComparison
+                  classes={classes}
+                  loading={loading}
+                  compareAuthor={compareAuthor}
+                  />
 
                 <InterestTrendsComparison
                   classes={classes}
