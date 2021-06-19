@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, CardContent, Grid, Typography} from "@material-ui/core";
+import {Divider, Grid, Typography} from "@material-ui/core";
 import RecentInterest from "../../InterestProfile/RecentInterest/RecentInterest";
 import {getUserInfo} from "../../../../Services/utils/functions";
 
@@ -8,35 +8,36 @@ export default function RecentInterestComparison({classes, loading, compareAutho
   const currentUser = getUserInfo();
 
   return (
-    <Card className={classes.cardHeight}>
-      <CardContent>
-        <Grid container justify="center" className={classes.gutterLarge}>
-          <Grid item>
-            <Typography variant="h5">
-              <b> Recent Interests </b>
-            </Typography>
-          </Grid>
+    <>
+      <Grid container  className={classes.header}>
+        <Grid item>
+          <Typography variant="h5" gutterBottom color="textSecondary">
+            <b> Recent Interests </b>
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+      </Grid>
+
+      <Grid container className={classes.gutterLarge}>
+        <Grid container direction="column" alignItems="center" xs>
+          <Typography variant="h5" color="textSecondary">
+            {currentUser.first_name} {currentUser.last_name}
+          </Typography>
+
+          <RecentInterest loading={loading} height={600}/>
         </Grid>
 
-        <Grid container>
-          <Grid container direction="column" alignItems="center" xs>
-            <Typography variant="h5">
-              {currentUser.first_name} {currentUser.last_name}
-            </Typography>
+        <Grid container direction="column" alignItems="center" xs>
 
-            <RecentInterest loading={loading} height={600}/>
-          </Grid>
+          <Typography variant="h5" color="textSecondary">
+            {compareAuthor.first_name} {compareAuthor.last_name}
+          </Typography>
 
-          <Grid container direction="column" alignItems="center" xs>
-
-            <Typography variant="h5">
-              {compareAuthor.first_name} {compareAuthor.last_name}
-            </Typography>
-
-            <RecentInterest loading={loading} height={600} user={compareAuthor}/>
-          </Grid>
+          <RecentInterest loading={loading} height={600} user={compareAuthor}/>
         </Grid>
-      </CardContent>
-    </Card>
+      </Grid>
+    </>
   );
 }

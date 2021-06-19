@@ -5,7 +5,6 @@ import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
 import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
 import InterestOverview from "../Views/Application/InterestProfile/InterestOverview/InterestOverview";
 import ConceptChartPage from "../Views/Application/InterestProfile/PotentialInterests/PotentialInterests";
-import StreamChartPage from "../Views/StreamChart";
 import SearchUserProfile from "../Views/Application/CompareAuthors/SearchUserProfile";
 import Keyword from "../Views/Keyword.js";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
@@ -123,14 +122,6 @@ let routes = [
   //   name: "Concept Chart",
   //   icon: "fas fa-cloud text-info",
   //   component: ConceptChartPage,
-  //   layout: "/app",
-  //   display: "none",
-  // },
-  // {
-  //   path: "/stream-chart",
-  //   name: "Stream Chart",
-  //   icon: "fas fa-cloud text-info",
-  //   component: StreamChartPage,
   //   layout: "/app",
   //   display: "none",
   // },

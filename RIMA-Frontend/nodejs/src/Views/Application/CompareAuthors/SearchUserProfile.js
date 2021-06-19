@@ -24,8 +24,6 @@ import HeatMap from "../../components/UserCharts/HeatMap.js";
 import "react-tabs/style/react-tabs.css";
 import "../../../assets/scss/custom.css";
 import swal from "@sweetalert/with-react";
-import { setItem } from "Services/utils/localStorage";
-import { ThemeProvider } from "@material-ui/core";
 import ComparisonSlider from "./ComparisonSlider";
 
 const SimilarityComponent = (props) => {
@@ -238,10 +236,10 @@ class SearchUserProfile extends React.Component {
         {/*  score={this.state.score}*/}
         {/*/>*/}
         <Container  fluid>
-        {/*<ComparisonSlider*/}
-        {/*    first_name={this.state.first_name}*/}
-        {/*    last_name={this.state.last_name}*/}
-        {/*  />*/}
+        <ComparisonSlider
+            first_name={this.state.first_name}
+            last_name={this.state.last_name}
+          />
           <br />
           
           <Row>

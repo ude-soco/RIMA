@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   cardHeight: {
     height: "100%",
     padding: theme.spacing(2),
-    borderRadius: theme.spacing(4)
+    borderRadius: theme.spacing(2)
   },
   padding: {
     margin: theme.spacing(15, 0, 15, 0)
@@ -63,6 +63,7 @@ export default function InterestProfile() {
         <Grid item xs={12}>
           <Grid container spacing={2}>
 
+            {/*<InterestTrends classes={classes} show={true} elevation={true}/>*/}
             <InterestTrends classes={classes} show={true} elevation={true}/>
           </Grid>
         </Grid>
