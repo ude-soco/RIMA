@@ -9,12 +9,11 @@ import {useHistory} from "react-router-dom";
 
 export default function AddConference() {
   const [details, setDetails] = useState({
-    confname: "",
+    platform_name: "",
+    platform_url: "",
+    conference_name_abbr: "",
     conference_url: "",
-    year: "",
-    platform: "",
-    platfrom_url: "",
-    
+    conference_event_year:"", 
   });
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
@@ -28,36 +27,45 @@ export default function AddConference() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    let data = {
-      confname: details.confname,
-      conference_url: details.conference_url,
-      year: details.year,
-      platform: details.platform,
-      platfrom_url: details.platfrom_url
-    };
+    console.log(details);
 
+   alert(JSON.stringify(details));
+   e.preventDefault();
+    
+    let data = {
+      platform_name: details.platform_name,
+      platform_url: details.platform_url,
+      conferences: [
+        {
+          conference_name_abbr: details.conference_name_abbr,
+          conference_url: details.conference_url,
+          conference_event_year: details.conference_event_year,
+        }, 
+    ],    
+    };
+    console.log(data);
     setIsLoading(true);
-   /*
-    RestAPI.addPaper(data).then((response) => {
-      toast.success("Paper Added!", {
+   
+    RestAPI.addConference (data).then((response) => {
+      toast.success("Conference Event Added!", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
       setDetails({
-        confname: "",
-        conference_url: "",
-        year: "",
-        platform: "",
-        platfrom_url:"",
-      });
+      platform_name: "",
+      platform_url: "",
+      conference_name_abbr: "",
+      conference_url: "",
+      conference_event_year:"",
+ 
+    });
       setIsLoading(false);
       history.push("/app/view-paper")
     }).catch((error) => {
       setIsLoading(false);
       handleServerErrors(error, toast.error);
     });
-    */
+    
   }
 
   return (
@@ -95,15 +103,15 @@ export default function AddConference() {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-confname"
+                            htmlFor="input-conference_name_abbr"
                           >
                             Conference Name Abbr.
                           </label>
                           <Input
                             className="form-control-alternative"
-                            id="input-confname"
-                            name="confname"
-                            value={details.confname}
+                            id="input-conference_name_abbr"
+                            name="conference_name_abbr"
+                            value={details.conference_name_abbr}
                             onChange={handleChange}
                             placeholder=" Ex: Lak "
                             type="text"
@@ -135,15 +143,15 @@ export default function AddConference() {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-year"
+                            htmlFor="input-conference_event_year"
                           >
                             Year
                           </label>
                           <Input
                             className="form-control-alternative"
-                            id="input-year"
-                            name="year"
-                            value={details.year}
+                            id="input-conference_event_year"
+                            name="conference_event_year"
+                            value={details.conference_event_year}
                             onChange={handleChange}
                             placeholder="Year"
                             type="number"
@@ -154,15 +162,15 @@ export default function AddConference() {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-platform"
+                            htmlFor="input-platform_name"
                           >
                             platform
                           </label>
                           <Input
                             className="form-control-alternative"
-                            id="input-platform"
-                            name="platform"
-                            value={details.platform}
+                            id="input-platform_name"
+                            name="platform_name"
+                            value={details.platform_name}
                             onChange={handleChange}
                             placeholder="Ex: dblp"
                             // className="form-control-alternative"
@@ -179,7 +187,7 @@ export default function AddConference() {
                               className="form-control-label"
                               htmlFor="input-platform_url"
                             >
-                              Platfrom Url
+                              Platform Url
                             </label>
                             <Input
                               className="form-control-alternative"

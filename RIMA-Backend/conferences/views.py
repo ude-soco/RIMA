@@ -54,7 +54,34 @@ from .topicutils import (
     getAuthorsDict,   #printText 
     getConfEvents)  #BAB 08.06.2021::Extension for other conferences other than LAK
 from .TopicExtractor import (fetchAllTopics, fetchAbstracts_author, updateAllTopics)
+from .serializers import ConferenceSerializer, PlatformSerializer
+from rest_framework.generics import (ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView,
+                                     DestroyAPIView, ListAPIView,
+                                     RetrieveAPIView, CreateAPIView)
 
+
+'''
+BAB Add Conference View
+
+'''
+
+class addConferenceView(ListCreateAPIView):
+    serializer_class = PlatformSerializer
+
+    #def get_queryset(self):
+        # return self.request.user.papers.filter(paper_id="manual")
+        #return self.request.user.papers.all().order_by("-year")
+    
+    def post(self, request, *args, **kwargs):
+        print("TEST BAB")
+
+        request_data = self.request.data
+        print(request_data)
+        serializer = self.serializer_class(data=request_data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 '''
 BAB get conf events/years

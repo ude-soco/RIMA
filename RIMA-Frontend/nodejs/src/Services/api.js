@@ -62,6 +62,23 @@ class RestAPI {
     }).then((res) => res);
   }
 
+
+  //** ADD CONFERENCE API  BAB**//
+  static addConference(data) {
+    const TOKEN = getItem("accessToken");
+    console.log(data);
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/conferences/addConference/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+
   //** GET LIST PAPER API **//
   static getListPaper() {
     const TOKEN = getItem("accessToken");
