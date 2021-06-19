@@ -25,7 +25,7 @@ import Register from "../Views/Website/Register/Register";
 import Dashboard from "../Views/Application/Dashboard/Dashboard";
 
 import addConference from "../Views/Application/Conferences/addConference.jsx";
-
+import viewConference from "../Views/Application/Conferences/viewConference.js"
 
 
 let routes = [
@@ -53,11 +53,21 @@ let routes = [
     layout: "/app",
     // display: "none"
   },
+  // BAB
   {
     path: "/add-conference",
     name: "Add Conference",
     icon: "ni ni-fat-add text-green",
     component: addConference,
+    layout: "/app",
+    // display: "none"
+  },
+  // BAB
+  {
+    path: "/view-conference",
+    name: "My Conferences",
+    icon: "ni ni-fat-add text-green",
+    component: viewConference,
     layout: "/app",
     // display: "none"
   },

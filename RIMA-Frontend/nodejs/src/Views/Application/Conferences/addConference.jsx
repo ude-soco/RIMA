@@ -60,7 +60,7 @@ export default function AddConference() {
  
     });
       setIsLoading(false);
-      history.push("/app/view-paper")
+      history.push("/app/view-conference")
     }).catch((error) => {
       setIsLoading(false);
       handleServerErrors(error, toast.error);

@@ -20,6 +20,8 @@ import BookIcon from '@material-ui/icons/Book';
 import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import MeetingRoomOutlined from '@material-ui/icons/MeetingRoomOutlined';
+
 
 const drawerWidth = 240;
 
@@ -87,6 +89,9 @@ export default function SideBar({selection, setSelection}) {
       case "addConference":
         history.push("/app/add-conference");
         break;
+      case "viewConference":
+        history.push("/app/view-conference");
+        break;  
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -254,6 +259,16 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Add Conference"/>
           </ListItem>
         
+          <ListItem button id="viewConference"
+                    selected={selectedList("viewConference")}
+                    onClick={handleSelect}
+                    className={selectedList("viewConference")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <MeetingRoomOutlined className={selectedList("viewConference")}/>
+            </ListItemIcon>
+            <ListItemText primary="View added Conferences"/>
+          </ListItem>
+
         <ListItem button id="topicTrends"
                     selected={selectedList("topicTrends")}
                     onClick={handleSelect}
