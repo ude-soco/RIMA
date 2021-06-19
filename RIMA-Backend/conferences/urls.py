@@ -6,6 +6,9 @@ from . import views
 
 
 urlpatterns = [
+    
+
+    path('addConference/', views.addConferenceView.as_view()), # BAB
     path('laktopics/<pk1>/<pk2>/<pk3>', views.TopicsView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
 
     path('lakkeywords/<pk1>/<pk2>/<pk3>', views.KeywordsView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
