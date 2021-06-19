@@ -51,17 +51,17 @@ const useStyles = makeStyles(theme => ({
 export default function CompareAuthors() {
   const [suggestions, setSuggestions] = useState([]);
   const [values, setValues] = useState(undefined);
-  // const [compareAuthor, setCompareAuthor] = useState(undefined);
-  const [compareAuthor, setCompareAuthor] = useState({
-    email: "ulrich@gmail.com",
-    first_name: "Ulrich",
-    last_name: "Hoppe",
-    id: 22,
-    twitter_account_id: "@UCSM_UDE",
-    author_id: "1724546",
-    paper_count: 77,
-    tweet_count: 21,
-  });
+  const [compareAuthor, setCompareAuthor] = useState(undefined);
+  // const [compareAuthor, setCompareAuthor] = useState({
+  //   email: "ulrich@gmail.com",
+  //   first_name: "Ulrich",
+  //   last_name: "Hoppe",
+  //   id: 22,
+  //   twitter_account_id: "@UCSM_UDE",
+  //   author_id: "1724546",
+  //   paper_count: 77,
+  //   tweet_count: 21,
+  // });
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -130,14 +130,14 @@ export default function CompareAuthors() {
         </Grid>
       </Grid>
 
-      {!values === undefined ? <></> :
+      {values === undefined ? <></> :
         <>
           <Grid container direction="column" component={Paper} className={classes.cardHeightAlt} alignItems="center">
             <Grid item xs className={classes.headerAlt}>
               <Typography variant="h4" color="textSecondary">
                 Similarity score between you
                 and {compareAuthor.first_name} {compareAuthor.last_name}
-                {/*is <b>{values.score}%</b>.*/}
+                is <b>{values.score}%</b>.
               </Typography>
             </Grid>
 

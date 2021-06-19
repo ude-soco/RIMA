@@ -19,7 +19,7 @@ export default function InterestTrendsComparison({classes, compareAuthor}) {
         </Grid>
       </Grid>
 
-      <Grid container className={classes.gutterLarge}>
+      <Grid container className={classes.gutter}>
         <Grid item xs={12} lg={6}>
           <Grid container direction="column" alignItems="center">
             <Typography variant="h5" color="textSecondary">
