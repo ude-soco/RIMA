@@ -105,7 +105,7 @@ class SearchUserProfile extends React.Component {
     this.setState({ isLoding: true }, () => {
       RestAPI.getScore(this.props.compareAuthor.id)
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           this.setState({
             score: response.data.score,
             venn_chart_data: response.data.venn_chart_data,
@@ -119,6 +119,7 @@ class SearchUserProfile extends React.Component {
         });
       RestAPI.getUserProfile(this.props.compareAuthor.id)
         .then((response) => {
+          // console.log(response.data)
           this.setState({
             id: response.data.id,
             first_name: response.data.first_name,
@@ -229,14 +230,7 @@ class SearchUserProfile extends React.Component {
   render() {
     return (
       <>
-        {/*<SearchUserHeader*/}
-        {/*  first_name={this.state.first_name}*/}
-        {/*  last_name={this.state.last_name}*/}
-        {/*  score={this.state.score}*/}
-        {/*/>*/}
-        <Container  fluid>
-          <br />
-          
+        <Container fluid>
           <Row>
             <h1>&nbsp;&nbsp;&nbsp;Basic explanation</h1>
           </Row>
@@ -246,11 +240,12 @@ class SearchUserProfile extends React.Component {
                 <CardHeader className="bg-white border-0">
                   <Row className="align-items-center">
                     <Col xs="12">
-                      <h2 className="mb-0">Interest Association Model</h2>
-                      <p>
-                        This model explaining how the similarity
-                        between users was measured.
-                      </p>
+                      <h2 className="mb-0">Semantic-based similarity of users’ interest models</h2>
+                      {/*<p>*/}
+                      {/*  This model explaining how the similarity*/}
+                      {/*  between users was measured.*/}
+                      {/*  Semantic-based similarity of users’ interest models*/}
+                      {/*</p>*/}
                     </Col>
                   </Row>
                 </CardHeader>
@@ -288,11 +283,12 @@ class SearchUserProfile extends React.Component {
                 <CardHeader className="bg-white border-0">
                   <Row className="align-items-center">
                     <Col xs="12">
-                      <h2 className="mb-0">Interest Similarity Model</h2>
-                      <p>
-                        This model explaining how the similarity
-                        between each interest keyword was measured.
-                      </p>
+                      <h2 className="mb-0">Semantic-based similarity of users’ interest models</h2>
+                      {/*<p>*/}
+                      {/*  This model explaining how the similarity*/}
+                      {/*  between each interest keyword was measured.*/}
+                      {/*  Semantic-based similarity of users’ interest models*/}
+                      {/*</p>*/}
                     </Col>
                   </Row>
                 </CardHeader>
@@ -324,20 +320,21 @@ class SearchUserProfile extends React.Component {
           <Col className="order-xl-2" xl="6">
               <Card className="card-profile shadow">
                 <CardHeader className="bg-white border-0">
-                  <h2>User Similarity Model</h2>
+                  <h2>Weight-based similarity of users’ interest models</h2>
                   <p>
-                    This model explaining the weight of users occupied by
-                    interest.
+                    {/*This model explaining the weight of users occupied by*/}
+                    {/*interest.*/}
+                    {/*Weight-based similarity of users’ interest models*/}
                     <i
-                      style={{ cursor: "pointer" }}
+                      style={{cursor: "pointer"}}
                       onClick={this.modalDetail}
                       className="fa fa-question-circle"
                       onMouseOver={() => this.handleToggle(true)}
                       onMouseOut={() => this.handleToggle(false)}
                     />
                     {this.state.imageTooltipOpen && (
-                            <b
-                              className="imgTooltip"
+                      <b
+                        className="imgTooltip"
                               style={{ 
                                 backgroundColor: "#ffffff",
                                 color: "#8E8E8E",

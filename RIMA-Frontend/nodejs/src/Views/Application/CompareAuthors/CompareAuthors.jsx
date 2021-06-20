@@ -9,6 +9,7 @@ import InterestOverviewComparison from "./InterestOverviewComparison/InterestOve
 import SearchUserProfile from "./SearchUserProfile";
 import InterestTrendsComparison from "./InterestTrendsComparison/InterestTrendsComparison";
 import ActivitiesComparison from "./ActivitiesComparison/ActivitiesComparison";
+import AdvancedExplanation from "./AdvancedExplanation/AdvancedExplanation";
 
 
 const useStyles = makeStyles(theme => ({
@@ -50,24 +51,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function CompareAuthors() {
   const [suggestions, setSuggestions] = useState([]);
-  const [values, setValues] = useState(undefined);
+  const [similarityScores, setSimilarityScores] = useState(undefined);
   const [compareAuthor, setCompareAuthor] = useState(undefined);
-  // const [compareAuthor, setCompareAuthor] = useState({
-  //   email: "ulrich@gmail.com",
-  //   first_name: "Ulrich",
-  //   last_name: "Hoppe",
-  //   id: 22,
-  //   twitter_account_id: "@UCSM_UDE",
-  //   author_id: "1724546",
-  //   paper_count: 77,
-  //   tweet_count: 21,
-  // });
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const handleChangeTab = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [tabValue, setTabValue] = React.useState(0);
 
   const loading =
     <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
@@ -78,6 +65,10 @@ export default function CompareAuthors() {
         <Typography variant="overline"> Loading data </Typography>
       </Grid>
     </Grid>
+
+  const handleChangeTab = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   const handleSearchAuthors = (event, values) => {
     if (values.replace(/\s+/g, '').length > 1) {
@@ -92,11 +83,11 @@ export default function CompareAuthors() {
 
   const handleSelectAuthorComparison = (event, values) => {
     setSuggestions([]);
-    setValues(undefined);
+    setSimilarityScores(undefined);
     if (values !== null) {
       RestAPI.getScore(values.id).then(res => {
-        // console.log(res.data)
-        setValues({...res.data})
+        console.log(res.data)
+        setSimilarityScores({...res.data})
       }).catch(err => handleServerErrors(err, toast.error));
 
       RestAPI.getUserProfile(values.id).then(res => {
@@ -130,21 +121,21 @@ export default function CompareAuthors() {
         </Grid>
       </Grid>
 
-      {values === undefined ? <></> :
+      {similarityScores === undefined ? <></> :
         <>
           <Grid container direction="column" component={Paper} className={classes.cardHeightAlt} alignItems="center">
             <Grid item xs className={classes.headerAlt}>
               <Typography variant="h4" color="textSecondary">
                 Similarity score between you
-                and {compareAuthor.first_name} {compareAuthor.last_name}
-                is <b>{values.score}%</b>.
+                and {compareAuthor.first_name} {compareAuthor.last_name} is
+                {/*<b>{similarityScores.score}%</b>.*/}
               </Typography>
             </Grid>
 
             <Grid container>
               <Grid item xs>
                 <Tabs
-                  value={value}
+                  value={tabValue}
                   onChange={handleChangeTab}
                   textColor={"primary"}
                   indicatorColor={"primary"}
@@ -157,7 +148,7 @@ export default function CompareAuthors() {
               </Grid>
             </Grid>
 
-            {value === 0 ?
+            {tabValue === 0 ?
               <>
                 <InterestOverviewComparison
                   classes={classes}
@@ -182,7 +173,9 @@ export default function CompareAuthors() {
                 />
               </> :
               <>
-                <SearchUserProfile compareAuthor={compareAuthor}/>
+                {/*<SearchUserProfile compareAuthor={compareAuthor}/>*/}
+                <AdvancedExplanation classes={classes} loading={loading} similarityScores={similarityScores}
+                                     compareAuthor={compareAuthor}/>
               </>
             }
           </Grid>

@@ -499,7 +499,7 @@ class RestAPI {
   }
 
   //** GET DATA STATUS API **//
-  static dataimportstatus() {
+  static dataImportstatus() {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",

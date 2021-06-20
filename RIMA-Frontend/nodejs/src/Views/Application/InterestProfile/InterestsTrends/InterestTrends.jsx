@@ -85,9 +85,8 @@ export default function InterestTrends({classes, elevation, show, user}) {
     RestAPI.interestTrends(user)
       .then((response) => {
         const {twitter_data, paper_data} = response.data;
-        console.log(twitter_data);
-        let twitterData = getChartOptions(response.data.twitter_data);
-        let paperData = getChartOptions(response.data.paper_data);
+        let twitterData = getChartOptions(twitter_data);
+        let paperData = getChartOptions(paper_data);
 
         setPaper({
           ...paper,
@@ -120,8 +119,6 @@ export default function InterestTrends({classes, elevation, show, user}) {
   }, [])
 
 
-  console.log(paper)
-  console.log(tweets)
   return (
     <>
       <Grid item xs={12}>
