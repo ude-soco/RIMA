@@ -124,10 +124,10 @@ export default function AdvancedExplanation({classes, loading, similarityScores,
         </Grid>
       </Grid>
 
-      <Dialog open={openExplanation} onClose={() => setOpenExplanation(!openExplanation)} fullWidth>
+      <Dialog open={openExplanation} onClose={() => setOpenExplanation(!openExplanation)} fullWidth maxWidth={"lg"}>
         <DialogContent >
           <Grid container justify="center">
-            <img src={require("../../../../assets/img/similaritychart.png")}  alt="explanation"/>
+            <img src={require("../../../../assets/img/wordEmbeddingBasedMeasure.png")}  alt="explanation"/>
           </Grid>
         </DialogContent>
       </Dialog>
