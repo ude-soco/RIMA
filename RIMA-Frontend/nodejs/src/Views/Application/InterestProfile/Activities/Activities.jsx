@@ -24,7 +24,7 @@ export default function Activities({classes, loading, user, elevation, showTitle
     options: {
       dataLabels: {enabled: true},
       colors: getColorArray(1),
-      xaxis: {title: {text: "Year"}, categories: []},
+      xaxis: {title: {text: "Month"}, categories: []},
       yaxis: {title: {text: "Number of tweets"}}
     }
   });

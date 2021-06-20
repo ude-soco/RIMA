@@ -76,7 +76,7 @@ class RestAPI {
 
   // OLD APIS
 
-  static refreshData(data) {
+  static refreshData() {
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/trigger-data-updata/`,
@@ -89,7 +89,7 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  static refreshPaper(data) {
+  static refreshPaper() {
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/trigger-paper-updata/`,
@@ -221,7 +221,7 @@ class RestAPI {
   }
 
   //** UPDATE USER PROFILE API **//
-  static updateUserProfile(data, id) {
+  static updateUserProfile(data) {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "patch",
@@ -314,56 +314,12 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  //** PIE DATA API **//
-  static pieChart(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${getItem("userId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-
-  //** PIE DATA API FOR USER PROFILE **//
-  static pieChartUser(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${getItem("mId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-
   //** STREAM DATA API **//
   static streamChart() {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/stream-graph/user/${getItem("userId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-    }).then((res) => res);
-  }
-
-  //** STREAM DATA API FOR USER PROFILE **//
-  static streamChartUser() {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/stream-graph/user/${getItem("mId")}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -401,42 +357,12 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  //** BAR DATA API FOR USER PROFILE **//
-  static barChartUser(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/activity-stats/user/${getItem("mId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-
   //** CLOUD DATA API **//
   static cloudChart(data) {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/long-term/user/${getItem("userId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-
-  //** CLOUD DATA API FOR USER PROFILE **//
-  static cloudChartUser(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/long-term/user/${getItem("mId")}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
