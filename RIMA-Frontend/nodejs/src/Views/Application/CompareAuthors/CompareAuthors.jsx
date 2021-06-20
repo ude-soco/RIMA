@@ -6,10 +6,11 @@ import {handleServerErrors} from "../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
 import RecentInterestComparison from "./RecentInterestComparison/RecentInterestComparison";
 import InterestOverviewComparison from "./InterestOverviewComparison/InterestOverviewComparison";
-import SearchUserProfile from "./SearchUserProfile";
 import InterestTrendsComparison from "./InterestTrendsComparison/InterestTrendsComparison";
 import ActivitiesComparison from "./ActivitiesComparison/ActivitiesComparison";
 import AdvancedExplanation from "./AdvancedExplanation/AdvancedExplanation";
+import IntermediateExplanation from "./IntermediateExplanation/IntermediateExplanation";
+import BasicExplanation from "./BasicExplanation/BasicExplanation";
 
 
 const useStyles = makeStyles(theme => ({
@@ -84,6 +85,7 @@ export default function CompareAuthors() {
   const handleSelectAuthorComparison = (event, values) => {
     setSuggestions([]);
     setSimilarityScores(undefined);
+    setTabValue(0);
     if (values !== null) {
       RestAPI.getScore(values.id).then(res => {
         console.log(res.data)
@@ -127,8 +129,7 @@ export default function CompareAuthors() {
             <Grid item xs className={classes.headerAlt}>
               <Typography variant="h4" color="textSecondary">
                 Similarity score between you
-                and {compareAuthor.first_name} {compareAuthor.last_name} is
-                {/*<b>{similarityScores.score}%</b>.*/}
+                and {compareAuthor.first_name} {compareAuthor.last_name} is <b>{similarityScores.score}%</b>.
               </Typography>
             </Grid>
 
@@ -173,7 +174,11 @@ export default function CompareAuthors() {
                 />
               </> :
               <>
-                {/*<SearchUserProfile compareAuthor={compareAuthor}/>*/}
+                <BasicExplanation classes={classes} similarityScores={similarityScores} compareAuthor={compareAuthor}/>
+
+                <IntermediateExplanation classes={classes} loading={loading} similarityScores={similarityScores}
+                                         compareAuthor={compareAuthor}/>
+
                 <AdvancedExplanation classes={classes} loading={loading} similarityScores={similarityScores}
                                      compareAuthor={compareAuthor}/>
               </>

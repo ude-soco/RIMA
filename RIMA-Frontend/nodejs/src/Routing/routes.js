@@ -5,7 +5,6 @@ import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
 import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
 import InterestOverview from "../Views/Application/InterestProfile/InterestOverview/InterestOverview";
 import ConceptChartPage from "../Views/Application/InterestProfile/PotentialInterests/PotentialInterests";
-import SearchUserProfile from "../Views/Application/CompareAuthors/SearchUserProfile";
 import Keyword from "../Views/Keyword.js";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
@@ -131,14 +130,6 @@ let routes = [
     name: "User Profile",
     icon: "ni ni-single-02 text-green",
     component: Profile,
-    layout: "/app",
-    display: "none",
-  },
-  {
-    path: "/profile/:id",
-    name: "User Account Details",
-    icon: "ni ni-single-02 text-green",
-    component: SearchUserProfile,
     layout: "/app",
     display: "none",
   },

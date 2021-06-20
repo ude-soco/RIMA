@@ -45,23 +45,22 @@ class VennDiagram extends Component {
   };
 
   setHoveredKeyword = (user, keyword) => {
-    this.setState({ selectedUser: user, selectedKeyword: keyword });
+    this.setState({selectedUser: user, selectedKeyword: keyword});
   };
   clearHoveredKeyword = () => {
-    this.setState({ selectedUser: null, selectedKeyword: null });
+    this.setState({selectedUser: null, selectedKeyword: null});
   };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.venn_chart_data !== prevProps.venn_chart_data) {
-      const data = this.props.venn_chart_data;
-      this.setState({
-        user_1_exclusive_interest: data.user_1_exclusive_interest,
-        user_2_exclusive_interest: data.user_2_exclusive_interest,
-        similar_user_1: data.similar_interests.user_1,
-        similar_user_2: data.similar_interests.user_2,
-        isLoding: false,
-      });
-      if (
+  componentDidMount() {
+    const data = this.props.venn_chart_data;
+    this.setState({
+      user_1_exclusive_interest: data.user_1_exclusive_interest,
+      user_2_exclusive_interest: data.user_2_exclusive_interest,
+      similar_user_1: data.similar_interests.user_1,
+      similar_user_2: data.similar_interests.user_2,
+      isLoding: false,
+    });
+    if (
         Object.keys(data.similar_interests.user_1).length > 0 ||
         Object.keys(data.similar_interests.user_2).length > 0
       ) {
@@ -69,7 +68,7 @@ class VennDiagram extends Component {
           isData: true,
         });
       }
-    }
+
   }
 
   getUser1Keywords = () => {
@@ -151,12 +150,6 @@ class VennDiagram extends Component {
 
   render() {
     return (
-      <>
-        {this.state.isLoding ? (
-          <div className="text-center" style={{ padding: "20px" }}>
-            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-          </div>
-        ) : (
           <>
             <div
               style={{
@@ -242,7 +235,7 @@ class VennDiagram extends Component {
               id="modal"
             >
               <ModalBody>
-                <h3>Users’ semantically similar interest</h3>
+                <h3>Users’ semantically similar interests</h3>
                 <br/>
                 {this.state.isData ? (
                   <div className="flex">
@@ -273,8 +266,6 @@ class VennDiagram extends Component {
               </ModalFooter>
             </Modal>
           </>
-        )}
-      </>
     );
   }
 }

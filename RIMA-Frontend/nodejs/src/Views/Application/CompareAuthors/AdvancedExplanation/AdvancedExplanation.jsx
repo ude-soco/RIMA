@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {Divider, Grid, Typography} from "@material-ui/core";
-import {getUserInfo} from "../../../../Services/utils/functions";
+import {Dialog, DialogContent, Divider, Grid, IconButton, Typography} from "@material-ui/core";
+import {getColorArray, getUserInfo} from "../../../../Services/utils/functions";
 import Chart from "react-apexcharts";
+import {HelpOutline} from "@material-ui/icons";
 
 const option = {
   chart: {
     type: "bar",
     stacked: true
   },
-  colors: ["#008FFB", "#FF4560"],
+  colors: getColorArray(2),
+  // colors: ["#008FFB", "#FF4560"],
   plotOptions: {
     bar: {
       horizontal: true,
@@ -50,6 +52,7 @@ const option = {
 
 export default function AdvancedExplanation({classes, loading, similarityScores, compareAuthor}) {
   const currentUser = getUserInfo();
+  const [openExplanation, setOpenExplanation] = useState(false);
   const [state, setState] = useState({
     series: [],
     options: {
@@ -97,11 +100,18 @@ export default function AdvancedExplanation({classes, loading, similarityScores,
   return (
     <>
       <Grid container className={classes.header}>
-        <Grid item>
-          <Typography variant="h5" gutterBottom color="textSecondary">
-            <b> Advanced Explanation: Weight-based similarity of users’ interest models</b>
-          </Typography>
-        </Grid>
+          <Grid container alignItems="center">
+            <Grid item xs>
+              <Typography variant="h5" gutterBottom color="textSecondary">
+                <b> Advanced Explanation: Weight-based similarity of users’ interest models</b>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={() => setOpenExplanation(!openExplanation)}>
+                <HelpOutline />
+              </IconButton>
+            </Grid>
+          </Grid>
         <Grid item xs={12}>
           <Divider/>
         </Grid>
@@ -113,6 +123,14 @@ export default function AdvancedExplanation({classes, loading, similarityScores,
           }
         </Grid>
       </Grid>
+
+      <Dialog open={openExplanation} onClose={() => setOpenExplanation(!openExplanation)} fullWidth>
+        <DialogContent >
+          <Grid container justify="center">
+            <img src={require("../../../../assets/img/similaritychart.png")}  alt="explanation"/>
+          </Grid>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
