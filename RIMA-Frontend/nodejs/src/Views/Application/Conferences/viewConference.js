@@ -15,6 +15,7 @@ import "tippy.js/animations/scale.css";
 
 
 
+
 // reactstrap components
 import {
   Modal,
@@ -38,56 +39,12 @@ import {
   Col,
 } from "reactstrap";
 
-const confEvents =  [
-  {
-    value: "2011",
-    label: "2011"
-  },
-  {
-    value: "2012",
-    label: "2012"
-  },
-  {
-    value: "2013",
-    label: "2013"
-  },
-  {
-    value: "2014",
-    label: "2014"
-  },
-  {
-    value: "2015",
-    label: "2015"
-  },
-  {
-    value: "2016",
-    label: "2016"
-  },
-  {
-    value: "2017",
-    label: "2017"
-  },
-  {
-    value: "2018",
-    label: "2018"
-  },
-  {
-    value: "2019",
-    label: "2019"
-  },
-  {
-    value: "2020",
-    label: "2020"
-  }
-];
-
-const reactSelectStyles = base => ({ ...base, zIndex: 999 })
 
 
 class viewConference extends React.Component {
   state = {
     data: [],
-    paperDetail: [],
+    conferenceEvents: [],
     isLoding: false,
     modal: false,
     editmodal: false,
@@ -105,7 +62,7 @@ class viewConference extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ isLoding: true }, this.getPaperData());
+    this.setState({ isLoding: true }, this.getConferenceData());
   }
 
   selectYear = (e) => {
@@ -115,20 +72,43 @@ class viewConference extends React.Component {
   }
 
 
-  //** GET ALL PAPERS **//
-  getPaperData = () => {
-    RestAPI.getListPaper()
+  //** GET ALL CONFERENCES **//
+  getConferenceData = () => {
+    RestAPI.getListConfercne()
       .then((response) => {
         this.setState({
           isLoding: false,
           data: response.data,
         });
+
       })
       .catch((error) => {
         this.setState({ isLoding: false });
         handleServerErrors(error, toast.error);
       });
   };
+
+
+//** GET ALL CONFERENCE EVENTS **//
+getConferenceEventsData = (conference_name_abbr) => {
+  console.log("TEST")
+  console.log(conference_name_abbr)
+  console.log("TEST")
+
+  RestAPI.getListConfercneEvents(conference_name_abbr)
+    .then((response) => {
+      this.setState({
+        isLoding: false,
+        eventsmodal: !this.state.eventsmodal,
+        conferenceEvents: response.data,
+      });
+    })
+    .catch((error) => {
+      this.setState({ isLoding: false });
+      handleServerErrors(error, toast.error);
+    });
+};
+
 
   // Toggles the delete paper modal
   toggleDeletePaper = (id) => {
@@ -175,14 +155,11 @@ class viewConference extends React.Component {
     });
   };
 
-  showEnquiryBAB = (id) => {
-    const paperdata = this.state.data.find((v, i) => {
-      return v.id === id;
-    });
-    this.setState({
-      eventsmodal: !this.state.eventsmodal,
-      paperDetail: paperdata,
-    });
+
+  getSelectedValueBAB = () => {
+    console.log("THIS IS SELECT YEAR")
+    console.log(this.state.selectyear)
+    console.log("THIS IS SELECT YEAR")
   };
 
   //** SET VALUES IN EDIT PAPERS MODAL **//
@@ -237,7 +214,7 @@ class viewConference extends React.Component {
               isloading: false,
             });
 
-            this.getPaperData();
+            this.getConferenceData();
 
             toast.success("Update Papaer !", {
               position: toast.POSITION.TOP_RIGHT,
@@ -324,22 +301,6 @@ class viewConference extends React.Component {
                         Conferences List
                       </h2>
                     </Col>
-                    {/* <Col md="auto">
-                      <OverlayTrigger
-                        placement="left"
-                        delay={{show: 100, hide: 400}}
-                        overlay={
-                          <Tooltip>
-                            Update your publication list
-                          </Tooltip>
-                        }
-                      >
-                        { <Button color="info" onClick={this.refreshPaper}>
-                          <FontAwesomeIcon icon={faSyncAlt} style={{marginRight: "8px"}}/>
-                          Update
-                        </Button> }
-                      </OverlayTrigger>
-                    </Col> */}
                   </Row>
                 </CardHeader>
 
@@ -347,11 +308,12 @@ class viewConference extends React.Component {
 
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">Year</th>
-                      <th scope="col">Title</th>
-                      {/*<th scope="col">URL</th>*/}
-                      <th scope="col">Authors</th>
-                      <th scope="col">Options</th>
+
+                     <th scope="col">Conference</th>
+                      <th scope="col">Conference URL</th>
+                      <th scope="col">Platform</th>
+                      <th scope="col">Platform URl</th>
+                      <th scope="col" width="5">Options</th>
                       <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
@@ -377,14 +339,11 @@ class viewConference extends React.Component {
                       </tr>
                     ) : this.state.data.length ? (
                       this.state.data.map((value, index) => (
-                        <tr key={value.id}>
-                          <td>{value.year}</td>
-                          <th scope="row">
-                            {" "}
-                            {`${(value.title || "").slice(0, 70)} ...`}{" "}
-                          </th>
-                          {/*<td><a href={value.url} target="_blank">Link</a></td>*/}
-                          <td style={{ fontStyle: "italic" }}> {`${(value.authors || " ").slice(0, 50)} ...`}</td>
+                        <tr key={value.platform_name}>
+                          <td>{value.conference_name_abbr}</td>
+                          <td><a href ={ value.conference_url}>{value.conference_url}</a></td>
+                          <td>{value.platform_name}</td>
+                          <td><a href ={value.platform_url}>{value.platform_url}</a></td>
                           <td>
                           <div align="left">
                                   <UncontrolledDropdown>
@@ -424,47 +383,29 @@ class viewConference extends React.Component {
                                     </DropdownMenu>
                                  </UncontrolledDropdown>
                                  </div>
-                                
                           </td>
-
                           <td > 
-
-                          <div style={{width: "100px"}}>
+                          <div style={{width: "150px"}}>
                               <Select
                                 placeholder="Events"
-                                options={confEvents}
-                                value={confEvents.find((obj) => obj.value === selectyear)}
+                                options={value.conference_events}
+                               // value={value.conference_events.find((obj) => obj.value === selectyear)}
                                 onChange={this.selectYear}
-                                styles={reactSelectStyles}
                               />
                           </div>
-
+                          </td>
+                          
+                          <td className="text-center">
+                              <Button color="secondary" onClick={() => this.getSelectedValueBAB()} width = "50px">
+                              Add Event
+                              </Button> 
                           </td>
                           <td className="text-center">
-                            
-                                
-                                    <Button color="secondary" onClick="" width = "50px">
-                                    Add Event
-                                    </Button>
-                                 
-                             
+                              <Button color="secondary" onClick={() => this.getConferenceEventsData(value.conference_name_abbr)} width = "50px">
+                                Stored Events
+                              </Button>    
                           </td>
-                          <td className="text-center">
-                                
-                                  
-                                    <Button color="secondary" onClick={() => this.showEnquiryBAB(value.id)} width = "50px">
-                                     Stored Events
-                                    </Button>
-                                  
-                                  
-                                
-                          </td>
-
-                        
-
-                      
                         </tr>
-                        
                       ))
                     ) : (
                           <tr className="text-center1" style={{ padding: "20px" }}>
@@ -488,13 +429,10 @@ class viewConference extends React.Component {
                 <div style={{ display: "flex", margin: " 0 53px 25px 25px", justifyContent: "space-between" }}>
                   <div style={{ margin: "32px 0px 0px 0px" }}>
                     <div align="right">
-                      <Button color="primary" onClick={this.saveChanges}>
-                        Save
-                      </Button>
-                      <Link to={"/app/cloud-chart/" + getItem("userId")}>
-                        <Button color="secondary">
-                          Back
-                              </Button>
+                      <Link to={"/app/add-conference"}>
+                        <Button color="primary">
+                          Add new Conference
+                        </Button>
                       </Link>
                     </div>
                   </div>
@@ -528,24 +466,24 @@ class viewConference extends React.Component {
                   <ModalHeader toggle={this.toggle}>Paper Detail</ModalHeader>
                   <ModalBody>
                     <strong>Title: </strong>{" "}
-                    {this.state.paperDetail && this.state.paperDetail.title}
+                    {this.state.conferenceEvents && this.state.conferenceEvents.title}
                     <br />
                     <br />
                     <strong>Year: </strong>{" "}
-                    {this.state.paperDetail && this.state.paperDetail.year}
+                    {this.state.conferenceEvents && this.state.conferenceEvents.year}
                     <br />
                     <br />
                     <strong>Authors: </strong>{" "}
-                    {this.state.paperDetail && this.state.paperDetail.authors}
+                    {this.state.conferenceEvents && this.state.conferenceEvents.authors}
                     <br />
                     <br />
                     <strong>Source: </strong>{" "}
-                    <a href={this.state.paperDetail && this.state.paperDetail.url}>See paper on Semantic Scholar</a>
+                    <a href={this.state.conferenceEvents && this.state.conferenceEvents.url}>See paper on Semantic Scholar</a>
 
                     <br />
                     <br />
                     <strong>Abstract: </strong>
-                    {this.state.paperDetail && this.state.paperDetail.abstract}
+                    {this.state.conferenceEvents && this.state.conferenceEvents.abstract}
                   </ModalBody>
 
                   <ModalFooter>
@@ -556,14 +494,6 @@ class viewConference extends React.Component {
                 </Modal>
               </div>
 
-
-
-               {/* BAB */}         
-
-
-
-
-
                <div>
                 <Modal isOpen={this.state.eventsmodal} toggle={this.eventstoggle} size="lg">
                   <ModalHeader toggle={this.eventstoggle}>Conference Events</ModalHeader>
@@ -572,10 +502,10 @@ class viewConference extends React.Component {
                   <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">Year</th>
-                      <th scope="col">Title</th>
+                      <th scope="col">Conference</th>
+                      <th scope="col">Conference Event</th>
                       {/*<th scope="col">URL</th>*/}
-                      <th scope="col">Authors</th>
+                      <th scope="col">Conference URL</th>
                       <th scope="col" width="5"></th>
                     </tr>
                   </thead>
@@ -598,22 +528,16 @@ class viewConference extends React.Component {
                           />
                         </td>
                       </tr>
-                    ) : this.state.data.length ? (
-                      this.state.data.map((value, index) => (
-                        <tr key={value.id}>
-                          <td>{value.year}</td>
-                          <th scope="row">
-                            {" "}
-                            {`${(value.title || "").slice(0, 70)} ...`}{" "}
-                          </th>
-                          {/*<td><a href={value.url} target="_blank">Link</a></td>*/}
-                          <td style={{ fontStyle: "italic" }}> {`${(value.authors || " ").slice(0, 50)} ...`}</td>
+                    ) : this.state.conferenceEvents.length ? (
+                      this.state.conferenceEvents.map((value, index) => (
+                        <tr>
+                          <td>{value.conference_name_abbr}</td>
+                          <td>{value.conference_event_name_abbr}</td>
+                          <td><a href = {value.conference_event_url}>{value.conference_event_url}</a></td>
                           <td className="text-center" style={{ width: "5"}}>
-                            
-                                    <Button color="secondary" onClick="" width = "50px">
-                                    Extract Trends
-                                    </Button>
-
+                            <Button color="secondary" onClick="" width = "50px">
+                            Extract Trends
+                            </Button>
                           </td>
                     
                         </tr>

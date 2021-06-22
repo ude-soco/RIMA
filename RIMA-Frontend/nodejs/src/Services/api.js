@@ -78,6 +78,37 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+  //** GET LIST Conferences API  BAB**//
+  static getListConfercne() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/addConference/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  //** GET LIST COnference Events API  BAB**//
+  static getListConfercneEvents(conference_name_abbr) {
+    console.log("TEST")
+  console.log(conference_name_abbr)
+  console.log("TEST")
+
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/ConferenceEvents/${conference_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
 
   //** GET LIST PAPER API **//
   static getListPaper() {

@@ -13,7 +13,6 @@ export default function AddConference() {
     platform_url: "",
     conference_name_abbr: "",
     conference_url: "",
-    conference_event_year:"", 
   });
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
@@ -27,9 +26,7 @@ export default function AddConference() {
   };
 
   const handleSubmit = (e) => {
-    console.log(details);
-
-   alert(JSON.stringify(details));
+   console.log(details);
    e.preventDefault();
     
     let data = {
@@ -39,7 +36,6 @@ export default function AddConference() {
         {
           conference_name_abbr: details.conference_name_abbr,
           conference_url: details.conference_url,
-          conference_event_year: details.conference_event_year,
         }, 
     ],    
     };
@@ -56,7 +52,6 @@ export default function AddConference() {
       platform_url: "",
       conference_name_abbr: "",
       conference_url: "",
-      conference_event_year:"",
  
     });
       setIsLoading(false);
@@ -143,25 +138,6 @@ export default function AddConference() {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-conference_event_year"
-                          >
-                            Year
-                          </label>
-                          <Input
-                            className="form-control-alternative"
-                            id="input-conference_event_year"
-                            name="conference_event_year"
-                            value={details.conference_event_year}
-                            onChange={handleChange}
-                            placeholder="Year"
-                            type="number"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
                             htmlFor="input-platform_name"
                           >
                             platform
@@ -179,8 +155,7 @@ export default function AddConference() {
                           />
                         </FormGroup>
                       </Col>
-                    </Row>
-                    <Row>
+
                       <Col lg="6">
                           <FormGroup>
                             <label

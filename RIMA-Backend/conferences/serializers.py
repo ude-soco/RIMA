@@ -24,7 +24,7 @@ class ConferenceEventSerializer(serializers.ModelSerializer):
 class ConferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference
-        fields = ['conference_name_abbr', 'conference_url', 'conference_event_year']
+        fields = ['conference_name_abbr', 'conference_url']
 
 
 class PlatformSerializer(serializers.ModelSerializer):

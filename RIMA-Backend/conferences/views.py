@@ -1,9 +1,20 @@
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
+# test import BEGIN
+from .DataExtractor import ConferenceDataCollector  as dataCollector
+from . import ConferenceUtils as confutils
+headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7',
+                   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                   'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+                   'Accept-Encoding': 'none',
+                   'Accept-Language': 'en-US,en;q=0.8',
+                   'Connection': 'keep-alive'}
+# test import END
+
 
 import datetime
 import json
 from collections import OrderedDict
-from django.urls import reverse
+from django.urls import conf, reverse
 from django.http.response import HttpResponse
 from rest_framework.views import APIView
 from urllib.parse import unquote
@@ -54,11 +65,36 @@ from .topicutils import (
     getAuthorsDict,   #printText 
     getConfEvents)  #BAB 08.06.2021::Extension for other conferences other than LAK
 from .TopicExtractor import (fetchAllTopics, fetchAbstracts_author, updateAllTopics)
-from .serializers import ConferenceSerializer, PlatformSerializer
+from .serializers import ConferenceSerializer, PlatformSerializer,ConferenceEventSerializer
 from rest_framework.generics import (ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
+
+from .models import Platform, Conference, Conference_Event 
+
+
+
+"""
+BAB Conference Events views
+"""
+class ConferenceEventsView(ListCreateAPIView):
+    serializer_class = ConferenceEventSerializer
+    lookup_field = 'conference_name_abbr'
+
+    def get_queryset(self):
+        url_path = self.request.get_full_path()
+        #print("the url path is:", url_path)
+        url_path = url_path.replace("%20", " ")
+        topics_split = url_path.split(r"/")
+        #print(topics_split)
+
+        #print(self.request.query_params.get('conference_name_abbr'))
+        #print(Conference_Event.objects.filter(conference_name_abbr= topics_split[-1])).values_list(
+         #                       flat=True)
+        #print('Events Query Set', Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1]))
+        return Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1])
+        #return Conference_Event.objects.filter(conference_name_abbr= self.request.query_params.get('conference_name_abbr'))
 
 
 '''
@@ -68,20 +104,58 @@ BAB Add Conference View
 
 class addConferenceView(ListCreateAPIView):
     serializer_class = PlatformSerializer
-
-    #def get_queryset(self):
-        # return self.request.user.papers.filter(paper_id="manual")
-        #return self.request.user.papers.all().order_by("-year")
+    conference_serializer_class = ConferenceSerializer
+    #confutils.addDataToConfEventModel(f'edm')
+    def get(self, request, *args, **kwargs):
+        data = []
+        conferences_events_JSON = []
+        conferences = Conference.objects.all()
+        for conference in conferences:
+            conference_events = Conference_Event.objects.filter(
+                                conference_name_abbr = conference.conference_name_abbr).values_list(
+                                'conference_event_name_abbr',
+                                flat=True)
+            for event in conference_events:
+                conferences_events_JSON.append({
+                    'value': event,
+                    'label': event,
+                })
+            data.append({
+                'platform_name' : conference.platform_name.platform_name,
+                'platform_url' : conference.platform_name.platform_url,
+                'conference_name_abbr' : conference.conference_name_abbr,
+                'conference_url' : conference.conference_url,
+                'conference_events': conferences_events_JSON,
+            })
+            conferences_events_JSON =[]    
+        #print(data, 'BAB data Test')
+        return Response(data)
     
     def post(self, request, *args, **kwargs):
-        print("TEST BAB")
-
+        #print("TEST BAB")
         request_data = self.request.data
-        print(request_data)
-        serializer = self.serializer_class(data=request_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        #print(request_data)
+        stored_platforms = Platform.objects.filter(platform_name=request_data['platform_name']).count()
+
+        if stored_platforms:
+            platform_obj = Platform.objects.get(platform_name=request_data['platform_name'])
+
+            conference = Conference.objects.create(
+            conference_name_abbr=request_data['conferences'][0]['conference_name_abbr'],
+            conference_url=request_data['conferences'][0]['conference_url'],
+            platform_name=platform_obj
+            )
+            conference.save()
+            confutils.addDataToConfEventModel(request_data['conferences'][0]['conference_name_abbr'])
+
+            return(Response(""))
+        else:
+            #print(request_data)
+            serializer = self.serializer_class(data=request_data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            confutils.addDataToConfEventModel(request_data['conferences'][0]['conference_name_abbr'])
+            return Response(serializer.data)
 
 '''
 BAB get conf events/years
