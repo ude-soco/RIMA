@@ -71,7 +71,7 @@ from rest_framework.generics import (ListCreateAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .models import Platform, Conference, Conference_Event 
+from .models import Platform, Conference, Conference_Event, Conference_Event_Paper 
 
 
 
@@ -81,19 +81,32 @@ BAB Conference Events views
 class ConferenceEventsView(ListCreateAPIView):
     serializer_class = ConferenceEventSerializer
     lookup_field = 'conference_name_abbr'
-
+    
     def get_queryset(self):
+        data = {}
         url_path = self.request.get_full_path()
         #print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
+        #conference_events = Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1])
+        conference_events_objs = Conference_Event.objects.filter(conference_name_abbr= topics_split[-1])
+
+        #print(conference_events[0], 'conference Events[0]')
+
+        for conference_event_obj in conference_events_objs:
+            print(conference_event_obj, 'conference Event')
+            #no_of_Event_Papers  = Conference_Event_Paper.objects.all()
+            data['conference_events'] = conference_event_obj
+            data['no_of_Event_Papers'] = 5
+
+        
         #print(topics_split)
 
         #print(self.request.query_params.get('conference_name_abbr'))
         #print(Conference_Event.objects.filter(conference_name_abbr= topics_split[-1])).values_list(
          #                       flat=True)
         #print('Events Query Set', Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1]))
-        return Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1])
+        return conference_events_objs
         #return Conference_Event.objects.filter(conference_name_abbr= self.request.query_params.get('conference_name_abbr'))
 
 
@@ -126,6 +139,7 @@ class addConferenceView(ListCreateAPIView):
                 'conference_name_abbr' : conference.conference_name_abbr,
                 'conference_url' : conference.conference_url,
                 'conference_events': conferences_events_JSON,
+                'no_of_events': conference_events.count(),
             })
             conferences_events_JSON =[]    
         #print(data, 'BAB data Test')

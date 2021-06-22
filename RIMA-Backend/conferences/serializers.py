@@ -13,18 +13,22 @@ from rest_framework import serializers
 class ConferenceEventPaperSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference_Event_Paper
-        fields = "__all__"
+        fields = ['conference_event_name_abbr','paper_id', 'paper_doi','title','url','year','abstract','no_of_cititations','citiations','paper_venu']
 
 class ConferenceEventSerializer(serializers.ModelSerializer):
+    conference_papers = ConferenceEventPaperSerializer(many=True,read_only=True)
+
     class Meta:
         model = Conference_Event
-        fields = "__all__"
+        fields = ['conference_name_abbr','conference_event_name_abbr', 'conference_event_full_name','conference_event_url','conference_event_year','conference_papers']
 
 
 class ConferenceSerializer(serializers.ModelSerializer):
+    conference_events = ConferenceEventSerializer(many=True,read_only=True)
+
     class Meta:
         model = Conference
-        fields = ['conference_name_abbr', 'conference_url']
+        fields = ['platform_name','conference_name_abbr', 'conference_url','conference_events']
 
 
 class PlatformSerializer(serializers.ModelSerializer):

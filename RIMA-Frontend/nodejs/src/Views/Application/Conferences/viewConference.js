@@ -313,6 +313,7 @@ getConferenceEventsData = (conference_name_abbr) => {
                       <th scope="col">Conference URL</th>
                       <th scope="col">Platform</th>
                       <th scope="col">Platform URl</th>
+                      <th scope="col">Number of Events</th>
                       <th scope="col" width="5">Options</th>
                       <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
@@ -344,6 +345,7 @@ getConferenceEventsData = (conference_name_abbr) => {
                           <td><a href ={ value.conference_url}>{value.conference_url}</a></td>
                           <td>{value.platform_name}</td>
                           <td><a href ={value.platform_url}>{value.platform_url}</a></td>
+                          <td align = "center">{value.no_of_events}</td>
                           <td>
                           <div align="left">
                                   <UncontrolledDropdown>
