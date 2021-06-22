@@ -4,14 +4,18 @@ import json
 class Platform(models.Model):
     platform_name = models.CharField(max_length=255,primary_key=True)
     platform_url = models.CharField(max_length=1024, null=True, blank=True)
+   
+    def __str__(self):
+        return self.platform_name
 
 class Conference(models.Model):
     platform_name = models.ForeignKey(Platform,
                                     related_name="conferences",
                                     on_delete=models.CASCADE)
     conference_name_abbr = models.CharField(max_length=100,primary_key=True)
-    conference_full_name = models.CharField(max_length=255,null=True,blank=True)
+    #conference_full_name = models.CharField(max_length=255,null=True,blank=True)
     conference_url = models.CharField(max_length=1024, null=True, blank=True)
+    #conference_event_year = models.IntegerField(null=True,blank=True)
 
 
 class Conference_Event(models.Model):
@@ -22,6 +26,9 @@ class Conference_Event(models.Model):
     conference_event_full_name = models.CharField(max_length=255,null=True,blank=True)
     conference_event_url = models.CharField(max_length=1024, null=True, blank=True)
     conference_event_year = models.IntegerField(null=True,blank=True)
+
+    def __str__(self):
+        return self.conference_event_name_abbr
 
 class Conference_Event_Paper(models.Model):
     conference_event_name_abbr = models.ForeignKey(Conference_Event,
@@ -43,6 +50,8 @@ class Conference_Event_Paper(models.Model):
 
     def get_citiations(self):
         return json.loads(self.citiations)
+
+    
 
 class Author(models.Model):
     author_id = models.CharField(max_length=255, primary_key=True)
