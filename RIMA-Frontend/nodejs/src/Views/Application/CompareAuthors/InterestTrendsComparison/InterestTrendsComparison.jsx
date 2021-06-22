@@ -11,7 +11,7 @@ export default function InterestTrendsComparison({classes, compareAuthor}) {
       <Grid container className={classes.header}>
         <Grid item>
           <Typography variant="h5" gutterBottom color="textSecondary">
-            <b> Interest Trends </b>
+            <b> Evolution of Interests </b>
           </Typography>
         </Grid>
         <Grid item xs={12}>

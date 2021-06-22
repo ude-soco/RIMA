@@ -126,7 +126,7 @@ export default function InterestTrends({classes, elevation, show, user}) {
           <CardContent>
             {show ?
               <>
-                <Typography variant="h5" gutterBottom> Paper Keywords Trend </Typography>
+                <Typography variant="h5" gutterBottom> Evolution of Interests: Publications </Typography>
                 <Typography gutterBottom> Interest trends of paper keywords over the last five years </Typography>
               </>
               : <>
@@ -159,7 +159,7 @@ export default function InterestTrends({classes, elevation, show, user}) {
           <CardContent>
             {show ?
               <>
-                <Typography variant="h5" gutterBottom> Twitter Keywords Trend </Typography>
+                <Typography variant="h5" gutterBottom> Evolution of Interests: Tweets </Typography>
                 <Typography gutterBottom> Interest trends of twitter keywords over the last 6 months </Typography>
               </> :
               <>

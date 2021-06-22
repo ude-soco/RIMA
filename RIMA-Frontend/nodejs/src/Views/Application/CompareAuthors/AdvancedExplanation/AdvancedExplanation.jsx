@@ -81,10 +81,13 @@ export default function AdvancedExplanation({classes, loading, similarityScores,
         {
           name: `${currentUser.first_name} ${currentUser.last_name}`,
           data: Object.values(user_1_data).map(function (x) {
-            return x * -1;
+            return x.toFixed(2) * -1;
           })
         },
-        {name: `${compareAuthor.first_name} ${compareAuthor.last_name}`, data: Object.values(user_2_data)}
+        {name: `${compareAuthor.first_name} ${compareAuthor.last_name}`,
+          data: Object.values(user_2_data).map(function (x) {
+            return x.toFixed(2);
+          })}
       ],
       options: {
         ...state.options,

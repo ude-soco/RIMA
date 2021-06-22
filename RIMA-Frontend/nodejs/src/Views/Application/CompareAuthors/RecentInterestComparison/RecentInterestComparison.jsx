@@ -22,8 +22,11 @@ export default function RecentInterestComparison({classes, loading, compareAutho
 
       <Grid container className={classes.gutterLarge}>
         <Grid container direction="column" alignItems="center" xs>
-          <Typography variant="h5" color="textSecondary">
+          <Typography variant="h5" color="textSecondary" className={classes.gutter}>
             {currentUser.first_name} {currentUser.last_name}
+          </Typography>
+          <Typography color="textSecondary">
+            This chart shows your recent interests in the last year (for publications), and last month (for tweets).
           </Typography>
 
           <RecentInterest loading={loading} height={600}/>
@@ -31,8 +34,11 @@ export default function RecentInterestComparison({classes, loading, compareAutho
 
         <Grid container direction="column" alignItems="center" xs>
 
-          <Typography variant="h5" color="textSecondary">
+          <Typography variant="h5" color="textSecondary" className={classes.gutter}>
             {compareAuthor.first_name} {compareAuthor.last_name}
+          </Typography>
+          <Typography color="textSecondary">
+            This chart shows your recent interests in the last year (for publications), and last month (for tweets).
           </Typography>
 
           <RecentInterest loading={loading} height={600} user={compareAuthor}/>

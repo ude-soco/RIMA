@@ -143,8 +143,8 @@ export default function CompareAuthors() {
                   variant="fullWidth"
                   className={classes.tabPanel}
                 >
-                  <Tab label={"Interest Overview Comparison"}/>
-                  <Tab label={"Explanations"}/>
+                  <Tab label={"Comparison of interest profiles"}/>
+                  <Tab label={"Explanation of similarity score"}/>
                 </Tabs>
               </Grid>
             </Grid>
