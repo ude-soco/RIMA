@@ -508,6 +508,8 @@ getConferenceEventsData = (conference_name_abbr) => {
                       <th scope="col">Conference Event</th>
                       {/*<th scope="col">URL</th>*/}
                       <th scope="col">Conference URL</th>
+                      <th scope="col">No. Stored Papers</th>
+                      <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
                     </tr>
                   </thead>
@@ -536,14 +538,18 @@ getConferenceEventsData = (conference_name_abbr) => {
                           <td>{value.conference_name_abbr}</td>
                           <td>{value.conference_event_name_abbr}</td>
                           <td><a href = {value.conference_event_url}>{value.conference_event_url}</a></td>
+                          <td>{value.no_of_stored_papers}</td>                         
+                          <td className="text-center" style={{ width: "5"}}>
+                            <Button color="secondary" onClick="" width = "50px">
+                             Collect Papers
+                            </Button>
+                          </td >
                           <td className="text-center" style={{ width: "5"}}>
                             <Button color="secondary" onClick="" width = "50px">
                             Extract Trends
                             </Button>
                           </td>
-                    
                         </tr>
-                        
                       ))
                     ) : (
                           <tr className="text-center1" style={{ padding: "20px" }}>

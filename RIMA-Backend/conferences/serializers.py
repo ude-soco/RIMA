@@ -9,18 +9,24 @@ from .models import(
 
 from rest_framework import serializers
 
-#tracks = TrackSerializer(many=True, read_only=True)
 class ConferenceEventPaperSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conference_Event_Paper
-        fields = ['conference_event_name_abbr','paper_id', 'paper_doi','title','url','year','abstract','no_of_cititations','citiations','paper_venu']
+        fields = ['paper_id', 'paper_doi','title','url','year','abstract','no_of_cititations','citiations','paper_venu']
 
 class ConferenceEventSerializer(serializers.ModelSerializer):
-    conference_papers = ConferenceEventPaperSerializer(many=True,read_only=True)
+    conference_event_papers = ConferenceEventPaperSerializer(many=True)
 
     class Meta:
         model = Conference_Event
-        fields = ['conference_name_abbr','conference_event_name_abbr', 'conference_event_full_name','conference_event_url','conference_event_year','conference_papers']
+        fields = ['conference_event_name_abbr','conference_name_abbr', 'conference_event_full_name','conference_event_url','no_of_stored_papers','conference_event_papers']
+
+    def create(self, validated_data):
+        papers_data = validated_data.pop('conference_event_papers')
+        event = Conference_Event.objects.create(**validated_data)
+        for paper_data in papers_data:
+            Conference_Event_Paper.objects.create(conference_event_name_abbr=event, **paper_data)
+        return Conference_Event
 
 
 class ConferenceSerializer(serializers.ModelSerializer):
@@ -28,7 +34,7 @@ class ConferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conference
-        fields = ['platform_name','conference_name_abbr', 'conference_url','conference_events']
+        fields = ['conference_name_abbr','conference_url','conference_events']
 
 
 class PlatformSerializer(serializers.ModelSerializer):

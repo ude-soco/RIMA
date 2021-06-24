@@ -162,26 +162,29 @@ def construct_confList(conf_name,headers):
     valid_events_urls =[]
     soup = []
     conf_url = f'{dblp_url}{conf_name}'
+    conf_complete_name = ""
     try:
         
         soup = fetch_soup(conf_url,headers)
-        conf_complete_name = fetch_dois_ids_from_html(conf_name,soup,"h1",{},"" ,"",False,False,headers)
+        if soup :
+            conf_complete_name = fetch_dois_ids_from_html(conf_name,soup,"h1",{},"" ,"",False,False,headers)
 
-        conf_events_all_urls = fetch_dois_ids_from_html(conf_name,soup,"nav",{"class": "publ"},"a" ,"href",False,False,headers)
+            conf_events_all_urls = fetch_dois_ids_from_html(conf_name,soup,"nav",{"class": "publ"},"a" ,"href",False,False,headers)
         print('**** conference url: ',conf_url, ' ****')
         print(' ')
         print('**** all links ****')
         print(' ')
-        for event_url in conf_events_all_urls:
-            match = re.search(conference_events % conf_name, event_url,re.IGNORECASE)
-            if match:
-                print(event_url,'    contains valid conference event')
-                valid_events_urls.append(event_url)
-                print(' ')
-                conf = event_url[match.start():match.end()]
-                conf_list.append(conf[1:-1])    # [1:-1] removes the dot at the end and "/" from the beginning 
-            else: 
-                print(event_url,'    contains no valid conference event')
+        if len(conf_events_all_urls) != 0:
+            for event_url in conf_events_all_urls:
+                match = re.search(conference_events % conf_name, event_url,re.IGNORECASE)
+                if match:
+                    print(event_url,'    contains valid conference event')
+                    valid_events_urls.append(event_url)
+                    print(' ')
+                    conf = event_url[match.start():match.end()]
+                    conf_list.append(conf[1:-1])    # [1:-1] removes the dot at the end and "/" from the beginning 
+                else: 
+                    print(event_url,'    contains no valid conference event')
         return list(set(conf_list)),conf_url, conf_complete_name, valid_events_urls  # removing duplicates
     
     except AttributeError as error:

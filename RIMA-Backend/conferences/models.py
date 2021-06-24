@@ -25,7 +25,7 @@ class Conference_Event(models.Model):
     conference_event_name_abbr = models.CharField(max_length=100, primary_key=True)
     conference_event_full_name = models.CharField(max_length=255,null=True,blank=True)
     conference_event_url = models.CharField(max_length=1024, null=True, blank=True)
-    conference_event_year = models.IntegerField(null=True,blank=True)
+    no_of_stored_papers = models.IntegerField(null=True,blank=True)
 
     def __str__(self):
         return self.conference_event_name_abbr

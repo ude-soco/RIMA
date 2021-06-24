@@ -19,21 +19,15 @@ def addDataToConfEventModel(conference_name_abbr):
     valid_events_urls_list.sort()
     stored_conferences = Conference.objects.filter(conference_name_abbr=conference_name_abbr).count()
     index = 0
-    #print(conf_list[index])
-    #index+=1
-    #print(conf_list[index])
-    print(len(conf_list), 'length conf_list' )
-    print(len(valid_events_urls_list), 'length valid_events_urls_list')
     if stored_conferences:
         conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)
-        for event in valid_events_urls_list:
-            print(index + 1 , ' : ',conf_list[index], 'BAB')
-            print(index+1, ' : ',  event)
-            conference_event = Conference_Event.objects.create(
-            conference_event_name_abbr=conf_list[index],
-            conference_event_url=event,
-            conference_name_abbr=conference_obj
-            )
-            index+=1
-            conference_event.save()
-           
+        if len(conf_list) != 0 and len(valid_events_urls_list) != 0:
+            for event in valid_events_urls_list:
+                conference_event = Conference_Event.objects.create(
+                conference_event_name_abbr=conf_list[index],
+                conference_event_url=event,
+                conference_name_abbr=conference_obj
+                )
+                index+=1
+                conference_event.save()
+            

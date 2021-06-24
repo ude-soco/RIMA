@@ -80,34 +80,17 @@ BAB Conference Events views
 """
 class ConferenceEventsView(ListCreateAPIView):
     serializer_class = ConferenceEventSerializer
-    lookup_field = 'conference_name_abbr'
     
     def get_queryset(self):
-        data = {}
+        data = []
         url_path = self.request.get_full_path()
-        #print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        #conference_events = Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1])
-        conference_events_objs = Conference_Event.objects.filter(conference_name_abbr= topics_split[-1])
-
-        #print(conference_events[0], 'conference Events[0]')
-
+        conference_events_objs = Conference_Event.objects.filter(conference_name_abbr= topics_split[-1])        
         for conference_event_obj in conference_events_objs:
-            print(conference_event_obj, 'conference Event')
-            #no_of_Event_Papers  = Conference_Event_Paper.objects.all()
-            data['conference_events'] = conference_event_obj
-            data['no_of_Event_Papers'] = 5
+            conference_event_obj.no_of_stored_papers = conference_event_obj.conference_event_papers.all().count()
 
-        
-        #print(topics_split)
-
-        #print(self.request.query_params.get('conference_name_abbr'))
-        #print(Conference_Event.objects.filter(conference_name_abbr= topics_split[-1])).values_list(
-         #                       flat=True)
-        #print('Events Query Set', Conference_Event.objects.all().filter(conference_name_abbr= topics_split[-1]))
         return conference_events_objs
-        #return Conference_Event.objects.filter(conference_name_abbr= self.request.query_params.get('conference_name_abbr'))
 
 
 '''
@@ -118,7 +101,6 @@ BAB Add Conference View
 class addConferenceView(ListCreateAPIView):
     serializer_class = PlatformSerializer
     conference_serializer_class = ConferenceSerializer
-    #confutils.addDataToConfEventModel(f'edm')
     def get(self, request, *args, **kwargs):
         data = []
         conferences_events_JSON = []
@@ -142,13 +124,10 @@ class addConferenceView(ListCreateAPIView):
                 'no_of_events': conference_events.count(),
             })
             conferences_events_JSON =[]    
-        #print(data, 'BAB data Test')
         return Response(data)
     
     def post(self, request, *args, **kwargs):
-        #print("TEST BAB")
         request_data = self.request.data
-        #print(request_data)
         stored_platforms = Platform.objects.filter(platform_name=request_data['platform_name']).count()
 
         if stored_platforms:
@@ -164,7 +143,6 @@ class addConferenceView(ListCreateAPIView):
 
             return(Response(""))
         else:
-            #print(request_data)
             serializer = self.serializer_class(data=request_data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
