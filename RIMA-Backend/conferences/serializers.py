@@ -5,9 +5,15 @@ from .models import(
  Conference_Event,
  Conference_Event_Paper,
  Author,
+ PreloadedConferenceList,
 )
 
 from rest_framework import serializers
+
+class PreloadedConferenceListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PreloadedConferenceList
+        fields = "__all__"
 
 class ConferenceEventPaperSerializer(serializers.ModelSerializer):
     class Meta:

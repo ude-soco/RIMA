@@ -75,6 +75,23 @@ def fetch_soup(url,headers):
         print( 'A page was downloaded successfully')
         return soup
 
+# get all conferences list from dblp based on the index Ex.: index=1, index=101, index=201, ... etc
+#  -> can be extended to other platforms
+# https://dblp.org/db/conf/index.html?pos=1
+def fetch_confernces_names_listed_in_html(platform, index):
+    preloaded_data = []
+    conference_list_element =  ""
+    if platform == 'dblp':
+        url = f'https://dblp.org/db/conf/index.html?pos=' + f'{index}'
+        soup =  fetch_soup(url,headers_windows)
+        conference_list_element = soup.find("div", {"class": "hide-body"}).find_all("a")
+        for inner_element in conference_list_element:
+            preloaded_data.append({
+              'conference_url' : inner_element["href"],
+              'conference_name_abbr' : inner_element["href"].split(r"/")[-2],
+              'conference_full_name' : inner_element.text,    
+            })    
+    return preloaded_data
 
 
 def search_publicationid_in_semscholar(conf_name,semscholar_titles):

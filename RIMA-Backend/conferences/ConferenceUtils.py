@@ -31,3 +31,5 @@ def addDataToConfEventModel(conference_name_abbr):
                 index+=1
                 conference_event.save()
             
+
+#def create_json_of_conferences_list():

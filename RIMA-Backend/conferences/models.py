@@ -1,6 +1,14 @@
 from django.db import models
 import json
 
+
+class PreloadedConferenceList(models.Model):
+
+    conference_name_abbr = models.CharField(max_length=255,null=True, blank=True)
+    conference_full_name = models.CharField(max_length=255,null=True, blank=True)
+    conference_url = models.CharField(max_length=1024, null=True, blank=True)
+
+
 class Platform(models.Model):
     platform_name = models.CharField(max_length=255,primary_key=True)
     platform_url = models.CharField(max_length=1024, null=True, blank=True)
