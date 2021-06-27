@@ -13,12 +13,6 @@ import {Settings} from "@material-ui/icons";
 export default function InterestOverview({classes}) {
   const history = useHistory();
   const [openDrawer, setOpenDrawer] = useState(true);
-  const [state, setState] = useState({
-    activeNav: 1,
-    chartExample1Data: "data1",
-    tooltipOpen: false,
-    imageTooltipOpen: false,
-  });
 
   useEffect(() => {
     if (window.Chart) {
@@ -26,28 +20,6 @@ export default function InterestOverview({classes}) {
     }
   }, []);
 
-  const toggleNavs = (e, index) => {
-    e.preventDefault();
-    setState({
-      ...state,
-      activeNav: index,
-      chartExample1Data:
-        state.chartExample1Data === "data1" ? "data2" : "data1",
-    });
-  };
-  const toogle = (status) => {
-    setState({
-      ...state,
-      tooltipOpen: status
-    });
-  };
-  const handleToogle = (status) => {
-    console.log("called")
-    setState({
-      ...state,
-      imageTooltipOpen: status
-    });
-  };
 
   const modalDetail = () => {
     swal(

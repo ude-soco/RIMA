@@ -2,7 +2,7 @@
 import React from "react";
 import Chart from "chart.js";
 import PieChart from "./components/Chart/PieChart"
-import Activities from "./Application/Dashboard/Activities/Activities"
+import Activities from "./Application/InterestProfile/Activities/Activities"
 import CloudChart from "./Application/ReuseableComponents/Charts/CloudChart/CloudChart"
 
 

@@ -45,23 +45,22 @@ class VennDiagram extends Component {
   };
 
   setHoveredKeyword = (user, keyword) => {
-    this.setState({ selectedUser: user, selectedKeyword: keyword });
+    this.setState({selectedUser: user, selectedKeyword: keyword});
   };
   clearHoveredKeyword = () => {
-    this.setState({ selectedUser: null, selectedKeyword: null });
+    this.setState({selectedUser: null, selectedKeyword: null});
   };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.venn_chart_data !== prevProps.venn_chart_data) {
-      const data = this.props.venn_chart_data;
-      this.setState({
-        user_1_exclusive_interest: data.user_1_exclusive_interest,
-        user_2_exclusive_interest: data.user_2_exclusive_interest,
-        similar_user_1: data.similar_interests.user_1,
-        similar_user_2: data.similar_interests.user_2,
-        isLoding: false,
-      });
-      if (
+  componentDidMount() {
+    const data = this.props.venn_chart_data;
+    this.setState({
+      user_1_exclusive_interest: data.user_1_exclusive_interest,
+      user_2_exclusive_interest: data.user_2_exclusive_interest,
+      similar_user_1: data.similar_interests.user_1,
+      similar_user_2: data.similar_interests.user_2,
+      isLoding: false,
+    });
+    if (
         Object.keys(data.similar_interests.user_1).length > 0 ||
         Object.keys(data.similar_interests.user_2).length > 0
       ) {
@@ -69,7 +68,7 @@ class VennDiagram extends Component {
           isData: true,
         });
       }
-    }
+
   }
 
   getUser1Keywords = () => {
@@ -81,18 +80,18 @@ class VennDiagram extends Component {
     } = this.state;
     let items = [];
     let relatedKeywords = [];
-    console.log("selectedUser", selectedKeyword);
+    // console.log("selectedUser", selectedKeyword);
     if (selectedUser == "user_2") {
       for (let i = 0; i < similar_user_2[selectedKeyword].length; i++) {
         relatedKeywords.push(similar_user_2[selectedKeyword][i]);
       }
     }
     let keys = Object.keys(similar_user_1);
-    console.log(
-      "relatedkeywords1",
-      similar_user_1,
-      Object.keys(similar_user_1)
-    );
+    // console.log(
+    //   "relatedkeywords1",
+    //   similar_user_1,
+    //   Object.keys(similar_user_1)
+    // );
     for (let index = 0; index < Object.keys(similar_user_1).length; index++) {
       let appliedClass = "";
       if (relatedKeywords) {
@@ -128,7 +127,7 @@ class VennDiagram extends Component {
       }
     }
     let keys = Object.keys(similar_user_2);
-    console.log("relatedkeywords2", keys);
+    // console.log("relatedkeywords2", keys);
     for (let index = 0; index < Object.keys(similar_user_2).length; index++) {
       let appliedClass = "";
       if (relatedKeywords) {
@@ -151,12 +150,6 @@ class VennDiagram extends Component {
 
   render() {
     return (
-      <>
-        {this.state.isLoding ? (
-          <div className="text-center" style={{ padding: "20px" }}>
-            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-          </div>
-        ) : (
           <>
             <div
               style={{
@@ -175,7 +168,7 @@ class VennDiagram extends Component {
                   padding: "10px",
                 }}
               >
-                {this.props.first_name + " " + this.props.last_name}
+                {getItem("name") + " " + getItem("lastname")}
               </div>
               <div
                 style={{
@@ -185,7 +178,7 @@ class VennDiagram extends Component {
                   padding: "10px",
                 }}
               >
-                {getItem("name") + " " + getItem("lastname")}
+                {this.props.first_name + " " + this.props.last_name}
               </div>
             </div>
             <div
@@ -242,8 +235,8 @@ class VennDiagram extends Component {
               id="modal"
             >
               <ModalBody>
-                <h3>Similar Keywords</h3>
-                <br />
+                <h3>Users’ semantically similar interests</h3>
+                <br/>
                 {this.state.isData ? (
                   <div className="flex">
                     <div
@@ -251,13 +244,13 @@ class VennDiagram extends Component {
                       className="user1"
                     >
                       <h3 style={{ textAlign: "center" }}>
-                        {this.props.first_name + " " + this.props.last_name}
+                        {getItem("name") + " " + getItem("lastname")}
                       </h3>
                       {this.getUser1Keywords()}
                     </div>
                     <div style={{ width: "50%", cursor: "pointer" }} id="user2">
                       <h3 style={{ textAlign: "center" }}>
-                        {getItem("name") + " " + getItem("lastname")}
+                        {this.props.first_name + " " + this.props.last_name}
                       </h3>
                       {this.getUser2Keywords()}
                     </div>
@@ -273,8 +266,6 @@ class VennDiagram extends Component {
               </ModalFooter>
             </Modal>
           </>
-        )}
-      </>
     );
   }
 }

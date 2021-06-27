@@ -3,15 +3,13 @@ import Login from "../Views/Website/Login/Login";
 import AddPaper from "../Views/Application/Publications/Paper/AddPaper.jsx";
 import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
 import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
-import InterestOverview from "../Views/Application/Dashboard/InterestOverview/InterestOverview";
-import ConceptChartPage from "../Views/ConceptChart";
-import StreamChartPage from "../Views/StreamChart";
-import SearchUserProfile from "../Views/SearchUserProfile";
+import InterestOverview from "../Views/Application/InterestProfile/InterestOverview/InterestOverview";
+import ConceptChartPage from "../Views/Application/InterestProfile/PotentialInterests/PotentialInterests";
 import Keyword from "../Views/Keyword.js";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
 import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
-import RecentInterest from "../Views/Application/Dashboard/RecentInterest/RecentInterest";
+import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/RecentInterest";
 // import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
@@ -22,7 +20,8 @@ import RecommendTopic from "Views/RecommendTopic";
 import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
 import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
-import Dashboard from "../Views/Application/Dashboard/Dashboard";
+import InterestProfile from "../Views/Application/InterestProfile/InterestProfile";
+import CompareAuthors from "../Views/Application/CompareAuthors/CompareAuthors";
 
 import addConference from "../Views/Application/Conferences/addConference.jsx";
 import viewConference from "../Views/Application/Conferences/viewConference.js"
@@ -30,16 +29,24 @@ import viewConference from "../Views/Application/Conferences/viewConference.js"
 
 let routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: "/interest-profile",
+    name: "InterestProfile",
     icon: "ni ni-tv-2 text-primary",
-    component: Dashboard,
+    component: InterestProfile,
+    layout: "/app",
+    display: "none",
+  },
+  {
+    path: "/compare-authors",
+    name: "CompareAuthors",
+    icon: "ni ni-tv-2 text-primary",
+    component: CompareAuthors,
     layout: "/app",
     display: "none",
   },
   {
     path: "/index",
-    name: "Dashboard",
+    name: "InterestProfile",
     icon: "ni ni-tv-2 text-primary",
     component: ViewPaper,
     layout: "/app",
@@ -138,28 +145,12 @@ let routes = [
   //   layout: "/app",
   //   display: "none",
   // },
-  // {
-  //   path: "/stream-chart",
-  //   name: "Stream Chart",
-  //   icon: "fas fa-cloud text-info",
-  //   component: StreamChartPage,
-  //   layout: "/app",
-  //   display: "none",
-  // },
 
   {
     path: "/user-profile",
     name: "User Profile",
     icon: "ni ni-single-02 text-green",
     component: Profile,
-    layout: "/app",
-    display: "none",
-  },
-  {
-    path: "/profile/:id",
-    name: "User Account Details",
-    icon: "ni ni-single-02 text-green",
-    component: SearchUserProfile,
     layout: "/app",
     display: "none",
   },

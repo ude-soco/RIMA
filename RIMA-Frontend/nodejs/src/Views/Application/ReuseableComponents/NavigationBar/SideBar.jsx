@@ -20,8 +20,6 @@ import BookIcon from '@material-ui/icons/Book';
 import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
-import MeetingRoomOutlined from '@material-ui/icons/MeetingRoomOutlined';
-
 
 const drawerWidth = 240;
 
@@ -68,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SideBar({selection, setSelection}) {
   const classes = useStyles();
   const history = useHistory()
-  const [openDashboard, setOpenDashboard] = useState(true);
   const [openSettings, setOpenSettings] = useState(true);
   const [openRecommendation, setOpenRecommendation] = useState(true);
   const [openConference, setOpenConference] = useState(true);
@@ -77,8 +74,11 @@ export default function SideBar({selection, setSelection}) {
   const handleSelect = (e) => {
     setSelection(e.currentTarget.id);
     switch (e.currentTarget.id) {
-      case "dashboard":
-        history.push("/app/dashboard")
+      case "interestOverview":
+        history.push("/app/interest-profile")
+        break;
+      case "compareAuthors":
+        history.push("/app/compare-authors")
         break;
       case "addPublication":
         history.push("/app/add-paper")
@@ -86,12 +86,6 @@ export default function SideBar({selection, setSelection}) {
       case "myPublications":
         history.push("/app/view-paper");
         break;
-      case "addConference":
-        history.push("/app/add-conference");
-        break;
-      case "viewConference":
-        history.push("/app/view-conference");
-        break;  
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -119,7 +113,7 @@ export default function SideBar({selection, setSelection}) {
       case "compareConferences":
         history.push("/app/topicsresearch/" + getItem("userId"));
         break;
-      case "compareResearchers":
+      case "conferenceNetwork":
         history.push("/app/topicsauthors/" + getItem("userId"));
         break;
       case "myProfile":
@@ -142,16 +136,26 @@ export default function SideBar({selection, setSelection}) {
       <Divider className={classes.divider}/>
 
 
-      {/* DASHBOARD */}
+      {/* INTEREST PROFILE */}
       <List className={classes.text}>
-        <ListItem button id="dashboard"
-                  selected={selectedList("dashboard")}
+        <ListItem button id="interestOverview"
+                  selected={selectedList("interestOverview")}
                   onClick={handleSelect}
-                  className={selectedList("dashboard")}>
+                  className={selectedList("interestOverview")}>
           <ListItemIcon className={classes.listIcon}>
-            <DashboardIcon className={selectedList("dashboard")}/>
+            <CloudIcon className={selectedList("interestOverview")}/>
           </ListItemIcon>
-          <ListItemText primary="Dashboard"/>
+          <ListItemText primary="Interest Profile"/>
+        </ListItem>
+
+        <ListItem button id="compareAuthors"
+                  selected={selectedList("compareAuthors")}
+                  onClick={handleSelect}
+                  className={selectedList("compareAuthors")}>
+          <ListItemIcon className={classes.listIcon}>
+            <GroupIcon className={selectedList("compareAuthors")}/>
+          </ListItemIcon>
+          <ListItemText primary="Compare Authors"/>
         </ListItem>
 
         {/* TODO: To be removed */}
@@ -223,7 +227,50 @@ export default function SideBar({selection, setSelection}) {
             <ListItemIcon className={classes.listIconNested}>
               <TwitterIcon className={selectedList("tweetsAndPeople")}/>
             </ListItemIcon>
-            <ListItemText primary="Tweets and People"/>
+            <ListItemText primary="Tweets"/>
+          </ListItem>
+
+          <ListItem button id="publicationRecommendation"
+                    selected={selectedList("publicationRecommendation")}
+                    onClick={handleSelect}
+                    className={selectedList("publicationRecommendation")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <LocalLibraryIcon className={selectedList("publicationRecommendation")}/>
+            </ListItemIcon>
+            <ListItemText primary="Publications"/>
+          </ListItem>
+        {/* TODO: Publications and Researchers (Jaleh's thesis) */}
+        </Collapse>
+
+
+        {/* CONFERENCES */}
+        <ListItem button onClick={() => setOpenConference(!openConference)}>
+          <ListItemIcon className={classes.listIcon}>
+            <BusinessIcon/>
+          </ListItemIcon>
+          <ListItemText primary="Conference Insights"/>
+          {openConference ? <ExpandLess/> : <ExpandMore/>}
+        </ListItem>
+
+        <Collapse in={openConference} unmountOnExit>
+          <ListItem button id="topicTrends"
+                    selected={selectedList("topicTrends")}
+                    onClick={handleSelect}
+                    className={selectedList("topicTrends")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <MultilineChartIcon className={selectedList("topicTrends")}/>
+            </ListItemIcon>
+            <ListItemText primary="Topics and Trends"/>
+          </ListItem>
+
+          <ListItem button id="conferenceNetwork"
+                    selected={selectedList("conferenceNetwork")}
+                    onClick={handleSelect}
+                    className={selectedList("conferenceNetwork")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <GroupIcon className={selectedList("conferenceNetwork")}/>
+            </ListItemIcon>
+            <ListItemText primary="Author Networks"/>
           </ListItem>
 
           <ListItem button id="topicRecommendation"
@@ -235,50 +282,7 @@ export default function SideBar({selection, setSelection}) {
             </ListItemIcon>
             <ListItemText primary="Topic Recommendation"/>
           </ListItem>
-        </Collapse>
 
-
-        {/* CONFERENCES */}
-        <ListItem button onClick={() => setOpenConference(!openConference)}>
-          <ListItemIcon className={classes.listIcon}>
-            <BusinessIcon/>
-          </ListItemIcon>
-          <ListItemText primary="Conferences"/>
-          {openConference ? <ExpandLess/> : <ExpandMore/>}
-        </ListItem>
-
-        <Collapse in={openConference} unmountOnExit>
-
-        <ListItem button id="addConference"
-                    selected={selectedList("addConference")}
-                    onClick={handleSelect}
-                    className={selectedList("addConference")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <AddIcon className={selectedList("addConference")}/>
-            </ListItemIcon>
-            <ListItemText primary="Add Conference"/>
-          </ListItem>
-        
-          <ListItem button id="viewConference"
-                    selected={selectedList("viewConference")}
-                    onClick={handleSelect}
-                    className={selectedList("viewConference")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <MeetingRoomOutlined className={selectedList("viewConference")}/>
-            </ListItemIcon>
-            <ListItemText primary="View added Conferences"/>
-          </ListItem>
-
-        <ListItem button id="topicTrends"
-                    selected={selectedList("topicTrends")}
-                    onClick={handleSelect}
-                    className={selectedList("topicTrends")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <MultilineChartIcon className={selectedList("topicTrends")}/>
-            </ListItemIcon>
-            <ListItemText primary="Topic Trends"/>
-          </ListItem>
-      
           <ListItem button id="compareConferences"
                     selected={selectedList("compareConferences")}
                     onClick={handleSelect}
@@ -289,15 +293,6 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Compare Conferences"/>
           </ListItem>
 
-          <ListItem button id="compareResearchers"
-                    selected={selectedList("compareResearchers")}
-                    onClick={handleSelect}
-                    className={selectedList("compareResearchers")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <GroupIcon className={selectedList("compareResearchers")}/>
-            </ListItemIcon>
-            <ListItemText primary="Compare Researchers"/>
-          </ListItem>
         </Collapse>
 
 
@@ -318,7 +313,17 @@ export default function SideBar({selection, setSelection}) {
             <ListItemIcon className={classes.listIconNested}>
               <PersonIcon className={selectedList("myProfile")}/>
             </ListItemIcon>
-            <ListItemText primary="My Profile"/>
+            <ListItemText primary="Manage Profile"/>
+          </ListItem>
+
+          <ListItem button id="myPublications"
+                    selected={selectedList("myPublications")}
+                    onClick={handleSelect}
+                    className={selectedList("myPublications")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <LocalLibraryIcon className={selectedList("myPublications")}/>
+            </ListItemIcon>
+            <ListItemText primary="Manage Publications"/>
           </ListItem>
 
           <ListItem button id="addPublication"
@@ -331,15 +336,7 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Add Publication"/>
           </ListItem>
 
-          <ListItem button id="myPublications"
-                    selected={selectedList("myPublications")}
-                    onClick={handleSelect}
-                    className={selectedList("myPublications")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <LocalLibraryIcon className={selectedList("myPublications")}/>
-            </ListItemIcon>
-            <ListItemText primary="My Publications"/>
-          </ListItem>
+
         </Collapse>
 
       </List>

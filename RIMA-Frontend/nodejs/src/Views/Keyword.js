@@ -101,7 +101,7 @@ class Keyword extends React.Component {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 2000,
         });
-        window.location.href = "/app/dashboard";
+        window.location.href = "/app/interest-profile";
       })
       .catch((error) => {
         this.setState({isLoding: false});
@@ -234,7 +234,7 @@ class Keyword extends React.Component {
                             <Button color="primary" type="submit">
                               Save
                             </Button>
-                            <Link to={"/app/dashboard"}>
+                            <Link to={"/app/interest-profile"}>
                               <Button color="secondary">
                                 Back
                               </Button>

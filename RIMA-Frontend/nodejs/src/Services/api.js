@@ -1,9 +1,82 @@
-import { getItem } from "./utils/localStorage";
-import { BASE_URL } from "./constants";
 import axios from "axios";
+import {BASE_URL} from "./constants";
+import {getItem} from "./utils/localStorage";
+
 
 class RestAPI {
-  static refreshData(data) {
+  // SEARCH FOR USERS BY NAME TO COMPARE
+  static searchAuthors(userName) {
+    let user = JSON.parse(localStorage.getItem("rimaUser"));
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/accounts/user-search/${userName}/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${user.token}`,
+      },
+    }).then((res) => res)
+  }
+
+  // LONG TERM INTEREST
+  static longTermInterest(userData) {
+    let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/long-term/user/${!userData ? currentUser.id : userData.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
+
+  // SHORT TERM INTEREST
+  static shortTermInterest(userData) {
+    let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/short-term/user/${!userData ? currentUser.id : userData.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
+
+  static interestTrends(userData) {
+    let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/stream-graph/user/${!userData ? currentUser.id : userData.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      },
+    }).then((res) => res);
+  }
+
+  static activities(userData) {
+    let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/activity-stats/user/${!userData ? currentUser.id : userData.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${currentUser.token}`,
+      }
+    }).then((res) => res);
+  }
+
+
+  // OLD APIS
+
+  static refreshData() {
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/trigger-data-updata/`,
@@ -16,7 +89,7 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  static refreshPaper(data) {
+  static refreshPaper() {
     return axios({
       method: "post",
       url: `${BASE_URL}/api/interests/trigger-paper-updata/`,
@@ -196,7 +269,7 @@ class RestAPI {
   }
 
   //** UPDATE USER PROFILE API **//
-  static updateUserProfile(data, id) {
+  static updateUserProfile(data) {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "patch",
@@ -289,53 +362,12 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  //** PIE DATA API **//
-  static pieChart(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${getItem("userId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-  //** PIE DATA API FOR USER PROFILE **//
-  static pieChartUser(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${getItem("mId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
   //** STREAM DATA API **//
   static streamChart() {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/stream-graph/user/${getItem("userId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-    }).then((res) => res);
-  }
-  //** STREAM DATA API FOR USER PROFILE **//
-  static streamChartUser() {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/stream-graph/user/${getItem("mId")}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -373,42 +405,12 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  //** BAR DATA API FOR USER PROFILE **//
-  static barChartUser(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/activity-stats/user/${getItem("mId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-
   //** CLOUD DATA API **//
   static cloudChart(data) {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/interests/long-term/user/${getItem("userId")}`,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Token ${TOKEN}`,
-      },
-      keywords: data,
-    }).then((res) => res);
-  }
-
-  //** CLOUD DATA API FOR USER PROFILE **//
-  static cloudChartUser(data) {
-    const TOKEN = getItem("accessToken");
-    return axios({
-      method: "get",
-      url: `${BASE_URL}/api/interests/long-term/user/${getItem("mId")}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -441,6 +443,7 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+
   //** GET SEARCH USER PROFILE DATA API **//
   static getUserProfile(id) {
     const TOKEN = getItem("accessToken");
@@ -470,7 +473,7 @@ class RestAPI {
   }
 
   //** GET DATA STATUS API **//
-  static dataImportStatus() {
+  static dataImportstatus() {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
@@ -499,6 +502,7 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+
   static savedTweets(data) {
     const TOKEN = getItem("accessToken");
 
@@ -513,6 +517,7 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+
   static getSavedTweets() {
     const TOKEN = getItem("accessToken");
 
@@ -526,6 +531,7 @@ class RestAPI {
       },
     }).then((res) => res);
   }
+
   static hideSavedTweet(id) {
     const TOKEN = getItem("accessToken");
 
@@ -539,8 +545,9 @@ class RestAPI {
       },
     })
   }
-   //LAK Form
-   static topicForm() {
+
+  //LAK Form
+  static topicForm() {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
@@ -552,6 +559,7 @@ class RestAPI {
       },
     }).then((res) => res);
   }
+
   //** STREAM DATA API FOR USER PROFILE **//
   static topicFormUser() {
     const TOKEN = getItem("accessToken");
@@ -567,18 +575,18 @@ class RestAPI {
   }
 
 //**added by mouadh */
-static getsimilartweets() {
-  const TOKEN = getItem("accessToken");
-  return axios({
-    method: "get",
-    url: `${BASE_URL}/api/interests/getsimilarity/`,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Token ${TOKEN}`,
-    },
-  }).then((res) => res);
-}
+  static getsimilartweets() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/interests/getsimilarity/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
 }
 
 

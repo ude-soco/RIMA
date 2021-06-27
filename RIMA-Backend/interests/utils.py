@@ -318,7 +318,8 @@ def get_venn_chart_data(user_1_interests, user_2_interests):
 
 
 def get_radar_similarity_data(user_1_interests, user_2_interests):
-    from interests.Semantic_Similarity.Word_Embedding.IMsim import glove_model
+    # from interests.Semantic_Similarity.Word_Embedding.IMsim import glove_model
+    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
     vector_space = list(
         set(user_1_interests.keys()).union(set(user_2_interests.keys())))
     user_1_data = {}

@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
 import Chart from "chart.js";
-import PieChart from "../../../components/Chart/PieChart";
+import ConceptMapContainer from "../../../components/ConceptMap";
+import {Card, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 
 // core components
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
-import {Card, CardContent, Grid, Paper, Typography} from "@material-ui/core";
+import {CardContent, Typography} from "@material-ui/core";
 
-export default function RecentInterest({classes}) {
+export default function PotentialInterests({classes}) {
+
   const [state, setState] = useState({
     activeNav: 1,
     chartExample1Data: "data1",
@@ -16,8 +18,7 @@ export default function RecentInterest({classes}) {
     if (window.Chart) {
       parseOptions(Chart, chartOptions());
     }
-  }, [])
-
+  })
   const toggleNavs = (e, index) => {
     e.preventDefault();
     setState({
@@ -27,17 +28,23 @@ export default function RecentInterest({classes}) {
         this.state.chartExample1Data === "data1" ? "data2" : "data1",
     });
   };
+
   return (
     <>
+        {/* Page content */}
       <Card className={classes.cardHeight}>
         <CardContent>
-          <Typography variant="h5" gutterBottom> Recent Interest </Typography>
+          <Typography variant="h5" gutterBottom> Potential Interest </Typography>
           <Typography gutterBottom>
-            This chart shows your recent interests in the last year (for publications), and last month (for tweets).
+            This chart uses your top 5 interests to infer your
+            potential interests. You can see them on the right side
+            of the graph.
           </Typography>
-          <PieChart/>
+
+          <ConceptMapContainer />
         </CardContent>
       </Card>
-    </>
-  );
+      </>
+    );
+
 }

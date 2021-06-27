@@ -6,6 +6,7 @@ import Loader from "react-loader-spinner";
 import RestAPI from "Services/api";
 
 import { handleServerErrors } from "Services/utils/errorHandler";
+import {Grid} from "@material-ui/core";
 
 class ConceptMapContainer extends Component {
 	constructor(props) {
@@ -335,11 +336,15 @@ class ConceptMapContainer extends Component {
 						</div>
 					) : this.state.isData ? (
 						<>
-							<div>
-								<Stage width={width} height={this.stageHeight}>
-									<Layer>{this.getNodes()}</Layer>
-								</Stage>
-							</div>
+							<Grid container justify="center">
+								<Grid item>
+									<Stage
+										width={width} height={this.stageHeight}
+									>
+										<Layer>{this.getNodes()}</Layer>
+									</Stage>
+								</Grid>
+							</Grid>
 						</>
 					) : (
 								<div style={{ textAlign: "center" }}>

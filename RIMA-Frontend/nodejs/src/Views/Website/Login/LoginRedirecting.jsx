@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import {toast} from "react-toastify";
 import {handleServerErrors} from "Services/utils/errorHandler";
 import RestAPI from "../../../Services/api";
-import {getItem} from "Services/utils/localStorage";
 import {Card, Container, Row} from "react-bootstrap";
 
 
@@ -10,26 +9,20 @@ export default function LoginRedirecting() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      dataImport();
+      RestAPI.dataImportstatus()
+        .then((res) => {
+          const {data: {data_being_loaded}} = res;
+          if (!data_being_loaded) {
+            window.location.href = "/app/interest-profile";
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+          handleServerErrors(error, toast.error);
+        });
     }, 2000)
     return () => clearInterval(interval)
   }, [])
-
-
-  const dataImport = () => {
-    RestAPI.dataImportStatus()
-      .then((res) => {
-        const {data: {data_being_loaded}} = res;
-        if (!data_being_loaded) {
-          // window.location.href = "/app/cloud-chart/" + getItem("mId");
-          window.location.href = "/app/dashboard";
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-        handleServerErrors(error, toast.error);
-      });
-  };
 
   const customStyles = {
     card: {

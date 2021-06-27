@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       marginLeft: drawerWidth,
     },
   },
@@ -85,7 +85,7 @@ export default function Admin(props) {
           <Switch>
             {getRoutes(routes)}
             {/*<Redirect from="*" to="/app/PieChartPage"/>*/}
-            <Redirect from="*" to="/app/dashboard"/>
+            <Redirect from="*" to="/app/interest-profile"/>
           </Switch>
         </main>
 

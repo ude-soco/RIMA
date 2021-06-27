@@ -85,6 +85,8 @@ export default function Login() {
         setIsLoading(false);
         console.log(res.data)
         if (res.status === 200) {
+          // console.log(res.data)
+          localStorage.setItem("rimaUser", JSON.stringify(res.data));
           localStorage.setItem("accessToken", res.data.token);
           localStorage.setItem("name", res.data.first_name);
           localStorage.setItem("lastname", res.data.last_name);
@@ -95,7 +97,7 @@ export default function Login() {
             window.location.href = "/app/redirect";
           } else {
             // history.push("/app/cloud-chart/" + res.data.id);
-            history.push("/app/dashboard");
+            history.push("/app/interest-profile");
           }
         }
       })
