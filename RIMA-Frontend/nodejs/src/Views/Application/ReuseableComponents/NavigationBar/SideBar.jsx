@@ -20,6 +20,8 @@ import BookIcon from '@material-ui/icons/Book';
 import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import MeetingRoomOutlined from '@material-ui/icons/MeetingRoomOutlined';
+
 
 const drawerWidth = 240;
 
@@ -86,6 +88,12 @@ export default function SideBar({selection, setSelection}) {
       case "myPublications":
         history.push("/app/view-paper");
         break;
+      case "addConference":
+        history.push("/app/add-conference");
+        break;
+      case "viewConference":
+        history.push("/app/view-conference");
+        break;  
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -239,7 +247,7 @@ export default function SideBar({selection, setSelection}) {
             </ListItemIcon>
             <ListItemText primary="Publications"/>
           </ListItem>
-        {/* TODO: Publications and Researchers (Jaleh's thesis) */}
+         {/* TODO: Publications and Researchers (Jaleh's thesis) */}
         </Collapse>
 
 
@@ -253,6 +261,27 @@ export default function SideBar({selection, setSelection}) {
         </ListItem>
 
         <Collapse in={openConference} unmountOnExit>
+
+        <ListItem button id="addConference"
+                      selected={selectedList("addConference")}
+                      onClick={handleSelect}
+                      className={selectedList("addConference")}>
+              <ListItemIcon className={classes.listIconNested}>
+                <AddIcon className={selectedList("addConference")}/>
+              </ListItemIcon>
+              <ListItemText primary="Add Conference"/>
+            </ListItem>
+          
+            <ListItem button id="viewConference"
+                      selected={selectedList("viewConference")}
+                      onClick={handleSelect}
+                      className={selectedList("viewConference")}>
+              <ListItemIcon className={classes.listIconNested}>
+                <MeetingRoomOutlined className={selectedList("viewConference")}/>
+              </ListItemIcon>
+              <ListItemText primary="View added Conferences"/>
+            </ListItem>
+
           <ListItem button id="topicTrends"
                     selected={selectedList("topicTrends")}
                     onClick={handleSelect}
@@ -283,19 +312,8 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Topic Recommendation"/>
           </ListItem>
 
-          <ListItem button id="compareConferences"
-                    selected={selectedList("compareConferences")}
-                    onClick={handleSelect}
-                    className={selectedList("compareConferences")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <BusinessIcon className={selectedList("compareConferences")}/>
-            </ListItemIcon>
-            <ListItemText primary="Compare Conferences"/>
-          </ListItem>
-
-        </Collapse>
-
-
+          </Collapse>
+    
         {/* SETTINGS */}
         <ListItem button onClick={() => setOpenSettings(!openSettings)}>
           <ListItemIcon className={classes.listIcon}>
