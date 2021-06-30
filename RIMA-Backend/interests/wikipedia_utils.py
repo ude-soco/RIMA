@@ -18,7 +18,7 @@ def wikifilter(keyword):
             page_py = wiki_wiki.page(singles)
             if page_py.exists() == True:
                 candidate[singles] = keyword[key]
-    #     print(candidate)
+    print('candidate: ',candidate)
 
     final = {}
     redirect = {}
@@ -31,13 +31,14 @@ def wikifilter(keyword):
         data = json.loads(query.text)
         PAGES = data["query"]["pages"]
         for v in PAGES.values():
+            print('VVVVVVVVVVVVVVV',v)
             redirect[ca] = v["title"]
             relation[v["title"]] = ca
             final[v["title"]] = 0
 
     for ca in redirect.keys():
         final[redirect[ca]] = candidate[ca]
-    #     print(final)
+    print('final',final)
 
     return relation, final
 

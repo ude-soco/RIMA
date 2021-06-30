@@ -167,14 +167,41 @@ class RestAPI {
 
   //** GET LIST COnference Events API  BAB**//
   static getListConfercneEvents(conference_name_abbr) {
-    console.log("TEST")
-  console.log(conference_name_abbr)
-  console.log("TEST")
-
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
       url: `${BASE_URL}/api/conferences/ConferenceEvents/${conference_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  
+//** COLLECT PAPERS FOR AN EVENT **//
+
+  static collectEventPapers(conference_name_abbr,conference_event_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/collectEventPapers/${conference_name_abbr}/${conference_event_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+
+ //** EXTRACT TRENDS OF AN EVENT **//
+  static ExtractEventTrends(conference_event_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/ExtractEventTrends/${conference_event_name_abbr}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

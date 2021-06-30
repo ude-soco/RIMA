@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('addConference/', views.addConferenceView.as_view()), # BAB
     path('ConferenceEvents/<slug:conference_name_abbr>', views.ConferenceEventsView.as_view()), # BAB
+    path('collectEventPapers/<slug:conference_name_abbr>/<slug:conference_event_name_abbr>', views.CollectEventPapersView.as_view()), # BAB
+    path('ExtractEventTrends/<slug:conference_event_name_abbr>', views.ExtractEventTrendsView.as_view()), # BAB
 
     path('laktopics/<pk1>/<pk2>/<pk3>', views.TopicsView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
 

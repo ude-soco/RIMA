@@ -1,6 +1,9 @@
 //Done by Swarna
 // Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
-import React from "react";
+import React, {useState,useEffect } from "react";
+import {CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import Chart from "chart.js";
 import Select from "react-select";
 import LAKForm from "../../../components/LAKForms/LAKForm";
@@ -28,101 +31,175 @@ import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollT
 import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
 
 // years and conferences' names should be fetched later from a customed endpoint
-const conference = [
-  { value: 'LAK', label: 'LAK' },
-  { value: 'edm', label: 'edm' },
-  { value: 'aied', label: 'aied'},
-];
+
 // BAB:END 08/06/2021 :: cover other conferences.
 
+const useStyles = makeStyles(theme => ({
+  padding: {
+    padding: theme.spacing(4),
+    marginBottom: theme.spacing(2)
+  },
+  gutter: {
+    marginBottom: theme.spacing(2)
+  },
+  gutterLarge: {
+    marginBottom: theme.spacing(11)
+  },
+  tabPanel: {
+    marginBottom: theme.spacing(7),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  header: {
+    marginBottom: theme.spacing(8)
+  },
+  headerAlt: {
+    margin: theme.spacing(3, 0, 4, 0)
+  },
+  cardHeight: {
+    height: "100%",
+    padding: theme.spacing(4),
+    borderRadius: theme.spacing(2),
+    marginBottom: 24
+  },
+  cardHeightAlt: {
+    height: "100%",
+    padding: theme.spacing(4, 4, 0, 4),
+    // borderRadius: theme.spacing(4, 4, 0, 0),
+    borderRadius: theme.spacing(2),
+    marginBottom: 24
+  },
+}));
 
-class TopicBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.navigateTop = this.navigateTop.bind(this);
-    this.state = {
-      activeNav: 4,
-      chartExample1Data: "data1",
-      tooltipOpen: false,
-      imageTooltipOpen: false,
-      // BAB:BEGIN 08/06/2021 :: cover other conferences
-      selectedOption: { label: 'LAK', value: 'LAK' },  
-      confEvents: [
-        {
-          value: "2011",
-          label: "2011"
-        },
-        {
-          value: "2012",
-          label: "2012"
-        },
-        {
-          value: "2013",
-          label: "2013"
-        },
-        {
-          value: "2014",
-          label: "2014"
-        },
-        {
-          value: "2015",
-          label: "2015"
-        },
-        {
-          value: "2016",
-          label: "2016"
-        },
-        {
-          value: "2017",
-          label: "2017"
-        },
-        {
-          value: "2018",
-          label: "2018"
-        },
-        {
-          value: "2019",
-          label: "2019"
-        },
-        {
-          value: "2020",
-          label: "2020"
-        }
-      ],
-  
-      // BAB:END 08/06/2021 :: cover other conferences.
-    };
+export default function TopicBar (props) {
+  const [activeNav, setactiveNav] = useState(4);
+  const [chartExample1Data, setchartExample1Data] = useState("data1");
+  const [tooltipOpen, settooltipOpen] = useState(false);
+  const [imageTooltipOpen, setimageTooltipOpen] = useState(false);
+  const classes = useStyles();
+  const [selectedOption, setselectedOption] = useState({ label: 'LAK', value: 'LAK' });
+  const [conference, setconference] = useState([]);
+  const [confEvents, setconfEvents] = useState([
+    {
+      value: "2011",
+      label: "2011"
+    },
+    {
+      value: "2012",
+      label: "2012"
+    },
+    {
+      value: "2013",
+      label: "2013"
+    },
+    {
+      value: "2014",
+      label: "2014"
+    },
+    {
+      value: "2015",
+      label: "2015"
+    },
+    {
+      value: "2016",
+      label: "2016"
+    },
+    {
+      value: "2017",
+      label: "2017"
+    },
+    {
+      value: "2018",
+      label: "2018"
+    },
+    {
+      value: "2019",
+      label: "2019"
+    },
+    {
+      value: "2020",
+      label: "2020"
+    }
+  ],);
+    
+
+  const loading =
+    <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
+      <Grid item>
+        <CircularProgress/>
+      </Grid>
+      <Grid item>
+        <Typography variant="overline"> Loading data </Typography>
+      </Grid>
+    </Grid>
+
+  useEffect(() => {
+    handleSearchConferences();
+  }, [])
+
     if (window.Chart) {
       parseOptions(Chart, chartOptions());
     }
-  }
+  
 
-  navigateTop() {
+  const navigateTop = () => {
     window.scrollTo(0, 0)
   }
 
    // BAB:BEGIN 08/06/2021 :: cover other conferences.
-  handleChange = selectedOption => {
-    this.forceUpdate();
-    this.setState({ selectedOption });
+  const handleChange = (selectedOption) => {
+    //this.forceUpdate();
+    setselectedOption(selectedOption);
     console.log("updated");
     console.log(`Option selected:`, selectedOption);
     fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
     .then(response => response.json())
     .then(json => {
-      this.setState({
-        confEvents: json.years,
-      })
+      setconfEvents( json.years)
     });
   };
+
+  
+  const handleSearchConferences = () => {
+    fetch(`${BASE_URL_CONFERENCE}searchConf/`)
+    .then(response => response.json())
+    .then(json => {
+      setconference(json)
+    });
+  };
+
+
   // BAB:END 08/06/2021 :: cover other conferences.
 
-  render() {
-    const { selectedOption } = this.state;   // BAB 08/06/2021 :: cover other conferences.
+ 
+   // const { selectedOption } = state;   // BAB 08/06/2021 :: cover other conferences.
     return (
       <>
+
+      <Grid container component={Paper} className={classes.cardHeight}>     
+              <Grid item xs>
+                <Typography variant="h5" gutterBottom>
+                  Conferences
+                </Typography>
+                <Typography className={classes.gutter}>
+                  Search for conferences and show trends
+                </Typography>
+
+                <Autocomplete
+                  loading={loading}
+                  options={conference}
+                  onInputChange={handleSearchConferences}
+                  //onChange={handleSelectAuthorComparison}
+                  getOptionLabel={(option) => option.conference_full_name + " url: " + option.conference_url}
+                  renderInput={(params) => <TextField {...params} label="Type an conference name" variant="outlined"/>}
+                  className={classes.gutter}
+                />
+              </Grid>
+            </Grid>
+
+
         {/* Page content */}
-        <Container className="mt--7" fluid style={{maxWidth: "1400px"}}>
+        <Grid container component={Paper} className={classes.cardHeight}>
+
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">
               <Row className="align-items-center">
@@ -150,7 +227,7 @@ class TopicBar extends React.Component {
                           placeholder="Select conference"
                           options={conference}
                           value={selectedOption}
-                          onChange={this.handleChange}
+                          onChange={handleChange}
                         // BAB:END 08/06/2021 :: cover other conferences.
                         />
                       </div>
@@ -172,7 +249,7 @@ class TopicBar extends React.Component {
                   >
                     {/*  BAB 08.06.2021 */ }
                     <Col>
-                      <LAKForm conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />        {/*  BAB 08.06.2021 */ } 
+                      <LAKForm conferenceName = {selectedOption.value} confEvents = {confEvents} />        {/*  BAB 08.06.2021 */ } 
                      </Col>
                   </div>
                 </div>
@@ -190,7 +267,7 @@ class TopicBar extends React.Component {
                                         
 
                     <Col>
-                      <LAKBar conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />          {/*  BAB 08.06.2021 */ }
+                      <LAKBar conferenceName = {selectedOption.value} confEvents = {confEvents} />          {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>
@@ -216,7 +293,7 @@ class TopicBar extends React.Component {
                     }}
                   >
                     <Col>
-                      <LAKPie conferenceName = {selectedOption.value}  confEvents = {this.state.confEvents}/>       {/*  BAB 08.06.2021 */ } 
+                      <LAKPie conferenceName = {selectedOption.value}  confEvents = {confEvents}/>       {/*  BAB 08.06.2021 */ } 
                     </Col>
                   </div>
                 </div>
@@ -233,7 +310,7 @@ class TopicBar extends React.Component {
                     }}
                   >
                     <Col>
-                      <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {this.state.confEvents}/>    {/*  BAB 08.06.2021 */ }
+                      <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>
@@ -265,7 +342,7 @@ class TopicBar extends React.Component {
                     }}
                   >
                     <Col>
-                      <VennChart  conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} page = 'topicbar' conferences = {this.conference}/>     {/*  BAB 08.06.2021 */ } 
+                      <VennChart  conferenceName = {selectedOption.value} confEvents = {confEvents} page = 'topicbar' conferences = {conference}/>     {/*  BAB 08.06.2021 */ } 
                     </Col>
                   </div>
                 </div>
@@ -288,11 +365,9 @@ class TopicBar extends React.Component {
 
             <ScrollTopWrapper/>
           </Card>
-        </Container>
-
+        </Grid>
       </>
     );
   }
-}
 
-export default TopicBar;
+

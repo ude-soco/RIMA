@@ -65,13 +65,13 @@ from .topicutils import (
     getAuthorsDict,   #printText 
     getConfEvents)  #BAB 08.06.2021::Extension for other conferences other than LAK
 from .TopicExtractor import (fetchAllTopics, fetchAbstracts_author, updateAllTopics)
-from .serializers import ConferenceSerializer, PlatformSerializer,ConferenceEventSerializer
+from .serializers import PreloadedConferenceListSerializer,ConferenceSerializer, PlatformSerializer,ConferenceEventSerializer
 from rest_framework.generics import (ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .models import Platform, Conference, Conference_Event, Conference_Event_Paper 
+from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper 
 
 
 
@@ -93,6 +93,35 @@ class ConferenceEventsView(ListCreateAPIView):
         return conference_events_objs
 
 
+"""
+BAB Conference Events views
+"""
+class CollectEventPapersView(ListCreateAPIView): 
+   
+    def get(self, request, *args, **kwargs):
+        data = [{}]
+        url_path = self.request.get_full_path()
+        url_path = url_path.replace("%20", " ")
+        topics_split = url_path.split(r"/")
+        confutils.addDataToConfPaperModel(topics_split[-2],topics_split[-1])
+        return Response(data)
+
+
+
+
+
+"""
+BAB Conference Events views
+"""
+class ExtractEventTrendsView(ListCreateAPIView): 
+   
+    def get(self, request, *args, **kwargs):
+        data = [{}]
+        url_path = self.request.get_full_path()
+        url_path = url_path.replace("%20", " ")
+        topics_split = url_path.split(r"/")
+        confutils.addDatatoKeywordAndTopicModels(topics_split[-1])
+        return Response(data)
 '''
 BAB Add Conference View
 
@@ -148,6 +177,23 @@ class addConferenceView(ListCreateAPIView):
             serializer.save()
             confutils.addDataToConfEventModel(request_data['conferences'][0]['conference_name_abbr'])
             return Response(serializer.data)
+
+'''
+BAB get conf events/years
+'''
+# Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
+
+class searchConf(APIView):
+    def get(self, request, format=None):
+        preloadedConferenceList = PreloadedConferenceList.objects.all()
+        serializer = PreloadedConferenceListSerializer(preloadedConferenceList, many=True)
+        return Response(serializer.data)
+        
+        #data = Conference_Event.objects.all()
+        #return data
+    
+
+
 
 '''
 BAB get conf events/years

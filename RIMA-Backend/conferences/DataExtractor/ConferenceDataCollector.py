@@ -246,7 +246,7 @@ def fetch_events_html_raw_data(conf_name,years,headers):
 
 
 # fetch all dois or ids of the conference publications
-def fetch_all_dois_ids(conf_name, years,headers):
+def fetch_all_dois_ids_old(conf_name, years,headers):
     complete_doi_ids_dict= {}
     complete_events_names_dict = {}
     conf_event_url = f''
@@ -282,40 +282,40 @@ def fetch_all_dois_ids(conf_name, years,headers):
     return complete_doi_ids_dict, conf_url ,conf_complete_name,complete_events_names_dict
 
 
+# fetch all dois or ids of the conference publications
+def fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, url,headers):
+    data = {
+            'conf_event_complete_name': '',
+            'conf_event_name_abbr' : '',
+            'dois-ids' : [] 
+           }
+    try:
+        event_html = fetch_soup(url,headers)
+        if event_html:
+            dois_ids  = fetch_dois_ids_from_html(conference_name_abbr,event_html,"nav",{"class": "publ"},"a","href",True,False,headers)
+            conf_event_complete_name = fetch_dois_ids_from_html(conference_name_abbr,event_html,"h1",{},"" ,"",False,False,headers)
+
+            print(' ')
+            print(' **** ','Publications\' dois/ids of the conference event: **** ')
+            for index in range(len(dois_ids)):
+                print('doi/id ',index+1,' ', dois_ids[index])
+
+            data['dois-ids'] = dois_ids
+            data['conf_event_complete_name'] = conf_event_complete_name
+            data['conf_event_name_abbr'] = conf_event_name_abbr
+    except AttributeError as error:
+        print('   ****    ')
+        print('NoneType Error please, check the searched attribute or pattern')
+    return data
+
+
+
 #DOI-https://api.semanticscholar.org/v1/paper/10.1038/nrn3241
 #ID-https://api.semanticscholar.org/v1/paper/0796f6cd7f0403a854d67d525e9b32af3b277331
 #fetching paper data from semantic scholar AP given their list of dois or ids
-def extract_papers_data(conf_events_url_dois_dict,conf_url,conf_complete_name,complete_events_names_dict):
-    transition_full_dict = defaultdict(dict)
-    complete_data_dict = {}
-    paper_data_dict= {}
-    
-    for key,value in conf_events_url_dois_dict.items():
-        for a_value in value:
-            #print(a_value)
-            paper_data = requests.get(f'{semantic_scholar_url_api}{a_value}').json()
-            #print(paper_data)
-            paper_data_dict.setdefault(key, []).append(paper_data)
-
-
-
-
-    for key,value in complete_events_names_dict.items():
-        for a_value in value:
-            transition_full_dict[key][a_value] = paper_data_dict[a_value]
-
-    
-    
-    
-    complete_data_dict['conf_full_name'] = conf_complete_name
-    complete_data_dict['conf_abrev_name'] = conference_name
-    complete_data_dict['conf_url'] = conf_url
-    complete_data_dict['conf_events'] = transition_full_dict
-
-    json_dump = json.dumps(complete_data_dict, indent = 4)         
-            
-    json_object = json.loads(json_dump)
-   
-    print(type(json_object))
-
-    return json_object
+def extract_papers_data(data_dict_event):
+    data_dict_event['paper_data'] = []
+    for value in data_dict_event['dois-ids']:
+        paper_data = requests.get(f'{semantic_scholar_url_api}{value}').json()
+        data_dict_event['paper_data'].append(paper_data)
+    return data_dict_event

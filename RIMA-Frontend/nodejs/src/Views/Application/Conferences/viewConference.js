@@ -109,6 +109,38 @@ getConferenceEventsData = (conference_name_abbr) => {
     });
 };
 
+//** COLLECT PAPERS FOR AN EVENT **//
+collectEventPapers = (conference_name_abbr,conference_event_name_abbr) => {
+  RestAPI.collectEventPapers(conference_name_abbr,conference_event_name_abbr)
+    .then((response) => {
+      this.setState({
+        isLoding: false,
+        eventsmodal: !this.state.eventsmodal,
+        conferenceEvents: response.data,
+      });
+    })
+    .catch((error) => {
+      this.setState({ isLoding: false });
+      handleServerErrors(error, toast.error);
+    });
+};
+
+//** EXTRACT TRENDS OF AN EVENT **//
+ExtractEventTrends = (conference_event_name_abbr) => {
+  RestAPI.ExtractEventTrends(conference_event_name_abbr)
+    .then((response) => {
+      this.setState({
+        isLoding: false,
+        eventsmodal: !this.state.eventsmodal,
+        conferenceEvents: response.data,
+      });
+    })
+    .catch((error) => {
+      this.setState({ isLoding: false });
+      handleServerErrors(error, toast.error);
+    });
+};
+
 
   // Toggles the delete paper modal
   toggleDeletePaper = (id) => {
@@ -540,12 +572,12 @@ getConferenceEventsData = (conference_name_abbr) => {
                           <td><a href = {value.conference_event_url}>{value.conference_event_url}</a></td>
                           <td>{value.no_of_stored_papers}</td>                         
                           <td className="text-center" style={{ width: "5"}}>
-                            <Button color="secondary" onClick="" width = "50px">
+                            <Button color="secondary" onClick={() => this.collectEventPapers(value.conference_name_abbr, value.conference_event_name_abbr)} width = "50px">
                              Collect Papers
                             </Button>
                           </td >
                           <td className="text-center" style={{ width: "5"}}>
-                            <Button color="secondary" onClick="" width = "50px">
+                            <Button color="secondary" onClick={() => this.ExtractEventTrends(value.conference_event_name_abbr)} width = "50px">
                             Extract Trends
                             </Button>
                           </td>
