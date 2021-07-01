@@ -1,5 +1,5 @@
 from .DataExtractor import ConferenceDataCollector  as dataCollector 
-from .models import Conference_Event, Conference,Conference_Event_Paper
+from .models import Conference_Event, Conference,Conference_Event_Paper,Conf_Event_keyword,Event_has_keyword
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
@@ -64,15 +64,14 @@ def addDataToConfPaperModel(conference_name_abbr,conf_event_name_abbr):
    
 
 def getEventPapersData(conference_event_name_abbr):
-    #abstract_title_list = []
     abstract_title_str = ""
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
     if conference_event_obj:
         conference_event_papers_data = Conference_Event_Paper.objects.filter(conference_event_name_abbr=conference_event_obj)
         if conference_event_papers_data:
             for paper_data in conference_event_papers_data:
-                #abstract_title_list.append(paper_data.title + " " + paper_data.abstract)
-                abstract_title_str +=  paper_data.title + " " + paper_data.abstract   
+                if paper_data.title and paper_data.abstract:
+                    abstract_title_str +=  paper_data.title + " " + paper_data.abstract   
     return abstract_title_str
 
 
@@ -81,9 +80,25 @@ def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
     abstract_title_str = getEventPapersData(conference_event_name_abbr)
     print(abstract_title_str)
     keywords = getKeyword(abstract_title_str, 'Yake', 30)
-    #relation, final = wikifilter(keywords)
-
     print('KEYWORDS FIRST TEST', keywords)
+    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr =conference_event_name_abbr )
+    for key,value in keywords.items():
+        stored_keyword_check = Conf_Event_keyword.objects.filter(keywrod = key).exists()
+        if not stored_keyword_check:
+            conf_event_keyword_obj = Conf_Event_keyword.objects.create(keywrod=key,algorithm='Yake')
+            event_has_keyword_obj = Event_has_keyword(conference_event_name_abbr=conference_event_obj,
+                                                    keyword_id =conf_event_keyword_obj,
+                                                    wiegth = value)
+        else:
+            stored_keyword_obj = Conf_Event_keyword.objects.get(keywrod = key)
+            event_has_keyword_obj = Event_has_keyword(conference_event_name_abbr=conference_event_obj,
+                                                    keyword_id =stored_keyword_obj,
+                                                    wiegth = value)
+        event_has_keyword_obj.save()
+    
+    
+    #relation, final = wikifilter(keywords)
+    
     #print(' relation  WIKIS FIRST TEST', relation)
     #print('final TOPICS WIKIS FIRST TEST', final)
    

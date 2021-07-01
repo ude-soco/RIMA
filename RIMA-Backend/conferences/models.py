@@ -1,6 +1,8 @@
 from django.db import models
 import json
 
+from django.db.models.deletion import CASCADE
+
 
 class PreloadedConferenceList(models.Model):
 
@@ -83,5 +85,14 @@ class Author(models.Model):
     def get_all_papers(self):
         return json.loads(self.all_papers)
 
+class Conf_Event_keyword(models.Model):
+    keyword_id = models.AutoField(primary_key=True)
+    keywrod = models.CharField(max_length=255, null=True, blank=True)
+    algorithm = models.CharField(max_length=255, null=True, blank=True)
+    conference_event_name_abbr = models.ManyToManyField(Conference_Event,through = 'Event_has_keyword')
 
-   
+
+class Event_has_keyword(models.Model):
+    conference_event_name_abbr = models.ForeignKey(Conference_Event, on_delete=CASCADE, related_name= 'hasEvents')
+    keyword_id = models.ForeignKey(Conf_Event_keyword, on_delete=CASCADE, related_name= 'haskeywords')
+    wiegth = models.IntegerField(null=True) 

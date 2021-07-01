@@ -183,7 +183,7 @@ BAB get conf events/years
 '''
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 
-class searchConf(APIView):
+class searchConfView(APIView):
     def get(self, request, format=None):
         preloadedConferenceList = PreloadedConferenceList.objects.all()
         serializer = PreloadedConferenceListSerializer(preloadedConferenceList, many=True)

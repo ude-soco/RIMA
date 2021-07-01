@@ -188,11 +188,14 @@ export default function TopicBar (props) {
                   loading={loading}
                   options={conference}
                   onInputChange={handleSearchConferences}
-                  //onChange={handleSelectAuthorComparison}
-                  getOptionLabel={(option) => option.conference_full_name + " url: " + option.conference_url}
+                  onChange=""
+                  getOptionLabel={(option) => option.conference_full_name}
                   renderInput={(params) => <TextField {...params} label="Type an conference name" variant="outlined"/>}
                   className={classes.gutter}
                 />
+                <Button color="primary" onClick= "" width = "50px">
+                    Show Trends
+                </Button> 
               </Grid>
             </Grid>
 
