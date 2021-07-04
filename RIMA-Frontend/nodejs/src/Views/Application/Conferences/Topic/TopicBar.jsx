@@ -76,7 +76,9 @@ export default function TopicBar (props) {
   const [tooltipOpen, settooltipOpen] = useState(false);
   const [imageTooltipOpen, setimageTooltipOpen] = useState(false);
   const classes = useStyles();
-  const [selectedOption, setselectedOption] = useState({ label: 'LAK', value: 'LAK' });
+  const [selectedOption, setselectedOption] = useState({ label: 'lak', value: 'lak' });
+  const [available, setavailable] = useState([{ label: 'lak', value: 'lak' },{ label: 'edm', value: 'edm' },{ label: 'aied', value: 'aied' }]);
+
   const [conference, setconference] = useState([]);
   const [confEvents, setconfEvents] = useState([
     {
@@ -154,7 +156,7 @@ export default function TopicBar (props) {
     fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
     .then(response => response.json())
     .then(json => {
-      setconfEvents( json.years)
+      setconfEvents(json.events)
     });
   };
 
@@ -188,8 +190,8 @@ export default function TopicBar (props) {
                   loading={loading}
                   options={conference}
                   onInputChange={handleSearchConferences}
-                  onChange=""
                   getOptionLabel={(option) => option.conference_full_name}
+                  onChange={(event, values) => console.log("Searched Value !!"+ values)}
                   renderInput={(params) => <TextField {...params} label="Type an conference name" variant="outlined"/>}
                   className={classes.gutter}
                 />
@@ -228,7 +230,7 @@ export default function TopicBar (props) {
                         <Select
                         // BAB:BEGIN 08/06/2021 :: cover other conferences.
                           placeholder="Select conference"
-                          options={conference}
+                          options={available}
                           value={selectedOption}
                           onChange={handleChange}
                         // BAB:END 08/06/2021 :: cover other conferences.

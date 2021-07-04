@@ -126,13 +126,13 @@ class LAKForm extends Component {
 
   // BAB 08.06.2021 
   selectValue(e) {
-    fetch(`${BASE_URL_CONFERENCE}` + "laktopics/" + this.props.conferenceName + "/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/topic/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
           isLoaded: true,
-          items: json.topics,
-          length: json.topics.length,
+          items: json.words,
+          length: json.words.length,
           active1: true,
           active2: false
         })
@@ -145,13 +145,13 @@ class LAKForm extends Component {
 
   selectKeyword(e) {
     console.log("count", this.state.count)
-    fetch(`${BASE_URL_CONFERENCE}` + "lakkeywords/" + this.props.conferenceName + "/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/keyword/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
           isLoaded: true,
-          items: json.keywords,
-          length: json.keywords.length,
+          items: json.words,
+          length: json.words.length,
           active1: false,
           active2: true
         })

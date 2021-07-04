@@ -133,6 +133,10 @@ def applyTopicMiningKeyword(conferenceName,year, number):
         "value": val
     } for key, val in topics_list_ref.items()]
 
+
+    print("Swarnaaaaaaa TESSSSSSSSSST" , list_topics_y1[0:5], "Swarnaaaaaaa TESSSSSSSSSST")
+    print("Swarnaaaaaaa TESSSSSSSSSST" , list_topics_y1[0:10], "Swarnaaaaaaa TESSSSSSSSSST")
+
     if number == "5":
         return list_topics_y1[0:5]
     else:

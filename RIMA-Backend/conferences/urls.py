@@ -15,9 +15,12 @@ urlpatterns = [
 
     path('searchConf/', views.searchConfView.as_view()), # BAB
 
-    path('laktopics/<pk1>/<pk2>/<pk3>', views.TopicsView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('wordcloud/<pk1>/<pk2>/<pk3>', views.WordCloudView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
 
-    path('lakkeywords/<pk1>/<pk2>/<pk3>', views.KeywordsView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
+     # TO BE REMOVED
+    #path('lakkeywords/<pk1>/<pk2>/<pk3>', views.KeywordsView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
+    #path('lakkeywords/<pk1>/<pk2>/<pk3>', views.KeywordsView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
+
     path('confEvents/<pk1>', views.confEvents.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
 
     path('alltopics/', views.AllTopicsViewDB.as_view()),

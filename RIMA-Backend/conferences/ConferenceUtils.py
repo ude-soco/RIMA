@@ -6,6 +6,7 @@ from .topicutils import listToString
 import json
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
+import operator
 
 
 # Authentication headers
@@ -116,3 +117,42 @@ def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
    
 
     return True
+
+
+def getKeywordsfromModels(conference_event_name_abbr):
+    data = []
+    event_has_keyword_objs = Event_has_keyword.objects.filter(conference_event_name_abbr=conference_event_name_abbr)
+
+    for event_has_keyword_obj in event_has_keyword_objs:
+        conf_event_keyword_obj = Conf_Event_keyword.objects.get(keyword_id=event_has_keyword_obj.keyword_id_id)
+        data.append({
+            'keyword' : conf_event_keyword_obj.keyword,
+            'weight' : event_has_keyword_obj.weight,
+
+        })
+        
+    sorted_data = sorted(data, key=lambda k: k['weight'])    
+    return sorted_data
+
+def getTopicsfromModels(conference_event_name_abbr):
+    data = []
+    event_has_topic_objs = Event_has_Topic.objects.filter(conference_event_name_abbr=conference_event_name_abbr)
+
+    for event_has_topic_obj in event_has_topic_objs:
+        conf_event_topic_obj = Conf_Event_Topic.objects.get(topic_id=event_has_topic_obj.topic_id_id)
+        data.append({
+            'topic' : conf_event_topic_obj.topic,
+            'weight' : event_has_topic_obj.weight,
+
+        })
+    sorted_data = sorted(data, key=lambda k: k['weight'])   
+
+    print(' **** READ TOPICS TEST **** ',sorted_data, ' **** READ TOPICS TEST **** ')
+    return  sorted_data
+
+
+def split_restapi_url(url_path):
+    print("the url path is:", url_path)
+    url_path = url_path.replace("%20", " ")
+    topics_split = url_path.split(r"/")
+    return topics_split

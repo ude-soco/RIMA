@@ -190,7 +190,7 @@ class searchConfView(APIView):
 BAB get conf events/years
 '''
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
-
+# modified 04.07.2021
 class confEvents(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -200,9 +200,21 @@ class confEvents(APIView):
         topics_split = url_path.split(r"/")
         print(topics_split)
         #print("The year is:",year)
+        conferences_events_JSON = []
+
+        conference_events = Conference_Event.objects.filter( conference_name_abbr = topics_split[-1]).values_list(
+                                'conference_event_name_abbr',
+                                flat=True)
+        for event in conference_events:
+            conferences_events_JSON.append({
+                'value': event,
+                'label': event,
+            })
+
+
         return Response({
-            "years":
-            getConfEvents(topics_split[-1])
+            "events":
+            conferences_events_JSON
         })
 
 '''
@@ -210,30 +222,45 @@ View regarding topic wordcloud
 '''
 
 #BAB 08.06.2021 Extension for other conferences other than LAK
-
-class TopicsView(APIView):
+# modified 04.07.2021
+class WordCloudView(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
-        #print("The serializer is:",serializer_class)
-        #print(applyTopicMining())
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        #print("The year is:",year)
-        return Response({
-            "topics":
-            applyTopicMiningTopic(topics_split[-3],topics_split[-1], topics_split[-2])
-        })
+        url_splits = confutils.split_restapi_url(request.get_full_path())
+        keyword_or_topic = url_splits[-3]
+        number = url_splits[-2]
+        conference_event_name_abbr = url_splits[-1]
+        result_data = []
 
+        if keyword_or_topic == "topic":
+            models_data  = confutils.getTopicsfromModels(conference_event_name_abbr)
+        elif keyword_or_topic == "keyword":
+            models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
+
+        if number == '5':
+            reduced_models_data  = models_data[-5:]
+        elif number == '10':
+            reduced_models_data  = models_data[-10:]
+
+        for model_data in reduced_models_data:
+            result_data.append({
+                "text" : model_data[keyword_or_topic],
+                "value": model_data['weight'],
+
+            })
+        
+        return Response({
+            "words":
+            result_data
+        })
+        
 
 '''
 View regarding keyword topic cloud
 '''
 
 #BAB 08.06.2021 Extension for other conferences other than LAK
-
+# TO BE Removed
+"""
 class KeywordsView(APIView):
     def get(self, request, *args, **kwargs):
         #serializer_class = TopicSerializer
@@ -249,7 +276,7 @@ class KeywordsView(APIView):
             "keywords":
             applyTopicMiningKeyword(topics_split[-1],topics_split[-1], topics_split[-2])
         })
-
+"""
 
 class AllTopicsViewDB(APIView):
     def get(self, request, *args, **kwargs):
@@ -724,7 +751,7 @@ class FetchAbstractView(APIView):
         print('BAB')
         return Response({
             "abstractview":
-            getAbstractbasedonKeyword(topics_split[-3],topics_split[-1], topics_split[-2])
+            getAbstractbasedonKeyword(topics_split[-3],"2011", topics_split[-2])
         })
 
 
