@@ -162,11 +162,11 @@ export default function CompareAuthors() {
                   compareAuthor={compareAuthor}
                 />
 
-                <ActivitiesComparison
-                  classes={classes}
-                  loading={loading}
-                  compareAuthor={compareAuthor}
-                  />
+                {/*<ActivitiesComparison*/}
+                {/*  classes={classes}*/}
+                {/*  loading={loading}*/}
+                {/*  compareAuthor={compareAuthor}*/}
+                {/*  />*/}
 
                 <InterestTrendsComparison
                   classes={classes}
