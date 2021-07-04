@@ -87,12 +87,30 @@ class Author(models.Model):
 
 class Conf_Event_keyword(models.Model):
     keyword_id = models.AutoField(primary_key=True)
-    keywrod = models.CharField(max_length=255, null=True, blank=True)
+    keyword = models.CharField(max_length=255, null=True, blank=True)
     algorithm = models.CharField(max_length=255, null=True, blank=True)
     conference_event_name_abbr = models.ManyToManyField(Conference_Event,through = 'Event_has_keyword')
 
 
 class Event_has_keyword(models.Model):
-    conference_event_name_abbr = models.ForeignKey(Conference_Event, on_delete=CASCADE, related_name= 'hasEvents')
+    conference_event_name_abbr = models.ForeignKey(Conference_Event, on_delete=CASCADE, related_name= 'keywords_Events')
     keyword_id = models.ForeignKey(Conf_Event_keyword, on_delete=CASCADE, related_name= 'haskeywords')
-    wiegth = models.IntegerField(null=True) 
+    weight = models.IntegerField(null=True) 
+
+    class Meta:
+        unique_together = (("conference_event_name_abbr", "keyword_id"),)
+
+class Conf_Event_Topic(models.Model):
+    topic_id = models.AutoField(primary_key=True) 
+    topic = models.CharField(max_length=255, null=True, blank=True)
+    algorithm = models.CharField(max_length=255, null=True, blank=True)
+    conference_event_name_abbr = models.ManyToManyField(Conference_Event,through = 'Event_has_Topic')
+
+
+class Event_has_Topic(models.Model):
+    conference_event_name_abbr = models.ForeignKey(Conference_Event, on_delete=CASCADE, related_name= 'Topics_Events')
+    topic_id = models.ForeignKey(Conf_Event_Topic, on_delete=CASCADE, related_name= 'hastopics')
+    weight = models.IntegerField(null=True)
+    
+    class Meta:
+        unique_together = (("conference_event_name_abbr", "topic_id"),)
