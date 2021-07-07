@@ -6,6 +6,8 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import {Button, Label, FormGroup, Form, Row, Col} from "reactstrap";
 import ReactApexChart from "react-apexcharts";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+
 
 class LAKBar extends Component {
   constructor(props) {
@@ -138,6 +140,7 @@ class LAKBar extends Component {
     fetch("http://127.0.0.1:8000/api/conferences/toptopics/lak/2011")
       .then((response) => response.json())
       .then((json) => {
+        
         this.setState(
           {
             selectyear: "2011",
@@ -155,8 +158,8 @@ class LAKBar extends Component {
                   dataPointSelection: function (event, chartContext, config) {
                     var topic =
                       config.w.config.xaxis.categories[config.dataPointIndex];
-                    console.log(chartContext);
-                    console.log(config.w.globals.selectedDataPoints[0][0]);
+                    console.log('chartContext '+chartContext);
+                    console.log('config.w.globals.selectedDataPoints[0][0]' + config.w.globals.selectedDataPoints[0][0]);
                     display(topic, "2011");
                   },
                 },
@@ -220,7 +223,7 @@ class LAKBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/conferences/topkeywords/" + this.props.conferenceName + "/"+ this.state.selectyear
+      "http://127.0.0.1:8000/api/conferences/topkeywords/keyword/"+ this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -291,7 +294,7 @@ class LAKBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/conferences/toptopics/" + this.props.conferenceName + "/"+ this.state.selectyear
+      "http://127.0.0.1:8000/api/conferences/toptopics/topic/"+ this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {

@@ -7,6 +7,7 @@ import json
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 import operator
+from django.db.models import Q
 
 
 # Authentication headers
@@ -16,6 +17,13 @@ headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US
                    'Accept-Encoding': 'none',
                    'Accept-Language': 'en-US,en;q=0.8',
                    'Connection': 'keep-alive'}
+
+
+def split_restapi_url(url_path):
+    print("the url path is:", url_path)
+    url_path = url_path.replace("%20", " ")
+    topics_split = url_path.split(r"/")
+    return topics_split 
 
 
 def addDataToConfEventModel(conference_name_abbr):
@@ -65,20 +73,26 @@ def addDataToConfPaperModel(conference_name_abbr,conf_event_name_abbr):
    
 
 def getEventPapersData(conference_event_name_abbr):
-    abstract_title_str = ""
+    conference_event_papers_data = []
+
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
     if conference_event_obj:
         conference_event_papers_data = Conference_Event_Paper.objects.filter(conference_event_name_abbr=conference_event_obj)
-        if conference_event_papers_data:
-            for paper_data in conference_event_papers_data:
-                if paper_data.title and paper_data.abstract:
-                    abstract_title_str +=  paper_data.title + " " + paper_data.abstract   
-    return abstract_title_str
+       # print('PAPERS DATA',conference_event_papers_data)   
+    return conference_event_papers_data
 
 
 def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
     abstract_title_str = ""
-    abstract_title_str = getEventPapersData(conference_event_name_abbr)
+    conference_event_papers_data = []
+
+    conference_event_papers_data = getEventPapersData(conference_event_name_abbr)
+
+    if conference_event_papers_data:
+        for paper_data in conference_event_papers_data:
+            if paper_data.title and paper_data.abstract:
+                abstract_title_str +=  paper_data.title + " " + paper_data.abstract 
+
     print(abstract_title_str)
     keywords = getKeyword(abstract_title_str, 'Yake', 30)
     print('KEYWORDS FIRST TEST', keywords)
@@ -131,7 +145,7 @@ def getKeywordsfromModels(conference_event_name_abbr):
 
         })
         
-    sorted_data = sorted(data, key=lambda k: k['weight'])    
+    sorted_data = sorted(data, key=lambda k: k['weight'],reverse=True)    
     return sorted_data
 
 def getTopicsfromModels(conference_event_name_abbr):
@@ -145,14 +159,29 @@ def getTopicsfromModels(conference_event_name_abbr):
             'weight' : event_has_topic_obj.weight,
 
         })
-    sorted_data = sorted(data, key=lambda k: k['weight'])   
+    sorted_data = sorted(data, key=lambda k: k['weight'],reverse=True)   
 
-    print(' **** READ TOPICS TEST **** ',sorted_data, ' **** READ TOPICS TEST **** ')
+    #print(' **** READ TOPICS TEST **** ',sorted_data, ' **** READ TOPICS TEST **** ')
     return  sorted_data
 
 
-def split_restapi_url(url_path):
-    print("the url path is:", url_path)
-    url_path = url_path.replace("%20", " ")
-    topics_split = url_path.split(r"/")
-    return topics_split
+def getAbstractbasedonKeyword(conference_event_name_abbr,keyword):
+    conference_event_papers_data = getEventPapersData(conference_event_name_abbr)
+    filtered_conference_event_papers_data = conference_event_papers_data.filter(Q(abstract__icontains=keyword)
+                                               | Q(title__icontains=keyword))
+    #print('KEYWORD DATA *********************** ' , filtered_conference_event_papers_data)
+
+    titles_abstracts = []
+    if filtered_conference_event_papers_data:
+        for paper_data in filtered_conference_event_papers_data:
+            if paper_data.title and paper_data.abstract:
+                titles_abstracts.append({
+                    'title': paper_data.title,
+                    'abstarct': paper_data.abstract,
+                    'year' : paper_data.year,
+                    'venue': paper_data.paper_venu,
+                }) 
+    
+   # print('titles_abstracts *********************** ' , titles_abstracts)
+
+    return titles_abstracts

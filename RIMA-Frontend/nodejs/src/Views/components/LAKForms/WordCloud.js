@@ -51,7 +51,7 @@ const options = {
 };
 
 
-class LAKForm extends Component {
+class WordCloud extends Component {
   constructor(props) {
     super(props);
     this.selectValue = this.selectValue.bind(this);
@@ -168,9 +168,9 @@ class LAKForm extends Component {
           modal: true,
           scroll: true,
           highlightText: param,
-          modalTitle: json.abstractview[0],
-          modalBody: json.abstractview[1],
-          url: 'https://www.semanticscholar.org/search?year%5B0%5D=' + this.state.selectValue + '&year%5B1%5D=' + this.state.selectValue + '&venue%5B0%5D=LAK&q=' + param + '&sort=relevance'
+          modalTitle: json,
+          modalBody: json,
+          url: 'https://www.semanticscholar.org/search?year%5B0%5D=' + json[0].year + '&year%5B1%5D=' + json[0].year + '&venue%5B0%5D=' + json[0].venue + '&q=' + param + '&sort=relevance'
           // modalHeader:json.abstractview[2],
         })
       })
@@ -231,9 +231,9 @@ class LAKForm extends Component {
             <h2>Topic/Keyword cloud</h2>
             <br></br>
             <p>This visualization displays top 5/10 topics/keywords for
-              the selected year
+              the selected Event
             </p>
-            <Label>Select a year</Label>
+            <Label>Select an Event</Label>
             <div style={{width: '200px'}}>
               <Select
                 placeholder="Select Option"
@@ -306,24 +306,23 @@ class LAKForm extends Component {
                   </thead>
                   <tbody>
                   {console.log("the title is:", modalTitle)}
-                  {modalTitle.map((text, index) => {
-                    const image = modalBody[index];
-                    return <tr>
+                  {modalTitle.map((text, index) => (
+                     <tr>
                       <td>{index + 1}</td>
                       <td style={{'whiteSpace': 'unset'}}><p><Highlighter
                         highlightClassName="YourHighlightClass"
                         searchWords={[highlightText]}
                         autoEscape={true}
-                        textToHighlight={text}
+                        textToHighlight={text.title}
                       /></p></td>
                       <td style={{'whiteSpace': 'unset'}}><Highlighter
                         highlightClassName="YourHighlightClass"
                         searchWords={[highlightText]}
                         autoEscape={true}
-                        textToHighlight={image}
-                      /></td>
-                    </tr>;
-                  })}
+                        textToHighlight={text.abstarct}
+                        /></td>
+                      </tr>
+                  ))}
                   </tbody>
                 </Table>
 
@@ -367,4 +366,4 @@ class LAKForm extends Component {
   }
 }
 
-export default LAKForm;
+export default WordCloud;

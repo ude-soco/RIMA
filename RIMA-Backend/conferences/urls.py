@@ -25,12 +25,18 @@ urlpatterns = [
 
     path('alltopics/', views.AllTopicsViewDB.as_view()),
 
+    # modified --> can be merged to one
+    #   
     path('topkeywords/<pk1>/<pk2>', views.TopicBarView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('toptopics/<pk1>/<pk2>', views.TopicBarViewTopics.as_view()),  #BAB 08.0s6.2021 Extension for other conferences other than LAK 
+    path('toptopics/<pk1>/<pk2>', views.TopicBarView.as_view()),  #BAB 08.0s6.2021 Extension for other conferences other than LAK 
+    ###
+    path('topicdetails/<pk1>/<pk2>', views.getTopicBarValues.as_view()),   
 
+
+
+     
     path('populatetopics/<pk>', views.populateTopicView.as_view()),
     path('populatekeys/<pk>', views.populateKeyView.as_view()),
-    path('topicdetails/<pk1>/<pk2>', views.getTopicBarValues.as_view()),   
 
     path('keydetails/<pk1>/<pk2>', views.getKeyBarValues.as_view()),
     path('comparetopics/', views.vennPlotView.as_view()),

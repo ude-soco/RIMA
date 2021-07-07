@@ -237,9 +237,9 @@ class WordCloudView(APIView):
             models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
 
         if number == '5':
-            reduced_models_data  = models_data[-5:]
+            reduced_models_data  = models_data[:5]
         elif number == '10':
-            reduced_models_data  = models_data[-10:]
+            reduced_models_data  = models_data[:10]
 
         for model_data in reduced_models_data:
             result_data.append({
@@ -290,21 +290,44 @@ View for the bar chart top 10 keywords/top 10 publications
 '''
 
 #BAB
+# modified
 class TopicBarView(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = DictSerializer
-        url_path = request.get_full_path()
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        return Response({"keywords": getTopKeywords(topics_split[-2], topics_split[-1])})
+        list_words = []
+        list_weights =[]
+        result_dict= {}
+        result_dict['keywords'] = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path())
+        conference_event_name_abbr = url_splits[-1]
+        keyword_or_topic = url_splits[-2]
+
+        if keyword_or_topic == 'keyword':
+             models_data = confutils.getKeywordsfromModels(conference_event_name_abbr)
+        elif keyword_or_topic == 'topic':
+             models_data = confutils.getTopicsfromModels(conference_event_name_abbr)
+           
+
+        for model_data in models_data[:10]:
+            list_words.append(model_data[keyword_or_topic])
+            list_weights.append(model_data['weight'])
+
+        print('TOP KEYWORDS  BAB TEST ******* ',{"words": list_words,
+                                                "weights":  list_weights })
+        
+        result_dict['keywords'].append(list_words)
+        result_dict['keywords'].append(list_weights)
+
+        return Response(result_dict)
 
 
 '''
 View for the bar chart top 10 topics/top 10 publications
 '''
 
+"""
 #BAB
+# to be removed
 class TopicBarViewTopics(APIView):
     def get(self, request, *args, **kwargs):
         #serializer_class = DictSerializer
@@ -314,7 +337,7 @@ class TopicBarViewTopics(APIView):
         print(topics_split)
         return Response({"keywords": getTopTopics(topics_split[-2],topics_split[-1])})
 
-
+"""
 class populateTopicView(APIView):
     def get(self, request, *args, **kwargs):
         #serializer_class = TopicSerializer
@@ -734,25 +757,17 @@ class OverviewChartViewKeywords(APIView):
         })
 
 #BAB 08.06.2021 Extension for other conferences other than LAK
-
+#modified
 class FetchAbstractView(APIView):
     def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        
-        print('BAB')
-        print('split ', topics_split)
-        print('split -1 ',topics_split[-1])
-        print('split -2 ',topics_split[-2])
-        print('split -3 ',topics_split[-3])
-
-        print('BAB')
-        return Response({
-            "abstractview":
-            getAbstractbasedonKeyword(topics_split[-3],"2011", topics_split[-2])
-        })
+        url_splits = confutils.split_restapi_url(request.get_full_path())
+        conference_name  = url_splits[-3]
+        word = url_splits[-2]
+        conference_event_name_abbr = url_splits[-1]
+        #sconfutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+        return Response(
+            confutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+        )
 
 
 '''

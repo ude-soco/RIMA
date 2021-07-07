@@ -96,7 +96,7 @@ method to get top 5/10 keywords for topic cloud
 '''
 
 #BAB 08.06.2021
-
+# to be removed 
 def applyTopicMiningKeyword(conferenceName,year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
@@ -150,7 +150,7 @@ method to fetch top 5/10 topics for the topiccloud
 '''
 
 #BAB 08.06.2021
-
+# to be removed 
 def applyTopicMiningTopic(conferenceName,year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
@@ -196,6 +196,7 @@ def applyTopicMiningTopic(conferenceName,year, number):
 
 
 # Function to convert
+# to be removed
 def listToString(s):
 
     # initialize an empty string
@@ -209,7 +210,7 @@ def listToString(s):
 get top 10 keywords for the bar chart
 '''
 
-#BAB
+# to be removed
 def getTopKeywords(conferenceName, year):
     query = "select t.keywords,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
         year) + "'"
@@ -270,7 +271,7 @@ def getTopKeywords(conferenceName, year):
 top 10 topics for bar chart and also the data as per the bar chart
 '''
 
-
+# to be removed
 def getTopTopics(conferenceName,year):
     print("Bar chart...")
     query = "select t.topics,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
@@ -390,7 +391,8 @@ get the top 10 papers for the selected topic in LAK Bar Chart
 
 
 def getTopicDetails(topic, year):
-    lak_abstract = getText(year)
+    lak_abstract = getText('2011')
+    print('lak_abstract ****************************************** ',lak_abstract,' ***************************** lak_abstract')
     topic = topic.replace("%20", " ")
     lak_abstract["titleAndAbstract"] = lak_abstract[
         "title"] + " " + lak_abstract["abstract"]
@@ -1794,7 +1796,8 @@ def getAbstractbasedonKeyword(conferenceName,year, keyword):
     list_papernames = []
     for i in range(0, len(list_titles)):
         list_papernames.append("Paper" + str(i + 1))
-    return list_titles, list_abstracts, list_papernames
+
+    return list_titles, list_abstracts #, list_papernames
 
 
 def getDataAuthorComparisonKeywords(year, author1, author2):

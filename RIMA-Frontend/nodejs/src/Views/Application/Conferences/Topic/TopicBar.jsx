@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Chart from "chart.js";
 import Select from "react-select";
-import LAKForm from "../../../components/LAKForms/LAKForm";
+import WordCloud from "../../../components/LAKForms/WordCloud";
 import {
   Card,
   CardHeader,
@@ -254,7 +254,7 @@ export default function TopicBar (props) {
                   >
                     {/*  BAB 08.06.2021 */ }
                     <Col>
-                      <LAKForm conferenceName = {selectedOption.value} confEvents = {confEvents} />        {/*  BAB 08.06.2021 */ } 
+                      <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} />        {/*  BAB 08.06.2021 */ } 
                      </Col>
                   </div>
                 </div>
