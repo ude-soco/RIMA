@@ -96,7 +96,7 @@ method to get top 5/10 keywords for topic cloud
 '''
 
 #BAB 08.06.2021
-# to be removed 
+# to be removed  Wordcloud
 def applyTopicMiningKeyword(conferenceName,year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
@@ -150,7 +150,7 @@ method to fetch top 5/10 topics for the topiccloud
 '''
 
 #BAB 08.06.2021
-# to be removed 
+# to be removed  Word cloud
 def applyTopicMiningTopic(conferenceName,year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
@@ -210,7 +210,7 @@ def listToString(s):
 get top 10 keywords for the bar chart
 '''
 
-# to be removed
+# to be removed wordcloud
 def getTopKeywords(conferenceName, year):
     query = "select t.keywords,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
         year) + "'"
@@ -271,7 +271,7 @@ def getTopKeywords(conferenceName, year):
 top 10 topics for bar chart and also the data as per the bar chart
 '''
 
-# to be removed
+# to be removed LakBar
 def getTopTopics(conferenceName,year):
     print("Bar chart...")
     query = "select t.topics,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
@@ -389,7 +389,7 @@ def getPaperswithKeys(year):
 get the top 10 papers for the selected topic in LAK Bar Chart
 '''
 
-
+# to be removed Lak Bar
 def getTopicDetails(topic, year):
     lak_abstract = getText('2011')
     print('lak_abstract ****************************************** ',lak_abstract,' ***************************** lak_abstract')
@@ -417,9 +417,11 @@ def getTopicDetails(topic, year):
     print("-------------------", sorted_dict)
     myDict = {key: val for key, val in sorted_dict.items() if val != 0}
 
+    print('Final myDict *********** ', myDict, ' ********** Final myDict')
+
     return myDict.keys(), myDict.values()
 
-
+# to be removed  LAkbar
 def getTopicDetails1(topic, year):
     print("*************************")
     topic_list_search = getPaperswithTopics(year)[0]
@@ -477,7 +479,7 @@ def getTopicDetails1(topic, year):
 get the top 10 papers for the selected keyword in LAK Bar Chart
 '''
 
-
+# to be removed lakBAR
 def getKeyDetails(topic, year):
     lak_abstract = getText(year)
     topic = topic.replace("%20", " ")
@@ -506,7 +508,7 @@ def getKeyDetails(topic, year):
 
     return sorted_dict.keys(), sorted_dict.values()
 
-
+# to be removed LAKBAR
 def getKeyDetails1(keyword, year):
     print("*************************")
     print(keyword)
@@ -568,7 +570,7 @@ def getKeyDetails1(keyword, year):
 get all the LAK Data from database specific to a particular year
 '''
 
-
+# to be removed LAK Bar
 def getText(year):
     try:
         up.uses_netloc.append("postgres")

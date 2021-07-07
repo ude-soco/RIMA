@@ -13,7 +13,7 @@ import {
   } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 
-class LAKBarPaperCount extends Component {
+class TopicBarPaperCount extends Component {
   constructor(props){
     super(props);
     
@@ -346,4 +346,4 @@ else{
       }
 }
 
-export default LAKBarPaperCount;
+export default TopicBarPaperCount;

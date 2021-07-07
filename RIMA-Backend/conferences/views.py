@@ -1,5 +1,6 @@
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 # test import BEGIN
+from matplotlib.pyplot import uninstall_repl_displayhook
 from .DataExtractor import ConferenceDataCollector  as dataCollector
 from . import ConferenceUtils as confutils
 import datetime
@@ -311,14 +312,49 @@ class TopicBarView(APIView):
         for model_data in models_data[:10]:
             list_words.append(model_data[keyword_or_topic])
             list_weights.append(model_data['weight'])
-
-        print('TOP KEYWORDS  BAB TEST ******* ',{"words": list_words,
-                                                "weights":  list_weights })
         
         result_dict['keywords'].append(list_words)
         result_dict['keywords'].append(list_weights)
 
         return Response(result_dict)
+
+# BAB
+# modified
+class getTopicBarValues(APIView):
+    def get(self, request, *args, **kwargs):
+        abstract_title_str = ""
+        abstracts_titles = []
+        list_papers_titles = []
+        helper_list = []
+        list_freq = []
+        result_dict ={}
+        result_dict['docs'] = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path())
+        conference_event_name_abbr = url_splits[-1]
+        word = url_splits[-2]
+        
+        abstracts_titles = confutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+
+        for abstract_title in abstracts_titles:
+            abstract_title_str = abstract_title['title'] + abstract_title['abstarct']
+            helper_list.append({
+                'title' : abstract_title['title'],
+                'term_frequency': abstract_title_str.lower().count(word.lower())
+            })
+
+        helper_list = sorted(helper_list, key=lambda k: k['term_frequency'],reverse=True)    
+        #print('####****####***** ', helper_list[:10], ' ####****####*****')
+        for item in helper_list[:10]:
+            list_papers_titles.append(item['title'])
+            list_freq.append(item['term_frequency'])
+
+        result_dict['docs'].append(list_papers_titles)
+        result_dict['docs'].append(list_freq)
+        #print('#######################################',result_dict['docs'][0],'############################')
+        #print('#######################################',result_dict['docs'][1],'############################')
+        return Response(result_dict)
+
 
 
 '''
@@ -352,19 +388,6 @@ class populateKeyView(APIView):
         url_path = request.get_full_path()
         year = url_path[-4:]
         return Response({"topicsdict": getPaperswithKeys(year)[1]})
-
-
-class getTopicBarValues(APIView):
-    def get(self, request, *args, **kwargs):
-        #serializer_class = JSONSerialize
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        print(topics_split[-2])
-        print(topics_split[-1])
-        return Response(
-            {"docs": getTopicDetails(topics_split[-2], topics_split[-1])})
 
 
 class getKeyBarValues(APIView):

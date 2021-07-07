@@ -15,7 +15,7 @@ import {
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
 import Header from "../../../components/Headers/Header.js";
 import "../../../../assets/scss/custom.css";
-import LAKBar from "../../../components/LAKForms/LAKBar";
+import TopicBar from "../../../components/LAKForms/TopicBar";
 import LAKPie from "../../../components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "../../../components/LAKForms/LAKStackedAreaChart";
 import VennChart from "../../../components/LAKForms/VennChart";
@@ -171,7 +171,7 @@ class TopicResearch extends React.Component {
                                         
 
                     <Col>
-                      <LAKBar conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />          {/*  BAB 08.06.2021 */ }
+                      <TopicBar conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />          {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>

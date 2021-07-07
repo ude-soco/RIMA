@@ -20,7 +20,7 @@ import {
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
 import Header from "../../../components/Headers/Header.js";
 import "../../../../assets/scss/custom.css";
-import LAKBar from "../../../components/LAKForms/LAKBar";
+import TopicBar from "../../../components/LAKForms/TopicBar";
 import LAKPie from "../../../components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "../../../components/LAKForms/LAKStackedAreaChart";
 import VennChart from "../../../components/LAKForms/VennChart";
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function TopicBar (props) {
+export default function ConferenceBar (props) {
   const [activeNav, setactiveNav] = useState(4);
   const [chartExample1Data, setchartExample1Data] = useState("data1");
   const [tooltipOpen, settooltipOpen] = useState(false);
@@ -272,7 +272,7 @@ export default function TopicBar (props) {
                                         
 
                     <Col>
-                      <LAKBar conferenceName = {selectedOption.value} confEvents = {confEvents} />          {/*  BAB 08.06.2021 */ }
+                      <TopicBar conferenceName = {selectedOption.value} confEvents = {confEvents} />          {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>
@@ -281,7 +281,7 @@ export default function TopicBar (props) {
             'backgroundColor':'#F0F8FF','marginLeft':'50px',
             'borderRadius':'2px'}}>
                 <Col>
-                <LAKBarPaperCount/>
+                <TopicBarPaperCount/>
                </Col>
             </div>
           </div> */}

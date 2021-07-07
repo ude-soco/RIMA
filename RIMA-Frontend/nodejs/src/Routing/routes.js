@@ -13,7 +13,7 @@ import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/
 // import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
-import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
+import ConferenceBar from "../Views/Application/Conferences/Topic/ConferenceBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
 import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";
@@ -200,7 +200,7 @@ let routes = [
   },
   {
     path: "/topicbar",
-    component: TopicBar,
+    component: ConferenceBar,
     layout: "/app",
     display: "none",
   },

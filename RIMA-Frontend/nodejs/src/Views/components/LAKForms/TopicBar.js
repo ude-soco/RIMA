@@ -9,7 +9,7 @@ import ReactApexChart from "react-apexcharts";
 import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 
 
-class LAKBar extends Component {
+class TopicBar extends Component {
   constructor(props) {
     super(props);
     this.selectValue = this.selectValue.bind(this);
@@ -384,10 +384,10 @@ class LAKBar extends Component {
               <h2> Top 10 topics/keywords </h2>
               <p>
                 The bar chart displays the top 10 topics/keywords for the
-                selected year and its corresponding publications
+                selected event and its corresponding publications
               </p>
 
-              <Label>Select a year</Label>
+              <Label>Select an Event</Label>
               <br></br>
               <div style={{width: "200px"}}>
                 <Select
@@ -538,4 +538,4 @@ class LAKBar extends Component {
   }
 }
 
-export default LAKBar;
+export default TopicBar;
