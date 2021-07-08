@@ -835,13 +835,32 @@ def getDataForPieTopics(conferenceName,year, number):
     topics_yearwise['weight'] = topics_yearwise['weight'].astype(int)
     topics_yearwise = topics_yearwise.sort_values(by=['weight'],
                                                   ascending=False)
+
+    print('********** PERCENT 0 *****************')
+    print(topics_yearwise['weight'])
+    print('********** PERCENT  0 *****************')
+
+    """
     topics_yearwise[['weight']] = MinMaxScaler().fit_transform(
         topics_yearwise[['weight']])
+
+    print('********** PERCENT 1 *****************')
+    print(topics_yearwise['weight'])
+    print('********** PERCENT  1 *****************')
+
+    print('********** PERCENT 2  *****************')
+    print(topics_yearwise['weight'].sum())
+    print('********** PERCENT 2 *****************')
+
     topics_yearwise['percent'] = (topics_yearwise['weight'] /
                                   topics_yearwise['weight'].sum()) * 100
     # topics_yearwise['percent']=topics_yearwise['percent'].astype(str)
     topics_yearwise['percent'] = topics_yearwise['percent'].apply(np.floor)
+
+    print('********** PERCENT 3  *****************')
     print(topics_yearwise['percent'])
+    print('********** PERCENT  3 *****************')
+    
     if number == "5":
         topics_yearwise = topics_yearwise.head(5)
     else:
@@ -849,7 +868,13 @@ def getDataForPieTopics(conferenceName,year, number):
             topics_yearwise = topics_yearwise.head(10)
         else:
             pass
-    return topics_yearwise['topic'].values, topics_yearwise['percent'].values
+
+    print('********** PERCENT 4  *****************')
+    print(topics_yearwise.head(5))
+    print('********** PERCENT  4 *****************')
+
+"""
+    return topics_yearwise['topic'][:10], topics_yearwise['weight'][:10]
 
 
 '''
@@ -911,7 +936,7 @@ def getMultipleYearTopicJourney(conferenceName,listoftopics):
         list1_modified.append(sub_list)
     return list1_modified, lak_years
 
-
+# lakbar to be removed
 def getPaperIDFromPaperTitle(title):
     #title="Towards visual analytics for teachers dynamic diagnostic pedagogical decision-making"
     query = "select id from LAKData where title like'" + title + "%'"

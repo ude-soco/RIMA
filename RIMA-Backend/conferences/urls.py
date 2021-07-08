@@ -55,7 +55,7 @@ urlpatterns = [
     path('gettopicsyearwise/<pk>', views.AllTopicDicts.as_view()),
 
 
-    path('fetchpaper/', views.FetchPaperView.as_view()), 
+    path('fetchpaper/<pk1>', views.FetchPaperView.as_view()), 
     path('fetchallauthors/', views.AuthorsFetchView.as_view()),
     path('fetchallauthorsdict/', views.AuthorsDictFetchView.as_view()),
     path('topicoverview/', views.TopicOverview.as_view()),

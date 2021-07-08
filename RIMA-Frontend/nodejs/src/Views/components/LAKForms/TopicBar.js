@@ -76,7 +76,7 @@ class TopicBar extends Component {
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
                   fetch(
-                    "http://127.0.0.1:8000/api/conferences/fetchpaper/?!"  +  title
+                    "http://127.0.0.1:8000/api/conferences/fetchpaper/"  +  title
                   )
                     .then((response) => response.json())
                     .then((json) => {

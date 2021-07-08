@@ -64,6 +64,8 @@ from rest_framework.generics import (ListCreateAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
 from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper 
+from django.db.models import Q
+
 
 
 
@@ -537,23 +539,17 @@ class MultipleKeyAreaView(APIView):
             getMultipleYearKeyJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[1]
         })
 
-
+# modified BAB
 class FetchPaperView(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
+        title = ""
+        url_spilts =confutils.split_restapi_url(request.get_full_path())
+        title = url_spilts[-1]
+        print(url_spilts[-1] , 'URL REQUEST TEST')
+        conference_event_paper_obj = Conference_Event_Paper.objects.get(Q(title__icontains=title))
 
-        print(url_path.find(r"/"))
-        count_slash = url_path.count(r"/")
-        topics_split = url_path.split("!")
-        val = ""
-        if count_slash > 4:
-            val = topics_split[-2]
-        else:
-            val = topics_split[-1]
-        return Response({'url': getPaperIDFromPaperTitle(topics_split[-1])})
+        print("URL TEST ",conference_event_paper_obj.url, "URL TEST")
+        return Response({'url': conference_event_paper_obj.url})
 
 
 
