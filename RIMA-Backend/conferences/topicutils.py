@@ -1492,7 +1492,7 @@ def searchForTopics(year, keyword):
 method to get keyword data for stacked bar chart across years
 '''
 
-
+#to be removed
 def getTopKeysForAllYear(conferenceName,list_of_years):
     # BAB DISTINCT
     query = "select DISTINCT keywords,year from Topics where year in" + str(
@@ -1536,6 +1536,7 @@ method to get topic data for stacked bar chart across years
 '''
 
 #BAB
+#to be removed
 def getTopTopicsForAllYears(conferenceName,list_of_years):
     # BAB DISTINCT
     query = "select DISTINCT topics,year from Topics where year in" + str(
@@ -1574,7 +1575,10 @@ def getTopTopicsForAllYears(conferenceName,list_of_years):
     """
      BAB matrix = lak_data.set_index(['topic', 'year']).unstack(fill_value=0)
     """
-    print('BAB',matrix)
+    print('**** BAB ****')
+    print(matrix)
+    print('**** BAB ****')
+
     return [matrix.values.tolist()] + [matrix.index.tolist()
                                        ] + [matrix.columns.levels[1].tolist()]
 

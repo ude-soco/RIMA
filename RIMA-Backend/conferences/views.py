@@ -257,6 +257,126 @@ class WordCloudView(APIView):
         })
         
 
+
+'''
+View to get topics for the pie chart
+'''
+
+#BAB
+class TopicPieView(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(request.get_full_path())
+        keyword_or_topic = url_splits[-3]
+        number = url_splits[-2]
+        conference_event_name_abbr = url_splits[-1]
+        list_words = []
+        list_weights =[]
+
+        result_dict= {}
+        result_dict['words'] = []
+        result_dict['weights'] = []
+
+
+        if keyword_or_topic == "topic":
+            models_data  = confutils.getTopicsfromModels(conference_event_name_abbr)
+
+
+        elif keyword_or_topic == "keyword":
+            models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
+
+        if number == '5':
+            reduced_models_data  = models_data[:5]
+        elif number == '10':
+            reduced_models_data  = models_data[:10]
+
+        print(reduced_models_data)
+
+        for model_data in reduced_models_data:
+            print(model_data[keyword_or_topic])
+            result_dict['words'].append(model_data[keyword_or_topic])
+            result_dict['weights'].append(model_data['weight'])
+        
+        return Response(result_dict)
+
+        
+'''
+View to get topic data for the stacked bar chart across years
+'''
+
+#BAB
+class FetchTopicView(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'?')
+        print('CHECK URL',request.get_full_path())
+        topics_split_params = url_splits[-1].split("&")
+    	
+        '''
+        models_data_first  = confutils.getKeywordsfromModels("lak2011")
+        models_data_second  = confutils.getKeywordsfromModels("lak2012")
+        models_data_third  = confutils.getKeywordsfromModels("lak2013")
+       
+
+        print("********** Test for stacked ********** ")
+        print(models_data_first)
+        print("********** Test for stacked ********** ")
+        print(models_data_second)
+        print("********** Test for stacked ********** ")
+        print(models_data_third)
+        print("********** Test for stacked ********** ")
+        '''
+
+        result_data = confutils.getSharedWords(topics_split_params)
+     
+        return Response(
+            {"Topiclist": result_data})
+
+
+'''
+View to get keyword data for the stacked bar chart across years
+'''
+
+
+class FetchKeyView(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'?')
+        print('CHECK URL',request.get_full_path())
+        topics_split_params = url_splits[-1].split("&")
+
+        print(topics_split_params)
+        #getTopKeysForAllYear
+        return Response(
+            {"Topiclist": getTopKeysForAllYear("",topics_split_params)})
+
+
+
+'''
+View to get keyword data for pie chart
+'''
+
+#BAB
+# to be removed
+class KeyPieView(APIView):
+    def get(self, request, *args, **kwargs):
+        #serializer_class = TopicSerializer
+        url_path = request.get_full_path()
+        url_path = request.get_full_path()
+
+        url_path = url_path.replace("%20", " ")
+        topics_split = url_path.split(r"/")
+        year = topics_split[-1]
+
+        num = topics_split[-2]
+        conferenceName = topics_split[-3]
+
+        return Response({
+            "keys": getDataForPieKeys(conferenceName,year, num)[0],
+            "weights": getDataForPieKeys(conferenceName,year, num)[1]
+        })
+
+
+
+
 '''
 View regarding keyword topic cloud
 '''
@@ -437,52 +557,6 @@ class AllTopicDicts(APIView):
             "years": getTopicWeightsAllYears(topics_split[-1])[1]
         })
 
-
-'''
-View to get topics for the pie chart
-'''
-
-#BAB
-class TopicPieView(APIView):
-    def get(self, request, *args, **kwargs):
-       # serializer_class = TopicSerializer
-        url_path = request.get_full_path()
-
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        year = topics_split[-1]
-
-        num = topics_split[-2]
-        
-        conferenceName = topics_split[-3]
-        return Response({
-            "topics": getDataForPieTopics(conferenceName,year, num)[0],
-            "weights": getDataForPieTopics(conferenceName,year, num)[1]
-        })
-
-
-'''
-View to get keyword data for pie chart
-'''
-
-#BAB
-class KeyPieView(APIView):
-    def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
-        url_path = request.get_full_path()
-        url_path = request.get_full_path()
-
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        year = topics_split[-1]
-
-        num = topics_split[-2]
-        conferenceName = topics_split[-3]
-
-        return Response({
-            "keys": getDataForPieKeys(conferenceName,year, num)[0],
-            "weights": getDataForPieKeys(conferenceName,year, num)[1]
-        })
 
 
 '''
@@ -686,48 +760,6 @@ class SearchTopicView(APIView):
             {"titles": searchForTopics(topics_split[-1], topics_split[-2])})
 
 
-'''
-View to get topic data for the stacked bar chart across years
-'''
-
-#BAB
-class FetchTopicView(APIView):
-    def get(self, request, *args, **kwargs):
-        print('BAB')
-
-        url_path = request.get_full_path()
-        #print("the url path is:",url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split("?")
-        topics_split_params = topics_split[1].split("&")
-        topics_split_conferenceName = topics_split_params[1].split("/")
-        print('BAB')
-        print('BAB',topics_split_conferenceName[-1])
-        print('BAB')
-        #getTopKeysForAllYear
-        return Response(
-            {"Topiclist": getTopTopicsForAllYears(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])})
-
-
-'''
-View to get keyword data for the stacked bar chart across years
-'''
-
-
-class FetchKeyView(APIView):
-    def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        #print("the url path is:",url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split("?")
-
-        topics_split_params = topics_split[1].split("&")
-        topics_split_conferenceName = topics_split_params[1].split("/")
-
-        print(topics_split_params)
-        #getTopKeysForAllYear
-        return Response(
-            {"Topiclist": getTopKeysForAllYear(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])})
 
 
 class UpdateAllTopics(APIView):

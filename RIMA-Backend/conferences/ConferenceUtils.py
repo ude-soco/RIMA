@@ -19,10 +19,10 @@ headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US
                    'Connection': 'keep-alive'}
 
 
-def split_restapi_url(url_path):
+def split_restapi_url(url_path,split_char):
     print("the url path is:", url_path)
     url_path = url_path.replace("%20", " ")
-    topics_split = url_path.split(r"/")
+    topics_split = url_path.split(split_char)
     return topics_split 
 
 
@@ -95,6 +95,7 @@ def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
 
     print(abstract_title_str)
     keywords = getKeyword(abstract_title_str, 'Yake', 30)
+
     print('KEYWORDS FIRST TEST', keywords)
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr =conference_event_name_abbr )
     for key,value in keywords.items():
@@ -127,7 +128,7 @@ def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
                                                     weight = value)
         event_has_topic_obj.save()
     #print(' relation  WIKIS FIRST TEST', relation)
-    #print('final TOPICS WIKIS FIRST TEST', final)
+    print('final TOPICS WIKIS FIRST TEST', final)
    
 
     return True
@@ -185,3 +186,35 @@ def getAbstractbasedonKeyword(conference_event_name_abbr,keyword):
    # print('titles_abstracts *********************** ' , titles_abstracts)
 
     return titles_abstracts
+
+def getSharedWords(conference_events_list):
+    models_data = []
+    first_event = conference_events_list[0]
+    shared_word = []
+    dict_list = []
+    result_data = []
+    for model_data in getTopicsfromModels(first_event):
+        models_data.append({
+            'word': model_data['topic'],
+            'weight': [model_data['weight']],
+        })
+    print('models data')
+    print(models_data)
+    print('models_data')
+    for conference_event in conference_events_list[1:]:
+        conference_event_data = getTopicsfromModels(conference_event)
+        for filter_word in conference_event_data:
+            shared_word = list(filter(lambda event: event['word'] == filter_word['topic'], models_data))
+            index = next((i for i, item in enumerate(models_data) if item["word"] == filter_word['topic']), None)
+            if shared_word:
+                models_data[index]['weight'].append(filter_word['weight'])
+
+    for model_data in models_data: 
+        if len(model_data['weight']) == len(conference_events_list):   
+            dict_list.append(model_data)
+    
+    result_data.append(dict_list)
+    result_data.append(conference_events_list)
+
+
+    return result_data

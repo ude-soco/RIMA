@@ -44,15 +44,16 @@ class LAKStackedBarChart extends Component {
 
   componentDidMount() {
     var text = ["2011", "2012"];
-    fetch(BASE_URL_CONFERENCE + "getalltopiclist/" + "?" + text.join("&") + "/" + this.props.conferenceName )
+    fetch(BASE_URL_CONFERENCE + "getalltopiclist/?lak2011&lak2012&lak2013&lak2014")
       .then((response) => response.json())
       .then((json) => {
         var series = [];
         console.log(json.Topiclist[0]);
         for (let i = 0; i < json.Topiclist[0].length; i++) {
           series = series.concat([
-            {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
+            {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
           ]);
+          //console.log("BAB"+ json.Topiclist[1][i] + json.Topiclist[0][i])
           //selectInputRef1.current.chart.publicMethods.updateOptions({})
         }
         this.setState({
@@ -87,7 +88,7 @@ class LAKStackedBarChart extends Component {
             },
 
             xaxis: {
-              categories: json.Topiclist[2],
+              categories: json.Topiclist[1],
             },
             yaxis: {
               title: {
@@ -108,7 +109,7 @@ class LAKStackedBarChart extends Component {
               offsetX: 40,
             },
           },
-          years: json.Topiclist[2],
+          years: json.Topiclist[1],
           isLoaded: true,
         });
       });
@@ -128,7 +129,7 @@ class LAKStackedBarChart extends Component {
     var key = this.state.key;
     if (key == "key") {
       var text = this.state.selectedValue;
-      fetch(BASE_URL_CONFERENCE + "getallkeylist/" + "?" + text.join("&") + "/" + this.props.conferenceName)
+      fetch(BASE_URL_CONFERENCE + "getallkeylist/" + "?" + text.join("&"))
         .then((response) => response.json())
         .then((json) => {
           var series = [];
@@ -200,7 +201,7 @@ class LAKStackedBarChart extends Component {
     } else {
       var text = this.state.selectedValue;
 
-      fetch(BASE_URL_CONFERENCE + "getalltopiclist/" + "?" + text.join("&") + "/" + this.props.conferenceName)
+      fetch(BASE_URL_CONFERENCE + "getalltopiclist/" + "?" + text.join("&"))
         .then((response) => response.json())
         .then((json) => {
           var series = [];

@@ -49,7 +49,7 @@ urlpatterns = [
     
     
     path('gettopicsforpie/<pk1>/<pk2>/<pk3>', views.TopicPieView.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getkeysforpie/<pk1>/<pk2>/<pk3>', views.KeyPieView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('getkeysforpie/<pk1>/<pk2>/<pk3>', views.TopicPieView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
     
     
     path('gettopicsyearwise/<pk>', views.AllTopicDicts.as_view()),

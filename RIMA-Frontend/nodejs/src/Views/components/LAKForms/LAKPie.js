@@ -63,16 +63,10 @@ class LAKPie extends Component {
           modal: true,
           scroll: true,
           highlightText: param,
-          modalTitle: json.abstractview[0],
-          modalBody: json.abstractview[1],
-          url:
-            "https://www.semanticscholar.org/search?year%5B0%5D=" +
-            this.state.selectyear +
-            "&year%5B1%5D=" +
-            this.state.selectyear +
-            "&venue%5B0%5D=LAK&q=" +
-            param +
-            "&sort=relevance",
+          modalTitle: json,
+          modalBody: json,
+          url: 'https://www.semanticscholar.org/search?year%5B0%5D=' + json[0].year + '&year%5B1%5D=' + json[0].year + '&venue%5B0%5D=' + json[0].venue + '&q=' + param + '&sort=relevance'
+
 
           // modalHeader:json.abstractview[2],
         });
@@ -122,7 +116,7 @@ class LAKPie extends Component {
                 },
               },
             },
-            labels: json.topics,
+            labels: json.words,
             tooltip: {
               custom: function ({series, seriesIndex, dataPointIndex, w}) {
                 console.log(w.config);
@@ -165,7 +159,7 @@ class LAKPie extends Component {
 
     fetch(
       BASE_URL_CONFERENCE +
-      "gettopicsforpie/" + this.props.conferenceName + "/"+
+      "gettopicsforpie/topic/"+
       this.state.selectnum +
       "/" +
       this.state.selectyear
@@ -191,7 +185,7 @@ class LAKPie extends Component {
                 },
               },
             },
-            labels: json.topics,
+            labels: json.words,
             tooltip: {
               custom: function ({series, seriesIndex, dataPointIndex, w}) {
                 return (
@@ -226,7 +220,7 @@ class LAKPie extends Component {
     const displayabstract = this.displayAbstract;
     fetch(
       BASE_URL_CONFERENCE +
-      "getkeysforpie/" + this.props.conferenceName + "/"+
+      "getkeysforpie/keyword/"+
       this.state.selectnum +
       "/" +
       this.state.selectyear
@@ -251,7 +245,7 @@ class LAKPie extends Component {
                 },
               },
             },
-            labels: json.keys,
+            labels: json.words,
             tooltip: {
               custom: function ({
                                   labels,
@@ -407,99 +401,73 @@ class LAKPie extends Component {
               />
             </FormGroup>
           </Form>
-          <Modal
-            isOpen={this.state.modal}
-            toggle={this.toggle}
-            size="lg"
-            scrollable={false}
-          >
-            <ModalHeader toggle={this.toggle}>
-              <h2>
+          <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" scrollable={false}>
+              <ModalHeader toggle={this.toggle}><h2>
                 <Highlighter
                   highlightClassName="YourHighlightClass"
                   searchWords={[highlightText]}
                   autoEscape={true}
-                  textToHighlight={
-                    "List of Publications related to the topic/keyword '" +
-                    highlightText +
-                    "'"
-                  }
-                />
-              </h2>
-            </ModalHeader>
-            <ModalBody>
-              <br/>
-              <br/>
-              <Table hover size="20">
-                <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Abstract</th>
-                </tr>
-                </thead>
-                <tbody>
-                {console.log("the title is:", modalTitle)}
-                {modalTitle.map((text, index) => {
-                  const image = modalBody[index];
-                  return (
-                    <tr>
+                  textToHighlight={"List of Publications related to the topic/keyword '" + highlightText + "'"}
+                /></h2></ModalHeader>
+              <ModalBody>
+                <br/>
+                <br/>
+                <Table hover size="20">
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Abstract</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {console.log("the title is:", modalTitle)}
+                  {modalTitle.map((text, index) => (
+                     <tr>
                       <td>{index + 1}</td>
-                      <td style={{whiteSpace: "unset"}}>
-                        <p>
-                          <Highlighter
-                            highlightClassName="YourHighlightClass"
-                            searchWords={[highlightText]}
-                            autoEscape={true}
-                            textToHighlight={text}
-                          />
-                        </p>
-                      </td>
-                      <td style={{whiteSpace: "unset"}}>
-                        <Highlighter
-                          highlightClassName="YourHighlightClass"
-                          searchWords={[highlightText]}
-                          autoEscape={true}
-                          textToHighlight={image}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-                </tbody>
-              </Table>
-            </ModalBody>
-            <ModalFooter>
-              <Row>
-                <Col>
-                  <Button color="info">
-                    {" "}
-                    <a style={{color: "white"}} href={url} target="_blank">
-                      Search in Semantic Scholar
-                    </a>
-                  </Button>
-                </Col>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col/>
-                <Col>
-                  <Button color="secondary" onClick={this.toggle}>
-                    Close
-                  </Button>
-                </Col>
-              </Row>
-            </ModalFooter>
-          </Modal>
+                      <td style={{'whiteSpace': 'unset'}}><p><Highlighter
+                        highlightClassName="YourHighlightClass"
+                        searchWords={[highlightText]}
+                        autoEscape={true}
+                        textToHighlight={text.title}
+                      /></p></td>
+                      <td style={{'whiteSpace': 'unset'}}><Highlighter
+                        highlightClassName="YourHighlightClass"
+                        searchWords={[highlightText]}
+                        autoEscape={true}
+                        textToHighlight={text.abstarct}
+                        /></td>
+                      </tr>
+                  ))}
+                  </tbody>
+                </Table>
+
+              </ModalBody>
+              <ModalFooter>
+                <Row>
+                  <Col>
+                    <Button color="info"> <a style={{'color': 'white'}} href={url} target="_blank">Search in Semantic
+                      Scholar</a></Button>
+                  </Col>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col/>
+                  <Col>
+                    <Button color="secondary" onClick={this.toggle}>Close</Button>
+                  </Col>
+                </Row>
+              </ModalFooter>
+            </Modal>
         </>
       );
     } else {
