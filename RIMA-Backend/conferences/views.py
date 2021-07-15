@@ -228,7 +228,7 @@ View regarding topic wordcloud
 # modified 04.07.2021
 class WordCloudView(APIView):
     def get(self, request, *args, **kwargs):
-        url_splits = confutils.split_restapi_url(request.get_full_path())
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
         keyword_or_topic = url_splits[-3]
         number = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
@@ -265,7 +265,7 @@ View to get topics for the pie chart
 #BAB
 class TopicPieView(APIView):
     def get(self, request, *args, **kwargs):
-        url_splits = confutils.split_restapi_url(request.get_full_path())
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         keyword_or_topic = url_splits[-3]
         number = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
@@ -421,7 +421,7 @@ class TopicBarView(APIView):
         result_dict= {}
         result_dict['keywords'] = []
 
-        url_splits = confutils.split_restapi_url(request.get_full_path())
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_event_name_abbr = url_splits[-1]
         keyword_or_topic = url_splits[-2]
 
@@ -452,7 +452,7 @@ class getTopicBarValues(APIView):
         result_dict ={}
         result_dict['docs'] = []
 
-        url_splits = confutils.split_restapi_url(request.get_full_path())
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_event_name_abbr = url_splits[-1]
         word = url_splits[-2]
         
@@ -617,7 +617,7 @@ class MultipleKeyAreaView(APIView):
 class FetchPaperView(APIView):
     def get(self, request, *args, **kwargs):
         title = ""
-        url_spilts =confutils.split_restapi_url(request.get_full_path())
+        url_spilts =confutils.split_restapi_url(request.get_full_path(), r'/')
         title = url_spilts[-1]
         print(url_spilts[-1] , 'URL REQUEST TEST')
         conference_event_paper_obj = Conference_Event_Paper.objects.get(Q(title__icontains=title))
@@ -811,7 +811,7 @@ class OverviewChartViewKeywords(APIView):
 #modified
 class FetchAbstractView(APIView):
     def get(self, request, *args, **kwargs):
-        url_splits = confutils.split_restapi_url(request.get_full_path())
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_name  = url_splits[-3]
         word = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
