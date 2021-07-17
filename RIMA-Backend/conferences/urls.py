@@ -68,8 +68,9 @@ urlpatterns = [
     path('getalltitles/<pk1>/<pk2>', views.SearchKeywordView.as_view()),
     path('searchtopic/<pk1>/<pk2>', views.SearchTopicView.as_view()),
 
-    path('getalltopiclist/', views.FetchTopicView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getallkeylist/', views.FetchKeyView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK
+    # stacked bar
+    path('getalltopiclist/topic/', views.FetchTopicView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('getallkeylist/keyword/', views.FetchTopicView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK
     
     
     path('getallauthorslist/<pk1>/<pk2>/<pk3>',

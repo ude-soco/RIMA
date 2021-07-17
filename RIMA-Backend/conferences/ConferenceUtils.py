@@ -187,25 +187,39 @@ def getAbstractbasedonKeyword(conference_event_name_abbr,keyword):
 
     return titles_abstracts
 
-def getSharedWords(conference_events_list):
+
+def getSharedWords(conference_events_list,keyword_or_topic):
     models_data = []
     first_event = conference_events_list[0]
     shared_word = []
     dict_list = []
     result_data = []
-    for model_data in getTopicsfromModels(first_event):
+    models_data_first_event = []
+    conference_event_data = []
+
+    if keyword_or_topic == 'topic':
+        models_data_first_event = getTopicsfromModels(first_event)
+    elif keyword_or_topic == 'keyword':
+        models_data_first_event = getKeywordsfromModels(first_event)
+
+
+    for model_data in models_data_first_event:
         models_data.append({
-            'word': model_data['topic'],
+            'word': model_data[keyword_or_topic],
             'weight': [model_data['weight']],
         })
     print('models data')
     print(models_data)
     print('models_data')
     for conference_event in conference_events_list[1:]:
-        conference_event_data = getTopicsfromModels(conference_event)
+        if keyword_or_topic == 'topic':
+            conference_event_data = getTopicsfromModels(conference_event)
+        elif keyword_or_topic == 'keyword':
+            conference_event_data = getKeywordsfromModels(conference_event)
+
         for filter_word in conference_event_data:
-            shared_word = list(filter(lambda event: event['word'] == filter_word['topic'], models_data))
-            index = next((i for i, item in enumerate(models_data) if item["word"] == filter_word['topic']), None)
+            shared_word = list(filter(lambda event: event['word'] == filter_word[keyword_or_topic], models_data))
+            index = next((i for i, item in enumerate(models_data) if item["word"] == filter_word[keyword_or_topic]), None)
             if shared_word:
                 models_data[index]['weight'].append(filter_word['weight'])
 

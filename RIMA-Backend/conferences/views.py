@@ -307,10 +307,14 @@ View to get topic data for the stacked bar chart across years
 class FetchTopicView(APIView):
     def get(self, request, *args, **kwargs):
         result_data = []
-        url_splits = confutils.split_restapi_url(request.get_full_path(), r'?')
-        print('CHECK URL',request.get_full_path())
-        topics_split_params = url_splits[-1].split("&")
-    	
+        url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
+        url_splits_topic_keyword = confutils.split_restapi_url(request.get_full_path(), r'/')
+       
+        keyword_or_topic = url_splits_topic_keyword[-2]
+        print('CHECK URL',url_splits_topic_keyword[-2])
+        topics_split_params = url_splits_question_mark[-1].split("&")
+
+
         '''
         models_data_first  = confutils.getKeywordsfromModels("lak2011")
         models_data_second  = confutils.getKeywordsfromModels("lak2012")
@@ -326,7 +330,7 @@ class FetchTopicView(APIView):
         print("********** Test for stacked ********** ")
         '''
 
-        result_data = confutils.getSharedWords(topics_split_params)
+        result_data = confutils.getSharedWords(topics_split_params,keyword_or_topic)
      
         return Response(
             {"Topiclist": result_data})
