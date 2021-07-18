@@ -41,9 +41,10 @@ urlpatterns = [
     path('keydetails/<pk1>/<pk2>', views.getKeyBarValues.as_view()),
     path('comparetopics/', views.vennPlotView.as_view()),
 
-    path('getalltopicsresults/<pk1>', views.allTopics.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getallkeysresults/<pk1>', views.allKeys.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getalltopicsevolution/', views.MultipleTopicAreaView.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
+    # Area chart
+    path('getalltopicsresults/topic/<pk1>', views.allWords.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('getallkeysresults/keyword/<pk1>', views.allWords.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('getalltopicsevolution/<pk>/', views.MultipleTopicAreaView.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
     path('getallkeysevolution/', views.MultipleKeyAreaView.as_view()),    #BAB 08.06.2021 Extension for other conferences other than LAK 
     
     

@@ -134,9 +134,6 @@ def applyTopicMiningKeyword(conferenceName,year, number):
     } for key, val in topics_list_ref.items()]
 
 
-    print("Swarnaaaaaaa TESSSSSSSSSST" , list_topics_y1[0:5], "Swarnaaaaaaa TESSSSSSSSSST")
-    print("Swarnaaaaaaa TESSSSSSSSSST" , list_topics_y1[0:10], "Swarnaaaaaaa TESSSSSSSSSST")
-
     if number == "5":
         return list_topics_y1[0:5]
     else:
@@ -634,7 +631,7 @@ def compareTopics(year1, year2):
     print(calculate_similarity(["learning analytics"], ["learning analytics"]))
     return "success"
 
-#BAB
+# to be removed Area chart
 def getAllKeywordsAllYears(conferenceName):
     query = "select keywords from Topics"
     topics = getTopics(conferenceName,"", query)
@@ -660,7 +657,7 @@ def getAllKeywordsAllYears(conferenceName):
     } for val in list(set(flatList_topics))]
     return list_dict
 
-
+# to be removed Area chart
 def getAllTopicsAllYears(conferenceName):
     query = "select topics from Topics"
     topics = getTopics(conferenceName,"", query)

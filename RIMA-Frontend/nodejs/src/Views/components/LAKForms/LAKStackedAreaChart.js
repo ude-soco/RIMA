@@ -58,7 +58,7 @@ class LAKStackedAreaChart extends Component {
     this.onClear();
 
     console.log(e.target.value);
-    fetch(BASE_URL_CONFERENCE + "getallkeysresults/"  + this.props.conferenceName)
+    fetch(BASE_URL_CONFERENCE + "getallkeysresults/keyword/"  + this.props.conferenceName)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -74,7 +74,7 @@ class LAKStackedAreaChart extends Component {
 
   selectTopic(e) {
     this.onClear();
-    fetch(BASE_URL_CONFERENCE + "getalltopicsresults/" + this.props.conferenceName)
+    fetch(BASE_URL_CONFERENCE + "getalltopicsresults/topic/" + this.props.conferenceName)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -162,9 +162,9 @@ class LAKStackedAreaChart extends Component {
 
       fetch(
         BASE_URL_CONFERENCE +
-        "getalltopicsevolution/" +
+        "getalltopicsevolution/" + this.props.conferenceName +"/" +
         "?" +
-        selectedValues.join("&") + "/" + this.props.conferenceName
+        selectedValues.join("&")  
       )
         .then((response) => response.json())
         .then((json) => {
@@ -175,10 +175,7 @@ class LAKStackedAreaChart extends Component {
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
-          console.log(BASE_URL_CONFERENCE +
-            "getalltopicsevolution/" +
-            "?" +
-            selectedValues.join("&"));
+
           console.log("series", series);
           this.setState({
             selectTopic: selectedValues,
@@ -225,9 +222,9 @@ class LAKStackedAreaChart extends Component {
 
       fetch(
         BASE_URL_CONFERENCE +
-        "getallkeysevolution/" +
+        "getallkeysevolution/"  +
         "?" +
-        selectedValues.join("&") + "/" + this.props.conferenceName
+        selectedValues.join("&")+"/"  + this.props.conferenceName 
       )
         .then((response) => response.json())
         .then((json) => {
@@ -235,6 +232,7 @@ class LAKStackedAreaChart extends Component {
           if (json != null) {
             series = [];
             for (let i = 0; i < json.weights.length; i++) {
+              console.log("selectedValues[i]", selectedValues[i]);
               series = series.concat([
                 {name: selectedValues[i], data: json.weights[i]},
               ]);

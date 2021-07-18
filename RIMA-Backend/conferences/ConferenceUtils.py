@@ -1,5 +1,12 @@
 from .DataExtractor import ConferenceDataCollector  as dataCollector 
-from .models import Event_has_Topic,Conf_Event_Topic,Conference_Event, Conference,Conference_Event_Paper,Conf_Event_keyword,Event_has_keyword
+from .models import (Event_has_Topic
+                    ,Conf_Event_Topic
+                    ,Conference_Event
+                    ,Conference
+                    ,Conference_Event_Paper
+                    ,Conf_Event_keyword
+                    ,Event_has_keyword)
+                    
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
@@ -208,9 +215,7 @@ def getSharedWords(conference_events_list,keyword_or_topic):
             'word': model_data[keyword_or_topic],
             'weight': [model_data['weight']],
         })
-    print('models data')
-    print(models_data)
-    print('models_data')
+
     for conference_event in conference_events_list[1:]:
         if keyword_or_topic == 'topic':
             conference_event_data = getTopicsfromModels(conference_event)
@@ -232,3 +237,8 @@ def getSharedWords(conference_events_list,keyword_or_topic):
 
 
     return result_data
+
+
+def getWordWeightEventBased(events_list):
+    
+    return ""

@@ -530,16 +530,40 @@ class vennPlotView(APIView):
     def get(self, request, *args, **kwargs):
         return Response({"set": compareTopics("2013", "2012")})
 
-
-class allTopics(APIView):
+# modified Area chart
+class allWords(APIView):
     def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        return Response({"topics": getAllTopicsAllYears(topics_split[-1])})
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        conference_name_abbr = url_splits[-1]
+        keyword_or_topic = url_splits[-2]
+
+        models_data = []
+        result_data_with_duplicates = []
+        result_data =[]
 
 
+        conference_events_objs = Conference_Event.objects.filter(conference_name_abbr= conference_name_abbr)
+        for conference_event_obj in conference_events_objs:
+            if keyword_or_topic == 'topic':
+                models_data = confutils.getTopicsfromModels(conference_event_obj.conference_event_name_abbr)
+            elif keyword_or_topic == 'keyword':
+                models_data = confutils.getKeywordsfromModels(conference_event_obj.conference_event_name_abbr)
+
+            for model_data in models_data:
+                result_data_with_duplicates.append(model_data[keyword_or_topic])
+
+        print('####################################')       
+        print(list(set(result_data_with_duplicates)))
+        print('####################################')       
+
+        result_data = [{
+        "value": val,
+        "label": val
+        } for val in list(set(result_data_with_duplicates))]
+
+        return Response({"topics": result_data})
+
+# To be removed Area chart
 class allKeys(APIView):
     def get(self, request, *args, **kwargs):
         url_path = request.get_full_path()
