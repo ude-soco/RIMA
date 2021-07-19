@@ -44,8 +44,8 @@ urlpatterns = [
     # Area chart
     path('getalltopicsresults/topic/<pk1>', views.allWords.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 
     path('getallkeysresults/keyword/<pk1>', views.allWords.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getalltopicsevolution/<pk>/', views.MultipleTopicAreaView.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getallkeysevolution/', views.MultipleKeyAreaView.as_view()),    #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('getalltopicsevolution/topic/<pk>/', views.MultipleTopicAreaView.as_view()),   #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('getallkeysevolution/keyword/<pk>/', views.MultipleTopicAreaView.as_view()),    #BAB 08.06.2021 Extension for other conferences other than LAK 
     
     
     

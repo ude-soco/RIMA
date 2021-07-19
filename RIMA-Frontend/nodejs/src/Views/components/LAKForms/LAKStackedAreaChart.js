@@ -162,7 +162,7 @@ class LAKStackedAreaChart extends Component {
 
       fetch(
         BASE_URL_CONFERENCE +
-        "getalltopicsevolution/" + this.props.conferenceName +"/" +
+        "getalltopicsevolution/topic/" + this.props.conferenceName +"/" +
         "?" +
         selectedValues.join("&")  
       )
@@ -222,9 +222,9 @@ class LAKStackedAreaChart extends Component {
 
       fetch(
         BASE_URL_CONFERENCE +
-        "getallkeysevolution/"  +
+        "getallkeysevolution/keyword/"  + this.props.conferenceName +"/" +
         "?" +
-        selectedValues.join("&")+"/"  + this.props.conferenceName 
+        selectedValues.join("&")
       )
         .then((response) => response.json())
         .then((json) => {

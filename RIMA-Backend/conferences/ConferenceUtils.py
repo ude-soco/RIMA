@@ -239,6 +239,54 @@ def getSharedWords(conference_events_list,keyword_or_topic):
     return result_data
 
 
-def getWordWeightEventBased(events_list):
+def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
+    result_data = []
+
+    if keyword_or_topic == 'topic':
+        word_object = Conf_Event_Topic.objects.get(topic=word)
+    elif keyword_or_topic == 'keyword':
+        word_object = Conf_Event_keyword.objects.get(keyword=word)
+
+    print('topic_object')
+    print(word_object)
+    print('topic_object')
+
+    for conference_event in conference_event_objs:
+        if keyword_or_topic == 'topic':
+            print('BAB')
+            check_exist = Conf_Event_Topic.objects.filter(conference_event_name_abbr=conference_event.conference_event_name_abbr, topic_id=word_object.topic_id).exists()
+            print('BAB')
+            if check_exist:
+                weight = Event_has_Topic.objects.get(conference_event_name_abbr=conference_event.conference_event_name_abbr, topic_id=word_object.topic_id).weight
+                result_data.append({
+                    'word': word,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'weight':weight
+                })
+            else:
+                result_data.append({
+                    'word': word,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'weight':0
+                })
+
+        elif keyword_or_topic == 'keyword':
+            check_exist = Conf_Event_keyword.objects.filter(conference_event_name_abbr=conference_event.conference_event_name_abbr, keyword_id=word_object.keyword_id).exists()
+            if check_exist:
+                weight = Event_has_keyword.objects.get(conference_event_name_abbr=conference_event.conference_event_name_abbr, keyword_id=word_object.keyword_id).weight
+                result_data.append({
+                    'word': word,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'weight':weight
+                })
+            else:
+                result_data.append({
+                    'word': word,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'weight':0
+                })
+    print('############## Weights #################')
+    print(result_data)
+    print('############## Weights #################')
     
-    return ""
+    return result_data

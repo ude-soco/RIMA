@@ -594,24 +594,49 @@ View to get topics for stacked area chart- topic evolution
 #BAB
 class MultipleTopicAreaView(APIView):
     def get(self, request, *args, **kwargs):
+        models_data = []
+        result_data = []
+        weights =[]
+        events = []
 
-        url_path = request.get_full_path()
-        #print("the url path is:",url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split("?")
-        print(topics_split[1])
-        topics_split_params = topics_split[1].split("&")
-        topics_split_conferenceName = topics_split_params[1].split("/")
-        print(topics_split_params, "*********************")
+        url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
+        url_splits_conference_name = confutils.split_restapi_url(request.get_full_path(), r'/')
+       
+        conference_name_abbr = url_splits_conference_name[-2]
+        print('CHECK URL',url_splits_conference_name[-2])
+        words_split_params = url_splits_question_mark[-1].split("&")
+        print('CHECK URL',url_splits_question_mark[-1].split("&"))
+
+        keyword_or_topic = 'topic'
+
+        conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)
+        conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
+        
+        for word in words_split_params:
+            models_data = confutils.getWordWeightEventBased(conference_event_objs,word,url_splits_conference_name[-3])
+            for model_data in models_data:
+                weights.append(model_data['weight'])
+                events.append(model_data['conference_event_abbr'])
+            result_data.append(weights)
+            weights =[]
+
+
+        print('result_data')
+        print(result_data)
+        print(list(sorted(set(events), key=events.index)))  #list(sorted(set(events), key=events.index))
+        print('result_data')
         #listoftopics=["Learning","Analytics"]
         #getKeyWeightsAllYears
-        return Response({
-            "weights":
-            getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[0],
-            "years":
-            getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[1]
-        })
 
+        
+        return Response({
+            "weights": result_data
+            #getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[0]
+            ,
+            "years": list(sorted(set(events), key=events.index))
+            #getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[1]
+        })
+      
 
 '''
 View to get keywords for stacked area chart- topic evolution

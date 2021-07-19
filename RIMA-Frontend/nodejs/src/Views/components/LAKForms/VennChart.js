@@ -86,29 +86,6 @@ class VennChart extends Component {
         })
       });
 
-/*
-      Promise.all([
-        fetch(BASE_URL_CONFERENCE + "commontopics/lak/2011/2013"),
-        fetch(BASE_URL_CONFERENCE + "confEvents/lak"),
-        fetch(BASE_URL_CONFERENCE + "confEvents/lak"),
-        ]).then(([res1, res2,res3]) => { 
-          return Promise.all([res1.json(), res2.json(),res3.json()]) 
-       })
-       .then(([res1, res2,res3]) => {
-        this.setState({
-          selectVal: "2013",
-          selectValue2: "2014",
-          items_confCompare: res1.commontopics,
-          display: "block",
-          isLoaded: true,
-          display1: "none",
-          loader: false,
-          selectValueConf1: "LAK",
-          selectValueConf2: "LAK",
-       });
-      });
-
-*/
     }
 
 //BAB:BEGIN::10.06.2021 
