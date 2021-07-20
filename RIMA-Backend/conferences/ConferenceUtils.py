@@ -10,14 +10,24 @@ from .models import (Event_has_Topic
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
-import json
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
-import operator
 from django.db.models import Q
+
+import json
+import operator
+from collections import Counter
+
+import base64
+#from plotly.offline import plot
+from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
+from matplotlib import pyplot as plt
+
+from django.conf import settings
 
 
 # Authentication headers
+
 headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7',
                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                    'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
@@ -290,3 +300,46 @@ def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
     print('############## Weights #################')
     
     return result_data
+
+
+def generateVennPhoto(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
+    
+    print('################### TEST VENN ###################')
+    print(list_words_first_event)
+    print('+++++++++')
+    print(list_words_second_event)
+    print('+++++++++')
+    print(list_intersect_first_and_second)
+
+    print('################### TEST VENN ###################')
+    fig, ax = plt.subplots()
+
+    ax.set_title('Common '+ keyword_or_topic + 's for the years ' + str(first_event) + ' and ' + str(second_event),fontsize=12)
+
+    v = venn2_unweighted(subsets=(40, 40, 25),
+                            set_labels=[str(first_event), str(second_event)])
+    v.get_patch_by_id('10').set_alpha(0.3)
+    v.get_patch_by_id('10').set_color('#86AD41')
+    v.get_patch_by_id('01').set_alpha(0.3)
+    v.get_patch_by_id('01').set_color('#7DC3A1')
+    v.get_patch_by_id('11').set_alpha(0.3)
+    v.get_patch_by_id('11').set_color('#3A675C')
+    v.get_label_by_id('10').set_text('\n'.join(
+        list(set(list_words_first_event) - set(list_words_second_event))))
+    label1 = v.get_label_by_id('10')
+    label1.set_fontsize(7)
+    v.get_label_by_id('01').set_text('\n'.join(
+        list(set(list_words_second_event) - set(list_words_first_event))))
+    label2 = v.get_label_by_id('01')
+    label2.set_fontsize(7)
+    v.get_label_by_id('11').set_text('\n'.join(list_intersect_first_and_second))
+    label3 = v.get_label_by_id('11')
+    label3.set_fontsize(7)
+    plt.axis('off')
+    plt.savefig(settings.TEMP_DIR + '/venn.png')
+    with open(settings.TEMP_DIR + '/venn.png', "rb") as image_file:
+        image_data = base64.b64encode(image_file.read()).decode('utf-8')
+
+    ctx = image_data
+
+    return ctx

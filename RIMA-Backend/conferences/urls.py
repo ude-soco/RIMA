@@ -62,7 +62,7 @@ urlpatterns = [
     path('topicoverview/', views.TopicOverview.as_view()),
 
     path('commontopics/<pk1>/<pk2>/<pk3>', views.VennOverview.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('commonkeys/<pk1>/<pk2>/<pk3>', views.VennOverviewKeys.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK
+    path('commonkeys/<pk1>/<pk2>/<pk3>', views.VennOverview.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK
 
     path('getallkeywords/<pk>', views.AllKeywordsView.as_view()),
     path('getalltopics/<pk>', views.AllTopicsView.as_view()),

@@ -66,7 +66,12 @@ from rest_framework.generics import (ListCreateAPIView,
 from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper 
 from django.db.models import Q
 
-
+from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
+from matplotlib import pyplot as plt
+import matplotlib
+from collections import defaultdict
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, RobustScaler
+matplotlib.use("SVG")
 
 
 """
@@ -329,7 +334,7 @@ class FetchTopicView(APIView):
         print(models_data_third)
         print("********** Test for stacked ********** ")
         '''
-
+        print(topics_split_params)
         result_data = confutils.getSharedWords(topics_split_params,keyword_or_topic)
      
         return Response(
@@ -722,14 +727,50 @@ View to obtain common topics for the conference venn diagram
 
 class VennOverview(APIView):
     def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        #url_path=url_path.replace("%20"," ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
+        words_first_event = []
+        words_second_event = []
+        words_intersect_second_event = []
+        models_data_first_event =[]
+        models_data_second_event =[]
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+
+        first_event = url_splits[-2]
+        second_event = url_splits[-1]
+        keyword_or_topic = url_splits[-3]
+        
+        if keyword_or_topic == 'topic':
+            models_data_first_event = confutils.getTopicsfromModels(first_event)
+            models_data_second_event = confutils.getTopicsfromModels(second_event)
+            
+
+        elif keyword_or_topic == 'keyword':
+            models_data_first_event = confutils.getKeywordsfromModels(first_event)
+            models_data_second_event = confutils.getKeywordsfromModels(second_event)
+            
+
+        for data in models_data_first_event:
+            words_first_event.append(data[keyword_or_topic])
+
+        for data in models_data_second_event:
+             words_second_event.append(data[keyword_or_topic])
+
+        models_data_intersect_first_and_second = confutils.getSharedWords([first_event,second_event], keyword_or_topic)
+
+        if len(models_data_intersect_first_and_second) > 0:
+            for data in models_data_intersect_first_and_second[0]:
+                words_intersect_second_event.append(data['word'])
+
+        
+        ctx = confutils.generateVennPhoto(words_first_event[0:10]
+                                         ,words_second_event[0:10]
+                                         ,words_intersect_second_event[0:10]
+                                         ,first_event
+                                         ,second_event
+                                         ,'topic')
+
         return Response({
-            "commontopics":
-            generateVennData(topics_split[-3],topics_split[-2], topics_split[-1])
+            "commontopics": ctx
         })
 
 

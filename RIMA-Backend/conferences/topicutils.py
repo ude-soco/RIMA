@@ -29,6 +29,7 @@ from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 #import plotly.express as px
 from pprint import pprint
 from django.conf import settings
+from . import ConferenceUtils as confutils
 
 
 
@@ -1191,11 +1192,11 @@ def generateVennDataKeys(conferenName,year1, year2):
     list_intersect_y1y2 = list(
         set(list_topics_y1).intersection(set(list_topics_y2)))
     list(set(list_topics_y1) - set(list_topics_y2))
+
     fig, ax = plt.subplots()
 
-    ax.set_title('Common keywords for the years ' + str(year1) + ' and ' +
-                 str(year2),
-                 fontsize=12)
+    ax.set_title('Common keywords for the years ' + str(year1) + ' and ' + str(year2),fontsize=12)
+    
     v = venn2_unweighted(subsets=(40, 40, 25),
                          set_labels=[str(year1), str(year2)])
     v.get_patch_by_id('10').set_alpha(0.3)
@@ -1278,36 +1279,10 @@ def generateVennData(conferenName,year1, year2):
     list_intersect_y1y2 = list(
         set(list_topics_y1).intersection(set(list_topics_y2)))
     list(set(list_topics_y1) - set(list_topics_y2))
-    fig, ax = plt.subplots()
 
-    ax.set_title('Common topics for the years ' + str(year1) + ' and ' +
-                 str(year2),
-                 fontsize=12)
-    v = venn2_unweighted(subsets=(40, 40, 25),
-                         set_labels=[str(year1), str(year2)])
-    v.get_patch_by_id('10').set_alpha(0.3)
-    v.get_patch_by_id('10').set_color('#86AD41')
-    v.get_patch_by_id('01').set_alpha(0.3)
-    v.get_patch_by_id('01').set_color('#7DC3A1')
-    v.get_patch_by_id('11').set_alpha(0.3)
-    v.get_patch_by_id('11').set_color('#3A675C')
-    v.get_label_by_id('10').set_text('\n'.join(
-        list(set(list_topics_y1) - set(list_topics_y2))))
-    label1 = v.get_label_by_id('10')
-    label1.set_fontsize(7)
-    v.get_label_by_id('01').set_text('\n'.join(
-        list(set(list_topics_y2) - set(list_topics_y1))))
-    label2 = v.get_label_by_id('01')
-    label2.set_fontsize(7)
-    v.get_label_by_id('11').set_text('\n'.join(list_intersect_y1y2))
-    label3 = v.get_label_by_id('11')
-    label3.set_fontsize(7)
-    plt.axis('off')
-    plt.savefig(settings.TEMP_DIR + '/venn.png')
-    with open(settings.TEMP_DIR + '/venn.png', "rb") as image_file:
-        image_data = base64.b64encode(image_file.read()).decode('utf-8')
+    
 
-    ctx = image_data
+    ctx = confutils.generateVennPhoto(list_topics_y1,list_topics_y2,list_intersect_y1y2,year1,year2,'topic')
 
     return ctx
 

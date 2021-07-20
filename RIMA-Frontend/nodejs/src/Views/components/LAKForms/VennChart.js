@@ -63,7 +63,7 @@ class VennChart extends Component {
       loader: true,
       display: "none",
     });
-    fetch(BASE_URL_CONFERENCE + "commontopics/lak/2011/2012")
+    fetch(BASE_URL_CONFERENCE + "commontopics/topic/2011/2012")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -127,7 +127,7 @@ class VennChart extends Component {
     });
     fetch(
       BASE_URL_CONFERENCE +
-      "commonkeys/" + this.props.conferenceName + "/"+
+      "commonkeys/keyword/"+
       this.state.selectVal +
       "/" +
       this.state.selectValue2
@@ -156,7 +156,7 @@ class VennChart extends Component {
     });
     fetch(
       BASE_URL_CONFERENCE +
-      "commontopics/" + this.props.conferenceName + "/"+
+      "commontopics/topic/"+
       this.state.selectVal +
       "/" +
       this.state.selectValue2
