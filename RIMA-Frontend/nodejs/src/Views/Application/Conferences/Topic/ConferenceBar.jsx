@@ -77,8 +77,8 @@ export default function ConferenceBar (props) {
   const [imageTooltipOpen, setimageTooltipOpen] = useState(false);
   const classes = useStyles();
   const [selectedOption, setselectedOption] = useState({ label: 'lak', value: 'lak' });
-  const [available, setavailable] = useState([{ label: 'lak', value: 'lak' },{ label: 'edm', value: 'edm' },{ label: 'aied', value: 'aied' },{ label: 'camsap', value: 'camsap' }]);
-
+  const [available, setavailable] = useState([{ label: 'acisp', value: 'acisp' },{ label: 'aaecc', value: 'aaecc' },{ label: 'eann', value: 'eann' },{ label: 'lak', value: 'lak' },{ label: 'edm', value: 'edm' },{ label: 'aied', value: 'aied' },{ label: 'camsap', value: 'camsap' }]);
+  
   const [conference, setconference] = useState([]);
   const [confEvents, setconfEvents] = useState([
     {
