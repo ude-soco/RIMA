@@ -955,7 +955,7 @@ get author specific collaboration based on the selected author
 def getAuthorFromAuthorName(author, topic, year):
     topic = topic.lower()
     query = "select authors,authorids from LAKData where authors like '%" + author + "%' and year='" + year + "'"
-    lak_id = getTopics("", query)
+    lak_id = getTopics("", year,query)
 
     authors_mod = pd.DataFrame({
         'authors':
@@ -971,7 +971,7 @@ def getAuthorFromAuthorName(author, topic, year):
     #author_data=requests.get(f"https://api.semanticscholar.org/v1/author/{authorprof}").json()
     auth_url = f"https://www.semanticscholar.org/author/144973020/{authorprof}"
     query1 = "select id,title,abstract,authors,authorids from LAKData where authors like '%" + author + "%' and year='" + year + "'"
-    lak_count = getTopics("", query1)
+    lak_count = getTopics("",year, query1)
     lak_count[
         'titleAndAbstract'] = lak_count['title'] + " " + lak_count['abstract']
     #count=len(lak_count['id'].values)
@@ -998,7 +998,7 @@ def getAuthorFromAuthorName(author, topic, year):
 
 def getAuthorsDict():
     query = "select authors from LAKData"
-    authors = getTopics("", query)
+    authors = getTopics("","", query)
     list_auth_sub = []
     list_auth_single = []
     list_authors = list(authors['authors'].values)
@@ -1035,7 +1035,7 @@ def getAuthorsForYear(year):
         query = "select authors from LAKData"
     else:
         query = "select authors from LAKData where year='" + year + "'"
-    authors = getTopics("", query)
+    authors = getTopics("",year, query)
     list_auth_sub = []
     list_auth_single = []
     list_authors = list(authors['authors'].values)
@@ -1063,7 +1063,7 @@ def getAuthorsForYear(year):
 
 def getAllAuthors():
     query = 'select authors from LAKData'
-    authors = getTopics("", query)
+    authors = getTopics("", "",query)
 
     list_auth_sub = []
     list_auth_single = []
@@ -1100,7 +1100,7 @@ def getAllAuthorsDict():
 
 def getTopicEvoultion():
     query = "select topics,year from Topics"
-    topics_yearwise = getTopics("", query)
+    topics_yearwise = getTopics("", "",query)
     list_dicts = []
     for val in list(topics_yearwise["topics"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1293,8 +1293,8 @@ get all topics for the author network
 
 
 def getAllTopics(year):
-    query = "select topics from Topics where year='" + year + "'"
-    lak_keywords = getTopics("", query)
+    query = "select distinct topics from Topics where year='" + year + "'"
+    lak_keywords = getTopics("",year, query)
     list_allkeys = []
     for val in list(lak_keywords['topics'].values):
         topics_list = val.replace("{", "")
@@ -1333,7 +1333,7 @@ get all keywords for author network
 
 def getAllKeywords(year):
     query = "select keywords from Topics where year='" + year + "'"
-    lak_keywords = getTopics("", query)
+    lak_keywords = getTopics("", "",query)
     list_allkeys = []
     for val in list(lak_keywords['keywords'].values):
         topics_list = val.replace("{", "")
@@ -1374,7 +1374,7 @@ def searchForTopics(year, keyword):
     try:
         keyword = keyword.lower()
         query = "select t.topics,l.title,l.abstract,l.authors from LAKData l join Topics t on l.year=t.year where t.year='" + year + "' and lower(t.topics) like '%" + keyword + "%'"
-        lak_data = getTopics("", query)
+        lak_data = getTopics("", "",query)
         lak_data["titleAndAbstract"] = lak_data["title"] + " " + lak_data[
             "abstract"]
         list_titles = []
@@ -1386,7 +1386,7 @@ def searchForTopics(year, keyword):
         list_titles = list(set(list_titles))
         query = "select authors from LAKData where title in" + str(
             tuple(list_titles)) + "and year='" + year + "'"
-        lak_authors = getTopics("", query)
+        lak_authors = getTopics("", "",query)
         split_authors = []
         list_pairs = []
         list_edges = []
@@ -1421,7 +1421,7 @@ def searchForTopics(year, keyword):
         l2 = [v[0] for _, v in d.items()]
         list_nodes = []
         query = "select authors from LAKData where year='" + year + "' and (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%')"
-        lak = getTopics("", query)
+        lak = getTopics("", "",query)
         for val in flatList_val:
             #count=flatList.count(val)
             count = lak.authors.str.count(val).sum()
@@ -1564,7 +1564,7 @@ def searchForKeyword(year, keyword):
     try:
         keyword = keyword.lower()
         query = "select t.keywords,l.title,l.abstract,l.authors from LAKData l join Topics t on l.year=t.year where t.year='" + year + "' and lower(t.keywords) like '%" + keyword + "%'"
-        lak_data = getTopics("", query)
+        lak_data = getTopics("","", query)
         lak_data["titleAndAbstract"] = lak_data["title"] + " " + lak_data[
             "abstract"]
         list_titles = []
@@ -1576,7 +1576,7 @@ def searchForKeyword(year, keyword):
         list_titles = list(set(list_titles))
         query = "select authors from LAKData where title in" + str(
             tuple(list_titles)) + "and year='" + year + "'"
-        lak_authors = getTopics("", query)
+        lak_authors = getTopics("", "",query)
         split_authors = []
         list_pairs = []
         list_edges = []
@@ -1616,7 +1616,7 @@ def searchForKeyword(year, keyword):
         l2 = [v[0] for _, v in d.items()]
         list_nodes = []
         query = "select authors from LAKData where year='" + year + "' and (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%')"
-        lak = getTopics("", query)
+        lak = getTopics("", "",query)
         for val in flatList_val:
             #count=flatList.count(val)
             count = lak.authors.str.count(val).sum()
@@ -1652,6 +1652,9 @@ def searchForKeyword(year, keyword):
             }]
         }
 
+    print('###################### TEST BAB ######################')
+    print(dict_xy)
+    print('###################### TEST BAB ######################')
     return dict_xy
 
 
@@ -1685,7 +1688,7 @@ def searchForKeyword(year, keyword):
 #     return [matrix.values.tolist()]+[matrix.index.tolist()]+[matrix.columns.levels[1].tolist()]
 def getFlowChartDataTopics(year, searchword):
     query = "select topics from Topics where year='" + year + "'"
-    lak_data = getTopics("", query)
+    lak_data = getTopics("", "",query)
     sorted_topics_dict = {}
     sorted_keys_dict = {}
 
@@ -1731,7 +1734,7 @@ def getFlowChartDataTopics(year, searchword):
 
 def getFlowChartDataKeywords(year, searchword):
     query = "select keywords from Topics where year='" + year + "'"
-    lak_data = getTopics("", query)
+    lak_data = getTopics("", "",query)
     sorted_topics_dict = {}
     sorted_keys_dict = {}
     keys_list = lak_data['keywords'].values[0]
@@ -1805,7 +1808,7 @@ def getAbstractbasedonKeyword(conferenceName,year, keyword):
 
 def getDataAuthorComparisonKeywords(year, author1, author2):
     query = "select t.keywords,t.year,l.abstract,l.authors,l.title from LAKData l join Topics t on l.year=t.year where (l.authors like '%" + author1 + "%' or l.authors like '%" + author2 + "%') and t.year='" + year + "'"
-    lak_topics = getTopics("", query)
+    lak_topics = getTopics("", "",query)
     lak_topics['titleAndAbstract'] = lak_topics['title'] + " " + lak_topics[
         'abstract']
     list_dicts = []
@@ -1892,7 +1895,7 @@ def getDataAuthorComparisonKeywords(year, author1, author2):
 
 def getDataAuthorComparisonTopics(year, author1, author2):
     query = "select t.topics,t.year,l.abstract,l.authors,l.title from LAKData l join Topics t on l.year=t.year where (l.authors like '%" + author1 + "%' or l.authors like '%" + author2 + "%') and t.year='" + year + "'"
-    lak_topics = getTopics("", query)
+    lak_topics = getTopics("", "",query)
     lak_topics['titleAndAbstract'] = lak_topics['title'] + " " + lak_topics[
         'abstract']
     list_dicts = []
@@ -2044,7 +2047,7 @@ def fetchTopicsuserID(ssuserid, year):
     wikis_noquotes = wikis_noquotes.replace("(", "")
     wikis_noquotes = wikis_noquotes.replace(")", "")
     query = "select topics from Topics where year='" + year + "'"
-    lak_topics = getTopics("", query)
+    lak_topics = getTopics("", "",query)
     wikis_noquotes = wikis_noquotes.replace("{", "")
     wikis_noquotes = wikis_noquotes.replace("}", "")
     print(
@@ -2163,7 +2166,7 @@ def insertData(query):
 
 def getAuthorIdfromAuthor(author):
     query = "select authors,authorids from LAKData where authors like '%" + author + "%'"
-    lak_authors = getTopics("", query)
+    lak_authors = getTopics("","", query)
     val = list(lak_authors.values)[0]
     val_authors = val[0].split(",")
     val_ids = val[1].split(",")
@@ -2196,8 +2199,8 @@ def compareAuthors(author1, author2, year, key):
         mainquery1 = "select keywords,topics,authorid from AuthorsTab where name='" + author1 + "' and year='" + year + "'"
         mainquery2 = "select keywords,topics,authorid from AuthorsTab where name='" + author2 + "' and year='" + year + "'"
 
-    lak_query1 = getTopics("", mainquery1)
-    lak_query2 = getTopics("", mainquery2)
+    lak_query1 = getTopics("", "",mainquery1)
+    lak_query2 = getTopics("", "",mainquery2)
     if len(list(lak_query1.values)) != 0:
         #print("topics",convertStrtoDict(lak_query1['topics'].values[0]))
         sorted_dict1 = dict(
@@ -2216,7 +2219,7 @@ def compareAuthors(author1, author2, year, key):
             query1 = "select title,abstract from LAKData where authors like '%" + author1 + "%'"
         else:
             query1 = "select title,abstract from LAKData where authors like '%" + author1 + "%' and year='" + year + "'"
-        lak_author1_data = getTopics("", query1)
+        lak_author1_data = getTopics("", "",query1)
         lak_author1_data['titleAndAbs'] = lak_author1_data[
             'title'] + " " + lak_author1_data['abstract']
         abstracts_a1 = list(lak_author1_data['titleAndAbs'].values)
@@ -2260,7 +2263,7 @@ def compareAuthors(author1, author2, year, key):
             query2 = "select title,abstract from LAKData where authors like '%" + author2 + "%'"
         else:
             query2 = "select title,abstract from LAKData where authors like '%" + author2 + "%' and year='" + year + "'"
-        lak_author2_data = getTopics("", query2)
+        lak_author2_data = getTopics("", "",query2)
         lak_author2_data['titleAndAbs'] = lak_author2_data[
             'title'] + " " + lak_author2_data['abstract']
         abstracts_a2 = list(lak_author2_data['titleAndAbs'].values)
@@ -2319,7 +2322,7 @@ method to fetch topics for author conference venn diagram
 
 def authorConfTopicComparison(key, author, year):
     query1 = "select l.title,l.abstract from LAKData l where l.authors like '%" + author + "%'"
-    lak_author1_topics = getTopics("", query1)
+    lak_author1_topics = getTopics("", "",query1)
     lak_author1_topics['titleandAbstract'] = lak_author1_topics[
         'title'] + " " + lak_author1_topics['abstract']
     lak_text = ' '.join(list(lak_author1_topics['titleandAbstract'].values))
@@ -2337,7 +2340,7 @@ def authorConfTopicComparison(key, author, year):
             query2 = "select topics from Topics"
         else:
             query2 = "select topics from Topics where year='" + year + "'"
-    lak_years = getTopics("", query2)
+    lak_years = getTopics("", "",query2)
     list_year = []
     if key == 'key':
         list_year = lak_years["keywords"].values[0]
@@ -2421,9 +2424,9 @@ def authorConfTopicComparison(key, author, year):
 
 def getAuthorComparisionData(author1, author2):
     query1 = "select topics from Authors where name='" + author1 + "'"
-    lak_author1_topics = getTopics("", query1)
+    lak_author1_topics = getTopics("", "",query1)
     query2 = "select topics from Authors where name='" + author2 + "'"
-    lak_author2_topics = getTopics("", query2)
+    lak_author2_topics = getTopics("", "",query2)
     list_author1 = lak_author1_topics["topics"].values[0]
     topics_list1 = list_author1.replace("{", "")
     topics_list1 = topics_list1.replace("}", "")
@@ -2473,7 +2476,7 @@ def getAuthorComparisionData(author1, author2):
 
 def compareLAKwithAuthortopics(author, year):
     query1 = "select topics from Topics where year='" + year + "'"
-    lak_conf = getTopics("", query1)
+    lak_conf = getTopics("", "",query1)
     list_topics_conf = lak_conf["topics"].values[0]
     topics_list1 = list_topics_conf.replace("{", "")
     topics_list1 = topics_list1.replace("}", "")
@@ -2493,7 +2496,7 @@ def compareLAKwithAuthortopics(author, year):
                key=operator.itemgetter(1)))
     sorted_dict1 = {k: sorted_dict1[k] for k in list(sorted_dict1)[0:10]}
     query2 = "select topics from Authors where author='" + author + "'"
-    lak_auth = getTopics("", query2)
+    lak_auth = getTopics("", "",query2)
     list_topics_auth = lak_auth["topics"].values[0]
     topics_list2 = list_topics_auth.replace("{", "")
     topics_list2 = topics_list2.replace("}", "")

@@ -1,5 +1,5 @@
 from .DataExtractor import ConferenceDataCollector  as dataCollector 
-from .models import (Event_has_Topic
+from .models import (Author, Event_has_Topic
                     ,Conf_Event_Topic
                     ,Conference_Event
                     ,Conference
@@ -65,7 +65,7 @@ def addDataToConfEventModel(conference_name_abbr):
                 index+=1
                 conference_event.save()
 
-def addDataToConfPaperModel(conference_name_abbr,conf_event_name_abbr):    
+def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr):    
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conf_event_name_abbr)
     conference_event_url  = conference_event_obj.conference_event_url
     data = dataCollector.fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, conference_event_url,headers_windows)
@@ -84,10 +84,25 @@ def addDataToConfPaperModel(conference_name_abbr,conf_event_name_abbr):
         paper_venu = paper_data['venue'],
         )
         event_paper.save()
+        authors = paper_data['authors']
+        
+        print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+        print(conference_event_url)
+        print(authors)
+        print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+
+        for author_data in authors:
+            author = Author(author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
+            author.save()
+            author.papers_within_conference.add(event_paper)
+            print(author_data)
     
-    print(conference_event_url)
-    #print(data['paper_data'][1])
    
+    #print(data['paper_data'][1])
+
+def addDataToAuthorModel():
+
+    return "" 
 
 def getEventPapersData(conference_event_name_abbr):
     conference_event_papers_data = []

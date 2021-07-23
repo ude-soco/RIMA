@@ -102,7 +102,7 @@ class CollectEventPapersView(ListCreateAPIView):
         url_path = self.request.get_full_path()
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        confutils.addDataToConfPaperModel(topics_split[-2],topics_split[-1])
+        confutils.addDataToConfPaperAndAuthorModels(topics_split[-2],topics_split[-1])
         return Response(data)
 
 
