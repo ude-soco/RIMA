@@ -131,27 +131,21 @@ class addConferenceView(ListCreateAPIView):
     conference_serializer_class = ConferenceSerializer
     def get(self, request, *args, **kwargs):
         data = []
-        conferences_events_JSON = []
         conferences = Conference.objects.all()
         for conference in conferences:
             conference_events = Conference_Event.objects.filter(
                                 conference_name_abbr = conference.conference_name_abbr).values_list(
                                 'conference_event_name_abbr',
                                 flat=True)
-            for event in conference_events:
-                conferences_events_JSON.append({
-                    'value': event,
-                    'label': event,
-                })
+           
             data.append({
                 'platform_name' : conference.platform_name.platform_name,
                 'platform_url' : conference.platform_name.platform_url,
                 'conference_name_abbr' : conference.conference_name_abbr,
                 'conference_url' : conference.conference_url,
-                'conference_events': conferences_events_JSON,
                 'no_of_events': conference_events.count(),
             })
-            conferences_events_JSON =[]    
+
         return Response(data)
     
     def post(self, request, *args, **kwargs):
@@ -224,6 +218,31 @@ class confEvents(APIView):
             "events":
             conferences_events_JSON
         })
+
+class conferenceAuthors(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        confutils.getAuthorsData('ecctd')
+        print(url_splits)
+        #print("The year is:",year)
+        conferences_events_JSON = []
+
+        conference_events = Conference_Event.objects.filter( conference_name_abbr = url_splits[-1]).values_list(
+                                'conference_event_name_abbr',
+                                flat=True)
+        for event in conference_events:
+            conferences_events_JSON.append({
+                'value': event,
+                'label': event,
+            })
+
+        print('############# AUTHOR TEST ####################')
+        print(conferences_events_JSON)
+        print('############# AUTHOR TEST ####################')
+        return Response({
+            "events":
+            conferences_events_JSON
+        })        
 
 '''
 View regarding topic wordcloud

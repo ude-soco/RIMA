@@ -94,6 +94,9 @@ export default function SideBar({selection, setSelection}) {
       case "viewConference":
         history.push("/app/view-conference");
         break;  
+      case "viewAuthor":
+        history.push("/app/view-author");
+        break; 
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -290,6 +293,17 @@ export default function SideBar({selection, setSelection}) {
               <MultilineChartIcon className={selectedList("topicTrends")}/>
             </ListItemIcon>
             <ListItemText primary="Topics and Trends"/>
+          </ListItem>
+
+
+          <ListItem button id="viewAuthor"
+                    selected={selectedList("viewAuthor")}
+                    onClick={handleSelect}
+                    className={selectedList("viewAuthor")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <MultilineChartIcon className={selectedList("viewAuthor")}/>
+            </ListItemIcon>
+            <ListItemText primary="Author Dashboard"/>
           </ListItem>
 
           <ListItem button id="conferenceNetwork"

@@ -24,7 +24,9 @@ import InterestProfile from "../Views/Application/InterestProfile/InterestProfil
 import CompareAuthors from "../Views/Application/CompareAuthors/CompareAuthors";
 
 import addConference from "../Views/Application/Conferences/addConference.jsx";
-import viewConference from "../Views/Application/Conferences/viewConference.js"
+import viewConference from "../Views/Application/Conferences/viewConference.js"; 
+import authorDashboard from "../Views/Application/Conferences/authorDashboard.js"; 
+
 
 
 let routes = [
@@ -75,6 +77,14 @@ let routes = [
     name: "My Conferences",
     icon: "ni ni-fat-add text-green",
     component: viewConference,
+    layout: "/app",
+    // display: "none"
+  },
+  {
+    path: "/view-author",
+    name: "Conferences Authors",
+    icon: "ni ni-fat-add text-green",
+    component: authorDashboard,
     layout: "/app",
     // display: "none"
   },

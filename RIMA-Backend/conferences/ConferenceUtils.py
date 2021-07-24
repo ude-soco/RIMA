@@ -1,3 +1,4 @@
+from django.urls import conf
 from .DataExtractor import ConferenceDataCollector  as dataCollector 
 from .models import (Author, Event_has_Topic
                     ,Conf_Event_Topic
@@ -82,17 +83,18 @@ def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr)
         #no_of_cititations = paper_data['doi'],
         citiations = len(paper_data['citations']),
         paper_venu = paper_data['venue'],
+        conference_name_abbr = conference_name_abbr
         )
         event_paper.save()
         authors = paper_data['authors']
-        
+
         print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
         print(conference_event_url)
         print(authors)
         print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
 
         for author_data in authors:
-            author = Author(author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
+            author = Author(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
             author.save()
             author.papers_within_conference.add(event_paper)
             print(author_data)
@@ -100,8 +102,20 @@ def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr)
    
     #print(data['paper_data'][1])
 
-def addDataToAuthorModel():
+def getAuthorsData(conference_name_abbr):
 
+    data = []
+
+    conference_papers_objs = Conference_Event_Paper.objects.filter(conference_name_abbr=conference_name_abbr)
+    
+    for paper_obj in conference_papers_objs:
+        authors_objs = Author.papers_within_conference.through.objects.filter(conference_event_paper_id=paper_obj)
+
+    #for author_obj in authors_objs:
+        
+        print('authors_objs')
+        print(authors_objs)
+        print('authors_objs')
     return "" 
 
 def getEventPapersData(conference_event_name_abbr):

@@ -152,7 +152,7 @@ class RestAPI {
     }).then((res) => res);
   }
   //** GET LIST Conferences API  BAB**//
-  static getListConfercne() {
+  static getListConference() {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
@@ -165,6 +165,21 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  //** GET LIST Conferences API  BAB**//
+  static getListConferenceAuthors(conference_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/conferenceAuthors/${conference_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  
   //** GET LIST COnference Events API  BAB**//
   static getListConfercneEvents(conference_name_abbr) {
     const TOKEN = getItem("accessToken");

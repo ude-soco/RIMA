@@ -74,7 +74,7 @@ class viewConference extends React.Component {
 
   //** GET ALL CONFERENCES **//
   getConferenceData = () => {
-    RestAPI.getListConfercne()
+    RestAPI.getListConference()
       .then((response) => {
         this.setState({
           isLoding: false,
@@ -347,7 +347,7 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                       <th scope="col">Platform URl</th>
                       <th scope="col">Number of Events</th>
                       <th scope="col" width="5">Options</th>
-                      <th scope="col" width="5"></th>
+                      
                       <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
                     </tr>
@@ -418,16 +418,7 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                                  </UncontrolledDropdown>
                                  </div>
                           </td>
-                          <td > 
-                          <div style={{width: "150px"}}>
-                              <Select
-                                placeholder="Events"
-                                options={value.conference_events}
-                               // value={value.conference_events.find((obj) => obj.value === selectyear)}
-                                onChange={this.selectYear}
-                              />
-                          </div>
-                          </td>
+                       
                           
                           <td className="text-center">
                               <Button color="secondary" onClick={() => this.getSelectedValueBAB()} width = "50px">
