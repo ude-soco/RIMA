@@ -116,31 +116,30 @@ def addDataToAuthorModels(author_data,paper_obj,conference_obj,conference_event_
     
 #not done yet
 def getAuthorsData(conference_name_abbr):
-
     data = []
-    papers_data = []
-    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr )#,conference_event_name_abbr_id ='ecctd2017')
-
+    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr
+                                                            ).values_list('author_id', flat=True
+                                                            ).order_by('author_id').distinct()
 
     print(len(author_has_papers_objs))
+    new_list = list(set(author_has_papers_objs))
+    print(len(new_list))
 
     for author_obj in author_has_papers_objs:
-        author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj.author_id_id)
-        author_event_papers_objs = Conference_Event_Paper.objects.filter(paper_id=author_obj.paper_id_id
+        author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj)
+        author_event_papers_objs = Author_has_Papers.objects.filter(author_id_id=author_model_data.semantic_scolar_author_id
                                                                         ,conference_name_abbr=conference_name_abbr
-                                                                        #,conference_event_name_abbr='ecctd2017'
                                                                         ).values_list()
        
-        
         data.append({
-            'semantic_scholar_author_id':author_obj.author_id_id,
+            'semantic_scholar_author_id':author_model_data.semantic_scolar_author_id,
             'name':author_model_data.author_name,
             'semantic_scholar_url':author_model_data.author_url,
             'no_of_papers':len(author_event_papers_objs),
-            'conference_event': conference_name_abbr
         })
-
-    return data
+        
+    sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
+    return sorted_data
 
 
 def addDataToKeywordAndTopicModels(conference_event_name_abbr):

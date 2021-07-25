@@ -221,33 +221,13 @@ class confEvents(APIView):
 
 class conferenceAuthors(APIView):
     def get(self, request, *args, **kwargs):
+        result_data = []
+
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
-        #confutils.getAuthorsData('ecctd')
-
-        print(url_splits)
-        #print("The year is:",year)
-        conferences_events_JSON = []
-        """   
+        conference_name_abbr = url_splits[-1]
         
-
-        conference_events = Conference_Event.objects.filter( conference_name_abbr = url_splits[-1]).values_list(
-                                'conference_event_name_abbr',
-                                flat=True)
-        for event in conference_events:
-            conferences_events_JSON.append({
-                'value': event,
-                'label': event,
-            })
-
-        print('############# AUTHOR TEST ####################')
-        print(conferences_events_JSON)
-        print('############# AUTHOR TEST ####################')
-        
-        """
-        return Response({
-            "events":
-            confutils.getAuthorsData('ecctd')
-        })        
+        result_data = confutils.getAuthorsData(conference_name_abbr)
+        return Response(result_data)        
 
 '''
 View regarding topic wordcloud

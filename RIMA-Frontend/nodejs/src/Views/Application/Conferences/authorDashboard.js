@@ -63,13 +63,15 @@ class authorDashboard extends React.Component {
 
     available: 
         [
-            { label: 'acisp', value: 'acisp' },
+            
             { label: 'aaecc', value: 'aaecc' },
             { label: 'eann', value: 'eann' },
             { label: 'lak', value: 'lak' },
             { label: 'edm', value: 'edm' },
             { label: 'aied', value: 'aied' },
-            { label: 'camsap', value: 'camsap' }],
+            { label: 'camsap', value: 'camsap' },
+            { label: 'ecctd', value: 'ecctd' },
+        ],
 
    selectedOption :{ label: 'lak', value: 'lak' },
 
@@ -234,11 +236,10 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                   <thead className="thead-light">
                     <tr>
 
-                     <th scope="col">Conference</th>
-                      <th scope="col">Conference URL</th>
-                      <th scope="col">Platform</th>
-                      <th scope="col">Platform URl</th>
-                      <th scope="col">Number of Events</th>
+                     <th scope="col">semantic scholar id</th>
+                      <th scope="col">name</th>
+                      <th scope="col">semantic scholar url</th>
+                      <th scope="col">No. of papers</th>
                       <th scope="col" width="5"></th>
 
                     </tr>
@@ -263,14 +264,12 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                       </tr>
                     ) : this.state.data.length ? (
                       this.state.data.map((value, index) => (
-                        <tr key={value.platform_name}>
-                          <td>{value.conference_name_abbr}</td>
-                          <td><a href ={ value.conference_url}>{value.conference_url}</a></td>
-                          <td>{value.platform_name}</td>
-                          <td><a href ={value.platform_url}>{value.platform_url}</a></td>
-                          <td align = "center">{value.no_of_events}</td>
+                        <tr key={value.semantic_scholar_author_id}>
+                          <td>{value.semantic_scholar_author_id}</td>
+                          <td>{value.name}</td>
+                          <td><a href ={ value.semantic_scholar_url}>{value.semantic_scholar_url}</a></td>
+                          <td>{value.no_of_papers}</td>
                          
-                          
                           <td className="text-center">
                               <Button color="secondary" onClick={() => this.getConferenceEventsData(value.conference_name_abbr)} width = "50px">
                                 Stored Events
