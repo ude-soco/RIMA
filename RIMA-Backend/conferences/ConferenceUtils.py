@@ -1,34 +1,27 @@
 from django.urls import conf
 from .DataExtractor import ConferenceDataCollector  as dataCollector 
-from .models import (Author, Event_has_Topic
+from .models import (Author, Author_has_Papers, Event_has_Topic
                     ,Conf_Event_Topic
                     ,Conference_Event
                     ,Conference
                     ,Conference_Event_Paper
                     ,Conf_Event_keyword
-                    ,Event_has_keyword)
-                    
+                    ,Event_has_keyword)                  
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 from django.db.models import Q
-
 import json
 import operator
 from collections import Counter
-
 import base64
-#from plotly.offline import plot
 from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
 from matplotlib import pyplot as plt
-
 from django.conf import settings
 
-
 # Authentication headers
-
 headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7',
                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                    'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
@@ -66,11 +59,15 @@ def addDataToConfEventModel(conference_name_abbr):
                 index+=1
                 conference_event.save()
 
-def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr):    
+def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr):
+    conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)    
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conf_event_name_abbr)
+
     conference_event_url  = conference_event_obj.conference_event_url
+
     data = dataCollector.fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, conference_event_url,headers_windows)
     data = dataCollector.extract_papers_data(data)
+
     for paper_data in data['paper_data']:
         event_paper = Conference_Event_Paper.objects.create(
         conference_event_name_abbr = conference_event_obj,
@@ -94,41 +91,59 @@ def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr)
         print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
 
         for author_data in authors:
-            author = Author(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
-            author.save()
-            author.papers_within_conference.add(event_paper)
+            addDataToAuthorModels(author_data,event_paper,conference_obj,conference_event_obj)
             print(author_data)
     
    
     #print(data['paper_data'][1])
 
+def addDataToAuthorModels(author_data,paper_obj,conference_obj,conference_event_obj):
+    stored_author_check = Author.objects.filter(semantic_scolar_author_id = author_data['authorId']).exists()
+    if not stored_author_check:
+        author_obj = Author.objects.create(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
+        author_has_papers_obj = Author_has_Papers(author_id=author_obj
+                                                    ,paper_id=paper_obj
+                                                    ,conference_name_abbr=conference_obj
+                                                    ,conference_event_name_abbr=conference_event_obj)
+    else:
+        author_obj= Author.objects.get(semantic_scolar_author_id = author_data['authorId'])
+        author_has_papers_obj = Author_has_Papers(author_id=author_obj
+                                                    ,paper_id=paper_obj
+                                                    ,conference_name_abbr=conference_obj
+                                                    ,conference_event_name_abbr=conference_event_obj)
+
+    author_has_papers_obj.save()    
+    
+#not done yet
 def getAuthorsData(conference_name_abbr):
 
     data = []
+    papers_data = []
+    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr )#,conference_event_name_abbr_id ='ecctd2017')
 
-    conference_papers_objs = Conference_Event_Paper.objects.filter(conference_name_abbr=conference_name_abbr)
-    
-    for paper_obj in conference_papers_objs:
-        authors_objs = Author.papers_within_conference.through.objects.filter(conference_event_paper_id=paper_obj)
 
-    #for author_obj in authors_objs:
+    print(len(author_has_papers_objs))
+
+    for author_obj in author_has_papers_objs:
+        author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj.author_id_id)
+        author_event_papers_objs = Conference_Event_Paper.objects.filter(paper_id=author_obj.paper_id_id
+                                                                        ,conference_name_abbr=conference_name_abbr
+                                                                        #,conference_event_name_abbr='ecctd2017'
+                                                                        ).values_list()
+       
         
-        print('authors_objs')
-        print(authors_objs)
-        print('authors_objs')
-    return "" 
+        data.append({
+            'semantic_scholar_author_id':author_obj.author_id_id,
+            'name':author_model_data.author_name,
+            'semantic_scholar_url':author_model_data.author_url,
+            'no_of_papers':len(author_event_papers_objs),
+            'conference_event': conference_name_abbr
+        })
 
-def getEventPapersData(conference_event_name_abbr):
-    conference_event_papers_data = []
-
-    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
-    if conference_event_obj:
-        conference_event_papers_data = Conference_Event_Paper.objects.filter(conference_event_name_abbr=conference_event_obj)
-       # print('PAPERS DATA',conference_event_papers_data)   
-    return conference_event_papers_data
+    return data
 
 
-def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
+def addDataToKeywordAndTopicModels(conference_event_name_abbr):
     abstract_title_str = ""
     conference_event_papers_data = []
 
@@ -178,6 +193,19 @@ def addDatatoKeywordAndTopicModels(conference_event_name_abbr):
    
 
     return True
+
+
+
+def getEventPapersData(conference_event_name_abbr):
+    conference_event_papers_data = []
+
+    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
+    if conference_event_obj:
+        conference_event_papers_data = Conference_Event_Paper.objects.filter(conference_event_name_abbr=conference_event_obj)
+       # print('PAPERS DATA',conference_event_papers_data)   
+    return conference_event_papers_data
+
+
 
 
 def getKeywordsfromModels(conference_event_name_abbr):

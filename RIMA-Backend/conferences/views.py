@@ -119,7 +119,7 @@ class ExtractEventTrendsView(ListCreateAPIView):
         url_path = self.request.get_full_path()
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        confutils.addDatatoKeywordAndTopicModels(topics_split[-1])
+        confutils.addDataToKeywordAndTopicModels(topics_split[-1])
         return Response(data)
 '''
 BAB Add Conference View
@@ -222,10 +222,13 @@ class confEvents(APIView):
 class conferenceAuthors(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
-        confutils.getAuthorsData('ecctd')
+        #confutils.getAuthorsData('ecctd')
+
         print(url_splits)
         #print("The year is:",year)
         conferences_events_JSON = []
+        """   
+        
 
         conference_events = Conference_Event.objects.filter( conference_name_abbr = url_splits[-1]).values_list(
                                 'conference_event_name_abbr',
@@ -239,9 +242,11 @@ class conferenceAuthors(APIView):
         print('############# AUTHOR TEST ####################')
         print(conferences_events_JSON)
         print('############# AUTHOR TEST ####################')
+        
+        """
         return Response({
             "events":
-            conferences_events_JSON
+            confutils.getAuthorsData('ecctd')
         })        
 
 '''
