@@ -114,16 +114,12 @@ def addDataToAuthorModels(author_data,paper_obj,conference_obj,conference_event_
 
     author_has_papers_obj.save()    
     
-#not done yet
+
 def getAuthorsData(conference_name_abbr):
     data = []
     author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr
                                                             ).values_list('author_id', flat=True
                                                             ).order_by('author_id').distinct()
-
-    print(len(author_has_papers_objs))
-    new_list = list(set(author_has_papers_objs))
-    print(len(new_list))
 
     for author_obj in author_has_papers_objs:
         author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj)
@@ -136,11 +132,29 @@ def getAuthorsData(conference_name_abbr):
             'name':author_model_data.author_name,
             'semantic_scholar_url':author_model_data.author_url,
             'no_of_papers':len(author_event_papers_objs),
+            'conference_name': conference_name_abbr,
         })
-        
+
     sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
     return sorted_data
 
+
+def getAuthorPublicationsInConf(conference_name_abbr,author_id):
+    result_data = []
+    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr,author_id_id=author_id)
+    for author_has_papers_obj in author_has_papers_objs:
+        paper_data = Conference_Event_Paper.objects.get(paper_id=author_has_papers_obj.paper_id_id)
+        result_data.append({
+            'semantic_scholar_paper_id': paper_data.paper_id,
+            'paper_doi':paper_data.paper_doi,
+            'title':paper_data.title,
+            'abstract':paper_data.abstract,
+            'semantic_scholar_url':paper_data.url,
+            'conference_event':paper_data.conference_event_name_abbr_id,
+        })
+   
+    sorted_data = sorted(result_data, key=lambda k: k['conference_event'], reverse=True)
+    return sorted_data
 
 def addDataToKeywordAndTopicModels(conference_event_name_abbr):
     abstract_title_str = ""

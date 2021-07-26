@@ -11,6 +11,7 @@ urlpatterns = [
     path('addConference/', views.addConferenceView.as_view()), # BAB
     path('ConferenceEvents/<slug:conference_name_abbr>', views.ConferenceEventsView.as_view()), # BAB 
     path('conferenceAuthors/<slug:conference_name_abbr>', views.conferenceAuthors.as_view()), # BAB 
+    path('AuthorPublication/<pk1>/<pk2>', views.AuthorPublications.as_view()),
 
     path('collectEventPapers/<slug:conference_name_abbr>/<slug:conference_event_name_abbr>', views.CollectEventPapersView.as_view()), # BAB
     path('ExtractEventTrends/<slug:conference_event_name_abbr>', views.ExtractEventTrendsView.as_view()), # BAB

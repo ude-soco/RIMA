@@ -1,5 +1,6 @@
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 # test import BEGIN
+from django.conf.urls import url
 from matplotlib.pyplot import uninstall_repl_displayhook
 from .DataExtractor import ConferenceDataCollector  as dataCollector
 from . import ConferenceUtils as confutils
@@ -227,6 +228,19 @@ class conferenceAuthors(APIView):
         conference_name_abbr = url_splits[-1]
         
         result_data = confutils.getAuthorsData(conference_name_abbr)
+        return Response(result_data)        
+
+
+
+class AuthorPublications(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        author_id = url_splits[-1]
+        conference_name_abbr = url_splits[-2]
+        
+        result_data = confutils.getAuthorPublicationsInConf(conference_name_abbr,author_id)
         return Response(result_data)        
 
 '''

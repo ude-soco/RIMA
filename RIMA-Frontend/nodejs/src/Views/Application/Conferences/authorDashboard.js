@@ -45,21 +45,17 @@ import {
 class authorDashboard extends React.Component {
   state = {
     data: [],
-    conferenceEvents: [],
+    authorPublications: [],
     isLoding: false,
     modal: false,
-    editmodal: false,
-    deleteModal: false,
-    deletePaperId: "",
-    title: "",
     url: "",
     year: "",
-    abstract: "",
     id: "",
-    authors: "",
-    show: false,
-    selectyear: "",
-    eventsmodal: "",
+    count: "",
+ 
+
+    publicationsmodal: "",
+    wordcloudmodal :"",
 
     available: 
         [
@@ -74,19 +70,25 @@ class authorDashboard extends React.Component {
         ],
 
    selectedOption :{ label: 'lak', value: 'lak' },
-
+   numbers : [
+    {
+      value: "5",
+      label: "5"
+    },
+    {
+      value: "10",
+      label: "10"
+    }
+  ],
 
   };
 
+  
   componentDidMount() {
     this.setState({ isLoding: true }, this.getConferenceAuthorsData());
   }
 
-  selectYear = (e) => {
-    this.setState({
-      selectyear: e.value,
-    });
-  }
+ 
 
   handleChange = (selectedOption) => {
     this.setState({
@@ -114,17 +116,13 @@ this.getConferenceAuthorsData(selectedOption.value);
 
 
 //** GET ALL CONFERENCE EVENTS **//
-getConferenceEventsData = (conference_name_abbr) => {
-  console.log("TEST")
-  console.log(conference_name_abbr)
-  console.log("TEST")
-
-  RestAPI.getListConfercneEvents(conference_name_abbr)
+getListPublications = (conference_name_abbr,author_id) => {
+  RestAPI.getListPublications(conference_name_abbr,author_id)
     .then((response) => {
       this.setState({
         isLoding: false,
-        eventsmodal: !this.state.eventsmodal,
-        conferenceEvents: response.data,
+        publicationsmodal: !this.state.publicationsmodal,
+        authorPublications: response.data,
       });
     })
     .catch((error) => {
@@ -134,19 +132,25 @@ getConferenceEventsData = (conference_name_abbr) => {
 };
 
 //** EXTRACT TRENDS OF AN EVENT **//
-ExtractEventTrends = (conference_event_name_abbr) => {
+ExtractAuthorTrends = (conference_event_name_abbr) => {
+    this.setState({
+        isLoding: false,
+        wordcloudmodal: !this.state.wordcloudmodal,
+      });
+/*
   RestAPI.ExtractEventTrends(conference_event_name_abbr)
     .then((response) => {
       this.setState({
         isLoding: false,
-        eventsmodal: !this.state.eventsmodal,
-        conferenceEvents: response.data,
+        wordcloudmodal: !this.state.wordcloudmodal,
+        authorPublications: response.data,
       });
     })
     .catch((error) => {
       this.setState({ isLoding: false });
       handleServerErrors(error, toast.error);
     });
+*/
 };
 
   toggle = (id) => {
@@ -157,24 +161,31 @@ ExtractEventTrends = (conference_event_name_abbr) => {
 
   eventstoggle = (id) => {
     this.setState({
-      eventsmodal: !this.state.eventsmodal,
+      publicationsmodal: !this.state.publicationsmodal,
     });
   };
 
+  wordstoggle = (id) => {
+    this.setState({
+        wordcloudmodal: !this.state.wordcloudmodal,
+    });
+  };
 
+  selectCountValue = (e) => {
+    this.setState({
+      count: e.value
+    })
+  }
 
-
-
+   
 
   render() {
 
     var {
-      
-      selectyear,
       available,
       selectedOption,
-
-    
+      count,
+      numbers,
     } = this.state;
 
     return (
@@ -188,7 +199,7 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                   <Row style={{ alignItems: "center" }}>
                     <Col>
                       <h2 className="mb-0">
-                        Choose a Conference
+                       Conference Authors Dashboard
                       </h2>
                     </Col>
                   </Row>
@@ -225,7 +236,7 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                   <Row style={{ alignItems: "center" }}>
                     <Col>
                       <h2 className="mb-0">
-                        Conferences List
+                        Authors List
                       </h2>
                     </Col>
                   </Row>
@@ -240,6 +251,7 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                       <th scope="col">name</th>
                       <th scope="col">semantic scholar url</th>
                       <th scope="col">No. of papers</th>
+                      <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
 
                     </tr>
@@ -271,8 +283,13 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                           <td>{value.no_of_papers}</td>
                          
                           <td className="text-center">
-                              <Button color="secondary" onClick={() => this.getConferenceEventsData(value.conference_name_abbr)} width = "50px">
-                                Stored Events
+                              <Button color="secondary" onClick={() => this.ExtractAuthorTrends(value.conference_name_abbr)} width = "50px">
+                                Interests Cloud
+                              </Button>    
+                          </td>
+                          <td className="text-center">
+                              <Button color="secondary" onClick={() => this.getListPublications(value.conference_name,value.semantic_scholar_author_id)} width = "50px">
+                                Publications in {value.conference_name} 
                               </Button>    
                           </td>
                         </tr>
@@ -290,20 +307,17 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                 </Table>
               </Card>
                <div>
-                <Modal isOpen={this.state.eventsmodal} toggle={this.eventstoggle} size="lg">
+                <Modal isOpen={this.state.publicationsmodal} toggle={this.eventstoggle} size="lg">
                   <ModalHeader toggle={this.eventstoggle}>Conference Events</ModalHeader>
                   <ModalBody>
 
                   <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">Conference</th>
-                      <th scope="col">Conference Event</th>
-                      {/*<th scope="col">URL</th>*/}
-                      <th scope="col">Conference URL</th>
-                      <th scope="col">No. Stored Papers</th>
-                      <th scope="col" width="5"></th>
-                      <th scope="col" width="5"></th>
+                      <th scope="col">title</th>
+                      <th scope="col">conference event</th>
+                      <th scope="col">semantic scholar url</th>
+                      <th scope="col">paper doi</th>
                     </tr>
                   </thead>
                   
@@ -325,18 +339,13 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                           />
                         </td>
                       </tr>
-                    ) : this.state.conferenceEvents.length ? (
-                      this.state.conferenceEvents.map((value, index) => (
+                    ) : this.state.authorPublications.length ? (
+                      this.state.authorPublications.map((value, index) => (
                         <tr>
-                          <td>{value.conference_name_abbr}</td>
-                          <td>{value.conference_event_name_abbr}</td>
-                          <td><a href = {value.conference_event_url}>{value.conference_event_url}</a></td>
-                          <td>{value.no_of_stored_papers}</td>                         
-                          <td className="text-center" style={{ width: "5"}}>
-                            <Button color="secondary" onClick={() => this.ExtractEventTrends(value.conference_event_name_abbr)} width = "50px">
-                            Extract Trends
-                            </Button>
-                          </td>
+                          <td>{value.title}</td>
+                          <td>{value.conference_event}</td>
+                          <td><a href = {value.semantic_scholar_url}>{value.semantic_scholar_url}</a></td>
+                          <td>{value.paper_doi}</td>                         
                         </tr>
                       ))
                     ) : (
@@ -353,6 +362,29 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={this.eventstoggle}>
+                      OK
+                    </Button>
+                  </ModalFooter>
+                </Modal>
+              </div>
+
+
+
+              <div>
+                <Modal isOpen={this.state.wordcloudmodal} toggle={this.wordstoggle} size="lg">
+                  <ModalHeader toggle={this.wordstoggle}>Author Topic/Keyword cloud</ModalHeader>
+                  <ModalBody>
+                        <Label>Select the number of topics/keywords</Label>
+                        <div style={{width: '200px'}}>
+                        <Select
+                            placeholder="Select number"
+                            options={numbers} value={numbers.find(obj => obj.value === count)}
+                            onChange={this.selectCountValue}
+                        />
+                        </div>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="primary" onClick={this.wordstoggle}>
                       OK
                     </Button>
                   </ModalFooter>

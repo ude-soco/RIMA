@@ -180,7 +180,23 @@ class RestAPI {
   }
 
   
-  //** GET LIST COnference Events API  BAB**//
+//** GET LIST PUBLICATIONS OF AN AUTHOR WITHIN A CONFERENCE  **//
+static getListPublications(conference_name_abbr,author_id) {
+  const TOKEN = getItem("accessToken");
+  return axios({
+    method: "get",
+    url: `${BASE_URL}/api/conferences/AuthorPublication/${conference_name_abbr}/${author_id}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Token ${TOKEN}`,
+    },
+  }).then((res) => res);
+}
+
+
+
+  //** GET LIST Conference Events API  BAB**//
   static getListConfercneEvents(conference_name_abbr) {
     const TOKEN = getItem("accessToken");
     return axios({
