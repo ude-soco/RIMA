@@ -11,6 +11,9 @@ import Select from "react-select";
 import "d3-transition";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import ReactWordcloud from "react-wordcloud";
+
 
 
 
@@ -40,7 +43,22 @@ import {
   Label,
 } from "reactstrap";
 
+const options = {
 
+    colors: ["#90EE90", "#0BDA51", "#17B169", "#03C03C", "#00693E"],
+    enableTooltip: true,
+    deterministic: true,
+    fontFamily: "Arial",
+    fontSizes: [15, 45],
+    fontStyle: "oblique",
+    fontWeight: "normal",
+    padding: 3,
+    rotations: 1,
+    rotationAngles: [0, 90],
+    scale: "sqrt",
+    spiral: "archimedean",
+    transitionDuration: 1000
+  };
 
 class authorDashboard extends React.Component {
   state = {
@@ -51,11 +69,17 @@ class authorDashboard extends React.Component {
     url: "",
     year: "",
     id: "",
-    count: "",
- 
+    count: "10",
+    items: [],
+    length: 0,
+    active1: true,
+    active2: false,
 
     publicationsmodal: "",
     wordcloudmodal :"",
+
+    currentAuthor:"",
+    conferenceName:"",
 
     available: 
         [
@@ -99,8 +123,8 @@ this.getConferenceAuthorsData(selectedOption.value);
 };
 
   //** GET ALL CONFERENCES **//
-  getConferenceAuthorsData = (conference_name_abbr) => {
-    RestAPI.getListConferenceAuthors(conference_name_abbr)
+  getConferenceAuthorsData = (conference_name) => {
+    RestAPI.getListConferenceAuthors(conference_name)
       .then((response) => {
         this.setState({
           isLoding: false,
@@ -116,8 +140,8 @@ this.getConferenceAuthorsData(selectedOption.value);
 
 
 //** GET ALL CONFERENCE EVENTS **//
-getListPublications = (conference_name_abbr,author_id) => {
-  RestAPI.getListPublications(conference_name_abbr,author_id)
+getListPublications = (conference_name,author_id) => {
+  RestAPI.getListPublications(conference_name,author_id)
     .then((response) => {
       this.setState({
         isLoding: false,
@@ -131,26 +155,16 @@ getListPublications = (conference_name_abbr,author_id) => {
     });
 };
 
-//** EXTRACT TRENDS OF AN EVENT **//
-ExtractAuthorTrends = (conference_event_name_abbr) => {
+//** EXTRACT INTERESTS OF AN AUTHOR **//
+ExtractAuthorInterests = (conference_name,author_id) => {
     this.setState({
         isLoding: false,
         wordcloudmodal: !this.state.wordcloudmodal,
+        currentAuthor:author_id,
+        conferenceName:conference_name
       });
-/*
-  RestAPI.ExtractEventTrends(conference_event_name_abbr)
-    .then((response) => {
-      this.setState({
-        isLoding: false,
-        wordcloudmodal: !this.state.wordcloudmodal,
-        authorPublications: response.data,
-      });
-    })
-    .catch((error) => {
-      this.setState({ isLoding: false });
-      handleServerErrors(error, toast.error);
-    });
-*/
+      
+    this.selectKeyword(conference_name,author_id)
 };
 
   toggle = (id) => {
@@ -159,7 +173,7 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
     });
   };
 
-  eventstoggle = (id) => {
+  publicationstoggle = (id) => {
     this.setState({
       publicationsmodal: !this.state.publicationsmodal,
     });
@@ -169,6 +183,7 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
     this.setState({
         wordcloudmodal: !this.state.wordcloudmodal,
     });
+
   };
 
   selectCountValue = (e) => {
@@ -177,7 +192,43 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
     })
   }
 
+  selectTopic = (conference_name,author_id) => {
+    fetch(`${BASE_URL_CONFERENCE}` + "wordCloudAuthor/topic/" + this.state.count + "/" + conference_name+"/"+author_id)
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          isLoaded: true,
+          items: json.words,
+          length: json.words.length,
+          active1: true,
+          active2: false
+          
+        })
+      });
+
+  }
+  // BAB 08.06.2021 
+
+  selectKeyword = (conference_name,author_id) => {
+    console.log("count", this.state.count)
+    console.log("conf", conference_name)
+    console.log("id", author_id)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordCloudAuthor/keyword/" + this.state.count + "/" + conference_name+"/"+author_id)
+        .then(response => response.json())
+        .then(json => {
+            this.setState({
+            isLoaded: true,
+            items: json.words,
+            length: json.words.length,
+            active1: false,
+            active2: true
+            
+            })
+        });
+
+  }
    
+
 
   render() {
 
@@ -283,7 +334,7 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
                           <td>{value.no_of_papers}</td>
                          
                           <td className="text-center">
-                              <Button color="secondary" onClick={() => this.ExtractAuthorTrends(value.conference_name_abbr)} width = "50px">
+                              <Button color="secondary" onClick={() => this.ExtractAuthorInterests(value.conference_name,value.semantic_scholar_author_id)} width = "50px">
                                 Interests Cloud
                               </Button>    
                           </td>
@@ -307,15 +358,15 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
                 </Table>
               </Card>
                <div>
-                <Modal isOpen={this.state.publicationsmodal} toggle={this.eventstoggle} size="lg">
-                  <ModalHeader toggle={this.eventstoggle}>Conference Events</ModalHeader>
+                <Modal isOpen={this.state.publicationsmodal} toggle={this.publicationstoggle} size="lg">
+                  <ModalHeader toggle={this.publicationstoggle}>Conference Events</ModalHeader>
                   <ModalBody>
 
                   <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">title</th>
                       <th scope="col">conference event</th>
+                      <th scope="col">title</th>
                       <th scope="col">semantic scholar url</th>
                       <th scope="col">paper doi</th>
                     </tr>
@@ -342,8 +393,8 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
                     ) : this.state.authorPublications.length ? (
                       this.state.authorPublications.map((value, index) => (
                         <tr>
-                          <td>{value.title}</td>
                           <td>{value.conference_event}</td>
+                          <td>{value.title}</td>
                           <td><a href = {value.semantic_scholar_url}>{value.semantic_scholar_url}</a></td>
                           <td>{value.paper_doi}</td>                         
                         </tr>
@@ -361,7 +412,7 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
                   </Table>
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={this.eventstoggle}>
+                    <Button color="primary" onClick={this.publicationstoggle}>
                       OK
                     </Button>
                   </ModalFooter>
@@ -371,7 +422,7 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
 
 
               <div>
-                <Modal isOpen={this.state.wordcloudmodal} toggle={this.wordstoggle} size="lg">
+                <Modal isOpen={this.state.wordcloudmodal} toggle={this.wordstoggle}  size="lg" >
                   <ModalHeader toggle={this.wordstoggle}>Author Topic/Keyword cloud</ModalHeader>
                   <ModalBody>
                         <Label>Select the number of topics/keywords</Label>
@@ -380,6 +431,17 @@ ExtractAuthorTrends = (conference_event_name_abbr) => {
                             placeholder="Select number"
                             options={numbers} value={numbers.find(obj => obj.value === count)}
                             onChange={this.selectCountValue}
+                        />
+                        </div>
+                        <br/>
+                        <br/>                               
+                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Topic</Button>{' '}
+                        <Button color="primary" outline active={this.state.active2} onClick={() => this.selectKeyword(this.state.conferenceName,this.state.currentAuthor)}>Keyword</Button>
+                        <div>
+                            <ReactWordcloud
+                            id="tpc_cloud"
+                            options={options}
+                            words={this.state.items}
                         />
                         </div>
                   </ModalBody>

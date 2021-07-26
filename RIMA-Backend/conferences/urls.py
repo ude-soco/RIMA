@@ -19,6 +19,7 @@ urlpatterns = [
     path('searchConf/', views.searchConfView.as_view()), # BAB
 
     path('wordcloud/<pk1>/<pk2>/<pk3>', views.WordCloudView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
+    path('wordCloudAuthor/<pk1>/<pk2>/<pk3>/<pk4>', views.AuthorWordCloudView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK
 
      # TO BE REMOVED
     #path('lakkeywords/<pk1>/<pk2>/<pk3>', views.KeywordsView.as_view()),  #BAB 08.06.2021 Extension for other conferences other than LAK 

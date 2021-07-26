@@ -240,6 +240,8 @@ static getListPublications(conference_name_abbr,author_id) {
       },
     }).then((res) => res);
   }
+  
+
 
   //** GET LIST PAPER API **//
   static getListPaper() {

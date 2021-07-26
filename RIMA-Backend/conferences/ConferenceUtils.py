@@ -138,10 +138,18 @@ def getAuthorsData(conference_name_abbr):
     sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
     return sorted_data
 
+def getAuthorInterests(publications_list,author_id):
+    
+    return ""
 
-def getAuthorPublicationsInConf(conference_name_abbr,author_id):
+
+def getAuthorPublicationsInConf(author_id, conference_name_abbr, conference_event_name_abbr =""):
     result_data = []
-    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr,author_id_id=author_id)
+    if conference_event_name_abbr == "":
+        author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr,author_id_id=author_id)
+    else:
+        author_has_papers_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id=conference_event_name_abbr,author_id_id=author_id)
+
     for author_has_papers_obj in author_has_papers_objs:
         paper_data = Conference_Event_Paper.objects.get(paper_id=author_has_papers_obj.paper_id_id)
         result_data.append({
@@ -155,6 +163,7 @@ def getAuthorPublicationsInConf(conference_name_abbr,author_id):
    
     sorted_data = sorted(result_data, key=lambda k: k['conference_event'], reverse=True)
     return sorted_data
+
 
 def addDataToKeywordAndTopicModels(conference_event_name_abbr):
     abstract_title_str = ""
@@ -206,6 +215,7 @@ def addDataToKeywordAndTopicModels(conference_event_name_abbr):
    
 
     return True
+
 
 
 

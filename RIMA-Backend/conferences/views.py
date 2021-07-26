@@ -240,7 +240,7 @@ class AuthorPublications(APIView):
         author_id = url_splits[-1]
         conference_name_abbr = url_splits[-2]
         
-        result_data = confutils.getAuthorPublicationsInConf(conference_name_abbr,author_id)
+        result_data = confutils.getAuthorPublicationsInConf(author_id,conference_name_abbr)
         return Response(result_data)        
 
 '''
@@ -280,6 +280,36 @@ class WordCloudView(APIView):
         })
         
 
+class AuthorWordCloudView(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        keyword_or_topic = url_splits[-3]
+        number = url_splits[-2]
+        conference_event_name_abbr = url_splits[-1]
+        result_data = []
+
+        if keyword_or_topic == "topic":
+            models_data  = confutils.getTopicsfromModels(conference_event_name_abbr)
+        elif keyword_or_topic == "keyword":
+            models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
+
+        if number == '5':
+            reduced_models_data  = models_data[:5]
+        elif number == '10':
+            reduced_models_data  = models_data[:10]
+
+        for model_data in reduced_models_data:
+            result_data.append({
+                "text" : model_data[keyword_or_topic],
+                "value": model_data['weight'],
+
+            })
+        
+        return Response({
+            "words":
+            result_data
+        })
+        
 
 '''
 View to get topics for the pie chart
