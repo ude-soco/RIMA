@@ -153,9 +153,10 @@ class Author_Event_keyword(models.Model):
 
 class Author_has_Keyword(models.Model):
     author_id = models.ForeignKey(Author, on_delete=CASCADE, related_name= 'authors_keywords')
-    conference_event_name_abbr = models.ForeignKey(Conference_Event, on_delete=CASCADE)
+    conference_event_name_abbr = models.ForeignKey(Conference_Event, on_delete=CASCADE, null=True, blank=True)
     keyword_id = models.ForeignKey(Author_Event_keyword, on_delete=CASCADE, related_name= 'authorhaskeywords')
     weight = models.IntegerField(null=True)
+    all_events = models.BooleanField(default=False)
     
     class Meta:
         unique_together = (("author_id", "keyword_id","conference_event_name_abbr"),)

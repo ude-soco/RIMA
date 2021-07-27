@@ -291,15 +291,15 @@ class AuthorWordCloudView(APIView):
         result_data = []
         publications_list = confutils.getAuthorPublicationsInConf(author_id, conference_name_abbr)
 
-        print('publications_list')
-        print(len(publications_list))
-        print('publications_list')
+        #print('publications_list')
+        #print(len(publications_list))
+        #print('publications_list')
 
 
         if keyword_or_topic == "topic":
-            extracted_data  = confutils.getAuthorInterests(publications_list,conference_name_abbr,keyword_or_topic)
+            extracted_data  = confutils.getAuthorInterests(publications_list,author_id,keyword_or_topic)
         elif keyword_or_topic == "keyword":
-            extracted_data  = confutils.getAuthorInterests(publications_list,conference_name_abbr,keyword_or_topic)
+            extracted_data  = confutils.getAuthorInterests(publications_list,author_id,keyword_or_topic)
         
         for key,value in extracted_data.items(): 
             inter_data.append({
@@ -311,22 +311,19 @@ class AuthorWordCloudView(APIView):
         print(inter_data)
         print('######### ++++++++++++############## inter_data ############# +++++++++++++++ ############')
 
-        """
-        if number == '5':
-            reduced_extracted_data  = extracted_data[:5]
-        elif number == '10':
-            reduced_extracted_data  = extracted_data[:10]
-        
-        for data in reduced_extracted_data:
-            result_data.append({
-                "text" : data[keyword_or_topic],
-                "value": data['weight'],
+        sorted_data = sorted(inter_data, key=lambda k: k['value'],reverse=True)
 
-            })
-        """
+        
+        if number == '5':
+            sorted_data  = sorted_data[:5]
+        elif number == '10':
+            sorted_data  = sorted_data[:10]
+        
+       
+        
         return Response({
             "words":
-            inter_data
+            sorted_data
         })
         
 

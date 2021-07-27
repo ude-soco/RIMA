@@ -6,7 +6,9 @@ from .models import (Author, Author_has_Papers, Event_has_Topic
                     ,Conference
                     ,Conference_Event_Paper
                     ,Conf_Event_keyword
-                    ,Event_has_keyword)                  
+                    ,Event_has_keyword
+                    ,Author_Event_keyword
+                    ,Author_has_Keyword)                  
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
@@ -138,18 +140,64 @@ def getAuthorsData(conference_name_abbr):
     sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
     return sorted_data
 
+#bab under work
 def getAuthorInterests(publications_list,author_id,keyword_or_topic):
     abstract_title_str = ""
-
+    data = []
+    keywords = {}
+    
     for publication in publications_list:
         if publication['title'] and publication['abstract']:
                 abstract_title_str +=  publication['title'] + " " + publication['abstract']
 
     if keyword_or_topic == 'keyword':
-        keywords = getKeyword(abstract_title_str, 'Yake', 30)
-        return keywords
+        stored_keyword_all_events_check = Author_has_Keyword.objects.filter(author_id = author_id,all_events = True).exists()
+        if not stored_keyword_all_events_check: 
+                
+            keywords = getKeyword(abstract_title_str, 'Yake', 30)
+            print('here!!!!!!!!')
+            print(author_id)
+            print('here!!!!!!!!')
+            author_obj = Author.objects.get(semantic_scolar_author_id =author_id)
+            for key,value in keywords.items():
+                stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
+                if not stored_keyword_check:
+                    author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
+                    author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
+                                                                keyword_id =author_event_keyword_obj,
+                                                                weight = value,
+                                                                all_events = True)
+                else:
+                    stored_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
+                    author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
+                                                            keyword_id =stored_keyword_obj,
+                                                            weight = value,
+                                                            all_events = True)
+                author_has_keyword_obj.save()
+
+            return keywords
+        else:
+            author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
+
+            for author_has_keyword_obj in author_has_keyword_objs:
+                author_event_keyword_obj = Author_Event_keyword.objects.get(keyword_id=author_has_keyword_obj.keyword_id_id)
+                
+                keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight    
+               
+                
+            return keywords
+
     elif keyword_or_topic == 'topic':
-        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
+
+        for author_has_keyword_obj in author_has_keyword_objs:
+            author_event_keyword_obj = Author_Event_keyword.objects.get(keyword_id=author_has_keyword_obj.keyword_id_id)
+            
+            keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight
+
+
+        #keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        
         relation, final = wikifilter(keywords)
         return final
 

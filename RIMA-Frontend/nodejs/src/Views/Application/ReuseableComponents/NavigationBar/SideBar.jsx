@@ -301,7 +301,7 @@ export default function SideBar({selection, setSelection}) {
                     onClick={handleSelect}
                     className={selectedList("viewAuthor")}>
             <ListItemIcon className={classes.listIconNested}>
-              <MultilineChartIcon className={selectedList("viewAuthor")}/>
+              <DashboardIcon className={selectedList("viewAuthor")}/>
             </ListItemIcon>
             <ListItemText primary="Author Dashboard"/>
           </ListItem>

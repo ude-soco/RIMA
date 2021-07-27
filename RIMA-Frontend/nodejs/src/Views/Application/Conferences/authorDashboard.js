@@ -193,11 +193,15 @@ ExtractAuthorInterests = (conference_name,author_id) => {
   }
 
   selectTopic = (conference_name,author_id) => {
+    this.setState({ //isLoding: true,
+      isLoaded: true })
+
     fetch(`${BASE_URL_CONFERENCE}` + "wordCloudAuthor/topic/" + this.state.count + "/" + conference_name+"/"+author_id)
       .then(response => response.json())
       .then(json => {
         this.setState({
-          isLoaded: true,
+          //isLoding: false,
+          isLoaded: false,
           items: json.words,
           length: json.words.length,
           active1: true,
@@ -217,7 +221,7 @@ ExtractAuthorInterests = (conference_name,author_id) => {
         .then(response => response.json())
         .then(json => {
             this.setState({
-            isLoaded: true,
+            //isLoaded: true,
             items: json.words,
             length: json.words.length,
             active1: false,
@@ -425,7 +429,7 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                 <Modal isOpen={this.state.wordcloudmodal} toggle={this.wordstoggle}  size="lg" >
                   <ModalHeader toggle={this.wordstoggle}>Author Topic/Keyword cloud</ModalHeader>
                   <ModalBody>
-                        <Label>Select the number of topics/keywords</Label>
+                        <Label>Select the number of keywords</Label>
                         <div style={{width: '200px'}}>
                         <Select
                             placeholder="Select number"
@@ -434,15 +438,47 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                         />
                         </div>
                         <br/>
+
                         <br/>                               
-                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Topic</Button>{' '}
+                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Extract and show Topics</Button>{' '}
                         <Button color="primary" outline active={this.state.active2} onClick={() => this.selectKeyword(this.state.conferenceName,this.state.currentAuthor)}>Keyword</Button>
                         <div>
+
+
+
+
+                        {this.state.isLoaded ? (
+                          <tr className="text-center" style={{ padding: "20px" }}>
+                            <td></td>
+                            <td></td>
+                            <td style={{ textAlign: "center" }}>
+                              {" "}
+                              <Loader
+                                type="Puff"
+                                color="#00BFFF"
+                                height={100}
+                                width={100}
+                              />
+                            </td>
+                          </tr>
+                        ):(
                             <ReactWordcloud
                             id="tpc_cloud"
                             options={options}
                             words={this.state.items}
                         />
+                        )
+                        /*
+                        : (
+                          <tr className="text-center1" style={{ padding: "20px" }}>
+                            <td></td>
+                            <td style={{ textAlign: "right" }}>
+                              {" "}
+                              <strong> No keywords Found</strong>
+                            </td>
+                          </tr>
+                        )}
+                        */ }
                         </div>
                   </ModalBody>
                   <ModalFooter>
