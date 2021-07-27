@@ -283,31 +283,50 @@ class WordCloudView(APIView):
 class AuthorWordCloudView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
-        keyword_or_topic = url_splits[-3]
-        number = url_splits[-2]
-        conference_event_name_abbr = url_splits[-1]
+        keyword_or_topic = url_splits[-4]
+        number = url_splits[-3]
+        conference_name_abbr = url_splits[-2]
+        author_id = url_splits[-1]
+        inter_data = []
         result_data = []
+        publications_list = confutils.getAuthorPublicationsInConf(author_id, conference_name_abbr)
+
+        print('publications_list')
+        print(len(publications_list))
+        print('publications_list')
+
 
         if keyword_or_topic == "topic":
-            models_data  = confutils.getTopicsfromModels(conference_event_name_abbr)
+            extracted_data  = confutils.getAuthorInterests(publications_list,conference_name_abbr,keyword_or_topic)
         elif keyword_or_topic == "keyword":
-            models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
+            extracted_data  = confutils.getAuthorInterests(publications_list,conference_name_abbr,keyword_or_topic)
+        
+        for key,value in extracted_data.items(): 
+            inter_data.append({
+                "text" : key,
+                "value": value,
+            })
 
+        print('######### ++++++++++++############## inter_data ############# +++++++++++++++ ############')
+        print(inter_data)
+        print('######### ++++++++++++############## inter_data ############# +++++++++++++++ ############')
+
+        """
         if number == '5':
-            reduced_models_data  = models_data[:5]
+            reduced_extracted_data  = extracted_data[:5]
         elif number == '10':
-            reduced_models_data  = models_data[:10]
-
-        for model_data in reduced_models_data:
+            reduced_extracted_data  = extracted_data[:10]
+        
+        for data in reduced_extracted_data:
             result_data.append({
-                "text" : model_data[keyword_or_topic],
-                "value": model_data['weight'],
+                "text" : data[keyword_or_topic],
+                "value": data['weight'],
 
             })
-        
+        """
         return Response({
             "words":
-            result_data
+            inter_data
         })
         
 

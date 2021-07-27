@@ -31,7 +31,6 @@ def wikifilter(keyword):
         data = json.loads(query.text)
         PAGES = data["query"]["pages"]
         for v in PAGES.values():
-            print('VVVVVVVVVVVVVVV',v)
             redirect[ca] = v["title"]
             relation[v["title"]] = ca
             final[v["title"]] = 0

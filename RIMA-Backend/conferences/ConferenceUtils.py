@@ -138,8 +138,28 @@ def getAuthorsData(conference_name_abbr):
     sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
     return sorted_data
 
-def getAuthorInterests(publications_list,author_id):
-    
+def getAuthorInterests(publications_list,author_id,keyword_or_topic):
+    abstract_title_str = ""
+
+    for publication in publications_list:
+        if publication['title'] and publication['abstract']:
+                abstract_title_str +=  publication['title'] + " " + publication['abstract']
+
+    if keyword_or_topic == 'keyword':
+        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        return keywords
+    elif keyword_or_topic == 'topic':
+        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        relation, final = wikifilter(keywords)
+        return final
+
+    #sorted_data = sorted(data, key=lambda k: k['weight'],reverse=True)
+    #print('########++++++#######')
+    #print(keywords) 
+    #print('+++++++++++++++++++')
+    #print(final)
+    #print('########++++++#######')
+
     return ""
 
 
