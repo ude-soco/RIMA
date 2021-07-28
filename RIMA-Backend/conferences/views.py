@@ -117,11 +117,26 @@ class ExtractEventTrendsView(ListCreateAPIView):
    
     def get(self, request, *args, **kwargs):
         data = [{}]
-        url_path = self.request.get_full_path()
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        confutils.addDataToConferenceKeywordAndTopicModels(topics_split[-1])
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        conference_event_name_abbr = url_splits[-1]
+
+        confutils.addDataToConferenceKeywordAndTopicModels(conference_event_name_abbr)
         return Response(data)
+
+
+
+class ExtractAuthorsTrendsView(ListCreateAPIView): 
+    def get(self, request, *args, **kwargs):
+        data = [{}]
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        conference_event_name_abbr = url_splits[-1]
+
+        print(url_splits)
+        print(conference_event_name_abbr)
+        confutils.addDataToAuthorKeywordAndTopicModels(conference_event_name_abbr)
+        return Response(data)
+
+
 '''
 BAB Add Conference View
 

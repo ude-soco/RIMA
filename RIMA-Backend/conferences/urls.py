@@ -14,7 +14,8 @@ urlpatterns = [
     path('AuthorPublication/<pk1>/<pk2>', views.AuthorPublications.as_view()),
 
     path('collectEventPapers/<slug:conference_name_abbr>/<slug:conference_event_name_abbr>', views.CollectEventPapersView.as_view()), # BAB
-    path('ExtractEventTrends/<slug:conference_event_name_abbr>', views.ExtractEventTrendsView.as_view()), # BAB
+    path('ExtractEventTrends/<slug:conference_event_name_abbr>', views.ExtractEventTrendsView.as_view()), # BAB 
+    path('ExtractAuthorsTrends/<slug:conference_event_name_abbr>', views.ExtractAuthorsTrendsView.as_view()),
 
     path('searchConf/', views.searchConfView.as_view()), # BAB
 

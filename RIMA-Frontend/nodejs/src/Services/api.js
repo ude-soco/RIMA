@@ -242,6 +242,19 @@ static getListPublications(conference_name_abbr,author_id) {
   }
   
 
+  //** EXTRACT TRENDS OF THE AUTHORS OF AN EVENT **//
+  static ExtractAuthorsTrends(conference_event_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/ExtractAuthorsTrends/${conference_event_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
 
   //** GET LIST PAPER API **//
   static getListPaper() {

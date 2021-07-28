@@ -357,7 +357,7 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                           </td>
                           <td className="text-center">
                               <Button color="secondary" onClick={() => this.getListPublications(value.conference_name,value.semantic_scholar_author_id)} width = "50px">
-                                Publications in {value.conference_name} 
+                                Stored Publications in {value.conference_name} 
                               </Button>    
                           </td>
                         </tr>

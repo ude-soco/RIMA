@@ -96,7 +96,9 @@ def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr)
             print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
 
             for author_data in authors:
-                addDataToAuthorModels(author_data,event_paper,conference_obj,conference_event_obj)
+                print(author_data)
+                if author_data['authorId']:
+                    addDataToAuthorModels(author_data,event_paper,conference_obj,conference_event_obj)
                 print(author_data)
     
    
@@ -237,6 +239,30 @@ def getAuthorPublicationsInConf(author_id, conference_name_abbr, conference_even
    
     sorted_data = sorted(result_data, key=lambda k: k['conference_event'], reverse=True)
     return sorted_data
+
+# under work
+def addDataToAuthorKeywordAndTopicModels(conference_event_name_abbr):
+    authors_publications_dicts_list = []
+    publications = []
+    authors_publications_event_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id = conference_event_name_abbr).values_list('author_id', flat=True).order_by('author_id').distinct()
+    print(Author_has_Papers.objects.filter(conference_event_name_abbr_id = conference_event_name_abbr).count())
+    
+    for author in  authors_publications_event_objs:
+        authors_publications_objs = Author_has_Papers.objects.filter(author_id_id =author)
+
+        for author_publications_obj in authors_publications_objs:
+            publications.append(author_publications_obj.paper_id_id)
+        
+        authors_publications_dicts_list.append({
+            'author_id': author,
+            'publications': publications,
+        })
+        publications = []   
+        
+    print(authors_publications_dicts_list)
+
+  
+    return ""
 
 
 def addDataToConferenceKeywordAndTopicModels(conference_event_name_abbr):
