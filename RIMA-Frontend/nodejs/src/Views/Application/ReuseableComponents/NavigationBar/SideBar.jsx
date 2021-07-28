@@ -282,7 +282,7 @@ export default function SideBar({selection, setSelection}) {
               <ListItemIcon className={classes.listIconNested}>
                 <MeetingRoomOutlined className={selectedList("viewConference")}/>
               </ListItemIcon>
-              <ListItemText primary="View added Conferences"/>
+              <ListItemText primary="Stored Conferences"/>
             </ListItem>
 
           <ListItem button id="topicTrends"

@@ -421,9 +421,11 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                        
                           
                           <td className="text-center">
-                              <Button color="secondary" onClick={() => this.getSelectedValueBAB()} width = "50px">
-                              Add Event
-                              </Button> 
+                          <Link to={"/app/view-author"}>
+                              <Button color="secondary"  width = "50px">
+                              Authors Dashboard
+                              </Button>
+                           </Link> 
                           </td>
                           <td className="text-center">
                               <Button color="secondary" onClick={() => this.getConferenceEventsData(value.conference_name_abbr)} width = "50px">
@@ -564,12 +566,12 @@ ExtractEventTrends = (conference_event_name_abbr) => {
                           <td>{value.no_of_stored_papers}</td>                         
                           <td className="text-center" style={{ width: "5"}}>
                             <Button color="secondary" onClick={() => this.collectEventPapers(value.conference_name_abbr, value.conference_event_name_abbr)} width = "50px">
-                             Collect Papers
+                             Collect Publications
                             </Button>
                           </td >
                           <td className="text-center" style={{ width: "5"}}>
                             <Button color="secondary" onClick={() => this.ExtractEventTrends(value.conference_event_name_abbr)} width = "50px">
-                            Extract Trends
+                            Extract Keywords/Topics
                             </Button>
                           </td>
                         </tr>

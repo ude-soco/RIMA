@@ -71,30 +71,33 @@ def addDataToConfPaperAndAuthorModels(conference_name_abbr,conf_event_name_abbr)
     data = dataCollector.extract_papers_data(data)
 
     for paper_data in data['paper_data']:
-        event_paper = Conference_Event_Paper.objects.create(
-        conference_event_name_abbr = conference_event_obj,
-        paper_id = paper_data['paperId'],
-        paper_doi = paper_data['doi'],
-        title = paper_data['title'],
-        url = paper_data['url'],
-        year = paper_data['year'],
-        abstract = paper_data['abstract'],
-        #no_of_cititations = paper_data['doi'],
-        citiations = len(paper_data['citations']),
-        paper_venu = paper_data['venue'],
-        conference_name_abbr = conference_name_abbr
-        )
-        event_paper.save()
-        authors = paper_data['authors']
+        if Conference_Event_Paper.objects.filter(paper_id = paper_data['paperId']).exists():
+            pass
+        else:
+            event_paper = Conference_Event_Paper.objects.create(
+            conference_event_name_abbr = conference_event_obj,
+            paper_id = paper_data['paperId'],
+            paper_doi = paper_data['doi'],
+            title = paper_data['title'],
+            url = paper_data['url'],
+            year = paper_data['year'],
+            abstract = paper_data['abstract'],
+            #no_of_cititations = paper_data['doi'],
+            citiations = len(paper_data['citations']),
+            paper_venu = paper_data['venue'],
+            conference_name_abbr = conference_name_abbr
+            )
+            event_paper.save()
+            authors = paper_data['authors']
 
-        print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-        print(conference_event_url)
-        print(authors)
-        print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            print(conference_event_url)
+            print(authors)
+            print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
 
-        for author_data in authors:
-            addDataToAuthorModels(author_data,event_paper,conference_obj,conference_event_obj)
-            print(author_data)
+            for author_data in authors:
+                addDataToAuthorModels(author_data,event_paper,conference_obj,conference_event_obj)
+                print(author_data)
     
    
     #print(data['paper_data'][1])
@@ -151,43 +154,47 @@ def getAuthorInterests(publications_list,author_id,keyword_or_topic):
                 abstract_title_str +=  publication['title'] + " " + publication['abstract']
 
     if keyword_or_topic == 'keyword':
-        stored_keyword_all_events_check = Author_has_Keyword.objects.filter(author_id = author_id,all_events = True).exists()
-        if not stored_keyword_all_events_check: 
+
+        #stored_keyword_all_events_check = Author_has_Keyword.objects.filter(author_id = author_id,all_events = True).exists()
+        #if not stored_keyword_all_events_check: 
                 
-            keywords = getKeyword(abstract_title_str, 'Yake', 30)
-            print('here!!!!!!!!')
-            print(author_id)
-            print('here!!!!!!!!')
-            author_obj = Author.objects.get(semantic_scolar_author_id =author_id)
-            for key,value in keywords.items():
-                stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
-                if not stored_keyword_check:
-                    author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
-                    author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
-                                                                keyword_id =author_event_keyword_obj,
-                                                                weight = value,
-                                                                all_events = True)
-                else:
-                    stored_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
-                    author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
-                                                            keyword_id =stored_keyword_obj,
+        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        """
+        print('here!!!!!!!!')
+        print(author_id)
+        print('here!!!!!!!!')
+        author_obj = Author.objects.get(semantic_scolar_author_id =author_id)
+        for key,value in keywords.items():
+            stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
+            if not stored_keyword_check:
+                author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
+                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
+                                                            keyword_id =author_event_keyword_obj,
                                                             weight = value,
                                                             all_events = True)
-                author_has_keyword_obj.save()
+            else:
+                stored_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
+                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
+                                                        keyword_id =stored_keyword_obj,
+                                                        weight = value,
+                                                        all_events = True)
+            author_has_keyword_obj.save()
 
-            return keywords
-        else:
-            author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
+        return keywords
+            else:
+        author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
 
-            for author_has_keyword_obj in author_has_keyword_objs:
-                author_event_keyword_obj = Author_Event_keyword.objects.get(keyword_id=author_has_keyword_obj.keyword_id_id)
-                
-                keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight    
-               
-                
-            return keywords
+        for author_has_keyword_obj in author_has_keyword_objs:
+            author_event_keyword_obj = Author_Event_keyword.objects.get(keyword_id=author_has_keyword_obj.keyword_id_id)
+            
+            keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight    
+            
+        """  
+        return keywords
 
     elif keyword_or_topic == 'topic':
+
+        """
         author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
 
         for author_has_keyword_obj in author_has_keyword_objs:
@@ -195,9 +202,8 @@ def getAuthorInterests(publications_list,author_id,keyword_or_topic):
             
             keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight
 
-
-        #keywords = getKeyword(abstract_title_str, 'Yake', 30)
-        
+        """
+        keywords = getKeyword(abstract_title_str, 'Yake', 30)
         relation, final = wikifilter(keywords)
         return final
 
@@ -233,7 +239,7 @@ def getAuthorPublicationsInConf(author_id, conference_name_abbr, conference_even
     return sorted_data
 
 
-def addDataToKeywordAndTopicModels(conference_event_name_abbr):
+def addDataToConferenceKeywordAndTopicModels(conference_event_name_abbr):
     abstract_title_str = ""
     conference_event_papers_data = []
 

@@ -109,7 +109,8 @@ class authorDashboard extends React.Component {
 
   
   componentDidMount() {
-    this.setState({ isLoding: true }, this.getConferenceAuthorsData());
+    this.setState({ isLoding: true });
+    this.getConferenceAuthorsData(this.state.selectedOption.value)
   }
 
  
@@ -119,8 +120,8 @@ class authorDashboard extends React.Component {
         selectedOption : selectedOption,
         isLoding: true,
     });
-this.getConferenceAuthorsData(selectedOption.value);
-};
+    this.getConferenceAuthorsData(selectedOption.value);
+  };
 
   //** GET ALL CONFERENCES **//
   getConferenceAuthorsData = (conference_name) => {
@@ -294,6 +295,18 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                         Authors List
                       </h2>
                     </Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col></Col>
+                    <Col style={{ alignItems: "right" }} >
+                    <Link to={"/app/view-conference"}>
+                      <Button color="primary" width = "30px">
+                        Conferences Dashboard
+                      </Button>
+                    </Link> 
+                    </Col>
                   </Row>
                 </CardHeader>
 
@@ -440,8 +453,9 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                         <br/>
 
                         <br/>                               
-                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Extract and show Topics</Button>{' '}
                         <Button color="primary" outline active={this.state.active2} onClick={() => this.selectKeyword(this.state.conferenceName,this.state.currentAuthor)}>Keyword</Button>
+                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Extract and show Topics</Button>{' '}
+
                         <div>
 
 

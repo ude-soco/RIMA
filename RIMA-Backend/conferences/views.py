@@ -120,7 +120,7 @@ class ExtractEventTrendsView(ListCreateAPIView):
         url_path = self.request.get_full_path()
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        confutils.addDataToKeywordAndTopicModels(topics_split[-1])
+        confutils.addDataToConferenceKeywordAndTopicModels(topics_split[-1])
         return Response(data)
 '''
 BAB Add Conference View
