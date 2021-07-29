@@ -8,7 +8,9 @@ from .models import (Author, Author_has_Papers, Event_has_Topic
                     ,Conf_Event_keyword
                     ,Event_has_keyword
                     ,Author_Event_keyword
-                    ,Author_has_Keyword)                  
+                    ,Author_has_Keyword
+                    ,Author_Event_Topic
+                    ,Author_has_Topic)                  
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
@@ -148,73 +150,21 @@ def getAuthorsData(conference_name_abbr):
 #bab under work
 def getAuthorInterests(publications_list,author_id,keyword_or_topic):
     abstract_title_str = ""
-    data = []
     keywords = {}
+    topics = {}
     
     for publication in publications_list:
         if publication['title'] and publication['abstract']:
                 abstract_title_str +=  publication['title'] + " " + publication['abstract']
 
     if keyword_or_topic == 'keyword':
-
-        #stored_keyword_all_events_check = Author_has_Keyword.objects.filter(author_id = author_id,all_events = True).exists()
-        #if not stored_keyword_all_events_check: 
-                
         keywords = getKeyword(abstract_title_str, 'Yake', 30)
-        """
-        print('here!!!!!!!!')
-        print(author_id)
-        print('here!!!!!!!!')
-        author_obj = Author.objects.get(semantic_scolar_author_id =author_id)
-        for key,value in keywords.items():
-            stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
-            if not stored_keyword_check:
-                author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
-                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
-                                                            keyword_id =author_event_keyword_obj,
-                                                            weight = value,
-                                                            all_events = True)
-            else:
-                stored_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
-                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
-                                                        keyword_id =stored_keyword_obj,
-                                                        weight = value,
-                                                        all_events = True)
-            author_has_keyword_obj.save()
-
-        return keywords
-            else:
-        author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
-
-        for author_has_keyword_obj in author_has_keyword_objs:
-            author_event_keyword_obj = Author_Event_keyword.objects.get(keyword_id=author_has_keyword_obj.keyword_id_id)
-            
-            keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight    
-            
-        """  
         return keywords
 
     elif keyword_or_topic == 'topic':
-
-        """
-        author_has_keyword_objs = Author_has_Keyword.objects.filter(author_id=author_id,all_events=True)
-
-        for author_has_keyword_obj in author_has_keyword_objs:
-            author_event_keyword_obj = Author_Event_keyword.objects.get(keyword_id=author_has_keyword_obj.keyword_id_id)
-            
-            keywords[author_event_keyword_obj.keyword]=author_has_keyword_obj.weight
-
-        """
         keywords = getKeyword(abstract_title_str, 'Yake', 30)
-        relation, final = wikifilter(keywords)
-        return final
-
-    #sorted_data = sorted(data, key=lambda k: k['weight'],reverse=True)
-    #print('########++++++#######')
-    #print(keywords) 
-    #print('+++++++++++++++++++')
-    #print(final)
-    #print('########++++++#######')
+        relation, topics = wikifilter(keywords)
+        return topics
 
     return ""
 
@@ -243,23 +193,67 @@ def getAuthorPublicationsInConf(author_id, conference_name_abbr, conference_even
 # under work
 def addDataToAuthorKeywordAndTopicModels(conference_event_name_abbr):
     authors_publications_dicts_list = []
-    publications = []
+    abstract_title_str = ""
+
     authors_publications_event_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id = conference_event_name_abbr).values_list('author_id', flat=True).order_by('author_id').distinct()
-    print(Author_has_Papers.objects.filter(conference_event_name_abbr_id = conference_event_name_abbr).count())
+    print(authors_publications_event_objs.count())
     
     for author in  authors_publications_event_objs:
         authors_publications_objs = Author_has_Papers.objects.filter(author_id_id =author)
 
         for author_publications_obj in authors_publications_objs:
-            publications.append(author_publications_obj.paper_id_id)
+            publication_obj = Conference_Event_Paper.objects.get(paper_id = author_publications_obj.paper_id_id)
+            if publication_obj.title and publication_obj.abstract:
+                abstract_title_str +=  publication_obj.title + " " + publication_obj.abstract
+
+        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
+        author_obj = Author.objects.get(semantic_scolar_author_id =author)
+        for key,value in keywords.items():
+            stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
+            
+            if not stored_keyword_check:
+                author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
+            else:
+                author_event_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
+
+            stored_has_keyword_check = Author_has_Keyword.objects.filter(author_id = author_obj,
+                                                                        keyword_id =author_event_keyword_obj,
+                                                                        conference_event_name_abbr = conference_event_obj).exists()
+            if not stored_has_keyword_check:                                                         
+                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
+                                                            keyword_id =author_event_keyword_obj,
+                                                            weight = value,
+                                                            conference_event_name_abbr = conference_event_obj)
+            else:
+                pass
+            
+            author_has_keyword_obj.save()
+
+        relation, topics = wikifilter(keywords)
+        for key,value in topics.items():
+            stored_topic_check = Author_Event_Topic.objects.filter(topic = key).exists()
+            if not stored_topic_check:
+                conf_event_topic_obj = Author_Event_Topic.objects.create(topic=key,algorithm='Yake')
+            else:
+                conf_event_topic_obj = Author_Event_Topic.objects.get(topic = key)
+            
+            stored_has_topic_check = Author_has_Topic.objects.filter(author_id = author_obj,
+                                                                    topic_id =conf_event_topic_obj,
+                                                                    conference_event_name_abbr = conference_event_obj).exists()
+            if not  stored_has_topic_check:                                                      
+                event_has_topic_obj = Author_has_Topic(author_id = author_obj,
+                                                        topic_id =conf_event_topic_obj,
+                                                        weight = value,
+                                                        conference_event_name_abbr = conference_event_obj)
+            else:
+                pass                
+                                        
+            event_has_topic_obj.save()
+
+        abstract_title_str = ""   
         
-        authors_publications_dicts_list.append({
-            'author_id': author,
-            'publications': publications,
-        })
-        publications = []   
-        
-    print(authors_publications_dicts_list)
+    #print(authors_publications_dicts_list[:3])
 
   
     return ""
