@@ -18,7 +18,7 @@ export default function InterestOverviewComparison ({classes, compareAuthor}) {
         </Grid>
       </Grid>
 
-      <Grid container className={classes.gutterLarge}>
+      <Grid container >
         <Grid item xs={6}>
           <Grid container direction="column" alignItems="center">
             <Typography variant="h5" color="textSecondary">

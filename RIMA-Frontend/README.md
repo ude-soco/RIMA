@@ -1,46 +1,21 @@
-# RIMA - Frontend
+<p align="center">
+<a href="https://rima.sc.inko.cloud/" target="_blank" rel="noopener noreferrer">
+<img height="120px" src="nodejs/public/images/rimaLogo.svg" alt="re-frame logo">
+</a>
+</p>
 
-## Table of Contents
+## Installation Guide for RIMA-Frontend
 
-* [Project Info](#project-info)
-* [Project structure](#project-structure)
-* [Technologies](#technologies)
-* [Additional applications](#Additional-applications)
-* [Setup](#setup)
+1. Download and install [Node.js v.8.9.0](https://nodejs.org/dist/v8.9.0/) from the official website
 
-## Project Info
+2. Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-This consists of the web application made with React and Bootstrap for RIMA project.
+3. Open a command prompt/terminal and move to the `RIMA-Frontend/nodejs` directory
 
-## Project structure
+4. Rename the `.env.example` file to `.env`
 
-TODO
+5. Type `npm install` to install the necessary dependencies for the project
 
-## Technologies
+6. Type `npm start` to run the project
 
-Project is created with:
-
-- [Node.js v.8.9.0](https://nodejs.org/dist/v8.9.0/)
-- [React](https://reactjs.org/docs/getting-started.html)
-- [React-Bootstrap](https://react-bootstrap.github.io/)
-
-## Additional applications
-
-- [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download)
-
-
-## Setup
-
-Step 1:- Download and install [Node.js](https://nodejs.org/dist/v8.9.0/) from the official website
-
-Step 2:- Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
-
-Step 3:- Open a command prompt/terminal and move to the ``RIMA-Frontend/nodejs`` directory
-
-Step 4:- Rename the ``.env.example`` file to ``.env``
-
-Step 5:- Type ``npm install`` to install the necessary dependencies for the project
-
-Step 6:- Type ``npm start`` to run the project
-
-Step 7:- Open [http://localhost:3000](http://localhost:3000/) in a browser
+7. Open [http://localhost:3000](http://localhost:3000/) in a browser

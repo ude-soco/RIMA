@@ -1,0 +1,135 @@
+version: "3"
+
+services:
+  rima-postgres:
+    image: postgres
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=interest_miner_db
+      - POSTGRES_USER=interest_miner
+      - POSTGRES_PASSWORD=interest_miner
+    volumes:
+      - rima-postgres:/var/lib/postgresql/data/
+    networks:
+      - rima-webserver
+
+  rima-redis:
+    image: docker.io/bitnami/redis:latest
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    volumes:
+      - rima-redis:/bitnami/redis/data
+    networks:
+      - rima-webserver
+
+  rima-backend:
+    image: rima-backend
+    build:
+      context: ./RIMA-Backend
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    command:
+      - /bin/bash
+      - -c
+      - |
+        python manage.py migrate
+        python manage.py runserver 0.0.0.0:8000
+    environment:
+      - TWITTER_API_KEY=VHR72dG8nWMZBHYFeyDOlYvV5
+      - TWITTER_API_SECRET=SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X
+      - TWITTER_ACCESS=864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG
+      - TWITTER_ACCESS_SECRET=MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf
+      - TWITTER_CONSUMER_KEY=q3tv2FEcuhreRWO4WYtSAyJAj
+      - TWITTER_CONSUMER_SECRET=vxrXdz8TpiQQhQv7GSHMBliGQoMzGPNMdUpcVercmCYb8UqvzF
+      - TWITTER_ACCESS_TOKEN=1106978050850328578-2HjYKtDlRU3J88emRjV4TmkUapeJWl
+      - TWITTER_ACCESS_TOKEN_SECRET="doG0kjyHoD4tGBUnKTneUDZjUD392dRR3z8PwTJ2Autwm
+      - TWITTER_FETCH_DAYS=180
+      - REDIS_HOST=rima-redis
+      - GLOVE_MODEL_FILE_PATH=datatest_word2vec.txt
+      - POSTGRES_DB=interest_miner_db
+      - POSTGRES_USER=interest_miner
+      - POSTGRES_PASSWORD=interest_miner
+      #- GLOVE_MODEL_FILE_PATH=""
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./RIMA-Backend:/app:ro
+    depends_on:
+      - rima-postgres
+      - rima-redis
+    networks:
+      - rima-webserver
+      - rima-webapp
+
+  rima-worker:
+    image: rima-backend
+    build:
+      context: ./RIMA-Backend
+    restart: unless-stopped
+    command:
+      - /bin/bash
+      - -c
+      - |
+        celery worker --app=interest_miner_api --concurrency=1 -l info
+    environment:
+      - TWITTER_API_KEY=VHR72dG8nWMZBHYFeyDOlYvV5
+      - TWITTER_API_SECRET=SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X
+      - TWITTER_ACCESS=864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG
+      - TWITTER_ACCESS_SECRET=MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf
+      - TWITTER_CONSUMER_KEY=q3tv2FEcuhreRWO4WYtSAyJAj
+      - TWITTER_CONSUMER_SECRET=vxrXdz8TpiQQhQv7GSHMBliGQoMzGPNMdUpcVercmCYb8UqvzF
+      - TWITTER_ACCESS_TOKEN=1106978050850328578-2HjYKtDlRU3J88emRjV4TmkUapeJWl
+      - TWITTER_ACCESS_TOKEN_SECRET="doG0kjyHoD4tGBUnKTneUDZjUD392dRR3z8PwTJ2Autwm
+      - TWITTER_FETCH_DAYS=180
+      - DJANGO_DEBUG="False"
+      - REDIS_HOST=rima-redis
+      - GLOVE_MODEL_FILE_PATH=datatest_word2vec.txt
+      - POSTGRES_DB=interest_miner_db
+      - POSTGRES_USER=interest_miner
+      - POSTGRES_PASSWORD=interest_miner
+      #- GLOVE_MODEL_FILE_PATH=""
+    volumes:
+      - ./RIMA-Backend:/app:ro
+    depends_on:
+      - rima-postgres
+      - rima-redis
+    networks:
+      - rima-webserver
+      - rima-webapp
+
+  rima-frontend:
+    image: rima-frontend
+    build:
+      context: ./RIMA-Frontend/nodejs
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    stdin_open: true
+    environment:
+      - REACT_APP_BASE_URL= http://localhost:8000
+      - REACT_APP_BASE_URL_INTEREST=http://localhost:8000/api/interests/
+      - REACT_APP_TOKEN='cdf895267756d954747b63b9cc56e23fa06ecd29'
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./RIMA-Frontend/nodejs/src:/app/src:ro
+      - ./RIMA-Frontend/nodejs/public:/app/public:ro
+    networks:
+      - rima-webapp
+
+networks:
+  rima-webapp:
+    driver: bridge
+  rima-webserver:
+    driver: bridge
+
+volumes:
+  rima-postgres:
+    driver: local
+  rima-redis:
+    driver: local
