@@ -63,8 +63,7 @@ urlpatterns = [
 
     path('fetchpaper/<pk1>', views.FetchPaperView.as_view()), 
     path('fetchallauthors/', views.AuthorsFetchView.as_view()),
-    # under work
-    path('fetchallauthorsdict/', views.AuthorsDictFetchView.as_view()),
+    #path('fetchallauthorsdict/', views.AuthorsDictFetchView.as_view()),
     path('topicoverview/', views.TopicOverview.as_view()),
 
     path('commontopics/<pk1>/<pk2>/<pk3>', views.VennOverview.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
@@ -96,8 +95,8 @@ urlpatterns = [
          views.CompareAuthorConf.as_view()),
     path('insertauthordb/', views.AuthorDBInsertView.as_view()),
     path('authorcomparison/<pk1>/<pk2>', views.AuthorComparisonData.as_view()),
-    path('authorconfcomparison/<pk1>/<pk2>/<pk3>',
-         views.AuthorConfComparisionView.as_view()),
+    #under work
+    path('authorconfcomparison/<pk1>/<pk2>/<pk3>/<pk4>', views.AuthorConfComparisionView.as_view()),
     path('updatealltopics/', views.UpdateAllTopics.as_view()),
     #added by mouadh
     path('getsimilarity/', views.similartweets.as_view()),

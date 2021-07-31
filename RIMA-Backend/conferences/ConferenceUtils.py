@@ -136,7 +136,8 @@ def getAuthorsData(conference_name_abbr="", conference_event_name_abbr =""):
                                                                 ).values_list('author_id', flat=True
                                                                 ).order_by('author_id').distinct()
 
-
+    print(author_has_papers_objs, 'author_has_papers_objs')
+    
     for author_obj in author_has_papers_objs:
         author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj)
         author_event_papers_objs = Author_has_Papers.objects.filter(author_id_id=author_model_data.semantic_scolar_author_id
@@ -155,7 +156,7 @@ def getAuthorsData(conference_name_abbr="", conference_event_name_abbr =""):
     return sorted_data
 
 #bab under work
-def getAuthorInterests(publications_list,author_id,keyword_or_topic):
+def getAuthorInterests(publications_list,author_id,keyword_or_topic,num = 30):
     abstract_title_str = ""
     keywords = {}
     topics = {}
@@ -165,17 +166,14 @@ def getAuthorInterests(publications_list,author_id,keyword_or_topic):
                 abstract_title_str +=  publication['title'] + " " + publication['abstract']
 
     if keyword_or_topic == 'keyword':
-        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        keywords = getKeyword(abstract_title_str, 'Yake', num)
         return keywords
 
     elif keyword_or_topic == 'topic':
         
-        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        keywords = getKeyword(abstract_title_str, 'Yake', num)
         relation, topics = wikifilter(keywords)
-        print('TEST BOX TEST BOX TEST BOX TEST BOX TEST BOX')
-        print(keywords)
-        print(topics)
-        print('TEST BOX TEST BOX TEST BOX TEST BOX TEST BOX')
+
         return topics
 
     return ""

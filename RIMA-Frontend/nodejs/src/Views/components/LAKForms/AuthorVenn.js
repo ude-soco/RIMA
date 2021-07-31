@@ -56,7 +56,7 @@ class AuthorVenn extends Component {
   };
 
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +  "/" + this.state.year)
+    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +  "/all years")
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -99,7 +99,7 @@ class AuthorVenn extends Component {
     var selectVal = this.state.selectVal;
     fetch(
       BASE_URL_CONFERENCE +
-      "authorconfcomparison/" +
+      "authorconfcomparison/" + this.props.conferenceName +"/" +
       e.target.value +
       "/" +
       this.state.author +
@@ -130,7 +130,7 @@ class AuthorVenn extends Component {
 
     fetch(
       BASE_URL_CONFERENCE +
-      "authorconfcomparison/" +
+      "authorconfcomparison/" + this.props.conferenceName +"/" +
       e.target.value +
       "/" +
       this.state.author +
@@ -218,7 +218,7 @@ class AuthorVenn extends Component {
               </Button>
               <Button
                 outline
-                value="key"
+                value="keyword"
                 active={active2}
                 color="primary"
                 onClick={this.selectKey}
@@ -331,7 +331,7 @@ class AuthorVenn extends Component {
               </Button>
               <Button
                 outline
-                value="key"
+                value="keyword"
                 active={active2}
                 color="primary"
                 onClick={this.selectKey}

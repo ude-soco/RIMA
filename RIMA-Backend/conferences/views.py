@@ -781,24 +781,7 @@ class TopicOverview(APIView):
         return Response({"overview": getTopicEvoultion()})
 
 
-'''
-View to obtain topics for Author Conference Venn Diagram
-'''
 
-
-class AuthorConfComparisionView(APIView):
-    def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = unquote(url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        return Response({
-            "compare":
-            authorConfTopicComparison(topics_split[-3], topics_split[-2],
-                                      topics_split[-1])
-        })
 
 
 '''
@@ -848,10 +831,71 @@ class VennOverview(APIView):
                                          ,words_intersect_second_event[0:10]
                                          ,first_event
                                          ,second_event
-                                         ,'topic')
+                                         ,keyword_or_topic)
 
         return Response({
             "commontopics": ctx
+        })
+
+'''
+View to obtain topics for Author Conference Venn Diagram
+'''
+
+class AuthorConfComparisionView(APIView):
+    def get(self, request, *args, **kwargs):
+        words_conferemce_event = []
+        words_author = []
+        models_data_conference_event = []
+        intersect_words = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+       
+        print(url_splits)
+    	
+        conference_name = url_splits[-4]
+        keyword_or_topic = url_splits[-3]
+        auther_name = url_splits[-2]
+        conference_event_name_abbr = url_splits[-1]
+
+        first_author_obj = Author.objects.get(Q(author_name=auther_name))
+
+        if keyword_or_topic == 'topic':
+            models_data_conference_event = confutils.getTopicsfromModels(conference_event_name_abbr)
+            
+
+        elif keyword_or_topic == 'keyword':
+            models_data_conference_event = confutils.getKeywordsfromModels(conference_event_name_abbr)
+        
+        for data in models_data_conference_event:
+            words_conferemce_event.append(data[keyword_or_topic])
+
+
+        author_publications = confutils.getAuthorPublicationsInConf(first_author_obj.semantic_scolar_author_id
+                                                                          ,conference_name
+                                                                          ,"")
+
+        
+        print(author_publications, 'author_publications')
+        author_interests =  confutils.getAuthorInterests(author_publications,"", keyword_or_topic, 30)
+        sorted_data_author_interests = dict(sorted(author_interests.items(), key=lambda item: item[1], reverse=True))
+
+
+        for key,value in sorted_data_author_interests.items():
+            words_author.append(key)
+
+        reduced1 = words_conferemce_event[0:10]
+        reduced2 = words_author[0:10]
+        intersect_words = list(set(reduced1).intersection(reduced2))
+
+        ctx = confutils.generateVennPhoto(words_author[0:10]
+                                         ,words_conferemce_event[0:10]
+                                         ,intersect_words[0:10]
+                                         ,auther_name
+                                         ,conference_event_name_abbr
+                                         ,keyword_or_topic)
+
+        return Response({
+            "compare": ctx
         })
 
 
