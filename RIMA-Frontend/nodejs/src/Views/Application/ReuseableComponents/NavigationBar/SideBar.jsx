@@ -115,7 +115,7 @@ export default function SideBar({selection, setSelection}) {
       case "tweetsAndPeople":
         history.push("/recommendation/twitter-scanner/" + getItem("userId"))
         break;
-      case "topicRecommendation":
+      case "publicationRecommendation":
         history.push("/app/topicsrecommend/" + getItem("userId"))
         break;
       case "topicTrends":

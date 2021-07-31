@@ -64,7 +64,7 @@ from rest_framework.generics import (ListCreateAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper 
+from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper,Author
 from django.db.models import Q
 
 from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
@@ -73,6 +73,8 @@ import matplotlib
 from collections import defaultdict
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, RobustScaler
 matplotlib.use("SVG")
+
+import itertools
 
 
 """
@@ -1001,42 +1003,99 @@ View to get topic details of Author
 
 class AuthorFetchYearView(APIView):
     def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        return Response({"authors": getAuthorsForYear(topics_split[-1])})
+        result_data = []
+        models_data = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        conference_event_name = url_splits[-1]
+        conference_name = url_splits[-2]
+
+        print(url_splits)
+        if conference_event_name == "all years":
+            models_data = confutils.getAuthorsData(conference_name,"")
+        else:
+            models_data = confutils.getAuthorsData("",conference_event_name)
+
+        for data in models_data:
+            result_data.append({
+                "value": data['name'],
+                "label": data['name']
+
+            })
+     
+
+        result_data = sorted(result_data, key=lambda k: k['value'])
+
+        return Response({"authors": result_data})
 
 
 '''
 View to get topic details
 '''
-
-
+# under work
 class AuthorTopicComparisonView(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+   
     def get(self, request, *args, **kwargs):
-        # print(request.user)
-        # for user in User.objects.all():
-        #     print(user)
-        #     token,created=Token.objects.get_or_create(user=user)
-        #     print(token.key)
-        # print("user:",request.user)
-        url_path = request.get_full_path()
-        url_path = unquote(url_path)
+        result_data = []
 
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split("?")
-        topics_split_params = topics_split[1].split("&")
-        print(topics_split_params)
+        url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
+        url_splits_and_symbol = url_splits_question_mark[1].split("&")
+        url_splits_slash = url_splits_question_mark[0].split("/")
+        print(url_splits_and_symbol)
+        keyword_or_topic = url_splits_and_symbol[-1]
+        conference_event_name_abbr =  url_splits_and_symbol[-2]
+        first_author_name = url_splits_and_symbol[-4]
+        second_author_name = url_splits_and_symbol[-3]
+        conference_name = url_splits_slash[-2]
+
+        first_author_obj = Author.objects.get(Q(author_name=first_author_name))
+        second_author_obj = Author.objects.get(Q(author_name=second_author_name))
+
+        first_author_publications = confutils.getAuthorPublicationsInConf(first_author_obj.semantic_scolar_author_id
+                                                                          ,conference_name
+                                                                          ,conference_event_name_abbr)
+
+        second_author_publications = confutils.getAuthorPublicationsInConf(second_author_obj.semantic_scolar_author_id
+                                                                          ,conference_name
+                                                                          , conference_event_name_abbr)
+
+        first_author_interests =  confutils.getAuthorInterests(first_author_publications,"", keyword_or_topic)
+        sorted_data_first_author = dict(sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
+        reduced_sorted_data_first_author = dict(itertools.islice(sorted_data_first_author.items(), 10))
+
+        second_author_interests = confutils.getAuthorInterests(second_author_publications,"",keyword_or_topic)
+        sorted_data_second_author = dict(sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True)) #itertools.islice(d.items(), 2)
+        reduced_sorted_data_second_author = dict(itertools.islice(sorted_data_second_author.items(), 10))
+
+        authors_dict = {
+            k: [reduced_sorted_data_first_author.get(k, 0),
+                reduced_sorted_data_second_author.get(k, 0)]
+            for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
+        }
+    	
+        set_intersect_key = list(
+            set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
+       
+        words = authors_dict.keys()
+        weights = authors_dict.values()
+        authors_name = [first_author_name,second_author_name]
+        print(set_intersect_key,'-----------' , words , '+++++++++' , weights, '++++++++', authors_name, '------------')
+
+        result_data.append(words)
+        result_data.append(weights)
+        result_data.append(authors_name)
+        result_data.append(set_intersect_key)
+
+        print('######################## HERE #########################')
+        print(authors_dict)
+        print('######################## HERE #########################')
+
+        print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
+        print('############')
+        print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
+
         return Response({
-            "authortopics":
-            compareAuthors(topics_split_params[-4], topics_split_params[-3],
-                           topics_split_params[-2], topics_split_params[-1])
-        })
+            "authortopics": result_data})
 
 
         #return Response({"authortopics":getDataAuthorComparisonTopics(topics_split_params[-1],topics_split_params[-3],topics_split_params[-2])})

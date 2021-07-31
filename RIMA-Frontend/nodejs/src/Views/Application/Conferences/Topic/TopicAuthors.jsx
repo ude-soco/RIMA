@@ -1,5 +1,5 @@
 //Done by Swarna
-import React from "react";
+import React ,{useState,useEffect } from "react";
 import Chart from "chart.js";
 import {Card, CardHeader, CardBody, Container, Row, Col, Label} from "reactstrap";
 import Select from 'react-select';
@@ -9,27 +9,78 @@ import Header from "../../../components/Headers/Header.js";
 import "../../../../assets/scss/custom.css";
 import LAKAuthorsbar from "../../../components/LAKForms/LAKAuthorsbar";
 import AuthorNetwork from "../../../components/LAKForms/AuthorNetwork";
+import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
 
 
-class TopicAuthors extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeNav: 4,
-      chartExample1Data: "data1",
-      tooltipOpen: false,
-      imageTooltipOpen: false,
-    };
-    if (window.Chart) {
-      parseOptions(Chart, chartOptions());
-    }
-  }
+export default function TopicAuthors (props) { 
+  
+    const [selectedOption, setselectedOption] = useState({ label: 'lak', value: 'lak' });
+    const [available, setavailable] = useState([{ label: 'ecctd', value: 'ecctd' },{ label: 'acisp', value: 'acisp' },{ label: 'aaecc', value: 'aaecc' },{ label: 'eann', value: 'eann' },{ label: 'lak', value: 'lak' },{ label: 'edm', value: 'edm' },{ label: 'aied', value: 'aied' },{ label: 'camsap', value: 'camsap' }]);
+    
+    const [conference, setconference] = useState([]);
+    const [confEvents, setconfEvents] = useState([
+      {
+        value: "2011",
+        label: "2011"
+      },
+      {
+        value: "2012",
+        label: "2012"
+      },
+      {
+        value: "2013",
+        label: "2013"
+      },
+      {
+        value: "2014",
+        label: "2014"
+      },
+      {
+        value: "2015",
+        label: "2015"
+      },
+      {
+        value: "2016",
+        label: "2016"
+      },
+      {
+        value: "2017",
+        label: "2017"
+      },
+      {
+        value: "2018",
+        label: "2018"
+      },
+      {
+        value: "2019",
+        label: "2019"
+      },
+      {
+        value: "2020",
+        label: "2020"
+      }
+    ],);
+    
 
-  render() {
-    const conference = [{
-      label: "LAK",
-      value: "LAK"
-    }];
+
+  
+
+
+
+   const handleChange = (selectedOption) => {
+    //this.forceUpdate();
+    setselectedOption(selectedOption);
+    console.log("updated");
+    console.log(`Option selected:`, selectedOption);
+    fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
+    .then(response => response.json())
+    .then(json => {
+      setconfEvents(json.events)
+    });
+  };
+
+
+
     return (
       <>
 
@@ -60,8 +111,9 @@ class TopicAuthors extends React.Component {
                           <div style={{width: '200px'}}>
                             <Select
                               placeholder="Select conference"
-                              options={conference}
-                              value={conference.find(obj => obj.value === "LAK")}
+                              options={available}
+                              value={selectedOption}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -73,7 +125,7 @@ class TopicAuthors extends React.Component {
                       <br/>
                       <Row>
                         <Col>
-                          <AuthorNetwork/>
+                          <AuthorNetwork conferenceName = {selectedOption.value} confEvents = {confEvents}/>
                         </Col>
                       </Row>
                       <br/>
@@ -84,7 +136,7 @@ class TopicAuthors extends React.Component {
                       }}>
                         <Row>
                           <Col>
-                            <LAKAuthorsbar/>
+                            <LAKAuthorsbar conferenceName = {selectedOption.value} confEvents = {confEvents}/>
                           </Col></Row>
                       </div>
                     </div>
@@ -99,6 +151,5 @@ class TopicAuthors extends React.Component {
       </>
     );
   }
-}
 
-export default TopicAuthors;
+

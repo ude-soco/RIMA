@@ -32,7 +32,7 @@ class AuthorVenn extends Component {
       items_y2: [],
       items_y12: [],
       items_authors: [],
-      year: "",
+      year: "lak2011",
       arr_keys: [],
       arr_vals: [],
       author: "",
@@ -56,7 +56,7 @@ class AuthorVenn extends Component {
   };
 
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "fetchallauthorsdict/")
+    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +  "/" + this.state.year)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -166,52 +166,8 @@ class AuthorVenn extends Component {
       display1,
     } = this.state;
 
-    const data = [
-      {
-        value: "all years",
-        label: "all years",
-      },
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+    const data  = this.props.confEvents;
+
     //var{items,arr_keys,arr_vals}=this.state;
     if (isLoaded) {
       return (

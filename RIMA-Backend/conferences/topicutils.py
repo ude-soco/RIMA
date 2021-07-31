@@ -1060,7 +1060,7 @@ def getAuthorsForYear(year):
         list_auths.append(dict_temp)
     return list_auths
 
-
+# to be removed
 def getAllAuthors():
     query = 'select authors from LAKData'
     authors = getTopics("", "",query)
@@ -2303,6 +2303,10 @@ def compareAuthors(author1, author2, year, key):
         keys = authors_dict.keys()
         values = authors_dict.values()
         auths = [author1, author2]
+
+
+        print(set_intersect_key,'-----------' , keys , '+++++++++' , values, '++++++++', auths, '------------')
+        
         return keys, values, auths, set_intersect_key
     elif key == 'topic':
         authors_dict = {

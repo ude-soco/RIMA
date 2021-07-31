@@ -62,7 +62,7 @@ class LAKAuthorsbar extends Component {
 
     fetch(
       BASE_URL_CONFERENCE +
-        "getauthortopicdetails/?" +
+        "getauthortopicdetails/" + this.props.conferenceName +"/?" +
         this.state.selectVal1 +
         "&" +
         this.state.selectVal2 +
@@ -155,7 +155,7 @@ class LAKAuthorsbar extends Component {
       });
   }
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/all years")
+    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +"/lak2011")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -173,7 +173,7 @@ class LAKAuthorsbar extends Component {
 
     fetch(
       BASE_URL_CONFERENCE +
-        "getauthortopicdetails/?A. A. Economides&A. Ammari&all years&topic"
+        "getauthortopicdetails/" + this.props.conferenceName +"/?A. A. Economides&A. Ammari&all years&topic"
     )
       .then((response) => response.json())
       .then((json) => {
@@ -281,7 +281,7 @@ class LAKAuthorsbar extends Component {
 
     fetch(
       BASE_URL_CONFERENCE +
-        "getauthortopicdetails/?" +
+        "getauthortopicdetails/" + this.props.conferenceName +"/?" +
         this.state.selectVal1 +
         "&" +
         this.state.selectVal2 +
@@ -298,8 +298,12 @@ class LAKAuthorsbar extends Component {
           series = series.concat([
             { name: json.authortopics[0][i], data: json.authortopics[1][i] },
           ]);
+
+          
           //selectInputRef1.current.chart.publicMethods.updateOptions({})
         }
+        console.log("series bab", series)
+
         this.setState({
           selectValue: e.value,
           series: series,
@@ -400,7 +404,7 @@ class LAKAuthorsbar extends Component {
   }
 
   selectyearValue(e) {
-    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + e.value)
+    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +"/" + e.value)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -426,52 +430,7 @@ class LAKAuthorsbar extends Component {
       active2,
     } = this.state;
 
-    const yeardata = [
-      {
-        value: "all years",
-        label: "all years",
-      },
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+    const yeardata = this.props.confEvents;
 
     var url =
       "https://www.semanticscholar.org/search?author=" +

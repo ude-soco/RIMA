@@ -63,6 +63,7 @@ urlpatterns = [
 
     path('fetchpaper/<pk1>', views.FetchPaperView.as_view()), 
     path('fetchallauthors/', views.AuthorsFetchView.as_view()),
+    # under work
     path('fetchallauthorsdict/', views.AuthorsDictFetchView.as_view()),
     path('topicoverview/', views.TopicOverview.as_view()),
 
@@ -82,14 +83,14 @@ urlpatterns = [
     path('getallauthorslist/<pk1>/<pk2>/<pk3>',
          views.FetchAuthorView.as_view()),
     path('getallauthorsdict/', views.FetchAuthorsDict.as_view()),
-    path('getauthorsyearlist/<pk>', views.AuthorFetchYearView.as_view()), 
+    path('getauthorsyearlist/<pk1>/<pk2>', views.AuthorFetchYearView.as_view()), 
 
     path('getoverviewtopicdetails/<pk1>/<pk2>',
          views.OverviewChartViewTopics.as_view()),
     path('getoverviewkeydetails/<pk1>/<pk2>',
          views.OverviewChartViewKeywords.as_view()),
     path('getabstractdetails/<pk1>/<pk2>/<pk3>', views.FetchAbstractView.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
-    path('getauthortopicdetails/', views.AuthorTopicComparisonView.as_view()),
+    path('getauthortopicdetails/<pk>/', views.AuthorTopicComparisonView.as_view()),
     #path('getauthorkeydetails/',views.AuthorKeywordComparisonView.as_view()),
     path('getauthorvsconfdetails/<pk1>/<pk2>',
          views.CompareAuthorConf.as_view()),

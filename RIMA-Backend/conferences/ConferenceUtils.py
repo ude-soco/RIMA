@@ -124,11 +124,18 @@ def addDataToAuthorModels(author_data,paper_obj,conference_obj,conference_event_
     author_has_papers_obj.save()    
     
 
-def getAuthorsData(conference_name_abbr):
+def getAuthorsData(conference_name_abbr="", conference_event_name_abbr =""):
     data = []
-    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr
-                                                            ).values_list('author_id', flat=True
-                                                            ).order_by('author_id').distinct()
+
+    if conference_event_name_abbr == "":
+        author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr
+                                                                ).values_list('author_id', flat=True
+                                                                ).order_by('author_id').distinct()
+    else:
+        author_has_papers_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id=conference_event_name_abbr
+                                                                ).values_list('author_id', flat=True
+                                                                ).order_by('author_id').distinct()
+
 
     for author_obj in author_has_papers_objs:
         author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj)
@@ -162,8 +169,13 @@ def getAuthorInterests(publications_list,author_id,keyword_or_topic):
         return keywords
 
     elif keyword_or_topic == 'topic':
+        
         keywords = getKeyword(abstract_title_str, 'Yake', 30)
         relation, topics = wikifilter(keywords)
+        print('TEST BOX TEST BOX TEST BOX TEST BOX TEST BOX')
+        print(keywords)
+        print(topics)
+        print('TEST BOX TEST BOX TEST BOX TEST BOX TEST BOX')
         return topics
 
     return ""
@@ -174,7 +186,10 @@ def getAuthorPublicationsInConf(author_id, conference_name_abbr, conference_even
     if conference_event_name_abbr == "":
         author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr,author_id_id=author_id)
     else:
+        print('here',conference_event_name_abbr)
         author_has_papers_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id=conference_event_name_abbr,author_id_id=author_id)
+        print('here',author_has_papers_objs)
+
 
     for author_has_papers_obj in author_has_papers_objs:
         paper_data = Conference_Event_Paper.objects.get(paper_id=author_has_papers_obj.paper_id_id)
@@ -190,7 +205,7 @@ def getAuthorPublicationsInConf(author_id, conference_name_abbr, conference_even
     sorted_data = sorted(result_data, key=lambda k: k['conference_event'], reverse=True)
     return sorted_data
 
-# under work
+
 def addDataToAuthorKeywordAndTopicModels(conference_event_name_abbr):
     authors_publications_dicts_list = []
     abstract_title_str = ""
