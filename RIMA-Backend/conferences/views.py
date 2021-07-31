@@ -857,7 +857,7 @@ class AuthorConfComparisionView(APIView):
         auther_name = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
 
-        first_author_obj = Author.objects.get(Q(author_name=auther_name))
+        author_obj = Author.objects.filter(Q(author_name=auther_name))[0]
 
         if keyword_or_topic == 'topic':
             models_data_conference_event = confutils.getTopicsfromModels(conference_event_name_abbr)
@@ -870,7 +870,7 @@ class AuthorConfComparisionView(APIView):
             words_conferemce_event.append(data[keyword_or_topic])
 
 
-        author_publications = confutils.getAuthorPublicationsInConf(first_author_obj.semantic_scolar_author_id
+        author_publications = confutils.getAuthorPublicationsInConf(author_obj.semantic_scolar_author_id
                                                                           ,conference_name
                                                                           ,"")
 

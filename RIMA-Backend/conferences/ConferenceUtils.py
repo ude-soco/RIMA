@@ -137,7 +137,7 @@ def getAuthorsData(conference_name_abbr="", conference_event_name_abbr =""):
                                                                 ).order_by('author_id').distinct()
 
     print(author_has_papers_objs, 'author_has_papers_objs')
-    
+
     for author_obj in author_has_papers_objs:
         author_model_data = Author.objects.get(semantic_scolar_author_id=author_obj)
         author_event_papers_objs = Author_has_Papers.objects.filter(author_id_id=author_model_data.semantic_scolar_author_id
@@ -501,7 +501,7 @@ def generateVennPhoto(list_words_first_event,list_words_second_event,list_inters
     print('################### TEST VENN ###################')
     fig, ax = plt.subplots()
 
-    ax.set_title('Common '+ keyword_or_topic + 's for the years ' + str(first_event) + ' and ' + str(second_event),fontsize=12)
+    ax.set_title('Common '+ keyword_or_topic + 's between ' + str(first_event) + ' and ' + str(second_event),fontsize=12)
 
     v = venn2_unweighted(subsets=(40, 40, 25),
                             set_labels=[str(first_event), str(second_event)])
