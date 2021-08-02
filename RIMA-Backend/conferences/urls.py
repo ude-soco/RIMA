@@ -69,9 +69,11 @@ urlpatterns = [
     path('commontopics/<pk1>/<pk2>/<pk3>', views.VennOverview.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK 
     path('commonkeys/<pk1>/<pk2>/<pk3>', views.VennOverview.as_view()), #BAB 08.06.2021 Extension for other conferences other than LAK
 
-    path('getallkeywords/<pk>', views.AllKeywordsView.as_view()),
-    path('getalltopics/<pk>', views.AllTopicsView.as_view()),
+     #under work
+    path('getallkeywords/<pk1>/<pk2>', views.AllKeywordsView.as_view()),
+    path('getalltopics/<pk1>/<pk2>', views.AllTopicsView.as_view()),
     path('getalltitles/<pk1>/<pk2>', views.SearchKeywordView.as_view()),
+    
     path('searchtopic/<pk1>/<pk2>', views.SearchTopicView.as_view()),
 
     # stacked bar
@@ -95,7 +97,6 @@ urlpatterns = [
          views.CompareAuthorConf.as_view()),
     path('insertauthordb/', views.AuthorDBInsertView.as_view()),
     path('authorcomparison/<pk1>/<pk2>', views.AuthorComparisonData.as_view()),
-    #under work
     path('authorconfcomparison/<pk1>/<pk2>/<pk3>/<pk4>', views.AuthorConfComparisionView.as_view()),
     path('updatealltopics/', views.UpdateAllTopics.as_view()),
     #added by mouadh

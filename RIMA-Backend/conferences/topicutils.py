@@ -1587,6 +1587,15 @@ def searchForKeyword(year, keyword):
                 list_edges.append(val)
 
         #dict_xy={"nodes":list_pairs,"links":list_edges}
+
+        print('list_pairs')
+        print(list_pairs)
+        print('list_pairs')
+        print('#####################')
+        print('list_edges')
+        print(list_edges)
+        print('list_edges')
+
         list_listedges = []
         for val in list_edges:
             if "," in val:
@@ -1597,16 +1606,27 @@ def searchForKeyword(year, keyword):
         #     for i, start in enumerate(val, 1):
         #         result.append({"source": start, "target": val[i % len(val)]})
         # print(result)
+
+        print('list_listedges')
+        print(list_listedges)
+        print('list_listedges')
+
         result = []
         result = [{
             'source': start,
             'target': end
         } for points in list_listedges
                   for start, end in combinations(points, 2)]
-        print(result)
+        print('result')
+        print(len(result))
+        print('result')
 
         flatList = [item for elem in list_listedges for item in elem]
         flatList_val = list(set(flatList))
+
+        print('flatList_val')
+        print(flatList_val)
+        print('flatList_val')
 
         d = {}
 
@@ -1617,9 +1637,24 @@ def searchForKeyword(year, keyword):
         list_nodes = []
         query = "select authors from LAKData where year='" + year + "' and (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%')"
         lak = getTopics("", "",query)
+
+        print('lak')
+        print(lak)
+        print('lak')
+
         for val in flatList_val:
             #count=flatList.count(val)
             count = lak.authors.str.count(val).sum()
+            print('+++++++++++++++++++++++++++++++++++++++++++')
+            print('val')
+            print(val)
+            print('val')
+            print('+++++++++++++++++++++++++++++++++++++++++++')
+            print('count')
+            print(count)
+            print('count')
+            print('+++++++++++++++++++++++++++++++++++++++++++')
+
             list_nodes.append({"id": val, "size": count * 70})
 
         if len(result) == 0:
@@ -2306,7 +2341,7 @@ def compareAuthors(author1, author2, year, key):
 
 
         print(set_intersect_key,'-----------' , keys , '+++++++++' , values, '++++++++', auths, '------------')
-        
+
         return keys, values, auths, set_intersect_key
     elif key == 'topic':
         authors_dict = {

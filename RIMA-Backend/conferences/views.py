@@ -64,7 +64,7 @@ from rest_framework.generics import (ListCreateAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper,Author
+from .models import Platform, Conference, Conference_Event,PreloadedConferenceList, Conference_Event_Paper,Author,Author_has_Papers
 from django.db.models import Q
 
 from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
@@ -75,6 +75,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, Robu
 matplotlib.use("SVG")
 
 import itertools
+from itertools import combinations
 
 
 """
@@ -400,21 +401,6 @@ class FetchTopicView(APIView):
         print('CHECK URL',url_splits_topic_keyword[-2])
         topics_split_params = url_splits_question_mark[-1].split("&")
 
-
-        '''
-        models_data_first  = confutils.getKeywordsfromModels("lak2011")
-        models_data_second  = confutils.getKeywordsfromModels("lak2012")
-        models_data_third  = confutils.getKeywordsfromModels("lak2013")
-       
-
-        print("********** Test for stacked ********** ")
-        print(models_data_first)
-        print("********** Test for stacked ********** ")
-        print(models_data_second)
-        print("********** Test for stacked ********** ")
-        print(models_data_third)
-        print("********** Test for stacked ********** ")
-        '''
         print(topics_split_params)
         result_data = confutils.getSharedWords(topics_split_params,keyword_or_topic)
      
@@ -929,38 +915,132 @@ class AllKeywordsView(APIView):
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
         print(topics_split)
-        return Response({"keywords": getAllKeywords(topics_split[-1])})
+        print(getAllKeywords('2011'))
+        return Response({"keywords": getAllKeywords('2011')})
 
 
 '''
 get all topics for author network
 '''
 
-
+# under work
 class AllTopicsView(APIView):
     def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        return Response({"keywords": getAllTopics(topics_split[-1])})
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        conference_event_name_abbr = url_splits[-1]
+        keyword_or_topic = url_splits[-2]
+
+        models_data = []
+        result_data_with_duplicates = []
+        result_data =[]
+
+
+        if keyword_or_topic == 'topic':
+            models_data = confutils.getTopicsfromModels(conference_event_name_abbr)
+        elif keyword_or_topic == 'keyword':
+            models_data = confutils.getKeywordsfromModels(conference_event_name_abbr)
+
+        for model_data in models_data:
+            result_data_with_duplicates.append(model_data[keyword_or_topic])
+     
+        print(models_data)
+
+        result_data = [{
+        "value": val,
+        "label": val
+        } for val in list(set(result_data_with_duplicates))]
+
+        return Response({"keywords": result_data })
 
 
 '''
 View to get keywords for the author network
 '''
 
-
+#under work
 class SearchKeywordView(APIView):
     def get(self, request, *args, **kwargs):
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        return Response(
-            {"titles": searchForKeyword(topics_split[-1], topics_split[-2])})
+        paper_authors = []
+        authors_pairs_list = []
+        all_pairs_dicts_list = []
+        all_event_authors_list = []
+        result_data = {}
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        print(url_splits)
+
+        keyword_or_ropic = ""
+        word = url_splits[-2]
+        conference_event_name_abbr = url_splits[-1]
+
+        models_data = confutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+        if not models_data:
+            result_data = {
+            "nodes": [{
+                "id": "No Data Found",
+                "size": 500,
+                "x": 500,
+                "y": 200
+            }]
+        }        
+            return Response(
+                {"titles": result_data})
+        else:
+            for data in models_data:
+                authors_ids = Author_has_Papers.objects.filter(paper_id_id = data['paper_id'])
+                for author_id in authors_ids:
+                    author_obj = Author.objects.get(semantic_scolar_author_id = author_id.author_id_id)
+                    paper_authors.append(author_obj.author_name)
+                    
+
+                if len(paper_authors) > 1:
+                    authors_pairs_list = combinations(paper_authors, 2)
+                    for author_name in paper_authors:
+                        all_event_authors_list.append(author_name)
+                else:
+                    authors_pairs_list = []
+                    paper_authors = []
+                    continue    
+
+                for pair in authors_pairs_list:
+                    all_pairs_dicts_list.append({
+                        'source': pair[0],
+                        'target': pair[1],
+                    })
+                authors_pairs_list = []
+                paper_authors = []
+            print('############################ +++++++++++++++++++      ############### all_pairs_dicts_list ############################ ++++++++++++++++++ ##############') 
+            print(all_pairs_dicts_list)  
+            print('############################ +++++++++++++++++++      ############### all_pairs_dicts_list ############################ ++++++++++++++++++ ##############') 
+
+            print('############################ +++++++++++++++++++      ############### all_event_authors_list ############################ ++++++++++++++++++ ##############') 
+            print(all_event_authors_list)  
+            print('############################ +++++++++++++++++++      ############### all_event_authors_list ############################ ++++++++++++++++++ ##############') 
+            
+            nodes = []
+            count = {}
+            for author in all_event_authors_list:
+                if not author in count:
+                    count[author] = 70
+                    nodes.append({
+                        'id': author,
+                        'size': 70
+                    })
+                else:
+                    for node in nodes:
+                        if node['id'] == author:
+                            node['size'] += 70
+
+            result_data = {"nodes": nodes, "links": all_pairs_dicts_list}
+        
+                    
+
+            print('############################ +++++++++++++++++++      ############### result_data ############################ ++++++++++++++++++ ##############') 
+            print(result_data)  
+            print('############################ +++++++++++++++++++      ############### result_data ############################ ++++++++++++++++++ ##############') 
+
+            return Response(
+                {"titles": result_data})
 
 
 '''
@@ -997,7 +1077,7 @@ class FetchAuthorView(APIView):
         return Response({
             "authors":
             getAuthorFromAuthorName(topics_split[-3], topics_split[-2],
-                                    topics_split[-1])
+                                    '2011')
         })
 
 
@@ -1076,7 +1156,6 @@ class AuthorFetchYearView(APIView):
 '''
 View to get topic details
 '''
-# under work
 class AuthorTopicComparisonView(APIView):
    
     def get(self, request, *args, **kwargs):

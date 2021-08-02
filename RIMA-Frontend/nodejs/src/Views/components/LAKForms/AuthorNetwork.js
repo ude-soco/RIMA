@@ -158,7 +158,7 @@ class AuthorNetwork extends Component {
   }
 
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "getalltopics/2011")
+    fetch(BASE_URL_CONFERENCE + "getalltopics/topic/lak2011")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -187,7 +187,7 @@ class AuthorNetwork extends Component {
   }
 
   selectTopic(e) {
-    fetch(BASE_URL_CONFERENCE + "getalltopics/" + this.state.selectYear)
+    fetch(BASE_URL_CONFERENCE + "getalltopics/topic/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -200,7 +200,7 @@ class AuthorNetwork extends Component {
   }
 
   selectKeyword(e) {
-    fetch(BASE_URL_CONFERENCE + "getallkeywords/" + this.state.selectYear)
+    fetch(BASE_URL_CONFERENCE + "getallkeywords/keyword/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -284,48 +284,7 @@ class AuthorNetwork extends Component {
         backgroundColor: "yellow",
       },
     };
-    const yeardata = [
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+    const yeardata = this.props.confEvents;
 
     if (isLoaded) {
       return (

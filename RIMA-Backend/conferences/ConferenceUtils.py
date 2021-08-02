@@ -385,6 +385,7 @@ def getAbstractbasedonKeyword(conference_event_name_abbr,keyword):
                     'abstarct': paper_data.abstract,
                     'year' : paper_data.year,
                     'venue': paper_data.paper_venu,
+                    'paper_id': paper_data.paper_id
                 }) 
     
    # print('titles_abstracts *********************** ' , titles_abstracts)
