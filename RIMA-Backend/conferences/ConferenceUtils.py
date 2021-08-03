@@ -456,26 +456,41 @@ def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
     return result_data
 
 
-
+# under work
 def getSharedWordsBetweenConferences(conferences_list,keyword_or_topic):
     conferences_words = []
     one_conference_words = []
+    models_words = []
+    shared_words = []
 
     for conference in conferences_list:
         conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference)
         for conference_event in conference_event_objs:
-            print(conference_event.conference_event_name_abbr)
-        if keyword_or_topic == 'topic':
-            data = getTopicsfromModels()
-        elif keyword_or_topic == 'keyword':
-            data = getKeywordsfromModels()
+            if keyword_or_topic == 'topic':
+                models_words = getTopicsfromModels(conference_event.conference_event_name_abbr)
+            elif keyword_or_topic == 'keyword':
+                model_words = getKeywordsfromModels(conference_event.conference_event_name_abbr)
+
+            for word in models_words[:10]:
+                one_conference_words.append(word[keyword_or_topic])
+        conferences_words.append(one_conference_words)
+        one_conference_words=[]
 
 
+    print('conferences_words')
+    print(conferences_words)    
+    print('conferences_words')
 
-    result_data = []
+
+    shared_words = set.intersection(*map(set,conferences_words)) 
+
+    print('shared_words')
+    print(shared_words)    
+    print('shared_words')
+
     
 
-    return result_data
+    return shared_words
 
 
 def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):

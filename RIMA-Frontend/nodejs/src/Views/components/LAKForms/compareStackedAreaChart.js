@@ -82,7 +82,15 @@ class CompareStackedAreaChart extends Component {
   };
 
 
-  wordhandleChange = () =>{}
+  wordhandleChange = (e) =>{
+    console.log(e.value)
+    this.setState({
+      selectValue: e.value
+    })
+    console.log(this.state.selectValue)
+
+
+  }
 
   conferenceshandleChange = (e) => {
 
@@ -98,7 +106,6 @@ class CompareStackedAreaChart extends Component {
 
 
   selectSharedTopics = (e) => {
-    this.onClear();
     fetch(BASE_URL_CONFERENCE + "getSharedWords/topic/?" + this.state.selectedConferences.join("&"))
       .then((response) => response.json())
       .then((json) => {
@@ -108,6 +115,7 @@ class CompareStackedAreaChart extends Component {
           active2: false,
           words: json.words.sort((a, b) => (a.label > b.label ? 1 : -1)),
           key: "topic",
+          selectedConferences: this.state.selectedConferences,
         });
       });
     console.log("options:", this.state.soptions);
@@ -230,9 +238,9 @@ class CompareStackedAreaChart extends Component {
 
       fetch(
         BASE_URL_CONFERENCE +
-        "getalltopicsevolution/topic/" + this.props.conferenceName +"/" +
+        "getSharedWordEvolution/topic/" + this.state.selectValue +"/" +
         "?" +
-        selectedValues.join("&")  
+        this.state.selectedConferences.join("&")  
       )
         .then((response) => response.json())
         .then((json) => {
@@ -371,15 +379,15 @@ class CompareStackedAreaChart extends Component {
           <Form role="form" method="POST">
             <FormGroup>
               <h2>Evolution of topics/keywords in Conferences over time</h2>
-              <br></br>
+              <br/>
               <p>
-                This chart displays the evolution of a topic/keywords over all
+              This chart displays the evolution of a topic/keywords over all
                 years of the selected conferences
               </p>
-              <br></br>
+              <br/>
 
-
-            <Label>Select Conferences </Label>
+                
+            <Label>Select conferences</Label>
 
             <div style={{width: "600px"}}>
             <Select
@@ -390,13 +398,14 @@ class CompareStackedAreaChart extends Component {
                 placeholder="Select Option"
                 options={conferencesNames}
                 value={conferencesNames.find((obj) => obj.value === selectTopic)}
-                onChange={this.handleChange}
+                onChange={this.conferenceshandleChange}
             />
+
             </div>
-            <br/>
+<              br/>
               <Button
-                color="primary"
                 outline
+                color="primary"
                 active={active1}
                 value="topic"
                 onClick={this.selectSharedTopics}
@@ -436,44 +445,35 @@ class CompareStackedAreaChart extends Component {
                   </p>
                 </div>
               )}
-
               <br/>
-              <div style={{color: "green", display: display1}}>
-                <Label>{textinput}</Label>
-              </div>
               <br/>
-              <Label>Select topics/keywords</Label>
-
-              <div style={{width: "600px"}}>
-                <Select
-                  ref={this.selectInputRef}
-                  name="selectOptions"
-                  isClearable
-                  isMulti
-                  placeholder="Select Option"
-                  options={soptions}
-                  value={soptions.find((obj) => obj.value === selectTopic)}
-                  onChange={this.handleChange}
-                />
-              </div>
+              <Label>Select a topic/keyword</Label>
+              <br/>
+              <div style={{width: "250px"}}>
+              <Select
+                placeholder="Select conference"
+                options={words}
+                value={words.find((obj) => obj.value === selectTopic)}
+                onChange={this.wordhandleChange}
+             />
+                </div>
               <br/>
               <Button
                 outline
-                color="primary"
                 active={active3}
+                color="primary"
                 onClick={this.clickEvent}
               >
                 Compare
               </Button>
               <Button
                 outline
-                color="primary"
                 active={active4}
+                color="primary"
                 onClick={this.onClear}
               >
                 Reset
               </Button>
-
               <div
                 style={{
                   marginLeft: "300px",
@@ -493,15 +493,6 @@ class CompareStackedAreaChart extends Component {
               </div>
             </FormGroup>
           </Form>
-          <div style={{opacity: opacity}}>
-            <ReactApexChart
-              ref={this.selectInputRef1}
-              options={this.state.options}
-              series={this.state.series}
-              type="area"
-              height={350}
-            />
-          </div>
         </div>
       );
     } else {
@@ -515,7 +506,6 @@ class CompareStackedAreaChart extends Component {
               This chart displays the evolution of a topic/keywords over all
                 years of the selected conferences
               </p>
-              <br/>
               <br/>
 
                 
@@ -532,8 +522,9 @@ class CompareStackedAreaChart extends Component {
                 value={conferencesNames.find((obj) => obj.value === selectTopic)}
                 onChange={this.conferenceshandleChange}
             />
-            </div>
 
+            </div>
+<              br/>
               <Button
                 outline
                 color="primary"
@@ -576,33 +567,18 @@ class CompareStackedAreaChart extends Component {
                   </p>
                 </div>
               )}
-
               <br/>
               <br/>
               <Label>Select a topic/keyword</Label>
               <br/>
+              <div style={{width: "250px"}}>
               <Select
                 placeholder="Select conference"
                 options={words}
-                value={selectedOption}
+                value={words.find((obj) => obj.value === selectTopic)}
                 onChange={this.wordhandleChange}
              />
-
-              <Label>Select conferences</Label>
-              <br/>
-              <div style={{width: "600px"}}>
-                <Select
-                  ref={this.selectInputRef}
-                  name="selectOptions"
-                  isClearable
-                  isMulti
-                  placeholder="Select Option"
-                  options={soptions}
-                  value={soptions.find((obj) => obj.value === selectTopic)}
-                  onChange={this.handleChange}
-                />
-              </div>
-
+                </div>
               <br/>
               <Button
                 outline

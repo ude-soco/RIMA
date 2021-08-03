@@ -76,7 +76,7 @@ matplotlib.use("SVG")
 
 import itertools
 from itertools import combinations
-
+import re
 
 
 
@@ -101,16 +101,83 @@ class conferencesNamesView(ListCreateAPIView):
 class conferencesSharesWordsView(ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         result_data = []
+        models_data = []
+        conferences_list = []
 
-        confutils.getSharedWordsBetweenConferences(['lak','aied','edm'],'')
-        
         url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(),r'?')
+        conferences_list= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
+        print(conferences_list)
+        keyword_or_topic = confutils.split_restapi_url(url_splits_question_mark[0],r'/')[-2]
+        print(keyword_or_topic)
 
 
-
-
+        models_data = confutils.getSharedWordsBetweenConferences(conferences_list,keyword_or_topic)
+        
+        for word in models_data:
+            result_data.append({
+                'value': word,
+                'label': word,
+            })
 
         return Response({'words': result_data})  
+
+
+class SharedWordEvolutionView(ListCreateAPIView):
+    def get(self, request, *args, **kwargs):
+        models_data = []
+        result_data = []
+        weights =[]
+        events = []
+        years = []
+
+        url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
+        conferences_list= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
+        print(conferences_list)
+        keyword_or_topic = confutils.split_restapi_url(url_splits_question_mark[0],r'/')[-3]
+        print(keyword_or_topic)
+        word = confutils.split_restapi_url(url_splits_question_mark[0],r'/')[-2]
+        print(word)
+
+     
+
+        
+        
+        for conference in conferences_list:
+            conference_obj = Conference.objects.get(conference_name_abbr=conference)
+            conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
+            models_data = confutils.getWordWeightEventBased(conference_event_objs,word,keyword_or_topic)
+
+            print(models_data)
+
+            for model_data in models_data:
+                model_data['conference_event_abbr'] = re.sub("[^0-9]", "", model_data['conference_event_abbr'].split('-')[0])
+                years.append(model_data['conference_event_abbr'])
+
+            years = sorted(list(set(years)))
+
+            for model_data in models_data:
+                if model_data['conference_event_abbr'] in years:
+                    weights.append(model_data['weight'])
+                else: 
+                    weights.append(model_data[0])
+
+            
+
+            result_data.append(weights)
+            weights =[]
+            print(years)
+
+        print('result_data')
+        print(result_data)
+        print(events)
+        print('result_data')
+
+
+        return Response({"weights": []
+            #getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[0]
+            ,
+            "years": []
+            }) 
 
 """
 BAB Conference Events views
