@@ -21,6 +21,7 @@ import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
 import MeetingRoomOutlined from '@material-ui/icons/MeetingRoomOutlined';
+import CompareIcon from '@material-ui/icons/Compare';
 
 
 const drawerWidth = 240;
@@ -121,14 +122,14 @@ export default function SideBar({selection, setSelection}) {
       case "topicTrends":
         history.push("/app/topicbar/" + getItem("userId"))
         break;
-      case "compareConferences":
-        history.push("/app/topicsresearch/" + getItem("userId"));
-        break;
       case "conferenceNetwork":
         history.push("/app/topicsauthors/" + getItem("userId"));
         break;
       case "myProfile":
         history.push('/app/user-profile');
+        break;
+      case "compareConferences":
+        history.push("/app/compareConferences");
         break;
     }
   }
@@ -314,6 +315,16 @@ export default function SideBar({selection, setSelection}) {
               <GroupIcon className={selectedList("conferenceNetwork")}/>
             </ListItemIcon>
             <ListItemText primary="Author Networks"/>
+          </ListItem>
+
+          <ListItem button id="compareConferences"
+                    selected={selectedList("compareConferences")}
+                    onClick={handleSelect}
+                    className={selectedList("compareConferences")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <CompareIcon className={selectedList("compareConferences")}/>
+            </ListItemIcon>
+            <ListItemText primary="Compare Conferences"/>
           </ListItem>
 
           <ListItem button id="topicRecommendation"

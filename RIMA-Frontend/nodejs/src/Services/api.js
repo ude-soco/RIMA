@@ -166,6 +166,20 @@ class RestAPI {
   }
 
   //** GET LIST Conferences API  BAB**//
+  static getConferencesNames() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/conferencesNames/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  //** GET LIST Conferences API  BAB**//
   static getListConferenceAuthors(conference_name_abbr) {
     const TOKEN = getItem("accessToken");
     return axios({

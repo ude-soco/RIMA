@@ -300,7 +300,7 @@ class AuthorNetwork extends Component {
           }}
         >
           <div style={{marginLeft: "30px"}}>
-            <h3>Researcher collaboration network</h3>
+            <h3> Researcher collaboration network</h3>
             <br/>
             <p>
               This visualization displays the collaboration of researchers for

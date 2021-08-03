@@ -78,6 +78,40 @@ import itertools
 from itertools import combinations
 
 
+
+
+class conferencesNamesView(ListCreateAPIView):
+    def get(self, request, *args, **kwargs):
+        models_data = []
+        result_data = []
+
+        models_data = confutils.getConferencesList()
+
+        for data in models_data:
+            result_data.append({
+                'value': data['conference_name_abbr'],
+                'label': data['conference_name_abbr']
+            })
+
+
+        return Response(result_data)
+
+
+
+class conferencesSharesWordsView(ListCreateAPIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+
+        confutils.getSharedWordsBetweenConferences(['lak','aied','edm'],'')
+        
+        url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(),r'?')
+
+
+
+
+
+        return Response({'words': result_data})  
+
 """
 BAB Conference Events views
 """
@@ -150,20 +184,8 @@ class addConferenceView(ListCreateAPIView):
     conference_serializer_class = ConferenceSerializer
     def get(self, request, *args, **kwargs):
         data = []
-        conferences = Conference.objects.all()
-        for conference in conferences:
-            conference_events = Conference_Event.objects.filter(
-                                conference_name_abbr = conference.conference_name_abbr).values_list(
-                                'conference_event_name_abbr',
-                                flat=True)
-           
-            data.append({
-                'platform_name' : conference.platform_name.platform_name,
-                'platform_url' : conference.platform_name.platform_url,
-                'conference_name_abbr' : conference.conference_name_abbr,
-                'conference_url' : conference.conference_url,
-                'no_of_events': conference_events.count(),
-            })
+        
+        data = confutils.getConferencesList()
 
         return Response(data)
     
@@ -402,7 +424,7 @@ class FetchTopicView(APIView):
         topics_split_params = url_splits_question_mark[-1].split("&")
 
         print(topics_split_params)
-        result_data = confutils.getSharedWords(topics_split_params,keyword_or_topic)
+        result_data = confutils.getSharedWordsBetweenEvents(topics_split_params,keyword_or_topic)
      
         return Response(
             {"Topiclist": result_data})
@@ -805,7 +827,7 @@ class VennOverview(APIView):
         for data in models_data_second_event:
              words_second_event.append(data[keyword_or_topic])
 
-        models_data_intersect_first_and_second = confutils.getSharedWords([first_event,second_event], keyword_or_topic)
+        models_data_intersect_first_and_second = confutils.getSharedWordsBetweenEvents([first_event,second_event], keyword_or_topic)
 
         if len(models_data_intersect_first_and_second) > 0:
             for data in models_data_intersect_first_and_second[0]:

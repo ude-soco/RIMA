@@ -40,6 +40,25 @@ def split_restapi_url(url_path,split_char):
     topics_split = url_path.split(split_char)
     return topics_split 
 
+def getConferencesList():
+    data = []
+    conferences = Conference.objects.all()
+    for conference in conferences:
+        conference_events = Conference_Event.objects.filter(
+                            conference_name_abbr = conference.conference_name_abbr).values_list(
+                            'conference_event_name_abbr',
+                            flat=True)
+        
+        data.append({
+            'platform_name' : conference.platform_name.platform_name,
+            'platform_url' : conference.platform_name.platform_url,
+            'conference_name_abbr' : conference.conference_name_abbr,
+            'conference_url' : conference.conference_url,
+            'no_of_events': conference_events.count(),
+        })
+
+    return data 
+
 
 def addDataToConfEventModel(conference_name_abbr):
     conf_list = []
@@ -393,7 +412,7 @@ def getAbstractbasedonKeyword(conference_event_name_abbr,keyword):
     return titles_abstracts
 
 
-def getSharedWords(conference_events_list,keyword_or_topic):
+def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
     models_data = []
     first_event = conference_events_list[0]
     shared_word = []
@@ -433,6 +452,28 @@ def getSharedWords(conference_events_list,keyword_or_topic):
     result_data.append(dict_list)
     result_data.append(conference_events_list)
 
+
+    return result_data
+
+
+
+def getSharedWordsBetweenConferences(conferences_list,keyword_or_topic):
+    conferences_words = []
+    one_conference_words = []
+
+    for conference in conferences_list:
+        conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference)
+        for conference_event in conference_event_objs:
+            print(conference_event.conference_event_name_abbr)
+        if keyword_or_topic == 'topic':
+            data = getTopicsfromModels()
+        elif keyword_or_topic == 'keyword':
+            data = getKeywordsfromModels()
+
+
+
+    result_data = []
+    
 
     return result_data
 
