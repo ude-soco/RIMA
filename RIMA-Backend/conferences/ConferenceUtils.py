@@ -470,7 +470,7 @@ def getSharedWordsBetweenConferences(conferences_list,keyword_or_topic):
             if keyword_or_topic == 'topic':
                 models_words = getTopicsfromModels(conference_event.conference_event_name_abbr)
             elif keyword_or_topic == 'keyword':
-                model_words = getKeywordsfromModels(conference_event.conference_event_name_abbr)
+                models_words = getKeywordsfromModels(conference_event.conference_event_name_abbr)
 
             for word in models_words[:10]:
                 one_conference_words.append(word[keyword_or_topic])

@@ -187,7 +187,7 @@ export default function CompareConferences (props) {
       <div
         className="row mt-4"
         style={{
-          height: "750px",
+          height: "800px",
           width: "830px",
           backgroundColor: "#F0F8FF",
           marginLeft: "50px",

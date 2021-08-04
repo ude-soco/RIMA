@@ -1,4 +1,3 @@
-//Done by Swarna
 import React, {Component} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
@@ -10,7 +9,6 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 
 import RestAPI from "../../../Services/api";
-// react plugin used to create google maps
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { handleServerErrors } from "Services/utils/errorHandler";
@@ -32,13 +30,10 @@ class CompareStackedAreaChart extends Component {
 
       
       soptions: [],
-      newOptions: [],
       years: [],
       loader: false,
       display: "none",
       opacity: "0.9",
-      selectOptions: [],
-      selectedValues: [],
       combinedList: [],
       yearsList: [],
       isLoaded: false,
@@ -57,7 +52,6 @@ class CompareStackedAreaChart extends Component {
     };
   }
 
-  //BAB
 
   componentDidMount() {
     this.getConferencesNames()
@@ -93,7 +87,6 @@ class CompareStackedAreaChart extends Component {
   }
 
   conferenceshandleChange = (e) => {
-
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
     this.setState({
       selectConference: Array.isArray(e) ? e.map((s) => s.value) : [],
@@ -120,6 +113,24 @@ class CompareStackedAreaChart extends Component {
       });
     console.log("options:", this.state.soptions);
   }
+
+
+  selectSharedKeywords = (e) => {
+    fetch(BASE_URL_CONFERENCE + "getSharedWords/keyword/?" + this.state.selectedConferences.join("&"))
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("json", json);
+        this.setState({
+          active1: false,
+          active2: true,
+          words: json.words.sort((a, b) => (a.label > b.label ? 1 : -1)),
+          key: "keyowrd",
+          selectedConferences: this.state.selectedConferences,
+        });
+      });
+    console.log("options:", this.state.soptions);
+  }
+
 
 
 
@@ -166,47 +177,18 @@ class CompareStackedAreaChart extends Component {
 
   
 
-
-  handleChange = (e) => {
-    const value = Array.isArray(e) ? e.map((s) => s.value) : [];
-    this.setState({
-      selectTopic: Array.isArray(e) ? e.map((s) => s.value) : [],
-      selectedValues: value,
-    });
-    console.log("value is:", this.state.selectedValues);
-  };
-
-  selectValue = (e) => {
-    var selectValue = this.state.selectValue;
-    var isDisplayed = this.state.isDisplayed;
-    console.log("the val is:", e);
-    console.log("the val is:", e.length);
-    console.log("the val is:", e[0].value);
-    let value = Array.from(e.target.selectedOptions, (option) => option.value);
-    this.setState({
-      active1: false,
-      active2: true,
-      selectedValues: value,
-    });
-
-    console.log(this.state.selectedValues);
-  }
-
   handleToogle = (status) => {
     this.setState({imageTooltipOpen: status});
     console.log(this.state.imageTooltipOpen);
   };
 
   onClear = () => {
-    //window.location.reload(false);
     console.log(this.selectInputRef.current.select.state.selectValue);
     if (this.selectInputRef.current.select.state.selectValue == "") {
       console.log("set");
     } else {
-      console.log("unset");
       this.selectInputRef.current.select.clearValue();
     }
-    // this.selectInputRef.current.select.clearValue();
     this.setState({
       active3: false,
       active4: true,
@@ -214,17 +196,14 @@ class CompareStackedAreaChart extends Component {
     });
   }
 
-  //this.selectInputRef1.current.chart.destroy();}
   clickEvent =() => {
     if (this.state.key == "topic") {
       if (this.selectInputRef1.current == null) {
-        console.log("true");
         this.setState({
           loader: true,
           display: "block",
         });
       } else {
-        //this.selectInputRef1.current=null
         this.setState({
           opacity: "0.1",
           loader: true,
@@ -232,9 +211,6 @@ class CompareStackedAreaChart extends Component {
         });
       }
 
-      //console.log("in click event", this.state.selectedValues);
-      var selectedValues = this.state.selectedValues;
-      console.log("in click event", selectedValues);
       var {series} = this.state;
       var {weights} =  this.state;
 
@@ -300,63 +276,57 @@ class CompareStackedAreaChart extends Component {
         });
       }
 
-      console.log("in click event", this.state.selectedValues);
-      var selectedValues = this.state.selectedValues;
+   
       var {series} = this.state;
 
       fetch(
         BASE_URL_CONFERENCE +
-        "getallkeysevolution/keyword/"  + this.props.conferenceName +"/" +
+        "getSharedWordEvolution/keyword/" + this.state.selectValue +"/" +
         "?" +
-        selectedValues.join("&")
+        this.state.selectedConferences.join("&")  
       )
         .then((response) => response.json())
         .then((json) => {
-          console.log("json", json);
-          if (json != null) {
-            series = [];
-            weights = [];
+          series = [];
+          weights = [];
+          for (let index = 0; index < this.state.selectedConferences.length; index++ ){
             for (let i = 0; i < json.weights.length; i++) {
-                for(let j = 0; j < selectedValues.length;j++)
-                {
-                weights[j] = json.weights[i][j]
-                }
-                
-                series = series.concat([
-                {name: selectedValues[i], data: weights,}
-              
-            ]);
-            
+                weights[i] = json.weights[i][index]
             }
-            console.log("series", series);
-            this.setState({
-              selectTopic: selectedValues,
-              active1: false,
-              active2: true,
-              active3: true,
-              active4: false,
-              series: series,
-              datalabels: {
-                enabled: true,
+                series = series.concat([
+                {name: this.state.selectedConferences[index], data: weights,}]);
+
+            console.log("weights", weights);
+            weights = [];
+            
+        }
+          console.log("series", series);
+          console.log("this.state.selectedConferences", this.state.selectedConferences);
+          this.setState({
+            selectConference: this.state.selectedConferences,
+            active1: false,
+            active2: true,
+            active3: true,
+            active4: false,
+            series: series,
+            datalabels: {
+              enabled: true,
+            },
+            options: {
+              stroke: {
+                curve: "smooth",
               },
-              options: {
-                stroke: {
-                  curve: "smooth",
-                },
-                xaxis: {
-                  categories: json.years,
-                },
+              xaxis: {
+                categories: json.years,
               },
-              isLoaded: true,
-              loader: false,
-              opacity: "0.9",
-            });
-          } else {
-            this.setState({
-              flag: true,
-            });
-          }
+            },
+            isLoaded: true,
+            loader: false,
+            opacity: "0.9",
+          });
         });
+          
+      
     }
   }
 
@@ -366,7 +336,6 @@ class CompareStackedAreaChart extends Component {
     const checkmount = this.checkIfMounted;
     var {
       active2,
-      newOptions,
       isLoaded,
       loader,
       active1,
@@ -431,7 +400,7 @@ class CompareStackedAreaChart extends Component {
                 color="primary"
                 value="key"
                 active={active2}
-                onClick={this.selectKey}
+                onClick={this.selectSharedKeywords}
               >
                 Keyword
               </Button>
@@ -562,7 +531,7 @@ class CompareStackedAreaChart extends Component {
                 color="primary"
                 value="key"
                 active={active2}
-                onClick={this.selectKey}
+                onClick={this.selectSharedKeywords}
               >
                 Keyword
               </Button>

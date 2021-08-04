@@ -237,7 +237,8 @@ class WordCloud extends Component {
             <div style={{width: '200px'}}>
               <Select
                 placeholder="Select Option"
-                options={data} value={data.find(obj => obj.value === selectValue)}
+                options={data} 
+                value={data.find(obj => obj.value === selectValue)}
                 onChange={this.getYearValue}
                  
               />
