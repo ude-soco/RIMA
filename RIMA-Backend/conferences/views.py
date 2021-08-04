@@ -129,6 +129,8 @@ class SharedWordEvolutionView(ListCreateAPIView):
         weights =[]
         events = []
         years = []
+        conf_based_data = []
+        all_models_data = []
 
         url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
         conferences_list= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
@@ -138,38 +140,86 @@ class SharedWordEvolutionView(ListCreateAPIView):
         word = confutils.split_restapi_url(url_splits_question_mark[0],r'/')[-2]
         print(word)
 
-     
-
-        
-        
+    
         for conference in conferences_list:
             conference_obj = Conference.objects.get(conference_name_abbr=conference)
             conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
             models_data = confutils.getWordWeightEventBased(conference_event_objs,word,keyword_or_topic)
 
-            print(models_data)
 
             for model_data in models_data:
-                model_data['conference_event_abbr'] = re.sub("[^0-9]", "", model_data['conference_event_abbr'].split('-')[0])
-                years.append(model_data['conference_event_abbr'])
+                years.append(model_data['year'])
+                conf_based_data.append(model_data)
+
+
+            all_models_data.append(conf_based_data)
+            conf_based_data = []
+
+        
+        years = sorted(list(set(years)))
+
+        """
+        for data in all_models_data:
+            for inner_data, year in zip(data,years):
+                if inner_data['year'] == year:
+                    weights.append(inner_data['weight'])
+                else:
+                    weights.append(0)
+
+            result_data.append(weights)
+            weights = []
+        """
+
+
+        print(len(all_models_data) , 'LEEEN')
+        for year in years:
+            for data in all_models_data:
+                print('data')
+                print(data)
+                print('data')
+                for inner_data in data:
+                    if year == inner_data['year']:
+                        weights.append(year)
+                        weights.append(inner_data['weight'])
+                        year_found = True
+                        break
+                    else:
+                        year_found = False
+                if year_found == False:
+                    weights.append(year)
+                    weights.append(0)
+            
+            result_data.append(weights)
+            weights = []
+
+            """
+            for year in years:
+                for model_data in models_data:
+                    if model_data['year'] == year:
+
+
+
+                weights.append(model_data['weight'])
+                events.append(model_data['year'])
+                
+                print(model_data)
+           
+            result_data.append(weights)
+            result_data.append(events)
+            weights = []
+            events = []
 
             years = sorted(list(set(years)))
 
-            for model_data in models_data:
-                if model_data['conference_event_abbr'] in years:
-                    weights.append(model_data['weight'])
-                else: 
-                    weights.append(model_data[0])
-
+             """
             
 
-            result_data.append(weights)
-            weights =[]
-            print(years)
-
         print('result_data')
+        print(all_models_data)
+        print('++++++++++++++++++')
         print(result_data)
-        print(events)
+        print('++++++++++++++++++')
+        print(years)
         print('result_data')
 
 

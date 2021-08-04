@@ -24,6 +24,7 @@ import base64
 from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
 from matplotlib import pyplot as plt
 from django.conf import settings
+import re 
 
 # Authentication headers
 headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7',
@@ -507,21 +508,21 @@ def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
 
     for conference_event in conference_event_objs:
         if keyword_or_topic == 'topic':
-            print('BAB')
             check_exist = Conf_Event_Topic.objects.filter(conference_event_name_abbr=conference_event.conference_event_name_abbr, topic_id=word_object.topic_id).exists()
-            print('BAB')
             if check_exist:
                 weight = Event_has_Topic.objects.get(conference_event_name_abbr=conference_event.conference_event_name_abbr, topic_id=word_object.topic_id).weight
                 result_data.append({
                     'word': word,
                     'conference_event_abbr': conference_event.conference_event_name_abbr,
-                    'weight':weight
+                    'weight':weight,
+                    'year' : re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
             else:
                 result_data.append({
                     'word': word,
                     'conference_event_abbr': conference_event.conference_event_name_abbr,
-                    'weight':0
+                    'weight':0,
+                    'year' : re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
 
         elif keyword_or_topic == 'keyword':
@@ -531,17 +532,19 @@ def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
                 result_data.append({
                     'word': word,
                     'conference_event_abbr': conference_event.conference_event_name_abbr,
-                    'weight':weight
+                    'weight':weight,
+                    'year' : re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
             else:
                 result_data.append({
                     'word': word,
                     'conference_event_abbr': conference_event.conference_event_name_abbr,
-                    'weight':0
+                    'weight':0,
+                    'year' : re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
-    print('############## Weights #################')
-    print(result_data)
-    print('############## Weights #################')
+    #print('############## Weights #################')
+    #print(result_data)
+    #print('############## Weights #################')
     
     return result_data
 
