@@ -28,11 +28,11 @@ class CompareStackedAreaChart extends Component {
       selectedConferences:[],
       words:[],
       selectedOption:"",
+      weights : [],
 
       
       soptions: [],
       newOptions: [],
-      weights: [],
       years: [],
       loader: false,
       display: "none",
@@ -232,9 +232,11 @@ class CompareStackedAreaChart extends Component {
         });
       }
 
-      console.log("in click event", this.state.selectedValues);
+      //console.log("in click event", this.state.selectedValues);
       var selectedValues = this.state.selectedValues;
+      console.log("in click event", selectedValues);
       var {series} = this.state;
+      var {weights} =  this.state;
 
       fetch(
         BASE_URL_CONFERENCE +
@@ -245,16 +247,22 @@ class CompareStackedAreaChart extends Component {
         .then((response) => response.json())
         .then((json) => {
           series = [];
-          for (let i = 0; i < json.weights.length; i++) {
-            series = series.concat([
-              {name: selectedValues[i], data: json.weights[i]},
-            ]);
-            //selectInputRef1.current.chart.publicMethods.updateOptions({})
-          }
+          weights = [];
+          for (let index = 0; index < this.state.selectedConferences.length; index++ ){
+            for (let i = 0; i < json.weights.length; i++) {
+                weights[i] = json.weights[i][index]
+            }
+                series = series.concat([
+                {name: this.state.selectedConferences[index], data: weights,}]);
 
+            console.log("weights", weights);
+            weights = [];
+            
+        }
           console.log("series", series);
+          console.log("this.state.selectedConferences", this.state.selectedConferences);
           this.setState({
-            selectTopic: selectedValues,
+            selectConference: this.state.selectedConferences,
             active1: true,
             active2: false,
             active3: true,
@@ -307,12 +315,18 @@ class CompareStackedAreaChart extends Component {
           console.log("json", json);
           if (json != null) {
             series = [];
+            weights = [];
             for (let i = 0; i < json.weights.length; i++) {
-              console.log("selectedValues[i]", selectedValues[i]);
-              series = series.concat([
-                {name: selectedValues[i], data: json.weights[i]},
-              ]);
-              //selectInputRef1.current.chart.publicMethods.updateOptions({})
+                for(let j = 0; j < selectedValues.length;j++)
+                {
+                weights[j] = json.weights[i][j]
+                }
+                
+                series = series.concat([
+                {name: selectedValues[i], data: weights,}
+              
+            ]);
+            
             }
             console.log("series", series);
             this.setState({
@@ -493,6 +507,15 @@ class CompareStackedAreaChart extends Component {
               </div>
             </FormGroup>
           </Form>
+          <div style={{opacity: opacity}}>
+            <ReactApexChart
+              ref={this.selectInputRef1}
+              options={this.state.options}
+              series={this.state.series}
+              type="area"
+              height={350}
+            />
+          </div>
         </div>
       );
     } else {

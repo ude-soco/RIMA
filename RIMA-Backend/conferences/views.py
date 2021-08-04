@@ -127,107 +127,56 @@ class SharedWordEvolutionView(ListCreateAPIView):
         models_data = []
         result_data = []
         weights =[]
-        events = []
-        years = []
-        conf_based_data = []
+        years_range = []
         all_models_data = []
 
         url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
         conferences_list= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
-        print(conferences_list)
         keyword_or_topic = confutils.split_restapi_url(url_splits_question_mark[0],r'/')[-3]
-        print(keyword_or_topic)
         word = confutils.split_restapi_url(url_splits_question_mark[0],r'/')[-2]
-        print(word)
 
-    
         for conference in conferences_list:
             conference_obj = Conference.objects.get(conference_name_abbr=conference)
             conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
             models_data = confutils.getWordWeightEventBased(conference_event_objs,word,keyword_or_topic)
-
-
             for model_data in models_data:
-                years.append(model_data['year'])
-                conf_based_data.append(model_data)
+                years_range.append(model_data['year'])
+            all_models_data.append(models_data)
 
+        years_range = sorted(list(set(years_range)))
 
-            all_models_data.append(conf_based_data)
-            conf_based_data = []
-
-        
-        years = sorted(list(set(years)))
-
-        """
-        for data in all_models_data:
-            for inner_data, year in zip(data,years):
-                if inner_data['year'] == year:
-                    weights.append(inner_data['weight'])
+        for year in years_range:
+            for data in all_models_data:
+                ocurrence_list = list(filter(lambda inner_data: inner_data['year'] == year, data))
+                if ocurrence_list:
+                    print('test_list')
+                    sum_weight = 0
+                    for result in ocurrence_list:
+                        sum_weight += result['weight']
+                        print(result)
+                    weights.append(sum_weight)
+                    sum_weight = 0
+                    print('test_list')
                 else:
                     weights.append(0)
 
             result_data.append(weights)
             weights = []
-        """
-
-
-        print(len(all_models_data) , 'LEEEN')
-        for year in years:
-            for data in all_models_data:
-                print('data')
-                print(data)
-                print('data')
-                for inner_data in data:
-                    if year == inner_data['year']:
-                        weights.append(year)
-                        weights.append(inner_data['weight'])
-                        year_found = True
-                        break
-                    else:
-                        year_found = False
-                if year_found == False:
-                    weights.append(year)
-                    weights.append(0)
-            
-            result_data.append(weights)
-            weights = []
-
-            """
-            for year in years:
-                for model_data in models_data:
-                    if model_data['year'] == year:
-
-
-
-                weights.append(model_data['weight'])
-                events.append(model_data['year'])
-                
-                print(model_data)
-           
-            result_data.append(weights)
-            result_data.append(events)
-            weights = []
-            events = []
-
-            years = sorted(list(set(years)))
-
-             """
-            
-
+                    
         print('result_data')
         print(all_models_data)
         print('++++++++++++++++++')
         print(result_data)
         print('++++++++++++++++++')
-        print(years)
+        print(years_range)
         print('result_data')
+        
+            
 
 
-        return Response({"weights": []
-            #getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[0]
-            ,
-            "years": []
-            }) 
+        return Response({"weights": result_data,
+                         "years": years_range
+                         }) 
 
 """
 BAB Conference Events views
