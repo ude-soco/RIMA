@@ -549,6 +549,25 @@ def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
     return result_data
 
 
+def getYearsRangeBetweenConferences(conferences_list):
+    years = []
+
+    for conference in conferences_list:
+        conference_obj = Conference.objects.get(conference_name_abbr=conference)
+        conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
+        
+        for conference_event_obj in conference_event_objs:
+            confernece_year = re.sub("[^0-9]", "", conference_event_obj.conference_event_name_abbr.split('-')[0])
+            if re.match("^\d{2}$", confernece_year):
+                confernece_year = '19' + confernece_year
+
+            years.append(confernece_year)
+
+       
+    result_data = sorted(list(set(years)))
+    
+    return result_data
+
 def generateVennPhoto(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
     
     print('################### TEST VENN ###################')

@@ -1,3 +1,4 @@
+
 import React, {Component} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
@@ -14,7 +15,7 @@ import { Link } from "react-router-dom";
 import { handleServerErrors } from "Services/utils/errorHandler";
 
 
-class CompareStackedAreaChart extends Component {
+class CompareStackedBarChart extends Component {
   constructor(props) {
     super(props);
     this.selectInputRef = React.createRef();
@@ -92,10 +93,28 @@ class CompareStackedAreaChart extends Component {
       selectConference: Array.isArray(e) ? e.map((s) => s.value) : [],
       selectedConferences: value,
     });
+
+
     console.log("value is:", this.state.selectedConferences);
 
   }
 
+
+  selectYearsRange = (e) =>{
+    fetch(BASE_URL_CONFERENCE + "getSharedYears/?" + this.state.selectedConferences.join("&"))
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("json", json);
+        this.setState({
+          active1: true,
+          active2: false,
+          words: json.years.sort((a, b) => (a.label > b.label ? 1 : -1)),
+          key: "topic",
+          selectedConferences: this.state.selectedConferences,
+        });
+      });
+
+  }
 
 
   selectSharedTopics = (e) => {
@@ -385,7 +404,29 @@ class CompareStackedAreaChart extends Component {
             />
 
             </div>
-<              br/>
+            <br/>
+              <Button
+                outline
+                color="primary"
+                active={active1}
+                value="topic"
+                onClick={this.selectYearsRange}
+              >
+                get years
+              </Button>
+            <br/>
+            <br/>
+              <Label>Select a year</Label>
+              <br/>
+              <div style={{width: "250px"}}>
+              <Select
+                placeholder="Select conference"
+                options={words}
+                value={words.find((obj) => obj.value === selectTopic)}
+                onChange={this.wordhandleChange}
+             />
+                </div>
+            <br/>
               <Button
                 outline
                 color="primary"
@@ -429,17 +470,7 @@ class CompareStackedAreaChart extends Component {
                 </div>
               )}
               <br/>
-              <br/>
-              <Label>Select a topic/keyword</Label>
-              <br/>
-              <div style={{width: "250px"}}>
-              <Select
-                placeholder="Select conference"
-                options={words}
-                value={words.find((obj) => obj.value === selectTopic)}
-                onChange={this.wordhandleChange}
-             />
-                </div>
+              
               <br/>
               <Button
                 outline
@@ -478,10 +509,9 @@ class CompareStackedAreaChart extends Component {
           </Form>
           <div style={{opacity: opacity}}>
             <ReactApexChart
-              ref={this.selectInputRef1}
               options={this.state.options}
               series={this.state.series}
-              type="area"
+              type="bar"
               height={350}
             />
           </div>
@@ -500,7 +530,7 @@ class CompareStackedAreaChart extends Component {
               </p>
               <br/>
 
-                
+            
             <Label>Select conferences</Label>
 
             <div style={{width: "600px"}}>
@@ -516,6 +546,29 @@ class CompareStackedAreaChart extends Component {
             />
 
             </div>
+            <br/>
+              <Button
+                outline
+                color="primary"
+                active={active1}
+                value="topic"
+                onClick={this.selectYearsRange}
+              >
+                get years
+              </Button>
+
+              <br/>
+            <br/>
+              <Label>Select a year</Label>
+              <br/>
+              <div style={{width: "250px"}}>
+              <Select
+                placeholder="Select conference"
+                options={words}
+                value={words.find((obj) => obj.value === selectTopic)}
+                onChange={this.wordhandleChange}
+             />
+                </div>
 <              br/>
               <Button
                 outline
@@ -560,17 +613,7 @@ class CompareStackedAreaChart extends Component {
                 </div>
               )}
               <br/>
-              <br/>
-              <Label>Select a topic/keyword</Label>
-              <br/>
-              <div style={{width: "250px"}}>
-              <Select
-                placeholder="Select conference"
-                options={words}
-                value={words.find((obj) => obj.value === selectTopic)}
-                onChange={this.wordhandleChange}
-             />
-                </div>
+            
               <br/>
               <Button
                 outline
@@ -613,4 +656,4 @@ class CompareStackedAreaChart extends Component {
   }
 }
 
-export default CompareStackedAreaChart;
+export default CompareStackedBarChart;

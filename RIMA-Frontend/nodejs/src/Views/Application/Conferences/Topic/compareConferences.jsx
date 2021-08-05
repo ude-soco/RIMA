@@ -1,7 +1,7 @@
 import React, {useState,useEffect } from "react";
 import {CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
 import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart";
-import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
+import CompareStackedBarChart from "../../../components/LAKForms/compareStackedBarChart";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
 
@@ -179,7 +179,7 @@ export default function CompareConferences (props) {
           }}
         >
           <Col>
-            <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
+            <CompareStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
           </Col>
         </div>
       </div>

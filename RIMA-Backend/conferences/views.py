@@ -98,7 +98,7 @@ class conferencesNamesView(ListCreateAPIView):
 
 
 
-class conferencesSharesWordsView(ListCreateAPIView):
+class conferencesSharedWordsView(ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         result_data = []
         models_data = []
@@ -120,6 +120,7 @@ class conferencesSharesWordsView(ListCreateAPIView):
             })
 
         return Response({'words': result_data})  
+
 
 
 class SharedWordEvolutionView(ListCreateAPIView):
@@ -177,6 +178,35 @@ class SharedWordEvolutionView(ListCreateAPIView):
         return Response({"weights": result_data,
                          "years": years_range
                          }) 
+
+
+
+
+class conferencesYearsRangeView(ListCreateAPIView):
+    
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        models_data = []
+        conferences_list = []
+
+        url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(),r'?')
+        conferences_list= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
+       
+
+
+        models_data = confutils.getYearsRangeBetweenConferences(conferences_list)
+        
+        for word in models_data:
+            result_data.append({
+                'value': word,
+                'label': word,
+            })
+
+        print('result_dat')
+        print(result_data)
+        print('result_data')
+
+        return Response({'years': result_data})  
 
 """
 BAB Conference Events views

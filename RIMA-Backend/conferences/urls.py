@@ -9,8 +9,9 @@ urlpatterns = [
     
     # BAB Vis Compare Stackes Area
     path('conferencesNames/', views.conferencesNamesView.as_view()), # BAB 
-    path('getSharedWords/<pk1>/', views.conferencesSharesWordsView.as_view()), 
+    path('getSharedWords/<pk1>/', views.conferencesSharedWordsView.as_view()), 
     path('getSharedWordEvolution/<pk1>/<pk2>/', views.SharedWordEvolutionView.as_view()),
+    path('getSharedYears/', views.conferencesYearsRangeView.as_view()),
 
     path('addConference/', views.addConferenceView.as_view()), # BAB
     path('ConferenceEvents/<slug:conference_name_abbr>', views.ConferenceEventsView.as_view()), # BAB 
