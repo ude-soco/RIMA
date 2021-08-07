@@ -28,6 +28,7 @@ class CompareStackedBarChart extends Component {
       words:[],
       selectedOption:"",
       weights : [],
+      key: "",
 
       
       soptions: [],
@@ -42,7 +43,7 @@ class CompareStackedBarChart extends Component {
       selectTopic: "",
       series: [],
       flag: false,
-      key: "",
+      
       active1: false,
       active2: false,
       active3: false,
@@ -192,19 +193,75 @@ class CompareStackedBarChart extends Component {
 
 
   selectSharedKeywords = (e) => {
-    fetch(BASE_URL_CONFERENCE + "getSharedWords/keyword/?" + this.state.selectedConferences.join("&"))
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json", json);
-        this.setState({
-          active1: false,
-          active2: true,
-          words: json.words.sort((a, b) => (a.label > b.label ? 1 : -1)),
-          key: "keyowrd",
-          selectedConferences: this.state.selectedConferences,
-        });
+    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/keyword/"+this.state.selectValue+"/?" + this.state.selectedConferences.join("&"))
+    .then((response) => response.json())
+    .then((json) => {
+      var series = [];
+      console.log(json.Topiclist[0]);
+      for (let i = 0; i < json.Topiclist[0].length; i++) {
+        series = series.concat([
+          {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
+        ]);
+        //selectInputRef1.current.chart.publicMethods.updateOptions({})
+      }
+      this.setState({
+        active1: false,
+        active2: true,
+        active3: true,
+        active4: false,
+        opacity: 1,
+        series: series,
+
+        options: {
+          chart: {
+            type: "bar",
+            height: 350,
+            stacked: true,
+            stackType: "100%",
+            toolbar: {
+              show: true,
+            },
+            zoom: {
+              enabled: true,
+            },
+          },
+
+          plotOptions: {
+            bar: {
+              horizontal: true,
+            },
+          },
+          stroke: {
+            width: 1,
+            colors: ["#fff"],
+          },
+
+          xaxis: {
+            categories: json.Topiclist[1],
+          },
+          yaxis: {
+            title: {
+              text: undefined,
+            },
+            labels: {
+              style: {
+                fontWeight: 700,
+              },
+            },
+          },
+          fill: {
+            opacity: 1,
+          },
+          legend: {
+            position: "bottom",
+            horizontalAlign: "left",
+            offsetX: 40,
+          },
+        },
+        years: json.Topiclist[1],
+        isLoaded: true,
       });
-    console.log("options:", this.state.soptions);
+    });
   }
 
 
@@ -272,141 +329,8 @@ class CompareStackedBarChart extends Component {
     });
   }
 
-  clickEvent =() => {
-    if (this.state.key == "topic") {
-      if (this.selectInputRef1.current == null) {
-        this.setState({
-          loader: true,
-          display: "block",
-        });
-      } else {
-        this.setState({
-          opacity: "0.1",
-          loader: true,
-          display: "block",
-        });
-      }
 
-      var {series} = this.state;
-      var {weights} =  this.state;
-
-      fetch(
-        BASE_URL_CONFERENCE +
-        "getSharedWordEvolution/topic/" + this.state.selectValue +"/" +
-        "?" +
-        this.state.selectedConferences.join("&")  
-      )
-        .then((response) => response.json())
-        .then((json) => {
-          series = [];
-          weights = [];
-          for (let index = 0; index < this.state.selectedConferences.length; index++ ){
-            for (let i = 0; i < json.weights.length; i++) {
-                weights[i] = json.weights[i][index]
-            }
-                series = series.concat([
-                {name: this.state.selectedConferences[index], data: weights,}]);
-
-            console.log("weights", weights);
-            weights = [];
-            
-        }
-          console.log("series", series);
-          console.log("this.state.selectedConferences", this.state.selectedConferences);
-          this.setState({
-            selectConference: this.state.selectedConferences,
-            active1: true,
-            active2: false,
-            active3: true,
-            active4: false,
-            series: series,
-            datalabels: {
-              enabled: true,
-            },
-            options: {
-              stroke: {
-                curve: "smooth",
-              },
-              xaxis: {
-                categories: json.years,
-              },
-            },
-            isLoaded: true,
-            loader: false,
-            opacity: "0.9",
-          });
-        });
-    } else {
-      if (this.selectInputRef1.current == null) {
-        console.log("true");
-        this.setState({
-          loader: true,
-          display: "block",
-        });
-      } else {
-        //this.selectInputRef1.current=null
-        this.setState({
-          opacity: "0.1",
-          loader: true,
-          display: "block",
-        });
-      }
-
-   
-      var {series} = this.state;
-
-      fetch(
-        BASE_URL_CONFERENCE +
-        "getSharedWordEvolution/keyword/" + this.state.selectValue +"/" +
-        "?" +
-        this.state.selectedConferences.join("&")  
-      )
-        .then((response) => response.json())
-        .then((json) => {
-          series = [];
-          weights = [];
-          for (let index = 0; index < this.state.selectedConferences.length; index++ ){
-            for (let i = 0; i < json.weights.length; i++) {
-                weights[i] = json.weights[i][index]
-            }
-                series = series.concat([
-                {name: this.state.selectedConferences[index], data: weights,}]);
-
-            console.log("weights", weights);
-            weights = [];
-            
-        }
-          console.log("series", series);
-          console.log("this.state.selectedConferences", this.state.selectedConferences);
-          this.setState({
-            selectConference: this.state.selectedConferences,
-            active1: false,
-            active2: true,
-            active3: true,
-            active4: false,
-            series: series,
-            datalabels: {
-              enabled: true,
-            },
-            options: {
-              stroke: {
-                curve: "smooth",
-              },
-              xaxis: {
-                categories: json.years,
-              },
-            },
-            isLoaded: true,
-            loader: false,
-            opacity: "0.9",
-          });
-        });
-          
-      
-    }
-  }
-
-
+        
 
   render() {
     const checkmount = this.checkIfMounted;
@@ -502,6 +426,15 @@ class CompareStackedBarChart extends Component {
               >
                 Compare Keywords
               </Button>
+              
+              <Button
+                outline
+                active={active4}
+                color="primary"
+                onClick={this.onClear}
+              >
+                Reset
+              </Button>
               <i
                 className="fas fa-question-circle text-blue"
                 onMouseOver={() => this.handleToogle(true)}
@@ -527,24 +460,7 @@ class CompareStackedBarChart extends Component {
                 </div>
               )}
               <br/>
-              
-              <br/>
-              <Button
-                outline
-                active={active3}
-                color="primary"
-                onClick={this.clickEvent}
-              >
-                Compare
-              </Button>
-              <Button
-                outline
-                active={active4}
-                color="primary"
-                onClick={this.onClear}
-              >
-                Reset
-              </Button>
+          
               <div
                 style={{
                   marginLeft: "300px",
@@ -645,6 +561,15 @@ class CompareStackedBarChart extends Component {
               >
                Compare Keywords
               </Button>
+
+              <Button
+                outline
+                active={active4}
+                color="primary"
+                onClick={this.onClear}
+              >
+                Reset
+              </Button>
               <i
                 className="fas fa-question-circle text-blue"
                 onMouseOver={() => this.handleToogle(true)}
@@ -670,24 +595,7 @@ class CompareStackedBarChart extends Component {
                 </div>
               )}
               <br/>
-            
-              <br/>
-              <Button
-                outline
-                active={active3}
-                color="primary"
-                onClick={this.clickEvent}
-              >
-                Compare
-              </Button>
-              <Button
-                outline
-                active={active4}
-                color="primary"
-                onClick={this.onClear}
-              >
-                Reset
-              </Button>
+           
               <div
                 style={{
                   marginLeft: "300px",

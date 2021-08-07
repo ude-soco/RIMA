@@ -240,21 +240,12 @@ class conferencesSharedWordsBarView(ListCreateAPIView):
                 not_available_events.append(conference_event)    
 
 
-        
-
-        for a in avaiable_events:
-            print(a, 'hallooo')
-
-
         print(conferences_list)
         print(year)
         print(keyword_or_topic)
         print(conferences_events_list)
         print('AVAILABLE',list(set(avaiable_events)))
         print('NOT AVAILABLE',list(set(not_available_events)))
-        print(request.get_full_path())
-
-
 
         result_data = confutils.getSharedWordsBetweenEvents(avaiable_events,keyword_or_topic)
 
