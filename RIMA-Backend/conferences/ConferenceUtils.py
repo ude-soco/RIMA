@@ -175,7 +175,6 @@ def getAuthorsData(conference_name_abbr="", conference_event_name_abbr =""):
     sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
     return sorted_data
 
-#bab under work
 def getAuthorInterests(publications_list,author_id,keyword_or_topic,num = 30):
     abstract_title_str = ""
     keywords = {}
@@ -491,8 +490,9 @@ def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
             'weight': words_weights
         })
 
-    result_data.append(shared_words_final_data)
-    result_data.append(conference_events_list)
+    #result_data.append(shared_words_final_data)
+    #result_data.append(conference_events_list)
+    result_data = [shared_words_final_data,conference_events_list]
 
     print('result_data stacked bar NEW')
     print(result_data)
@@ -501,7 +501,6 @@ def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
     return result_data
 
 
-# under work
 def getSharedWordsBetweenConferences(conferences_list,keyword_or_topic):
     conferences_words = []
     one_conference_words = []
@@ -595,22 +594,35 @@ def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
 
 def getYearsRangeOfConferences(conferences_list, all_or_shared):
     years = []
+    result_data = []
+    years_filtering_list = []
+    years_filtering_list = []
 
     for conference in conferences_list:
         conference_obj = Conference.objects.get(conference_name_abbr=conference)
         conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
-
+        intermediate_list = []
         for conference_event_obj in conference_event_objs:
             confernece_year = re.sub("[^0-9]", "", conference_event_obj.conference_event_name_abbr.split('-')[0])
             if re.match("^\d{2}$", confernece_year):
                 confernece_year = '19' + confernece_year
+            intermediate_list.append(confernece_year)
+        years.append(intermediate_list)
 
-            years.append(confernece_year)
-
+    
     if all_or_shared == 'shared':
-        result_data = list(set([year for year in years if years.count(year) == len(conferences_list)]))
+        for years_list in years:
+            years_list = list(set(years_list))
+            years_filtering_list.append(years_list)
+        years_filtering_list = [y for x in years_filtering_list for y in x]
+        result_data = list(set([year for year in years_filtering_list if years_filtering_list.count(year) == len(conferences_list)]))
     elif all_or_shared == 'all':
-        result_data = sorted(list(set(years)))
+        result_data = sorted(list(set().union(*years)))
+    
+    print('#################### result_data ######################')
+    print(result_data)
+    print('#################### result_data ######################')
+
     
     return result_data
 

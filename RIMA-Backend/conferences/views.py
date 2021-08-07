@@ -223,30 +223,27 @@ class conferencesSharedWordsBarView(ListCreateAPIView):
         year = confutils.split_restapi_url(url_splits[-2],r'/')[-2]
         keyword_or_topic = confutils.split_restapi_url(url_splits[-2],r'/')[-3]
 
+    
         for conference in conferences_list:
             conferences_events_list.append(conference+year)
-            conferences_events_list.append(conference+year[2:])
+            if int(year) < 2000:
+                conferences_events_list.append(conference+year[2:])
+
 
         for conference_event in conferences_events_list:
             event_is_available = Conference_Event.objects.filter(Q(conference_event_name_abbr__icontains=conference_event)).exists()
             if event_is_available:
-                event = Conference_Event.objects.filter(Q(conference_event_name_abbr__icontains=conference_event)).values_list('conference_event_name_abbr', flat=True)
-                avaiable_events.append(event)
+                model_events = Conference_Event.objects.filter(Q(conference_event_name_abbr__icontains=conference_event))
+                for model_event in model_events:
+                    avaiable_events.append(model_event.conference_event_name_abbr)
             else:
                 not_available_events.append(conference_event)    
 
 
+        
 
-        #all_model_conferences_events = Conference_Event.objects.all().values_list('conference_event_name_abbr',flat=True)
-
-        #print(all_model_conferences_events)
-        #for conference_event in conferences_events_list:
-         #   if conference_event in all_model_conferences_events:
-         #       print(True)
-         #       avaiable_events.append(model_conference_event)
-         #   else:
-           #     not_available_events.append(conference_event)
-
+        for a in avaiable_events:
+            print(a, 'hallooo')
 
 
         print(conferences_list)
@@ -256,6 +253,10 @@ class conferencesSharedWordsBarView(ListCreateAPIView):
         print('AVAILABLE',list(set(avaiable_events)))
         print('NOT AVAILABLE',list(set(not_available_events)))
         print(request.get_full_path())
+
+
+
+        result_data = confutils.getSharedWordsBetweenEvents(avaiable_events,keyword_or_topic)
 
         print('result_dat')
         print(result_data)
@@ -576,9 +577,7 @@ class FetchTopicView(APIView):
 
         print(topics_split_params)
         result_data = confutils.getSharedWordsBetweenEvents(topics_split_params,keyword_or_topic)
-        confutils.getSharedWordsBetweenEventsOld(topics_split_params,keyword_or_topic)
 
-        
         return Response(
             {"Topiclist": result_data})
 
