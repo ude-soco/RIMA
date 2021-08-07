@@ -194,7 +194,7 @@ class conferencesYearsRangeView(ListCreateAPIView):
        
 
 
-        models_data = confutils.getYearsRangeBetweenConferences(conferences_list)
+        models_data = confutils.getYearsRangeOfConferences(conferences_list, 'shared')
         
         for word in models_data:
             result_data.append({
@@ -207,6 +207,61 @@ class conferencesYearsRangeView(ListCreateAPIView):
         print('result_data')
 
         return Response({'years': result_data})  
+
+
+
+# under work
+class conferencesSharedWordsBarView(ListCreateAPIView):
+    def get(self, request, *args, **kwargs):
+        result_data = [[],[]]
+        conferences_events_list = []
+        avaiable_events  = []
+        not_available_events = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'?')
+        conferences_list = confutils.split_restapi_url(url_splits[-1],r'&')
+        year = confutils.split_restapi_url(url_splits[-2],r'/')[-2]
+        keyword_or_topic = confutils.split_restapi_url(url_splits[-2],r'/')[-3]
+
+        for conference in conferences_list:
+            conferences_events_list.append(conference+year)
+            conferences_events_list.append(conference+year[2:])
+
+        for conference_event in conferences_events_list:
+            event_is_available = Conference_Event.objects.filter(Q(conference_event_name_abbr__icontains=conference_event)).exists()
+            if event_is_available:
+                event = Conference_Event.objects.filter(Q(conference_event_name_abbr__icontains=conference_event)).values_list('conference_event_name_abbr', flat=True)
+                avaiable_events.append(event)
+            else:
+                not_available_events.append(conference_event)    
+
+
+
+        #all_model_conferences_events = Conference_Event.objects.all().values_list('conference_event_name_abbr',flat=True)
+
+        #print(all_model_conferences_events)
+        #for conference_event in conferences_events_list:
+         #   if conference_event in all_model_conferences_events:
+         #       print(True)
+         #       avaiable_events.append(model_conference_event)
+         #   else:
+           #     not_available_events.append(conference_event)
+
+
+
+        print(conferences_list)
+        print(year)
+        print(keyword_or_topic)
+        print(conferences_events_list)
+        print('AVAILABLE',list(set(avaiable_events)))
+        print('NOT AVAILABLE',list(set(not_available_events)))
+        print(request.get_full_path())
+
+        print('result_dat')
+        print(result_data)
+        print('result_data')
+
+        return Response({'Topiclist': result_data}) 
 
 """
 BAB Conference Events views
@@ -511,7 +566,7 @@ View to get topic data for the stacked bar chart across years
 #BAB
 class FetchTopicView(APIView):
     def get(self, request, *args, **kwargs):
-        result_data = []
+        result_data = [[],[]]
         url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
         url_splits_topic_keyword = confutils.split_restapi_url(request.get_full_path(), r'/')
        
@@ -521,7 +576,9 @@ class FetchTopicView(APIView):
 
         print(topics_split_params)
         result_data = confutils.getSharedWordsBetweenEvents(topics_split_params,keyword_or_topic)
-     
+        confutils.getSharedWordsBetweenEventsOld(topics_split_params,keyword_or_topic)
+
+        
         return Response(
             {"Topiclist": result_data})
 
@@ -1041,7 +1098,6 @@ class AllKeywordsView(APIView):
 get all topics for author network
 '''
 
-# under work
 class AllTopicsView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
@@ -1075,7 +1131,6 @@ class AllTopicsView(APIView):
 View to get keywords for the author network
 '''
 
-#under work
 class SearchKeywordView(APIView):
     def get(self, request, *args, **kwargs):
         paper_authors = []

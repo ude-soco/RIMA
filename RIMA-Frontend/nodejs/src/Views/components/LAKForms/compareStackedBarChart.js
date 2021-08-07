@@ -77,7 +77,7 @@ class CompareStackedBarChart extends Component {
   };
 
 
-  wordhandleChange = (e) =>{
+  yearhandleChange = (e) =>{
     console.log(e.value)
     this.setState({
       selectValue: e.value
@@ -109,7 +109,6 @@ class CompareStackedBarChart extends Component {
           active1: true,
           active2: false,
           words: json.years.sort((a, b) => (a.label > b.label ? 1 : -1)),
-          key: "topic",
           selectedConferences: this.state.selectedConferences,
         });
       });
@@ -118,20 +117,78 @@ class CompareStackedBarChart extends Component {
 
 
   selectSharedTopics = (e) => {
-    fetch(BASE_URL_CONFERENCE + "getSharedWords/topic/?" + this.state.selectedConferences.join("&"))
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json", json);
-        this.setState({
-          active1: true,
-          active2: false,
-          words: json.words.sort((a, b) => (a.label > b.label ? 1 : -1)),
-          key: "topic",
-          selectedConferences: this.state.selectedConferences,
-        });
+    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/topic/"+this.state.selectValue+"/?" + this.state.selectedConferences.join("&"))
+    .then((response) => response.json())
+    .then((json) => {
+      var series = [];
+      console.log(json.Topiclist[0]);
+      for (let i = 0; i < json.Topiclist[0].length; i++) {
+        series = series.concat([
+          {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
+        ]);
+        //selectInputRef1.current.chart.publicMethods.updateOptions({})
+      }
+      this.setState({
+        active1: false,
+        active2: true,
+        active3: true,
+        active4: false,
+        opacity: 1,
+        series: series,
+
+        options: {
+          chart: {
+            type: "bar",
+            height: 350,
+            stacked: true,
+            stackType: "100%",
+            toolbar: {
+              show: true,
+            },
+            zoom: {
+              enabled: true,
+            },
+          },
+
+          plotOptions: {
+            bar: {
+              horizontal: true,
+            },
+          },
+          stroke: {
+            width: 1,
+            colors: ["#fff"],
+          },
+
+          xaxis: {
+            categories: json.Topiclist[1],
+          },
+          yaxis: {
+            title: {
+              text: undefined,
+            },
+            labels: {
+              style: {
+                fontWeight: 700,
+              },
+            },
+          },
+          fill: {
+            opacity: 1,
+          },
+          legend: {
+            position: "bottom",
+            horizontalAlign: "left",
+            offsetX: 40,
+          },
+        },
+        years: json.Topiclist[1],
+        isLoaded: true,
       });
-    console.log("options:", this.state.soptions);
+    });
   }
+
+
 
 
   selectSharedKeywords = (e) => {
@@ -412,7 +469,7 @@ class CompareStackedBarChart extends Component {
                 value="topic"
                 onClick={this.selectYearsRange}
               >
-                get years
+                get shared years
               </Button>
             <br/>
             <br/>
@@ -423,7 +480,7 @@ class CompareStackedBarChart extends Component {
                 placeholder="Select conference"
                 options={words}
                 value={words.find((obj) => obj.value === selectTopic)}
-                onChange={this.wordhandleChange}
+                onChange={this.yearhandleChange}
              />
                 </div>
             <br/>
@@ -434,7 +491,7 @@ class CompareStackedBarChart extends Component {
                 value="topic"
                 onClick={this.selectSharedTopics}
               >
-                Topic
+                Compare Topics
               </Button>
               <Button
                 outline
@@ -443,7 +500,7 @@ class CompareStackedBarChart extends Component {
                 active={active2}
                 onClick={this.selectSharedKeywords}
               >
-                Keyword
+                Compare Keywords
               </Button>
               <i
                 className="fas fa-question-circle text-blue"
@@ -554,7 +611,7 @@ class CompareStackedBarChart extends Component {
                 value="topic"
                 onClick={this.selectYearsRange}
               >
-                get years
+                get shared years
               </Button>
 
               <br/>
@@ -566,7 +623,7 @@ class CompareStackedBarChart extends Component {
                 placeholder="Select conference"
                 options={words}
                 value={words.find((obj) => obj.value === selectTopic)}
-                onChange={this.wordhandleChange}
+                onChange={this.yearhandleChange}
              />
                 </div>
 <              br/>
@@ -577,7 +634,7 @@ class CompareStackedBarChart extends Component {
                 value="topic"
                 onClick={this.selectSharedTopics}
               >
-                Topic
+                Compare Topics
               </Button>
               <Button
                 outline
@@ -586,7 +643,7 @@ class CompareStackedBarChart extends Component {
                 active={active2}
                 onClick={this.selectSharedKeywords}
               >
-                Keyword
+               Compare Keywords
               </Button>
               <i
                 className="fas fa-question-circle text-blue"

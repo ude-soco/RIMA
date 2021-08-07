@@ -412,8 +412,8 @@ def getAbstractbasedonKeyword(conference_event_name_abbr,keyword):
 
     return titles_abstracts
 
-
-def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
+# can be removed
+def getSharedWordsBetweenEventsOld(conference_events_list,keyword_or_topic):
     models_data = []
     first_event = conference_events_list[0]
     shared_word = []
@@ -453,7 +453,51 @@ def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
     result_data.append(dict_list)
     result_data.append(conference_events_list)
 
+    print('result_data stacked bar')
+    print(result_data)
+    print('result_data stacked bar')
 
+    return result_data
+
+
+
+def getSharedWordsBetweenEvents(conference_events_list,keyword_or_topic):
+    shared_words = []
+    shared_words_final_data = []
+    result_data = []
+    conference_event_data = []
+    all_words = []
+
+    for conference_event in conference_events_list:
+        if keyword_or_topic == 'topic':
+            conference_event_data = getTopicsfromModels(conference_event)
+        elif keyword_or_topic == 'keyword':
+            conference_event_data = getKeywordsfromModels(conference_event)
+
+        for data in conference_event_data:
+            all_words.append(data[keyword_or_topic])
+
+
+    shared_words = list(set([word for word in all_words if all_words.count(word) == len(conference_events_list)]))
+
+    for word in shared_words:
+        words_weights = []
+        for conference_event in conference_events_list:
+            conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr = conference_event)
+            conf_event_word_data = getWordWeightEventBased([conference_event_obj],word,keyword_or_topic)
+            words_weights.append(conf_event_word_data[0]['weight'])
+        shared_words_final_data.append({
+            'word': word,
+            'weight': words_weights
+        })
+
+    result_data.append(shared_words_final_data)
+    result_data.append(conference_events_list)
+
+    print('result_data stacked bar NEW')
+    print(result_data)
+    print('result_data stacked bar NEW')
+ 
     return result_data
 
 
@@ -549,13 +593,13 @@ def getWordWeightEventBased(conference_event_objs,word,keyword_or_topic):
     return result_data
 
 
-def getYearsRangeBetweenConferences(conferences_list):
+def getYearsRangeOfConferences(conferences_list, all_or_shared):
     years = []
 
     for conference in conferences_list:
         conference_obj = Conference.objects.get(conference_name_abbr=conference)
         conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
-        
+
         for conference_event_obj in conference_event_objs:
             confernece_year = re.sub("[^0-9]", "", conference_event_obj.conference_event_name_abbr.split('-')[0])
             if re.match("^\d{2}$", confernece_year):
@@ -563,10 +607,14 @@ def getYearsRangeBetweenConferences(conferences_list):
 
             years.append(confernece_year)
 
-       
-    result_data = sorted(list(set(years)))
+    if all_or_shared == 'shared':
+        result_data = list(set([year for year in years if years.count(year) == len(conferences_list)]))
+    elif all_or_shared == 'all':
+        result_data = sorted(list(set(years)))
     
     return result_data
+
+
 
 def generateVennPhoto(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
     
