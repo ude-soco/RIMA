@@ -29,6 +29,7 @@ import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollT
 import ConferenceGeneralData from "../../../components/LAKForms/ConferenceGeneralData";
 // BAB:BEGIN 08/06/2021 :: cover other conferences.
 import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
+import ReactApexChart from "react-apexcharts";
 
 // years and conferences' names should be fetched later from a customed endpoint
 
@@ -131,7 +132,39 @@ export default function ConferenceBar (props) {
   const [BarChartseries, setBarChartseries] = useState([]);
   const [BarConfEventsList, setBarConfEventsList] = useState([]);
 
-
+  const [BarOptions, setBarOptions] = useState({
+    chart: {
+      type: 'bar',
+      height: 350
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        endingShape: 'rounded'
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    },
+    xaxis: {
+      categories: ["lak2011", "lak2012", "lak2013", "lak2014", "lak2015", "lak2016", "lak2017", "lak2018", "lak2019", "lak2020", "lak2021"],
+    },
+    yaxis: {
+      min: 10,
+      max: 400,
+    },
+    fill: {
+      opacity: 1
+    },
+  
+  },
+);
 
 
   const loading =
@@ -177,15 +210,14 @@ export default function ConferenceBar (props) {
       setConferenceOtherData(json.other_data)
       setBarChartseries(json.series)
       setBarConfEventsList(json.conference_events)
+      setBarOptions({
+        ...BarOptions,
+        xaxis: {
+          ...BarOptions.xaxis,
+          categories: json.conference_events
+        }
+      })
     });
-
-    console.log("data");
-    console.log(confEvents);
-    console.log(conferenceOtherData);
-    console.log(BarChartseries)
-    console.log(BarConfEventsList)
-
-    console.log("data");
   };
 
   
@@ -272,7 +304,14 @@ export default function ConferenceBar (props) {
                   Events General Overview of the {selectedOption.value} Conference
                 </Typography>
 
-                <ConferenceGeneralData series = {BarChartseries} data = {BarConfEventsList} />
+
+                <div id="chart">
+            <ReactApexChart 
+            options={BarOptions} 
+
+            series={BarChartseries} type="bar" height={350} 
+            />
+        </div>
                 
               </Grid>
             </Grid>

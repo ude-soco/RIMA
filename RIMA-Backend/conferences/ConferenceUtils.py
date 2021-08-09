@@ -59,9 +59,9 @@ def getConferenceData(conference_name_abbr):
     no_of_all_authors = author_has_papers_objs.values_list('author_id').distinct().count()
 
     event_based_papers_data = {'name': '', 'data':[]}
-    event_based_papers_data['name'] = 'no_of_event_papers'
+    event_based_papers_data['name'] = 'number of papers'
     event_based_authors_data = {'name':'' , 'data':[]}
-    event_based_authors_data['name'] = 'no_of_event_authors'
+    event_based_authors_data['name'] = 'no of authors'
 
     for conference_event in conference_events_model_objs:
         no_of_event_papers = Conference_Event_Paper.objects.filter(conference_event_name_abbr = conference_event.conference_event_name_abbr).count()
