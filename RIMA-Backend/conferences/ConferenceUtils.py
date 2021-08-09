@@ -10,7 +10,7 @@ from .models import (Author, Author_has_Papers, Event_has_Topic
                     ,Author_Event_keyword
                     ,Author_has_Keyword
                     ,Author_Event_Topic
-                    ,Author_has_Topic)                  
+                    ,Author_has_Topic, PreloadedConferenceList)                  
 from .serializers import ConferenceEventSerializer
 from .TopicExtractor import getData,createConcatenatedColumn
 from .topicutils import listToString
@@ -40,6 +40,67 @@ def split_restapi_url(url_path,split_char):
     url_path = url_path.replace("%20", " ")
     topics_split = url_path.split(split_char)
     return topics_split 
+
+
+def getConferenceData(conference_name_abbr):
+    result_data = {'series':[]}
+    conference_events_result_data = []
+    conference_events_years = []
+
+    conference_preloaded_model_data = PreloadedConferenceList.objects.filter(conference_name_abbr = conference_name_abbr)[0]
+    conference_events_model_objs = Conference_Event.objects.filter(conference_name_abbr = conference_name_abbr)
+    conference_papers_model_objs = Conference_Event_Paper.objects.filter(conference_name_abbr = conference_name_abbr)
+    author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr = conference_name_abbr)
+
+    conference_full_name = conference_preloaded_model_data.conference_full_name
+    conference_url = conference_preloaded_model_data.conference_url
+    no_of_events = conference_events_model_objs.count()
+    no_of_all_papers = conference_papers_model_objs.count()
+    no_of_all_authors = author_has_papers_objs.values_list('author_id').distinct().count()
+
+    event_based_papers_data = {'name': '', 'data':[]}
+    event_based_papers_data['name'] = 'no_of_event_papers'
+    event_based_authors_data = {'name':'' , 'data':[]}
+    event_based_authors_data['name'] = 'no_of_event_authors'
+
+    for conference_event in conference_events_model_objs:
+        no_of_event_papers = Conference_Event_Paper.objects.filter(conference_event_name_abbr = conference_event.conference_event_name_abbr).count()
+        no_of_event_authors = Author_has_Papers.objects.filter(conference_event_name_abbr =  conference_event.conference_event_name_abbr).values_list('author_id').distinct().count()
+
+        event_based_papers_data['data'].append(no_of_event_papers)
+        event_based_authors_data['data'].append(no_of_event_authors)
+
+        conference_events_years.append(conference_event.conference_event_name_abbr)
+
+    result_data['series'].append(event_based_papers_data)
+    result_data['series'] .append(event_based_authors_data)
+    
+    #result_data['series'] = conference_events_result_data,
+    result_data['conference_events'] = conference_events_years
+    result_data['other_data'] = {
+        'conference_full_name': conference_full_name,
+        'conference_url' :conference_url,
+        'no_of_events': no_of_events,
+        'no_of_all_papers':no_of_all_papers,
+        'no_of_all_authors': no_of_all_authors
+
+    }
+
+
+    print('!!!! Conference Data !!!!')
+    print(conference_name_abbr)
+    print(conference_full_name)
+    print(conference_url)
+    print(no_of_events)
+    print(no_of_all_papers)
+    print(no_of_all_authors)
+
+    print(result_data)
+    print('!!!! Conference Data !!!!')
+    
+
+    return result_data
+
 
 def getConferencesList():
     data = []

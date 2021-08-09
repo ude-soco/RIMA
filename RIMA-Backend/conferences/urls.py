@@ -15,7 +15,9 @@ urlpatterns = [
 
     path('getSharedWordsBar/<pk1>/<pk2>/', views.conferencesSharedWordsBarView.as_view()),
 
+    path('conferenceData/<pk1>', views.conferenceGeneralDataView.as_view()), 
 
+    
     path('addConference/', views.addConferenceView.as_view()), # BAB
     path('ConferenceEvents/<slug:conference_name_abbr>', views.ConferenceEventsView.as_view()), # BAB 
     path('conferenceAuthors/<slug:conference_name_abbr>', views.conferenceAuthors.as_view()), # BAB 

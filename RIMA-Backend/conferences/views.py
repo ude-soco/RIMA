@@ -78,9 +78,15 @@ import itertools
 from itertools import combinations
 import re
 
+class conferenceGeneralDataView(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        conference_name_abbr = url_splits[-1]
+        result_data = confutils.getConferenceData(conference_name_abbr)
+        return Response(result_data)
 
 
-class conferencesNamesView(ListCreateAPIView):
+class conferencesNamesView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
         result_data = []
@@ -329,6 +335,9 @@ class addConferenceView(ListCreateAPIView):
         data = []
         
         data = confutils.getConferencesList()
+
+        #BAB
+        confutils.getConferenceData('aied')
 
         return Response(data)
     

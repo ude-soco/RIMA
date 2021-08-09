@@ -25,8 +25,8 @@ import LAKPie from "../../../components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "../../../components/LAKForms/LAKStackedAreaChart";
 import VennChart from "../../../components/LAKForms/VennChart";
 import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
-import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
-
+import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper"; 
+import ConferenceGeneralData from "../../../components/LAKForms/ConferenceGeneralData";
 // BAB:BEGIN 08/06/2021 :: cover other conferences.
 import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
 
@@ -86,43 +86,53 @@ export default function ConferenceBar (props) {
       label: "2011"
     },
     {
-      value: "2012",
-      label: "2012"
+      value: "lak2012",
+      label: "lak2012"
     },
     {
-      value: "2013",
-      label: "2013"
+      value: "lak2013",
+      label: "lak2013"
     },
     {
-      value: "2014",
-      label: "2014"
+      value: "lak2014",
+      label: "lak2014"
     },
     {
-      value: "2015",
-      label: "2015"
+      value: "lak2015",
+      label: "lak2015"
     },
     {
-      value: "2016",
-      label: "2016"
+      value: "lak2016",
+      label: "lak2016"
     },
     {
-      value: "2017",
-      label: "2017"
+      value: "lak2017",
+      label: "lak2017"
     },
     {
-      value: "2018",
-      label: "2018"
+      value: "lak2018",
+      label: "lak2018"
     },
     {
-      value: "2019",
-      label: "2019"
+      value: "lak2019",
+      label: "lak2019"
     },
     {
-      value: "2020",
-      label: "2020"
+      value: "lak2020",
+      label: "lak2020"
+    },
+    {
+      value: "lak2021",
+      label: "lak2021"
     }
   ],);
     
+  const [conferenceOtherData, setConferenceOtherData] = useState({});
+  const [BarChartseries, setBarChartseries] = useState([]);
+  const [BarConfEventsList, setBarConfEventsList] = useState([]);
+
+
+
 
   const loading =
     <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
@@ -136,6 +146,7 @@ export default function ConferenceBar (props) {
 
   useEffect(() => {
     handleSearchConferences();
+    
   }, [])
 
     if (window.Chart) {
@@ -158,6 +169,23 @@ export default function ConferenceBar (props) {
     .then(json => {
       setconfEvents(json.events)
     });
+
+
+    fetch(`${BASE_URL_CONFERENCE}conferenceData/${selectedOption.value}`)
+    .then(response => response.json())
+    .then(json => {
+      setConferenceOtherData(json.other_data)
+      setBarChartseries(json.series)
+      setBarConfEventsList(json.conference_events)
+    });
+
+    console.log("data");
+    console.log(confEvents);
+    console.log(conferenceOtherData);
+    console.log(BarChartseries)
+    console.log(BarConfEventsList)
+
+    console.log("data");
   };
 
   
@@ -177,7 +205,7 @@ export default function ConferenceBar (props) {
     return (
       <>
 
-      <Grid container component={Paper} className={classes.cardHeight}>     
+            <Grid container component={Paper} className={classes.cardHeight}>     
               <Grid item xs>
                 <Typography variant="h5" gutterBottom>
                   Conferences
@@ -201,6 +229,53 @@ export default function ConferenceBar (props) {
               </Grid>
             </Grid>
 
+
+          <Grid container component={Paper} className={classes.cardHeight}>     
+              <Grid item xs>
+                <Typography variant="h5" gutterBottom>
+                  Conference Complete Name
+                </Typography>
+                <Typography className={classes.gutter}>
+                  {conferenceOtherData.conference_full_name}
+                </Typography>
+                <Typography variant="h5" gutterBottom>
+                    dblp Conference Url
+                </Typography>
+                <Typography className={classes.gutter}>
+                {conferenceOtherData.conference_url}
+                </Typography>
+                <Typography variant="h5" gutterBottom>
+                  Number of Events
+                </Typography>
+                <Typography className={classes.gutter}>
+                {conferenceOtherData.no_of_events}
+                </Typography> 
+                <Typography variant="h5" gutterBottom>
+                  Number of all Papers
+                </Typography>
+                <Typography className={classes.gutter}>
+                {conferenceOtherData.no_of_all_papers}
+                </Typography>
+                <Typography variant="h5" gutterBottom>
+                  Number of all Authors
+                </Typography>
+                <Typography className={classes.gutter}>
+                {conferenceOtherData.no_of_all_authors}
+                </Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Typography variant="h5" gutterBottom>
+                  General Overview
+                </Typography>
+                <Typography className={classes.gutter}>
+                  Events General Overview of the {selectedOption.value} Conference
+                </Typography>
+
+                <ConferenceGeneralData series = {BarChartseries} data = {BarConfEventsList} />
+                
+              </Grid>
+            </Grid>
 
         {/* Page content */}
         <Grid container component={Paper} className={classes.cardHeight}>
@@ -256,6 +331,7 @@ export default function ConferenceBar (props) {
                     <Col>
                       <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} />        {/*  BAB 08.06.2021 */ } 
                      </Col>
+                     
                   </div>
                 </div>
                 <div className="main">
