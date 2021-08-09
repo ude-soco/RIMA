@@ -1,5 +1,5 @@
 //Done by Swarna
-// Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
+// Updated by Basem Abughallya 
 import React, {useState,useEffect } from "react";
 import {CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -26,12 +26,10 @@ import LAKStackedAreaChart from "../../../components/LAKForms/LAKStackedAreaChar
 import VennChart from "../../../components/LAKForms/VennChart";
 import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper"; 
-import ConferenceGeneralData from "../../../components/LAKForms/ConferenceGeneralData";
-// BAB:BEGIN 08/06/2021 :: cover other conferences.
 import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
 import ReactApexChart from "react-apexcharts";
+import { Link } from "react-router-dom";
 
-// years and conferences' names should be fetched later from a customed endpoint
 
 // BAB:END 08/06/2021 :: cover other conferences.
 
@@ -294,6 +292,12 @@ export default function ConferenceBar (props) {
                 <Typography className={classes.gutter}>
                 {conferenceOtherData.no_of_all_authors}
                 </Typography>
+
+                <Link to={"/app/view-author"}>
+                    <Button color="primary"  width = "50px">
+                    {selectedOption.value}'s Authors Dashboard
+                    </Button>
+                  </Link> 
               </Grid>
 
               <Grid item xs>
@@ -303,16 +307,13 @@ export default function ConferenceBar (props) {
                 <Typography className={classes.gutter}>
                   Events General Overview of the {selectedOption.value} Conference
                 </Typography>
-
-
-                <div id="chart">
-            <ReactApexChart 
-            options={BarOptions} 
-
-            series={BarChartseries} type="bar" height={350} 
-            />
-        </div>
-                
+                  <div id="chart">
+                    <ReactApexChart 
+                    options={BarOptions} 
+                    series={BarChartseries} type="bar" height={350} 
+                    />
+                  </div>
+                  
               </Grid>
             </Grid>
 
@@ -467,20 +468,6 @@ export default function ConferenceBar (props) {
                   </div>
                 </div>
               </Row>
-              {/*<Row>*/}
-              {/*  <Col></Col>*/}
-              {/*  <Col></Col>*/}
-              {/*  <Col></Col>*/}
-              {/*  <Col></Col>*/}
-              {/*  <Col></Col>*/}
-              {/*  <Col></Col>*/}
-              {/*  */}
-              {/*  <Col><div><br></br><Button color="primary" onClick=*/}
-              {/*  {this.navigateTop}><i title="Navigate to top of the page"*/}
-              {/*  className="fas fa-arrow-up text-white"*/}
-              {/*  */}
-              {/*></i></Button></div></Col>*/}
-              {/*</Row>*/}
             </CardHeader>
 
             <ScrollTopWrapper/>

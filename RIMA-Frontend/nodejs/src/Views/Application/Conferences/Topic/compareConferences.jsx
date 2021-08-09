@@ -2,6 +2,7 @@ import React, {useState,useEffect } from "react";
 import {CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
 import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart";
 import CompareStackedBarChart from "../../../components/LAKForms/compareStackedBarChart";
+import CompareTimeLineChart from "../../../components/LAKForms/CompareTimeLineChart";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import {chartOptions, parseOptions} from "Services/variables/charts.js";
 
@@ -130,83 +131,95 @@ export default function CompareConferences (props) {
     return (
         <>
        <Grid container component={Paper} className={classes.cardHeight}>
+          <Card className="bg-gradient-default1 shadow">
+            <CardHeader className="bg-transparent">
+              <Row className="align-items-center">
+                <div
+                  className="col"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    height: "1000",
+                    width: "5000",
+                  }}
+                >
+                  <div>
+                    <h2 className="text-white1 mb-0">Comparison of Conference(s)</h2>
+                    <p>
+                    
+                      The following visualizations compare the topics of conference over multiple years
+                    </p>
+                    <div style={{marginLeft: "40px"}}>
+                      <Label>Select conference</Label>
+                      <br></br>
+                      <div style={{width: "200px"}}>
+                        <Select
+                        // BAB:BEGIN 08/06/2021 :: cover other conferences.
+                          placeholder="Select conference"
+                          options={available}
+                          value={selectedOption}
+                          onChange={handleChange}
+                        // BAB:END 08/06/2021 :: cover other conferences.
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Row>
+              <Row>
+                <div className="main">
+                  <div
+                    className="row mt-4"
+                    style={{
+                      height: "1000px",
+                      width: "830px",
+                      backgroundColor: "#F0F8FF",
+                      marginLeft: "50px",
+                      borderRadius: "2px",
+                    }}
+                  >
+                    <Col>
+                      <CompareStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
+                    </Col>
+                  </div>
+                </div>
+                <br></br>
+                <div
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    width: "830px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <CompareStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                  </Col>
+                </div>
 
-<Card className="bg-gradient-default1 shadow">
-  <CardHeader className="bg-transparent">
-    <Row className="align-items-center">
-      <div
-        className="col"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          height: "1000",
-          width: "5000",
-        }}
-      >
-        <div>
-          <h2 className="text-white1 mb-0">Comparison of Conference(s)</h2>
-          <p>
-          
-            The following visualizations compare the topics of conference over multiple years
-          </p>
-          <div style={{marginLeft: "40px"}}>
-            <Label>Select conference</Label>
-            <br></br>
-            <div style={{width: "200px"}}>
-              <Select
-              // BAB:BEGIN 08/06/2021 :: cover other conferences.
-                placeholder="Select conference"
-                options={available}
-                value={selectedOption}
-                onChange={handleChange}
-              // BAB:END 08/06/2021 :: cover other conferences.
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </Row>
-    <Row>
-      <div className="main">
-        <div
-          className="row mt-4"
-          style={{
-            height: "1000px",
-            width: "800px",
-            backgroundColor: "#F0F8FF",
-            marginLeft: "50px",
-            borderRadius: "2px",
-          }}
-        >
-          <Col>
-            <CompareStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
-          </Col>
-        </div>
-      </div>
-      <br></br>
-      <div
-        className="row mt-4"
-        style={{
-          height: "800px",
-          width: "830px",
-          backgroundColor: "#F0F8FF",
-          marginLeft: "50px",
-          borderRadius: "2px",
-        }}
-      >
-        <Col>
-          <CompareStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
-        </Col>
-      </div>
+                <div
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    width: "830px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <CompareTimeLineChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                  </Col>
+                </div>
 
-     
-    </Row>
-  </CardHeader>
-
-  <ScrollTopWrapper/>
-</Card>
-</Grid>
-  
-        </>
+              
+              </Row>
+            </CardHeader>
+           <ScrollTopWrapper/>
+          </Card>
+        </Grid>
+ </>
 );
 }
