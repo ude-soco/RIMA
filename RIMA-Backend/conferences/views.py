@@ -82,7 +82,7 @@ class conferenceGeneralDataView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
         conference_name_abbr = url_splits[-1]
-        result_data = confutils.getConferenceData(conference_name_abbr)
+        result_data = confutils.getConferenceGeneralData(conference_name_abbr)
         return Response(result_data)
 
 
@@ -129,7 +129,7 @@ class conferencesSharedWordsView(ListCreateAPIView):
 
 
 
-class SharedWordEvolutionView(ListCreateAPIView):
+class SharedWordEvolutionView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
         result_data = []
@@ -188,7 +188,7 @@ class SharedWordEvolutionView(ListCreateAPIView):
 
 
 
-class conferencesYearsRangeView(ListCreateAPIView):
+class conferencesYearsRangeView(APIView):
     
     def get(self, request, *args, **kwargs):
         result_data = []
@@ -216,8 +216,7 @@ class conferencesYearsRangeView(ListCreateAPIView):
 
 
 
-# under work
-class conferencesSharedWordsBarView(ListCreateAPIView):
+class conferencesSharedWordsBarView(APIView):
     def get(self, request, *args, **kwargs):
         result_data = [[],[]]
         conferences_events_list = []
@@ -260,6 +259,41 @@ class conferencesSharedWordsBarView(ListCreateAPIView):
         print('result_data')
 
         return Response({'Topiclist': result_data}) 
+
+
+# under work timeline
+class DataTimeLineChartView(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        conference_all_models_words = []
+        conferences_all_events = []
+
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'?')
+        keyword_or_topic = url_splits[0].split('/')[-2]
+        conferences_list = url_splits[1].split('&')
+
+        print(keyword_or_topic)
+        print(conferences_list)
+
+        for conference in conferences_list:
+            conference_events = Conference_Event.objects.filter(conference_name_abbr = conference)
+            for conference_event in conference_events:
+                conferences_all_events.append(conference_event.conference_event_name_abbr)
+                if keyword_or_topic == 'topic':
+                    models_data = confutils.getTopicsfromModels(conference_event.conference_event_name_abbr)
+                elif keyword_or_topic == 'keyword':
+                    models_data = confutils.getKeywordsfromModels(conference_event.conference_event_name_abbr)
+                
+                for word_dict in models_data:
+                    conference_all_models_words.append(word_dict[keyword_or_topic])
+
+
+        confutils.getConferencesEventsContainingWord(conferences_all_events,'Learning')
+
+        #print(conference_all_models_words)
+        return Response({'data' : result_data})
+
 
 """
 BAB Conference Events views
@@ -332,13 +366,8 @@ class addConferenceView(ListCreateAPIView):
     serializer_class = PlatformSerializer
     conference_serializer_class = ConferenceSerializer
     def get(self, request, *args, **kwargs):
-        data = []
-        
+        data = []   
         data = confutils.getConferencesList()
-
-        #BAB
-        confutils.getConferenceData('aied')
-
         return Response(data)
     
     def post(self, request, *args, **kwargs):

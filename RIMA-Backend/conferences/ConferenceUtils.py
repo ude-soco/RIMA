@@ -42,7 +42,7 @@ def split_restapi_url(url_path,split_char):
     return topics_split 
 
 
-def getConferenceData(conference_name_abbr):
+def getConferenceGeneralData(conference_name_abbr):
     result_data = {'series':[]}
     conference_events_result_data = []
     conference_events_years = []
@@ -236,6 +236,7 @@ def getAuthorsData(conference_name_abbr="", conference_event_name_abbr =""):
     sorted_data = sorted(data, key=lambda k: k['no_of_papers'], reverse=True)
     return sorted_data
 
+
 def getAuthorInterests(publications_list,author_id,keyword_or_topic,num = 30):
     abstract_title_str = ""
     keywords = {}
@@ -427,6 +428,7 @@ def getKeywordsfromModels(conference_event_name_abbr):
         data.append({
             'keyword' : conf_event_keyword_obj.keyword,
             'weight' : event_has_keyword_obj.weight,
+            'event' : event_has_keyword_obj.conference_event_name_abbr_id,
 
         })
         
@@ -442,6 +444,7 @@ def getTopicsfromModels(conference_event_name_abbr):
         data.append({
             'topic' : conf_event_topic_obj.topic,
             'weight' : event_has_topic_obj.weight,
+            'event' : event_has_topic_obj.conference_event_name_abbr_id,
 
         })
     sorted_data = sorted(data, key=lambda k: k['weight'],reverse=True)   
@@ -687,7 +690,13 @@ def getYearsRangeOfConferences(conferences_list, all_or_shared):
     
     return result_data
 
+def getConferencesEventsContainingWord(conferences_list,word):
 
+    word_obj = Conf_Event_Topic.objects.get(topic=word)
+    data = Event_has_Topic.objects.filter(conference_event_name_abbr_id__in = conferences_list, topic_id_id = word_obj.topic_id)
+    for d in data:
+        print(d.topic_id_id,' ------ ',  d.weight)
+    return ""
 
 def generateVennPhoto(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
     
