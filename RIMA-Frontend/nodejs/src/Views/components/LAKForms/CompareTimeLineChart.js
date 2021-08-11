@@ -28,111 +28,400 @@ class CompareTimeLineChart extends React.Component {
         active4: false,
         selectTopic: "",
         opacity: "0.9",
-
+        
         series: [
           {
-            name: 'Bob',
+            name: 'lak', 
             data: [
               {
-                x: 'Design',
+                x: 'Learning',
+                y: [
+                    new Date('2011').getTime(),
+                    new Date('2011-12-31').getTime()
+                  ]
+              }, 
+              {
+                x: 'Analytic',
                 y: [
                   new Date('2011').getTime(),
-                  new Date('2011').getTime(),
-                ]
-              },{
-                x: 'Design',
-                y: [
-                  new Date('2012').getTime(),
-                  new Date('2012').getTime(),
+                  new Date('2011-12-31').getTime()
                 ]
               },
               {
-                x: 'Code',
+                x: 'Analytics',
                 y: [
                   new Date('2011').getTime(),
-                  new Date('2016').getTime()
+                  new Date('2011-12-31').getTime()
                 ]
               },
               {
-                x: 'Code',
+                x: 'Data',
+                y: [
+                  new Date('2011').getTime(),
+                  new Date('2011-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Student',
+                y: [
+                  new Date('2011').getTime(),
+                  new Date('2011-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Learning',
+                y: [
+                  new Date('2012').getTime(),
+                  new Date('2012-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2012').getTime(),
+                  new Date('2012-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data',
+                y: [
+                  new Date('2012').getTime(),
+                  new Date('2012-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Learning analytics', 
+                y: [
+                  new Date('2012').getTime(),
+                  new Date('2012-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Social',
+                y: [
+                  new Date('2012').getTime(),
+                  new Date('2012-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2013').getTime(),
+                  new Date('2013-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data',
+                y: [
+                  new Date('2013').getTime(),
+                  new Date('2013-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Student',
+                y: [
+                  new Date('2013').getTime(),
+                  new Date('2013-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Learning analytics',
+                y: [
+                  new Date('2013').getTime(),
+                  new Date('2013-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Paper',
+                y: [
+                  new Date('2013').getTime(),
+                  new Date('2013-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
+               y: [
+                new Date('2014').getTime(),
+                new Date('2014-12-31').getTime()
+              ]
+              }, 
+              {
+                x: 'Student',
+                y: [
+                  new Date('2014').getTime(),
+                  new Date('2014-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2014').getTime(),
+                  new Date('2014-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning analytics',
+                y: [
+                  new Date('2014').getTime(),
+                  new Date('2014-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data', 
+                y: [
+                  new Date('2014').getTime(),
+                  new Date('2014-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
+                y: [
+                  new Date('2015').getTime(),
+                  new Date('2015-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Student',
+                y: [
+                  new Date('2015').getTime(),
+                  new Date('2015-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Data',
+                y: [
+                  new Date('2015').getTime(),
+                  new Date('2015-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Analytics', 
+                y: [
+                  new Date('2015').getTime(),
+                  new Date('2015-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning analytics',
+                y: [
+                  new Date('2015').getTime(),
+                  new Date('2015-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
+                y: [
+                  new Date('2016').getTime(),
+                  new Date('2016-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Student',
+                y: [
+                  new Date('2016').getTime(),
+                  new Date('2016-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2016').getTime(),
+                  new Date('2016-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data',
+                y: [
+                  new Date('2016').getTime(),
+                  new Date('2016-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Learning analytics',
+                y: [
+                  new Date('2016').getTime(),
+                  new Date('2016-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
+                y: [
+                  new Date('2017').getTime(),
+                  new Date('2017-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Student',
+                y: [
+                  new Date('2017').getTime(),
+                  new Date('2017-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2017').getTime(),
+                  new Date('2017-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data',
+                y: [
+                  new Date('2017').getTime(),
+                  new Date('2017-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning analytics',
+                y: [
+                  new Date('2017').getTime(),
+                  new Date('2017-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
                 y: [
                   new Date('2018').getTime(),
-                  new Date('2020').getTime()
+                  new Date('2018-12-31').getTime()
                 ]
               },
               {
-                x: 'Test',
+                x: 'Student',
                 y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
+                  new Date('2018').getTime(),
+                  new Date('2018-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2018').getTime(),
+                  new Date('2018-12-31').getTime()
                 ]
               },
               {
-                x: 'Test',
-                y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
+                x: 'Data',
+                y:[
+                  new Date('2018').getTime(),
+                  new Date('2018-12-31').getTime()
                 ]
               },
               {
-                x: 'Validation',
+                x: 'Learning analytics',
                 y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
+                  new Date('2018').getTime(),
+                  new Date('2018-12-31').getTime()
                 ]
               },
               {
-                x: 'Design',
+                x: 'Student',
+                y:[
+                  new Date('2019').getTime(),
+                  new Date('2019-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Learning',
                 y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
-                ],
+                  new Date('2019').getTime(),
+                  new Date('2019-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Model',
+                y: [
+                  new Date('2019').getTime(),
+                  new Date('2019-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Data',
+                y: [
+                  new Date('2019').getTime(),
+                  new Date('2019-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2019').getTime(),
+                  new Date('2019-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
+                y: [
+                  new Date('2020').getTime(),
+                  new Date('2020-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Student',
+                y: [
+                  new Date('2020').getTime(),
+                  new Date('2020-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data',
+                y: [
+                  new Date('2020').getTime(),
+                  new Date('2020-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Model',
+                y: [
+                  new Date('2020').getTime(),
+                  new Date('2020-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2020').getTime(),
+                  new Date('2020-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Learning',
+                y: [
+                  new Date('2021').getTime(),
+                  new Date('2021-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Student',
+                y: [
+                  new Date('2021').getTime(),
+                  new Date('2021-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Data', 
+                y: [
+                  new Date('2021').getTime(),
+                  new Date('2021-12-31').getTime()
+                ]
+              },
+              {
+                x: 'Model',
+                y: [
+                  new Date('2021').getTime(),
+                  new Date('2021-12-31').getTime()
+                ]
+              }, 
+              {
+                x: 'Analytics',
+                y: [
+                  new Date('2021').getTime(),
+                  new Date('2021-12-31').getTime()
+                ]
               }
             ]
-          },
-          {
-            name: 'Joe',
-            data: [
-              {
-                x: 'Design',
-                y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
-                  ,
-                ]
-              },
-              {
-                x: 'Test',
-                y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
-                ]
-              },
-              {
-                x: 'Code',
-                y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
-                ]
-              },
-              {
-                x: 'Deployment',
-                y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
-                ]
-              },
-              {
-                x: 'Design',
-                y: [
-                  new Date('2011').getTime(),
-                  new Date('2013').getTime()
-                ]
-              }
-            ]
-          },
-         
+          }
         ],
+
         options: {
           chart: {
             height: 450,
@@ -169,6 +458,7 @@ class CompareTimeLineChart extends React.Component {
 
     componentDidMount() {
       this.getConferencesNames()
+      
     }
 
      //** GET ALL CONFERENCES **//
@@ -193,150 +483,28 @@ class CompareTimeLineChart extends React.Component {
       selectConference: Array.isArray(e) ? e.map((s) => s.value) : [],
       selectedConferences: value,
     });
-
-
-    console.log("value is:", this.state.selectedConferences);
-
   }
 
 
   selectData = (e) =>{
-
-    const seriesTest = [
-      {
-        name: 'Bob',
-        data: [
-          {
-            x: 'Design',
-            y: [
-              '2011',
-              '2011'
-            ]
-          },{
-            x: 'Design',
-            y: [
-              '2012',
-              '2012'
-            ]
-          },
-          {
-            x: 'Code',
-            y: [
-              '2011',
-              '2014'
-            ]
-          },
-          {
-            x: 'Code',
-            y: [
-              '2018',
-              '2021'
-            ]
-          },
-          {
-            x: 'Test',
-            y: [
-              '2011',
-              '2014'
-            ]
-          },
-          {
-            x: 'Test',
-            y: [
-              '2011',
-              '2013'
-            ]
-          },
-          {
-            x: 'Validation',
-            y: [
-              '2011',
-              '2013'
-            ]
-          },
-          {
-            x: 'Design',
-            y: [
-              '2011',
-              '2013'
-            ],
-          }
-        ]
-      },
-      {
-        name: 'Joe',
-        data: [
-          {
-            x: 'Design',
-            y: [
-              '2011',
-              '2013'
-              ,
-            ]
-          },
-          {
-            x: 'Test',
-            y: [
-              '2011',
-              '2013'
-            ]
-          },
-          {
-            x: 'Code',
-            y: [
-              '2011',
-              '2013'
-            ]
-          },
-          {
-            x: 'Deployment',
-            y: [
-              '2011',
-              '2013'
-            ]
-          },
-          {
-            x: 'Design',
-            y: [
-              '2011',
-              '2013'
-            ]
-          }
-        ]
-      },
-     
-    ];
-
-    for(var index= 0; index < seriesTest.length; index++){
-      //console.log(my_list[index]);
-      var inner_list = seriesTest[index];
-      
-      for(var inner =0 ; inner < inner_list['data'].length; inner++){
-        inner_list['data'][inner]['y'][0] = new Date(inner_list['data'][inner]['y'][0]).getTime()
-        inner_list['data'][inner]['y'][1] = new Date(inner_list['data'][inner]['y'][1]).getTime()
-
-        console.log(inner_list['data'][inner]['y']);
-      }
-
-    }
-
-    this.setState({
-      series : seriesTest
-    });
-    
-
     fetch(BASE_URL_CONFERENCE + "getDataTimeLineChart/topic/?" + this.state.selectedConferences.join("&"))
     .then((response) => response.json())
     .then((json) => {
-      console.log(json)
-    });
 
+      for(var index= 0; index < json.data.length; index++){
+        var inner_list = json.data[index];
+        for(var inner =0 ; inner < inner_list['data'].length; inner++){
+          inner_list['data'][inner]['y'][0] = new Date(inner_list['data'][inner]['y'][0]).getTime()
+          inner_list['data'][inner]['y'][1] = new Date(inner_list['data'][inner]['y'][1]).getTime()
+        }
+      }
+      this.setState({
+        series : json.data
+      });
+    });
   } 
 
-
   onClear = (e) =>{
-
-
   }
 
     render() {
@@ -347,7 +515,7 @@ class CompareTimeLineChart extends React.Component {
               <h2>Timeline of topics/keywords in Conferences over time</h2>
               <br/>
               <p>
-              This chart displays the timeline of all the topics/keywords over all
+              This chart displays the timeline of the top five topics/keywords over all
                 years of the selected conferences
               </p>
               <br/>
@@ -363,8 +531,9 @@ class CompareTimeLineChart extends React.Component {
                 isMulti
                 placeholder="Select Option"
                 options={this.state.conferencesNames}
-                value={this.state.conferencesNames.find((obj) => obj.value === this.state.selectTopic)}
+                value={this.state.conferencesNames.find((obj) => obj.value === this.state.selectedConferences)}
                 onChange={this.conferenceshandleChange}
+                defaultValue={{value: 'lak', label: 'lak'}}
             />
 
             </div>

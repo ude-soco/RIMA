@@ -277,21 +277,34 @@ class DataTimeLineChartView(APIView):
         print(conferences_list)
 
         for conference in conferences_list:
+            conference_based_result_data = {
+                    'name': conference,
+                    'data': []
+                }   
             conference_events = Conference_Event.objects.filter(conference_name_abbr = conference)
             for conference_event in conference_events:
-                conferences_all_events.append(conference_event.conference_event_name_abbr)
                 if keyword_or_topic == 'topic':
                     models_data = confutils.getTopicsfromModels(conference_event.conference_event_name_abbr)
                 elif keyword_or_topic == 'keyword':
                     models_data = confutils.getKeywordsfromModels(conference_event.conference_event_name_abbr)
                 
-                for word_dict in models_data:
-                    conference_all_models_words.append(word_dict[keyword_or_topic])
+                for data in models_data[:5]:
+                    print(data)
+                    year = re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0]) 
+                    conference_based_result_data['data'].append({
+                        'x':data[keyword_or_topic],
+                        'y':[
+                            year,
+                            year +"-12-31"
+                            #str(int(year)+1)
+                        ]
+                    })
 
-
-        confutils.getConferencesEventsContainingWord(conferences_all_events,'Learning')
-
-        #print(conference_all_models_words)
+            result_data.append(conference_based_result_data)
+        
+        print('##############' , ' result data ', '####################')
+        print(result_data)
+        print('##############' , ' result data ', '####################')
         return Response({'data' : result_data})
 
 
