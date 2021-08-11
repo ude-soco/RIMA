@@ -30,6 +30,9 @@ import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
 import ReactApexChart from "react-apexcharts";
 import { Link } from "react-router-dom";
 
+import RestAPI from "../../../../Services/api";
+
+
 
 // BAB:END 08/06/2021 :: cover other conferences.
 
@@ -177,6 +180,7 @@ export default function ConferenceBar (props) {
 
   useEffect(() => {
     handleChange(selectedOption);
+    getConferencesNames();
     
   }, [])
 
@@ -188,6 +192,17 @@ export default function ConferenceBar (props) {
   const navigateTop = () => {
     window.scrollTo(0, 0)
   }
+
+
+
+  //** GET ALL CONFERENCES **//
+ const getConferencesNames = () => {
+    RestAPI.getConferencesNames()
+      .then((response) => {
+        setavailable(response.data);
+      })
+  };
+
 
    // BAB:BEGIN 08/06/2021 :: cover other conferences.
   const handleChange = (selectedOption) => {
@@ -302,7 +317,12 @@ export default function ConferenceBar (props) {
                 {conferenceOtherData.no_of_all_authors}
                 </Typography>
 
-                <Link to={"/app/view-author"}>
+                <Link to={{
+                              pathname: "/app/view-author",
+                              state: {
+                                  current_conference: selectedOption.value
+                              }
+                          }}>
                     <Button color="primary"  width = "50px">
                     {selectedOption.value}'s Authors Dashboard
                     </Button>
@@ -344,7 +364,7 @@ export default function ConferenceBar (props) {
                     }}
                      >
                     <Col>
-                      <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[3].value} />        {/*  BAB 08.06.2021 */ } 
+                      <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[0].value} />        {/*  BAB 08.06.2021 */ } 
                      </Col>
                      
                   </div>
@@ -361,7 +381,7 @@ export default function ConferenceBar (props) {
                     }}
                      >
                     <Col>
-                      <TopicBar conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[3].value}/>          {/*  BAB 08.06.2021 */ }
+                      <TopicBar conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[0].value}/>          {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>
