@@ -36,50 +36,56 @@ class CompareTimeLineChart extends React.Component {
               {
                 x: 'Design',
                 y: [
-                  new Date('2019-03-05').getTime(),
-                  new Date('2019-03-08').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2011').getTime(),
+                ]
+              },{
+                x: 'Design',
+                y: [
+                  new Date('2012').getTime(),
+                  new Date('2012').getTime(),
                 ]
               },
               {
                 x: 'Code',
                 y: [
-                  new Date('2019-03-02').getTime(),
-                  new Date('2019-03-05').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2016').getTime()
                 ]
               },
               {
                 x: 'Code',
                 y: [
-                  new Date('2019-03-05').getTime(),
-                  new Date('2019-03-07').getTime()
+                  new Date('2018').getTime(),
+                  new Date('2020').getTime()
                 ]
               },
               {
                 x: 'Test',
                 y: [
-                  new Date('2019-03-03').getTime(),
-                  new Date('2019-03-09').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               },
               {
                 x: 'Test',
                 y: [
-                  new Date('2019-03-08').getTime(),
-                  new Date('2019-03-11').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               },
               {
                 x: 'Validation',
                 y: [
-                  new Date('2019-03-11').getTime(),
-                  new Date('2019-03-16').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               },
               {
                 x: 'Design',
                 y: [
-                  new Date('2019-03-01').getTime(),
-                  new Date('2019-03-03').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ],
               }
             ]
@@ -90,73 +96,42 @@ class CompareTimeLineChart extends React.Component {
               {
                 x: 'Design',
                 y: [
-                  new Date('2019-03-02').getTime(),
-                  new Date('2019-03-05').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
+                  ,
                 ]
               },
               {
                 x: 'Test',
                 y: [
-                  new Date('2019-03-06').getTime(),
-                  new Date('2019-03-16').getTime()
-                ],
-                goals: [
-                  {
-                    name: 'Break',
-                    value: new Date('2019-03-10').getTime(),
-                    strokeColor: '#CD2F2A'
-                  }
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               },
               {
                 x: 'Code',
                 y: [
-                  new Date('2019-03-03').getTime(),
-                  new Date('2019-03-07').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               },
               {
                 x: 'Deployment',
                 y: [
-                  new Date('2019-03-20').getTime(),
-                  new Date('2019-03-22').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               },
               {
                 x: 'Design',
                 y: [
-                  new Date('2019-03-10').getTime(),
-                  new Date('2019-03-16').getTime()
+                  new Date('2011').getTime(),
+                  new Date('2013').getTime()
                 ]
               }
             ]
           },
-          {
-            name: 'Dan',
-            data: [
-              {
-                x: 'Code',
-                y: [
-                  new Date('2019-03-10').getTime(),
-                  new Date('2019-03-17').getTime()
-                ]
-              },
-              {
-                x: 'Validation',
-                y: [
-                  new Date('2019-03-05').getTime(),
-                  new Date('2019-03-09').getTime()
-                ],
-                goals: [
-                  {
-                    name: 'Break',
-                    value: new Date('2019-03-07').getTime(),
-                    strokeColor: '#CD2F2A'
-                  }
-                ]
-              },
-            ]
-          }
+         
         ],
         options: {
           chart: {
@@ -188,6 +163,9 @@ class CompareTimeLineChart extends React.Component {
       
       };
     }
+
+
+    
 
     componentDidMount() {
       this.getConferencesNames()
@@ -223,6 +201,130 @@ class CompareTimeLineChart extends React.Component {
 
 
   selectData = (e) =>{
+
+    const seriesTest = [
+      {
+        name: 'Bob',
+        data: [
+          {
+            x: 'Design',
+            y: [
+              '2011',
+              '2011'
+            ]
+          },{
+            x: 'Design',
+            y: [
+              '2012',
+              '2012'
+            ]
+          },
+          {
+            x: 'Code',
+            y: [
+              '2011',
+              '2014'
+            ]
+          },
+          {
+            x: 'Code',
+            y: [
+              '2018',
+              '2021'
+            ]
+          },
+          {
+            x: 'Test',
+            y: [
+              '2011',
+              '2014'
+            ]
+          },
+          {
+            x: 'Test',
+            y: [
+              '2011',
+              '2013'
+            ]
+          },
+          {
+            x: 'Validation',
+            y: [
+              '2011',
+              '2013'
+            ]
+          },
+          {
+            x: 'Design',
+            y: [
+              '2011',
+              '2013'
+            ],
+          }
+        ]
+      },
+      {
+        name: 'Joe',
+        data: [
+          {
+            x: 'Design',
+            y: [
+              '2011',
+              '2013'
+              ,
+            ]
+          },
+          {
+            x: 'Test',
+            y: [
+              '2011',
+              '2013'
+            ]
+          },
+          {
+            x: 'Code',
+            y: [
+              '2011',
+              '2013'
+            ]
+          },
+          {
+            x: 'Deployment',
+            y: [
+              '2011',
+              '2013'
+            ]
+          },
+          {
+            x: 'Design',
+            y: [
+              '2011',
+              '2013'
+            ]
+          }
+        ]
+      },
+     
+    ];
+
+    for(var index= 0; index < seriesTest.length; index++){
+      //console.log(my_list[index]);
+      var inner_list = seriesTest[index];
+      
+      for(var inner =0 ; inner < inner_list['data'].length; inner++){
+        inner_list['data'][inner]['y'][0] = new Date(inner_list['data'][inner]['y'][0]).getTime()
+        inner_list['data'][inner]['y'][1] = new Date(inner_list['data'][inner]['y'][1]).getTime()
+
+        console.log(inner_list['data'][inner]['y']);
+      }
+
+    }
+
+    this.setState({
+      series : seriesTest
+    });
+    
+
     fetch(BASE_URL_CONFERENCE + "getDataTimeLineChart/topic/?" + this.state.selectedConferences.join("&"))
     .then((response) => response.json())
     .then((json) => {
