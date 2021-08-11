@@ -104,7 +104,7 @@ def getConferenceGeneralData(conference_name_abbr):
 
 def getConferencesList():
     data = []
-    conferences = Conference.objects.all()
+    conferences = Conference.objects.all().order_by('conference_name_abbr')
     for conference in conferences:
         conference_events = Conference_Event.objects.filter(
                             conference_name_abbr = conference.conference_name_abbr).values_list(

@@ -135,15 +135,21 @@ class TopicBar extends Component {
       });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.confEvent !== prevProps.confEvent) {
+      this.componentDidMount()   
+     }
+  }
+
   componentDidMount() {
     const display = this.displayDocChart;
-    fetch("http://127.0.0.1:8000/api/conferences/toptopics/lak/2011")
+    fetch("http://127.0.0.1:8000/api/conferences/toptopics/topic/" +this.props.confEvent)
       .then((response) => response.json())
       .then((json) => {
         
         this.setState(
           {
-            selectyear: "2011",
+            selectyear: this.props.confEvent,
             series: [
               {
                 name: "Topics",
@@ -160,7 +166,7 @@ class TopicBar extends Component {
                       config.w.config.xaxis.categories[config.dataPointIndex];
                     console.log('chartContext '+chartContext);
                     console.log('config.w.globals.selectedDataPoints[0][0]' + config.w.globals.selectedDataPoints[0][0]);
-                    display(topic, "2011");
+                    display(topic, this.props.confEvent);
                   },
                 },
               },
@@ -208,7 +214,7 @@ class TopicBar extends Component {
             },
             isLoaded: true,
           },
-          display("Learning", "2011")
+          display("Learning", this.props.confEvent)
         );
       });
   }
@@ -398,6 +404,7 @@ class TopicBar extends Component {
                 />
               </div>
               <br></br>
+              <br/>
               <Button
                 outline
                 color="primary"
@@ -475,9 +482,10 @@ class TopicBar extends Component {
               <h2> Top 10 topics/keywords </h2>
               <p>
                 The bar chart displays the top 10 topics/keywords for the
-                selected year and its corresponding publications
+                selected event and its corresponding publications
               </p>
-              <Label> Select a year </Label>
+
+              <Label>Select an Event</Label>
               <br></br>
               <div style={{width: "200px"}}>
                 <Select
@@ -487,7 +495,8 @@ class TopicBar extends Component {
                   onChange={this.selectYear}
                 />
               </div>
-              {" "}
+              <br></br>
+              <br/>
               <Button
                 outline
                 color="primary"
@@ -526,6 +535,7 @@ class TopicBar extends Component {
                     The charts are displayed based on the frequency of
                     topic/keyword
                   </p>
+
                   {/* <p> Click on the bar to view publications related to topic/keyword</p>
                             <p>Click on the bar of publications visualization to view the publication in semantic scholar</p> */}
                 </div>

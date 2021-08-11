@@ -90,15 +90,23 @@ class WordCloud extends Component {
     console.log(this.state.imageTooltipOpen)
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.confEvent !== prevProps.confEvent) {
+      this.componentDidMount()   
+     }
+  }
+
   componentDidMount() {
-    //console.log("the json is ******************")   
-    fetch(`${BASE_URL_CONFERENCE}` + "laktopics/lak/10/2011")
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/topic/10/"+this.props.confEvent)
       .then(response => response.json())
       .then(json => {
         this.setState({
           isLoaded: true,
-          items: json.topics,
-          selectValue: "2011",
+          items: json.words,
+          length: json.words.length,
+          active1: true,
+          active2: false,
+          selectValue: this.props.confEvent,
           count: "10"
         })
       });
@@ -227,6 +235,7 @@ class WordCloud extends Component {
     if (isLoaded) {
       return (
         <>
+        <br/>
           <div>
             <h2>Topic/Keyword cloud</h2>
             <br></br>
@@ -279,7 +288,7 @@ class WordCloud extends Component {
               )}
           </div>
 
-          <div>
+          <div style={{width: '800px'}}>
             <ReactWordcloud
               id="tpc_cloud"
               callbacks={callbacks}

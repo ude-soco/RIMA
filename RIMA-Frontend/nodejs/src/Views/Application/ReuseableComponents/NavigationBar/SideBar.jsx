@@ -96,7 +96,11 @@ export default function SideBar({selection, setSelection}) {
         history.push("/app/view-conference");
         break;  
       case "viewAuthor":
-        history.push("/app/view-author");
+        history.push({
+          pathname: '/app/view-author',
+          state: {
+            current_conference: "lak"
+        }})
         break; 
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
@@ -265,7 +269,7 @@ export default function SideBar({selection, setSelection}) {
         </ListItem>
 
         <Collapse in={openConference} unmountOnExit>
-
+       {/* 
         <ListItem button id="addConference"
                       selected={selectedList("addConference")}
                       onClick={handleSelect}
@@ -275,16 +279,16 @@ export default function SideBar({selection, setSelection}) {
               </ListItemIcon>
               <ListItemText primary="Add Conference"/>
             </ListItem>
-          
-            <ListItem button id="viewConference"
-                      selected={selectedList("viewConference")}
-                      onClick={handleSelect}
-                      className={selectedList("viewConference")}>
-              <ListItemIcon className={classes.listIconNested}>
-                <MeetingRoomOutlined className={selectedList("viewConference")}/>
-              </ListItemIcon>
-              <ListItemText primary="Stored Conferences"/>
-            </ListItem>
+      */}
+        <ListItem button id="viewConference"
+                  selected={selectedList("viewConference")}
+                  onClick={handleSelect}
+                  className={selectedList("viewConference")}>
+          <ListItemIcon className={classes.listIconNested}>
+            <MeetingRoomOutlined className={selectedList("viewConference")}/>
+          </ListItemIcon>
+          <ListItemText primary="Stored Conferences"/>
+        </ListItem>
 
           <ListItem button id="topicTrends"
                     selected={selectedList("topicTrends")}

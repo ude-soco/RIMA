@@ -17,6 +17,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import AddConference from "../Conferences/addConference";
+
 
 
 
@@ -49,7 +51,7 @@ class viewConference extends React.Component {
   state = {
     data: [],
     conferenceEvents: [],
-    isLoding: false,
+    isLoading: false,
     modal: false,
     deletePaperId: "",
     title: "",
@@ -61,10 +63,13 @@ class viewConference extends React.Component {
     show: false,
     selectyear: "",
     eventsmodal: "",
+    add_conference_name_abbr : "",
+
+      
   };
 
   componentDidMount() {
-    this.setState({ isLoding: true }, this.getConferenceData());
+    this.setState({ isLoading: true }, this.getConferenceData());
   }
 
   selectYear = (e) => {
@@ -79,13 +84,13 @@ class viewConference extends React.Component {
     RestAPI.getListConference()
       .then((response) => {
         this.setState({
-          isLoding: false,
+          isLoading: false,
           data: response.data,
         });
 
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({ isLoading: false });
         handleServerErrors(error, toast.error);
       });
   };
@@ -100,13 +105,13 @@ getConferenceEventsData = (conference_name_abbr) => {
   RestAPI.getListConfercneEvents(conference_name_abbr)
     .then((response) => {
       this.setState({
-        isLoding: false,
+        isLoading: false,
         eventsmodal: !this.state.eventsmodal,
         conferenceEvents: response.data,
       });
     })
     .catch((error) => {
-      this.setState({ isLoding: false });
+      this.setState({ isLoading: false });
       handleServerErrors(error, toast.error);
     });
 };
@@ -116,13 +121,13 @@ collectEventPapers = (conference_name_abbr,conference_event_name_abbr) => {
   RestAPI.collectEventPapers(conference_name_abbr,conference_event_name_abbr)
     .then((response) => {
       this.setState({
-        isLoding: false,
+        isLoading: false,
         eventsmodal: !this.state.eventsmodal,
         conferenceEvents: response.data,
       });
     })
     .catch((error) => {
-      this.setState({ isLoding: false });
+      this.setState({ isLoading: false });
       handleServerErrors(error, toast.error);
     });
 };
@@ -132,13 +137,13 @@ ExtractEventTrends = (conference_event_name_abbr) => {
   RestAPI.ExtractEventTrends(conference_event_name_abbr)
     .then((response) => {
       this.setState({
-        isLoding: false,
+        isLoading: false,
         eventsmodal: !this.state.eventsmodal,
         conferenceEvents: response.data,
       });
     })
     .catch((error) => {
-      this.setState({ isLoding: false });
+      this.setState({ isLoading: false });
       handleServerErrors(error, toast.error);
     });
 };
@@ -148,13 +153,13 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
   RestAPI.ExtractAuthorsTrends(conference_event_name_abbr)
     .then((response) => {
       this.setState({
-        isLoding: false,
+        isLoading: false,
         eventsmodal: !this.state.eventsmodal,
         conferenceEvents: response.data,
       });
     })
     .catch((error) => {
-      this.setState({ isLoding: false });
+      this.setState({ isLoading: false });
       handleServerErrors(error, toast.error);
     });
 };
@@ -170,14 +175,14 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
   //** DELETE A PAPER **//
   deleteEnquiry = (id) => {
     this.setState({
-      isLoding: true,
+      isLoading: true,
       deleteModal: !this.state.deleteModal,
     }, () => {
       RestAPI.deletePaper(id)
         .then((response) => {
           const newvalue = this.state.data.filter((v, i) => v.id !== id);
           this.setState({
-            isLoding: false,
+            isLoading: false,
             data: [...newvalue],
           });
 
@@ -187,7 +192,7 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
           });
         })
         .catch((error) => {
-          this.setState({ isLoding: false });
+          this.setState({ isLoading: false });
           handleServerErrors(error, toast.error);
         });
     });
@@ -204,48 +209,37 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
 
 
   handleChange = (e) => {
-    let getValue = e.target.value;
-    let getName = e.target.name;
-    this.setState(() => ({ [getName]: getValue }));
+    this.setState({ 
+      add_conference_name_abbr: e.target.value
+    });
   };
 
-  refreshPaper = () => {
-    /*
-    this.setState({ isLoding1: true }, () => {
-      user
-        .refreshPaper()
-        .then((response) => {
-          toast.success("New data will be available in a few minutes!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 2000,
-          });
-        })
-        .catch((error) => {
-          this.setState({ isLoding1: false });
-          handleServerErrors(error, toast.error);
-        });
-    });
-  */
-  };
+  handleSubmit = (e) => {
+    e.preventDefault();
 
-  saveChanges = () => {
-    /*
-    this.setState({ isLoding1: true }, () => {
-      user
-        .refreshPaper()
-        .then((response) => {
-          toast.success("Data saved!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 2000,
-          });
-        })
-        .catch((error) => {
-          this.setState({ isLoding1: false });
-          handleServerErrors(error, toast.error);
-        });
-    });
-    */
-  };
+    let data = {
+      platform_name: "dblp",
+      platform_url: "https://dblp.org/",
+      conferences: [
+        {
+          conference_name_abbr: this.state.add_conference_name_abbr,
+          conference_url: "https://dblp.org/db/conf/"+this.state.add_conference_name_abbr +"/index.html	",
+        }, 
+    ],    
+    };
+     RestAPI.addConference (data).then((response) => {
+       toast.success("Conference Event Added!", {
+         position: toast.POSITION.TOP_RIGHT,
+         autoClose: 2000,
+       });
+       this.setState({
+       isLoading: true , 
+     });
+     this.getConferenceData()
+     
+     });
+     
+   }
 
   render() {
 
@@ -257,8 +251,54 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
 
     return (
       <>
-       
-        {/* Page content */}
+       <Container  fluid>
+      <Row>
+        <Col className="order-xl-1" xl="12">
+          <Card className="bg-secondary shadow">
+            <CardHeader className="bg-white border-0">
+              <Row className="align-items-center">
+                <Col xs="8">
+                  <h3 className="mb-0">Add Conference</h3>
+                </Col>
+              </Row>
+            </CardHeader>
+            <CardBody>
+                <Form onSubmit={this.handleSubmit} method="post">
+                  <div className="pl-lg-4">
+                    <Row>
+                      <Col lg="6">
+                        <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-conference_name_abbr"
+                          >
+                            Conference Name Abbr.
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            id="input-conference_name_abbr"
+                            name="conference_name_abbr"
+                            value={this.state.add_conference_name_abbr}
+                            onChange={this.handleChange}
+                            placeholder=" Ex.: lak "
+                            type="text"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    </div>
+                    <div align="right">
+                    <Button color="primary" type="submit">
+                      Save
+                    </Button>
+                  </div>
+                      </Form>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+        <br/>
         <Container  fluid>
           <Row>
             <div className="col">
@@ -292,7 +332,7 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                   <tbody>
                     {/* START LOADER */}
 
-                    {this.state.isLoding ? (
+                    {this.state.isLoading ? (
                       <tr className="text-center" style={{ padding: "20px" }}>
                         <td></td>
                         <td></td>
@@ -315,10 +355,13 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                           <td><a href ={value.platform_url}>{value.platform_url}</a></td>
                           <td align = "center">{value.no_of_events}</td>
                           
-                       
-                          
                           <td className="text-center">
-                          <Link to={"/app/view-author"}>
+                          <Link to={{
+                              pathname: "/app/view-author",
+                              state: {
+                                  current_conference: value.conference_name_abbr
+                              }
+                          }}>
                               <Button color="secondary"  width = "50px">
                               {value.conference_name_abbr}'s Authors Dashboard
                               </Button>
@@ -421,7 +464,7 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                   <tbody>
                     {/* START LOADER */}
 
-                    {this.state.isLoding ? (
+                    {this.state.isLoading ? (
                       <tr className="text-center" style={{ padding: "20px" }}>
                         <td></td>
                         <td></td>

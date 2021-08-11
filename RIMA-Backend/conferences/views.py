@@ -398,7 +398,7 @@ class addConferenceView(ListCreateAPIView):
             conference.save()
             confutils.addDataToConfEventModel(request_data['conferences'][0]['conference_name_abbr'])
 
-            return(Response(""))
+            return(Response({}))
         else:
             serializer = self.serializer_class(data=request_data)
             serializer.is_valid(raise_exception=True)

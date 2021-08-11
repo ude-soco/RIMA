@@ -81,8 +81,8 @@ export default function ConferenceBar (props) {
   const [conference, setconference] = useState([]);
   const [confEvents, setconfEvents] = useState([
     {
-      value: "2011",
-      label: "2011"
+      value: "lak2011",
+      label: "lak2011"
     },
     {
       value: "lak2012",
@@ -155,7 +155,7 @@ export default function ConferenceBar (props) {
     },
     yaxis: {
       min: 10,
-      max: 400,
+      max: 600,
     },
     fill: {
       opacity: 1
@@ -176,7 +176,7 @@ export default function ConferenceBar (props) {
     </Grid>
 
   useEffect(() => {
-    handleSearchConferences();
+    handleChange(selectedOption);
     
   }, [])
 
@@ -227,23 +227,28 @@ export default function ConferenceBar (props) {
     });
   };
 
-
-  // BAB:END 08/06/2021 :: cover other conferences.
-
  
-   // const { selectedOption } = state;   // BAB 08/06/2021 :: cover other conferences.
     return (
       <>
 
             <Grid container component={Paper} className={classes.cardHeight}>     
               <Grid item xs>
                 <Typography variant="h5" gutterBottom>
-                  Conferences
+                Topic Trends
                 </Typography>
                 <Typography className={classes.gutter}>
-                  Search for conferences and show trends
+                  Select a conference and let the following visualizations provide insights into
+                      trends of conference data
                 </Typography>
 
+                <Select
+                          placeholder="Select conference"
+                          options={available}
+                          value={selectedOption}
+                          onChange={handleChange}
+                        />
+
+              {/** 
                 <Autocomplete
                   loading={loading}
                   options={conference}
@@ -253,9 +258,13 @@ export default function ConferenceBar (props) {
                   renderInput={(params) => <TextField {...params} label="Type an conference name" variant="outlined"/>}
                   className={classes.gutter}
                 />
+                
+
+                <br/>
                 <Button color="primary" onClick= "" width = "50px">
                     Show Trends
                 </Button> 
+                */}
               </Grid>
             </Grid>
 
@@ -322,97 +331,52 @@ export default function ConferenceBar (props) {
 
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">
-              <Row className="align-items-center">
-                <div
-                  className="col"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    height: "1000",
-                    width: "5000",
-                  }}
-                >
-                  <div>
-                    <h2 className="text-white1 mb-0">Topic Trends</h2>
-                    <p>
-                      The following visualizations provide insights into
-                      trends of conference data
-                    </p>
-                    <div style={{marginLeft: "40px"}}>
-                      <Label>Select conference</Label>
-                      <br></br>
-                      <div style={{width: "200px"}}>
-                        <Select
-                        // BAB:BEGIN 08/06/2021 :: cover other conferences.
-                          placeholder="Select conference"
-                          options={available}
-                          value={selectedOption}
-                          onChange={handleChange}
-                        // BAB:END 08/06/2021 :: cover other conferences.
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Row>
               <Row>
                 <div className="main">
                   <div
                     className="row mt-4"
                     style={{
-                      height: "700px",
+                      height: "800px",
                       width: "830px",
                       backgroundColor: "#F0F8FF",
                       marginLeft: "50px",
                       borderRadius: "2px",
                     }}
-                  >
-                    {/*  BAB 08.06.2021 */ }
+                     >
                     <Col>
-                      <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} />        {/*  BAB 08.06.2021 */ } 
+                      <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[3].value} />        {/*  BAB 08.06.2021 */ } 
                      </Col>
                      
                   </div>
                 </div>
                 <div className="main">
-                  <div
+                <div
                     className="row mt-4"
                     style={{
-                      height: "600px",
+                      height: "800px",
                       width: "830px",
                       backgroundColor: "#F0F8FF",
                       marginLeft: "50px",
                       borderRadius: "2px",
                     }}
-                  >
-                                        
-
+                     >
                     <Col>
-                      <TopicBar conferenceName = {selectedOption.value} confEvents = {confEvents} />          {/*  BAB 08.06.2021 */ }
+                      <TopicBar conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[3].value}/>          {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>
-                {/* <div className="main">
-          <div className="row mt-4" style={{'height':'550px' ,'width':'400px',
-            'backgroundColor':'#F0F8FF','marginLeft':'50px',
-            'borderRadius':'2px'}}>
-                <Col>
-                <TopicBarPaperCount/>
-               </Col>
-            </div>
-          </div> */}
                 <br></br>
                 <div className="main">
-                  <div
+                <div
                     className="row mt-4"
                     style={{
-                      height: "700px",
+                      height: "800px",
                       width: "830px",
                       backgroundColor: "#F0F8FF",
                       marginLeft: "50px",
                       borderRadius: "2px",
                     }}
-                  >
+                     >
                     <Col>
                       <LAKPie conferenceName = {selectedOption.value}  confEvents = {confEvents}/>       {/*  BAB 08.06.2021 */ } 
                     </Col>
@@ -420,16 +384,16 @@ export default function ConferenceBar (props) {
                 </div>
                 <br></br>
                 <div className="main">
-                  <div
+                <div
                     className="row mt-4"
                     style={{
-                      height: "1000px",
-                      width: "800px",
+                      height: "800px",
+                      width: "830px",
                       backgroundColor: "#F0F8FF",
                       marginLeft: "50px",
                       borderRadius: "2px",
                     }}
-                  >
+                     >
                     <Col>
                       <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
                     </Col>
@@ -437,36 +401,35 @@ export default function ConferenceBar (props) {
                 </div>
                 <br></br>
                 <div
-                  className="row mt-4"
-                  style={{
-                    height: "750px",
-                    width: "830px",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "50px",
-                    borderRadius: "2px",
-                  }}
-                >
+                    className="row mt-4"
+                    style={{
+                      height: "800px",
+                      width: "830px",
+                      backgroundColor: "#F0F8FF",
+                      marginLeft: "50px",
+                      borderRadius: "2px",
+                    }}
+                     >
                   <Col>
                     <LAKStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
                   </Col>
                 </div>
 
-                <div className="main">
-                  <div
+                <div
                     className="row mt-4"
                     style={{
-                      height: "900px",
-                      width: "800px",
+                      height: "800px",
+                      width: "830px",
                       backgroundColor: "#F0F8FF",
                       marginLeft: "50px",
                       borderRadius: "2px",
                     }}
-                  >
+                     >
                     <Col>
                       <VennChart  conferenceName = {selectedOption.value} confEvents = {confEvents} page = 'topicbar' conferences = {conference}/>     {/*  BAB 08.06.2021 */ } 
                     </Col>
                   </div>
-                </div>
+                
               </Row>
             </CardHeader>
 

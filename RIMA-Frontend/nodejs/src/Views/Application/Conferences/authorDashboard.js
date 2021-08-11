@@ -64,7 +64,7 @@ class authorDashboard extends React.Component {
   state = {
     data: [],
     authorPublications: [],
-    isLoding: false,
+    isLoading: false,
     modal: false,
     url: "",
     year: "",
@@ -107,10 +107,21 @@ class authorDashboard extends React.Component {
 
   };
 
-  
+
   componentDidMount() {
-    this.setState({ isLoding: true });
-    this.getConferenceAuthorsData(this.state.selectedOption.value)
+    let confProps = this.props.location.state.current_conference;
+    this.setState({ isLoading: true });
+    if(typeof confProps != "undefined")
+    {
+      this.setState({
+        selectedOption: {label:confProps, value:confProps}
+      })
+      this.getConferenceAuthorsData(confProps)
+
+    }else{
+      this.getConferenceAuthorsData(this.state.selectedOption.value)
+
+    }
   }
 
  
@@ -118,7 +129,7 @@ class authorDashboard extends React.Component {
   handleChange = (selectedOption) => {
     this.setState({
         selectedOption : selectedOption,
-        isLoding: true,
+        isLoading: true,
     });
     this.getConferenceAuthorsData(selectedOption.value);
   };
@@ -128,13 +139,13 @@ class authorDashboard extends React.Component {
     RestAPI.getListConferenceAuthors(conference_name)
       .then((response) => {
         this.setState({
-          isLoding: false,
+          isLoading: false,
           data: response.data,
         });
 
       })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        this.setState({ isLoading: false });
         handleServerErrors(error, toast.error);
       });
   };
@@ -145,13 +156,13 @@ getListPublications = (conference_name,author_id) => {
   RestAPI.getListPublications(conference_name,author_id)
     .then((response) => {
       this.setState({
-        isLoding: false,
+        isLoading: false,
         publicationsmodal: !this.state.publicationsmodal,
         authorPublications: response.data,
       });
     })
     .catch((error) => {
-      this.setState({ isLoding: false });
+      this.setState({ isLoading: false });
       handleServerErrors(error, toast.error);
     });
 };
@@ -159,7 +170,7 @@ getListPublications = (conference_name,author_id) => {
 //** EXTRACT INTERESTS OF AN AUTHOR **//
 ExtractAuthorInterests = (conference_name,author_id) => {
     this.setState({
-        isLoding: false,
+        isLoading: false,
         wordcloudmodal: !this.state.wordcloudmodal,
         currentAuthor:author_id,
         conferenceName:conference_name
@@ -194,14 +205,14 @@ ExtractAuthorInterests = (conference_name,author_id) => {
   }
 
   selectTopic = (conference_name,author_id) => {
-    this.setState({ //isLoding: true,
+    this.setState({ //isLoading: true,
       isLoaded: true })
 
     fetch(`${BASE_URL_CONFERENCE}` + "wordCloudAuthor/topic/" + this.state.count + "/" + conference_name+"/"+author_id)
       .then(response => response.json())
       .then(json => {
         this.setState({
-          //isLoding: false,
+          //isLoading: false,
           isLoaded: false,
           items: json.words,
           length: json.words.length,
@@ -328,7 +339,7 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                   <tbody>
                     {/* START LOADER */}
 
-                    {this.state.isLoding ? (
+                    {this.state.isLoading ? (
                       <tr className="text-center" style={{ padding: "20px" }}>
                         <td></td>
                         <td></td>
@@ -393,7 +404,7 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                   <tbody>
                     {/* START LOADER */}
 
-                    {this.state.isLoding ? (
+                    {this.state.isLoading ? (
                       <tr className="text-center" style={{ padding: "20px" }}>
                         <td></td>
                         <td></td>
