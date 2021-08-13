@@ -18,4 +18,4 @@
 
 6. Type `npm start` to run the project
 
-7. Open [http://localhost:3000](http://localhost:3000/) in a browser
+7. [http://localhost:3000](http://localhost:3000/) will open in a browser
