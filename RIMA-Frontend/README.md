@@ -10,9 +10,9 @@
 
 2. Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-3. Open a command prompt/terminal and move to the `RIMA-Frontend/nodejs` directory
+3. Using a file explorer, move to the `RIMA-Frontend/nodejs` and rename the `.env.example` file to `.env`
 
-4. Rename the `.env.example` file to `.env`
+4. Open a command prompt or terminal and move to the `RIMA-Frontend/nodejs` directory
 
 5. Type `npm install` to install the necessary dependencies for the project
 
