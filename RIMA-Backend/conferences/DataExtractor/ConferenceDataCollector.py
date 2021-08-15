@@ -140,7 +140,9 @@ def search_publicationid_in_semscholar(conf_name,semscholar_titles):
         try:
             element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME , "result-page")))
             elements_list = element.find_elements_by_tag_name("div")
-            publications_ids.append(elements_list[0].get_attribute('data-paper-id'))
+            id = elements_list[0].get_attribute('data-paper-id')
+            print(id)
+            publications_ids.append(id)
         except TimeoutException:
             print('Timeout - No tag found in this page')
     print(' ')
@@ -163,7 +165,7 @@ def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag
     if html_element == "cite" and is_recursive:
         for matched_elements in found_elements:
             semscholar_titles.append(matched_elements.find_all('span',{"class": "title"})[0].text)
-        return search_publicationid_in_semscholar(conf_name,semscholar_titles[:85])
+        return search_publicationid_in_semscholar(conf_name,semscholar_titles)
     elif html_element == "nav":
         for matched_elements in found_elements:
             for element in matched_elements:
