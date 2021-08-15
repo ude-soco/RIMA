@@ -139,41 +139,6 @@ class CompareStackedAreaChart extends Component {
     return this.selectInputRef1.current != null;
   }
 
-  selectKey = (e) => {
-    this.onClear();
-
-    console.log(e.target.value);
-    fetch(BASE_URL_CONFERENCE + "getallkeysresults/keyword/"  + this.props.conferenceName)
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json", json);
-        this.setState({
-          active1: false,
-          active2: true,
-          soptions: json.topics.sort((a, b) => (a.label > b.label ? 1 : -1)),
-          key: "key",
-          
-        });
-      });
-  }
-
-
-  
-  selectTopic = (e) => {
-    this.onClear();
-    fetch(BASE_URL_CONFERENCE + "getalltopicsresults/topic/" + this.props.conferenceName)
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json", json);
-        this.setState({
-          active1: true,
-          active2: false,
-          soptions: json.topics.sort((a, b) => (a.label > b.label ? 1 : -1)),
-          key: "topic",
-        });
-      });
-    console.log("options:", this.state.soptions);
-  }
 
   
 

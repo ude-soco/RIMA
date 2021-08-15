@@ -107,27 +107,6 @@ export default function CompareConferences (props) {
       }
     ],);
     
-
-
-  
-
-
-
-
-   // BAB:BEGIN 08/06/2021 :: cover other conferences.
-   const handleChange = (selectedOption) => {
-    //this.forceUpdate();
-    setselectedOption(selectedOption);
-    console.log("updated");
-    console.log(`Option selected:`, selectedOption);
-    fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
-    .then(response => response.json())
-    .then(json => {
-      setconfEvents(json.events)
-    });
-  };
-
-
     return (
         <>
        <Grid container component={Paper} className={classes.cardHeight}>
@@ -149,20 +128,6 @@ export default function CompareConferences (props) {
                     
                       The following visualizations compare the topics of conference over multiple years
                     </p>
-                    <div style={{marginLeft: "40px"}}>
-                      <Label>Select conference</Label>
-                      <br></br>
-                      <div style={{width: "200px"}}>
-                        <Select
-                        // BAB:BEGIN 08/06/2021 :: cover other conferences.
-                          placeholder="Select conference"
-                          options={available}
-                          value={selectedOption}
-                          onChange={handleChange}
-                        // BAB:END 08/06/2021 :: cover other conferences.
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </Row>
@@ -195,7 +160,7 @@ export default function CompareConferences (props) {
                   }}
                 >
                   <Col>
-                    <CompareStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                    <CompareStackedAreaChart/>   {/*  BAB 08.06.2021 */ } 
                   </Col>
                 </div>
 

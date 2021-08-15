@@ -1,5 +1,6 @@
 #done by Basem
 
+#!django-admin --version
 from urllib.request import urlopen,Request
 from bs4 import BeautifulSoup
 import requests
@@ -13,17 +14,20 @@ import numpy as np
 from requests.exceptions import HTTPError
 import urllib.error 
 import urllib.parse
-from collections import defaultdict
 
 # Selenium Import
-#from selenium import webdriver
-#from selenium.webdriver.common.keys import Keys 
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
-#from selenium.webdriver.chrome.options import Options
-#from selenium.common.exceptions import TimeoutException
-#import time
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+import time
+
+import json
+from collections import defaultdict
+
 
 
 # global variables
@@ -51,6 +55,7 @@ conference_name = f''
 dblp_url = f'https://dblp.org/db/conf/'
 semantic_scholar_url_api = f'https://api.semanticscholar.org/v1/paper/'
 semantic_scholar_url_search = f'https://www.semanticscholar.org'
+semantic_scholar_search_url_api =f'https://api.semanticscholar.org/graph/v1/paper/search?query='
 
 # regex
 conference_events = r'\/%s\d+(\-[1-9])*\.' # examples: aied2020-1, edm2020, lak2020 , lak 2020, aadebug93 ... etc
@@ -94,6 +99,27 @@ def fetch_confernces_names_listed_in_html(platform, index):
     return preloaded_data
 
 
+def search_publicationid_in_semscholar_new(conf_name,semscholar_titles):
+    print(' ')
+    print('****','titles list length',len(semscholar_titles), '****')
+    print('****','Searching ids of',len(semscholar_titles), ' publications' , '****')
+    print(' ')   
+    publications_ids = []
+    elements_list = []
+    
+    for title in semscholar_titles:
+        paper_data = requests.get(f'{semantic_scholar_search_url_api}{title}').json()
+        print(paper_data['data'][0]['paperId'])
+        publications_ids.append(paper_data['data'][0]['paperId'])
+
+    print(' ')
+    print(' **** ','ids list length',publications_ids, ' **** ')
+    print(' ')
+    
+    return publications_ids
+
+# needs selenium
+
 def search_publicationid_in_semscholar(conf_name,semscholar_titles):
     print(' ')
     print('****','titles list length',len(semscholar_titles), '****')
@@ -122,7 +148,6 @@ def search_publicationid_in_semscholar(conf_name,semscholar_titles):
     print(' ')
     return publications_ids
 
-
 def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag , inner_tag_arribute, if_doi, is_recursive,headers):
     links_list  = []
     loop_must_break = False
@@ -138,24 +163,23 @@ def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag
     if html_element == "cite" and is_recursive:
         for matched_elements in found_elements:
             semscholar_titles.append(matched_elements.find_all('span',{"class": "title"})[0].text)
-        return search_publicationid_in_semscholar(conf_name,semscholar_titles)
-        
+        return search_publicationid_in_semscholar(conf_name,semscholar_titles[:85])
     elif html_element == "nav":
         for matched_elements in found_elements:
             for element in matched_elements:
                 if inner_tag == "a":
                     searched_text = element.find(inner_tag)[inner_tag_arribute]
-                    if '.pdf' in searched_text or 'drive.google' in searched_text:
-                        print(' ')
-                        print('**** text has .pdf -> Searching for the publication id in Semantic Scholar: ****')
-                        print('**** this may take up to 5 mins ****')
-                        print(' ')
-                        return fetch_dois_ids_from_html(conf_name,soup,"cite",{"class": "data"},"","",False,True,headers)
-                        loop_must_break = True
-                        break
-                    elif if_doi:
+                    if if_doi:
                         if element.select("li:nth-of-type(2)")[0].has_attr('data-doi'):
                             links_list.append(element.select("li:nth-of-type(2)")[0]['data-doi'])
+                        else:
+                            print(' ')
+                            print('**** text has .pdf -> Searching for the publication id in Semantic Scholar: ****')
+                            print('**** this may take up to 5 mins ****')
+                            print(' ')
+                            return fetch_dois_ids_from_html(conf_name,soup,"cite",{"class": "data"},"","",False,True,headers)
+                            loop_must_break = True
+                            break
                     else:
                         links_list.append(searched_text)
             if loop_must_break: 
@@ -185,7 +209,6 @@ def construct_confList(conf_name,headers):
         soup = fetch_soup(conf_url,headers)
         if soup :
             conf_complete_name = fetch_dois_ids_from_html(conf_name,soup,"h1",{},"" ,"",False,False,headers)
-
             conf_events_all_urls = fetch_dois_ids_from_html(conf_name,soup,"nav",{"class": "publ"},"a" ,"href",False,False,headers)
         print('**** conference url: ',conf_url, ' ****')
         print(' ')
