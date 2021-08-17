@@ -397,24 +397,7 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                   </tbody>
                 </Table>
               
-               <br/>
-               <br/>
-               <br/>
-               <br/>
-               <br/>
-               <br/>
-               <br/>
-                <div style={{ display: "flex", margin: " 0 53px 25px 25px", justifyContent: "space-between" }}>
-                  <div style={{ margin: "32px 0px 0px 0px" }}>
-                    <div align="right">
-                      <Link to={"/app/add-conference"}>
-                        <Button color="primary">
-                          Add new Conference
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+              
               </Card>
 
 

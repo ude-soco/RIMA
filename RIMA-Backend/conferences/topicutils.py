@@ -1282,7 +1282,7 @@ def generateVennData(conferenName,year1, year2):
 
     
 
-    ctx = confutils.generateVennPhoto(list_topics_y1,list_topics_y2,list_intersect_y1y2,year1,year2,'topic')
+    ctx = confutils.generate_Venn_Photo(list_topics_y1,list_topics_y2,list_intersect_y1y2,year1,year2,'topic')
 
     return ctx
 
@@ -1811,7 +1811,7 @@ def getFlowChartDataKeywords(year, searchword):
 
 #BAB 08.06.2021
 
-def getAbstractbasedonKeyword(conferenceName,year, keyword):
+def get_Abstract_Based_On_Keyword(conferenceName,year, keyword):
     keyword = keyword.lower()
     query = "select abstract,title from LAKData where (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%') and year='" + year + "'"
     LakAbstract = getTopics(conferenceName,"", query)

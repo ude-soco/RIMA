@@ -43,7 +43,7 @@ from .topicutils import (
     getAuthorFromAuthorName,
     getFlowChartDataTopics,
     getFlowChartDataKeywords,
-    getAbstractbasedonKeyword,
+    get_Abstract_Based_On_Keyword,
     getDataAuthorComparisonTopics,
     getAuthorsForYear,
     authorConfTopicComparison,
@@ -82,7 +82,7 @@ class conferenceGeneralDataView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
         conference_name_abbr = url_splits[-1]
-        result_data = confutils.getConferenceGeneralData(conference_name_abbr)
+        result_data = confutils.get_Conference_General_Data(conference_name_abbr)
         return Response(result_data)
 
 
@@ -91,7 +91,7 @@ class conferencesNamesView(APIView):
         models_data = []
         result_data = []
 
-        models_data = confutils.getConferencesList()
+        models_data = confutils.get_Conferences_List()
 
         for data in models_data:
             result_data.append({
@@ -117,7 +117,7 @@ class conferencesSharedWordsView(ListCreateAPIView):
         print(keyword_or_topic)
 
 
-        models_data = confutils.getSharedWordsBetweenConferences(conferences_list,keyword_or_topic)
+        models_data = confutils.get_Shared_Words_Between_Conferences(conferences_list,keyword_or_topic)
         
         for word in models_data:
             result_data.append({
@@ -145,7 +145,7 @@ class SharedWordEvolutionView(APIView):
         for conference in conferences_list:
             conference_obj = Conference.objects.get(conference_name_abbr=conference)
             conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
-            models_data = confutils.getWordWeightEventBased(conference_event_objs,word,keyword_or_topic)
+            models_data = confutils.get_Word_Weight_Event_Based(conference_event_objs,word,keyword_or_topic)
             for model_data in models_data:
                 years_range.append(model_data['year'])
             all_models_data.append(models_data)
@@ -200,7 +200,7 @@ class conferencesYearsRangeView(APIView):
        
 
 
-        models_data = confutils.getYearsRangeOfConferences(conferences_list, 'shared')
+        models_data = confutils.get_Years_Range_Of_Conferences(conferences_list, 'shared')
         
         for word in models_data:
             result_data.append({
@@ -252,7 +252,7 @@ class conferencesSharedWordsBarView(APIView):
         print('AVAILABLE',list(set(avaiable_events)))
         print('NOT AVAILABLE',list(set(not_available_events)))
 
-        result_data = confutils.getSharedWordsBetweenEvents(avaiable_events,keyword_or_topic)
+        result_data = confutils.get_Shared_Words_Between_Events(avaiable_events,keyword_or_topic)
 
         print('result_dat')
         print(result_data)
@@ -284,9 +284,9 @@ class DataTimeLineChartView(APIView):
             conference_events = Conference_Event.objects.filter(conference_name_abbr = conference)
             for conference_event in conference_events:
                 if keyword_or_topic == 'topic':
-                    models_data = confutils.getTopicsfromModels(conference_event.conference_event_name_abbr)
+                    models_data = confutils.get_Topics_from_Models(conference_event.conference_event_name_abbr)
                 elif keyword_or_topic == 'keyword':
-                    models_data = confutils.getKeywordsfromModels(conference_event.conference_event_name_abbr)
+                    models_data = confutils.get_Keywords_from_Models(conference_event.conference_event_name_abbr)
                 
                 for data in models_data[:5]:
                     print(data)
@@ -336,7 +336,7 @@ class CollectEventPapersView(ListCreateAPIView):
         url_path = self.request.get_full_path()
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        confutils.addDataToConfPaperAndAuthorModels(topics_split[-2],topics_split[-1])
+        confutils.add_Data_To_Conf_Paper_And_Author_Models(topics_split[-2],topics_split[-1])
         return Response(data)
 
 
@@ -353,7 +353,7 @@ class ExtractEventTrendsView(ListCreateAPIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
         conference_event_name_abbr = url_splits[-1]
 
-        confutils.addDataToConferenceKeywordAndTopicModels(conference_event_name_abbr)
+        confutils.add_Data_To_Conference_Keyword_And_Topic_Models(conference_event_name_abbr)
         return Response(data)
 
 
@@ -366,7 +366,7 @@ class ExtractAuthorsTrendsView(ListCreateAPIView):
 
         print(url_splits)
         print(conference_event_name_abbr)
-        confutils.addDataToAuthorKeywordAndTopicModels(conference_event_name_abbr)
+        confutils.add_Data_To_Author_Keyword_And_Topic_Models(conference_event_name_abbr)
         return Response(data)
 
 
@@ -380,7 +380,7 @@ class addConferenceView(ListCreateAPIView):
     conference_serializer_class = ConferenceSerializer
     def get(self, request, *args, **kwargs):
         data = []   
-        data = confutils.getConferencesList()
+        data = confutils.get_Conferences_List()
         return Response(data)
     
     def post(self, request, *args, **kwargs):
@@ -396,14 +396,14 @@ class addConferenceView(ListCreateAPIView):
             platform_name=platform_obj
             )
             conference.save()
-            confutils.addDataToConfEventModel(request_data['conferences'][0]['conference_name_abbr'])
+            confutils.add_Data_To_Conf_Event_Model(request_data['conferences'][0]['conference_name_abbr'])
 
             return(Response({}))
         else:
             serializer = self.serializer_class(data=request_data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            confutils.addDataToConfEventModel(request_data['conferences'][0]['conference_name_abbr'])
+            confutils.add_Data_To_Conf_Event_Model(request_data['conferences'][0]['conference_name_abbr'])
             return Response(serializer.data)
 
 '''
@@ -461,7 +461,7 @@ class conferenceAuthors(APIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
         conference_name_abbr = url_splits[-1]
         
-        result_data = confutils.getAuthorsData(conference_name_abbr)
+        result_data = confutils.get_Authors_Data(conference_name_abbr)
         return Response(result_data)        
 
 
@@ -474,7 +474,7 @@ class AuthorPublications(APIView):
         author_id = url_splits[-1]
         conference_name_abbr = url_splits[-2]
         
-        result_data = confutils.getAuthorPublicationsInConf(author_id,conference_name_abbr)
+        result_data = confutils.get_Author_Publications_In_Conf(author_id,conference_name_abbr)
         return Response(result_data)        
 
 '''
@@ -492,9 +492,9 @@ class WordCloudView(APIView):
         result_data = []
 
         if keyword_or_topic == "topic":
-            models_data  = confutils.getTopicsfromModels(conference_event_name_abbr)
+            models_data  = confutils.get_Topics_from_Models(conference_event_name_abbr)
         elif keyword_or_topic == "keyword":
-            models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
+            models_data  = confutils.get_Keywords_from_Models(conference_event_name_abbr)
 
         if number == '5':
             reduced_models_data  = models_data[:5]
@@ -523,7 +523,7 @@ class AuthorWordCloudView(APIView):
         author_id = url_splits[-1]
         inter_data = []
         result_data = []
-        publications_list = confutils.getAuthorPublicationsInConf(author_id, conference_name_abbr)
+        publications_list = confutils.get_Author_Publications_In_Conf(author_id, conference_name_abbr)
 
         #print('publications_list')
         #print(len(publications_list))
@@ -531,9 +531,9 @@ class AuthorWordCloudView(APIView):
 
 
         if keyword_or_topic == "topic":
-            extracted_data  = confutils.getAuthorInterests(publications_list,author_id,keyword_or_topic)
+            extracted_data  = confutils.get_Author_Interests(publications_list,author_id,keyword_or_topic)
         elif keyword_or_topic == "keyword":
-            extracted_data  = confutils.getAuthorInterests(publications_list,author_id,keyword_or_topic)
+            extracted_data  = confutils.get_Author_Interests(publications_list,author_id,keyword_or_topic)
         
         for key,value in extracted_data.items(): 
             inter_data.append({
@@ -581,11 +581,11 @@ class TopicPieView(APIView):
 
 
         if keyword_or_topic == "topic":
-            models_data  = confutils.getTopicsfromModels(conference_event_name_abbr)
+            models_data  = confutils.get_Topics_from_Models(conference_event_name_abbr)
 
 
         elif keyword_or_topic == "keyword":
-            models_data  = confutils.getKeywordsfromModels(conference_event_name_abbr)
+            models_data  = confutils.get_Keywords_from_Models(conference_event_name_abbr)
 
         if number == '5':
             reduced_models_data  = models_data[:5]
@@ -618,7 +618,7 @@ class FetchTopicView(APIView):
         topics_split_params = url_splits_question_mark[-1].split("&")
 
         print(topics_split_params)
-        result_data = confutils.getSharedWordsBetweenEvents(topics_split_params,keyword_or_topic)
+        result_data = confutils.get_Shared_Words_Between_Events(topics_split_params,keyword_or_topic)
 
         return Response(
             {"Topiclist": result_data})
@@ -718,9 +718,9 @@ class TopicBarView(APIView):
         keyword_or_topic = url_splits[-2]
 
         if keyword_or_topic == 'keyword':
-             models_data = confutils.getKeywordsfromModels(conference_event_name_abbr)
+             models_data = confutils.get_Keywords_from_Models(conference_event_name_abbr)
         elif keyword_or_topic == 'topic':
-             models_data = confutils.getTopicsfromModels(conference_event_name_abbr)
+             models_data = confutils.get_Topics_from_Models(conference_event_name_abbr)
            
 
         for model_data in models_data[:10]:
@@ -748,7 +748,7 @@ class getTopicBarValues(APIView):
         conference_event_name_abbr = url_splits[-1]
         word = url_splits[-2]
         
-        abstracts_titles = confutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+        abstracts_titles = confutils.get_Abstract_Based_On_Keyword(conference_event_name_abbr,word)
 
         for abstract_title in abstracts_titles:
             abstract_title_str = abstract_title['title'] + abstract_title['abstarct']
@@ -833,9 +833,9 @@ class allWords(APIView):
         conference_events_objs = Conference_Event.objects.filter(conference_name_abbr= conference_name_abbr)
         for conference_event_obj in conference_events_objs:
             if keyword_or_topic == 'topic':
-                models_data = confutils.getTopicsfromModels(conference_event_obj.conference_event_name_abbr)
+                models_data = confutils.get_Topics_from_Models(conference_event_obj.conference_event_name_abbr)
             elif keyword_or_topic == 'keyword':
-                models_data = confutils.getKeywordsfromModels(conference_event_obj.conference_event_name_abbr)
+                models_data = confutils.get_Keywords_from_Models(conference_event_obj.conference_event_name_abbr)
 
             for model_data in models_data:
                 result_data_with_duplicates.append(model_data[keyword_or_topic])
@@ -901,7 +901,7 @@ class MultipleTopicAreaView(APIView):
         conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
         
         for word in words_split_params:
-            models_data = confutils.getWordWeightEventBased(conference_event_objs,word,url_splits_conference_name[-3])
+            models_data = confutils.get_Word_Weight_Event_Based(conference_event_objs,word,url_splits_conference_name[-3])
             for model_data in models_data:
                 weights.append(model_data['weight'])
                 events.append(model_data['conference_event_abbr'])
@@ -1006,13 +1006,13 @@ class VennOverview(APIView):
         keyword_or_topic = url_splits[-3]
         
         if keyword_or_topic == 'topic':
-            models_data_first_event = confutils.getTopicsfromModels(first_event)
-            models_data_second_event = confutils.getTopicsfromModels(second_event)
+            models_data_first_event = confutils.get_Topics_from_Models(first_event)
+            models_data_second_event = confutils.get_Topics_from_Models(second_event)
             
 
         elif keyword_or_topic == 'keyword':
-            models_data_first_event = confutils.getKeywordsfromModels(first_event)
-            models_data_second_event = confutils.getKeywordsfromModels(second_event)
+            models_data_first_event = confutils.get_Keywords_from_Models(first_event)
+            models_data_second_event = confutils.get_Keywords_from_Models(second_event)
             
 
         for data in models_data_first_event:
@@ -1021,14 +1021,14 @@ class VennOverview(APIView):
         for data in models_data_second_event:
              words_second_event.append(data[keyword_or_topic])
 
-        models_data_intersect_first_and_second = confutils.getSharedWordsBetweenEvents([first_event,second_event], keyword_or_topic)
+        models_data_intersect_first_and_second = confutils.get_Shared_Words_Between_Events([first_event,second_event], keyword_or_topic)
 
         if len(models_data_intersect_first_and_second) > 0:
             for data in models_data_intersect_first_and_second[0]:
                 words_intersect_second_event.append(data['word'])
 
         
-        ctx = confutils.generateVennPhoto(words_first_event[0:10]
+        ctx = confutils.generate_Venn_Photo(words_first_event[0:10]
                                          ,words_second_event[0:10]
                                          ,words_intersect_second_event[0:10]
                                          ,first_event
@@ -1062,23 +1062,23 @@ class AuthorConfComparisionView(APIView):
         author_obj = Author.objects.filter(Q(author_name=auther_name))[0]
 
         if keyword_or_topic == 'topic':
-            models_data_conference_event = confutils.getTopicsfromModels(conference_event_name_abbr)
+            models_data_conference_event = confutils.get_Topics_from_Models(conference_event_name_abbr)
             
 
         elif keyword_or_topic == 'keyword':
-            models_data_conference_event = confutils.getKeywordsfromModels(conference_event_name_abbr)
+            models_data_conference_event = confutils.get_Keywords_from_Models(conference_event_name_abbr)
         
         for data in models_data_conference_event:
             words_conferemce_event.append(data[keyword_or_topic])
 
 
-        author_publications = confutils.getAuthorPublicationsInConf(author_obj.semantic_scolar_author_id
+        author_publications = confutils.get_Author_Publications_In_Conf(author_obj.semantic_scolar_author_id
                                                                           ,conference_name
                                                                           ,"")
 
         
         print(author_publications, 'author_publications')
-        author_interests =  confutils.getAuthorInterests(author_publications,"", keyword_or_topic, 30)
+        author_interests =  confutils.get_Author_Interests(author_publications,"", keyword_or_topic, 30)
         sorted_data_author_interests = dict(sorted(author_interests.items(), key=lambda item: item[1], reverse=True))
 
 
@@ -1089,7 +1089,7 @@ class AuthorConfComparisionView(APIView):
         reduced2 = words_author[0:10]
         intersect_words = list(set(reduced1).intersection(reduced2))
 
-        ctx = confutils.generateVennPhoto(words_author[0:10]
+        ctx = confutils.generate_Venn_Photo(words_author[0:10]
                                          ,words_conferemce_event[0:10]
                                          ,intersect_words[0:10]
                                          ,auther_name
@@ -1151,9 +1151,9 @@ class AllTopicsView(APIView):
 
 
         if keyword_or_topic == 'topic':
-            models_data = confutils.getTopicsfromModels(conference_event_name_abbr)
+            models_data = confutils.get_Topics_from_Models(conference_event_name_abbr)
         elif keyword_or_topic == 'keyword':
-            models_data = confutils.getKeywordsfromModels(conference_event_name_abbr)
+            models_data = confutils.get_Keywords_from_Models(conference_event_name_abbr)
 
         for model_data in models_data:
             result_data_with_duplicates.append(model_data[keyword_or_topic])
@@ -1187,7 +1187,7 @@ class SearchKeywordView(APIView):
         word = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
 
-        models_data = confutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+        models_data = confutils.get_Abstract_Based_On_Keyword(conference_event_name_abbr,word)
         if not models_data:
             result_data = {
             "nodes": [{
@@ -1328,9 +1328,9 @@ class FetchAbstractView(APIView):
         conference_name  = url_splits[-3]
         word = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
-        #sconfutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+        #sconfutils.get_Abstract_Based_On_Keyword(conference_event_name_abbr,word)
         return Response(
-            confutils.getAbstractbasedonKeyword(conference_event_name_abbr,word)
+            confutils.get_Abstract_Based_On_Keyword(conference_event_name_abbr,word)
         )
 
 
@@ -1350,9 +1350,9 @@ class AuthorFetchYearView(APIView):
 
         print(url_splits)
         if conference_event_name == "all years":
-            models_data = confutils.getAuthorsData(conference_name,"")
+            models_data = confutils.get_Authors_Data(conference_name,"")
         else:
-            models_data = confutils.getAuthorsData("",conference_event_name)
+            models_data = confutils.get_Authors_Data("",conference_event_name)
 
         for data in models_data:
             result_data.append({
@@ -1388,19 +1388,19 @@ class AuthorTopicComparisonView(APIView):
         first_author_obj = Author.objects.get(Q(author_name=first_author_name))
         second_author_obj = Author.objects.get(Q(author_name=second_author_name))
 
-        first_author_publications = confutils.getAuthorPublicationsInConf(first_author_obj.semantic_scolar_author_id
+        first_author_publications = confutils.get_Author_Publications_In_Conf(first_author_obj.semantic_scolar_author_id
                                                                           ,conference_name
                                                                           ,conference_event_name_abbr)
 
-        second_author_publications = confutils.getAuthorPublicationsInConf(second_author_obj.semantic_scolar_author_id
+        second_author_publications = confutils.get_Author_Publications_In_Conf(second_author_obj.semantic_scolar_author_id
                                                                           ,conference_name
                                                                           , conference_event_name_abbr)
 
-        first_author_interests =  confutils.getAuthorInterests(first_author_publications,"", keyword_or_topic)
+        first_author_interests =  confutils.get_Author_Interests(first_author_publications,"", keyword_or_topic)
         sorted_data_first_author = dict(sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
         reduced_sorted_data_first_author = dict(itertools.islice(sorted_data_first_author.items(), 10))
 
-        second_author_interests = confutils.getAuthorInterests(second_author_publications,"",keyword_or_topic)
+        second_author_interests = confutils.get_Author_Interests(second_author_publications,"",keyword_or_topic)
         sorted_data_second_author = dict(sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True)) #itertools.islice(d.items(), 2)
         reduced_sorted_data_second_author = dict(itertools.islice(sorted_data_second_author.items(), 10))
 
