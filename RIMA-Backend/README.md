@@ -22,6 +22,9 @@
 # Installs a python virtual environment
 python -m venv venv
 
+# Execution Policies (Should be done once per computer)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
 # Activates the python virtual environment
 .\venv\Scripts\activate
 
