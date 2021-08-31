@@ -108,8 +108,10 @@ def search_publicationid_in_semscholar_api_search(conf_name,semscholar_titles):
     
     for title in semscholar_titles:
         paper_data = requests.get(f'{semantic_scholar_search_url_api}{title}').json()
-        print(paper_data['data'][0]['paperId'])
-        publications_ids.append(paper_data['data'][0]['paperId'])
+
+        if 'data' in paper_data:
+            print(paper_data['data'][0]['paperId'])
+            publications_ids.append(paper_data['data'][0]['paperId'])
 
     print(' ')
     print(' **** ','ids list length',publications_ids, ' **** ')

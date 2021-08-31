@@ -372,12 +372,14 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
 
 def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
+
     """[inserts new records into author keyword and topic tables for an event]
 
     Args:
         conference_event_name_abbr ([str]): [the name of the conference event]
 
-    """    
+    """
+
     authors_publications_dicts_list = []
     abstract_title_str = ""
 
@@ -446,13 +448,11 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
 
 def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
-    """[summary]
+    """[extracts keywords and topics event based and insert them into keyword and topic tables]
 
     Args:
-        conference_event_name_abbr ([type]): [description]
+        conference_event_name_abbr ([str]): [the name of the conference event]
 
-    Returns:
-        [type]: [description]
     """    
     abstract_title_str = ""
     conference_event_papers_data = []
@@ -502,7 +502,6 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
     print('final TOPICS WIKIS FIRST TEST', final)
    
 
-    return True
 
 
 
