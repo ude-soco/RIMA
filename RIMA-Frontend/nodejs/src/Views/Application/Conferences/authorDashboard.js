@@ -464,8 +464,8 @@ ExtractAuthorInterests = (conference_name,author_id) => {
                         <br/>
 
                         <br/>                               
-                        <Button color="primary" outline active={this.state.active2} onClick={() => this.selectKeyword(this.state.conferenceName,this.state.currentAuthor)}>Keyword</Button>
-                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Extract and show Topics</Button>{' '}
+                        <Button color="primary" outline active={this.state.active2} onClick={() => this.selectKeyword(this.state.conferenceName,this.state.currentAuthor)}>Keyword based Interests</Button>
+                        <Button color="primary" outline active={this.state.active1} onClick={() => this.selectTopic(this.state.conferenceName,this.state.currentAuthor)}>Extract Wiki based Interests</Button>{' '}
 
                         <div>
 

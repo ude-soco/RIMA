@@ -326,11 +326,10 @@ class CompareStackedBarChart extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
-              <h2>Evolution of topics/keywords in Conferences over time</h2>
+            <h2>Popularity of topics/keywords in Conferences over time</h2>
               <br/>
               <p>
-              This chart displays the evolution of a topic/keyword over all
-                years of the selected conferences
+              This chart compares the popularity percentages of the shared topics/keywords over a specific shared year of the selected conferences
               </p>
               <br/>
 
@@ -460,14 +459,12 @@ class CompareStackedBarChart extends Component {
         <div id="chart">
           <Form role="form" method="POST">
             <FormGroup>
-              <h2>Evolution of topics/keywords in Conferences over time</h2>
+            <h2>Popularity of topics/keywords in Conferences over time</h2>
               <br/>
               <p>
-              This chart displays the evolution of a topic/keyword over all
-                years of the selected conferences
+              This chart compares the popularity percentages of the shared topics/keywords over a specific shared year of the selected conferences
               </p>
               <br/>
-
             
             <Label>Select conferences</Label>
 

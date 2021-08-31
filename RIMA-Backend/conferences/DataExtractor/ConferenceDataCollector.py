@@ -8,7 +8,6 @@ import re
 import pandas as pd
 import json
 import os
-import urllib.parse as up
 import pickle
 import numpy as np
 from requests.exceptions import HTTPError
@@ -99,10 +98,10 @@ def fetch_confernces_names_listed_in_html(platform, index):
     return preloaded_data
 
 
-def search_publicationid_in_semscholar_new(conf_name,semscholar_titles):
+def search_publicationid_in_semscholar_api_search(conf_name,semscholar_titles):
     print(' ')
     print('****','titles list length',len(semscholar_titles), '****')
-    print('****','Searching ids of',len(semscholar_titles), ' publications' , '****')
+    print('****','Searching ids of ',len(semscholar_titles), ' publications using Keyword API Search' , '****')
     print(' ')   
     publications_ids = []
     elements_list = []
@@ -120,10 +119,19 @@ def search_publicationid_in_semscholar_new(conf_name,semscholar_titles):
 
 # needs selenium
 
-def search_publicationid_in_semscholar(conf_name,semscholar_titles):
+def search_publicationid_in_semscholar_selenium(conf_name,semscholar_titles):
+    """[summary]
+
+    Args:
+        conf_name ([type]): [description]
+        semscholar_titles ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     print(' ')
     print('****','titles list length',len(semscholar_titles), '****')
-    print('****','Searching ids of',len(semscholar_titles), ' publications' , '****')
+    print('****','Searching ids of ',len(semscholar_titles), ' publications using Selenium' , '****')
     print(' ')   
     publications_ids = []
     elements_list = []
@@ -165,7 +173,10 @@ def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag
     if html_element == "cite" and is_recursive:
         for matched_elements in found_elements:
             semscholar_titles.append(matched_elements.find_all('span',{"class": "title"})[0].text)
-        return search_publicationid_in_semscholar(conf_name,semscholar_titles)
+        if len(semscholar_titles) > 80:    
+            return search_publicationid_in_semscholar_selenium(conf_name,semscholar_titles)
+        elif len(semscholar_titles) <= 80:
+            return search_publicationid_in_semscholar_api_search(conf_name,semscholar_titles)
     elif html_element == "nav":
         for matched_elements in found_elements:
             for element in matched_elements:
@@ -176,7 +187,7 @@ def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag
                             links_list.append(element.select("li:nth-of-type(2)")[0]['data-doi'])
                         else:
                             print(' ')
-                            print('**** text has .pdf -> Searching for the publication id in Semantic Scholar: ****')
+                            print('**** text has no DOI -> Searching for the publication id in Semantic Scholar: ****')
                             print('**** this may take up to 5 mins ****')
                             print(' ')
                             return fetch_dois_ids_from_html(conf_name,soup,"cite",{"class": "data"},"","",False,True,headers)

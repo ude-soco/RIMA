@@ -36,6 +36,17 @@ headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US
 
 
 def split_restapi_url(url_path,split_char):
+
+    """[splits the endpoint URL of the Front-end Request]
+
+    Args:
+        url_path ([str]): [endpoint url]
+        split_char ([raw str]): [split character]
+
+    Returns:
+        [list]: [list of url splits]
+    """  
+
     print("the url path is:", url_path)
     url_path = url_path.replace("%20", " ")
     topics_split = url_path.split(split_char)
@@ -43,6 +54,16 @@ def split_restapi_url(url_path,split_char):
 
 
 def get_conference_general_data(conference_name_abbr):
+
+    """[retrieves general data of a specicif conference from the database tables]
+
+    Args:
+        conference_name_abbr ([str]): [the name of the conference whose data should be fetched]
+
+    Returns:
+        [dict]: [dictionary of the general data]
+    """
+
     result_data = {'series':[]}
     conference_events_result_data = []
     conference_events_years = []
@@ -103,6 +124,13 @@ def get_conference_general_data(conference_name_abbr):
 
 
 def get_conferences_list():
+
+    """[retrives general of all stored conferences]
+
+    Returns:
+        [list]: [list of dictionaries of the conferences data]
+    """  
+
     data = []
     conferences = Conference.objects.all().order_by('conference_name_abbr')
     for conference in conferences:
@@ -123,6 +151,13 @@ def get_conferences_list():
 
 
 def add_data_to_conf_event_model(conference_name_abbr):
+
+    """[Insert new record into Conference Event table]
+
+    Args:
+    conference_name_abbr ([str]): [the name of the conference whose conference event should be stored]
+    """    
+
     conf_list = []
     conf_url = ""
     conf_complete_name = ""
@@ -145,6 +180,15 @@ def add_data_to_conf_event_model(conference_name_abbr):
                 conference_event.save()
 
 def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_name_abbr):
+
+    """[inserts new records in paper and author models]
+
+    Args:
+        conference_name_abbr ([str]): [the name of the conference]
+        conf_event_name_abbr ([str]): [the name of the conference event]
+
+    """    
+
     conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)    
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conf_event_name_abbr)
 
@@ -188,6 +232,14 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_nam
     #print(data['paper_data'][1])
 
 def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_event_obj):
+    """[inserts new records into author table]
+
+    Args:
+        author_data ([dict]): [contains author data]
+        paper_obj ([object]): [one record in table paper]
+        conference_obj ([obj]): [one record in conference table]
+        conference_event_obj ([obj]): [one record in conference table]
+    """    
     stored_author_check = Author.objects.filter(semantic_scolar_author_id = author_data['authorId']).exists()
     if not stored_author_check:
         author_obj = Author.objects.create(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
@@ -206,6 +258,17 @@ def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_ev
     
 
 def get_authors_data(conference_name_abbr="", conference_event_name_abbr =""):
+
+    """[retrieves general data of multiple authors in a conference or a conference event]
+
+    Args:
+        conference_name_abbr (str, optional): [the name of the conference]. Defaults to "".
+        conference_event_name_abbr (str, optional): [the name of the conference event]. Defaults to "".
+
+    Returns:
+        [list]: [list of data dictionaries for every author]
+    """    
+
     data = []
 
     if conference_event_name_abbr == "":
@@ -238,6 +301,19 @@ def get_authors_data(conference_name_abbr="", conference_event_name_abbr =""):
 
 
 def get_author_interests(publications_list,author_id,keyword_or_topic,num = 30):
+
+    """[fetches authors keyword- and wiki-based interests from a papers list]
+
+    Args:
+        publications_list ([list]): [list of publication objects]
+        author_id ([str]): [author semantic scholar ID]
+        keyword_or_topic ([str]): [either keyword- or wiki-based interest]
+        num (int, optional): [number of the words to be extracted]. Defaults to 30.
+
+    Returns:
+        [dict]: [dictionary of the extracted topics or keywords with their weights]
+    """
+
     abstract_title_str = ""
     keywords = {}
     topics = {}
@@ -261,15 +337,15 @@ def get_author_interests(publications_list,author_id,keyword_or_topic,num = 30):
 
 
 def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr =""):
-    """[summary]
+    """[retrieves all the pulication on an author from stored conferences]
 
     Args:
-        author_id ([type]): [description]
-        conference_name_abbr ([type]): [description]
-        conference_event_name_abbr (str, optional): [description]. Defaults to "".
+        author_id ([str]): [an author ID from table author]
+        conference_name_abbr ([str]): [the name of the conference]
+        conference_event_name_abbr (str, optional): [the name of the conference event]. Defaults to "".
 
     Returns:
-        [type]: [description]
+        [list]: [sorted list of dictionaries. Conference event is the sort criterion]
     """    
     result_data = []
     if conference_event_name_abbr == "":
@@ -296,6 +372,12 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
 
 def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
+    """[inserts new records into author keyword and topic tables for an event]
+
+    Args:
+        conference_event_name_abbr ([str]): [the name of the conference event]
+
+    """    
     authors_publications_dicts_list = []
     abstract_title_str = ""
 
@@ -364,6 +446,14 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
 
 def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
+    """[summary]
+
+    Args:
+        conference_event_name_abbr ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     abstract_title_str = ""
     conference_event_papers_data = []
 

@@ -326,15 +326,14 @@ class CompareStackedAreaChart extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
-              <h2>Evolution of topics/keywords in Conferences over time</h2>
+            <h2>Evolution of a shared topic/keyword in Conferences over time</h2>
               <br/>
               <p>
-              This chart displays the evolution of a topic/keyword over all
+              This chart compares the evolution of a topic/keyword over all
                 years of the selected conferences
               </p>
               <br/>
 
-                
             <Label>Select conferences</Label>
 
             <div style={{width: "600px"}}>
@@ -457,14 +456,13 @@ class CompareStackedAreaChart extends Component {
         <div id="chart">
           <Form role="form" method="POST">
             <FormGroup>
-              <h2>Evolution of topics/keywords in Conferences over time</h2>
+            <h2>Evolution of a shared topic/keyword in Conferences over time</h2>
               <br/>
               <p>
-              This chart displays the evolution of a topic/keyword over all
+              This chart compares the evolution of a topic/keyword over all
                 years of the selected conferences
               </p>
               <br/>
-
                 
             <Label>Select conferences</Label>
 
