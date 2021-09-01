@@ -312,6 +312,22 @@ static getListPublications(conference_name_abbr,author_id) {
     }).then((res) => res);
   }
 
+
+
+  //** DELETE A CONFERENCE API **//
+  static deleteConference(conference_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "DELETE",
+      url: `${BASE_URL}/api/conferences/conference/${conference_name_abbr}/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
   static deletekeyword(id) {
     const TOKEN = getItem("accessToken");
     return axios({

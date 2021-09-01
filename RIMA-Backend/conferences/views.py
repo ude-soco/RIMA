@@ -216,6 +216,19 @@ class conferencesYearsRangeView(APIView):
 
 
 
+class conferenceDeleteView(APIView):
+    serializer_class = ConferenceSerializer
+
+    def delete(self,request,pk):
+        print(pk)
+        conference_name_abbr = pk  
+        confutils.delete_conference_data(conference_name_abbr)
+
+        return Response({})
+  
+
+
+
 class conferencesSharedWordsBarView(APIView):
     def get(self, request, *args, **kwargs):
         result_data = [[],[]]
@@ -375,7 +388,7 @@ BAB Add Conference View
 
 '''
 
-class addConferenceView(ListCreateAPIView):
+class addConferenceView(APIView):
     serializer_class = PlatformSerializer
     conference_serializer_class = ConferenceSerializer
     def get(self, request, *args, **kwargs):

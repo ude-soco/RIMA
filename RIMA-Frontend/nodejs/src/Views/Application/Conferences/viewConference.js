@@ -53,7 +53,7 @@ class viewConference extends React.Component {
     conferenceEvents: [],
     isLoading: false,
     modal: false,
-    deletePaperId: "",
+    deleteConference: "",
     title: "",
     url: "",
     year: "",
@@ -164,29 +164,29 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
     });
 };
 
-  // Toggles the delete paper modal
-  toggleDeletePaper = (id) => {
+  // Toggles the delete Conference modal
+  toggleDeleteConference = (conference_name_abbr) => {
     this.setState({
       deleteModal: !this.state.deleteModal,
-      deletePaperId: id,
+      deleteConference: conference_name_abbr,
     })
   }
 
   //** DELETE A PAPER **//
-  deleteEnquiry = (id) => {
+  deleteEnquiry = (conference_name_abbr) => {
     this.setState({
       isLoading: true,
       deleteModal: !this.state.deleteModal,
     }, () => {
-      RestAPI.deletePaper(id)
+      RestAPI.deleteConference(conference_name_abbr)
         .then((response) => {
-          const newvalue = this.state.data.filter((v, i) => v.id !== id);
+          const newvalue = this.state.data.filter((v, i) => v.conference_name_abbr !== conference_name_abbr);
           this.setState({
             isLoading: false,
-            data: [...newvalue],
+             data: [...newvalue],
           });
 
-          toast.success("Paper deleted!", {
+          toast.success("Conference deleted!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 2000,
           });
@@ -195,7 +195,10 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
           this.setState({ isLoading: false });
           handleServerErrors(error, toast.error);
         });
+       // this.getConferenceData()
+
     });
+
   };
 
   
@@ -376,7 +379,7 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                           <td>
                           <div align="left">
                           <Tooltip title="delete conference">
-                            <IconButton onClick={() => this.toggleDeletePaper(value.conference_name_abbr)}>
+                            <IconButton onClick={() => this.toggleDeleteConference(value.conference_name_abbr)}>
                               <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                             </IconButton>
                             </Tooltip>
@@ -403,20 +406,20 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
 
               {/* //  Start Modal */}
               <div>
-                <Modal isOpen={this.state.deleteModal} toggle={() => this.toggleDeletePaper("")} size="lg">
-                  <ModalHeader toggle={() => this.toggleDeletePaper("")}>
+                <Modal isOpen={this.state.deleteModal} toggle={() => this.toggleDeleteConference("")} size="lg">
+                  <ModalHeader toggle={() => this.toggleDeleteConference("")}>
                     <h2>
-                      Remove paper?
+                      Remove Conference?
                     </h2>
                   </ModalHeader>
                   <ModalBody>
-                    <h4>You are about to delete the publication from the list! Are you sure?</h4>
+                    <h4>You are about to delete the conference from the list! Are you sure?</h4>
                   </ModalBody>
                   <ModalFooter>
-                    <Button varian="link" onClick={() => this.toggleDeletePaper("")}>
+                    <Button varian="link" onClick={() => this.toggleDeleteConference("")}>
                       Cancel
                     </Button>
-                    <Button color="danger" onClick={() => this.deleteEnquiry(this.state.deletePaperId)}>
+                    <Button color="danger" onClick={() => this.deleteEnquiry(this.state.deleteConference)}>
                       Delete
                     </Button>
                   </ModalFooter>

@@ -37,14 +37,14 @@ headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US
 
 def split_restapi_url(url_path,split_char):
 
-    """[splits the endpoint URL of the Front-end Request]
+    """splits the endpoint URL of the Front-end Request
 
     Args:
-        url_path ([str]): [endpoint url]
-        split_char ([raw str]): [split character]
+        url_path (str): endpoint url
+        split_char (raw str): split character
 
     Returns:
-        [list]: [list of url splits]
+        list: list of url splits
     """  
 
     print("the url path is:", url_path)
@@ -55,13 +55,13 @@ def split_restapi_url(url_path,split_char):
 
 def get_conference_general_data(conference_name_abbr):
 
-    """[retrieves general data of a specicif conference from the database tables]
+    """retrieves general data of a specicif conference from the database tables
 
     Args:
-        conference_name_abbr ([str]): [the name of the conference whose data should be fetched]
+        conference_name_abbr (str): the name of the conference whose data should be fetched
 
     Returns:
-        [dict]: [dictionary of the general data]
+        dict: dictionary of the general data
     """
 
     result_data = {'series':[]}
@@ -125,10 +125,10 @@ def get_conference_general_data(conference_name_abbr):
 
 def get_conferences_list():
 
-    """[retrives general of all stored conferences]
+    """retrives general data of all stored conferences
 
     Returns:
-        [list]: [list of dictionaries of the conferences data]
+        list: list of dictionaries of the conferences data
     """  
 
     data = []
@@ -152,10 +152,10 @@ def get_conferences_list():
 
 def add_data_to_conf_event_model(conference_name_abbr):
 
-    """[Insert new record into Conference Event table]
+    """Insert new record into Conference Event table
 
     Args:
-    conference_name_abbr ([str]): [the name of the conference whose conference event should be stored]
+    conference_name_abbr (str): the name of the conference whose conference event should be stored
     """    
 
     conf_list = []
@@ -181,11 +181,11 @@ def add_data_to_conf_event_model(conference_name_abbr):
 
 def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_name_abbr):
 
-    """[inserts new records in paper and author models]
+    """inserts new records in paper and author models
 
     Args:
-        conference_name_abbr ([str]): [the name of the conference]
-        conf_event_name_abbr ([str]): [the name of the conference event]
+        conference_name_abbr (str): the name of the conference
+        conf_event_name_abbr (str): the name of the conference event
 
     """    
 
@@ -232,13 +232,13 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_nam
     #print(data['paper_data'][1])
 
 def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_event_obj):
-    """[inserts new records into author table]
+    """inserts new records into author table
 
     Args:
-        author_data ([dict]): [contains author data]
-        paper_obj ([object]): [one record in table paper]
-        conference_obj ([obj]): [one record in conference table]
-        conference_event_obj ([obj]): [one record in conference table]
+        author_data (dict): contains author data
+        paper_obj (object): one record in table paper
+        conference_obj (obj): one record in conference table
+        conference_event_obj (obj): one record in conference table
     """    
     stored_author_check = Author.objects.filter(semantic_scolar_author_id = author_data['authorId']).exists()
     if not stored_author_check:
@@ -259,14 +259,14 @@ def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_ev
 
 def get_authors_data(conference_name_abbr="", conference_event_name_abbr =""):
 
-    """[retrieves general data of multiple authors in a conference or a conference event]
+    """retrieves general data of multiple authors in a conference or a conference event
 
     Args:
-        conference_name_abbr (str, optional): [the name of the conference]. Defaults to "".
-        conference_event_name_abbr (str, optional): [the name of the conference event]. Defaults to "".
+        conference_name_abbr (str, optional): the name of the conference. Defaults to "".
+        conference_event_name_abbr (str, optional): the name of the conference event. Defaults to "".
 
     Returns:
-        [list]: [list of data dictionaries for every author]
+        list: list of data dictionaries for every author
     """    
 
     data = []
@@ -302,16 +302,16 @@ def get_authors_data(conference_name_abbr="", conference_event_name_abbr =""):
 
 def get_author_interests(publications_list,author_id,keyword_or_topic,num = 30):
 
-    """[fetches authors keyword- and wiki-based interests from a papers list]
+    """fetches authors keyword- and wiki-based interests from a papers list
 
     Args:
-        publications_list ([list]): [list of publication objects]
-        author_id ([str]): [author semantic scholar ID]
-        keyword_or_topic ([str]): [either keyword- or wiki-based interest]
-        num (int, optional): [number of the words to be extracted]. Defaults to 30.
+        publications_list (list): list of publication objects
+        author_id (str): author semantic scholar ID
+        keyword_or_topic (str): either keyword- or wiki-based interest
+        num (int, optional): number of the words to be extracted. Defaults to 30.
 
     Returns:
-        [dict]: [dictionary of the extracted topics or keywords with their weights]
+        dict: dictionary of the extracted topics or keywords with their weights
     """
 
     abstract_title_str = ""
@@ -337,15 +337,15 @@ def get_author_interests(publications_list,author_id,keyword_or_topic,num = 30):
 
 
 def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr =""):
-    """[retrieves all the pulication on an author from stored conferences]
+    """retrieves all the pulication on an author from stored conferences
 
     Args:
-        author_id ([str]): [an author ID from table author]
-        conference_name_abbr ([str]): [the name of the conference]
-        conference_event_name_abbr (str, optional): [the name of the conference event]. Defaults to "".
+        author_id (str): an author ID from table author
+        conference_name_abbr (str): the name of the conference
+        conference_event_name_abbr (str, optional): the name of the conference event. Defaults to "".
 
     Returns:
-        [list]: [sorted list of dictionaries. Conference event is the sort criterion]
+        list: sorted list of dictionaries. Conference event is the sort criterion
     """    
     result_data = []
     if conference_event_name_abbr == "":
@@ -373,10 +373,10 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
 def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
-    """[inserts new records into author keyword and topic tables for an event]
+    """inserts new records into author keyword and topic tables for an event
 
     Args:
-        conference_event_name_abbr ([str]): [the name of the conference event]
+        conference_event_name_abbr (str): the name of the conference event
 
     """
 
@@ -448,10 +448,10 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
 
 def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
-    """[extracts keywords and topics event based and insert them into keyword and topic tables]
+    """extracts keywords and topics event based and insert them into keyword and topic tables
 
     Args:
-        conference_event_name_abbr ([str]): [the name of the conference event]
+        conference_event_name_abbr (str): the name of the conference event
 
     """    
     abstract_title_str = ""
@@ -507,6 +507,14 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
 
 
 def get_event_papers_data(conference_event_name_abbr):
+    """retrieves paper objects of a conference event
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    Returns:
+        list: list of papers objects
+    """    
     conference_event_papers_data = []
 
     conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
@@ -519,6 +527,14 @@ def get_event_papers_data(conference_event_name_abbr):
 
 
 def get_keywords_from_models(conference_event_name_abbr):
+    """retrieves keywords events based and weights from keywords tables 
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    Returns:
+        list: sorted list of dictionaries of keywords and their weights and conference event
+    """    
     data = []
     event_has_keyword_objs = Event_has_keyword.objects.filter(conference_event_name_abbr=conference_event_name_abbr)
 
@@ -535,6 +551,15 @@ def get_keywords_from_models(conference_event_name_abbr):
     return sorted_data
 
 def get_topics_from_models(conference_event_name_abbr):
+    """retrieves topics events based  and weights from topics tables 
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    Returns:
+        list: sorted list of dictionaries of topics and their weights and conference event
+    """    
+   
     data = []
     event_has_topic_objs = Event_has_Topic.objects.filter(conference_event_name_abbr=conference_event_name_abbr)
 
@@ -553,6 +578,15 @@ def get_topics_from_models(conference_event_name_abbr):
 
 
 def get_abstract_based_on_keyword(conference_event_name_abbr,keyword):
+    """[summary]
+
+    Args:
+        conference_event_name_abbr ([type]): [description]
+        keyword ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """        
     conference_event_papers_data = get_event_papers_data(conference_event_name_abbr)
     filtered_conference_event_papers_data = conference_event_papers_data.filter(Q(abstract__icontains=keyword)
                                                | Q(title__icontains=keyword))
@@ -570,12 +604,19 @@ def get_abstract_based_on_keyword(conference_event_name_abbr,keyword):
                     'paper_id': paper_data.paper_id
                 }) 
     
-   # print('titles_abstracts *********************** ' , titles_abstracts)
-
     return titles_abstracts
 
 # can be removed
 def get_shared_words_between_events_old(conference_events_list,keyword_or_topic):
+    """[summary]
+
+    Args:
+        conference_events_list ([type]): [description]
+        keyword_or_topic ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     models_data = []
     first_event = conference_events_list[0]
     shared_word = []
@@ -624,6 +665,15 @@ def get_shared_words_between_events_old(conference_events_list,keyword_or_topic)
 
 
 def get_shared_words_between_events(conference_events_list,keyword_or_topic):
+    """[summary]
+
+    Args:
+        conference_events_list ([type]): [description]
+        keyword_or_topic ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     shared_words = []
     shared_words_final_data = []
     result_data = []
@@ -664,6 +714,15 @@ def get_shared_words_between_events(conference_events_list,keyword_or_topic):
 
 
 def get_shared_words_between_conferences(conferences_list,keyword_or_topic):
+    """[summary]
+
+    Args:
+        conferences_list ([type]): [description]
+        keyword_or_topic ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     conferences_words = []
     one_conference_words = []
     models_words = []
@@ -700,6 +759,16 @@ def get_shared_words_between_conferences(conferences_list,keyword_or_topic):
 
 
 def get_word_weight_event_based(conference_event_objs,word,keyword_or_topic):
+    """[summary]
+
+    Args:
+        conference_event_objs ([type]): [description]
+        word ([type]): [description]
+        keyword_or_topic ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     result_data = []
 
     if keyword_or_topic == 'topic':
@@ -787,6 +856,43 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
 
     
     return result_data
+
+
+
+
+
+def delete_conference_data(conference_name_abbr):
+    
+    authors_list=  []
+    interesections = []
+    deleted_authors =[]
+    authors_list = Author_has_Papers.objects.filter(conference_name_abbr_id = conference_name_abbr).values_list('author_id_id',flat=True)
+    other_authors_list =  Author_has_Papers.objects.filter(~Q(conference_name_abbr=conference_name_abbr)).values_list('author_id_id',flat=True)
+    interesections = set(authors_list).intersection(other_authors_list)
+    list_to_delete = set(authors_list).difference(interesections)
+
+    
+    print('########### delete ###########')
+    print(len(interesections))
+    print(len(list_to_delete))
+    
+    print('########### delete ###########')
+
+    list_to_delete = list(list_to_delete)
+    while len(list_to_delete):
+        print(list_to_delete[:100])
+        deleted_authors = Author.objects.filter(semantic_scolar_author_id__in=list_to_delete[:100]).delete()
+        list_to_delete = list_to_delete[100:]
+
+       
+
+
+    print('deleted authors ')
+    print(deleted_authors)
+    Conference.objects.filter(conference_name_abbr=conference_name_abbr).delete()
+
+    return True
+
 
 
 def generate_venn_photo(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):

@@ -13,6 +13,9 @@ urlpatterns = [
     path('getSharedWordEvolution/<pk1>/<pk2>/', views.SharedWordEvolutionView.as_view()),
     path('getSharedYears/', views.conferencesYearsRangeView.as_view()), 
 
+    path('conference/<str:pk>/', views.conferenceDeleteView.as_view()), 
+    
+
     path('getSharedWordsBar/<pk1>/<pk2>/', views.conferencesSharedWordsBarView.as_view()),
 
     path('conferenceData/<pk1>', views.conferenceGeneralDataView.as_view()), 
