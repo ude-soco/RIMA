@@ -1,5 +1,5 @@
 
-import React, {Component} from "react";
+import React, {Component,useEffect} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import {BASE_URL_CONFERENCE} from "../../../Services/constants";
@@ -9,11 +9,6 @@ import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 
-import RestAPI from "../../../Services/api";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import { handleServerErrors } from "Services/utils/errorHandler";
-
 
 class CompareStackedBarChart extends Component {
   constructor(props) {
@@ -22,66 +17,163 @@ class CompareStackedBarChart extends Component {
     this.selectInputRef1 = React.createRef();
 
     this.state = {
-      conferencesNames:[],
+      mulitSelectDefaultValues : [{value: 'lak', label: 'lak'},{value: 'aied', label: 'aied'},{value: 'edm', label: 'edm'}],
       selectConference:"",
-      selectedConferences:[],
-      words:[],
-      selectedOption:"",
+      selectedConferences:["lak","aied","edm"],
+      years:[
+        {
+            value: "2020",
+            label: "2020"
+        },
+        {
+            value: "2013",
+            label: "2013"
+        },
+        {
+            value: "2017",
+            label: "2017"
+        },
+        {
+            value: "2015",
+            label: "2015"
+        },
+        {
+            value: "2018",
+            label: "2018"
+        },
+        {
+            value: "2011",
+            label: "2011"
+        },
+        {
+            value: "2019",
+            label: "2019"
+        }
+    ],
       weights : [],
       key: "",
 
-      
-      soptions: [],
-      years: [],
+
+      series: [
+        {
+            name: "student",
+            data: [
+                217,
+                172,
+                162,
+                459
+            ]
+        },
+        {
+          name: "students",
+          data: [
+                162,
+                114,
+                115,
+                255
+            ]
+        },
+        {
+             name: "learning",
+             data  : [
+                287,
+                143,
+                155,
+                268
+            ]
+        },
+        {
+            name: "model",
+            data: [
+                100,
+                81,
+                108,
+                203
+            ]
+        },
+        {
+            name: "data",
+            data: [
+                107,
+                69,
+                60,
+                246
+            ]
+        }
+    ],
+        
+    options: {
+      chart: {
+        type: "bar",
+        height: 350,
+        stacked: true,
+        stackType: "100%",
+        toolbar: {
+          show: true,
+        },
+        zoom: {
+          enabled: true,
+        },
+      },
+
+      plotOptions: {
+        bar: {
+          horizontal: true,
+        },
+      },
+      stroke: {
+        width: 1,
+        colors: ["#fff"],
+      },
+
+      xaxis: {
+        categories: [
+          "lak2020",
+          "aied2020-1",
+          "aied2020-2",
+          "edm2020"
+      ],
+      },
+      yaxis: {
+        title: {
+          text: undefined,
+        },
+        labels: {
+          style: {
+            fontWeight: 700,
+          },
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      legend: {
+        position: "bottom",
+        horizontalAlign: "left",
+        offsetX: 40,
+      },
+    },
+
       loader: false,
       display: "none",
       opacity: "0.9",
-      combinedList: [],
-      yearsList: [],
-      isLoaded: false,
-      selectValue: "",
+      selectValue: {value: '2020', label: '2020'},
       selectTopic: "",
-      series: [],
-      flag: false,
+
       
       active1: false,
-      active2: false,
+      active2: true,
       active3: false,
       active4: false,
       imageTooltipOpen: false,
-      display1: "none",
-      textinput: "",
     };
   }
 
-
-  componentDidMount() {
-    this.getConferencesNames()
-  }
-
-
-
-  //** GET ALL CONFERENCES **//
-  getConferencesNames = () => {
-    RestAPI.getConferencesNames()
-      .then((response) => {
-        this.setState({
-          isLoding: false,
-          conferencesNames: response.data,
-        });
-
-      })
-      .catch((error) => {
-        this.setState({ isLoding: false });
-        handleServerErrors(error, toast.error);
-      });
-  };
-
-
+  
   yearhandleChange = (e) =>{
-    console.log(e.value)
+    console.log(e)
     this.setState({
-      selectValue: e.value
+      selectValue: e
     })
     console.log(this.state.selectValue)
 
@@ -106,19 +198,42 @@ class CompareStackedBarChart extends Component {
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
-        this.setState({
-          active1: true,
-          active2: false,
-          words: json.years.sort((a, b) => (a.label > b.label ? 1 : -1)),
-          selectedConferences: this.state.selectedConferences,
-        });
-      });
 
+        if(json.years.length == 0)
+      {
+        this.state.selectValue = "";
+
+        this.setState({
+          series: [],
+          options: {
+            ... this.state.options,
+            xaxis: {
+              ...this.state.options.xaxis,
+              categories: [],
+            }
+          },
+          });
+      }
+
+        this.setState({
+          active1: false,
+          active2: false,
+          active3 : true,
+          years: json.years.sort((a, b) => (a.label > b.label ? 1 : -1)),
+          selectedConferences: this.state.selectedConferences,
+          });
+      });
+      
   }
 
 
   selectSharedTopics = (e) => {
-    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/topic/"+this.state.selectValue+"/?" + this.state.selectedConferences.join("&"))
+    console.log("test");
+    console.log(this.state.selectValue);
+    console.log("test");
+
+
+    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/topic/"+this.state.selectValue.value+"/?" + this.state.selectedConferences.join("&"))
     .then((response) => response.json())
     .then((json) => {
       var series = [];
@@ -127,64 +242,22 @@ class CompareStackedBarChart extends Component {
         series = series.concat([
           {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
         ]);
-        //selectInputRef1.current.chart.publicMethods.updateOptions({})
       }
       this.setState({
-        active1: false,
-        active2: true,
-        active3: true,
+        active1: true,
+        active2: false,
+        active3: false,
         active4: false,
         opacity: 1,
         series: series,
 
         options: {
-          chart: {
-            type: "bar",
-            height: 350,
-            stacked: true,
-            stackType: "100%",
-            toolbar: {
-              show: true,
-            },
-            zoom: {
-              enabled: true,
-            },
-          },
-
-          plotOptions: {
-            bar: {
-              horizontal: true,
-            },
-          },
-          stroke: {
-            width: 1,
-            colors: ["#fff"],
-          },
-
+          ... this.state.options,
           xaxis: {
+            ...this.state.options.xaxis,
             categories: json.Topiclist[1],
-          },
-          yaxis: {
-            title: {
-              text: undefined,
-            },
-            labels: {
-              style: {
-                fontWeight: 700,
-              },
-            },
-          },
-          fill: {
-            opacity: 1,
-          },
-          legend: {
-            position: "bottom",
-            horizontalAlign: "left",
-            offsetX: 40,
-          },
-        },
-        years: json.Topiclist[1],
-        isLoaded: true,
+          }
+         },
       });
     });
   }
@@ -193,7 +266,7 @@ class CompareStackedBarChart extends Component {
 
 
   selectSharedKeywords = (e) => {
-    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/keyword/"+this.state.selectValue+"/?" + this.state.selectedConferences.join("&"))
+    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/keyword/"+this.state.selectValue.value+"/?" + this.state.selectedConferences.join("&"))
     .then((response) => response.json())
     .then((json) => {
       var series = [];
@@ -202,78 +275,25 @@ class CompareStackedBarChart extends Component {
         series = series.concat([
           {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
         ]);
-        //selectInputRef1.current.chart.publicMethods.updateOptions({})
       }
       this.setState({
         active1: false,
         active2: true,
-        active3: true,
+        active3: false,
         active4: false,
         opacity: 1,
         series: series,
-
         options: {
-          chart: {
-            type: "bar",
-            height: 350,
-            stacked: true,
-            stackType: "100%",
-            toolbar: {
-              show: true,
-            },
-            zoom: {
-              enabled: true,
-            },
-          },
-
-          plotOptions: {
-            bar: {
-              horizontal: true,
-            },
-          },
-          stroke: {
-            width: 1,
-            colors: ["#fff"],
-          },
-
+          ... this.state.options,
           xaxis: {
+            ...this.state.options.xaxis,
             categories: json.Topiclist[1],
-          },
-          yaxis: {
-            title: {
-              text: undefined,
-            },
-            labels: {
-              style: {
-                fontWeight: 700,
-              },
-            },
-          },
-          fill: {
-            opacity: 1,
-          },
-          legend: {
-            position: "bottom",
-            horizontalAlign: "left",
-            offsetX: 40,
-          },
-        },
-        years: json.Topiclist[1],
-        isLoaded: true,
+          }
+         },
       });
     });
   }
 
-
-
-
-  checkIfMounted = ()=> {
-    console.log("mount");
-    return this.selectInputRef1.current != null;
-  }
-
-  
-  
 
   handleToogle = (status) => {
     this.setState({imageTooltipOpen: status});
@@ -281,47 +301,26 @@ class CompareStackedBarChart extends Component {
   };
 
   onClear = () => {
-    console.log(this.selectInputRef.current.select.state.selectValue);
-    if (this.selectInputRef.current.select.state.selectValue == "") {
-      console.log("set");
-    } else {
-      this.selectInputRef.current.select.clearValue();
-    }
+
     this.setState({
+      active1: false,
+      active2: false,
       active3: false,
       active4: true,
+      selectedConferences:[],
+      years : [],
+      selectValue : "",
       opacity: "0",
     });
+
+    this.selectInputRef.current.select.clearValue();
+
   }
 
 
         
 
   render() {
-    const checkmount = this.checkIfMounted;
-    var {
-      active2,
-      isLoaded,
-      loader,
-      active1,
-      opacity,
-      soptions,
-      display,
-      display1,
-      selectTopic,
-      textinput,
-      active3,
-      active4,
-      conferencesNames,
-      selectConference,
-      selectedConferences,
-      words,
-      selectedOption
-
-    } = this.state;
-
-
-    if (isLoaded) {
       return (
         <div id="chart" className="box">
           <Form role="form" method="POST">
@@ -343,9 +342,12 @@ class CompareStackedBarChart extends Component {
                 isClearable
                 isMulti
                 placeholder="Select Option"
-                options={conferencesNames}
-                value={conferencesNames.find((obj) => obj.value === selectTopic)}
+                options={this.props.conferencesNames}
+                value={this.props.conferencesNames.find((obj) => obj.value === this.state.selectTopic)}
                 onChange={this.conferenceshandleChange}
+                defaultValue={this.state.mulitSelectDefaultValues}
+
+
             />
 
             </div>
@@ -353,29 +355,33 @@ class CompareStackedBarChart extends Component {
               <Button
                 outline
                 color="primary"
-                active={active1}
+                active={this.state.active3}
                 value="topic"
                 onClick={this.selectYearsRange}
               >
                 get shared years
               </Button>
             <br/>
+            {this.state.years.length == 0  && !this.state.active4 ? (
+                <div style={{color: 'red'}}>No common years found</div>
+
+              ) : (<div/>)}
             <br/>
               <Label>Select a year</Label>
               <br/>
               <div style={{width: "250px"}}>
               <Select
                 placeholder="Select conference"
-                options={words}
-                value={words.find((obj) => obj.value === selectTopic)}
+                options={this.state.years}
+                value={this.state.selectValue}
                 onChange={this.yearhandleChange}
              />
-                </div>
+            </div>
             <br/>
               <Button
                 outline
                 color="primary"
-                active={active1}
+                active={this.state.active1}
                 value="topic"
                 onClick={this.selectSharedTopics}
               >
@@ -385,7 +391,7 @@ class CompareStackedBarChart extends Component {
                 outline
                 color="primary"
                 value="key"
-                active={active2}
+                active={this.state.active2}
                 onClick={this.selectSharedKeywords}
               >
                 Compare Keywords
@@ -393,7 +399,7 @@ class CompareStackedBarChart extends Component {
               
               <Button
                 outline
-                active={active4}
+                active={this.state.active4}
                 color="primary"
                 onClick={this.onClear}
               >
@@ -432,10 +438,10 @@ class CompareStackedBarChart extends Component {
                   position: "absolute",
                 }}
               >
-                <div style={{backgroundColor: "white", display: display}}>
+                <div style={{backgroundColor: "white", display: this.state.display}}>
                   <Loader
                     type="Bars"
-                    visible={loader}
+                    visible={this.state.loader}
                     color="#00BFFF"
                     height={100}
                     width={100}
@@ -444,7 +450,7 @@ class CompareStackedBarChart extends Component {
               </div>
             </FormGroup>
           </Form>
-          <div style={{opacity: opacity}}>
+          <div style={{opacity: this.state.opacity}}>
             <ReactApexChart
               options={this.state.options}
               series={this.state.series}
@@ -454,133 +460,8 @@ class CompareStackedBarChart extends Component {
           </div>
         </div>
       );
-    } else {
-      return (
-        <div id="chart">
-          <Form role="form" method="POST">
-            <FormGroup>
-            <h2>Popularity of topics/keywords in Conferences over time</h2>
-              <br/>
-              <p>
-              This chart compares the popularity percentages of the shared topics/keywords over a specific shared year of the selected conferences
-              </p>
-              <br/>
-            
-            <Label>Select conferences</Label>
-
-            <div style={{width: "600px"}}>
-            <Select
-                ref={this.selectInputRef}
-                name="selectOptions"
-                isClearable
-                isMulti
-                placeholder="Select Option"
-                options={conferencesNames}
-                value={conferencesNames.find((obj) => obj.value === selectTopic)}
-                onChange={this.conferenceshandleChange}
-            />
-
-            </div>
-            <br/>
-              <Button
-                outline
-                color="primary"
-                active={active1}
-                value="topic"
-                onClick={this.selectYearsRange}
-              >
-                get shared years
-              </Button>
-
-              <br/>
-            <br/>
-              <Label>Select a year</Label>
-              <br/>
-              <div style={{width: "250px"}}>
-              <Select
-                placeholder="Select conference"
-                options={words}
-                value={words.find((obj) => obj.value === selectTopic)}
-                onChange={this.yearhandleChange}
-             />
-                </div>
-<              br/>
-              <Button
-                outline
-                color="primary"
-                active={active1}
-                value="topic"
-                onClick={this.selectSharedTopics}
-              >
-                Compare Topics
-              </Button>
-              <Button
-                outline
-                color="primary"
-                value="key"
-                active={active2}
-                onClick={this.selectSharedKeywords}
-              >
-               Compare Keywords
-              </Button>
-
-              <Button
-                outline
-                active={active4}
-                color="primary"
-                onClick={this.onClear}
-              >
-                Reset
-              </Button>
-              <i
-                className="fas fa-question-circle text-blue"
-                onMouseOver={() => this.handleToogle(true)}
-                onMouseOut={() => this.handleToogle(false)}
-              />
-              {this.state.imageTooltipOpen && (
-                <div
-                  className="imgTooltip"
-                  style={{
-                    marginTop: "0px",
-                    position: "relative",
-                    left: "10px",
-                    width: "400px",
-                    color: "#8E8E8E",
-                    border: "1px solid #BDBDBD",
-                  }}
-                >
-                  <p>
-                    {" "}
-                    Hover over legend to highlight the evolution of a
-                    topic/keyword
-                  </p>
-                </div>
-              )}
-              <br/>
-           
-              <div
-                style={{
-                  marginLeft: "300px",
-                  marginTop: "100px",
-                  position: "absolute",
-                }}
-              >
-                <div style={{backgroundColor: "white", display: display}}>
-                  <Loader
-                    type="Bars"
-                    visible={loader}
-                    color="#00BFFF"
-                    height={100}
-                    width={100}
-                  />
-                </div>
-              </div>
-            </FormGroup>
-          </Form>
-        </div>
-      );
-    }
+    } 
   }
-}
+
 
 export default CompareStackedBarChart;

@@ -4,21 +4,14 @@ import CompareStackedAreaChart from "../../../components/LAKForms/compareStacked
 import CompareStackedBarChart from "../../../components/LAKForms/compareStackedBarChart";
 import CompareTimeLineChart from "../../../components/LAKForms/CompareTimeLineChart";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
-import {chartOptions, parseOptions} from "Services/variables/charts.js";
 
-import Chart from "chart.js";
-import Select from "react-select";
-import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
+import RestAPI from "../../../../Services/api";
 
 import {
     Card,
     CardHeader,
-    CardBody,
-    Container,
     Row,
     Col,
-    Label,
-    Button
   } from "reactstrap";
 
   const useStyles = makeStyles(theme => ({
@@ -59,54 +52,23 @@ import {
 
 
 export default function CompareConferences (props) {
-    const [selectedOption, setselectedOption] = useState({ label: 'lak', value: 'lak' });
-    const [available, setavailable] = useState([{ label: 'ecctd', value: 'ecctd' },{ label: 'acisp', value: 'acisp' },{ label: 'aaecc', value: 'aaecc' },{ label: 'eann', value: 'eann' },{ label: 'lak', value: 'lak' },{ label: 'edm', value: 'edm' },{ label: 'aied', value: 'aied' },{ label: 'camsap', value: 'camsap' }]);
+    const [availableConferences, setavailableConferences] = useState([]);
     const classes = useStyles();
 
-    const [conference, setconference] = useState([]);
-    const [confEvents, setconfEvents] = useState([
-      {
-        value: "2011",
-        label: "2011"
-      },
-      {
-        value: "2012",
-        label: "2012"
-      },
-      {
-        value: "2013",
-        label: "2013"
-      },
-      {
-        value: "2014",
-        label: "2014"
-      },
-      {
-        value: "2015",
-        label: "2015"
-      },
-      {
-        value: "2016",
-        label: "2016"
-      },
-      {
-        value: "2017",
-        label: "2017"
-      },
-      {
-        value: "2018",
-        label: "2018"
-      },
-      {
-        value: "2019",
-        label: "2019"
-      },
-      {
-        value: "2020",
-        label: "2020"
-      }
-    ],);
-    
+
+    useEffect(() => {
+      getConferencesNames();
+      
+    }, [])
+
+    //** GET ALL CONFERENCES **//
+    const getConferencesNames = () => {
+      RestAPI.getConferencesNames()
+        .then((response) => {
+          setavailableConferences(response.data);
+        })
+    };
+
     return (
         <>
        <Grid container component={Paper} className={classes.cardHeight}>
@@ -126,7 +88,7 @@ export default function CompareConferences (props) {
                     <h2 className="text-white1 mb-0">Comparison of Conference(s)</h2>
                     <p>
                     
-                      The following visualizations compare the topics of conference over multiple years
+                      The following visualizations compare the topics of different conferences using multiple criterion over the years
                     </p>
                   </div>
                 </div>
@@ -144,7 +106,7 @@ export default function CompareConferences (props) {
                     }}
                   >
                     <Col>
-                      <CompareStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
+                      <CompareStackedBarChart  conferencesNames = {availableConferences}/>    {/*  BAB 08.06.2021 */ }
                     </Col>
                   </div>
                 </div>
@@ -160,7 +122,7 @@ export default function CompareConferences (props) {
                   }}
                 >
                   <Col>
-                    <CompareStackedAreaChart/>   {/*  BAB 08.06.2021 */ } 
+                    <CompareStackedAreaChart conferencesNames = {availableConferences}/>   {/*  BAB 08.06.2021 */ } 
                   </Col>
                 </div>
 
@@ -175,7 +137,7 @@ export default function CompareConferences (props) {
                   }}
                 >
                   <Col>
-                    <CompareTimeLineChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                    <CompareTimeLineChart conferencesNames = {availableConferences}/>   {/*  BAB 08.06.2021 */ } 
                   </Col>
                 </div>
 
