@@ -350,6 +350,17 @@ class CompareTimeLineChart extends React.Component {
 
 
   onClear = (e) =>{
+
+    this.setState({
+      active1: false,
+      active2: false,
+      active3: false,
+      selectedConferences:[],
+      words : [],
+      opacity: "0",
+    });
+
+    //this.selectInputRef.current.select.clearValue();
   }
 
     render() {
@@ -380,10 +391,8 @@ class CompareTimeLineChart extends React.Component {
                 onChange={this.conferenceshandleChange}
                 defaultValue={this.state.mulitSelectDefaultValues}
             />
-
             </div>
             <br/>
-            
             <br/>
               <Button
                 outline

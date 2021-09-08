@@ -1,5 +1,5 @@
 import React, {useState,useEffect } from "react";
-import {CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
+import {Grid, makeStyles, Paper} from "@material-ui/core";
 import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart";
 import CompareStackedBarChart from "../../../components/LAKForms/compareStackedBarChart";
 import CompareTimeLineChart from "../../../components/LAKForms/CompareTimeLineChart";
@@ -140,8 +140,6 @@ export default function CompareConferences (props) {
                     <CompareTimeLineChart conferencesNames = {availableConferences}/>    
                   </Col>
                 </div>
-
-              
               </Row>
             </CardHeader>
            <ScrollTopWrapper/>
