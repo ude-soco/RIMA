@@ -111,8 +111,9 @@ def search_publicationid_in_semscholar_api_search(semscholar_titles):
         paper_data = requests.get(f'{semantic_scholar_search_url_api}{title}').json()
 
         if 'data' in paper_data:
-            print(paper_data['data'][0]['paperId'])
-            publications_ids.append(paper_data['data'][0]['paperId'])
+            if len(paper_data['data']) != 0:
+                print(paper_data['data'][0]['paperId'])
+                publications_ids.append(paper_data['data'][0]['paperId'])
 
     print(' ')
     print(' **** ','ids list length',publications_ids, ' **** ')
@@ -190,7 +191,7 @@ def fetch_data_from_html_tags(conf_name,soup,html_element,element_dict, inner_ta
         for matched_elements in found_elements:
             semscholar_titles.append(matched_elements.find_all('span',{"class": "title"})[0].text)
         if len(semscholar_titles) > 80:    
-            return search_publicationid_in_semscholar_selenium(conf_name,semscholar_titles)
+            return search_publicationid_in_semscholar_selenium(semscholar_titles)
         elif len(semscholar_titles) <= 80:
             return search_publicationid_in_semscholar_api_search(semscholar_titles)
     elif html_element == "nav":
