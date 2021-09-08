@@ -88,7 +88,7 @@ export default function CompareConferences (props) {
                     <h2 className="text-white1 mb-0">Comparison of Conference(s)</h2>
                     <p>
                     
-                      The following visualizations compare the topics of different conferences using multiple criterion over the years
+                      The following visualizations compare the trends of different conferences using multiple criterion over the years
                     </p>
                   </div>
                 </div>
@@ -98,7 +98,7 @@ export default function CompareConferences (props) {
                   <div
                     className="row mt-4"
                     style={{
-                      height: "1000px",
+                      height: "900px",
                       width: "830px",
                       backgroundColor: "#F0F8FF",
                       marginLeft: "50px",
@@ -106,7 +106,7 @@ export default function CompareConferences (props) {
                     }}
                   >
                     <Col>
-                      <CompareStackedBarChart  conferencesNames = {availableConferences}/>    {/*  BAB 08.06.2021 */ }
+                      <CompareStackedBarChart  conferencesNames = {availableConferences}/>    
                     </Col>
                   </div>
                 </div>
@@ -114,7 +114,7 @@ export default function CompareConferences (props) {
                 <div
                   className="row mt-4"
                   style={{
-                    height: "800px",
+                    height: "900px",
                     width: "830px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
@@ -122,14 +122,14 @@ export default function CompareConferences (props) {
                   }}
                 >
                   <Col>
-                    <CompareStackedAreaChart conferencesNames = {availableConferences}/>   {/*  BAB 08.06.2021 */ } 
+                    <CompareStackedAreaChart conferencesNames = {availableConferences}/>   
                   </Col>
                 </div>
 
                 <div
                   className="row mt-4"
                   style={{
-                    height: "800px",
+                    height: "900px",
                     width: "830px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
@@ -137,7 +137,7 @@ export default function CompareConferences (props) {
                   }}
                 >
                   <Col>
-                    <CompareTimeLineChart conferencesNames = {availableConferences}/>   {/*  BAB 08.06.2021 */ } 
+                    <CompareTimeLineChart conferencesNames = {availableConferences}/>    
                   </Col>
                 </div>
 

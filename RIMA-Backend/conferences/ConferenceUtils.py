@@ -824,6 +824,15 @@ def get_word_weight_event_based(conference_event_objs,word,keyword_or_topic):
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
+    """[summary]
+
+    Args:
+        conferences_list ([type]): [description]
+        all_or_shared ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     years = []
     result_data = []
     years_filtering_list = []
@@ -862,6 +871,14 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
 
 
 def delete_conference_data(conference_name_abbr):
+    """[summary]
+
+    Args:
+        conference_name_abbr ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     
     authors_list=  []
     interesections = []
@@ -870,32 +887,32 @@ def delete_conference_data(conference_name_abbr):
     other_authors_list =  Author_has_Papers.objects.filter(~Q(conference_name_abbr=conference_name_abbr)).values_list('author_id_id',flat=True)
     interesections = set(authors_list).intersection(other_authors_list)
     list_to_delete = set(authors_list).difference(interesections)
-
-    
-    print('########### delete ###########')
-    print(len(interesections))
-    print(len(list_to_delete))
-    
-    print('########### delete ###########')
-
     list_to_delete = list(list_to_delete)
     while len(list_to_delete):
         print(list_to_delete[:100])
         deleted_authors = Author.objects.filter(semantic_scolar_author_id__in=list_to_delete[:100]).delete()
         list_to_delete = list_to_delete[100:]
-
-       
-
-
     print('deleted authors ')
     print(deleted_authors)
     Conference.objects.filter(conference_name_abbr=conference_name_abbr).delete()
-
     return True
 
 
 
 def generate_venn_photo(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
+    """[summary]
+
+    Args:
+        list_words_first_event ([type]): [description]
+        list_words_second_event ([type]): [description]
+        list_intersect_first_and_second ([type]): [description]
+        first_event ([type]): [description]
+        second_event ([type]): [description]
+        keyword_or_topic ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     
     print('################### TEST VENN ###################')
     print(list_words_first_event)

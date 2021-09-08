@@ -63,6 +63,15 @@ conference_events = r'\/%s\d+(\-[1-9])*\.' # examples: aied2020-1, edm2020, lak2
 
 # pulls the pages html content
 def fetch_soup(url,headers):
+    """[summary]
+
+    Args:
+        url ([type]): [description]
+        headers ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     try:
         raw_request = Request(url,headers=headers)
         resp = urlopen(raw_request)
@@ -83,6 +92,15 @@ def fetch_soup(url,headers):
 #  -> can be extended to other platforms
 # https://dblp.org/db/conf/index.html?pos=1
 def fetch_confernces_names_listed_in_html(platform, index):
+    """[summary]
+
+    Args:
+        platform ([type]): [description]
+        index ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     preloaded_data = []
     conference_list_element =  ""
     if platform == 'dblp':
@@ -99,6 +117,15 @@ def fetch_confernces_names_listed_in_html(platform, index):
 
 
 def search_publicationid_in_semscholar_api_search(conf_name,semscholar_titles):
+    """[summary]
+
+    Args:
+        conf_name ([type]): [description]
+        semscholar_titles ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     print(' ')
     print('****','titles list length',len(semscholar_titles), '****')
     print('****','Searching ids of ',len(semscholar_titles), ' publications using Keyword API Search' , '****')
@@ -161,6 +188,22 @@ def search_publicationid_in_semscholar_selenium(conf_name,semscholar_titles):
     return publications_ids
 
 def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag , inner_tag_arribute, if_doi, is_recursive,headers):
+    """[summary]
+
+    Args:
+        conf_name ([type]): [description]
+        soup ([type]): [description]
+        html_element ([type]): [description]
+        element_dict ([type]): [description]
+        inner_tag ([type]): [description]
+        inner_tag_arribute ([type]): [description]
+        if_doi ([type]): [description]
+        is_recursive (bool): [description]
+        headers ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     links_list  = []
     loop_must_break = False
     semscholar_titles = []
@@ -210,6 +253,15 @@ def fetch_dois_ids_from_html(conf_name,soup,html_element,element_dict, inner_tag
 
 # constructs confernce list based on the availabe years of the conference on dblp. 
 def construct_confList(conf_name,headers):
+    """[summary]
+
+    Args:
+        conf_name ([type]): [description]
+        headers ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     print(' ')
     print('  ****  ','Conference: ', conf_name , '  ****  ')
     print(' ')
@@ -251,6 +303,16 @@ def construct_confList(conf_name,headers):
 
 # fetch conference html content from dblp based on a specific year oder multiple years. 
 def fetch_events_html_raw_data(conf_name,years,headers):
+    """[summary]
+
+    Args:
+        conf_name ([type]): [description]
+        years ([type]): [description]
+        headers ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     matching_conf_event = []
     conf_list = []
     complete_soup = []
@@ -285,6 +347,16 @@ def fetch_events_html_raw_data(conf_name,years,headers):
 
 # fetch all dois or ids of the conference publications
 def fetch_all_dois_ids_old(conf_name, years,headers):
+    """[summary]
+
+    Args:
+        conf_name ([type]): [description]
+        years ([type]): [description]
+        headers ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     complete_doi_ids_dict= {}
     complete_events_names_dict = {}
     conf_event_url = f''
@@ -322,6 +394,17 @@ def fetch_all_dois_ids_old(conf_name, years,headers):
 
 # fetch all dois or ids of the conference publications
 def fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, url,headers):
+    """[summary]
+
+    Args:
+        conference_name_abbr ([type]): [description]
+        conf_event_name_abbr ([type]): [description]
+        url ([type]): [description]
+        headers ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     data = {
             'conf_event_complete_name': '',
             'conf_event_name_abbr' : '',
@@ -352,6 +435,14 @@ def fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, url,headers):
 #ID-https://api.semanticscholar.org/v1/paper/0796f6cd7f0403a854d67d525e9b32af3b277331
 #fetching paper data from semantic scholar AP given their list of dois or ids
 def extract_papers_data(data_dict_event):
+    """[summary]
+
+    Args:
+        data_dict_event ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
     data_dict_event['paper_data'] = []
     for value in data_dict_event['dois-ids']:
         paper_data = requests.get(f'{semantic_scholar_url_api}{value}').json()

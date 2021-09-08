@@ -353,9 +353,6 @@ class CollectEventPapersView(ListCreateAPIView):
         return Response(data)
 
 
-
-
-
 """
 BAB Conference Events views
 """

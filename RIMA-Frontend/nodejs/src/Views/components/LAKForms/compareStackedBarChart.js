@@ -1,4 +1,3 @@
-
 import React, {Component,useEffect} from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
@@ -56,49 +55,24 @@ class CompareStackedBarChart extends Component {
 
       series: [
         {
-            name: "student",
-            data: [
-                217,
-                172,
-                162,
-                459
-            ]
+          name: "student",
+          data: [217, 172, 162,459]
         },
         {
           name: "students",
-          data: [
-                162,
-                114,
-                115,
-                255
-            ]
+          data: [162, 114, 115, 255]
         },
         {
-             name: "learning",
-             data  : [
-                287,
-                143,
-                155,
-                268
-            ]
+          name: "learning",
+          data  : [287, 143, 155, 268]
         },
         {
-            name: "model",
-            data: [
-                100,
-                81,
-                108,
-                203
-            ]
+          name: "model",
+          data: [100, 81, 108, 203]
         },
         {
-            name: "data",
-            data: [
-                107,
-                69,
-                60,
-                246
-            ]
+          name: "data",
+          data: [107, 69, 60, 246]
         }
     ],
         
@@ -197,23 +171,21 @@ class CompareStackedBarChart extends Component {
     fetch(BASE_URL_CONFERENCE + "getSharedYears/?" + this.state.selectedConferences.join("&"))
       .then((response) => response.json())
       .then((json) => {
-        console.log("json", json);
-
         if(json.years.length == 0)
-      {
-        this.state.selectValue = "";
+          {
+            this.state.selectValue = "";
 
-        this.setState({
-          series: [],
-          options: {
-            ... this.state.options,
-            xaxis: {
-              ...this.state.options.xaxis,
-              categories: [],
-            }
-          },
-          });
-      }
+            this.setState({
+              series: [],
+              options: {
+                ... this.state.options,
+                xaxis: {
+                  ...this.state.options.xaxis,
+                  categories: [],
+                }
+              },
+              });
+          }
 
         this.setState({
           active1: false,
@@ -227,13 +199,8 @@ class CompareStackedBarChart extends Component {
   }
 
 
-  selectSharedTopics = (e) => {
-    console.log("test");
-    console.log(this.state.selectValue);
-    console.log("test");
-
-
-    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/topic/"+this.state.selectValue.value+"/?" + this.state.selectedConferences.join("&"))
+  selectSharedWords = (val) => {
+    fetch(BASE_URL_CONFERENCE + "getSharedWordsBar/"+val+"/"+this.state.selectValue.value+"/?" + this.state.selectedConferences.join("&"))
     .then((response) => response.json())
     .then((json) => {
       var series = [];
@@ -243,22 +210,44 @@ class CompareStackedBarChart extends Component {
           {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
         ]);
       }
-      this.setState({
-        active1: true,
-        active2: false,
-        active3: false,
-        active4: false,
-        opacity: 1,
-        series: series,
 
-        options: {
-          ... this.state.options,
-          xaxis: {
-            ...this.state.options.xaxis,
-            categories: json.Topiclist[1],
-          }
-         },
-      });
+
+      if (val == "topic") {
+        this.setState({
+          active1: true,
+          active2: false,
+          active3: false,
+          active4: false,
+          opacity: 1,
+          series: series,
+  
+          options: {
+            ... this.state.options,
+            xaxis: {
+              ...this.state.options.xaxis,
+              categories: json.Topiclist[1],
+            }
+           },
+        });
+      }else{
+        this.setState({
+          active1: false,
+          active2: true,
+          active3: false,
+          active4: false,
+          opacity: 1,
+          series: series,
+          options: {
+            ... this.state.options,
+            xaxis: {
+              ...this.state.options.xaxis,
+              categories: json.Topiclist[1],
+            }
+           },
+        });
+      }
+
+      
     });
   }
 
@@ -383,16 +372,16 @@ class CompareStackedBarChart extends Component {
                 color="primary"
                 active={this.state.active1}
                 value="topic"
-                onClick={this.selectSharedTopics}
+                onClick={() => this.selectSharedWords("topic")}
               >
                 Compare Topics
               </Button>
               <Button
                 outline
                 color="primary"
-                value="key"
+                value="keyword"
                 active={this.state.active2}
-                onClick={this.selectSharedKeywords}
+                onClick={() => this.selectSharedWords("keyword")}
               >
                 Compare Keywords
               </Button>
