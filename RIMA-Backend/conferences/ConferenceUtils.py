@@ -143,114 +143,6 @@ def get_conferences_list():
 
     return data 
 
-
-def add_data_to_conf_event_model(conference_name_abbr):
-
-    """Insert new record into Conference Event table
-
-    Args:
-    conference_name_abbr (str): the name of the conference whose conference event should be stored
-    """    
-
-    conf_list = []
-    conf_url = ""
-    conf_complete_name = ""
-    valid_events_urls_list = []
-    conf_list,conf_url,conf_complete_name,valid_events_urls_list = dataCollector.construct_confList(conference_name_abbr)
-    conf_list.sort()
-    valid_events_urls_list.sort()
-    stored_conferences = Conference.objects.filter(conference_name_abbr=conference_name_abbr).count()
-    index = 0
-    if stored_conferences:
-        conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)
-        if len(conf_list) != 0 and len(valid_events_urls_list) != 0:
-            for event in valid_events_urls_list:
-                conference_event = Conference_Event.objects.create(
-                conference_event_name_abbr=conf_list[index],
-                conference_event_url=event,
-                conference_name_abbr=conference_obj
-                )
-                index+=1
-                conference_event.save()
-
-def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_name_abbr):
-
-    """inserts new records in paper and author models
-
-    Args:
-        conference_name_abbr (str): the name of the conference
-        conf_event_name_abbr (str): the name of the conference event
-
-    """    
-
-    conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)    
-    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conf_event_name_abbr)
-
-    conference_event_url  = conference_event_obj.conference_event_url
-
-    data = dataCollector.fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, conference_event_url)
-    data = dataCollector.extract_papers_data(data)
-
-    for paper_data in data['paper_data']:
-        if Conference_Event_Paper.objects.filter(paper_id = paper_data['paperId']).exists():
-            pass
-        else:
-            event_paper = Conference_Event_Paper.objects.create(
-            conference_event_name_abbr = conference_event_obj,
-            paper_id = paper_data['paperId'],
-            paper_doi = paper_data['doi'],
-            title = paper_data['title'],
-            url = paper_data['url'],
-            year = paper_data['year'],
-            abstract = paper_data['abstract'],
-            #no_of_cititations = paper_data['doi'],
-            citiations = len(paper_data['citations']),
-            paper_venu = paper_data['venue'],
-            conference_name_abbr = conference_name_abbr
-            )
-            event_paper.save()
-            authors = paper_data['authors']
-
-            print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            print(conference_event_url)
-            print(authors)
-            print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-
-            for author_data in authors:
-                print(author_data)
-                if author_data['authorId']:
-                    add_data_to_author_models(author_data,event_paper,conference_obj,conference_event_obj)
-                print(author_data)
-    
-   
-    #print(data['paper_data'][1])
-
-def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_event_obj):
-    """inserts new records into author table
-
-    Args:
-        author_data (dict): contains author data
-        paper_obj (object): one record in table paper
-        conference_obj (obj): one record in conference table
-        conference_event_obj (obj): one record in conference table
-    """    
-    stored_author_check = Author.objects.filter(semantic_scolar_author_id = author_data['authorId']).exists()
-    if not stored_author_check:
-        author_obj = Author.objects.create(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
-        author_has_papers_obj = Author_has_Papers(author_id=author_obj
-                                                    ,paper_id=paper_obj
-                                                    ,conference_name_abbr=conference_obj
-                                                    ,conference_event_name_abbr=conference_event_obj)
-    else:
-        author_obj= Author.objects.get(semantic_scolar_author_id = author_data['authorId'])
-        author_has_papers_obj = Author_has_Papers(author_id=author_obj
-                                                    ,paper_id=paper_obj
-                                                    ,conference_name_abbr=conference_obj
-                                                    ,conference_event_name_abbr=conference_event_obj)
-
-    author_has_papers_obj.save()    
-    
-
 def get_authors_data(conference_name_abbr="", conference_event_name_abbr =""):
 
     """retrieves general data of multiple authors in a conference or a conference event
@@ -363,139 +255,6 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
    
     sorted_data = sorted(result_data, key=lambda k: k['conference_event'], reverse=True)
     return sorted_data
-
-
-def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
-
-    """inserts new records into author keyword and topic tables for an event
-
-    Args:
-        conference_event_name_abbr (str): the name of the conference event
-
-    """
-
-    authors_publications_dicts_list = []
-    abstract_title_str = ""
-
-    authors_publications_event_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id = conference_event_name_abbr).values_list('author_id', flat=True).order_by('author_id').distinct()
-    print(authors_publications_event_objs.count())
-    
-    for author in  authors_publications_event_objs:
-        authors_publications_objs = Author_has_Papers.objects.filter(author_id_id =author)
-
-        for author_publications_obj in authors_publications_objs:
-            publication_obj = Conference_Event_Paper.objects.get(paper_id = author_publications_obj.paper_id_id)
-            if publication_obj.title and publication_obj.abstract:
-                abstract_title_str +=  publication_obj.title + " " + publication_obj.abstract
-
-        keywords = getKeyword(abstract_title_str, 'Yake', 30)
-        conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
-        author_obj = Author.objects.get(semantic_scolar_author_id =author)
-        for key,value in keywords.items():
-            stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
-            
-            if not stored_keyword_check:
-                author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
-            else:
-                author_event_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
-
-            stored_has_keyword_check = Author_has_Keyword.objects.filter(author_id = author_obj,
-                                                                        keyword_id =author_event_keyword_obj,
-                                                                        conference_event_name_abbr = conference_event_obj).exists()
-            if not stored_has_keyword_check:                                                         
-                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
-                                                            keyword_id =author_event_keyword_obj,
-                                                            weight = value,
-                                                            conference_event_name_abbr = conference_event_obj)
-            else:
-                pass
-            
-            author_has_keyword_obj.save()
-
-        relation, topics = wikifilter(keywords)
-        for key,value in topics.items():
-            stored_topic_check = Author_Event_Topic.objects.filter(topic = key).exists()
-            if not stored_topic_check:
-                conf_event_topic_obj = Author_Event_Topic.objects.create(topic=key,algorithm='Yake')
-            else:
-                conf_event_topic_obj = Author_Event_Topic.objects.get(topic = key)
-            
-            stored_has_topic_check = Author_has_Topic.objects.filter(author_id = author_obj,
-                                                                    topic_id =conf_event_topic_obj,
-                                                                    conference_event_name_abbr = conference_event_obj).exists()
-            if not  stored_has_topic_check:                                                      
-                event_has_topic_obj = Author_has_Topic(author_id = author_obj,
-                                                        topic_id =conf_event_topic_obj,
-                                                        weight = value,
-                                                        conference_event_name_abbr = conference_event_obj)
-            else:
-                pass                
-                                        
-            event_has_topic_obj.save()
-
-        abstract_title_str = ""   
-        
-    #print(authors_publications_dicts_list[:3])
-
-  
-    return ""
-
-
-def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
-    """extracts keywords and topics event based and insert them into keyword and topic tables
-
-    Args:
-        conference_event_name_abbr (str): the name of the conference event
-
-    """    
-    abstract_title_str = ""
-    conference_event_papers_data = []
-
-    conference_event_papers_data = get_event_papers_data(conference_event_name_abbr)
-
-    if conference_event_papers_data:
-        for paper_data in conference_event_papers_data:
-            if paper_data.title and paper_data.abstract:
-                abstract_title_str +=  paper_data.title + " " + paper_data.abstract 
-
-    print(abstract_title_str)
-    keywords = getKeyword(abstract_title_str, 'Yake', 30)
-
-    print('KEYWORDS FIRST TEST', keywords)
-    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr =conference_event_name_abbr )
-    for key,value in keywords.items():
-        stored_keyword_check = Conf_Event_keyword.objects.filter(keyword = key).exists()
-        if not stored_keyword_check:
-            conf_event_keyword_obj = Conf_Event_keyword.objects.create(keyword=key,algorithm='Yake')
-            event_has_keyword_obj = Event_has_keyword(conference_event_name_abbr=conference_event_obj,
-                                                    keyword_id =conf_event_keyword_obj,
-                                                    weight = value)
-        else:
-            stored_keyword_obj = Conf_Event_keyword.objects.get(keyword = key)
-            event_has_keyword_obj = Event_has_keyword(conference_event_name_abbr=conference_event_obj,
-                                                    keyword_id =stored_keyword_obj,
-                                                    weight = value)
-        event_has_keyword_obj.save()
-    
-    
-    relation, final = wikifilter(keywords)
-    for key,value in final.items():
-        stored_topic_check = Conf_Event_Topic.objects.filter(topic = key).exists()
-        if not stored_topic_check:
-            conf_event_topic_obj = Conf_Event_Topic.objects.create(topic=key,algorithm='Yake')
-            event_has_topic_obj = Event_has_Topic(conference_event_name_abbr=conference_event_obj,
-                                                    topic_id =conf_event_topic_obj,
-                                                    weight = value)
-        else:
-            stored_topic_check = Conf_Event_Topic.objects.get(topic = key)
-            event_has_topic_obj = Event_has_Topic(conference_event_name_abbr=conference_event_obj,
-                                                    topic_id =stored_topic_check,
-                                                    weight = value)
-        event_has_topic_obj.save()
-    #print(' relation  WIKIS FIRST TEST', relation)
-    print('final TOPICS WIKIS FIRST TEST', final)
-   
-
 
 
 
@@ -861,8 +620,242 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     return result_data
 
 
+def add_data_to_conf_event_model(conference_name_abbr):
+
+    """Insert new record into Conference Event table
+
+    Args:
+    conference_name_abbr (str): the name of the conference whose conference event should be stored
+    """    
+
+    conf_list = []
+    conf_url = ""
+    conf_complete_name = ""
+    valid_events_urls_list = []
+    conf_list,conf_url,conf_complete_name,valid_events_urls_list = dataCollector.construct_confList(conference_name_abbr)
+    conf_list.sort()
+    valid_events_urls_list.sort()
+    stored_conferences = Conference.objects.filter(conference_name_abbr=conference_name_abbr).count()
+    index = 0
+    if stored_conferences:
+        conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)
+        if len(conf_list) != 0 and len(valid_events_urls_list) != 0:
+            for event in valid_events_urls_list:
+                conference_event = Conference_Event.objects.create(
+                conference_event_name_abbr=conf_list[index],
+                conference_event_url=event,
+                conference_name_abbr=conference_obj
+                )
+                index+=1
+                conference_event.save()
+
+def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_name_abbr):
+
+    """inserts new records in paper and author models
+
+    Args:
+        conference_name_abbr (str): the name of the conference
+        conf_event_name_abbr (str): the name of the conference event
+
+    """    
+
+    conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)    
+    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conf_event_name_abbr)
+
+    conference_event_url  = conference_event_obj.conference_event_url
+
+    data = dataCollector.fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, conference_event_url)
+    data = dataCollector.extract_papers_data(data)
+
+    for paper_data in data['paper_data']:
+        if Conference_Event_Paper.objects.filter(paper_id = paper_data['paperId']).exists():
+            pass
+        else:
+            event_paper = Conference_Event_Paper.objects.create(
+            conference_event_name_abbr = conference_event_obj,
+            paper_id = paper_data['paperId'],
+            paper_doi = paper_data['doi'],
+            title = paper_data['title'],
+            url = paper_data['url'],
+            year = paper_data['year'],
+            abstract = paper_data['abstract'],
+            #no_of_cititations = paper_data['doi'],
+            citiations = len(paper_data['citations']),
+            paper_venu = paper_data['venue'],
+            conference_name_abbr = conference_name_abbr
+            )
+            event_paper.save()
+            authors = paper_data['authors']
+
+            print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            print(conference_event_url)
+            print(authors)
+            print('###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+
+            for author_data in authors:
+                print(author_data)
+                if author_data['authorId']:
+                    add_data_to_author_models(author_data,event_paper,conference_obj,conference_event_obj)
+                print(author_data)
+    
+   
+    #print(data['paper_data'][1])
+
+def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_event_obj):
+    """inserts new records into author table
+
+    Args:
+        author_data (dict): contains author data
+        paper_obj (object): one record in table paper
+        conference_obj (obj): one record in conference table
+        conference_event_obj (obj): one record in conference table
+    """    
+    stored_author_check = Author.objects.filter(semantic_scolar_author_id = author_data['authorId']).exists()
+    if not stored_author_check:
+        author_obj = Author.objects.create(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
+        author_has_papers_obj = Author_has_Papers(author_id=author_obj
+                                                    ,paper_id=paper_obj
+                                                    ,conference_name_abbr=conference_obj
+                                                    ,conference_event_name_abbr=conference_event_obj)
+    else:
+        author_obj= Author.objects.get(semantic_scolar_author_id = author_data['authorId'])
+        author_has_papers_obj = Author_has_Papers(author_id=author_obj
+                                                    ,paper_id=paper_obj
+                                                    ,conference_name_abbr=conference_obj
+                                                    ,conference_event_name_abbr=conference_event_obj)
+
+    author_has_papers_obj.save()  
+
+def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
+
+    """inserts new records into author keyword and topic tables for an event
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    """
+
+    authors_publications_dicts_list = []
+    abstract_title_str = ""
+
+    authors_publications_event_objs = Author_has_Papers.objects.filter(conference_event_name_abbr_id = conference_event_name_abbr).values_list('author_id', flat=True).order_by('author_id').distinct()
+    print(authors_publications_event_objs.count())
+    
+    for author in  authors_publications_event_objs:
+        authors_publications_objs = Author_has_Papers.objects.filter(author_id_id =author)
+
+        for author_publications_obj in authors_publications_objs:
+            publication_obj = Conference_Event_Paper.objects.get(paper_id = author_publications_obj.paper_id_id)
+            if publication_obj.title and publication_obj.abstract:
+                abstract_title_str +=  publication_obj.title + " " + publication_obj.abstract
+
+        keywords = getKeyword(abstract_title_str, 'Yake', 30)
+        conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr=conference_event_name_abbr)
+        author_obj = Author.objects.get(semantic_scolar_author_id =author)
+        for key,value in keywords.items():
+            stored_keyword_check = Author_Event_keyword.objects.filter(keyword = key).exists()
+            
+            if not stored_keyword_check:
+                author_event_keyword_obj = Author_Event_keyword.objects.create(keyword=key,algorithm='Yake')
+            else:
+                author_event_keyword_obj = Author_Event_keyword.objects.get(keyword = key)
+
+            stored_has_keyword_check = Author_has_Keyword.objects.filter(author_id = author_obj,
+                                                                        keyword_id =author_event_keyword_obj,
+                                                                        conference_event_name_abbr = conference_event_obj).exists()
+            if not stored_has_keyword_check:                                                         
+                author_has_keyword_obj = Author_has_Keyword(author_id = author_obj,
+                                                            keyword_id =author_event_keyword_obj,
+                                                            weight = value,
+                                                            conference_event_name_abbr = conference_event_obj)
+            else:
+                pass
+            
+            author_has_keyword_obj.save()
+
+        relation, topics = wikifilter(keywords)
+        for key,value in topics.items():
+            stored_topic_check = Author_Event_Topic.objects.filter(topic = key).exists()
+            if not stored_topic_check:
+                conf_event_topic_obj = Author_Event_Topic.objects.create(topic=key,algorithm='Yake')
+            else:
+                conf_event_topic_obj = Author_Event_Topic.objects.get(topic = key)
+            
+            stored_has_topic_check = Author_has_Topic.objects.filter(author_id = author_obj,
+                                                                    topic_id =conf_event_topic_obj,
+                                                                    conference_event_name_abbr = conference_event_obj).exists()
+            if not  stored_has_topic_check:                                                      
+                event_has_topic_obj = Author_has_Topic(author_id = author_obj,
+                                                        topic_id =conf_event_topic_obj,
+                                                        weight = value,
+                                                        conference_event_name_abbr = conference_event_obj)
+            else:
+                pass                
+                                        
+            event_has_topic_obj.save()
+
+        abstract_title_str = ""   
+        
+    #print(authors_publications_dicts_list[:3])
+
+  
+    return ""
 
 
+def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
+    """extracts keywords and topics event based and insert them into keyword and topic tables
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    """    
+    abstract_title_str = ""
+    conference_event_papers_data = []
+
+    conference_event_papers_data = get_event_papers_data(conference_event_name_abbr)
+
+    if conference_event_papers_data:
+        for paper_data in conference_event_papers_data:
+            if paper_data.title and paper_data.abstract:
+                abstract_title_str +=  paper_data.title + " " + paper_data.abstract 
+
+    print(abstract_title_str)
+    keywords = getKeyword(abstract_title_str, 'Yake', 30)
+
+    print('KEYWORDS FIRST TEST', keywords)
+    conference_event_obj = Conference_Event.objects.get(conference_event_name_abbr =conference_event_name_abbr )
+    for key,value in keywords.items():
+        stored_keyword_check = Conf_Event_keyword.objects.filter(keyword = key).exists()
+        if not stored_keyword_check:
+            conf_event_keyword_obj = Conf_Event_keyword.objects.create(keyword=key,algorithm='Yake')
+            event_has_keyword_obj = Event_has_keyword(conference_event_name_abbr=conference_event_obj,
+                                                    keyword_id =conf_event_keyword_obj,
+                                                    weight = value)
+        else:
+            stored_keyword_obj = Conf_Event_keyword.objects.get(keyword = key)
+            event_has_keyword_obj = Event_has_keyword(conference_event_name_abbr=conference_event_obj,
+                                                    keyword_id =stored_keyword_obj,
+                                                    weight = value)
+        event_has_keyword_obj.save()
+    
+    
+    relation, final = wikifilter(keywords)
+    for key,value in final.items():
+        stored_topic_check = Conf_Event_Topic.objects.filter(topic = key).exists()
+        if not stored_topic_check:
+            conf_event_topic_obj = Conf_Event_Topic.objects.create(topic=key,algorithm='Yake')
+            event_has_topic_obj = Event_has_Topic(conference_event_name_abbr=conference_event_obj,
+                                                    topic_id =conf_event_topic_obj,
+                                                    weight = value)
+        else:
+            stored_topic_check = Conf_Event_Topic.objects.get(topic = key)
+            event_has_topic_obj = Event_has_Topic(conference_event_name_abbr=conference_event_obj,
+                                                    topic_id =stored_topic_check,
+                                                    weight = value)
+        event_has_topic_obj.save()
+    #print(' relation  WIKIS FIRST TEST', relation)
+    print('final TOPICS WIKIS FIRST TEST', final)
+  
 
 def delete_conference_data(conference_name_abbr):
     """[summary]
