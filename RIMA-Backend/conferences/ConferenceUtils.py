@@ -1,4 +1,3 @@
-from django.urls import conf
 from .DataExtractor import ConferenceDataCollector  as dataCollector 
 from .models import (Author, Author_has_Papers, Event_has_Topic
                     ,Conf_Event_Topic
@@ -11,15 +10,9 @@ from .models import (Author, Author_has_Papers, Event_has_Topic
                     ,Author_has_Keyword
                     ,Author_Event_Topic
                     ,Author_has_Topic, PreloadedConferenceList)                  
-from .serializers import ConferenceEventSerializer
-from .TopicExtractor import getData,createConcatenatedColumn
-from .topicutils import listToString
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 from django.db.models import Q
-import json
-import operator
-from collections import Counter
 import base64
 from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
 from matplotlib import pyplot as plt
@@ -223,6 +216,7 @@ def get_author_interests(publications_list,author_id,keyword_or_topic,num = 30):
 
 
 def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr =""):
+
     """retrieves all the pulication on an author from stored conferences
 
     Args:
@@ -260,6 +254,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
 
 def get_event_papers_data(conference_event_name_abbr):
+
     """retrieves paper objects of a conference event
 
     Args:
@@ -280,6 +275,7 @@ def get_event_papers_data(conference_event_name_abbr):
 
 
 def get_keywords_from_models(conference_event_name_abbr):
+
     """retrieves keywords events based and weights from keywords tables 
 
     Args:
@@ -288,6 +284,7 @@ def get_keywords_from_models(conference_event_name_abbr):
     Returns:
         list: sorted list of dictionaries of keywords and their weights and conference event
     """    
+
     data = []
     event_has_keyword_objs = Event_has_keyword.objects.filter(conference_event_name_abbr=conference_event_name_abbr)
 
@@ -304,6 +301,7 @@ def get_keywords_from_models(conference_event_name_abbr):
     return sorted_data
 
 def get_topics_from_models(conference_event_name_abbr):
+
     """retrieves topics events based  and weights from topics tables 
 
     Args:
@@ -331,18 +329,20 @@ def get_topics_from_models(conference_event_name_abbr):
 
 
 def get_abstract_based_on_keyword(conference_event_name_abbr,keyword):
-    """[summary]
 
+    """reteives paper data containing a specific word within an event
     Args:
-        conference_event_name_abbr ([type]): [description]
-        keyword ([type]): [description]
+        conference_event_name_abbr (str): the name of the conference event. For example, lak2020
+        keyword (str): search word (topic or keyword) 
 
     Returns:
-        [type]: [description]
+        list: list of dictionaries of the found papers 
     """        
+
     conference_event_papers_data = get_event_papers_data(conference_event_name_abbr)
     filtered_conference_event_papers_data = conference_event_papers_data.filter(Q(abstract__icontains=keyword)
                                                | Q(title__icontains=keyword))
+
     #print('KEYWORD DATA *********************** ' , filtered_conference_event_papers_data)
 
     titles_abstracts = []
@@ -359,74 +359,19 @@ def get_abstract_based_on_keyword(conference_event_name_abbr,keyword):
     
     return titles_abstracts
 
-# can be removed
-def get_shared_words_between_events_old(conference_events_list,keyword_or_topic):
-    """[summary]
-
-    Args:
-        conference_events_list ([type]): [description]
-        keyword_or_topic ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """    
-    models_data = []
-    first_event = conference_events_list[0]
-    shared_word = []
-    dict_list = []
-    result_data = []
-    models_data_first_event = []
-    conference_event_data = []
-
-    if keyword_or_topic == 'topic':
-        models_data_first_event = get_topics_from_models(first_event)
-    elif keyword_or_topic == 'keyword':
-        models_data_first_event = get_keywords_from_models(first_event)
-
-
-    for model_data in models_data_first_event:
-        models_data.append({
-            'word': model_data[keyword_or_topic],
-            'weight': [model_data['weight']],
-        })
-
-    for conference_event in conference_events_list[1:]:
-        if keyword_or_topic == 'topic':
-            conference_event_data = get_topics_from_models(conference_event)
-        elif keyword_or_topic == 'keyword':
-            conference_event_data = get_keywords_from_models(conference_event)
-
-        for filter_word in conference_event_data:
-            shared_word = list(filter(lambda event: event['word'] == filter_word[keyword_or_topic], models_data))
-            index = next((i for i, item in enumerate(models_data) if item["word"] == filter_word[keyword_or_topic]), None)
-            if shared_word:
-                models_data[index]['weight'].append(filter_word['weight'])
-
-    for model_data in models_data: 
-        if len(model_data['weight']) == len(conference_events_list):   
-            dict_list.append(model_data)
-    
-    result_data.append(dict_list)
-    result_data.append(conference_events_list)
-
-    print('result_data stacked bar')
-    print(result_data)
-    print('result_data stacked bar')
-
-    return result_data
-
-
 
 def get_shared_words_between_events(conference_events_list,keyword_or_topic):
-    """[summary]
+
+    """retieves shared words among given list of conference events
 
     Args:
-        conference_events_list ([type]): [description]
-        keyword_or_topic ([type]): [description]
+        conference_events_list (list): list of conference event names
+        keyword_or_topic (str): "topic" or "keyword"
 
     Returns:
-        [type]: [description]
+        list: with two sub lists; shared words data and conference event names
     """    
+
     shared_words = []
     shared_words_final_data = []
     result_data = []
@@ -467,15 +412,18 @@ def get_shared_words_between_events(conference_events_list,keyword_or_topic):
 
 
 def get_shared_words_between_conferences(conferences_list,keyword_or_topic):
-    """[summary]
+
+    """retieves shared words among given list of conferences
+
 
     Args:
-        conferences_list ([type]): [description]
-        keyword_or_topic ([type]): [description]
+        conferences_list (list): list of conference event names
+        keyword_or_topic (str): "topic" or "keyword"
 
     Returns:
-        [type]: [description]
+        list: contains shared words
     """    
+
     conferences_words = []
     one_conference_words = []
     models_words = []
@@ -512,16 +460,18 @@ def get_shared_words_between_conferences(conferences_list,keyword_or_topic):
 
 
 def get_word_weight_event_based(conference_event_objs,word,keyword_or_topic):
-    """[summary]
+
+    """retrieves weights of a specific word in a list on conference events. If the word does not exist in an event, its weight is zero
 
     Args:
-        conference_event_objs ([type]): [description]
-        word ([type]): [description]
-        keyword_or_topic ([type]): [description]
+        conference_event_objs (list): list of conference event objects
+        word (str): any topic or keyword
+        keyword_or_topic (str): decides the type of the word --> "topic" or "keyword"
 
     Returns:
-        [type]: [description]
+        list: list of data dictionaries of the weight of a word in every given conference event 
     """    
+
     result_data = []
 
     if keyword_or_topic == 'topic':
@@ -577,15 +527,17 @@ def get_word_weight_event_based(conference_event_objs,word,keyword_or_topic):
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
-    """[summary]
+
+    """determines the year range of a given list of conferences, either all the years or only the shared years
 
     Args:
-        conferences_list ([type]): [description]
-        all_or_shared ([type]): [description]
+        conferences_list (list): list of conference names
+        all_or_shared (str): "all" or "shared"
 
     Returns:
-        [type]: [description]
+        list: list of the years range of the given conferences
     """    
+
     years = []
     result_data = []
     years_filtering_list = []
@@ -702,6 +654,7 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_nam
     #print(data['paper_data'][1])
 
 def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_event_obj):
+
     """inserts new records into author table
 
     Args:
@@ -710,6 +663,7 @@ def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_ev
         conference_obj (obj): one record in conference table
         conference_event_obj (obj): one record in conference table
     """    
+
     stored_author_check = Author.objects.filter(semantic_scolar_author_id = author_data['authorId']).exists()
     if not stored_author_check:
         author_obj = Author.objects.create(semantic_scolar_author_id = author_data['authorId'],author_name=author_data['name'],author_url=author_data['url'])
@@ -803,12 +757,14 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
 
 def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
+
     """extracts keywords and topics event based and insert them into keyword and topic tables
 
     Args:
         conference_event_name_abbr (str): the name of the conference event
 
     """    
+
     abstract_title_str = ""
     conference_event_papers_data = []
 
@@ -858,13 +814,12 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
   
 
 def delete_conference_data(conference_name_abbr):
-    """[summary]
+
+    """deletes all data of a given conference and its authors from authors table
 
     Args:
-        conference_name_abbr ([type]): [description]
+        conference_name_abbr (str): the name of the conference to be deleted 
 
-    Returns:
-        [type]: [description]
     """    
     
     authors_list=  []
@@ -882,23 +837,23 @@ def delete_conference_data(conference_name_abbr):
     print('deleted authors ')
     print(deleted_authors)
     Conference.objects.filter(conference_name_abbr=conference_name_abbr).delete()
-    return True
 
 
 
 def generate_venn_photo(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
-    """[summary]
+
+    """generates a venn diagram of two circles with given data
 
     Args:
-        list_words_first_event ([type]): [description]
-        list_words_second_event ([type]): [description]
-        list_intersect_first_and_second ([type]): [description]
-        first_event ([type]): [description]
-        second_event ([type]): [description]
-        keyword_or_topic ([type]): [description]
+        list_words_first_event (list): words of the first event 
+        list_words_second_event (list): words of the second event
+        list_intersect_first_and_second (list): intersection words
+        first_event (str): name of the first event
+        second_event (str): name of the second event
+        keyword_or_topic (str): "topic" or "keyword"
 
     Returns:
-        [type]: [description]
+        str: venn image
     """    
     
     print('################### TEST VENN ###################')
@@ -940,3 +895,63 @@ def generate_venn_photo(list_words_first_event,list_words_second_event,list_inte
     ctx = image_data
 
     return ctx
+
+
+
+
+
+# can be removed
+def get_shared_words_between_events_old(conference_events_list,keyword_or_topic):
+    """[summary]
+
+    Args:
+        conference_events_list ([type]): [description]
+        keyword_or_topic ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
+    models_data = []
+    first_event = conference_events_list[0]
+    shared_word = []
+    dict_list = []
+    result_data = []
+    models_data_first_event = []
+    conference_event_data = []
+
+    if keyword_or_topic == 'topic':
+        models_data_first_event = get_topics_from_models(first_event)
+    elif keyword_or_topic == 'keyword':
+        models_data_first_event = get_keywords_from_models(first_event)
+
+
+    for model_data in models_data_first_event:
+        models_data.append({
+            'word': model_data[keyword_or_topic],
+            'weight': [model_data['weight']],
+        })
+
+    for conference_event in conference_events_list[1:]:
+        if keyword_or_topic == 'topic':
+            conference_event_data = get_topics_from_models(conference_event)
+        elif keyword_or_topic == 'keyword':
+            conference_event_data = get_keywords_from_models(conference_event)
+
+        for filter_word in conference_event_data:
+            shared_word = list(filter(lambda event: event['word'] == filter_word[keyword_or_topic], models_data))
+            index = next((i for i, item in enumerate(models_data) if item["word"] == filter_word[keyword_or_topic]), None)
+            if shared_word:
+                models_data[index]['weight'].append(filter_word['weight'])
+
+    for model_data in models_data: 
+        if len(model_data['weight']) == len(conference_events_list):   
+            dict_list.append(model_data)
+    
+    result_data.append(dict_list)
+    result_data.append(conference_events_list)
+
+    print('result_data stacked bar')
+    print(result_data)
+    print('result_data stacked bar')
+
+    return result_data
