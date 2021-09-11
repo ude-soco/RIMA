@@ -22,24 +22,6 @@ import re
 
 
 
-def split_restapi_url(url_path,split_char):
-
-    """splits the endpoint URL of the Front-end Request
-
-    Args:
-        url_path (str): endpoint url
-        split_char (raw str): split character
-
-    Returns:
-        list: list of url splits
-    """  
-
-    print("the url path is:", url_path)
-    url_path = url_path.replace("%20", " ")
-    topics_split = url_path.split(split_char)
-    return topics_split 
-
-
 def get_conference_general_data(conference_name_abbr):
 
     """retrieves general data of a specicif conference from the database tables
@@ -135,6 +117,7 @@ def get_conferences_list():
         })
 
     return data 
+
 
 def get_authors_data(conference_name_abbr="", conference_event_name_abbr =""):
 
@@ -251,8 +234,6 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
     return sorted_data
 
 
-
-
 def get_event_papers_data(conference_event_name_abbr):
 
     """retrieves paper objects of a conference event
@@ -270,8 +251,6 @@ def get_event_papers_data(conference_event_name_abbr):
         conference_event_papers_data = Conference_Event_Paper.objects.filter(conference_event_name_abbr=conference_event_obj)
        # print('PAPERS DATA',conference_event_papers_data)   
     return conference_event_papers_data
-
-
 
 
 def get_keywords_from_models(conference_event_name_abbr):
@@ -299,6 +278,7 @@ def get_keywords_from_models(conference_event_name_abbr):
         
     sorted_data = sorted(data, key=lambda k: k['weight'],reverse=True)    
     return sorted_data
+
 
 def get_topics_from_models(conference_event_name_abbr):
 
@@ -601,6 +581,7 @@ def add_data_to_conf_event_model(conference_name_abbr):
                 index+=1
                 conference_event.save()
 
+
 def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_name_abbr):
 
     """inserts new records in paper and author models
@@ -651,8 +632,6 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr,conf_event_nam
                 print(author_data)
     
    
-    #print(data['paper_data'][1])
-
 def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_event_obj):
 
     """inserts new records into author table
@@ -679,6 +658,7 @@ def add_data_to_author_models(author_data,paper_obj,conference_obj,conference_ev
                                                     ,conference_event_name_abbr=conference_event_obj)
 
     author_has_papers_obj.save()  
+
 
 def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
@@ -839,7 +819,6 @@ def delete_conference_data(conference_name_abbr):
     Conference.objects.filter(conference_name_abbr=conference_name_abbr).delete()
 
 
-
 def generate_venn_photo(list_words_first_event,list_words_second_event,list_intersect_first_and_second,first_event,second_event, keyword_or_topic):
 
     """generates a venn diagram of two circles with given data
@@ -895,6 +874,29 @@ def generate_venn_photo(list_words_first_event,list_words_second_event,list_inte
     ctx = image_data
 
     return ctx
+
+
+def split_restapi_url(url_path,split_char):
+
+    """splits the endpoint URL of the Front-end Request
+
+    Args:
+        url_path (str): endpoint url
+        split_char (raw str): split character
+
+    Returns:
+        list: list of url splits
+    """  
+
+    print("the url path is:", url_path)
+    url_path = url_path.replace("%20", " ")
+    topics_split = url_path.split(split_char)
+    return topics_split 
+
+
+
+
+
 
 
 

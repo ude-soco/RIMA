@@ -95,6 +95,7 @@ class Author_has_Papers(models.Model):
     class Meta:
         unique_together = (("conference_event_name_abbr", "author_id","paper_id"),)
 
+
 class Conf_Event_keyword(models.Model):
     keyword_id = models.AutoField(primary_key=True)
     keyword = models.CharField(max_length=255, null=True, blank=True)
@@ -110,6 +111,7 @@ class Event_has_keyword(models.Model):
     class Meta:
         unique_together = (("conference_event_name_abbr", "keyword_id"),)
 
+
 class Conf_Event_Topic(models.Model):
     topic_id = models.AutoField(primary_key=True) 
     topic = models.CharField(max_length=255, null=True, blank=True)
@@ -124,7 +126,6 @@ class Event_has_Topic(models.Model):
     
     class Meta:
         unique_together = (("conference_event_name_abbr", "topic_id"),)
-
 
 
 class Author_Event_Topic(models.Model):

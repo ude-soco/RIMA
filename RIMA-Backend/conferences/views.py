@@ -13,11 +13,6 @@ from rest_framework.views import APIView
 from urllib.parse import unquote
 from rest_framework.response import Response
 from .topicutils import (
-    #added by mouadh 'getsimilarity'
-    getsimilarity,
-    applyTopicMiningTopic,
-    applyTopicMiningKeyword,
-    getTopKeywords,
     getPaperswithTopics,
     getTopicDetails,
     compareTopics,
@@ -416,19 +411,14 @@ class addConferenceView(APIView):
             confutils.add_data_to_conf_event_model(request_data['conferences'][0]['conference_name_abbr'])
             return Response(serializer.data)
 
-'''
-BAB get conf events/years
-'''
-# Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
+
 
 class searchConfView(APIView):
     def get(self, request, format=None):
         preloadedConferenceList = PreloadedConferenceList.objects.all()
         serializer = PreloadedConferenceListSerializer(preloadedConferenceList, many=True)
         return Response(serializer.data)
-        
-        #data = Conference_Event.objects.all()
-        #return data
+
     
 
 
@@ -682,27 +672,6 @@ class KeyPieView(APIView):
 '''
 View regarding keyword topic cloud
 '''
-
-#BAB 08.06.2021 Extension for other conferences other than LAK
-# TO BE Removed
-"""
-class KeywordsView(APIView):
-    def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
-        #print("The serializer is:",serializer_class)
-        #print(applyTopicMining())
-        url_path = request.get_full_path()
-        print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        #print("The year is:",year)
-        return Response({
-            "keywords":
-            applyTopicMiningKeyword(topics_split[-1],topics_split[-1], topics_split[-2])
-        })
-"""
-
 class AllTopicsViewDB(APIView):
     def get(self, request, *args, **kwargs):
         yearList = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]
@@ -780,24 +749,6 @@ class getTopicBarValues(APIView):
         return Response(result_dict)
 
 
-
-'''
-View for the bar chart top 10 topics/top 10 publications
-'''
-
-"""
-#BAB
-# to be removed
-class TopicBarViewTopics(APIView):
-    def get(self, request, *args, **kwargs):
-        #serializer_class = DictSerializer
-        url_path = request.get_full_path()
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
-        return Response({"keywords": getTopTopics(topics_split[-2],topics_split[-1])})
-
-"""
 class populateTopicView(APIView):
     def get(self, request, *args, **kwargs):
         #serializer_class = TopicSerializer
@@ -1510,8 +1461,3 @@ class AuthorConfComparisonData(APIView):
         })
 
 
-#created by mouadh, sorting tweets based on similarity score
-class similartweets(APIView):
-    def get(self, request, *args, **kwargs):
-
-        return Response({"vals": getsimilarity()})

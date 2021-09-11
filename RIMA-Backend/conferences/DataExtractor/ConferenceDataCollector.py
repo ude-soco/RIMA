@@ -26,9 +26,6 @@ headers_windows = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US
                    'Accept-Language': 'en-US,en;q=0.8',
                    'Connection': 'keep-alive'}
 
-# conference related variables
-conference_name = f''
-
 # URLs
 dblp_url = f'https://dblp.org/db/conf/'
 semantic_scholar_url_api = f'https://api.semanticscholar.org/v1/paper/'
@@ -68,7 +65,7 @@ def fetch_soup(url):
 
 
 def fetch_confernces_names_listed_in_html(platform, index):
-    """gets all conferences list from dblp
+    """gets conferences list from dblp
 
     Args:
         platform (str): the name of the platform where the conference names reside. For example, dblp
@@ -159,6 +156,7 @@ def search_publicationid_in_semscholar_selenium(semscholar_titles):
     print(' **** ','ids list length',len(publications_ids), ' **** ')
     print(' ')
     return publications_ids
+
 
 def fetch_data_from_html_tags(conf_name,soup,html_element,element_dict, inner_tag , inner_tag_arribute, if_doi, is_recursive):
     """Fetch data from different html tags
@@ -306,9 +304,6 @@ def fetch_all_dois_ids(conference_name_abbr,conf_event_name_abbr, url):
         print('   ****    ')
         print('NoneType Error please, check the searched attribute or pattern')
     return data
-
-
-
 
 
 def extract_papers_data(data_dict_event):
