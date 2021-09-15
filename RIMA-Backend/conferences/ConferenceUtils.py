@@ -803,19 +803,67 @@ def delete_conference_data(conference_name_abbr):
     """    
     
     authors_list=  []
-    interesections = []
+    other_authors_list = []
+
+    keywords_list = []
+    other_keywords_list = []
+
+    topics_list = []
+    other_topics_list = []
+    
+    authors_interesection = []
+    keywords_intersections = []
+    topics_intersections =[]
+
+    authors_list_to_delete= []
     deleted_authors =[]
+
+    topics_list_to_delete = []
+    deleted_topics=[]
+
+    keywords_list_to_delete = []
+    deleted_keywords=[]
+
+
     authors_list = Author_has_Papers.objects.filter(conference_name_abbr_id = conference_name_abbr).values_list('author_id_id',flat=True)
     other_authors_list =  Author_has_Papers.objects.filter(~Q(conference_name_abbr=conference_name_abbr)).values_list('author_id_id',flat=True)
-    interesections = set(authors_list).intersection(other_authors_list)
-    list_to_delete = set(authors_list).difference(interesections)
-    list_to_delete = list(list_to_delete)
-    while len(list_to_delete):
-        print(list_to_delete[:100])
-        deleted_authors = Author.objects.filter(semantic_scolar_author_id__in=list_to_delete[:100]).delete()
-        list_to_delete = list_to_delete[100:]
+    authors_interesection = set(authors_list).intersection(other_authors_list)
+    authors_list_to_delete = set(authors_list).difference(authors_interesection)
+    authors_list_to_delete = list(authors_list_to_delete)
+    
+    while len(authors_list_to_delete):
+        deleted_authors = Author.objects.filter(semantic_scolar_author_id__in=authors_list_to_delete[:100]).delete()
+        authors_list_to_delete = authors_list_to_delete[100:]
     print('deleted authors ')
     print(deleted_authors)
+    
+
+    keywords_list = Event_has_keyword.objects.filter(Q(conference_event_name_abbr__conference_event_name_abbr__icontains=conference_name_abbr)).values_list('keyword_id_id',flat=True)
+    other_keywords_list =  Event_has_keyword.objects.filter(~Q(conference_event_name_abbr__conference_event_name_abbr__icontains=conference_name_abbr)).values_list('keyword_id_id',flat=True)
+    keywords_intersections = set(keywords_list).intersection(other_keywords_list)
+    keywords_list_to_delete = set(keywords_list).difference(keywords_intersections)
+    keywords_list_to_delete = list(keywords_list_to_delete)
+
+    while len(keywords_list_to_delete):
+        deleted_keywords = Conf_Event_keyword.objects.filter(keyword_id__in=keywords_list_to_delete[:100]).delete()
+        keywords_list_to_delete = keywords_list_to_delete[100:]
+    print('deleted_keywords  ')
+    print(deleted_keywords)
+
+    topics_list = Event_has_Topic.objects.filter(Q(conference_event_name_abbr__conference_event_name_abbr__icontains=conference_name_abbr)).values_list('topic_id_id',flat=True)
+    other_topics_list =  Event_has_Topic.objects.filter(~Q(conference_event_name_abbr__conference_event_name_abbr__icontains=conference_name_abbr)).values_list('topic_id_id',flat=True)
+    topics_intersections = set(topics_list).intersection(other_topics_list)
+    topics_list_to_delete = set(topics_list).difference(topics_intersections)
+    topics_list_to_delete = list(topics_list_to_delete)
+
+    while len(topics_list_to_delete):
+        deleted_topics = Conf_Event_Topic.objects.filter(topic_id__in=topics_list_to_delete[:100]).delete()
+        topics_list_to_delete = topics_list_to_delete[100:]
+    print('deleted_topics  ')
+    print(deleted_topics)
+
+    
+    
     Conference.objects.filter(conference_name_abbr=conference_name_abbr).delete()
 
 
@@ -895,65 +943,3 @@ def split_restapi_url(url_path,split_char):
 
 
 
-
-
-
-
-
-
-
-# can be removed
-def get_shared_words_between_events_old(conference_events_list,keyword_or_topic):
-    """[summary]
-
-    Args:
-        conference_events_list ([type]): [description]
-        keyword_or_topic ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """    
-    models_data = []
-    first_event = conference_events_list[0]
-    shared_word = []
-    dict_list = []
-    result_data = []
-    models_data_first_event = []
-    conference_event_data = []
-
-    if keyword_or_topic == 'topic':
-        models_data_first_event = get_topics_from_models(first_event)
-    elif keyword_or_topic == 'keyword':
-        models_data_first_event = get_keywords_from_models(first_event)
-
-
-    for model_data in models_data_first_event:
-        models_data.append({
-            'word': model_data[keyword_or_topic],
-            'weight': [model_data['weight']],
-        })
-
-    for conference_event in conference_events_list[1:]:
-        if keyword_or_topic == 'topic':
-            conference_event_data = get_topics_from_models(conference_event)
-        elif keyword_or_topic == 'keyword':
-            conference_event_data = get_keywords_from_models(conference_event)
-
-        for filter_word in conference_event_data:
-            shared_word = list(filter(lambda event: event['word'] == filter_word[keyword_or_topic], models_data))
-            index = next((i for i, item in enumerate(models_data) if item["word"] == filter_word[keyword_or_topic]), None)
-            if shared_word:
-                models_data[index]['weight'].append(filter_word['weight'])
-
-    for model_data in models_data: 
-        if len(model_data['weight']) == len(conference_events_list):   
-            dict_list.append(model_data)
-    
-    result_data.append(dict_list)
-    result_data.append(conference_events_list)
-
-    print('result_data stacked bar')
-    print(result_data)
-    print('result_data stacked bar')
-
-    return result_data
