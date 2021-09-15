@@ -83,7 +83,7 @@ export default function Login() {
     RestAPI.userSignIn(data)
       .then((res) => {
         setIsLoading(false);
-        console.log(res.data)
+        console.log(res.data.is_staff)
         if (res.status === 200) {
           // console.log(res.data)
           localStorage.setItem("rimaUser", JSON.stringify(res.data));
@@ -92,6 +92,7 @@ export default function Login() {
           localStorage.setItem("lastname", res.data.last_name);
           localStorage.setItem("userId", res.data.id);
           localStorage.setItem("mId", res.data.id);
+          localStorage.setItem("isStaff", res.data.is_staff);     //Basem Abughallya::15.09.2021::Check if staff
           const {data: {data_being_loaded}} = res;
           if (data_being_loaded) {
             window.location.href = "/app/redirect";

@@ -24,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             "author_id",
             "paper_count",
             "tweet_count",
+            "is_staff"  # Basem Abughallya::15.09.2021::check if staff
         )
 
 
