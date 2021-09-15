@@ -286,34 +286,34 @@ export default function ConferenceBar (props) {
 
           <Grid container component={Paper} className={classes.cardHeight}>     
               <Grid item xs>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   Conference Complete Name
                 </Typography>
-                <Typography className={classes.gutter}>
+                <Typography variant="h5" className={classes.gutter}>
                   {conferenceOtherData.conference_full_name}
                 </Typography>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                     dblp Conference Url
                 </Typography>
-                <Typography className={classes.gutter}>
+                <Typography variant="h5" className={classes.gutter}>
                 {conferenceOtherData.conference_url}
                 </Typography>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   Number of Events
                 </Typography>
-                <Typography className={classes.gutter}>
+                <Typography variant="h5" className={classes.gutter}>
                 {conferenceOtherData.no_of_events}
                 </Typography> 
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   Number of all Papers
                 </Typography>
-                <Typography className={classes.gutter}>
+                <Typography variant="h5" className={classes.gutter}>
                 {conferenceOtherData.no_of_all_papers}
                 </Typography>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   Number of all Authors
                 </Typography>
-                <Typography className={classes.gutter}>
+                <Typography variant="h5" className={classes.gutter}>
                 {conferenceOtherData.no_of_all_authors}
                 </Typography>
 
