@@ -64,12 +64,16 @@ class viewConference extends React.Component {
     selectyear: "",
     eventsmodal: "",
     add_conference_name_abbr : "",
+    is_staff:"",
 
       
   };
 
   componentDidMount() {
-    this.setState({ isLoading: true }, this.getConferenceData());
+    this.setState({ 
+      isLoading: true,
+      is_staff:localStorage.getItem('isStaff')
+    }, this.getConferenceData());
   }
 
   selectYear = (e) => {
@@ -114,6 +118,11 @@ getConferenceEventsData = (conference_name_abbr) => {
       this.setState({ isLoading: false });
       handleServerErrors(error, toast.error);
     });
+
+    
+    console.log("current user");
+    console.log(localStorage.getItem('isStaff'));
+    console.log("current user");
 };
 
 //** COLLECT PAPERS FOR AN EVENT **//
@@ -328,13 +337,13 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                       <th scope="col">Number of Events</th>
                       <th scope="col" width="5"></th>
                       <th scope="col" width="5"></th>
-                      <th scope="col" width="5"></th>
+                      {this.state.is_staff == "true" ? (
+                      <th scope="col" width="5"></th>) : (<></>)}
                     </tr>
                   </thead>
 
                   <tbody>
                     {/* START LOADER */}
-
                     {this.state.isLoading ? (
                       <tr className="text-center" style={{ padding: "20px" }}>
                         <td></td>
@@ -375,17 +384,18 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                               {value.conference_name_abbr}'s Stored Events
                               </Button>    
                           </td>
-
+                          
+                          {this.state.is_staff == "true" ? (
                           <td>
                           <div align="left">
                           <Tooltip title="delete conference">
                             <IconButton onClick={() => this.toggleDeleteConference(value.conference_name_abbr)}>
                               <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                             </IconButton>
-                            </Tooltip>
-                               
+                            </Tooltip>   
                           </div>
                           </td>
+                          ):(<></>)}
                         </tr>
                       ))
                     ) : (
@@ -431,6 +441,7 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                   <ModalHeader toggle={this.eventstoggle}>Conference Events</ModalHeader>
                   <ModalBody>
 
+
                   <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
@@ -439,10 +450,15 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                       {/*<th scope="col">URL</th>*/}
                       <th scope="col">Conference URL</th>
                       <th scope="col">No. Stored Papers</th>
+
+                      {this.state.is_staff == "true" ? (
+                        <>
                       <th scope="col" width="5"></th>
                       <th scope="col" width="5" style={{textAlign: "center"}}>Options</th>
                       <th scope="col" width="5"></th>
-                      
+                      </>
+                      ):(<></>)}
+                  
                     </tr>
                   </thead>
                   
@@ -470,22 +486,30 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                           <td>{value.conference_name_abbr}</td>
                           <td>{value.conference_event_name_abbr}</td>
                           <td><a href = {value.conference_event_url}>{value.conference_event_url}</a></td>
-                          <td>{value.no_of_stored_papers}</td>                         
+                          <td>{value.no_of_stored_papers}</td>  
+                          {this.state.is_staff == "true" ? (
+                            <>
                           <td className="text-center" style={{ width: "5"}}>
-                            <Button color="secondary" onClick={() => this.collectEventPapers(value.conference_name_abbr, value.conference_event_name_abbr)} width = "50px">
-                             Collect Publications
-                            </Button>
-                          </td >
-                          <td className="text-center" style={{ width: "5"}}>
-                            <Button color="secondary" onClick={() => this.ExtractEventTrends(value.conference_event_name_abbr)} width = "50px">
-                            Extract Publications' Keywords/Topics
-                            </Button>
-                          </td>
-                           <td className="text-center" style={{ width: "5"}}>
-                            <Button color="secondary" onClick={() => this.ExtractAuthorsTrends(value.conference_event_name_abbr)} width = "50px">
-                            Extract Authors' Keywords/Topics
-                            </Button>
-                          </td>
+                          <Button color="secondary" onClick={() => this.collectEventPapers(value.conference_name_abbr, value.conference_event_name_abbr)} width = "50px">
+                           Collect Publications
+                          </Button>
+                        </td >
+                        <td className="text-center" style={{ width: "5"}}>
+                          <Button color="secondary" onClick={() => this.ExtractEventTrends(value.conference_event_name_abbr)} width = "50px">
+                          Extract Publications' Keywords/Topics
+                          </Button>
+                        </td>
+                         <td className="text-center" style={{ width: "5"}}>
+                          <Button color="secondary" onClick={() => this.ExtractAuthorsTrends(value.conference_event_name_abbr)} width = "50px">
+                          Extract Authors' Keywords/Topics
+                          </Button>
+                        </td>
+                        </>
+                          ):(
+                            <>
+                            </>
+                          )}                       
+
                         </tr>
                       ))
                     ) : (
