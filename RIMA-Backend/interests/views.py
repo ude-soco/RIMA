@@ -205,17 +205,17 @@ class SimilarityView(RetrieveAPIView):
 
         return Response({
             "score":
-            score,
+                score,
             "bar_chart_data": {
                 "user_1_data": radar_chart_data["user_1_data"],
                 "user_2_data": radar_chart_data["user_2_data"]
             },
             "heat_map_data":
-            get_heat_map_data(user_1_interests.keys(),
-                              user_2_interests.keys()),
+                get_heat_map_data(user_1_interests.keys(),
+                                  user_2_interests.keys()),
             "venn_chart_data":
-            get_venn_chart_data(user_1_interests.keys(),
-                                user_2_interests.keys())
+                get_venn_chart_data(user_1_interests.keys(),
+                                    user_2_interests.keys())
         })
 
 
@@ -291,13 +291,13 @@ class UserStreamGraphView(APIView):
         top_twitter_keywords = list(
             ShortTermInterest.objects.filter(
                 user=user, source=ShortTermInterest.TWITTER).order_by(
-                    "-weight").values_list("keyword__name", flat=True))
+                "-weight").values_list("keyword__name", flat=True))
         top_twitter_keywords = list(set(top_twitter_keywords))[:10]
 
         top_paper_keywords = list(
             ShortTermInterest.objects.filter(
                 user=user, source=ShortTermInterest.SCHOLAR).order_by(
-                    "-weight").values_list("keyword__name", flat=True))
+                "-weight").values_list("keyword__name", flat=True))
         top_paper_keywords = list(set(top_paper_keywords))[:10]
 
         for index in range(5, -1, -1):
@@ -421,7 +421,7 @@ class TopicsView(APIView):
         #print("The year is:",year)
         return Response({
             "topics":
-            applyTopicMiningTopic(topics_split[-1], topics_split[-2])
+                applyTopicMiningTopic(topics_split[-1], topics_split[-2])
         })
 
 
@@ -443,7 +443,7 @@ class KeywordsView(APIView):
         #print("The year is:",year)
         return Response({
             "keywords":
-            applyTopicMiningKeyword(topics_split[-1], topics_split[-2])
+                applyTopicMiningKeyword(topics_split[-1], topics_split[-2])
         })
 
 
@@ -611,9 +611,9 @@ class MultipleTopicAreaView(APIView):
         #getKeyWeightsAllYears
         return Response({
             "weights":
-            getMultipleYearTopicJourney(topics_split_params)[0],
+                getMultipleYearTopicJourney(topics_split_params)[0],
             "years":
-            getMultipleYearTopicJourney(topics_split_params)[1]
+                getMultipleYearTopicJourney(topics_split_params)[1]
         })
 
 
@@ -637,9 +637,9 @@ class MultipleKeyAreaView(APIView):
         #getKeyWeightsAllYears
         return Response({
             "weights":
-            getMultipleYearKeyJourney(topics_split_params)[0],
+                getMultipleYearKeyJourney(topics_split_params)[0],
             "years":
-            getMultipleYearKeyJourney(topics_split_params)[1]
+                getMultipleYearKeyJourney(topics_split_params)[1]
         })
 
 
@@ -691,8 +691,8 @@ class AuthorConfComparisionView(APIView):
         print(topics_split)
         return Response({
             "compare":
-            authorConfTopicComparison(topics_split[-3], topics_split[-2],
-                                      topics_split[-1])
+                authorConfTopicComparison(topics_split[-3], topics_split[-2],
+                                          topics_split[-1])
         })
 
 
@@ -710,7 +710,7 @@ class VennOverview(APIView):
         print(topics_split)
         return Response({
             "commontopics":
-            generateVennData(topics_split[-2], topics_split[-1])
+                generateVennData(topics_split[-2], topics_split[-1])
         })
 
 
@@ -728,7 +728,7 @@ class VennOverviewKeys(APIView):
         print(topics_split)
         return Response({
             "commontopics":
-            generateVennDataKeys(topics_split[-2], topics_split[-1])
+                generateVennDataKeys(topics_split[-2], topics_split[-1])
         })
 
 
@@ -845,8 +845,8 @@ class FetchAuthorView(APIView):
         print(topics_split)
         return Response({
             "authors":
-            getAuthorFromAuthorName(topics_split[-3], topics_split[-2],
-                                    topics_split[-1])
+                getAuthorFromAuthorName(topics_split[-3], topics_split[-2],
+                                        topics_split[-1])
         })
 
 
@@ -859,7 +859,7 @@ class OverviewChartViewTopics(APIView):
         print(topics_split)
         return Response({
             "topicoverview":
-            getFlowChartDataTopics(topics_split[-1], topics_split[-2])
+                getFlowChartDataTopics(topics_split[-1], topics_split[-2])
         })
 
 
@@ -872,7 +872,7 @@ class OverviewChartViewKeywords(APIView):
         print(topics_split)
         return Response({
             "keyoverview":
-            getFlowChartDataKeywords(topics_split[-1], topics_split[-2])
+                getFlowChartDataKeywords(topics_split[-1], topics_split[-2])
         })
 
 
@@ -885,7 +885,7 @@ class FetchAbstractView(APIView):
         print(topics_split)
         return Response({
             "abstractview":
-            getAbstractbasedonKeyword(topics_split[-1], topics_split[-2])
+                getAbstractbasedonKeyword(topics_split[-1], topics_split[-2])
         })
 
 
@@ -929,8 +929,8 @@ class AuthorTopicComparisonView(APIView):
         print(topics_split_params)
         return Response({
             "authortopics":
-            compareAuthors(topics_split_params[-4], topics_split_params[-3],
-                           topics_split_params[-2], topics_split_params[-1])
+                compareAuthors(topics_split_params[-4], topics_split_params[-3],
+                               topics_split_params[-2], topics_split_params[-1])
         })
 
 
@@ -946,9 +946,9 @@ class AuthorKeywordComparisonView(APIView):
         print(topics_split_params)
         return Response({
             "authortopics":
-            getDataAuthorComparisonKeywords(topics_split_params[-1],
-                                            topics_split_params[-3],
-                                            topics_split_params[-2])
+                getDataAuthorComparisonKeywords(topics_split_params[-1],
+                                                topics_split_params[-3],
+                                                topics_split_params[-2])
         })
 
 
@@ -977,7 +977,7 @@ class AuthorComparisonData(APIView):
         print(topics_split)
         return Response({
             "authortopics":
-            getAuthorComparisionData(topics_split[-2], topics_split[-1])
+                getAuthorComparisionData(topics_split[-2], topics_split[-1])
         })
 
 
@@ -995,7 +995,7 @@ class AuthorConfComparisonData(APIView):
         print(topics_split)
         return Response({
             "vals":
-            compareLAKwithAuthortopics(topics_split[-2], topics_split[-1])
+                compareLAKwithAuthortopics(topics_split[-2], topics_split[-1])
         })
 
 

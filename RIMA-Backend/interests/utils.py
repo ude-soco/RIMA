@@ -191,7 +191,7 @@ def generate_short_term_model(user_id, source):
                 year_wise_text[paper.year] = ""
             year_wise_text[
                 paper.
-                year] = f"{year_wise_text[paper.year]} {paper.title} {paper.abstract}"
+                    year] = f"{year_wise_text[paper.year]} {paper.title} {paper.abstract}"
 
         for year, text in year_wise_text.items():
             try:
@@ -318,8 +318,7 @@ def get_venn_chart_data(user_1_interests, user_2_interests):
 
 
 def get_radar_similarity_data(user_1_interests, user_2_interests):
-    # from interests.Semantic_Similarity.Word_Embedding.IMsim import glove_model
-    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
+    from interests.Semantic_Similarity.Word_Embedding.IMsim import glove_model
     vector_space = list(
         set(user_1_interests.keys()).union(set(user_2_interests.keys())))
     user_1_data = {}
@@ -395,8 +394,8 @@ def get_top_short_term_interest_by_weight(user_id, count=10):
     date_filtered_qs = (ShortTermInterest.objects.filter(
         user_id=user_id).prefetch_related("tweets", "papers",
                                           "keyword").order_by(
-                                              "-model_year", "-model_month",
-                                              "-weight"))
+        "-model_year", "-model_month",
+        "-weight"))
 
     keyword_id_map = {}
 
@@ -441,15 +440,15 @@ def get_top_long_term_interest_by_weight(user_id, count=10):
     tweet_model_ids = set(
         date_filtered_qs.filter(
             source__icontains=ShortTermInterest.TWITTER).values_list(
-                "id", flat=True))
+            "id", flat=True))
     paper_model_ids = set(
         date_filtered_qs.filter(
             source__icontains=ShortTermInterest.SCHOLAR).values_list(
-                "id", flat=True))
+            "id", flat=True))
     final_model_ids = set()
     final_model_ids = final_model_ids.union(
         set(list(paper_model_ids)[:paper_limit])).union(
-            set(list(tweet_model_ids)[:tweet_limit]))
+        set(list(tweet_model_ids)[:tweet_limit]))
 
     if len(final_model_ids) < count:
         # Add more papers

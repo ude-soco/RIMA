@@ -13,10 +13,7 @@ import {
 } from "./DragAndDropHelper";
 import { canDrag } from "./utils";
 import RemoveComponent from "./RemoveComponent";
-import {
-  UncontrolledDropdown,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledDropdown, DropdownToggle } from "reactstrap";
 import { MdSettings } from "react-icons/md";
 
 const ItemTypes = { TAG: "tag" };
@@ -32,7 +29,8 @@ class Tag extends Component {
   render() {
     const { props } = this;
     const label = props.tag[props.labelField];
-    this.handleTagSettingsChange=this.props.handleTagSettingsChange.bind(this);
+    this.handleTagSettingsChange =
+      this.props.handleTagSettingsChange.bind(this);
     const {
       connectDragSource,
       isDragging,
@@ -50,18 +48,18 @@ class Tag extends Component {
         style={{
           opacity: isDragging ? 0 : 1,
           cursor: canDrag(props) ? "move" : "auto",
-          padding: "0 10px",
+          padding: "5 10px",
           paddingBottom: "5px",
-          backgroundColor: tag.color
+          paddingRight: "10px",
+          backgroundColor: tag.color,
+          borderRadius: "4px",
         }}
         onClick={props.onTagClicked}
         onKeyDown={props.onTagClicked}
         onTouchStart={props.onTagClicked}
       >
-        <i className="fas fa-grip-vertical" style={{ color: '#FFF' }} />
-        {' '}
-        {label}
-        <UncontrolledDropdown direction="down" setActiveFromChild>
+        <i className="fas fa-grip-vertical" style={{ color: "#FFF" }} /> {label}
+        {/* <UncontrolledDropdown direction="down" setActiveFromChild>
           <Toggle
             tag="a"
             className="nav-link text-primary"
@@ -89,7 +87,13 @@ class Tag extends Component {
                     <input
                       type="number"
                       className="form-control "
-                      onChange={(e) => this.handleTagSettingsChange(tagId, e.target.name, e.target.value)}
+                      onChange={(e) =>
+                        this.handleTagSettingsChange(
+                          tagId,
+                          e.target.name,
+                          e.target.value
+                        )
+                      }
                       value={tag.n_tweets}
                       name="n_tweets"
                     />
@@ -103,7 +107,13 @@ class Tag extends Component {
                     <input
                       type="color"
                       className="form-control px-0 py-0 border-0 form-control-plaintext input-nTweets "
-                      onChange={(e) => this.handleTagSettingsChange(tagId, e.target.name, e.target.value)}
+                      onChange={(e) =>
+                        this.handleTagSettingsChange(
+                          tagId,
+                          e.target.name,
+                          e.target.value
+                        )
+                      }
                       value={tag.color}
                       name="color"
                     />
@@ -111,16 +121,15 @@ class Tag extends Component {
                 </div>
               </div>
             }
-          /> 
+          />
         </UncontrolledDropdown>
-       
         <RemoveComponent
           tag={props.tag}
           className={classNames.remove}
           removeComponent={props.removeComponent}
           onClick={props.onDelete}
           readOnly={readOnly}
-        />
+        />*/}
       </span>
     );
     return connectDragSource(connectDropTarget(tagComponent));

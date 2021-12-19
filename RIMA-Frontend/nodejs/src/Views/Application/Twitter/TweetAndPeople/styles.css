@@ -2,9 +2,10 @@
   cursor: pointer;
 }
 div#tag-search-container {
-  border: 1px solid rgb(94, 114, 228, 0.6);
+  border: 1px solid rgb(140, 140, 137, 0.6);
   padding-top: 5px;
-  padding-bottom: 5px;
+  width: 85%;
+  border-radius: 25 !important;
 }
 
 div.ReactTags__tags {

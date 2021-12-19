@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Author: Florian Boudin
 """Single Topical PageRank keyphrase extraction model.
-
 This implementation is an improvement on a keyphrase extraction algorithm,
 Topical PageRank (TPR), incorporating topical information from topic model and
 described in:
-
 * Lucas Sterckx, Thomas Demeester, Johannes Deleu and Chris Develder.
   Topical Word Importance for Fast Keyphrase Extraction.
   *In proceedings of WWW*, pages 121-122, 2015.
@@ -38,21 +36,16 @@ class TopicalPageRank(SingleRank):
 
     def candidate_selection(self, grammar=None, **kwargs):
         """Candidate selection heuristic.
-
         Here we select noun phrases that match the regular expression
         (adjective)*(noun)+, which represents zero or more adjectives followed
         by one or more nouns (Liu et al., 2010).
-
         Note that there is no details on this in the Single TPR paper, and these
         are the only information that can be found:
-
             ... a set of expressions or noun phrases ...
-
             ... Adjectives and nouns are then merged into keyphrases and
             corresponding scores are summed and ranked. ...
-
         Args:
-            grammar (str): grammar defining POS patterns of NPs, defaults to 
+            grammar (str): grammar defining POS patterns of NPs, defaults to
                 "NP: {<ADJ>*<NOUN|PROPN>+}".
         """
 
@@ -70,7 +63,6 @@ class TopicalPageRank(SingleRank):
                             normalized=False):
         """Candidate weight calculation using a biased PageRank towards LDA
         topic distributions.
-
         Args:
             window (int): the window within the sentence for connecting two
                 words in the graph, defaults to 10.
@@ -101,8 +93,9 @@ class TopicalPageRank(SingleRank):
 
         # set the default LDA model if none provided
         if lda_model is None:
+            lda_model = "/opt/lda-1000-semeval2010.py3.pickle.gz"
             # TODO: Uncomment this line before deployment
-            # lda_model = "/opt/lda-1000-semeval2010.py3.pickle.gz"
+            #lda_model = "/opt/lda-1000-semeval2010.py3.pickle.gz"
             lda_model = "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz"
             logging.warning('LDA model is hard coded to {}'.format(lda_model))
 

@@ -10,7 +10,8 @@ class TagSearch extends React.Component {
     this.handleDelete = this.props.handleDelete.bind(this);
     this.handleAddition = this.props.handleAddition.bind(this);
     this.handleDrag = this.props.handleDrag.bind(this);
-    this.handleTagSettingsChange = this.props.handleTagSettingsChange.bind(this);
+    this.handleTagSettingsChange =
+      this.props.handleTagSettingsChange.bind(this);
   }
 
   render() {

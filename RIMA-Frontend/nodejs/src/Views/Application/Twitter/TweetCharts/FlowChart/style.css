@@ -1,0 +1,9 @@
+.cssClass > rect {
+  fill: #ff0000 !important;
+  stroke: #ffff00 !important;
+  stroke-width: 4px !important;
+}
+#mermaid {
+  width: "50%" !important;
+  height: "50%" !important;
+}

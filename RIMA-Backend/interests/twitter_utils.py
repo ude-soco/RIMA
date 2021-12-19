@@ -9,14 +9,18 @@ from .utils import get_interest_similarity_score
 
 utc = pytz.timezone('UTC')
 
+TWITTER_API_KEY = "VHR72dG8nWMZBHYFeyDOlYvV5"
+TWITTER_API_SECRET = "SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X"
+TWITTER_ACCESS = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
+TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 # TODO: needs to be removed after discussion with Ralf
-# TWITTER_API_KEY = "VHR72dG8nWMZBHYFeyDOlYvV5"
-# TWITTER_API_SECRET = "SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X"
-# TWITTER_ACCESS = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
-# TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
+#TWITTER_API_KEY = "VHR72dG8nWMZBHYFeyDOlYvV5"
+#TWITTER_API_SECRET = "SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X"
+#TWITTER_ACCESS = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
+#TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 
-# AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-# AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
+#AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+#AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
 
 AUTH = tweepy.OAuthHandler(os.environ.get("TWITTER_API_KEY"), os.environ.get("TWITTER_API_SECRET"))
 AUTH.set_access_token(os.environ.get("TWITTER_ACCESS"), os.environ.get("TWITTER_ACCESS_SECRET"))
@@ -111,6 +115,7 @@ def extract_tweet_from_response(tweet, tag):
     result["user"] = {x: tweet["user"][x] for x in user_fields}
     result["color"] = tag["color"]
     result["tagId"] = tag["id"]
+    result["text"] = tag["text"]
     print(result)
     return result
 

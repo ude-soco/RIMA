@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
-import isEqual from 'lodash/isEqual';
-import noop from 'lodash/noop';
-import uniq from 'lodash/uniq';
-import Suggestions from './Suggestions';
-import PropTypes from 'prop-types';
-import ClassNames from 'classnames';
-import Tag from './Tag';
+import React, { Component } from "react";
+import { DragDropContext } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
+import isEqual from "lodash/isEqual";
+import noop from "lodash/noop";
+import uniq from "lodash/uniq";
+import Suggestions from "./Suggestions";
+import PropTypes from "prop-types";
+import ClassNames from "classnames";
+import Tag from "./Tag";
 
-import { buildRegExpFromDelimiters } from './utils';
+import { buildRegExpFromDelimiters } from "./utils";
 
 //Constants
 import {
@@ -18,7 +18,7 @@ import {
   DEFAULT_CLASSNAMES,
   DEFAULT_LABEL_FIELD,
   INPUT_FIELD_POSITIONS,
-} from './constants';
+} from "./constants";
 
 class ReactTags extends Component {
   static propTypes = {
@@ -95,7 +95,7 @@ class ReactTags extends Component {
     if (!props.inline) {
       /* eslint-disable no-console */
       console.warn(
-        '[Deprecation] The inline attribute is deprecated and will be removed in v7.x.x, please use inputFieldPosition instead.'
+        "[Deprecation] The inline attribute is deprecated and will be removed in v7.x.x, please use inputFieldPosition instead."
       );
       /* eslint-enable no-console */
     }
@@ -103,7 +103,7 @@ class ReactTags extends Component {
     const { suggestions } = props;
     this.state = {
       suggestions,
-      query: '',
+      query: "",
       isFocused: false,
       selectedIndex: -1,
       selectionMode: false,
@@ -154,9 +154,9 @@ class ReactTags extends Component {
   };
 
   resetAndFocusInput() {
-    this.setState({ query: '' });
+    this.setState({ query: "" });
     if (this.textInput) {
-      this.textInput.value = '';
+      this.textInput.value = "";
       this.textInput.focus();
     }
   }
@@ -203,7 +203,7 @@ class ReactTags extends Component {
           ? suggestions.length - 1
           : selectedIndex,
     });
-  }
+  };
 
   handleFocus(e) {
     const value = e.target.value;
@@ -218,7 +218,7 @@ class ReactTags extends Component {
     if (this.props.handleInputBlur) {
       this.props.handleInputBlur(value);
       if (this.textInput) {
-        this.textInput.value = '';
+        this.textInput.value = "";
       }
     }
     this.setState({ isFocused: false });
@@ -242,7 +242,7 @@ class ReactTags extends Component {
     // If no text is typed in so far, ignore the action - so we don't end up with a terminating
     // character typed in.
     if (this.props.delimiters.indexOf(e.keyCode) !== -1 && !e.shiftKey) {
-      if (e.keyCode !== KEYS.TAB || query !== '') {
+      if (e.keyCode !== KEYS.TAB || query !== "") {
         e.preventDefault();
       }
 
@@ -251,7 +251,7 @@ class ReactTags extends Component {
           ? suggestions[selectedIndex]
           : { id: query, [this.props.labelField]: query };
 
-      if (selectedQuery !== '') {
+      if (selectedQuery !== "") {
         this.addTag(selectedQuery);
       }
     }
@@ -259,7 +259,7 @@ class ReactTags extends Component {
     // when backspace key is pressed and query is blank, delete tag
     if (
       e.keyCode === KEYS.BACKSPACE &&
-      query === '' &&
+      query === "" &&
       this.props.allowDeleteFromEmptyInput
     ) {
       this.handleDelete(this.props.tags.length - 1, e);
@@ -296,12 +296,12 @@ class ReactTags extends Component {
     e.preventDefault();
 
     const clipboardData = e.clipboardData || window.clipboardData;
-    const clipboardText = clipboardData.getData('text');
+    const clipboardText = clipboardData.getData("text");
 
     const { maxLength = clipboardText.length } = this.props;
 
     const maxTextLength = Math.min(maxLength, clipboardText.length);
-    const pastedText = clipboardData.getData('text').substr(0, maxTextLength);
+    const pastedText = clipboardData.getData("text").substr(0, maxTextLength);
 
     // Used to determine how the pasted content is split.
     const delimiterRegExp = buildRegExpFromDelimiters(this.props.delimiters);
@@ -319,8 +319,8 @@ class ReactTags extends Component {
       return;
     }
 
-    console.log('tag data', tag)
-    console.log('tags data', tags)
+    console.log("tag data", tag);
+    console.log("tags data", tags);
     const existingKeys = tags.map((tag1) => tag1.id);
     //const existingKeys = tags.map((tag) => tag.id.toLowerCase());
 
@@ -347,7 +347,7 @@ class ReactTags extends Component {
 
     // reset the state
     this.setState({
-      query: '',
+      query: "",
       selectionMode: false,
       selectedIndex: -1,
     });
@@ -432,7 +432,7 @@ class ReactTags extends Component {
 
     const tagInput = !this.props.readOnly ? (
       <div className={classNames.tagInput}>
-        <input
+        {/*<input
           ref={(input) => {
             this.textInput = input;
           }}
@@ -449,7 +449,10 @@ class ReactTags extends Component {
           id={inputId}
           maxLength={maxLength}
           value={this.props.inputValue}
-        />
+          style={{
+            width: "100px",
+          }}
+        />*/}
 
         <Suggestions
           query={query}
@@ -468,7 +471,7 @@ class ReactTags extends Component {
     ) : null;
 
     return (
-      <div className={ClassNames(classNames.tags, 'react-tags-wrapper')}>
+      <div className={ClassNames(classNames.tags, "react-tags-wrapper")}>
         {position === INPUT_FIELD_POSITIONS.TOP && tagInput}
         <div className={classNames.selected}>
           {tagItems}

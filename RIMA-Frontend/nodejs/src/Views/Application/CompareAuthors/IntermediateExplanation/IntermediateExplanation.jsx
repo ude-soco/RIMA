@@ -40,13 +40,11 @@ export default function IntermediateExplanation({classes, loading, similaritySco
     const values = Object.values(heat_map_data);
     let series = [];
 
-    // console.log(values)
     for (const i in names) {
       let keys = Object.keys(values[i]);
       let val = Object.values(values[i]);
       let data = []
       for (const j in keys) {
-        // console.log(keys[j])
         data.push({
           x: keys[j],
           y: val[j].toFixed(2)
@@ -54,7 +52,6 @@ export default function IntermediateExplanation({classes, loading, similaritySco
       }
       series.push({name: names[i], data: data});
     }
-    // console.log(series);
     setState({
       ...state,
       series: series,
