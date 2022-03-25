@@ -133,6 +133,8 @@ def __import_papers_for_user(user_id):
                     list(map(lambda p: p['name'], item.get("authors", []))))
             },
         )
+        # added to see the papers for user (Lamees)
+        print(" __import_papers_for_user function in tasks.py", item)    
     print("Papers import completed for {}".format(user.username))
 
 
@@ -223,7 +225,7 @@ def update_long_term_interest_model_for_user(user_id):
         'countdown': 30 * 60
     },
 )
-def import_user_data(user_id):
+def import_user_data(user_id): # it is excuted in the sign up 
     print("importing tweets")
     __import_tweets_for_user(user_id)
 

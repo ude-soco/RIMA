@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models # when using models --> each class represents table # LK
 
 
 class TaskLog(models.Model):
@@ -93,4 +93,5 @@ class TriggerTask(models.Model):
             job_map[self.task_type].delay(self.user_id)
         else:
             job_map[self.task_type].delay()
+        
         return super().save(*args, **kwargs)

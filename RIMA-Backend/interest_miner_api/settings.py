@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
-DEBUG = os.getenv('DJANGO_DEBUG', False)
-
+#DEBUG = os.getenv('DJANGO_DEBUG', False) #LK
+DEBUG = os.getenv('DJANGO_DEBUG', True) #LK
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 

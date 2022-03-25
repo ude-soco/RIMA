@@ -132,6 +132,7 @@ def generate_geo_code(tag):
 
 
 def get_recommended_tweets(tags):
+    print("tags", tags)
     user_interest_model_list = []  # creates a list of user interest model
     full_result = []
     for tag in tags:
@@ -142,7 +143,7 @@ def get_recommended_tweets(tags):
         language = tag.get("lang", None)
         if language is not None:
             extra_kwargs['lang'] = language
-        user_interest_model_list.append(tag["text"])
+        user_interest_model_list.append(tag["text"]) # this code does not include weight only keywords # LK
         response = API.search(
             q=tag["text"],
             tweet_mode="extended",
