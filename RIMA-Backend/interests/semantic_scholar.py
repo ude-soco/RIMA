@@ -74,6 +74,8 @@ class SemanticScholarAPI:
         :rtype: :class:`dict`
         '''
         data = {}
+        seprator = ','
+        query_fields = seprator.join(query)
         # url = https://api.semanticscholar.org/graph/v1/paper/search?query='peer assessment'+'user model'&fields=url,title,abstract,authors
         url = '{}?query={}&fields=url,title,abstract,authors&limit={}'.format(self.API_Search_URL, query, limit)
         if include_unknown_references:
