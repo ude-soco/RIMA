@@ -6,10 +6,10 @@ import Button from '@material-ui/core/Button';
 import { Typography } from '@mui/material';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import Seperator from './Components/Seperator';
+import BarChart from './Components/BarChart';
 
 // import SimplePopover from "./Components/SimplePopover";
 import { handleServerErrors } from "Services/utils/errorHandler";
-import CardContent from "@material-ui/core/CardContent";
 import {
   Modal,
   ModalHeader,
@@ -27,7 +27,7 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
-import Grid from "@material-ui/core/Grid";
+import { Grid } from "@material-ui/core";
 // import { calculate_percentage } from "../Twitter/TweetAndPeople/TweetUtilities/percentage";
 import classnames from "classnames";
 import TagSearch from "./TagSearch.js";
@@ -61,6 +61,19 @@ function InterestControlPanel({ tags }) {
   return (
     <Grid container rowSpacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
       {res}
+      <Grid item container xs={2} sm={3} md={4}>
+      <Grid
+        item container
+        style={{
+          backgroundColor: '#fff',
+          maxHeight: "40px",
+          borderRadius: "5px",
+          border:'1px solid gray',
+          justifyContent: "flex-end"
+        }}
+        className={`p-1 pt-0 Rounded text-white`}>
+          </Grid>
+      </Grid>
     </Grid>
   )
 }
@@ -77,7 +90,7 @@ export default class PublicationRecommendation extends Component {
       papers: [],
       savedPapers: [],
       weight: 1,
-      loading: false,
+      loading: true,
 
       //New States added by Yasmin for showing pie chart
       newPapers: [],
@@ -253,11 +266,15 @@ export default class PublicationRecommendation extends Component {
                     What-if?
                   </Typography >
                 </div>
+                <BarChart />
                 <div>
-                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg">
-                    <ModalHeader toggle={this.toggle}>What if?</ModalHeader>
+                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" className="WhatIfModal">
+                    <ModalHeader toggle={this.toggle}>
+                      <Seperator Label="What if?" Width="130" />
+                    </ModalHeader>
                     <ModalBody>
                       <InterestControlPanel tags={this.state.tags} />
+                      
                     </ModalBody>
 
                     <ModalFooter>
@@ -317,56 +334,7 @@ export default class PublicationRecommendation extends Component {
     );
   }
 }
-const Tabs = () => {
-  const [activeTab, setActiveTab] = React.useState("1");
 
-  const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab);
-  };
-  return (
-    <div>
-      <Nav tabs className="popover--tabs">
-        <NavItem className="cursor--pointer--2">
-          <NavLink
-            className={classnames({ active: activeTab === "1" })}
-            onClick={() => {
-              toggle("1");
-            }}
-          >
-            keywords weight
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            className={classnames({ active: activeTab === "2" })}
-            onClick={() => {
-              toggle("2");
-            }}
-          >
-            keywords Tweets
-          </NavLink>
-        </NavItem>
-      </Nav>
-
-      <TabContent activeTab={activeTab}>
-        <TabPane tabId="1">
-          <Row>
-            <Col sm="12">
-              <h4>Tab 1 Contents</h4>
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tabId="2">
-          <Row>
-            <Col sm="12">
-              <h4>Tab Tab2</h4>
-            </Col>
-          </Row>
-        </TabPane>
-      </TabContent>
-    </div>
-  );
-}
 
 
 
