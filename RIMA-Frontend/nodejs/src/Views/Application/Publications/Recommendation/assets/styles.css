@@ -105,9 +105,11 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   height: 80px;
   margin-right: 20px;
   margin-top: 10px;
-  display: inline-block;
+  display: flex;
+  align-items:center;
+  justify-content: center;
   text-align: center;
-  padding-top: 30px;
+  /* padding-top: 30px; */
   border-radius: 12px;
   border: 1px solid #303F9F;
   color: #303F9F;

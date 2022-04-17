@@ -6,7 +6,7 @@ import numpy as np
 from tweepy.parsers import JSONParser
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter
-from .utils import get_interest_similarity_score,get_single_interest_similarity_score
+from .utils import get_weighted_interest_similarity_score,get_single_interest_similarity_score
 from .semantic_scholar import SemanticScholarAPI
 from interests.update_interests import normalize
 
@@ -19,7 +19,7 @@ def get_recommended_papers(interests):
     user_interest_model_dict = {}  # creates a dictionary of user interest model
     paper_dict = {}
     
-    limit = 10 # number of papers to retrieve
+    limit = 15 # number of papers to retrieve
     for interest in interests: 
         user_interest_model_dict[interest['text']] = interest['weight'] 
         # e.x user_interest_model_dict = {'analytics': 5, 'peer assessment': 5, 'personalization': 5, 'theory': 5, 'recommender system': 5}
@@ -52,7 +52,7 @@ def get_recommended_papers(interests):
         user_interests_weights = list(user_interest_model_dict.values())
 
         # calculate similarity score
-        score = round((get_interest_similarity_score(
+        score = round((get_weighted_interest_similarity_score(
                 user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
         interest_score = 0
         interests_similarity = {}

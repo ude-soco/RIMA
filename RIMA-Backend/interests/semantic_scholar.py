@@ -73,7 +73,7 @@ class SemanticScholarAPI:
         :returns: data or empty :class:`dict` if not found.
         :rtype: :class:`dict`
         '''
-        seprator = ','
+        seprator = '+'
         query_fields= seprator.join(query) 
 
         data = {}

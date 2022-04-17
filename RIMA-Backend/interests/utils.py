@@ -15,7 +15,7 @@ from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 from interests.update_interests import update_interest_models, normalize
 
-from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_weighted_vectors_similarity,calculate_weighted_vectors_similarity_single_word
+from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity, calculate_weighted_vectors_similarity,calculate_weighted_vectors_similarity_single_word
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 
 
@@ -284,15 +284,11 @@ def get_weighted_interest_similarity_score(keyword_list_1,
 
 def get_interest_similarity_score(keyword_list_1,
                                   keyword_list_2,
-                                  weights_1,
-                                  weights_2,
                                   algorithm="WordEmbedding"): # note add the new embedding here #LK
     #print("keyword_list_1",keyword_list_1)#LK
     if algorithm == "WordEmbedding":
-        return calculate_weighted_vectors_similarity(keyword_list_1,
+        return calculate_similarity(keyword_list_1,
                                     keyword_list_2,
-                                    weights_1,
-                                    weights_2,
                                     embedding="Glove")
     else:
         return wikisim(keyword_list_1, keyword_list_2)
