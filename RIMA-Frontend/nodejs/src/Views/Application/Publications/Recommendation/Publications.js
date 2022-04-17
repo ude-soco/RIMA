@@ -7,9 +7,14 @@ import { Typography } from '@mui/material';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import Seperator from './Components/Seperator';
 
-// import SimplePopover from "./TweetAndPeople/TweetUtilities/SimplePopover";
+// import SimplePopover from "./Components/SimplePopover";
 import { handleServerErrors } from "Services/utils/errorHandler";
+import CardContent from "@material-ui/core/CardContent";
 import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   Card,
   CardHeader,
   Container,
@@ -22,20 +27,43 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
-import styled from "styled-components";
+import Grid from "@material-ui/core/Grid";
 // import { calculate_percentage } from "../Twitter/TweetAndPeople/TweetUtilities/percentage";
 import classnames from "classnames";
 import TagSearch from "./TagSearch.js";
-// import TwitterUsers from "./TweetAndPeople/TwitterUserCard/TwitterUsers.js";
 import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
-// import { COUNTRIES } from "./TweetAndPeople/countries";
-// import SavedTweetCard from "./TweetAndPeople/TweetCard/SavedTweetCard";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import { Spinner } from "react-bootstrap";
-import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
+import Slider from "./Components/Slider"
+import { Rowing } from "@material-ui/icons";
 
 
+function InterestControlPanel({ tags }) {
+  let res = []
+  if (tags.length > 0) {
+    tags.map((tag, index) => (
+      res.push(
+        <Slider
+          key={tag.text}
+          handleSearchButtonClick1='{props.handleSearchButtonClick1}'
+          changeTagWeight='{props.changeTagWeight}'
+          handleDelete='{props.handleDelete}'
+          name={tag.text}
+          color={tag.color}
+          weight={tag.weight}
+          index={index}
+        />
+
+      )
+    ))
+  }
+  return (
+    <Grid container rowSpacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
+      {res}
+    </Grid>
+  )
+}
 export default class PublicationRecommendation extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +86,10 @@ export default class PublicationRecommendation extends Component {
       percentage: {},
       isShowing: false,
       restTag: [],
-      test: 'test'
+
+      modal: false,
+      paperDetail: []
+
     };
     this.getRecommendedPapers = this.getRecommendedPapers.bind(this);
     // this.handleDeleteTag = this.handleDeleteTag.bind(this);
@@ -68,18 +99,18 @@ export default class PublicationRecommendation extends Component {
 
     //1this.changeHandler = this.changeHandler.bind(this);
   }
-  // changed by yasmin
-  // generateRandomRGB() {
-  //   var hexValues = [
-  //     "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e",
-  //   ];
-  //   var newColor = "";
-  //   var o = Math.round, r = Math.random, s = 255;
-  //   var newColor = 'rgb(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ')';
-  //   //TODO: create a blocked list (like white and light yellow)
-  //   //rgb(103, 245, 11)
-  //   return newColor;
-  // }
+
+  //What if modal - Jaleh:
+  showEnquiry = () => {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  };
+  toggle = (id) => {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  };
   //Hoda 
   generateRandomRGB(indexcolor) {
     var hexValues = [
@@ -169,7 +200,6 @@ export default class PublicationRecommendation extends Component {
           papers: res.data.data,
           papersLoaded: true,
         }));
-        console.log(this.state.papers)
       })
       .catch((err) => console.error("Error Getting Papers:", err));
 
@@ -187,74 +217,6 @@ export default class PublicationRecommendation extends Component {
   }
   render() {
     const { papers } = this.state;
-    // return (
-    //   <>
-    //     <Card className="bg-gradient-default1 shadow">
-    //       <CardHeader className="bg-transparent">
-    //         <Row className="align-items-center">
-    //           <Col>
-    //             <h2>Publications Recommendation</h2>
-    //           </Col>
-    //         </Row>
-    //       </CardHeader>
-    //       <Container>
-    //         <Row className="align-items-center">
-    //           <Col md={11}>
-    //             <fieldset className="paper-interests-box">
-
-    //               <legend style={{ fontSize: "12px" }}>Your Interest:</legend>
-    //               <Row className="align-items-center">
-    //                 <Col md={10}>
-    //                   <TagSearch
-    //                     tags={this.state.tags}
-    //                     newTags={this.state.newTags}
-    //                   />
-    //                 </Col>
-    //               </Row>
-    //             </fieldset>
-    //           </Col>
-    //           <Col md={1}>
-    //             <div className="what-if-btn">What-if?</div>
-    //             {/* <SimplePopover
-    //                     handleSearchButtonClick1={this.handleSearchButtonClick1}
-    //                     changeTagWeight={this.changeTagWeight2}
-    //                     handleAddition={this.handleTagAddition}
-    //                     handleDelete={this.handleDeleteTag}
-    //                     interest={this.state.tags}
-    //                     percentage={this.state.percentage}
-    //                     isAdded={this.state.isAdded}
-    //                     newTweets={this.state.newTweets}
-    //                     oldTweets={this.state.tweets}
-    //                     handleApplyChanges={this.handleApplyChanges}
-    //                     isShowing={this.state.isShowing}
-    //                     restOfTags={this.state.restTag}
-    //                   /> */}
-    //           </Col>
-    //         </Row>
-    //       </Container>
-    //       <Container style={{ paddingTop: "20px" }} id="paper-card-container">
-    //         {papers.length > 0 ? (
-    //           papers.map((paper) => {
-    //             if (this.state.loading === true) {
-    //               this.setState({
-    //                 loading: false,
-    //               });
-    //             }
-    //             return (
-    //               <PaperCard
-    //                 key={paper.paperId}
-    //                 paper={paper}
-    //                 keyword_tags={this.state.tags}
-    //                 reloadPapers={this.state.reloadPapers}
-
-    //               />
-    //             );
-    //           })
-    //         ) : null}
-    //       </Container>
-    //     </Card>
-    //     <ScrollTopWrapper />
-    //   </>)
     return (
       <>
         <Card className="bg-gradient-default1 shadow">
@@ -282,28 +244,28 @@ export default class PublicationRecommendation extends Component {
                       newTags={this.state.newTags}
                     />
                   </Col>
-                  
+
                 </Row>
               </fieldset>
               <Col md={1}>
-                <div id="WhatifButton">
+                <div id="WhatifButton" onClick={() => this.showEnquiry()}>
                   <Typography align="center" variant="caption" size="large">
                     What-if?
                   </Typography >
-                  {/* <SimplePopover
-                          handleSearchButtonClick1={this.handleSearchButtonClick1}
-                          changeTagWeight={this.changeTagWeight2}
-                          handleAddition={this.handleTagAddition}
-                          handleDelete={this.handleDeleteTag}
-                          interest={this.state.tags}
-                          percentage={this.state.percentage}
-                          isAdded={this.state.isAdded}
-                          newTweets={this.state.newTweets}
-                          oldTweets={this.state.tweets}
-                          handleApplyChanges={this.handleApplyChanges}
-                          isShowing={this.state.isShowing}
-                          restOfTags={this.state.restTag}
-                        /> */}
+                </div>
+                <div>
+                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg">
+                    <ModalHeader toggle={this.toggle}>What if?</ModalHeader>
+                    <ModalBody>
+                      <InterestControlPanel tags={this.state.tags} />
+                    </ModalBody>
+
+                    <ModalFooter>
+                      <Button color="primary" onClick={this.toggle}>
+                        Apply changes
+                      </Button>
+                    </ModalFooter>
+                  </Modal>
                 </div>
               </Col>
             </div>
@@ -334,6 +296,18 @@ export default class PublicationRecommendation extends Component {
                     />
                   );
                 })
+              ) : this.state.loading ? (
+                <div style={{ marginTop: "8px" }}>
+                  <h1 className="d-flex justify-content-center align-items-center">
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      size="lg"
+                      style={{ margin: "4px 4px 3px 0px" }}
+                    />
+                    Loading Publications.. please wait
+                  </h1>
+                </div>
               ) : null}
             </Container>
           </CardHeader>

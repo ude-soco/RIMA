@@ -180,37 +180,36 @@ def calculate_weighted_vectors_similarity_single_word(source_doc,
     
     def glove_vectorize_single_word(doc, word_weight, sum_weights):
         """Identify the vector values for each word in the given document"""
-
+        
         # this code to remove stopwords and seperate the keyphrase into words but group them together
         doc = [i.lower().split() for i in doc]
         word_list = []
         for w in doc:
-            w = [word for word in w if word not in stopwords.words('english')]
-            word_list.append(w)
+            word_list = [word for word in w if word not in stopwords.words('english')]
             # word_list = [['analytics'],['peer','assessment'],['personalization'],['theory'],['recommender','system']]
 
-        vec_list = []
         word_vecs = []
-        for word in word_list:
-            try:
-                vec = glove_model[word]
-                word_vecs.append(vec)
-            except KeyError:
-                pass
-        
+        # for word in word_list:
+        try:
+            word_vecs = glove_model[word_list]
+        except KeyError:
+            pass
+
         vector = np.mean(word_vecs, axis=0)
-        weighted_vector = word_weight * np.array(vector) #[x * weights[i] for x in vector] # multiply each element in the vector with the weight value
-        # summing all vectors of keywords into one vector
-        vector = np.sum(weighted_vector, axis=0)
-        # dividing by the sum of weights
-        weighted_average_vector = vector / sum_weights
-        return weighted_average_vector
+        return vector
+        # weighted_vector =  word_weight * np.array(vector) #[x * weights[i] for x in vector] # multiply each element in the vector with the weight value
+        # # dividing by the sum of weights
+        # weighted_average_vector = weighted_vector / sum_weights
+        # print('weighted_average_vector',weighted_average_vector)
+        # return weighted_average_vector
 
     if embedding == "Glove":
         source_vec = glove_vectorize_single_word(source_doc, source_weight,source_sum_weights)
-
         target_vec = glove_vectorize(target_doc,target_weights)
-        sim_score = cosine_sim(source_vec, target_vec)
+        sim_score = cosine_sim(source_vec, target_vec) 
+        print('sim_score',sim_score)
+        weighted_sim = sim_score * (source_weight/5)
+        print('weighted_sim',weighted_sim)
 
-        if sim_score > threshold:
-            return sim_score
+        if weighted_sim > threshold:
+            return weighted_sim
