@@ -19,11 +19,11 @@ TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 #TWITTER_ACCESS = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
 #TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 
-#AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-#AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
+AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
 
-AUTH = tweepy.OAuthHandler(os.environ.get("TWITTER_API_KEY"), os.environ.get("TWITTER_API_SECRET"))
-AUTH.set_access_token(os.environ.get("TWITTER_ACCESS"), os.environ.get("TWITTER_ACCESS_SECRET"))
+# AUTH = tweepy.OAuthHandler(os.environ.get("TWITTER_API_KEY"), os.environ.get("TWITTER_API_SECRET"))
+# AUTH.set_access_token(os.environ.get("TWITTER_ACCESS"), os.environ.get("TWITTER_ACCESS_SECRET"))
 
 API = tweepy.API(AUTH, parser=JSONParser())
 

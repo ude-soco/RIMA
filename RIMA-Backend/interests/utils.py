@@ -267,6 +267,21 @@ def generate_short_term_model(user_id, source):
         paper_candidates.update(used_in_calc=True)
 
 
+def get_weighted_interest_similarity_score(keyword_list_1,
+                                  keyword_list_2,
+                                  weights_1,
+                                  weights_2,
+                                  algorithm="WordEmbedding"): # note add the new embedding here #LK
+    #print("keyword_list_1",keyword_list_1)#LK
+    if algorithm == "WordEmbedding":
+        return calculate_weighted_vectors_similarity(keyword_list_1,
+                                    keyword_list_2,
+                                    weights_1,
+                                    weights_2,
+                                    embedding="Glove")
+    else:
+        return wikisim(keyword_list_1, keyword_list_2)
+
 def get_interest_similarity_score(keyword_list_1,
                                   keyword_list_2,
                                   weights_1,

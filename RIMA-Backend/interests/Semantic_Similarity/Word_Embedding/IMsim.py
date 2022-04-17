@@ -180,7 +180,6 @@ def calculate_weighted_vectors_similarity_single_word(source_doc,
     
     def glove_vectorize_single_word(doc, word_weight, sum_weights):
         """Identify the vector values for each word in the given document"""
-
         # this code to remove stopwords and seperate the keyphrase into words but group them together
         doc = [i.lower().split() for i in doc]
         word_list = []
