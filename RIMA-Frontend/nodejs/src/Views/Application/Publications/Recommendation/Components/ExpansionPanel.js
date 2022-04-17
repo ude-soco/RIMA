@@ -7,6 +7,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Button as ButtonMUI, Grid, Item } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ReplaceableCloudChart from '../Components/ReplaceableCloudChart';
+import { Card as ReactstrapCard, CardText, CardBody,  CardTitle, CardSubtitle } from 'reactstrap';
 
 
 export default function ExpansionPanel( props ) {
@@ -85,7 +86,7 @@ export default function ExpansionPanel( props ) {
                                 <Accordion.Collapse eventKey="3">
                                     <Card.Body>
                                         <Seperator Label="How the system works?" Width="200"/>
-                                        <Grid container spacing={1}>
+                                        <Grid container spacing={0}>
                                             <Grid item xs={4}>
                                                 <div class="table-responsive-sm">
                                                     <table class="table">
@@ -123,7 +124,14 @@ export default function ExpansionPanel( props ) {
                                                 </div>
                                             </Grid>
                                             <Grid item xs={8}>
-                                                SLider
+                                                <ReactstrapCard style={{  boxShadow: "none"}}>
+                                                    <CardBody>
+                                                        <CardTitle>Card title</CardTitle>
+                                                        <CardSubtitle>Card subtitle</CardSubtitle>
+                                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
+                                                        <Button>Button</Button>
+                                                    </CardBody>
+                                                </ReactstrapCard>
                                             </Grid>
                                         </Grid>
                                     </Card.Body>
