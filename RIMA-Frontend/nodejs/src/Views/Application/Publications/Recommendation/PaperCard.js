@@ -228,7 +228,7 @@ export default function PaperCard(props) {
                             {/* </a> */}
 
                         </Col>
-                        <ExpansionPanel />
+                        <ExpansionPanel  tags={keyword_tags}/>
                     </div>
                 </>
             ) : (

@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { toast } from "react-toastify";
-import IconButton from "@material-ui/core/IconButton";
-
 import Button from '@material-ui/core/Button';
-import { Typography } from '@mui/material';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import Seperator from './Components/Seperator';
 import BarChart from './Components/BarChart';
+import SettingsIcon from '@mui/icons-material/Settings';
+import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
+import {Button as ButtonMUI, Grid, IconButton, Typography} from "@material-ui/core";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+
+
 
 // import SimplePopover from "./Components/SimplePopover";
 import { handleServerErrors } from "Services/utils/errorHandler";
@@ -27,7 +30,6 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
-import { Grid } from "@material-ui/core";
 // import { calculate_percentage } from "../Twitter/TweetAndPeople/TweetUtilities/percentage";
 import classnames from "classnames";
 import TagSearch from "./TagSearch.js";
@@ -99,9 +101,12 @@ export default class PublicationRecommendation extends Component {
       percentage: {},
       isShowing: false,
       restTag: [],
-
       modal: false,
-      paperDetail: []
+      paperDetail: [],
+      //New States added by Tannaz
+      whatWordCloud:false,
+      whatModal:false,
+
 
     };
     this.getRecommendedPapers = this.getRecommendedPapers.bind(this);
@@ -119,9 +124,23 @@ export default class PublicationRecommendation extends Component {
       modal: !this.state.modal,
     });
   };
-  toggle = (id) => {
+  toggle = () => {
     this.setState({
       modal: !this.state.modal,
+    });
+  };
+  //What modal - Tannaz:
+  showWhatEnquiry = () => {
+    this.setState({
+      whatWordCloud: true,
+      whatModal: !this.state.whatModal,
+
+    });
+  };
+  whatToggle = () => {
+    this.setState({
+      whatModal: !this.state.whatModal,
+
     });
   };
   //Hoda 
@@ -212,6 +231,7 @@ export default class PublicationRecommendation extends Component {
           loading: true,
           papers: res.data.data,
           papersLoaded: true,
+
         }));
       })
       .catch((err) => console.error("Error Getting Papers:", err));
@@ -244,7 +264,7 @@ export default class PublicationRecommendation extends Component {
               <fieldset className="paper-interests-box">
                 <legend
                   style={{
-                    fontSize: "12px",
+                    fontSize: "16px",
                     fontWeight: "bold",
                   }}
                 >
@@ -268,7 +288,7 @@ export default class PublicationRecommendation extends Component {
                 </div>
                 <BarChart />
                 <div>
-                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" className="WhatIfModal">
+                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" className="modalCSS">
                     <ModalHeader toggle={this.toggle}>
                       <Seperator Label="What if?" Width="130" />
                     </ModalHeader>
@@ -287,13 +307,63 @@ export default class PublicationRecommendation extends Component {
               </Col>
             </div>
             <div className="d-flex align-items-center ml-4 mt-2">
-              <Button variant="string">
+              <Button variant="string" onClick={() => this.showWhatEnquiry()}>
                 <CloudQueueIcon color="action" fontSize="small" />
                 <Typography align="center" variant="subtitle2" className="ml-2">
                   Interests Sources
                 </Typography >
               </Button>
             </div>
+            {/* What Modal */}
+            <div>
+              <Modal isOpen={this.state.whatModal} toggle={this.whatToggle} size="lg" className="modalCSS">
+                {
+                  this.state.whatWordCloud ?
+                  (<>
+                    <ModalHeader toggle={this.whatToggle}>
+                      <Seperator Label="What does the system know?" Width="300" />
+                    </ModalHeader>
+                    <ModalBody>
+                      <Typography align="left" variant="subtitle2" className="ml-3">
+                      Your Top Interests have been chosen from this wordcloud:
+                      </Typography >
+                      <CloudChart/>
+                    </ModalBody>
+                    <ModalFooter>
+                      <ButtonMUI variant="string" onClick={() => {this.setState({whatWordCloud: false})}}>
+                        <SettingsIcon color="action" fontSize="small" /> 
+                        <Typography align="center" variant="subtitle2">
+                            How? 
+                        </Typography >
+                      </ButtonMUI>
+                    </ModalFooter>
+                  </>)
+                  :
+                  (
+                    <>
+                      <ModalHeader toggle={this.whatToggle}>
+                        <Seperator Label="How your interests are extracted?" Width="300" />
+                      </ModalHeader>
+                      <ModalBody>
+                        <ButtonMUI variant="string"  onClick={() => { this.setState({whatWordCloud: true}) }}>
+                            <ArrowBackIosNewIcon color="action" fontSize="small" /> 
+                            <Typography align="center" variant="subtitle2">
+                                Back 
+                            </Typography >
+                        </ButtonMUI>
+                        <Typography align="left" variant="subtitle2" className="ml-3 mt-4">
+                          Alptug Flowchart
+                        </Typography >
+                      </ModalBody>
+                      <ModalFooter>
+                      </ModalFooter>
+                    </>
+                  )
+                }
+
+              </Modal>
+            </div>
+
             <Seperator Label="Publications" Width="130" />
             {/* end Tannaz */}
             <Container style={{ paddingTop: "20px" }} id="paper-card-container">

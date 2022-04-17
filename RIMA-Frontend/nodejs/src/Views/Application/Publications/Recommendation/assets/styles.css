@@ -96,8 +96,9 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   border: 1px solid rgb(140, 140, 137, 0.6);
   padding-left: 20px;
 }
-.WhatIfModal h5{
+.modalCSS h5{
   width: 100%;
+  margin-top: 10px;
 }
 /* Tannaz */
 #WhatifButton {
@@ -133,6 +134,92 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   text-align: center;
   font-size: 18px;
 
+}
+
+.box {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px 10px;
+  overflow: hidden; }
+
+.box-item {
+  display: flex;
+  position: relative;
+  float: left;
+  width: 50% ;
+  height: 80px;
+  line-height: 150%;
+  margin-right: 0px;
+  padding: 0px 5px;
+  border-radius: 4px; 
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+  .box-item:before {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top:15px;
+    height: 40px;
+    width: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+     }
+  .box-item:after {
+    content: '';
+    position: absolute;
+    left: -1px;
+    height: 40px;
+    width: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    }
+  .box-item:first-child:after {
+    display: none; }
+   .box-item:last-child {
+    margin-right: 0; } 
+    /* .box-item:last-child:before {
+      display: none; }  */
+.interestsBox{
+  background-color:rgb(98, 98, 98);
+}
+.interestsBox:before {
+  border-left: 10px solid rgb(98, 98, 98);
+}
+.interestsBox:after{
+  border-left: 10px solid rgb(98, 98, 98);
+}
+.dataBox{
+  background-color:#29a362;
+}
+.dataBox:before {
+  border-left: 10px solid #29a362;
+}
+.dataBox:after{
+  border-left: 10px solid #29a362;
+}
+.embeddingsBox{
+  background-color:rgb(168, 70, 161);
+}
+.embeddingsBox:before {
+  border-left: 10px solid rgb(168, 70, 161);
+}
+.embeddingsBox:after{
+  border-left: 10px solid rgb(168, 70, 161);
+}
+.similarityBox{
+  background-color:rgb(255, 178, 55);
+}
+.similarityBox:before {
+  border-left: 10px solid rgb(255, 178, 55);
+}
+.similarityBox:after{
+  border-left: 10px solid rgb(255, 178, 55);
+}
+.arrowBox{
+  color: white;
+  margin:5px;
 }
 
 /* end Tannaz */

@@ -4,11 +4,13 @@ import { Accordion, Card, Button } from "react-bootstrap";
 import Seperator from './Seperator';
 import { Typography } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { Button as ButtonMUI } from '@mui/material';
+import { Button as ButtonMUI, Grid, Item } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ReplaceableCloudChart from '../Components/ReplaceableCloudChart';
 
 
-export default function ExpansionPanel() {
+export default function ExpansionPanel( props ) {
+
     const [whyShow, setWhyShow] = useState(false);
     const [whatIfShow, setWhatIfShow] = useState(false);
 
@@ -68,15 +70,62 @@ export default function ExpansionPanel() {
                                     </Accordion.Toggle>
                                 </Card.Header>
                                 <div>
-                                    ----- Visualizations Why?
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={8}>
+                                            <div style={{width:"90%"}}>
+                                                <ReplaceableCloudChart tags={props}/>
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            Barchart
+                                        </Grid>
+                                    </Grid>
                                 </div>
 
                                 <Accordion.Collapse eventKey="3">
                                     <Card.Body>
                                         <Seperator Label="How the system works?" Width="200"/>
-                                        <div>
-                                            ----- Visualizations How?
-                                        </div>
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={4}>
+                                                <div class="table-responsive-sm">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr class="box">
+                                                                <td class="box-item interestsBox">
+                                                                    <Typography align="left" variant="subtitle2" className="arrowBox">
+                                                                        Interests<br />Keywords
+                                                                    </Typography >
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="box">
+                                                                <td class="box-item dataBox">
+                                                                    <Typography align="left" variant="subtitle2" className="arrowBox">
+                                                                        Data<br />Preprocess
+                                                                    </Typography >
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="box ">
+                                                                <td class="box-item embeddingsBox">
+                                                                    <Typography align="left" variant="subtitle2" className="arrowBox">
+                                                                        Embeddings<br />Generation
+                                                                    </Typography >
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="box">
+                                                                <td class="box-item similarityBox">
+                                                                    <Typography align="left" variant="subtitle2" className="arrowBox">
+                                                                        Similarity<br />Calculation
+                                                                    </Typography >
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                SLider
+                                            </Grid>
+                                        </Grid>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
