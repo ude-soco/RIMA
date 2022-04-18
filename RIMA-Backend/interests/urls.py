@@ -81,4 +81,7 @@ urlpatterns = [
     path('getsimilarity/', views.similartweets.as_view()),
     #for demo
     #path('updateprinttext/',views.printHelloBackend.as_view())
+     #Jaleh
+    path('recommended-papers', views.recommended_papers),
+#     path('papers', views.PaperView.as_view()),
 ]

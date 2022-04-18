@@ -83,7 +83,7 @@ export default function TweetCard(props) {
         }
       }
     }
-
+console.log('merged',merged)
     merged.forEach((element) => {
       modified_text = keywordHighlighter(
         element.name,
@@ -166,15 +166,16 @@ export default function TweetCard(props) {
           data: data,
         });
       }
+      // console.log(seriesData)
       setSeriesData(seriesData);
     }
   };
 
   const HideHandler = () => {
-    timer: setTimeout(() => {
-      props.deleteTweet(props.tweet);
-      setState({ hide: false });
-    }, 10000),
+    // timer: setTimeout(() => {
+    //   props.deleteTweet(props.tweet);
+    //   setState({ hide: false });
+    // }, 10000),
       setHide(true);
     countDownFun();
   };

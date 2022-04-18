@@ -1,0 +1,181 @@
+.bg-second{
+  background-color: rgba(132, 200, 141, 0.2);
+}
+
+#paper-card-container .card .card-body .card-text a div .highlight-keyword {
+  font-weight: bold;
+}
+
+#paper-card-container .color-link {
+  color: #324cdd;
+}
+
+#paper-card-container .card {
+  padding-left: 3em;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+#paper-card-container .card .vline {
+  position: absolute;
+  height: 100%;
+  width: 30px;
+  left: 2%;
+  font-size: 10px;
+  color: white
+}
+
+#paper-card-container .card .vline div{
+  padding: 5px;
+}
+
+#paper-card-container .card .info-icon {
+  position: absolute;
+  bottom: 4%;
+  right: 2%;
+}
+
+#paper-card-container .card .info-icon a svg {
+  width: 30px;
+  height: 30px;
+}
+
+#paper-card-container .card .options-icon {
+  position: absolute;
+  right: 3%;
+  top: 3%;
+  width: 20px;
+}
+
+#paper-card-container .card .card-body {
+  padding: 1em;
+}
+
+#paper-card-container .card .twitter-action-icons {
+  padding-bottom: 0.5em;
+}
+
+#paper-card-container .card .twitter-action-icons small {
+  margin-left: 9%;
+}
+
+#paper-card-container .card .twitter-action-icons small svg {
+  width: 30px;
+  height: 30px;
+}
+
+
+
+#paper-card-container .card .paper-title {
+  color: #626262;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 18px;
+}
+#paper-card-container .card .paper-subtitle {
+  font-weight: lighter;
+  font-style: italic;
+  color: #626262;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 15px;
+}
+
+#paper-card-container .card .card-body .paper-badge {
+  background-color: #e1e1e1;
+  border-radius: 5px;
+  border: 1px solid #626262;
+  color: #626262;
+  font-size: 12px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+#paper-card-container .card .card-body .paper-actions {
+    margin-top: 15px;
+    padding-right: 0px;
+}
+
+/* start Tannaz */
+#paper-card-container .card .card-body .paper-actions-btn {
+           
+              
+  color: #303F9F;
+  font-size: 12px;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+
+.paper-actions-btn:hover {
+  border-bottom: 1px solid #5d638c;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+/* end Tannaz */
+
+#paper-card-container .card .card-text {
+  font-size: 1.1em;
+  padding-left: 55px;
+  padding-top: 0;
+}
+
+.saved-paper-container {
+  padding-left: 0 !important;
+  padding-right: 55px !important;
+}
+/*Tooltip*/
+.tooltipA {
+  outline: none;
+}
+.tooltipA strong {
+  line-height: 10px;
+}
+.tooltipA:hover {
+  text-decoration: none;
+}
+.tooltipA span {
+  z-index: 10;
+  display: none;
+  padding: 14px 20px;
+  margin-top: -46px;
+  margin-left: -80px;
+  max-width: 300px;
+  line-height: 16px;
+}
+.tooltipA:hover span {
+  display: inline;
+  position: absolute;
+  color: #111;
+  border: 1px solid rgb(138, 137, 137);
+  background: #eeeeed;
+  font-size: 12px;
+}
+.callout {
+  z-index: 20;
+  position: absolute;
+  top: 30px;
+  border: 0;
+  left: 0 px;
+}
+/*CSS3 extras*/
+.tooltipA span {
+  border-radius: 4px;
+  /*box-shadow: 5px 5px 8px #ccc;*/
+}
+
+
+.truncated-text{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: justify;
+}

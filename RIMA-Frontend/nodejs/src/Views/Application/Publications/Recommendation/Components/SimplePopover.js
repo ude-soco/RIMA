@@ -3,11 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Popover from "@material-ui/core/Popover";
 import { Row, Col } from "reactstrap";
 import Button from "@material-ui/core/Button";
-import InterestCard from "./InterestCard";
+// import InterestCard from "./InterestCard";
 import CardActions from "@material-ui/core/CardActions";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import PieChartComponent from "../../TweetCharts/Pie";
-import SimilarityCard from "../TweetUtilities/SimilarityCard";
+// import PieChartComponent from "../../TweetCharts/Pie";
+// import SimilarityCard from "../TweetUtilities/SimilarityCard";
 import Grid from "@material-ui/core/Grid";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -88,17 +88,19 @@ export default function SimplePopover(props) {
               ) : (
                 <Grid>
                   <Grid item xs>
-                    <PieChartComponent
+                    Chart
+                    {/* <PieChartComponent
                       interest={props.interest}
                       percentage={props.percentage}
-                    />
+                    /> */}
                   </Grid>
                   <Grid>
-                    <SimilarityCard
+                  SimilarityCard
+                    {/* <SimilarityCard
                       newTweets={props.newTweets}
                       oldTweets={props.tweets}
                       style={{ marginBottom: "5px", marginRight: "10px" }}
-                    />
+                    /> */}
                     <CardActions>
                       <Button
                         onClick={() => {
@@ -117,7 +119,8 @@ export default function SimplePopover(props) {
             </Container>
           </Col>
           <Col xs={4}>
-            <InterestCard
+          InterestCard
+            {/* <InterestCard
               handleSearchButtonClick1={props.handleSearchButtonClick1}
               restOfTags={props.restOfTags}
               changeTagWeight={props.changeTagWeight}
@@ -125,7 +128,7 @@ export default function SimplePopover(props) {
               interest={props.interest}
               handleAddition={props.handleAddition}
               isShowing={props.isShowing}
-            />
+            /> */}
           </Col>
         </Row>
       </Popover>
