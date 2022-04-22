@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import { toast } from "react-toastify";
-import Button from '@material-ui/core/Button';
-import CloudQueueIcon from '@mui/icons-material/CloudQueue';
-import Seperator from './Components/Seperator';
-import BarChart from './Components/BarChart';
-import SettingsIcon from '@mui/icons-material/Settings';
+import Button from "@material-ui/core/Button";
+import CloudQueueIcon from "@mui/icons-material/CloudQueue";
+import Seperator from "./Components/Seperator";
+import BarChart from "./Components/BarChart";
+import SettingsIcon from "@mui/icons-material/Settings";
 import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
-import {Button as ButtonMUI, Grid, IconButton, Typography} from "@material-ui/core";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-
-
+import {
+  Button as ButtonMUI,
+  Grid,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 // import SimplePopover from "./Components/SimplePopover";
 import { handleServerErrors } from "Services/utils/errorHandler";
@@ -37,47 +40,46 @@ import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import { Spinner } from "react-bootstrap";
-import Slider from "./Components/Slider"
+import Slider from "./Components/Slider";
 import { Rowing } from "@material-ui/icons";
 
-
 function InterestControlPanel({ tags }) {
-  let res = []
+  let res = [];
   if (tags.length > 0) {
-    tags.map((tag, index) => (
+    tags.map((tag, index) =>
       res.push(
         <Slider
           key={tag.text}
-          handleSearchButtonClick1='{props.handleSearchButtonClick1}'
-          changeTagWeight='{props.changeTagWeight}'
-          handleDelete='{props.handleDelete}'
+          handleSearchButtonClick1="{props.handleSearchButtonClick1}"
+          changeTagWeight="{props.changeTagWeight}"
+          handleDelete="{props.handleDelete}"
           name={tag.text}
           color={tag.color}
           weight={tag.weight}
           index={index}
         />
-
       )
-    ))
+    );
   }
   return (
     <Grid container rowSpacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
       {res}
       <Grid item container xs={2} sm={3} md={4}>
-      <Grid
-        item container
-        style={{
-          backgroundColor: '#fff',
-          maxHeight: "40px",
-          borderRadius: "5px",
-          border:'1px solid gray',
-          justifyContent: "flex-end"
-        }}
-        className={`p-1 pt-0 Rounded text-white`}>
-          </Grid>
+        <Grid
+          item
+          container
+          style={{
+            backgroundColor: "#fff",
+            maxHeight: "40px",
+            borderRadius: "5px",
+            border: "1px solid gray",
+            justifyContent: "flex-end",
+          }}
+          className={`p-1 pt-0 Rounded text-white`}
+        ></Grid>
       </Grid>
     </Grid>
-  )
+  );
 }
 export default class PublicationRecommendation extends Component {
   constructor(props) {
@@ -104,10 +106,8 @@ export default class PublicationRecommendation extends Component {
       modal: false,
       paperDetail: [],
       //New States added by Tannaz
-      whatWordCloud:false,
-      whatModal:false,
-
-
+      whatWordCloud: false,
+      whatModal: false,
     };
     this.getRecommendedPapers = this.getRecommendedPapers.bind(this);
     // this.handleDeleteTag = this.handleDeleteTag.bind(this);
@@ -134,16 +134,14 @@ export default class PublicationRecommendation extends Component {
     this.setState({
       whatWordCloud: true,
       whatModal: !this.state.whatModal,
-
     });
   };
   whatToggle = () => {
     this.setState({
       whatModal: !this.state.whatModal,
-
     });
   };
-  //Hoda 
+  //Hoda
   generateRandomRGB(indexcolor) {
     var hexValues = [
       "9B59B6",
@@ -155,7 +153,7 @@ export default class PublicationRecommendation extends Component {
       "51EED4",
       "EDA043",
       "c39797",
-      "7a9097"
+      "7a9097",
     ];
 
     return "#" + hexValues[indexcolor];
@@ -231,22 +229,20 @@ export default class PublicationRecommendation extends Component {
           loading: true,
           papers: res.data.data,
           papersLoaded: true,
-
         }));
       })
       .catch((err) => console.error("Error Getting Papers:", err));
-
   };
 
   getTagColorByName(tagName) {
     const { tags } = this.state;
-    const color = tags.find(tag => tag.text === tagName).color
-    return color
+    const color = tags.find((tag) => tag.text === tagName).color;
+    return color;
   }
   componentDidMount() {
     this.getInterests().then(() => {
       this.getRecommendedPapers();
-    })
+    });
   }
   render() {
     const { papers } = this.state;
@@ -277,24 +273,27 @@ export default class PublicationRecommendation extends Component {
                       newTags={this.state.newTags}
                     />
                   </Col>
-
                 </Row>
               </fieldset>
               <Col md={1}>
                 <div id="WhatifButton" onClick={() => this.showEnquiry()}>
                   <Typography align="center" variant="caption" size="large">
                     What-if?
-                  </Typography >
+                  </Typography>
                 </div>
-                <BarChart />
+                {/* <BarChart /> */}
                 <div>
-                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" className="modalCSS">
+                  <Modal
+                    isOpen={this.state.modal}
+                    toggle={this.toggle}
+                    size="lg"
+                    className="modalCSS"
+                  >
                     <ModalHeader toggle={this.toggle}>
                       <Seperator Label="What if?" Width="130" />
                     </ModalHeader>
                     <ModalBody>
                       <InterestControlPanel tags={this.state.tags} />
-                      
                     </ModalBody>
 
                     <ModalFooter>
@@ -311,56 +310,35 @@ export default class PublicationRecommendation extends Component {
                 <CloudQueueIcon color="action" fontSize="small" />
                 <Typography align="center" variant="subtitle2" className="ml-2">
                   Interests Sources
-                </Typography >
+                </Typography>
               </Button>
             </div>
             {/* What Modal */}
             <div>
-              <Modal isOpen={this.state.whatModal} toggle={this.whatToggle} size="lg" className="modalCSS">
-                {
-                  this.state.whatWordCloud ?
-                  (<>
-                    <ModalHeader toggle={this.whatToggle}>
-                      <Seperator Label="What does the system know?" Width="300" />
-                    </ModalHeader>
-                    <ModalBody>
-                      <Typography align="left" variant="subtitle2" className="ml-3">
-                      Your Top Interests have been chosen from this wordcloud:
-                      </Typography >
-                      <CloudChart/>
-                    </ModalBody>
-                    <ModalFooter>
-                      <ButtonMUI variant="string" onClick={() => {this.setState({whatWordCloud: false})}}>
+              <Modal
+                isOpen={this.state.whatModal}
+                toggle={this.whatToggle}
+                size="lg"
+                className="modalCSS"
+              >
+                <ModalHeader toggle={this.whatToggle}>
+                  <Seperator Label="What does the system know?" Width="300" />
+                </ModalHeader>
+                <ModalBody>
+                  <Typography align="left" variant="subtitle2" className="ml-3">
+                    Your Top Interests have been chosen from this wordcloud:
+                  </Typography>
+                  <CloudChart />
+                </ModalBody>
+                <ModalFooter>
+                  {/* is deactivated until the interest profile part is done -> then redirect this button to interest profile */}
+                  {/* <ButtonMUI variant="string" onClick={() => {this.setState({whatWordCloud: false})}}>
                         <SettingsIcon color="action" fontSize="small" /> 
                         <Typography align="center" variant="subtitle2">
                             How? 
                         </Typography >
-                      </ButtonMUI>
-                    </ModalFooter>
-                  </>)
-                  :
-                  (
-                    <>
-                      <ModalHeader toggle={this.whatToggle}>
-                        <Seperator Label="How your interests are extracted?" Width="300" />
-                      </ModalHeader>
-                      <ModalBody>
-                        <ButtonMUI variant="string"  onClick={() => { this.setState({whatWordCloud: true}) }}>
-                            <ArrowBackIosNewIcon color="action" fontSize="small" /> 
-                            <Typography align="center" variant="subtitle2">
-                                Back 
-                            </Typography >
-                        </ButtonMUI>
-                        <Typography align="left" variant="subtitle2" className="ml-3 mt-4">
-                          Alptug Flowchart
-                        </Typography >
-                      </ModalBody>
-                      <ModalFooter>
-                      </ModalFooter>
-                    </>
-                  )
-                }
-
+                      </ButtonMUI> */}
+                </ModalFooter>
               </Modal>
             </div>
 
@@ -404,8 +382,3 @@ export default class PublicationRecommendation extends Component {
     );
   }
 }
-
-
-
-
-
