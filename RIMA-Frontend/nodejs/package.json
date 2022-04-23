@@ -14,8 +14,8 @@
     "url": ""
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --max_old_space_size=4096 start",
+    "build": "react-scripts --max_old_space_size=4096 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
@@ -52,6 +52,7 @@
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.3",
     "classnames": "2.2.6",
+    "cytoscape": "^3.21.1",
     "d3": "^5.5.0",
     "highcharts": "^9.3.0",
     "highcharts-react-official": "^3.1.0",
@@ -66,6 +67,7 @@
     "react-bootstrap": "^1.4.3",
     "react-chartjs-2": "^2.9.0",
     "react-cool-tabs": "^1.1.6",
+    "react-cytoscapejs": "^1.2.1",
     "react-d3-graph": "^2.5.0",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^3.0.2",
