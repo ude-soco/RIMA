@@ -1,0 +1,240 @@
+.cursor--pointer {
+  cursor: pointer;
+}
+
+div#tag-search-container {
+  border: 1px solid rgb(140, 140, 137, 0.6);
+  padding-top: 5px;
+  width: 85%;
+  border-radius: 25 !important;
+}
+
+div.ReactTags__tags {
+  position: relative;
+}
+
+/* Styles for the input */
+div.ReactTags__tagInput {
+  width: 200px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+div.ReactTags__tagInput input.ReactTags__tagInputField,
+div.ReactTags__tagInput input.ReactTags__tagInputField:focus {
+  height: 31px;
+  margin: 0;
+  font-size: 12px;
+  width: 100%;
+  border: 1px solid #eee;
+  padding: 0 4px;
+}
+
+/* Styles for selected tags */
+/* div.ReactTags__selected span.ReactTags__tag::before {
+      content: "<i class='far fa-ellipsis-v'></i>";
+      width: 15px;
+      font-size: 10px;
+  }
+   */
+div.ReactTags__selected span.ReactTags__tag {
+  border: 1px solid #ddd;
+  color: #000;
+  font-weight: bold;
+  background: #eee;
+  font-size: 14px;
+  display: inline-block;
+  padding: 5px;
+  margin: 5px 5px;
+  cursor: move;
+  border-radius: 2px;
+  background-color: rgb(94, 114, 228, 0.6);
+}
+
+div.ReactTags__selected a.ReactTags__remove {
+  color: white;
+  font-weight: 500;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/* Styles for suggestions */
+div.ReactTags__suggestions {
+  position: absolute;
+}
+
+div.ReactTags__suggestions ul {
+  list-style-type: none;
+  box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
+  background: white;
+  width: 200px;
+}
+
+div.ReactTags__suggestions li {
+  border-bottom: 1px solid #ddd;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+div.ReactTags__suggestions li mark {
+  text-decoration: underline;
+  background: none;
+  font-weight: 600;
+}
+
+div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
+  background: #b7cfe0;
+  cursor: pointer;
+}
+
+.paper-interests-box {
+  width: 100%;
+  margin-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  border-radius: 12px;
+  border: 1px solid rgb(140, 140, 137, 0.6);
+  padding-left: 20px;
+}
+.modalCSS h5{
+  width: 100%;
+  margin-top: 10px;
+}
+/* Tannaz */
+#WhatifButton {
+  width: 100%;
+  height: 80px;
+  margin-right: 20px;
+  margin-top: 10px;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  text-align: center;
+  /* padding-top: 30px; */
+  border-radius: 12px;
+  border: 1px solid #303F9F;
+  color: #303F9F;
+  transition: 0.3s;
+}
+
+#WhatifButton:hover {
+  background-color: #303F9F;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.Seperator {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 95%;
+  border-bottom: 1px solid rgb(129, 129, 129);
+  text-align: center;
+  font-size: 18px;
+
+}
+
+.box {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px 10px;
+  overflow: hidden; }
+
+.box-item {
+  display: flex;
+  position: relative;
+  float: left;
+  width: 50% ;
+  height: 80px;
+  line-height: 150%;
+  margin-right: 0px;
+  padding: 0px 5px;
+  border-radius: 4px; 
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+  .box-item:before {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top:15px;
+    height: 40px;
+    width: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+     }
+  .box-item:after {
+    content: '';
+    position: absolute;
+    left: -1px;
+    height: 40px;
+    width: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    }
+  .box-item:first-child:after {
+    display: none; }
+   .box-item:last-child {
+    margin-right: 0; } 
+    /* .box-item:last-child:before {
+      display: none; }  */
+.interestsBox{
+  background-color:rgb(98, 98, 98);
+}
+.interestsBox:before {
+  border-left: 10px solid rgb(98, 98, 98);
+}
+.interestsBox:after{
+  border-left: 10px solid rgb(98, 98, 98);
+}
+.dataBox{
+  background-color:#29a362;
+}
+.dataBox:before {
+  border-left: 10px solid #29a362;
+}
+.dataBox:after{
+  border-left: 10px solid #29a362;
+}
+.embeddingsBox{
+  background-color:rgb(168, 70, 161);
+}
+.embeddingsBox:before {
+  border-left: 10px solid rgb(168, 70, 161);
+}
+.embeddingsBox:after{
+  border-left: 10px solid rgb(168, 70, 161);
+}
+.similarityBox{
+  background-color:rgb(255, 178, 55);
+}
+.similarityBox:before {
+  border-left: 10px solid rgb(255, 178, 55);
+}
+.similarityBox:after{
+  border-left: 10px solid rgb(255, 178, 55);
+}
+.arrowBox{
+  color: white;
+  margin:5px;
+}
+
+
+
+/* end Tannaz */
+
+
+.paper-interests-box legend {
+  width: auto;
+  margin-left: 20px;
+  padding: 0px 10px;
+}
+
+.what-if-btn {
+  border: 1px solid #172B4D;
+  border-radius: 10px;
+  padding: 10px;
+}

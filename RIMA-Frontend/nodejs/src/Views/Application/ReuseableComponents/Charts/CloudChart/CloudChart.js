@@ -222,7 +222,7 @@ export default class CloudChart extends Component {
           </div>
         ) : this.state.isData ? (
           <>
-            <div style={{height: "500px", width: "100%"}}>
+            <div style={{height: "350px", width: "100%", marginTop:"30px", marginBottom:"10px"}}>
               <ReactWordcloud
                 options={options}
                 callbacks={callbacks}

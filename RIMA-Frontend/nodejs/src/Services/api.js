@@ -539,6 +539,22 @@ class RestAPI {
       },
     }).then((res) => res);
   }
+  
+  //Publication Recommendation
+  //Jaleh
+  static extractPapersFromTags(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/recommended-papers`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
 }
 
 
