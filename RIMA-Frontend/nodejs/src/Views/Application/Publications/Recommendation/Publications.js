@@ -286,7 +286,7 @@ export default class PublicationRecommendation extends Component {
                     What-if?
                   </Typography >
                 </div>
-                <BarChart />
+                {/* <BarChart /> */}
                 <div>
                   <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" className="modalCSS">
                     <ModalHeader toggle={this.toggle}>

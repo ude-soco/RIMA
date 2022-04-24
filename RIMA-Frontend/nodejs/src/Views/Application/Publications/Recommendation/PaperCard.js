@@ -30,10 +30,21 @@ function ColoredBand({ interests_similarity, tags }) {
 }
 
 function Title({ paper, similarityScore }) {
+    //highlight title
+    let modified_title = paper.title;
+    for(let p in paper.keywords_similarity)
+    {
+        let value=paper.keywords_similarity[p];
+        let regEx = new RegExp(p, "ig");
+        let matches=regEx.exec(modified_title)
+        if (matches ===null) continue; 
+        let originalText=matches[0]
+        modified_title=modified_title.replace(regEx,`<span title="Similarity Score:${value.max_score}" className="highlight-keyword" style="color:${value.max_interest_color};border-color:white">${originalText}</span>`); /*${value.color}*/
+    }
     return <div className="d-flex justify-content-between">
         <Col md={10}>
-            <div className="paper-title">
-                {paper.title}
+            <div className="paper-title" dangerouslySetInnerHTML={{ __html: modified_title }}>
+                
             </div>
             <div className="paper-subtitle"><Authors authorsList={paper.authors} /></div>
         </Col>
@@ -64,13 +75,51 @@ export default function PaperCard(props) {
         paperModiText: "",
         done: false,
     });
+    for(let p1 in props.paper.keywords_similarity)
+    {
+        let interests=props.paper.keywords_similarity[p1];
+        let max_score=0
+        let max_interest=""
+        let max_interest_color=""
+        for(let p2 in interests)
+        {
+            if(p2.toLowerCase().indexOf("max_")>=0)
+            {
+                continue;
+            }
+            let value=interests[p2];
+            interests[p2]={
+                ...value,color:value.color||props.keyword_tags.find(x=> x.text.toLowerCase()===p2.toLowerCase()).color
+                };   
+            if(max_score<value.score)
+            {
+                max_score=value.score
+                max_interest_color=value.color
+                max_interest=p2
+            }
+        }
+        if(max_score>0)
+        {
+            props.paper.keywords_similarity[p1]={...interests,max_score,max_interest,max_interest_color}
+        }
+    }
     const [hide, setHide] = useState(false);
     // Modified text changed by Yasmin, calculatingSimilarity for one related Keyword added by yasmin
     const [error, setError] = useState("");
     useEffect(() => {
         // calculateSimilarity();
         // let modified_text = convertUnicode(text);
+        //highlight abstract
         let modified_text = state.paper.abstract;
+        for(let p in state.paper.keywords_similarity)
+        {
+            let value=props.paper.keywords_similarity[p];
+            let regEx = new RegExp(p, "ig");
+            let matches=regEx.exec(modified_text);
+            if (matches ===null) continue; 
+            let originalText=matches[0];
+            modified_text=modified_text.replaceAll(regEx,`<span title="Similarity Score:${value.max_score}" class="highlight-keyword" style="color:${value.max_interest_color};border-color:white">${originalText}</span>`); /*${value.color}*/
+        }
         let merged = [];
         // for (const item of state.seriesData) {
         //     if (item.name == paper.related_interest) {
@@ -122,7 +171,7 @@ export default function PaperCard(props) {
         //         element.compare
         //     );
         // });
-
+        
         setState((prevState) => ({
             ...prevState,
             paperModiText: modified_text,
@@ -197,7 +246,7 @@ export default function PaperCard(props) {
 
     const { paper, keyword_tags } = props;
     const paperDetails = paper;
-    const text = paper.title + ' ' + paper.abstrcat;
+    
     // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
 
 
