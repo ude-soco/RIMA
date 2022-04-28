@@ -64,11 +64,11 @@ def get_recommended_papers(interests):
                 interest_score = round((get_single_interest_similarity_score(
                     [interest['text']],keywords_list,interest['weight'],keywords_weights,sum_interests_weights)or 0)* 100,2)
                 interests_similarity[interest['text']] = interest_score
-                #keyword_max_similarity-Hoda    
-                for keyword,weights in paper_keywords.items():
+                #keyword Interest similarity-Hoda    
+                for keyword,weight in paper_keywords.items():
                     keyword_score = round((get_weighted_interest_similarity_score(
-                        [interest['text']],[keyword],[interest['weight']],[weights])or 0)* 100,2)
-                    keyword_score=keyword_score* (weights/5)
+                        [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
+                    keyword_score=keyword_score* (weight/5)
                     if not keywords_similarity.__contains__(keyword):
                         keywords_similarity[keyword]={}    
                     keywords_similarity[keyword][interest['text']]={'score':keyword_score,'color':''}
