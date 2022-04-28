@@ -28,7 +28,7 @@ def EnsureGloveInit():
     global wasInit
     global glove_model
     if wasInit:
-        return
+        return glove_model
     if settings.GLOVE_MODEL_FILE_PATH:
         print("Loading GloVe model ...")
         glove_model = KeyedVectors.load_word2vec_format(settings.GLOVE_MODEL_FILE_PATH)
@@ -36,6 +36,7 @@ def EnsureGloveInit():
     else:
         print("GLOVE_MODEL_FILE_PATH not set; skip loading GloVe model")
     wasInit = True
+    return glove_model
 
 def GetVector(keyword):
     global glove_model
