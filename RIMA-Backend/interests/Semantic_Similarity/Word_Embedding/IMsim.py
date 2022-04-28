@@ -5,7 +5,8 @@ from gensim.models.wrappers import FastText
 from nltk.corpus import stopwords
 from django.conf import settings
 from pandas import array
-from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
+from interests.glove_model_wrapper import GetGloveVector
+#from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 
 def cosine_sim(vecA, vecB):
         """Find the cosine similarity distance between two vectors."""
@@ -30,7 +31,8 @@ def glove_vectorize(doc, weights):
             word_vecs = []
             for word in word_list[i]:
                 try:
-                    vec = glove_model[word]
+                    #vec = glove_model[word]
+                    vec = GetGloveVector(word)
                     word_vecs.append(vec)
                 except KeyError:
                     pass
@@ -84,7 +86,8 @@ def calculate_similarity(source_doc,
             word_vecs = []
             for word in words:
                 try:
-                    vec = glove_model[word]
+                    #vec = glove_model[word]
+                    vec = GetGloveVector(word)
                     word_vecs.append(vec)
                 except KeyError:
                     pass
@@ -191,7 +194,8 @@ def calculate_weighted_vectors_similarity_single_word(source_doc,
         word_vecs = []
         # for word in word_list:
         try:
-            word_vecs = glove_model[word_list]
+            #word_vecs = glove_model[word_list]
+            word_vecs = GetGloveVector(word_list)
         except KeyError:
             pass
 

@@ -41,6 +41,11 @@ build/Release
 node_modules/
 jspm_packages/
 
+# VS Code folder
+.vscode/
+# History folder
+.history/
+glovecache.json
 # TypeScript v1 declaration files
 typings/
 
