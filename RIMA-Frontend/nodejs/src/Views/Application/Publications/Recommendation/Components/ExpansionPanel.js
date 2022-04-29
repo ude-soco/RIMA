@@ -1,15 +1,37 @@
 import React, { useState } from "react";
-
-import { Accordion, Card, Button } from "react-bootstrap";
-import Seperator from "./Seperator";
-import { Typography } from "@mui/material";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { Button as ButtonMUI, Grid, Item } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ReplaceableCloudChart from "../Components/ReplaceableCloudChart";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
+import {
+  Button as ButtonMUI,
+  Collapse,
+  Grid,
+  makeStyles,
+  Typography,
+  CssBaseline,
+} from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import SettingsIcon from "@material-ui/icons/Settings";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Flowchart from "../Components/Flowchart";
+import Seperator from "./Seperator";
+// import ReplaceableCloudChart from "../Components/ReplaceableCloudChart";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  collapse: {
+    backgroundColor: theme.palette.common.white,
+  },
+  collapseButton: {
+    margin: "10px",
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  center: {
+    display: "flex",
+    justifyContent: "center ",
+  },
+}));
 
 export default function ExpansionPanel(props) {
   // Tannaz start
@@ -249,251 +271,250 @@ export default function ExpansionPanel(props) {
     { data: { source: "six", target: "seven", label: "" } },
     { data: { source: "five", target: "seven", label: "" } },
   ];
+
+  const classes = useStyles();
+  const [whyExpanded, setWhyExpanded] = useState(false);
+  const [whatIfExpanded, setWhatIfExpanded] = useState(false);
+  const [howExpanded, setHowExpanded] = useState(false);
+
+  const handleWhyExpandClick = () => {
+    setWhyExpanded(!whyExpanded);
+    setWhatIfExpanded(false);
+    // Back Button:
+    setWhyShow(!whyShow);
+    setWhatIfShow(false);
+  };
+  const handleWhatIfExpandClick = () => {
+    setWhatIfExpanded(!whatIfExpanded);
+    setWhyExpanded(false);
+    // Back Button:
+    setWhatIfShow(!whatIfShow);
+    setWhyShow(false);
+  };
+
   // Tannaz end
 
   return (
     // Tannaz start
+    <>
+      <CssBaseline />
 
-    <Accordion>
-      <Card style={{ boxShadow: "none", border: "none" }}>
-        <Card.Header className="d-flex justify-content-end ">
-          <Accordion.Toggle
-            as={Button}
-            variant="link"
-            eventKey="1"
+      <Grid container spacing={2} className={classes.collapseButton}>
+        <Grid md={1}>
+          <ButtonMUI
+            variant="string"
             onClick={() => {
-              setWhyShow(!whyShow);
-              setWhatIfShow(false);
+              handleWhyExpandClick();
             }}
           >
             Why?
-          </Accordion.Toggle>
-          <div
-            style={{
-              width: "1px",
-              height: "40px",
-              backgroundColor: "#303F9F",
-              marginRight: "10px",
-            }}
-          />
-          <Accordion.Toggle
-            as={Button}
-            variant="link"
-            eventKey="2"
+          </ButtonMUI>
+        </Grid>
+        <Grid md={2}>
+          <ButtonMUI
+            variant="string"
             onClick={() => {
-              setWhatIfShow(!whatIfShow);
-              setWhyShow(false);
+              handleWhatIfExpandClick();
             }}
           >
-            What-if?
-          </Accordion.Toggle>
-        </Card.Header>
-        {/* Handling th Back button */}
+            What-If?
+          </ButtonMUI>
+        </Grid>
+      </Grid>
+
+      {/* Handling th Back button */}
+
+      <Collapse in={whyExpanded} className={classes.collapse}>
         {whyShow && (
           <div className="d-flex justify-content-start ">
-            <Accordion.Toggle as={Button} variant="link" eventKey="1">
-              <ButtonMUI
-                variant="string"
-                onClick={() => {
-                  setWhyShow(false);
-                }}
-              >
-                <ArrowBackIosNewIcon color="action" fontSize="small" />
-                <Typography align="center" variant="subtitle2">
-                  Back
-                </Typography>
-              </ButtonMUI>
-            </Accordion.Toggle>
-          </div>
-        )}
-        {whatIfShow && (
-          <div className="d-flex justify-content-start ">
-            <Accordion.Toggle as={Button} variant="link" eventKey="2">
-              <ButtonMUI
-                variant="string"
-                onClick={() => {
-                  setWhatIfShow(false);
-                }}
-              >
-                <ArrowBackIosNewIcon color="action" fontSize="small" />
-                <Typography align="center" variant="subtitle2">
-                  Back
-                </Typography>
-              </ButtonMUI>
-            </Accordion.Toggle>
+            <ButtonMUI
+              variant="string"
+              onClick={() => {
+                setWhyShow(false);
+                setWhyExpanded(!whyExpanded);
+              }}
+            >
+              <ArrowBackIosIcon color="action" fontSize="small" />
+              <Typography align="center" variant="subtitle2">
+                Back
+              </Typography>
+            </ButtonMUI>
           </div>
         )}
 
         {/* Why visualizations */}
-        <Accordion.Collapse eventKey="1" id="multiCollapseExample2">
-          <Card.Body>
-            <Seperator Label="Why this publication?" Width="170" />
-            <Accordion>
-              <Card style={{ boxShadow: "none", border: "none" }}>
-                <Card.Header
-                  className="d-flex justify-content-end "
-                  style={{ border: "none" }}
+        <Grid container className={classes.root} spacing={2}>
+          <Seperator Label="Why this publication?" Width="170" />
+
+          <Grid item md={12} className={classes.collapseButton}>
+            <ButtonMUI
+              variant="string"
+              size="small"
+              className="m-2 mr-4"
+              onClick={() => {
+                setHowExpanded(!howExpanded);
+              }}
+            >
+              <SettingsIcon color="action" fontSize="small" />
+              <Typography align="center" variant="subtitle2" className="ml-1">
+                How?
+              </Typography>
+            </ButtonMUI>{" "}
+          </Grid>
+
+          <Grid item md={8}>
+            <div style={{ width: "90%" }}>
+              Wordcloud
+              {/* <ReplaceableCloudChart tags={props}/> */}
+            </div>
+          </Grid>
+          <Grid item md={4}>
+            Barchart
+          </Grid>
+        </Grid>
+
+        {/* How Visualizations */}
+        <Collapse in={howExpanded} className={classes.collapse}>
+          <Grid container className={classes.root} spacing={0}>
+            <Seperator Label="How the system works?" Width="200" />
+            <Grid item md={12} className={classes.collapseButton}>
+              {!moreDetail ? (
+                <ButtonMUI
+                  variant="string"
+                  size="small"
+                  className="m-2 mr-4"
+                  onClick={() => {
+                    setMoreDetail(true);
+                  }}
                 >
-                  <Accordion.Toggle as={Button} variant="link" eventKey="3">
-                    <ButtonMUI
-                      variant="string"
-                      onClick={() => {
-                        setWhatIfShow(false);
-                      }}
-                    >
-                      <SettingsIcon color="action" fontSize="small" />
-                      <Typography align="center" variant="subtitle2">
-                        How?
-                      </Typography>
-                    </ButtonMUI>
-                  </Accordion.Toggle>
-                </Card.Header>
-                <div>
-                  <Grid container spacing={2}>
-                    <Grid item xs={8}>
-                      <div style={{ width: "90%" }}>
-                        Wordcloud
-                        {/* <ReplaceableCloudChart tags={props}/> */}
-                      </div>
-                    </Grid>
-                    <Grid item xs={4}>
-                      Barchart
-                    </Grid>
-                  </Grid>
-                </div>
-
-                {/* How Visualizations */}
-                <Accordion.Collapse eventKey="3">
-                  <Card.Body>
-                    <Seperator Label="How the system works?" Width="200" />
-                    <div className="d-flex justify-content-end ">
-                      {!moreDetail ? (
-                        <ButtonMUI
-                          variant="string"
-                          size="small"
-                          onClick={() => {
-                            setMoreDetail(true);
-                          }}
+                  <AddCircleOutlineIcon color="action" fontSize="small" />
+                  <Typography
+                    align="center"
+                    variant="subtitle2"
+                    className="ml-1"
+                  >
+                    More
+                  </Typography>
+                </ButtonMUI>
+              ) : (
+                <ButtonMUI
+                  variant="string"
+                  size="small"
+                  className="m-2 mr-4"
+                  onClick={() => {
+                    setMoreDetail(false);
+                  }}
+                >
+                  <RemoveCircleOutlineIcon color="action" fontSize="small" />
+                  <Typography
+                    align="center"
+                    variant="subtitle2"
+                    className="ml-1"
+                  >
+                    Less
+                  </Typography>
+                </ButtonMUI>
+              )}
+            </Grid>
+            {/* Left Category Buttons */}
+            <Grid item md={4} sm={12} className="mr-0 pr-0">
+              <div class="table-responsive-sm">
+                <table class="table">
+                  <tbody>
+                    <tr class="box">
+                      <td class="box-item interestsBox">
+                        <Typography
+                          align="left"
+                          variant="subtitle2"
+                          className="arrowBox"
                         >
-                          <AddCircleOutlineIcon
-                            color="action"
-                            fontSize="small"
-                          />
-                          <Typography
-                            align="center"
-                            variant="subtitle2"
-                            className="m-2 mr-4"
-                          >
-                            More
-                          </Typography>
-                        </ButtonMUI>
-                      ) : (
-                        <ButtonMUI
-                          variant="string"
-                          size="small"
-                          onClick={() => {
-                            setMoreDetail(false);
-                          }}
+                          Interests
+                          <br />
+                          Keywords
+                        </Typography>
+                      </td>
+                    </tr>
+                    <tr class="box">
+                      <td class="box-item dataBox">
+                        <Typography
+                          align="left"
+                          variant="subtitle2"
+                          className="arrowBox"
                         >
-                          <RemoveCircleOutlineOutlinedIcon
-                            color="action"
-                            fontSize="small"
-                          />
-                          <Typography
-                            align="center"
-                            variant="subtitle2"
-                            className="m-2 mr-4"
-                          >
-                            Less
-                          </Typography>
-                        </ButtonMUI>
-                      )}
-                    </div>
-                    <Grid container spacing={0}>
-                      <Grid item xs={4}>
-                        <div class="table-responsive-sm">
-                          <table class="table">
-                            <tbody>
-                              <tr class="box">
-                                <td class="box-item interestsBox">
-                                  <Typography
-                                    align="left"
-                                    variant="subtitle2"
-                                    className="arrowBox"
-                                  >
-                                    Interests
-                                    <br />
-                                    Keywords
-                                  </Typography>
-                                </td>
-                              </tr>
-                              <tr class="box">
-                                <td class="box-item dataBox">
-                                  <Typography
-                                    align="left"
-                                    variant="subtitle2"
-                                    className="arrowBox"
-                                  >
-                                    Data
-                                    <br />
-                                    Preprocess
-                                  </Typography>
-                                </td>
-                              </tr>
-                              <tr class="box ">
-                                <td class="box-item embeddingsBox">
-                                  <Typography
-                                    align="left"
-                                    variant="subtitle2"
-                                    className="arrowBox"
-                                  >
-                                    Embeddings
-                                    <br />
-                                    Generation
-                                  </Typography>
-                                </td>
-                              </tr>
-                              <tr class="box">
-                                <td class="box-item similarityBox">
-                                  <Typography
-                                    align="left"
-                                    variant="subtitle2"
-                                    className="arrowBox"
-                                  >
-                                    Similarity
-                                    <br />
-                                    Calculation
-                                  </Typography>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </Grid>
-                      <Grid item xs={8}>
-                        {!moreDetail ? (
-                          <Flowchart elements={lessDetailFlowchart} />
-                        ) : (
-                          <Flowchart elements={moreDetailFlowchart} />
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            </Accordion>
-          </Card.Body>
-        </Accordion.Collapse>
+                          Data
+                          <br />
+                          Preprocess
+                        </Typography>
+                      </td>
+                    </tr>
+                    <tr class="box ">
+                      <td class="box-item embeddingsBox">
+                        <Typography
+                          align="left"
+                          variant="subtitle2"
+                          className="arrowBox"
+                        >
+                          Embeddings
+                          <br />
+                          Generation
+                        </Typography>
+                      </td>
+                    </tr>
+                    <tr class="box">
+                      <td class="box-item similarityBox">
+                        <Typography
+                          align="left"
+                          variant="subtitle2"
+                          className="arrowBox"
+                        >
+                          Similarity
+                          <br />
+                          Calculation
+                        </Typography>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </Grid>
+            {/* Right Flowchart */}
+            <Grid item md={8} sm={12} className="ml-0 pl-0">
+              {!moreDetail ? (
+                <Flowchart elements={lessDetailFlowchart} />
+              ) : (
+                <Flowchart elements={moreDetailFlowchart} />
+              )}
+            </Grid>
+          </Grid>
+        </Collapse>
+      </Collapse>
 
-        {/* What-if visualization */}
-        <Accordion.Collapse eventKey="2">
-          <Card.Body>
-            <Seperator Label="What-if I change?" Width="170" />
-            <div>----- Visualizations What-if?</div>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+      <Collapse in={whatIfExpanded} className={classes.collapse}>
+        {whatIfShow && (
+          <div className="d-flex justify-content-start ">
+            <ButtonMUI
+              variant="string"
+              onClick={() => {
+                setWhatIfShow(false);
+                setWhatIfExpanded(!whatIfExpanded);
+              }}
+            >
+              <ArrowBackIosIcon color="action" fontSize="small" />
+              <Typography align="center" variant="subtitle2">
+                Back
+              </Typography>
+            </ButtonMUI>
+          </div>
+        )}
+        <Grid container className={classes.root} spacing={2}>
+          {/* What-if visualization */}
+
+          <Seperator Label="What-if I change?" Width="170" />
+          <div>----- Visualizations What-if?</div>
+        </Grid>
+      </Collapse>
+    </>
+
     // Tannaz end
   );
 }

@@ -1,19 +1,25 @@
 import React, { Component } from "react";
-import { Col } from "react-bootstrap";
+import Grid from "@material-ui/core/Grid";
 
 export default function Seperator(props) {
-    const {Label , Width} = props;
+  const { Label, Width } = props;
 
-    return (
-        <div className="Seperator">
-            <Col md={12} style={{ color:"#2d3985" }}>
-                {Label}
-            </Col>
-            <Col md={12} className="d-flex justify-content-center">
-                <div style={{ width: Width+"px" , height:"3px" , backgroundColor:"#2d3985" , borderRadius:5 , marginTop:'2px'}}>
-                </div>
-            </Col>
-        </div>
-    );
-
-  };
+  return (
+    <div className="Seperator">
+      <Grid md={11} style={{ color: "#2d3985" }}>
+        {Label}
+      </Grid>
+      <Grid md={11} className="d-flex justify-content-center">
+        <div
+          style={{
+            width: Width + "px",
+            height: "3px",
+            backgroundColor: "#2d3985",
+            borderRadius: 5,
+            marginTop: "2px",
+          }}
+        ></div>
+      </Grid>
+    </div>
+  );
+}
