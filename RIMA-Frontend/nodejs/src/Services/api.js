@@ -555,6 +555,32 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+  static getInterestsSimilarities(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/recommended-interests-similarities`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+  static keywordSimilarities(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/publications-keyword-similarities`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
 }
 
 

@@ -88,15 +88,14 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 }
 
 .paper-interests-box {
-  width: 100%;
-  margin-left: 20px;
+  /* margin-left: 20px; */
   padding-top: 10px;
   padding-bottom: 20px;
   border-radius: 12px;
   border: 1px solid rgb(140, 140, 137, 0.6);
   padding-left: 20px;
 }
-.modalCSS h5{
+.publication-modal h5{
   width: 100%;
   margin-top: 10px;
 }
@@ -277,4 +276,8 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   border: 1px solid #172B4D;
   border-radius: 10px;
   padding: 10px;
+}
+/* Jaleh - MUI Tabs */
+.tab.Mui-selected{
+  color: #2d3985 !important;
 }

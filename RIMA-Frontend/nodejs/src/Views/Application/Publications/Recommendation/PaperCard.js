@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
+import { Typography } from '@mui/material';
 import {
   convertUnicode,
   keywordHighlighter,
@@ -11,15 +12,20 @@ import RestAPI from "Services/api";
 import ReactTooltip from "react-tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Container, Col, Row } from "reactstrap";
 import ExpansionPanel from "./Components/ExpansionPanel";
 =======
 import { Container,Col,Row } from 'reactstrap';
+=======
+import { Grid } from "@material-ui/core";
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
 import ExpansionPanel from './Components/ExpansionPanel';
 import TopSimilarityChart from './TopSimilarityChart';
 >>>>>>> origin/dev-h
 
 function ColoredBand({ interests_similarity, tags }) {
+<<<<<<< HEAD
   const totalValues = Math.round(
     Object.values(interests_similarity).reduce((a, b) => a + b)
   );
@@ -41,6 +47,21 @@ function ColoredBand({ interests_similarity, tags }) {
   return <Container className="align-items-center vline">{res}</Container>;
 }
 <<<<<<< HEAD
+=======
+    const totalValues = Math.round(Object.values(interests_similarity).reduce((a, b) => a + b));
+    let res = []
+    for (const [int, sim] of Object.entries(interests_similarity)) {
+        let height = 0;
+        if (Math.round(sim) != 0) {
+            height = (Math.round(sim * 100) / totalValues)
+            res.push(<Grid container className="align-items-center" key={int} style={{ backgroundColor: tags.find(t => t.text == int).color, height: height + '%' }}>{Math.round(sim)}%</Grid>)
+            // res.push(<Row className="align-items-center" key={int} style={{  height: height + '%' }}>{Math.round(sim)}%</Row>)
+        }
+    }
+    return (
+        <Grid container className="align-items-center vline">{res}</Grid>
+    )
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
 
 function Title({ paper, similarityScore }) {
   //highlight title
@@ -121,6 +142,7 @@ function  HighlightText(paperId,keywords_similarity,text)
 
 
 function Title({ paper, similarityScore }) {
+<<<<<<< HEAD
     //highlight title
     let modified_title =HighlightText(paper.paperId,paper.keywords_similarity, paper.title);
     //---------------Hoda end-----------------
@@ -139,6 +161,21 @@ function Title({ paper, similarityScore }) {
 >>>>>>> origin/dev-h
     </div>
   );
+=======
+    return <Grid container className="d-flex justify-content-between">
+        <Grid item md={10}>
+            <Grid className="paper-title">
+                {paper.title}
+            </Grid>
+            <Grid className="paper-subtitle"><Authors authorsList={paper.authors} /></Grid>
+        </Grid>
+        <Grid item md={2} style={{ justifyContent: 'flex-end' }}>
+            <span className="paper-badge">
+                Similarity Score: {similarityScore} %
+            </span>
+        </Grid>
+    </Grid>
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
 }
 function Authors({ authorsList }) {
   const res = [];
@@ -160,6 +197,7 @@ function PaperContent({ text }) {
 >>>>>>> origin/dev-h
 }
 export default function PaperCard(props) {
+<<<<<<< HEAD
   const [state, setState] = useState({
     timer: null,
 
@@ -243,10 +281,18 @@ export default function PaperCard(props) {
 =======
         // seriesData: props.keyword_tags,
         mainKewords: props.paper_keywords,
+=======
+    const [state, setState] = useState({
+        timer: null,
+        interests: props.interests,
+        // mainKewords: props.paper_keywords,
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
         paper: props.paper,
+        index: props.index,
         paperModiText: "",
         done: false,
     });
+<<<<<<< HEAD
     //---------------Hoda Start-----------------
     for(let p1 in props.paper.keywords_similarity)
     {
@@ -278,6 +324,8 @@ export default function PaperCard(props) {
     }
     //---------------Hoda end-----------------
     const [hide, setHide] = useState(false);
+=======
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
     // Modified text changed by Yasmin, calculatingSimilarity for one related Keyword added by yasmin
     const [error, setError] = useState("");
     useEffect(() => {
@@ -338,17 +386,23 @@ export default function PaperCard(props) {
         //         element.compare
         //     );
         // });
+<<<<<<< HEAD
         
         setState((prevState) => ({
             ...prevState,
+=======
+
+        setState(() => ({
+            ...state,
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
             paperModiText: modified_text,
             done: true,
         }));
     }, [state.done]);
 
     const setSeriesData = (data) => {
-        setState((prevState) => ({
-            ...prevState,
+        setState(() => ({
+            ...state,
             seriesData: [...data],
             done: true,
         }));
@@ -357,7 +411,7 @@ export default function PaperCard(props) {
     //Added by Yasmin for this component
     //   To highlight the similar exteracted keywords
     // const calculateSimilarity = async () => {
-    // const keyword_tags = this.keyword_tags.filter((i) => i.text == props.paper.abstract);
+    // const interests = this.interests.filter((i) => i.text == props.paper.abstract);
     // const data = {
     //     text: paper.abstrcat.trim(),
     //     algorithm: "Yake",
@@ -380,7 +434,7 @@ export default function PaperCard(props) {
     // }
     // let seriesData = [];
     // if (keywordArray.length !== 0) {
-    //     for (const userInterest of keyword_tags1) {
+    //     for (const userInterest of interests1) {
     //         let data = [];
     //         for (const tweetKeyword of keywordArray) {
     //             let requestData = {
@@ -439,6 +493,7 @@ export default function PaperCard(props) {
     }));
   }, [state.done]);
 
+<<<<<<< HEAD
   const setSeriesData = (data) => {
     setState((prevState) => ({
       ...prevState,
@@ -446,6 +501,12 @@ export default function PaperCard(props) {
       done: true,
     }));
   };
+=======
+    const { paper } = props;
+    const paperDetails = paper;
+    const text = paper.title + ' ' + paper.abstrcat;
+    // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
 
   //Added by Yasmin for this component
   //   To highlight the similar exteracted keywords
@@ -461,6 +522,7 @@ export default function PaperCard(props) {
   //     const keys = Object.keys(response.data);
   //     const value = Object.values(response.data);
 
+<<<<<<< HEAD
   //     for (let i = 0; i < keys.length; i++) {
   //         keywordArray.push({
   //             text: keys[i],
@@ -549,11 +611,25 @@ export default function PaperCard(props) {
 
             <Col md={12}>
               {/* <a
+=======
+    return (
+        <Grid container className="card mt-4" style={{ position: "relative", border: "1px solid", }}>
+
+            {state.done ? (
+                <>
+                    <ColoredBand interests_similarity={paper.interests_similarity} tags={state.interests} />
+                    <Grid container className="card-body">
+                        <Title paper={paperDetails} similarityScore={paper.score} />
+
+                        <Grid item md={12} sx={{padding:'10px',textAlign:'justify'}}>
+                            {/* <a
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
                 href="PAPER_URL"
                 target="_blank"
                 style={{ textDecoration: "none", color: "inherit" }}
                 rel="noopener noreferrer"
               > */}
+<<<<<<< HEAD
 <<<<<<< HEAD
               <PaperContent text={state.paperModiText} />
               {/* </a> */}
@@ -588,6 +664,17 @@ export default function PaperCard(props) {
                         </Col>
                         <ExpansionPanel  tags={keyword_tags}/>
                     </div>
+=======
+                            <Typography align="justify" sx={{padding:'0px 15px'}}>
+                                <PaperContent text={state.paperModiText} />
+                            </Typography>
+
+                            {/* </a> */}
+
+                        </Grid>
+                        <ExpansionPanel paper={paper} interests={state.interests} index={state.index} />
+                    </Grid>
+>>>>>>> ade349caeaab7d58c3b6bd46607655fdcfb02fda
                 </>
             ) : (
                 <Button
@@ -608,7 +695,8 @@ export default function PaperCard(props) {
                 </Button>
             )
             }
-        </div >
+        </Grid >
+
     );
 >>>>>>> origin/dev-h
 }

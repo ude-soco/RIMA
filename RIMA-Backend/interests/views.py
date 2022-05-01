@@ -83,7 +83,7 @@ from .models import (
 )
 from accounts.models import User
 from .twitter_utils import get_recommended_tweets
-from .publication_utils import get_recommended_papers
+from .publication_utils import get_recommended_papers,get_interest_paper_similarity, get_keyword_similarities
 from .utils import get_interest_similarity_score, get_top_long_term_interest_by_weight, get_top_short_term_interest_by_weight, get_radar_similarity_data, get_heat_map_data, get_venn_chart_data
 from interests.tasks import import_user_data, import_user_paperdata
 
@@ -377,10 +377,21 @@ def recommended_tweets(request, *args, **kwargs):
     tweets = get_recommended_tweets(request.data)
     return Response({"message": "Hello, world!", "data": tweets})
 
+# jaleh
 @api_view(["post"])
 def recommended_papers(request, *args, **kwargs):
     papers = get_recommended_papers(request.data)
     return Response({"message": "Successful", "data": papers})
+    
+@api_view(["post"])
+def recommended_interests_similarities(request, *args, **kwargs):
+    result = get_interest_paper_similarity(request.data)
+    return Response({"message": "Successful", "data": result})
+
+@api_view(["post"])
+def publications_keyword_similarities(request, *args, **kwargs):
+    res = get_keyword_similarities(request.data)
+    return Response({"message": "Successful", "data": 'res'})
 
 
 class TweetView(ListCreateAPIView):

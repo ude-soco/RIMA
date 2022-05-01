@@ -5,12 +5,12 @@ export default function Seperator(props) {
   const { Label, Width } = props;
 
   return (
-    <div className="Seperator">
-      <Grid md={11} style={{ color: "#2d3985" }}>
+    <Grid className="Seperator">
+      <Grid item md={11} style={{ color: "#2d3985" }}>
         {Label}
       </Grid>
-      <Grid md={11} className="d-flex justify-content-center">
-        <div
+      <Grid item md={11} className="d-flex justify-content-center">
+        <Grid
           style={{
             width: Width + "px",
             height: "3px",
@@ -18,8 +18,8 @@ export default function Seperator(props) {
             borderRadius: 5,
             marginTop: "2px",
           }}
-        ></div>
+        ></Grid>
       </Grid>
-    </div>
+    </Grid>
   );
 }

@@ -176,12 +176,11 @@ def calculate_weighted_vectors_similarity_single_word(source_doc,
                                                         target_doc,
                                                         source_weight,
                                                         target_weights,
-                                                        source_sum_weights,
                                                         embedding="Glove",
                                                         threshold=0):
     
     
-    def glove_vectorize_single_word(doc, word_weight, sum_weights):
+    def glove_vectorize_single_word(doc):
         """Identify the vector values for each word in the given document"""
         
         # this code to remove stopwords and seperate the keyphrase into words but group them together
@@ -208,12 +207,10 @@ def calculate_weighted_vectors_similarity_single_word(source_doc,
         # return weighted_average_vector
 
     if embedding == "Glove":
-        source_vec = glove_vectorize_single_word(source_doc, source_weight,source_sum_weights)
+        source_vec = glove_vectorize_single_word(source_doc)
         target_vec = glove_vectorize(target_doc,target_weights)
         sim_score = cosine_sim(source_vec, target_vec) 
-        print('sim_score',sim_score)
         weighted_sim = sim_score * (source_weight/5)
-        print('weighted_sim',weighted_sim)
 
         if weighted_sim > threshold:
             return weighted_sim
