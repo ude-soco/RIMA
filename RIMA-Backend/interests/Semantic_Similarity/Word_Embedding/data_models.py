@@ -1,13 +1,7 @@
-from array import array
 from gensim.models.keyedvectors import KeyedVectors
 from django.conf import settings
-import json
-from os.path import exists
-import numpy
-cacheFile="glovecache.json"
-dictionary_data = {}
-dictionary_ndarray = {}
 
+<<<<<<< HEAD
 def SaveCache():
     global dictionary_data
     global cacheFile    
@@ -66,3 +60,12 @@ def GetVector(keyword):
     SaveCache()
 
     return vector
+=======
+if settings.GLOVE_MODEL_FILE_PATH:
+    print("Loading GloVe model ...")
+    glove_model = KeyedVectors.load_word2vec_format(settings.GLOVE_MODEL_FILE_PATH)
+    print("... finished loading GloVe model")
+else:
+    print("GLOVE_MODEL_FILE_PATH not set; skip loading GloVe model")
+    glove_model = None
+>>>>>>> parent of 6de9c3f (Highlighting abstract)

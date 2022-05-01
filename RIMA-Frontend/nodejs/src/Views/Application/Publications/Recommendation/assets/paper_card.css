@@ -13,6 +13,7 @@
 #paper-card-container .color-link {
   color: #324cdd;
 }
+<<<<<<< HEAD
  
 .highlight-keyword {
   font-weight: bold;
@@ -21,6 +22,8 @@
   border-style: solid;
   border-width: 0;
 }
+=======
+>>>>>>> parent of 6de9c3f (Highlighting abstract)
 
 #paper-card-container .card {
   padding-left: 3em;

@@ -43,6 +43,7 @@ function ColoredBand({ interests_similarity, tags }) {
 <<<<<<< HEAD
 
 function Title({ paper, similarityScore }) {
+<<<<<<< HEAD
   //highlight title
   let modified_title = paper.title;
   for (let p in paper.keywords_similarity) {
@@ -124,10 +125,12 @@ function Title({ paper, similarityScore }) {
     //highlight title
     let modified_title =HighlightText(paper.paperId,paper.keywords_similarity, paper.title);
     //---------------Hoda end-----------------
+=======
+>>>>>>> parent of 6de9c3f (Highlighting abstract)
     return <div className="d-flex justify-content-between">
         <Col md={10}>
-            <div className="paper-title" dangerouslySetInnerHTML={{ __html: modified_title }}>
-                
+            <div className="paper-title">
+                {paper.title}
             </div>
             <div className="paper-subtitle"><Authors authorsList={paper.authors} /></div>
         </Col>
@@ -247,6 +250,7 @@ export default function PaperCard(props) {
         paperModiText: "",
         done: false,
     });
+<<<<<<< HEAD
     //---------------Hoda Start-----------------
     for(let p1 in props.paper.keywords_similarity)
     {
@@ -277,17 +281,24 @@ export default function PaperCard(props) {
         }
     }
     //---------------Hoda end-----------------
+=======
+>>>>>>> parent of 6de9c3f (Highlighting abstract)
     const [hide, setHide] = useState(false);
     // Modified text changed by Yasmin, calculatingSimilarity for one related Keyword added by yasmin
     const [error, setError] = useState("");
     useEffect(() => {
         // calculateSimilarity();
         // let modified_text = convertUnicode(text);
+<<<<<<< HEAD
         //---------------Hoda Start-----------------
         //highlight abstract
         let modified_text = HighlightText(state.paper.paperId,state.paper.keywords_similarity,state.paper.abstract);
         //---------------Hoda end-----------------
 
+=======
+        let modified_text = state.paper.abstract;
+        let merged = [];
+>>>>>>> parent of 6de9c3f (Highlighting abstract)
         // for (const item of state.seriesData) {
         //     if (item.name == paper.related_interest) {
         //         for (const data of item.data) {
@@ -338,7 +349,7 @@ export default function PaperCard(props) {
         //         element.compare
         //     );
         // });
-        
+
         setState((prevState) => ({
             ...prevState,
             paperModiText: modified_text,
@@ -439,6 +450,7 @@ export default function PaperCard(props) {
     }));
   }, [state.done]);
 
+<<<<<<< HEAD
   const setSeriesData = (data) => {
     setState((prevState) => ({
       ...prevState,
@@ -446,6 +458,12 @@ export default function PaperCard(props) {
       done: true,
     }));
   };
+=======
+    const { paper, keyword_tags } = props;
+    const paperDetails = paper;
+    const text = paper.title + ' ' + paper.abstrcat;
+    // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
+>>>>>>> parent of 6de9c3f (Highlighting abstract)
 
   //Added by Yasmin for this component
   //   To highlight the similar exteracted keywords

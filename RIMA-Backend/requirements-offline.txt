@@ -5,7 +5,7 @@ beautifulsoup4
 billiard
 blis
 catalogue
-celery==4.3.0
+celery
 certifi
 cffi
 chardet
@@ -32,7 +32,7 @@ drf-yasg
 eventlet
 feedparser
 future
-gensim==3.8.2
+gensim
 greenlet
 gunicorn
 idna
@@ -103,7 +103,7 @@ srsly
 tempora
 thinc
 tqdm
-tweepy==3.8.0
+tweepy
 uritemplate
 urllib3
 vine
