@@ -83,5 +83,6 @@ urlpatterns = [
     #path('updateprinttext/',views.printHelloBackend.as_view())
      #Jaleh
     path('recommended-papers', views.recommended_papers),
-#     path('papers', views.PaperView.as_view()),
+    path('recommended-interests-similarities', views.recommended_interests_similarities),
+    path('publications-keyword-similarities', views.publications_keyword_similarities),
 ]

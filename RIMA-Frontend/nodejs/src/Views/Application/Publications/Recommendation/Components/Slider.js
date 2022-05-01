@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 
-import IconButton from "@material-ui/core/IconButton";
 import { Typography } from '@mui/material';
 
-import { Grid, Card } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import { Col } from "reactstrap";
 const useStyles = makeStyles({
   root: {
     width: 210,
@@ -16,25 +14,23 @@ const useStyles = makeStyles({
 
 export default function CustomizedSlider(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  useEffect(() => {
-    setValue(props.weight);
-  }, [props]);
+  const [value, setValue] = React.useState(props.weight);
+  // useEffect(() => {
+  //   setValue(props.weight);
+  // }, [props]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     props.changeTagWeight(props.index, newValue);
   };
 
-  const handleTagChange = () => {
-    props.handleSearchButtonClick1(true);
+  const handleTagChange = (event) => {
+    props.handleTagsChange();
   };
 
+
   return (
-    <Grid
-      item container xs={2} sm={3} md={4}
-      style={{ padding: "3px" }}
-    >
+    
       <Grid
         item container
         style={{
@@ -76,17 +72,16 @@ export default function CustomizedSlider(props) {
               max={5}
               step={0.1}
               value={value}
-              // onChange={handleChange}
-              // onMouseUp={handleTagChange}
+              onChange={handleChange}
+              onMouseUp={handleTagChange}
               aria-labelledby="continuous-slider"
             />
           </Grid>
           <Grid item xs md={2} style={{ marginTop:"-10px" }}>
-            <span>{props.weight}</span>
+            <span>{value}</span>
           </Grid>
 
         </Grid>
       </Grid>
-    </Grid >
   );
 }

@@ -298,14 +298,12 @@ def get_single_interest_similarity_score(source_doc,
                                   target_doc,
                                   source_weight,
                                   target_weights,
-                                  source_sum_weights,
                                   algorithm="WordEmbedding"): # note add the new embedding here #LK
     if algorithm == "WordEmbedding":
         return calculate_weighted_vectors_similarity_single_word(source_doc,
                                     target_doc,
                                     source_weight,
                                     target_weights,
-                                    source_sum_weights,
                                     embedding="Glove")
     else:
         return wikisim(source_doc, target_doc)

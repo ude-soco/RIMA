@@ -1,14 +1,114 @@
 import React, { useState, useEffect } from 'react';
-export default function Example() {
-  const [count, setCount] = useState(0);
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import drilldown from "highcharts/modules/drilldown"
+import { Grid } from "@material-ui/core";
 
-  // Similar to componentDidMount and componentDidUpdate:  useEffect(() => {    // Update the document title using the browser API    document.title = `You clicked ${count} times`;  });
-  return (
-    <div>
-      <p>You rrr clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
-    </div>
-  );
+drilldown(Highcharts)
+export const BarChart = (props) => {
+
+    const [threshold, setThreshold] = React.useState(props.threshold);
+    useEffect(() => {
+        setThreshold(props.threshold);
+    }, [props])
+
+    const [items, setItems] = React.useState(props.items);
+    useEffect(() => {
+        setItems(props.items);
+    }, [props])
+
+    const [drilldownData, setDrilldown] = React.useState(props.drilldownData);
+    useEffect(() => {
+        setDrilldown(props.drilldownData);
+    }, [props])
+
+    const options = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Possible Similarities'
+        },
+        subtitle: {
+            text: 'Click the columns to view interests similarities.'
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true
+            }
+        },
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+            title: {
+                text: 'Similarity Scores'
+            },
+            plotLines: [{
+                color: 'black',
+                dashStyle: 'dash',
+                width: 2,
+                value: threshold,
+                label: {
+                    align: 'left',
+                    style: {
+                        fontStyle: 'italic'
+                    },
+                    text: 'SImilarity Threshold',
+                    x: -10
+                },
+                zIndex: 13
+            }]
+
+        },
+
+        plotOptions: {
+            column: {
+                grouping: false,
+                pointWidth: 15,
+            },
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                },
+
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">Similarity Scores</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
+        },
+
+        series: [
+            {
+                name: "Already recommended",
+                colorByPoint: false,
+                data: items.old.data || []
+            },
+            {
+                name: 'New recommendations',
+                color: 'green',
+                data: items.new.data || []
+
+            },
+            {
+                name: 'Out of recommendation',
+                color: 'red',
+                data: items.out.data || []
+            },
+
+        ],
+
+        drilldown: {
+            series: drilldownData
+        }
+    }
+
+    return (
+        <Grid>
+            <HighchartsReact highcharts={Highcharts} options={options} />
+        </Grid>
+    );
 }

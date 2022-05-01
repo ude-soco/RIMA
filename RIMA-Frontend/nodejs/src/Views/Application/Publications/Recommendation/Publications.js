@@ -1,131 +1,85 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import IconButton from "@material-ui/core/IconButton";
 
-import Button from '@material-ui/core/Button';
 import { Typography } from '@mui/material';
-import CloudQueueIcon from '@mui/icons-material/CloudQueue';
-import Seperator from './Components/Seperator';
-import BarChart from './Components/BarChart';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
-// import SimplePopover from "./Components/SimplePopover";
+import Seperator from './Components/Seperator';
+import { WhatIfGeneral } from './Components/WhatIfGeneral.jsx';
 import { handleServerErrors } from "Services/utils/errorHandler";
+import Modal from '@mui/material/Modal';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Button from '@mui/material/Button';
+import { Grid, Paper } from "@material-ui/core";
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
+  // Modal,
+  // ModalHeader,
+  // ModalBody,
+  // ModalFooter,
   Card,
   CardHeader,
   Container,
   Row,
   Col,
-  DropdownMenu,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
 } from "reactstrap";
-import { Grid } from "@material-ui/core";
-// import { calculate_percentage } from "../Twitter/TweetAndPeople/TweetUtilities/percentage";
-import classnames from "classnames";
-import TagSearch from "./TagSearch.js";
+import InterestsTags from "./TagSearch.js";
 import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
-import { Spinner } from "react-bootstrap";
-import Slider from "./Components/Slider"
-import { Rowing } from "@material-ui/icons";
 
 
-function InterestControlPanel({ tags }) {
-  let res = []
-  if (tags.length > 0) {
-    tags.map((tag, index) => (
-      res.push(
-        <Slider
-          key={tag.text}
-          handleSearchButtonClick1='{props.handleSearchButtonClick1}'
-          changeTagWeight='{props.changeTagWeight}'
-          handleDelete='{props.handleDelete}'
-          name={tag.text}
-          color={tag.color}
-          weight={tag.weight}
-          index={index}
-        />
 
-      )
-    ))
-  }
-  return (
-    <Grid container rowSpacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
-      {res}
-      <Grid item container xs={2} sm={3} md={4}>
-      <Grid
-        item container
-        style={{
-          backgroundColor: '#fff',
-          maxHeight: "40px",
-          borderRadius: "5px",
-          border:'1px solid gray',
-          justifyContent: "flex-end"
-        }}
-        className={`p-1 pt-0 Rounded text-white`}>
-          </Grid>
-      </Grid>
-    </Grid>
-  )
-}
-export default class PublicationRecommendation extends Component {
-  constructor(props) {
-    super(props);
+export default function PublicationRecommendation() {
 
-    this.state = {
-      papersLoaded: false,
-      filteredUsers: [],
-      tags: [],
-      tagsWithoutWeight: [],
+  const [state, setState] = useState({
+    papersLoaded: false,
+    interests: [],
+    papers: [],
+    loading: true,
+    //New States added by Yasmin for showing pie chart
+    reloadPapers: true,
+    modal: false,
+    threshold: 40,
+    test: 'test'
+  })
 
-      papers: [],
-      savedPapers: [],
-      weight: 1,
-      loading: true,
+  useEffect(() => {
+    getInterests()
+  }, [])
+  useEffect(() => {
+    getRecommendedPapers()
+  }, [state.interests])
 
-      //New States added by Yasmin for showing pie chart
-      newPapers: [],
-      isAdded: false,
-      reloadPapers: true,
-      percentage: {},
-      isShowing: false,
-      restTag: [],
+  // getRecommendedPapers = getRecommendedPapers.bind(this);
+  // handleDeleteTag = handleDeleteTag.bind(this);
+  // handleTagAddition = handleTagAddition.bind(this);
+  // handleDragTag = handleDragTag.bind(this);
+  // handleTagSettingsChange = handleTagSettingsChange.bind(this);
 
-      modal: false,
-      paperDetail: []
+  //1changeHandler = changeHandler.bind(this);
 
-    };
-    this.getRecommendedPapers = this.getRecommendedPapers.bind(this);
-    // this.handleDeleteTag = this.handleDeleteTag.bind(this);
-    // this.handleTagAddition = this.handleTagAddition.bind(this);
-    // this.handleDragTag = this.handleDragTag.bind(this);
-    // this.handleTagSettingsChange = this.handleTagSettingsChange.bind(this);
-
-    //1this.changeHandler = this.changeHandler.bind(this);
-  }
 
   //What if modal - Jaleh:
-  showEnquiry = () => {
-    this.setState({
-      modal: !this.state.modal,
+  const openWhatIfModal = () => {
+    setState({
+      ...state,
+      modal: true,
     });
   };
-  toggle = (id) => {
-    this.setState({
-      modal: !this.state.modal,
+  const closeWhatIfModal = (id) => {
+    setState({
+      ...state,
+      modal: false,
     });
   };
+
   //Hoda 
-  generateRandomRGB(indexcolor) {
+  const generateRandomRGB = (indexcolor) => {
     var hexValues = [
       "9B59B6",
       "3498DB",
@@ -144,103 +98,105 @@ export default class PublicationRecommendation extends Component {
   /**
    * Get Interest to show on the top of the page
    */
-  getInterests = () => {
-    return RestAPI.cloudChart()
-      .then((response) => {
-        let rowArray = [];
-        if (response.data) {
-          //Top 5
-          for (let i = 0; i < 5; i++) {
-            rowArray.push({
-              text: response.data[i].keyword,
-              weight: response.data[i].weight,
-              id: response.data[i].id.toString(),
-              color: this.generateRandomRGB(i),
-            });
-          }
+  const getInterests = () => {
+    return RestAPI.cloudChart().then((response, err) => {
+      let rowArray = [];
+      if (response.data) {
+        //Top 5
+        for (let i = 0; i < 5; i++) {
+          rowArray.push({
+            text: response.data[i].keyword,
+            weight: response.data[i].weight,
+            id: response.data[i].id.toString(),
+            color: generateRandomRGB(i),
+          });
         }
-        this.setState({
-          isLoding: true,
-          tags: rowArray,
-          tagsWithoutWeight: rowArray,
-        });
+      }
+      setState({
+        ...state,
+        isLoding: true,
+        interests: rowArray,
+      });
 
-        //???
-        // var inputs = document.getElementsByTagName("Input");
-        // for (var i = 0; i < inputs.length; i++) {
-        //   if (inputs[i].id === "keyword") {
-        //     inputs[i].disabled = true;
-        //   }
-        // }
-      })
+    })
       .catch((error) => {
-        this.setState({ isLoding: false });
+        setState({ ...state, isLoding: false });
         handleServerErrors(error, toast.error);
       });
   };
   /**
    * Get Recommended Items
    */
-  getRecommendedPapers = (newTagAdded = false) => {
-    const { tags } = this.state;
-    RestAPI.extractPapersFromTags(tags)
-      .then((res) => {
-        // if (newTagAdded) {
-        //   this.setState((prevState) => ({
-        //     ...prevState,
-        //     newPapers: res.data.data,
-        //     PapersLoaded: true,
-        //     isAdded: true,
-        //     isShowing: true,
-        //   }));
-        //   //Jaleh
-        //   // const perc = calculate_percentage(res.data.data);
-        //   const perc = 45;
-
-        //   this.setState((prevState) => ({
-        //     ...prevState,
-        //     percentage: perc,
-        //     isShowing: false,
-        //   }));
-        // } else {
-        // this.setState({
-        //   ,
-        //   papers: [],
-        // });
-        this.setState((prevState) => ({
-          ...prevState,
-          loading: true,
-          papers: res.data.data,
-          papersLoaded: true,
-        }));
-      })
-      .catch((err) => console.error("Error Getting Papers:", err));
-
+  function getRecommendedPapers() {
+    const { interests } = state;
+    if (interests.length > 0) {
+      RestAPI.extractPapersFromTags(interests)
+        .then((res) => {
+          setState(() => ({
+            ...state,
+            loading: false,
+            papers: res.data.data,
+            papersLoaded: true,
+          }));
+        })
+        .catch((err) => console.error("Error Getting Papers:", err));
+    }
   };
 
-  getTagColorByName(tagName) {
-    const { tags } = this.state;
-    const color = tags.find(tag => tag.text === tagName).color
+  const getTagColorByName = (tagName) => {
+    const { interests } = state;
+    const color = interests.find(tag => tag.text === tagName).color
     return color
   }
-  componentDidMount() {
-    this.getInterests().then(() => {
-      this.getRecommendedPapers();
+  const refinePapers = (papers) => {
+    let res = []
+    papers.map((paper) => {
+      res.push({
+        paperId: paper.paperId,
+        title: paper.title,
+        interests_similarity: paper.interests_similarity,
+        paper_keywords: paper.paper_keywords,
+        score: paper.score
+      })
     })
+    return res
   }
-  render() {
-    const { papers } = this.state;
-    return (
-      <>
-        <Card className="bg-gradient-default1 shadow">
-          <CardHeader className="bg-transparent">
-            <Row className="align-items-center">
-              <Col>
-                <h2>Publications Recommendation</h2>
-              </Col>
-            </Row>
-            {/* start Tannaz */}
-            <div className="d-flex align-items-center mt-3">
+  const refineInterests = (interests) => {
+    let res = []
+    let idCounter = 0
+    interests.map((interest) => {
+      res.push({
+        _id: idCounter++,
+        text: interest.text,
+        color: interest.color,
+        weight: interest.weight,
+      })
+    })
+    return res
+  }
+  const { papers } = state;
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70%',
+    bgcolor: 'background.paper',
+    border: '1px solid #ccc',
+    overflow: 'scroll',
+    height: '100%',
+    display: 'block',
+    // boxShadow: 24,
+    p: 4,
+  };
+  return (
+    <>
+      <Grid container component={Paper} className="bg-gradient-default1 shadow">
+        <Grid item md={12} style={{ padding: '15px' }} className="bg-transparent">
+          <Typography variant="h6">Publications Recommendation</Typography>
+          {/* start Tannaz */}
+          <Grid container spacing={2} className="d-flex align-items-center mt-3">
+            <Grid item md={11}>
               <fieldset className="paper-interests-box">
                 <legend
                   style={{
@@ -250,92 +206,107 @@ export default class PublicationRecommendation extends Component {
                 >
                   Your interests:
                 </legend>
-                <Row className="align-items-center">
-                  <Col md={12}>
-                    <TagSearch
-                      tags={this.state.tags}
-                      newTags={this.state.newTags}
+                <Grid container className="align-items-center">
+                  <Grid item md={12}>
+                    <InterestsTags
+                      tags={state.interests}
                     />
-                  </Col>
+                  </Grid>
 
-                </Row>
+                </Grid>
               </fieldset>
-              <Col md={1}>
-                <div id="WhatifButton" onClick={() => this.showEnquiry()}>
-                  <Typography align="center" variant="caption" size="large">
-                    What-if?
-                  </Typography >
-                </div>
-                <BarChart />
-                <div>
-                  <Modal isOpen={this.state.modal} toggle={this.toggle} size="lg" className="WhatIfModal">
-                    <ModalHeader toggle={this.toggle}>
+            </Grid>
+            <Grid item md={1}>
+              <Grid id="WhatifButton" onClick={() => openWhatIfModal()}>
+                <Typography align="center" variant="caption" size="large">
+                  What-if?
+                </Typography >
+              </Grid>
+              <Modal open={state.modal} onClose={closeWhatIfModal} size="md" className="publication-modal">
+                <Box sx={style}>
+                  <Grid item md={12}>
+                    <DialogTitle sx={{ m: 0, p: 2 }} >
                       <Seperator Label="What if?" Width="130" />
-                    </ModalHeader>
-                    <ModalBody>
-                      <InterestControlPanel tags={this.state.tags} />
-                      
-                    </ModalBody>
-
-                    <ModalFooter>
-                      <Button color="primary" onClick={this.toggle}>
+                      {state.modal ? (
+                        <IconButton
+                          aria-label="close"
+                          onClick={closeWhatIfModal}
+                          sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                          }}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      ) : null}
+                    </DialogTitle>
+                  </Grid>
+                  <Grid item md={12}>
+                    <DialogContent>
+                      <WhatIfGeneral interests={refineInterests(state.interests)} threshold={state.threshold} items={refinePapers(papers)} />
+                    </DialogContent>
+                  </Grid>
+                  {/* <ModalHeader closeWhatIfModal={closeWhatIfModal} style={{ paddingBottom: '0px' }}>
+                  <Seperator Label="What if?" Width="130" />
+                  </ModalHeader> */}
+                  {/* <ModalBody style={{ paddingTop: '10px' }}> */}
+                  {/*  */}
+                  {/* </ModalBody> */}
+                  <Grid item md={12}>
+                    <DialogActions>
+                      <Button color="primary" onClick={closeWhatIfModal}>
                         Apply changes
                       </Button>
-                    </ModalFooter>
-                  </Modal>
-                </div>
-              </Col>
-            </div>
-            <div className="d-flex align-items-center ml-4 mt-2">
+                    </DialogActions>
+                  </Grid>
+                </Box>
+              </Modal>
+            </Grid>
+          </Grid>
+        </Grid>
+        {/* <div className="d-flex align-items-center ml-4 mt-2">
               <Button variant="string">
                 <CloudQueueIcon color="action" fontSize="small" />
                 <Typography align="center" variant="subtitle2" className="ml-2">
                   Interests Sources
                 </Typography >
               </Button>
-            </div>
-            <Seperator Label="Publications" Width="130" />
-            {/* end Tannaz */}
-            <Container style={{ paddingTop: "20px" }} id="paper-card-container">
-              {papers.length > 0 ? (
-                papers.map((paper) => {
-                  if (this.state.loading === true) {
-                    this.setState({
-                      loading: false,
-                    });
-                  }
-                  return (
-                    <PaperCard
-                      key={paper.paperId}
-                      paper={paper}
-                      keyword_tags={this.state.tags}
-                      reloadPapers={this.state.reloadPapers}
-                    />
-                  );
-                })
-              ) : this.state.loading ? (
-                <div style={{ marginTop: "8px" }}>
-                  <h1 className="d-flex justify-content-center align-items-center">
-                    <Spinner
-                      animation="border"
-                      role="status"
-                      size="lg"
-                      style={{ margin: "4px 4px 3px 0px" }}
-                    />
-                    Loading Publications.. please wait
-                  </h1>
-                </div>
-              ) : null}
-            </Container>
-          </CardHeader>
-        </Card>
-        <ScrollTopWrapper />
-      </>
-    );
-  }
+            </div> */}
+        <Seperator Label="Publications" Width="130" />
+        {/* end Tannaz */}
+        <Grid container style={{ padding: "20px" }} id="paper-card-container">
+          {state.loading ? (
+            <Grid container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justify="center">
+              <Grid item md={3}>
+                <CircularProgress />
+              </Grid>
+              <Grid item md={3}>
+                <Typography align="center" variant="subtitle2" className="ml-2">Loading Publications.. please wait</Typography>
+              </Grid>
+            </Grid>
+          ) : (
+            papers ? (papers.map((paper) => {
+              if (paper.score > state.threshold) {
+                return (
+                  <PaperCard
+                    key={paper.paperId}
+                    index={paper.paperId}
+                    paper={paper}
+                    interests={refineInterests(state.interests)}
+                  />
+                );
+              }
+            })) : (
+              <Typography align="center" variant="subtitle2" className="ml-2">No publication Found</Typography>
+            ))}
+        </Grid>
+      </Grid>
+      <ScrollTopWrapper />
+    </>
+  );
 }
-
-
-
-
-
