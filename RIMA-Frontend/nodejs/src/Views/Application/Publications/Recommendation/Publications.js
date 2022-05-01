@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import { Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-
+import CloudQueueIcon from "@material-ui/icons/CloudQueue";
 import Seperator from "./Components/Seperator";
 import { WhatIfGeneral } from "./Components/WhatIfGeneral.jsx";
 import { handleServerErrors } from "Services/utils/errorHandler";
-import Modal from "@mui/material/Modal";
+import { Modal } from "@material-ui/core";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -16,21 +16,11 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import { Grid, Paper } from "@material-ui/core";
-import {
-  // Modal,
-  // ModalHeader,
-  // ModalBody,
-  // ModalFooter,
-  Card,
-  CardHeader,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
 import InterestsTags from "./TagSearch.js";
 import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
 
 export default function PublicationRecommendation() {
   const [state, setState] = useState({
@@ -43,6 +33,8 @@ export default function PublicationRecommendation() {
     modal: false,
     threshold: 40,
     test: "test",
+    //New States added by Tannaz
+    whatModal: false,
   });
 
   useEffect(() => {
@@ -71,6 +63,20 @@ export default function PublicationRecommendation() {
     setState({
       ...state,
       modal: false,
+    });
+  };
+
+  //What modal - Tannaz:
+  const openWhatModal = () => {
+    setState({
+      ...state,
+      whatModal: true,
+    });
+  };
+  const closeWhatModal = (id) => {
+    setState({
+      ...state,
+      whatModal: false,
     });
   };
 
@@ -185,6 +191,18 @@ export default function PublicationRecommendation() {
     // boxShadow: 24,
     p: 4,
   };
+  const whatStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "70%",
+    bgcolor: "background.paper",
+    border: "1px solid #ccc",
+    height: "70%",
+    display: "block",
+    p: 4,
+  };
   return (
     <>
       <Grid container component={Paper} className="bg-gradient-default1 shadow">
@@ -276,14 +294,55 @@ export default function PublicationRecommendation() {
             </Grid>
           </Grid>
         </Grid>
-        {/* <div className="d-flex align-items-center ml-4 mt-2">
-              <Button variant="string">
-                <CloudQueueIcon color="action" fontSize="small" />
-                <Typography align="center" variant="subtitle2" className="ml-2">
-                  Interests Sources
-                </Typography>
-              </Button>
-            </div> */}
+        <div className="d-flex align-items-center ml-4 mt-2">
+          <Button variant="string" onClick={() => openWhatModal()}>
+            <CloudQueueIcon color="action" fontSize="small" />
+            <Typography align="center" variant="subtitle2" className="ml-2">
+              Interests Sources
+            </Typography>
+          </Button>
+        </div>
+
+        {/* What Modal */}
+
+        <Modal
+          open={state.whatModal}
+          onClose={closeWhatModal}
+          size="md"
+          className="publication-modal"
+        >
+          <Box sx={whatStyle}>
+            <Grid item md={12}>
+              <DialogTitle sx={{ m: 0, p: 2 }}>
+                <Seperator Label="What the system knows?" Width="200" />
+                {state.whatModal ? (
+                  <IconButton
+                    aria-label="close"
+                    onClick={closeWhatModal}
+                    sx={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                ) : null}
+              </DialogTitle>
+            </Grid>
+            <Grid item md={12}>
+              <Typography align="left" variant="subtitle2" className="ml-3">
+                Your Top Interests have been chosen from this wordcloud:
+              </Typography>
+            </Grid>
+            <Grid item md={12}>
+              <DialogContent>
+                <CloudChart />
+              </DialogContent>
+            </Grid>
+          </Box>
+        </Modal>
+
         <Seperator Label="Publications" Width="130" />
         {/* end Tannaz */}
         <Grid container style={{ padding: "20px" }} id="paper-card-container">
