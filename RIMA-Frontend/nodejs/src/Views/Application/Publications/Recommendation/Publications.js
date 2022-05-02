@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { Typography } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import {CircularProgress} from "@material-ui/core";
 import Box from '@mui/material/Box';
 
 import Seperator from './Components/Seperator';
@@ -15,7 +14,8 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, Typography } from "@material-ui/core";
+import Divider from '@material-ui/core/Divider';
 import {
   // Modal,
   // ModalHeader,
@@ -298,6 +298,7 @@ export default function PublicationRecommendation() {
                     index={paper.paperId}
                     paper={paper}
                     interests={refineInterests(state.interests)}
+                    threshold={state.threshold}
                   />
                 );
               }

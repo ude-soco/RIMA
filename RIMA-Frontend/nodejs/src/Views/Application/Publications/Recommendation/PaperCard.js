@@ -63,6 +63,7 @@ export default function PaperCard(props) {
         // mainKewords: props.paper_keywords,
         paper: props.paper,
         index: props.index,
+        threshold: props.threshold,
         paperModiText: "",
         done: false,
     });
@@ -225,7 +226,7 @@ export default function PaperCard(props) {
                             {/* </a> */}
 
                         </Grid>
-                        <ExpansionPanel paper={paper} interests={state.interests} index={state.index} />
+                        <ExpansionPanel paper={paper} interests={state.interests} index={state.index} threshold={state.threshold} />
                     </Grid>
                 </>
             ) : (

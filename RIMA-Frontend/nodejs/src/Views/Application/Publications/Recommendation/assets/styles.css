@@ -152,3 +152,11 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 .tab.Mui-selected{
   color: #2d3985 !important;
 }
+
+.outlined-new-interest input{
+  padding: 10px;
+}
+#outlined-potential-keywords{
+  width: 100%;
+  padding: 0px 100px 35px 100px;
+}

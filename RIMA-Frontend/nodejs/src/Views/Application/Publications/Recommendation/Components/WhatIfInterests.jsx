@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Grid } from "@material-ui/core";
+import { Grid, IconButton, FormControl, OutlinedInput, InputAdornment } from "@material-ui/core";
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import InterestSlider from "./Slider";
 import { ComapaerableBarChart } from "./ComparableBarChart"
 import RestAPI from 'Services/api';
+import Slider from "@material-ui/core/Slider";
+import Divider from '@material-ui/core/Divider';
+
 
 export const WhatIfInterests = (props) => {
     const [state, setState] = useState({
         paper: props.paper,
         interests: props.interests,
-        index: props.index
+        index: props.index,
+        threshold: props.threshold
     })
-
+    useEffect(()=>{
+        handleInterestsChange()
+    },[state.interests.length])
     //Method:
-
+    const handleInterestDelete = (index) => {
+        if (index > -1) {
+            let interests = state.interests;
+            delete state.paper.interests_similarity[interests[index].text];
+            interests.splice(index, 1);
+            setState({ ...state, interests })
+        }
+    }
     const changeInterestWeight = (index, newWeight) => {
         let myTags = state.interests;
         myTags[index].weight = newWeight
@@ -20,26 +34,16 @@ export const WhatIfInterests = (props) => {
             ...state,
             interests: myTags
         })
-    }
-    const handleInterestsChange = () => {
-        const params = {
-            "interests": state.interests,
-            "paper_keywords":state.paper.paper_keywords
-        }
-        RestAPI.getInterestsSimilarities(params)
-            .then((res) => {
-                console.log(res.data.data)
-            })
-            .catch((err) => console.error("Error Getting Papers:", err));
+        handleInterestsChange()
     }
     const handleNewInterest = ((e) => {
-        if (e.key === 'Enter' && state.interests.length < 10) {
+        if ((e.key === 'Enter' || e.type=='click') && state.interests.length < 10) {
             const interests = state.interests
             const newInterest = document.getElementById(`newInterest_${state.index}`).value
             interests.push({
                 _id: interests.length,
                 text: newInterest,
-                color: 'red',
+                color: '#303F9F',
                 weight: 2.5,
             })
             setState({
@@ -48,19 +52,48 @@ export const WhatIfInterests = (props) => {
             })
         }
     })
+    
+    const handleInterestsChange = () => {
+        const params = {
+            "interests": state.interests,
+            "paper_keywords": state.paper.paper_keywords
+        }
+        const paper = state.paper
+        RestAPI.getInterestsSimilarities(params)
+            .then((res) => {
+                paper.new_score = res.data.data.score
+                paper.new_interests_similarity = res.data.data.interests_similarity
+                setState({
+                    ...state,
+                    paper: paper,
+                })
+            })
+            .catch((err) => console.error("Error Getting Papers:", err));
+    }
+    const handleChangeThreshold = (event, threshold) => {
+        if (typeof threshold === 'number') {
+            setState({ ...state, threshold });
+        }
+    };
+
+    function valueLabelFormat(value) {
+        let scaledValue = value;
+        return `${scaledValue}%`;
+    }
+
     function InterestControlPanel({ interests }) {
         let res = []
         interests.map((tag, index) => (
             res.push(
                 <Grid
-                    item container xs={2} sm={3} md={3}
+                    item container xs={2} sm={3} md={2}
                     style={{ padding: "3px" }}
                     key={tag.text}
                 ><InterestSlider
                         key={tag.text}
                         handleTagsChange={handleInterestsChange}
                         changeTagWeight={changeInterestWeight}
-                        handleDelete='{props.handleDelete}'
+                        handleDelete={handleInterestDelete}
                         name={tag.text}
                         color={tag.color}
                         weight={tag.weight}
@@ -69,23 +102,65 @@ export const WhatIfInterests = (props) => {
                 </Grid>
             )
         ))
-
         return (
             <Grid container>
                 {res}
-                <Grid item xs={2} sm={3} md={3}>
-                    <Grid item style={{ padding: '5px', width: '100%', height: '100%' }}>
-                        <input id={`newInterest_${state.index}`} placeholder="Add a New Interest..." onKeyDown={handleNewInterest} style={{ width: '100%', height: '100%' }} />
+                {(state.interests.length < 10) ?
+                    (<Grid item xs={2} sm={3} md={2}>
+                        <Grid item style={{ paddingTop: '3px', paddingLeft: '5px', width: '100%', height: '100%' }}>
+                            <FormControl variant="outlined">
+                                <OutlinedInput
+                                    id={`newInterest_${state.index}`}
+                                    className={'outlined-new-interest'}
+                                    placeholder='New Interest...'
+                                    onKeyDown={handleNewInterest}
+                                    endAdornment={<InputAdornment position="end">
+                                        <IconButton aria-label="add" color={'primary'} style={{ padding: '0px' }} onClick={handleNewInterest}>
+                                            <AddBoxIcon fontSize="small" />
+                                        </IconButton>
+                                    </InputAdornment>}
+                                    labelWidth={0}
+                                />
+                            </FormControl>
+                        </Grid>
                     </Grid>
-                </Grid>
+                    )
+                    : null}
             </Grid>
+
         )
     }
     return (
-        <Grid container >
-            <InterestControlPanel interests={state.interests} />
+        <Grid container>
+            <Grid container>
+                <InterestControlPanel interests={state.interests} />
+            </Grid>
+            <Divider style={{ width: '100%', marginTop: '10px' }} />
+            <Grid container style={{ justifyContent: 'center', marginTop: '40px' }}>
+                <Grid item md={3}><span>Similarity Threshold:</span></Grid>
+                <Grid container spacing={2} alignItems="center" item md={9}>
+                    <Grid item>0%</Grid>
+                    <Grid item xs>
+                        <Slider
+                            md={6}
+                            value={state.threshold}
+                            defaultValue={state.threshold}
+                            min={0}
+                            step={5}
+                            max={100}
+                            marks
+                            getAriaValueText={valueLabelFormat}
+                            valueLabelFormat={valueLabelFormat}
+                            onChange={handleChangeThreshold}
+                            valueLabelDisplay="on"
+                        />
+                    </Grid>
+                    <Grid item>100%</Grid>
+                </Grid>
+            </Grid>
+            <Divider style={{ width: '100%', marginTop: '10px' }} />
             <Grid item container md={12}>
-                <ComapaerableBarChart paper={state.paper} interests={state.interests} />
+                <ComapaerableBarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
             </Grid>
         </Grid>
     )

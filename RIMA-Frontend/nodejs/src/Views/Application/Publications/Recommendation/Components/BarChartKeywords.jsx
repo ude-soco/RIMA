@@ -5,83 +5,78 @@ import drilldown from "highcharts/modules/drilldown";
 import { Grid } from "@material-ui/core";
 
 drilldown(Highcharts)
-export const ComapaerableBarChart = (props) => {
+export const BarChart = (props) => {
+    if(!props.paper.keywords_similarity){
+        return null
+    }
     const paper = props.paper
     const interests = props.interests
+    const keywords_similarity = Object.entries(props.paper.keywords_similarity).map((data)=>Object.assign({'name':data[0],'y':data[1]}))
     const threshold = props.threshold || 40
-    const dataPrev = Object.entries(paper.interests_similarity);
-    const data = (paper.new_interests_similarity) ? Object.entries(paper.new_interests_similarity) : dataPrev;
+    // const data = Object.entries(paper.interests_similarity);
     const scorePrev = paper.score
-    const score = (paper.new_score) ? paper.new_score : paper.score
+    const score = paper.new_score
     const scoreColor = (score > threshold) ? 'green' : 'red'
     const status = (score > threshold) ? 'Recommended' : 'Not Recommended'
-    const getData = data => data.map((interest, i) => {
-        if (interests[i]) {
-            return ({
-                name: interest[0],
-                y: interest[1],
-                color: interests[i].color
-            })
-        }
-    });
+    // const getData = data => data.map((interest, i) => {
+    //     if (interests[i]) {
+    //         return ({
+    //             name: interest[0],
+    //             y: interest[1],
+    //             color: interests[i].color
+    //         })
+    //     }
+    // });
     const options = {
         chart: {
-            type: 'column',
+            type: 'column'
         },
         title: {
-            text: 'Compare Relevance Score by Changing the Interests',
-            align: 'center'
+            text: 'The relevance of the paper keywords to your interests'
+        },
+        subtitle: {
+            // text: 'Click the columns to view interests similarities.'
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true
+            }
+        },
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+            title: {
+                text: 'Relevance Scores'
+            },
         },
 
         plotOptions: {
             column: {
-                pointWidth: 20
+                grouping: false,
+                pointWidth: 15,
             },
             series: {
-                grouping: false,
                 borderWidth: 0,
-                style: { margin: '20px' }
-            },
-            softThreshold: true
+                dataLabels: {
+                    enabled: true,
+                },
+
+            }
         },
-        legend: {
-            enabled: true
-        },
+
         tooltip: {
-            shared: true,
-            headerFormat: '<span style="font-size: 15px">{point.point.name}</span><br/>',
-            pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y} %</b><br/>'
+            headerFormat: '<span style="font-size:11px">Similarity Scores</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
         },
-        xAxis: {
-            type: 'category',
-            title: {
-                text: 'Your Interests',
-            },
-        },
-        yAxis: [{
-            title: {
-                text: 'Relevance Score',
-            },
-            showFirstLabel: false,
-        }],
-        series: [{
-            color: 'rgb(158, 159, 163)',
-            pointPlacement: -0.08,
-            data: dataPrev.slice(),
-            name: 'Before changing',
 
-        }, {
-            name: 'After changing',
+        series: [
+            {
+                data: keywords_similarity || []
+            }
 
-            dataLabels: [{
-                enabled: true,
-                inside: true,
-                style: {
-                    fontSize: '16px'
-                }
-            }],
-            data: getData(data).slice()
-        }]
+        ],
+
     }
     const scoreOptions = {
         chart: {

@@ -76,6 +76,7 @@ export default function ExpansionPanel(props) {
     const paper = props.paper
     const interests = props.interests
     const index = props.index
+    const threshold = props.threshold
     const [value, setValue] = useState(0);
     //   var moreDetailFlowchart = [
     //     // nodes
@@ -562,10 +563,10 @@ export default function ExpansionPanel(props) {
                             </Tabs>
                         </Grid>
                         <TabPanel value={value} index={0}>
-                            <WhatIfInterests paper={paper} interests={interests} index={index} />
+                            <WhatIfInterests paper={paper} interests={interests} index={index} threshold={threshold}/>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                            {/* <WhatIfKeywords paper={paper} interests={tags} /> */}
+                            <WhatIfKeywords paper={paper} interests={interests} index={index} threshold={threshold}/>
                         </TabPanel>
                     </Grid>
                 </Grid>
