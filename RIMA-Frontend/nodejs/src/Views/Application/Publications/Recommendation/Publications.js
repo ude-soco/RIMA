@@ -224,12 +224,14 @@ export default class PublicationRecommendation extends Component {
         //   ,
         //   papers: [],
         // });
-        this.setState((prevState) => ({
-          ...prevState,
-          loading: true,
-          papers: res.data.data,
-          papersLoaded: true,
-        }));
+        this.setState((prevState) =>{ 
+          return ({
+                    ...prevState,
+                    loading: true,
+                    papers: res.data.data,
+                    papersLoaded: true,
+                  });
+        });
       })
       .catch((err) => console.error("Error Getting Papers:", err));
   };

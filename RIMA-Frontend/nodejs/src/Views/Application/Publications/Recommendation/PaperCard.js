@@ -12,7 +12,8 @@ import ReactTooltip from "react-tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Container,Col,Row } from 'reactstrap';
 import ExpansionPanel from './Components/ExpansionPanel';
-import TopSimilarityChart from './TopSimilarityChart';
+import PaperContent from './PaperContent.js';
+import { Typography } from "@material-ui/core";
 
 function ColoredBand({ interests_similarity, tags }) {
     const totalValues = Math.round(Object.values(interests_similarity).reduce((a, b) => a + b));
@@ -28,80 +29,6 @@ function ColoredBand({ interests_similarity, tags }) {
         <Container className="align-items-center vline">{res}</Container>
     )
 
-}
-//---------------Hoda Start-----------------
-function  highlighter(paperId,keyword,max_score,max_interest_color,originalText)
-{
-    let lookupkey=btoa(unescape(encodeURIComponent(keyword)));
-    return `<a data-tip="${lookupkey}" data-for="${paperId}" data-event="click" title="Similarity Score: ${Math.round(max_score*100)/100}" className="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`    
-}
-function KeywordSimObjToArray(keywords_similarity)
-{
-    let items=[]
-    let i=0;
-    for(let p2 in keywords_similarity)
-    {
-      
-      let value=keywords_similarity[p2];
-      items.push({
-                    keyword:p2,
-                    max_score:value.max_score,
-                    max_interest_color:value.max_interest_color,
-                    numberOfWord:p2.split(" ").length
-                });
-    }
-    return items.sort((a,b)=>a.numberOfWord<b.numberOfWord?1:a.numberOfWord==b.numberOfWord?0:-1);
-}
-function  HighlightText(paperId,keywords_similarity,text)
-{
-    keywords_similarity=KeywordSimObjToArray(keywords_similarity)
-    let modified_text = text;
-    for(let index in keywords_similarity)
-    {
-        let value=keywords_similarity[index];
-        let regEx = new RegExp(value.keyword, "ig");
-        let matches=regEx.exec(modified_text)
-        if (matches ===null) continue; 
-        let originalText=matches[0].split(" ").map(x=>"<x>"+x[0]+"</x>"+x.substring(1)).join("&nbsp;");
-
-        modified_text=modified_text.replace(regEx,highlighter(paperId,value.keyword,value.max_score,value.max_interest_color,originalText));
-    }
-    return modified_text;
-}
-
-
-function Title({ paper, similarityScore }) {
-    //highlight title
-    let modified_title =HighlightText(paper.paperId,paper.keywords_similarity, paper.title);
-    //---------------Hoda end-----------------
-    return <div className="d-flex justify-content-between">
-        <Col md={10}>
-            <div className="paper-title" dangerouslySetInnerHTML={{ __html: modified_title }}>
-                
-            </div>
-            <div className="paper-subtitle"><Authors authorsList={paper.authors} /></div>
-        </Col>
-        <Col md={{ justifyContent: 'flex-end' }}>
-            <span className="paper-badge">
-                Similarity Score: {similarityScore} %
-            </span>
-        </Col>
-    </div>
-}
-function Authors({ authorsList }) {
-    const res = []
-    authorsList.forEach(element => {
-        res.push(element.name)
-    });
-    return <span>{res.join(' , ')}</span>
-}
-function PaperContent({ text }) {
-    //---------------Hoda Start-----------------
-    useEffect(() => {
-        ReactTooltip.rebuild();
-    });
-    //---------------Hoda end-----------------
-    return <span dangerouslySetInnerHTML={{ __html: text }} />;
 }
 export default function PaperCard(props) {
     const [state, setState] = useState({
@@ -149,10 +76,6 @@ export default function PaperCard(props) {
     useEffect(() => {
         // calculateSimilarity();
         // let modified_text = convertUnicode(text);
-        //---------------Hoda Start-----------------
-        //highlight abstract
-        let modified_text = HighlightText(state.paper.paperId,state.paper.keywords_similarity,state.paper.abstract);
-        //---------------Hoda end-----------------
 
         // for (const item of state.seriesData) {
         //     if (item.name == paper.related_interest) {
@@ -207,7 +130,6 @@ export default function PaperCard(props) {
         
         setState((prevState) => ({
             ...prevState,
-            paperModiText: modified_text,
             done: true,
         }));
     }, [state.done]);
@@ -278,7 +200,6 @@ export default function PaperCard(props) {
     // };
 
     const { paper, keyword_tags } = props;
-    const paperDetails = paper;
     
     // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
 
@@ -298,31 +219,8 @@ export default function PaperCard(props) {
                     <ColoredBand interests_similarity={paper.interests_similarity} tags={keyword_tags} />
                     <div className="card-body">
                     {/*---------------Hoda Start-----------------*/}
-                    <ReactTooltip id={paperDetails.paperId} 
-                                event={'click'} 
-                                globalEventOff={'click'} border={true} 
-                                type={'light'} place={'bottom'} 
-                                effect={'solid'} clickable={true} getContent={(dataTip) => {
-                        if(!dataTip) return <>No Data!</>; 
-                        let keyword=decodeURIComponent(escape(atob(dataTip)));
-                        let interests=paper.keywords_similarity[keyword];
-                        return <TopSimilarityChart onClick={e => e.stopPropagation()} interests={interests} keyword={keyword} />;
-                    }} />
+                        <PaperContent paper={paper} /> 
                     {/*---------------Hoda End-----------------*/}
-
-                        <Title paper={paperDetails} similarityScore={paper.score}  />
-
-                        <Col md={12}>
-                            {/* <a
-                href="PAPER_URL"
-                target="_blank"
-                style={{ textDecoration: "none", color: "inherit" }}
-                rel="noopener noreferrer"
-              > */}
-                            <PaperContent text={state.paperModiText} /> 
-                            {/* </a> */}
-
-                        </Col>
                         <ExpansionPanel  tags={keyword_tags}/>
                     </div>
                 </>

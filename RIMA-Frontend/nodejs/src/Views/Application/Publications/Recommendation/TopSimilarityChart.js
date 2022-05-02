@@ -1,6 +1,6 @@
 //---------------Hoda Start-----------------
 import React, { Component } from "react";
-import {Card, CardContent, Grid, Typography} from "@material-ui/core";
+import {Paper, CardContent, Grid, Typography} from "@material-ui/core";
 import Chart from "react-apexcharts";
 import ReactTags from "../../../components/react-tags/ReactTags.js";
 import "./assets/styles.css";
@@ -8,7 +8,8 @@ import Keywords from "Views/Keywords.js";
 
 function getInterestScore(interests,max)
 {
-  let items=[]
+  let items=[];
+  if(!interests) return [{interest:"",score:0,color:"FFFFFF"}];
   let i=0;
   for(let p2 in interests)
   {
@@ -22,7 +23,7 @@ function getInterestScore(interests,max)
   return items.sort((a,b)=>a.score<b.score?1:a.score==b.score?0:-1).filter((_, i) => i < max);
 }
 
-function TopSimilarityChart({onClick,interests,keyword,height}) {
+function TopSimilarityChart({onClick,interests,height}) {
   interests=getInterestScore(interests,3);
   let cats=interests.map(x=>x.interest);
   let scores=interests.map(x=>x.score);
@@ -86,10 +87,10 @@ function TopSimilarityChart({onClick,interests,keyword,height}) {
         }
       }
     };
-  return  <Grid onClick={onClick}>
-              <Typography variant="body2" gutterBottom>The top three similarity score between your interests and selected keyword</Typography>
+  return  <Paper elevation={0}  onClick={onClick}  >
+              <Typography variant="body2" gutterBottom>The top three similarity score between your interests and selected keyword. Test</Typography>
               <Chart options={options.options} series={options.series} type="bar" height={height||150}/>
-          </Grid>;
+          </Paper >;
 }
 
 export default TopSimilarityChart;
