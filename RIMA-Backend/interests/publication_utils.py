@@ -56,6 +56,7 @@ def get_recommended_papers(interests):
                 user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
         interest_score = 0
         interests_similarity = {}
+<<<<<<< HEAD
         for interest in interests: 
             interest_score = round((get_single_interest_similarity_score(
                 [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
@@ -67,6 +68,47 @@ def get_recommended_papers(interests):
         paper['interests_similarity'] = interests_similarity
 
         papers_with_scores.append(paper)
+=======
+        sum_interests_weights = np.sum(user_interests_weights)
+        for interest in interests: 
+            interest_score = round((get_single_interest_similarity_score(
+                [interest['text']],keywords_list,interest['weight'],keywords_weights,sum_interests_weights)or 0)* 100,2)
+            interests_similarity[interest['text']] = interest_score
+        
+        
+        
+        if score > 40:
+<<<<<<< HEAD
+            interest_score = 0
+            interests_similarity = {}
+            keywords_similarity={}
+            sum_interests_weights = np.sum(user_interests_weights)
+            for interest in interests: 
+                interest_score = round((get_single_interest_similarity_score(
+                    [interest['text']],keywords_list,interest['weight'],keywords_weights,sum_interests_weights)or 0)* 100,2)
+                interests_similarity[interest['text']] = interest_score
+                #keyword Interest similarity-Hoda    
+                for keyword,weight in paper_keywords.items():
+                    keyword_score = round((get_weighted_interest_similarity_score(
+                        [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
+                    keyword_score=keyword_score* (weight/5)
+                    if not keywords_similarity.__contains__(keyword):
+                        keywords_similarity[keyword]={}    
+                    keywords_similarity[keyword][interest['text']]={'score':keyword_score,'color':''}
+
+=======
+>>>>>>> parent of 6de9c3f (Highlighting abstract)
+            paper["score"] = score
+            paper["paper_keywords"] = paper_keywords
+            paper['interests_similarity'] = interests_similarity
+
+            
+
+
+
+
+            papers_with_scores.append(paper)
+>>>>>>> 4c195edf06d381dea52cafb22dc4165c9ad481f9
 
 
     sorted_list = sorted(papers_with_scores,
