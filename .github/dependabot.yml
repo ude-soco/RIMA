@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "daily"
+- package-ecosystem: "npm"
+  directory: "/RIMA-Frontend/nodejs"
+  schedule:
+    interval: "daily"
+- package-ecosystem: "pip"
+  directory: "/RIMA-Backend"
+  schedule:
+    interval: "daily"
