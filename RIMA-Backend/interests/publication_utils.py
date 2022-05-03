@@ -56,7 +56,6 @@ def get_recommended_papers(interests):
                 user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
         interest_score = 0
         interests_similarity = {}
-<<<<<<< HEAD
         for interest in interests: 
             interest_score = round((get_single_interest_similarity_score(
                 [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
@@ -68,47 +67,6 @@ def get_recommended_papers(interests):
         paper['interests_similarity'] = interests_similarity
 
         papers_with_scores.append(paper)
-=======
-        sum_interests_weights = np.sum(user_interests_weights)
-        for interest in interests: 
-            interest_score = round((get_single_interest_similarity_score(
-                [interest['text']],keywords_list,interest['weight'],keywords_weights,sum_interests_weights)or 0)* 100,2)
-            interests_similarity[interest['text']] = interest_score
-        
-        
-        
-        if score > 40:
-<<<<<<< HEAD
-            interest_score = 0
-            interests_similarity = {}
-            keywords_similarity={}
-            sum_interests_weights = np.sum(user_interests_weights)
-            for interest in interests: 
-                interest_score = round((get_single_interest_similarity_score(
-                    [interest['text']],keywords_list,interest['weight'],keywords_weights,sum_interests_weights)or 0)* 100,2)
-                interests_similarity[interest['text']] = interest_score
-                #keyword Interest similarity-Hoda    
-                for keyword,weight in paper_keywords.items():
-                    keyword_score = round((get_weighted_interest_similarity_score(
-                        [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
-                    keyword_score=keyword_score* (weight/5)
-                    if not keywords_similarity.__contains__(keyword):
-                        keywords_similarity[keyword]={}    
-                    keywords_similarity[keyword][interest['text']]={'score':keyword_score,'color':''}
-
-=======
->>>>>>> parent of 6de9c3f (Highlighting abstract)
-            paper["score"] = score
-            paper["paper_keywords"] = paper_keywords
-            paper['interests_similarity'] = interests_similarity
-
-            
-
-
-
-
-            papers_with_scores.append(paper)
->>>>>>> 4c195edf06d381dea52cafb22dc4165c9ad481f9
 
 
     sorted_list = sorted(papers_with_scores,
@@ -123,14 +81,11 @@ def get_interest_paper_similarity(data):
     # seperating keywords and weights for paper and for user interest
     keywords_list = list(paper_keywords.keys())
     keywords_weights = list(paper_keywords.values())
-    user_interest_model_dict = []
-    print('interests',data['interests'])
+    user_interest_model_dict = {}
     for interest in data['interests']: 
         user_interest_model_dict[interest['text']] = interest['weight']
     user_interests = list(user_interest_model_dict.keys())
     user_interests_weights = list(user_interest_model_dict.values())
-    print('user_interests',user_interests)
-    print('user_interests_weights',user_interests_weights)
 
     # calculate similarity score
     score = round((get_weighted_interest_similarity_score(
@@ -142,14 +97,14 @@ def get_interest_paper_similarity(data):
             [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
         interests_similarity[interest['text']] = interest_score
     
-    paper=[]
+    paper={}
     paper["score"] = score
     paper['interests_similarity'] = interests_similarity
     return paper
 
 
 
-def get_keyword_similarities(data):
+def get_keywords_similarities(data):
     keywords = data['keywords']
     interests = data['interests']
     user_interest_model_dict={}
@@ -157,19 +112,20 @@ def get_keyword_similarities(data):
         user_interest_model_dict[interest['text']] = interest['weight'] 
     user_interests = list(user_interest_model_dict.keys())
     user_interests_weights = list(user_interest_model_dict.values())
-    keywords_keys = list(keywords.keys())
+    keywords_list = list(keywords.keys())
+    keywords_weights = list(keywords.values())
+    # calculate similarity score
+    score = round((get_weighted_interest_similarity_score(
+            user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
+    
     keyword_score = 0
-    keywords_similarities = {}
-    for key in keywords_keys: 
+    keywords_similarity = {}
+    for keyword in keywords: 
         keyword_score = round((get_single_interest_similarity_score(
-            [key],user_interests,keywords[key],user_interests_weights)or 0)* 100,2)
-        keyword_interests_score = {}
-        score = 0
-        for doc_key in user_interests:
-            score = round((get_single_interest_similarity_score(
-            [key],[doc_key],[keywords[key]],[user_interests[doc_key]])or 0)* 100,2)
-            keyword_interests_score = {'name':doc_key,'y':score,'color':interest['color']}
-        keywords_similarities = {"name":key,"score":keyword_score,"interests":keyword_interests_score}
-            
-    print(keyword_interests_score)
-    return keywords_similarities
+            [keyword],user_interests,keywords[keyword],user_interests_weights)or 0)* 100,2)
+        keywords_similarity[keyword] = keyword_score
+    
+    paper={}
+    paper["score"] = score
+    paper['keywords_similarity'] = keywords_similarity
+    return paper

@@ -84,5 +84,5 @@ urlpatterns = [
      #Jaleh
     path('recommended-papers', views.recommended_papers),
     path('recommended-interests-similarities', views.recommended_interests_similarities),
-    path('publications-keyword-similarities', views.publications_keyword_similarities),
+    path('recommended-keyword-similarities', views.recommended_keywords_similarities),
 ]

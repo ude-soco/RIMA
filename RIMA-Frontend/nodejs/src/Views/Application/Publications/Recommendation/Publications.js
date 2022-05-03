@@ -235,41 +235,11 @@ export default function PublicationRecommendation() {
                   </Grid>
                 </Grid>
               </fieldset>
-              <Col md={1}>
-                <div id="WhatifButton" onClick={() => this.showEnquiry()}>
-                  <Typography align="center" variant="caption" size="large">
-                    What-if?
-                  </Typography>
-                </div>
-                <BarChart />
-                <div>
-                  <Modal
-                    isOpen={this.state.modal}
-                    toggle={this.toggle}
-                    size="lg"
-                    className="modalCSS"
-                  >
-                    <ModalHeader toggle={this.toggle}>
-                      <Seperator Label="What if?" Width="130" />
-                    </ModalHeader>
-                    <ModalBody>
-                      <InterestControlPanel tags={this.state.tags} />
-                    </ModalBody>
-
-                    <ModalFooter>
-                      <Button color="primary" onClick={this.toggle}>
-                        Apply changes
-                      </Button>
-                    </ModalFooter>
-                  </Modal>
-                </div>
-              </Col>
-            </div>
-            <div className="d-flex align-items-center ml-4 mt-2">
-              <Button variant="string" onClick={() => this.showWhatEnquiry()}>
-                <CloudQueueIcon color="action" fontSize="small" />
-                <Typography align="center" variant="subtitle2" className="ml-2">
-                  Interests Sources
+            </Grid>
+            <Grid item md={1}>
+              <Grid id="WhatifButton" onClick={() => openWhatIfModal()}>
+                <Typography align="center" variant="caption" size="large">
+                  What-if?
                 </Typography>
               </Grid>
               <Modal
