@@ -2,8 +2,9 @@
 import React, { Component } from "react";
 import {Paper, CardContent, Grid, Typography} from "@material-ui/core";
 import Chart from "react-apexcharts";
-import ReactTags from "../../../components/react-tags/ReactTags.js";
-import "./assets/styles.css";
+//import ReactTags from "../../../components/react-tags/ReactTags.js";
+
+//import "./assets/styles.css";
 import Keywords from "Views/Keywords.js";
 
 function getInterestScore(interests,max)
@@ -23,8 +24,9 @@ function getInterestScore(interests,max)
   return items.sort((a,b)=>a.score<b.score?1:a.score==b.score?0:-1).filter((_, i) => i < max);
 }
 
-function TopSimilarityChart({onClick,interests,height}) {
-  interests=getInterestScore(interests,3);
+function TopSimilarityChart({onClick,interests,height,maxItem,title}) {
+  title=title||"The top three similarity score between your interests and selected keyword. ";
+  interests=getInterestScore(interests,maxItem||3);
   let cats=interests.map(x=>x.interest);
   let scores=interests.map(x=>x.score);
   let colors=interests.map(x=>x.color);
@@ -88,7 +90,7 @@ function TopSimilarityChart({onClick,interests,height}) {
       }
     };
   return  <Paper elevation={0}  onClick={onClick}  >
-              <Typography variant="body2" gutterBottom>The top three similarity score between your interests and selected keyword. Test</Typography>
+              <Typography variant="body2" gutterBottom>{title}</Typography>
               <Chart options={options.options} series={options.series} type="bar" height={height||150}/>
           </Paper >;
 }

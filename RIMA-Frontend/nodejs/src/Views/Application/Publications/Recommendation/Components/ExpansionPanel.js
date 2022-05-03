@@ -10,8 +10,9 @@ import ReplaceableCloudChart from "../Components/ReplaceableCloudChart";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
 import Flowchart from "../Components/Flowchart";
+import WhyExplanation  from "./WhyExplanation"
 
-export default function ExpansionPanel(props) {
+export default function ExpansionPanel({paper}) {
   // Tannaz start
   const [whyShow, setWhyShow] = useState(false);
   const [whatIfShow, setWhatIfShow] = useState(false);
@@ -349,17 +350,7 @@ export default function ExpansionPanel(props) {
                   </Accordion.Toggle>
                 </Card.Header>
                 <div>
-                  <Grid container spacing={2}>
-                    <Grid item xs={8}>
-                      <div style={{ width: "90%" }}>
-                        Wordcloud
-                        {/* <ReplaceableCloudChart tags={props}/> */}
-                      </div>
-                    </Grid>
-                    <Grid item xs={4}>
-                      Barchart
-                    </Grid>
-                  </Grid>
+                  <WhyExplanation paper={paper} />
                 </div>
 
                 {/* How Visualizations */}

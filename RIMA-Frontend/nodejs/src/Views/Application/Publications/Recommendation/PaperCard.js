@@ -12,7 +12,7 @@ import ReactTooltip from "react-tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Container,Col,Row } from 'reactstrap';
 import ExpansionPanel from './Components/ExpansionPanel';
-import PaperContent from './PaperContent.js';
+import PaperContent from './Components/PaperContent';
 import { Typography } from "@material-ui/core";
 
 function ColoredBand({ interests_similarity, tags }) {
@@ -221,7 +221,7 @@ export default function PaperCard(props) {
                     {/*---------------Hoda Start-----------------*/}
                         <PaperContent paper={paper} /> 
                     {/*---------------Hoda End-----------------*/}
-                        <ExpansionPanel  tags={keyword_tags}/>
+                        <ExpansionPanel paper={paper} tags={keyword_tags}/>
                     </div>
                 </>
             ) : (

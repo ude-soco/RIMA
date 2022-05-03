@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./assets/paper_card.css";
-import OptionDropDown from "../../../components/OptionDropDown";
+import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import TopSimilarityChart from "./TopSimilarityChart";
 import { Typography, Grid, Box, Chip, Switch } from "@material-ui/core";
