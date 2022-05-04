@@ -136,7 +136,7 @@ export default function HowExplanation(props) {
             shape: "diamond",
             width: 110,
           },
-          position: { x: 200, y: 110 },
+          position: { x: 150, y: 110 },
         },
         {
           data: {
@@ -156,7 +156,7 @@ export default function HowExplanation(props) {
             shape: "diamond",
             width: 110,
           },
-          position: { x: 630, y: 110 },
+          position: { x: 680, y: 110 },
         },
         {
           data: {
@@ -166,7 +166,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 120,
           },
-          position: { x: 195, y: 190 },
+          position: { x: 100, y: 190 },
         },
         {
           data: {
@@ -196,7 +196,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 120,
           },
-          position: { x: 620, y: 190 },
+          position: { x: 750, y: 190 },
         },
         {
           data: {
@@ -206,7 +206,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 130,
           },
-          position: { x: 280, y: 260 },
+          position: { x: 150, y: 260 },
         },
         {
           data: {
@@ -216,7 +216,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 210,
           },
-          position: { x: 550, y: 260 },
+          position: { x: 700, y: 260 },
         },
         {
           data: {
@@ -339,288 +339,266 @@ export default function HowExplanation(props) {
     { data: { source: "five", target: "seven", label: "" } },
     ];
 
-    let howBox;
-    if (!activeInterestButton && !activeDataButton && !activeEmbeddingButton && !activeSimilarityButton){
-        
-    if (moreDetail) {
-        howBox = <Flowchart elements={moreDetailFlowchart} height={400} />;
-        } else {
-        howBox = <Flowchart elements={lessDetailFlowchart} height={400} />;
-        }
-    }else{
-        
-
-    if (activeInterestButton) {
-        howBox = 
-        <Grid container md={12}
-        style={{
-            borderBottom: "1px solid #2d3985",
-            borderColor: "#2d3985",
-            alignContent: "center",
-            margin: "0px 10px",
-        }}>
-        
-            <Grid item md={6} >
-                <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
-                        <TableRow>
-                            <TableCell>
-                                <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                    Interests
-                                </Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                    Weights
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        {state.interests.map((interest) => (
-                            <TableRow key={interest._id}>
-                                <TableCell component="th" scope="row">
-                                    <Typography variant="subtitle2" align="center">
-                                        {interest.text}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Typography variant="subtitle2" align="center">
-                                        {interest.weight}
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Grid>
-            <Grid item md={6} >
+    // Additional Components
+    const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} />;
+    const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} />;
+    const interestsKeywordsBox = <Grid container md={12}
+    style={{
+        borderBottom: "1px solid #2d3985",
+        borderColor: "#2d3985",
+        alignContent: "center",
+        margin: "0px 10px",
+    }}>
+    
+        <Grid item md={6} >
             <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
-                        <TableRow>
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead className={classes.head}>
+                    <TableRow>
                         <TableCell>
-                                <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                    Keywords
+                            <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                Interests
+                            </Typography>
+                        </TableCell>
+                        <TableCell>
+                            <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                Weights
+                            </Typography>
+                        </TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {state.interests.map((interest) => (
+                        <TableRow key={interest._id}>
+                            <TableCell component="th" scope="row">
+                                <Typography variant="subtitle2" align="center">
+                                    {interest.text}
                                 </Typography>
                             </TableCell>
-                            <TableCell>
-                                <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                    Weights
+                            <TableCell align="right">
+                                <Typography variant="subtitle2" align="center">
+                                    {interest.weight}
                                 </Typography>
                             </TableCell>
                         </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        {Object.keys(state.paper.paper_keywords).map((keyword, i) => (
-                            <TableRow key={i}>
-                                <TableCell component="th" scope="row">
-                                    <Typography variant="subtitle2" align="center">
-                                        {keyword}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right"> 
-                                    <Typography variant="subtitle2" align="center">
-                                        {state.paper.paper_keywords[keyword]}
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Grid>
-
+                    ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </Grid>
-        ;
-        } else if (activeDataButton){
-        howBox = 
-        <Grid container md={12}
+        <Grid item md={6} >
+        <TableContainer >
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead className={classes.head}>
+                    <TableRow>
+                    <TableCell>
+                            <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                Keywords
+                            </Typography>
+                        </TableCell>
+                        <TableCell>
+                            <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                Weights
+                            </Typography>
+                        </TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {Object.keys(state.paper.paper_keywords).map((keyword, i) => (
+                        <TableRow key={i}>
+                            <TableCell component="th" scope="row">
+                                <Typography variant="subtitle2" align="center">
+                                    {keyword}
+                                </Typography>
+                            </TableCell>
+                            <TableCell align="right"> 
+                                <Typography variant="subtitle2" align="center">
+                                    {state.paper.paper_keywords[keyword]}
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Grid>
+
+    </Grid>;
+    const DataPreProcessBox = <Grid container md={12}
+    style={{
+        borderBottom: "1px solid #2d3985",
+        borderColor: "#2d3985",
+        alignContent: "center",
+        margin: "0px 10px",
+    }}>
+    
+        <Grid item md={6} >
+            <TableContainer >
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead className={classes.head}>
+                    <TableRow>
+                        <TableCell>
+                            <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                Interests
+                            </Typography>
+                        </TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell component="th" scope="row">
+                            Split keyphrase into keywords 
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Flowchart elements={lessDetailFlowchart} height={320}/>
+        </Grid>
+        <Grid item md={6} >
+        <TableContainer >
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead className={classes.head}>
+                    <TableRow>
+                        <TableCell>
+                            <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                Publication
+                            </Typography>
+                        </TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell component="th" scope="row">
+                            Split keyphrase into keywords 
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Flowchart elements={lessDetailFlowchart} height={320} />
+        </Grid>
+    </Grid>
+    const embeddingBox = <Grid container md={12}
         style={{
-            borderBottom: "1px solid #2d3985",
-            borderColor: "#2d3985",
-            alignContent: "center",
-            margin: "0px 10px",
-        }}>
-        
-            <Grid item md={6} >
-                <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
+          borderBottom: "1px solid #2d3985",
+          borderColor: "#2d3985",
+          alignContent: "center",
+          margin: "0px 10px",
+      }}>
+      
+          <Grid item md={6} >
+              <TableContainer >
+                  <Table className={classes.table} size="small" aria-label="a dense table">
+                      <TableHead className={classes.head}>
+                      <TableRow>
+                          <TableCell>
+                              <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                  Interests
+                              </Typography>
+                          </TableCell>
+                      </TableRow>
+                      </TableHead>
+                      <TableBody>
+                          <TableRow>
+                              <TableCell component="th" scope="row">
+                              Weighted average of all interest embeddings 
+                              </TableCell>
+
+                          </TableRow>
+                      </TableBody>
+                  </Table>
+              </TableContainer>
+              <Flowchart elements={lessDetailFlowchart} height={320}/>
+          </Grid>
+          <Grid item md={6} >
+          <TableContainer >
+                  <Table className={classes.table} size="small" aria-label="a dense table">
+                      <TableHead className={classes.head}>
+                          <TableRow>
+                              <TableCell>
+                                  <Typography variant="subtitle1" align="center" style={{color:"white"}}>
+                                      Publication
+                                  </Typography>
+                              </TableCell>                            
+                          </TableRow>
+                      </TableHead>
+                      <TableBody>
+                          <TableRow>
+                              <TableCell component="th" scope="row">
+                              Weighted average of all keyword embeddings
+                              </TableCell>
+                          </TableRow>
+                      </TableBody>
+                  </Table>
+              </TableContainer>
+              <Flowchart elements={lessDetailFlowchart} height={320}/>
+          </Grid>
+      </Grid>;
+    const similarityBox = <>
+    <Grid container md={12}
+    style={{
+        borderBottom: "1px solid #2d3985",
+        borderColor: "#2d3985",
+        alignContent: "center",
+        margin: "0px 10px",
+    }}>
+    
+        <Grid item md={6} >
+            <TableContainer >
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead className={classes.head}>
                         <TableRow>
                             <TableCell>
                                 <Typography variant="subtitle1" align="center" style={{color:"white"}}>
                                     Interests
                                 </Typography>
+                            </TableCell>                            
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell component="th" scope="row">
+                            Interest Model Embeddings                                    
                             </TableCell>
                         </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell component="th" scope="row">
-                                Split keyphrase into keywords 
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Flowchart elements={lessDetailFlowchart} height={320}/>
-            </Grid>
-            <Grid item md={6} >
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Grid>
+        <Grid item md={6} >
             <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead className={classes.head}>
                         <TableRow>
                             <TableCell>
                                 <Typography variant="subtitle1" align="center" style={{color:"white"}}>
                                     Publication
                                 </Typography>
-                            </TableCell>
+                            </TableCell>                                
                         </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell component="th" scope="row">
-                                Split keyphrase into keywords 
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Flowchart elements={lessDetailFlowchart} height={320} />
-            </Grid>
-        </Grid>
-        ;
-        }else if (activeEmbeddingButton){
-        howBox = 
-        <Grid container md={12}
-        style={{
-            borderBottom: "1px solid #2d3985",
-            borderColor: "#2d3985",
-            alignContent: "center",
-            margin: "0px 10px",
-        }}>
-        
-            <Grid item md={6} >
-                <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
+                    </TableHead>
+                    <TableBody>
                         <TableRow>
-                            <TableCell>
-                                <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                    Interests
-                                </Typography>
+                            <TableCell component="th" scope="row">
+                                Publication Embeddings 
                             </TableCell>
                         </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell component="th" scope="row">
-                                Weighted average of all interest embeddings 
-                                </TableCell>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Grid>
+    </Grid>
+    <Grid container md={12}
+    style={{
+        borderBottom: "1px solid #2d3985",
+        borderColor: "#2d3985",
+        alignContent: "center",
+        margin: "0px 10px",
+    }}>
+        <Flowchart elements={lessDetailFlowchart} height={320}/>
+    </Grid></>;
 
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Flowchart elements={lessDetailFlowchart} height={320}/>
-            </Grid>
-            <Grid item md={6} >
-            <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
-                            <TableRow>
-                                <TableCell>
-                                    <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                        Publication
-                                    </Typography>
-                                </TableCell>                            
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell component="th" scope="row">
-                                Weighted average of all keyword embeddings
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Flowchart elements={lessDetailFlowchart} height={320}/>
-            </Grid>
-        </Grid>
-        ;
-        }else if (activeSimilarityButton){
-        howBox = 
-        <>
-        <Grid container md={12}
-        style={{
-            borderBottom: "1px solid #2d3985",
-            borderColor: "#2d3985",
-            alignContent: "center",
-            margin: "0px 10px",
-        }}>
-        
-            <Grid item md={6} >
-                <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
-                            <TableRow>
-                                <TableCell>
-                                    <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                        Interests
-                                    </Typography>
-                                </TableCell>                            
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell component="th" scope="row">
-                                Interest Model Embeddings                                    
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Grid>
-            <Grid item md={6} >
-                <TableContainer >
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead className={classes.head}>
-                            <TableRow>
-                                <TableCell>
-                                    <Typography variant="subtitle1" align="center" style={{color:"white"}}>
-                                        Publication
-                                    </Typography>
-                                </TableCell>                                
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell component="th" scope="row">
-                                    Publication Embeddings 
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Grid>
-        </Grid>
-        <Grid container md={12}
-        style={{
-            borderBottom: "1px solid #2d3985",
-            borderColor: "#2d3985",
-            alignContent: "center",
-            margin: "0px 10px",
-        }}>
-            <Flowchart elements={lessDetailFlowchart} height={320}/>
-        </Grid>
-        </>
-        ;
-        }
-    }
       // end Tannaz
         return (
             // start Tannaz
@@ -745,7 +723,28 @@ export default function HowExplanation(props) {
             </Grid>
             {/* Right howBox */}
             <Grid item md={10} sm={12} style={{paddingLeft:"20px",paddingRight:"20px"}}>
-                {howBox}
+
+              {
+                !activeInterestButton && !activeDataButton && !activeEmbeddingButton && !activeSimilarityButton && moreDetail && moreDetailFlowchartBox
+              }
+                            {
+                !activeInterestButton && !activeDataButton && !activeEmbeddingButton && !activeSimilarityButton && !moreDetail && lessDetailFlowchartBox
+              }
+              {
+                activeInterestButton && interestsKeywordsBox
+              }
+
+              {
+                activeDataButton && DataPreProcessBox
+              }
+
+              {
+                activeEmbeddingButton && embeddingBox
+              }
+
+              {
+                activeSimilarityButton && similarityBox
+              }
             </Grid>
             </>
             // end Tannaz

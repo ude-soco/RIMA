@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 
 const layout = { name: "preset" };
-const initialPos = { x: 550, y: 0 };
-const minZoom = 0;
-const maxZoom = 4;
+// const initialPos = { x: 550, y: 0 };
+// const minZoom = 0;
+// const maxZoom = 4;
 
 export default function Flowchart(props) {
   // start Tannaz
@@ -14,6 +14,12 @@ export default function Flowchart(props) {
   return (
     <div style={{ display: "flex", flex: 1, height: height }}>
       <CytoscapeComponent
+        cy={(cy) =>
+          cy.on("resize", (_evt) => {
+            cy.layout(layout).run();
+            cy.fit(10);
+          })
+        }
         elements={elements}
         style={{
           width: "100%",
@@ -70,10 +76,10 @@ export default function Flowchart(props) {
             },
           },
         ]}
-        layout={layout}
-        pan={initialPos}
-        minZoom={minZoom}
-        maxZoom={maxZoom}
+        // layout={layout}
+        // pan={initialPos}
+        // minZoom={minZoom}
+        // maxZoom={maxZoom}
       />
     </div>
     // end Tannaz
