@@ -24,7 +24,7 @@ idna==2.9
 image
 importlib-metadata==1.6.0
 jellyfish==0.7.2
-joblib==0.14.1
+joblib==1.1.0
 kombu==4.6.8
 langdetect==1.0.8
 matplotlib
