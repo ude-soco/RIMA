@@ -165,6 +165,7 @@ function PaperAbstract({ paper }) {
   return (
     <Typography
       variant="body1"
+      align="justify" sx={{padding:'0px 15px'}}
       dangerouslySetInnerHTML={{ __html: modified_text }}
     />
   );
@@ -215,7 +216,8 @@ export default function PaperContent({ paper }) {
   });
 
   return (
-    <Box>
+    <>
+      {(false?(<>
       <Switch
         checked={popoverActive}
         onChange={popoverActiveHandleChange}
@@ -236,6 +238,7 @@ export default function PaperContent({ paper }) {
       ) : (
         "Tooltip"
       )}
+      </>):"")}
       {!popoverActive ? (
         <ReactTooltip
           id={paper.paperId}
@@ -310,7 +313,7 @@ export default function PaperContent({ paper }) {
       )}
       <Title paper={paper} similarityScore={paper.score} />
       <PaperAbstract paper={paper} />
-    </Box>
+    </>
   );
 }
 

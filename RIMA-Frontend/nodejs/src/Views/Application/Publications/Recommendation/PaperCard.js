@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import RestAPI from "Services/api";
 import ReactTooltip from "react-tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Container,Col,Row } from 'reactstrap';
+import { Grid } from "@material-ui/core";
 import ExpansionPanel from './Components/ExpansionPanel';
 import PaperContent from './Components/PaperContent';
 import { Typography } from "@material-ui/core";
@@ -18,25 +18,27 @@ import { Typography } from "@material-ui/core";
 function ColoredBand({ interests_similarity, tags }) {
     const totalValues = Math.round(Object.values(interests_similarity).reduce((a, b) => a + b));
     let res = []
-    tags.forEach((tag) => {
+    for (const [int, sim] of Object.entries(interests_similarity)) {
         let height = 0;
-        if (Math.round(interests_similarity[tag.text]) != 0) {
-            height = (Math.round(interests_similarity[tag.text] * 100) / totalValues)
-            res.push(<Row className="align-items-center" style={{ backgroundColor: tag.color, height: height + '%' }}>{Math.round(interests_similarity[tag.text])}%</Row>)
+        if (Math.round(sim) != 0) {
+            height = (Math.round(sim * 100) / totalValues)
+            res.push(<Grid container className="align-items-center" key={int} style={{ backgroundColor: tags.find(t => t.text == int).color, height: height + '%' }}>{Math.round(sim)}%</Grid>)
+            // res.push(<Row className="align-items-center" key={int} style={{  height: height + '%' }}>{Math.round(sim)}%</Row>)
         }
-    })
+    }
     return (
-        <Container className="align-items-center vline">{res}</Container>
+        <Grid container className="align-items-center vline">{res}</Grid>
     )
 
 }
 export default function PaperCard(props) {
     const [state, setState] = useState({
         timer: null,
-
-        // seriesData: props.keyword_tags,
-        mainKewords: props.paper_keywords,
+        interests: props.interests,
+        // mainKewords: props.paper_keywords,
         paper: props.paper,
+        index: props.index,
+        threshold: props.threshold,
         paperModiText: "",
         done: false,
     });
@@ -55,7 +57,7 @@ export default function PaperCard(props) {
             }
             let value=interests[p2];
             interests[p2]={
-                ...value,color:value.color||props.keyword_tags.find(x=> x.text.toLowerCase()===p2.toLowerCase()).color
+                ...value,color:value.color||props.interests.find(x=> x.text.toLowerCase()===p2.toLowerCase()).color
                 };   
             if(max_score<value.score)
             {
@@ -70,7 +72,6 @@ export default function PaperCard(props) {
         }
     }
     //---------------Hoda end-----------------
-    const [hide, setHide] = useState(false);
     // Modified text changed by Yasmin, calculatingSimilarity for one related Keyword added by yasmin
     const [error, setError] = useState("");
     useEffect(() => {
@@ -127,16 +128,16 @@ export default function PaperCard(props) {
         //         element.compare
         //     );
         // });
-        
-        setState((prevState) => ({
-            ...prevState,
+
+        setState(() => ({
+            ...state,
             done: true,
         }));
     }, [state.done]);
 
     const setSeriesData = (data) => {
-        setState((prevState) => ({
-            ...prevState,
+        setState(() => ({
+            ...state,
             seriesData: [...data],
             done: true,
         }));
@@ -145,7 +146,7 @@ export default function PaperCard(props) {
     //Added by Yasmin for this component
     //   To highlight the similar exteracted keywords
     // const calculateSimilarity = async () => {
-    // const keyword_tags = this.keyword_tags.filter((i) => i.text == props.paper.abstract);
+    // const interests = this.interests.filter((i) => i.text == props.paper.abstract);
     // const data = {
     //     text: paper.abstrcat.trim(),
     //     algorithm: "Yake",
@@ -168,7 +169,7 @@ export default function PaperCard(props) {
     // }
     // let seriesData = [];
     // if (keywordArray.length !== 0) {
-    //     for (const userInterest of keyword_tags1) {
+    //     for (const userInterest of interests1) {
     //         let data = [];
     //         for (const tweetKeyword of keywordArray) {
     //             let requestData = {
@@ -199,30 +200,25 @@ export default function PaperCard(props) {
 
     // };
 
-    const { paper, keyword_tags } = props;
-    
+    const { paper } = props;
+    const paperDetails = paper;
+    const text = paper.title + ' ' + paper.abstrcat;
     // const tweet_url = `https://twitter.com/${screenName}/status/${id_str}`;
 
 
     return (
-        <div md={{ boxShadow: 1 }}
-            className="card mt-4"
-            style={{
-                width: "100%",
-                position: "relative",
-                border: "1px solid",
-            }}
-        >
+        <Grid container className="card mt-4" style={{ position: "relative", border: "1px solid", }}>
+
             {state.done ? (
                 <>
-
-                    <ColoredBand interests_similarity={paper.interests_similarity} tags={keyword_tags} />
-                    <div className="card-body">
-                    {/*---------------Hoda Start-----------------*/}
+                    <ColoredBand interests_similarity={paper.interests_similarity} tags={state.interests} />
+                    <Grid container className="card-body">
+                        
                         <PaperContent paper={paper} /> 
-                    {/*---------------Hoda End-----------------*/}
-                        <ExpansionPanel paper={paper} tags={keyword_tags}/>
-                    </div>
+                        
+                        <ExpansionPanel paper={paper} interests={state.interests} index={state.index} threshold={state.threshold} />
+                    
+                    </Grid>
                 </>
             ) : (
                 <Button
@@ -243,6 +239,7 @@ export default function PaperCard(props) {
                 </Button>
             )
             }
-        </div >
+        </Grid >
+
     );
 }
