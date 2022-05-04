@@ -5,6 +5,9 @@ import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
 import PotentialInterests from "./PotentialInterests/PotentialInterests";
 import InterestTrends from "./InterestsTrends/InterestTrends";
+import InterestProfileNew from "./Tabs/InterestProfileNew";
+
+
 
 const useStyles = makeStyles(theme => ({
   spacing: {
@@ -36,7 +39,10 @@ export default function InterestProfile() {
 
   return (
     <>
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="row" spacing={2}>
+      <Grid item xs={12}>
+          <InterestProfileNew classes={classes}/>
+        </Grid>
         <Grid item xs={12}>
           <InterestOverview classes={classes}/>
         </Grid>
