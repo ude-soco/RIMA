@@ -53,16 +53,16 @@ secretGenerator:
 images:
 - name: inko/soco-rima-frontend
   newName: socialcomputing/rima-frontend
-  newTag: latest
+  newTag: master
 - name: inko/soco-rima-backend
   newName: socialcomputing/rima-backend
-  newTag: latest
+  newTag: master
 - name: inko/soco-rima-model-downloader
   newName: socialcomputing/rima-model-downloader
-  newTag: latest
+  newTag: master
 - name: inko/soco-rima-model-server
   newName: nginxinc/nginx-unprivileged
-  newTag: "1.19"
+  newTag: "1.20"
 - name: redis
   newTag: "6.0"
 - name: postgres
