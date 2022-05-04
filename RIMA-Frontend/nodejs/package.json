@@ -56,7 +56,7 @@
     "react-apexcharts": "^1.3.7",
     "react-autosuggest": "^10.0.0",
     "react-bootstrap": "^1.4.3",
-    "react-chartjs-2": "^2.9.0",
+    "react-chartjs-2": "^2.11.2",
     "react-cool-tabs": "^1.1.6",
     "react-d3-graph": "^2.5.0",
     "react-dnd": "^2.6.0",
