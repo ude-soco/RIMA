@@ -52,10 +52,13 @@ secretGenerator:
 
 images:
 - name: inko/soco-rima-frontend
+  newName: socialcomputing/rima-frontend
   newTag: latest
 - name: inko/soco-rima-backend
+  newName: socialcomputing/rima-backend
   newTag: latest
 - name: inko/soco-rima-model-downloader
+  newName: socialcomputing/rima-model-downloader
   newTag: latest
 - name: inko/soco-rima-model-server
   newName: nginxinc/nginx-unprivileged
