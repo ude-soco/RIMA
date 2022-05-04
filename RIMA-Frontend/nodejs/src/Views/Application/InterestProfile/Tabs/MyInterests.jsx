@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Grid, makeStyles, Box, Modal, Typography, Slider, IconButton } from "@material-ui/core";
+import { Button, Grid, makeStyles, Box, Modal, Typography, Slider, IconButton, Dialog, DialogTitle, DialogContent, DialogActions} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import InterestOverviewNew from "./InterestOverviewNew";
 
@@ -37,8 +37,8 @@ export default function MyInterests() {
 
   return (
   <>
-    <Grid justifyContent="flex-end">
-      <Grid item xs={12} >
+    <Grid container justify="flex-end" style={{paddingTop:32}} >
+      <Grid item>
         <Button 
         variant="outlined" 
         startIcon={<EditIcon />}
@@ -51,20 +51,18 @@ export default function MyInterests() {
         <InterestOverviewNew classes={classes} />
       </Grid>
     </Grid>
-    {/* The modal that is not really finished/showing begins here  */}
-    <Modal
+    {/* The dialog that is not really finished/showing begins here  */}
+    <Dialog
           open={open}
           onClose={handleClose}
           size="lg" 
           id="modal"
-          
+          maxWidth="lg"
         >
-          <Grid container direction="row" spacing={2} sm={style}>
-            <Grid item xs={12}>
-              <Typography id="modal-title" variant="h4" component="h4">
-              Manage interests
-              </Typography>
-           </Grid>
+         <DialogTitle id="alert-dialog-title">{"Manage Interests"}</DialogTitle>
+         <DialogContent>
+         <Grid container direction="row" spacing={2} style={{paddingTop:32}}>
+           
            <Grid item xs={4}>
               <Typography variant="h6" component="h7">
               Visualization
@@ -105,17 +103,20 @@ export default function MyInterests() {
                4.7 <EditIcon/>
               </Typography>
            </Grid>
-  
-            <Grid item xs ={4}>
-              <Button
+           </Grid>
+         </DialogContent>
+   
+         <DialogActions>
+         <Button
               onClick={handleClose}
               > 
               Cancel
-              </Button>
-              </Grid>
-            </Grid>
+          </Button>
+
+         </DialogActions>
+
                  
-        </Modal>
+        </Dialog>
         </>
   );
 }

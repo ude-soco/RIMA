@@ -6,6 +6,7 @@ In general, all of this work is based on the prototypes that were developed duri
 https://www.figma.com/file/wI8UhSvLpqK9feNJwZXtho/RIMA?node-id=827%3A6174
 https://www.figma.com/proto/wI8UhSvLpqK9feNJwZXtho/RIMA?node-id=503%3A67&scaling=min-zoom&page-id=503%3A67&starting-point-node-id=827%3A6174&show-proto-sidebar=1
 
+
 Since the overall structure of the prototypes consists of tabs, we first need the logic for the tabs.
 This can be found in "InterestProfileNew". We use the "Tabs" component from MUI https://v4.mui.com/components/tabs/#tabs to call every component.
 The single components can be found as seperate files under the "..InterestProfile/Tabs" folder.
@@ -43,12 +44,12 @@ I suggest using the following library for this:  https://reactflow.dev/
 I played around a bit with the framework in the following Sandboxes: https://codesandbox.io/s/keywords-88zuxg  and https://codesandbox.io/s/keywords-merged-normalized-0wsk3u
 The coloring and details can be adjusted also.
 
-Lastly, in "Tabs/MyInterests" I tried to show a skeleton for a modal for editing user interests.  
-I wanted it to look like the modal that pops up when you click on "Manage Interests" in the following Sandbox: 
+Lastly, in "Tabs/MyInterests" I tried to show a skeleton for a dialog for editing user interests.  
+I wanted it to look like the dialog that pops up when you click on "Manage Interests" in the following Sandbox: 
 https://codesandbox.io/s/dashboard-with-tabs-ykw76t?file=/MyInterests.jsx
-Then a modal with two sliders should pop up.
-In "Tabs/MyInterests" the modal does not show up, and the styling needs to be adjusted.
-If you want to do the modal from scratch, I suggest commenting or deleting line 55-118 in "MyInterests.jsx".
+Then a dialog with two sliders should pop up.
+In "Tabs/MyInterests" the dialog does not show up, and the styling needs to be adjusted.
+If you want to do the dialog from scratch, I suggest commenting or deleting line 55-118 in "MyInterests.jsx".
 
 The remaining part are Todos that are left, and for some I will leave personal suggestions that could be worth investigating.
 
