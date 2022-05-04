@@ -93,6 +93,6 @@
     "typescript": "3.7.5",
     "webpack-dev-server": "^3.10.3",
     "webpack": "^4.42.0",
-    "ws": "3.3.2"
+    "ws": "8.6.0"
   }
 }
