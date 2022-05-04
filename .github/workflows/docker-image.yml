@@ -5,6 +5,7 @@ on:
     tags:
     - '*'
     branches:
+    - 'master'
     - 'dev-*'
   pull_request:
     branches:
