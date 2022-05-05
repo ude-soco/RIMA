@@ -3,7 +3,7 @@ name: Build RIMA-Model-Server Image
 on:
   push:
     tags:
-    - '*'
+    - 'v*'
     branches:
     - 'master'
     - 'dev-*'
@@ -39,7 +39,11 @@ jobs:
         images: "${{ secrets.DOCKERHUB_USERNAME }}/rima-model-downloader"
         tags: |
           type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
           type=ref,event=branch
+          type=ref,event=pr
+          type=sha
 
     - name: Build and push container image
       uses: docker/build-push-action@v2
