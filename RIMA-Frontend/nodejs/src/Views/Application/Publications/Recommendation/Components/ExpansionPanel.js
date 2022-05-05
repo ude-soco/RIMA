@@ -9,17 +9,15 @@ import {
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import SettingsIcon from "@material-ui/icons/Settings";
-
-import HowExplanation from "../Components/HowExplanation";
-import WhyExplanation from "../Components/WhyExplanation";
-
+import HowExplanation from "./HowExplanation";
 import Seperator from "./Seperator";
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import PropTypes from "prop-types";
-import { WhatIfInterests } from "./WhatIfInterests";
-import { WhatIfKeywords } from "./WhatIfKeywords";
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import PropTypes from 'prop-types';
+import { WhatIfInterests } from './WhatIfInterests'
+import { WhatIfKeywords } from './WhatIfKeywords'
+import  WhyExplanation  from './WhyExplanation'
 
 const useStyles = makeStyles((theme) => ({
   root: {

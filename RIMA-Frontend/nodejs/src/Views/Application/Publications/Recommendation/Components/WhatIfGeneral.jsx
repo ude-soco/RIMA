@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { BarChart } from "./BarChart"
+import { BarChart } from "./BarChartDrilldown"
 import InterestSlider from "./Slider"
-import { Grid } from "@material-ui/core";
+import { CircularProgress, FormControl, Grid, IconButton, InputAdornment, OutlinedInput } from "@material-ui/core";
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import RestAPI from "Services/api";
 
 import Slider from "@material-ui/core/Slider";
@@ -24,43 +25,60 @@ function valueLabelFormat(value) {
 }
 export const WhatIfGeneral = (props) => {
     // const [initialInterests] = useState(props.interests)
-    const [interests, setInterests] = useState(props.interests)
-
-    const [threshold, setThreshold] = useState(props.threshold);
-
-    const [initialItems] = useState(props.items);
-    const [items, setItems] = useState(props.items);
-    // useEffect(() => {
-    //     setItems(props.items);
-    // }, [props])
+    const [state, setState] = useState({
+        interests: props.interests,
+        threshold: props.threshold,
+        initialItems: props.items,
+        items: props.items,
+        done:false
+    })
 
     useEffect(() => {
         getRecommendedPapers()
-    }, [interests])
+    },[state.interests.length])
 
+    const handleInterestsChange = ((e) => {
+
+    })
+    const handleChangeThreshold = (event, newValue) => {
+        if (typeof newValue === 'number') {
+            setState({ ...state, threshold: newValue });
+        }
+    };
+
+    const getRecommendedPapers = (newTagAdded = false) => {
+        setState({...state,done:false})
+        RestAPI.extractPapersFromTags(state.interests)
+            .then((res) => {
+                setState({...state,items:res.data.data,done:true})
+            })
+            .catch((err) => console.error("Error Getting Papers:", err));
+
+    };
     const handleNewInterest = ((e) => {
-        if (e.key === 'Enter' && interests.length < 10) {
-            const tempInterests = interests
+        if ((e.key === 'Enter' || e.type == 'click') && state.interests.length < 10) {
+            const interests = state.interests
             const newInterest = document.getElementById("WhatIfGnewInterest").value
             if (newInterest != '') {
-                tempInterests.push({
-                    _id: interests.length,
+                interests.push({
+                    _id: state.interests.length,
                     text: newInterest,
-                    color: 'red',
+                    color: '#aaa',
                     weight: 2.5,
                 })
-                setInterests(tempInterests)
-                getRecommendedPapers()
+                setState({ ...state, interests })
+                // getRecommendedPapers()
             }
         }
     })
-    function InterestControlPanel({ interests }) {
+    function InterestControlPanel() {
         let res = []
-        interests.map((interest, index) => (
+        state.interests.map((interest, index) => (
             res.push(
                 <Grid
                     item container xs={2} sm={3} md={3}
                     style={{ padding: "3px" }}
+                    key={interest.text}
                 >
                     <InterestSlider
                         key={interest.text}
@@ -79,7 +97,7 @@ export const WhatIfGeneral = (props) => {
         return (
             <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
                 {res}
-                {(interests.length < 10) ?
+                {(state.interests.length < 10) ?
                     (<Grid item container xs={2} sm={3} md={3}>
                         <Grid item style={{ padding: '5px', width: '100%',height: '50px' }}>
                             <Autocomplete
@@ -111,24 +129,6 @@ export const WhatIfGeneral = (props) => {
         setInterests(tempInterests)
     }
 
-    const handleInterestsChange = ((e) => {
-        getRecommendedPapers();
-    })
-    const handleChangeThreshold = (event, newValue) => {
-        if (typeof newValue === 'number') {
-            setThreshold(newValue);
-        }
-    };
-
-    const getRecommendedPapers = (newTagAdded = false) => {
-
-        RestAPI.extractPapersFromTags(interests)
-            .then((res) => {
-                setItems(res.data.data)
-            })
-            .catch((err) => console.error("Error Getting Papers:", err));
-
-    };
     function chartSeries() {
         let series = {
             old: {
@@ -151,16 +151,16 @@ export const WhatIfGeneral = (props) => {
         let dataOld = []
         let dataOut = []
         let dataNew = []
-        items.map((item) => {
-            let existence = initialItems.find((i) => i.paperId == item.paperId)
-            if (existence && item.score > threshold && existence.score > props.threshold) {
+        state.items.map((item) => {
+            let existence = state.initialItems.find((i) => i.paperId == item.paperId)
+            if (existence && item.score > state.threshold && existence.score > props.threshold) {
                 dataOld.push({
                     name: item.title,
                     y: item.score,
                     drilldown: item.paperId
                 })
                 let dData = []
-                interests.forEach((tag) => {
+                state.interests.forEach((tag) => {
                     dData.push({
                         name: tag.text,
                         y: item.interests_similarity[tag.text],
@@ -172,14 +172,14 @@ export const WhatIfGeneral = (props) => {
                     id: item.paperId,
                     data: dData
                 })
-            } else if (existence && item.score < threshold && existence.score > props.threshold) {
+            } else if (existence && item.score < state.threshold && existence.score > props.threshold) {
                 dataOut.push({
                     name: item.title,
                     y: item.score,
                     drilldown: item.paperId
                 })
                 let dData = []
-                interests.forEach((tag) => {
+                state.interests.forEach((tag) => {
                     dData.push({
                         name: tag.text,
                         y: item.interests_similarity[tag.text],
@@ -191,14 +191,14 @@ export const WhatIfGeneral = (props) => {
                     id: item.paperId,
                     data: dData
                 })
-            } else if (((!existence) || (existence && existence.score < props.threshold)) && item.score > threshold) {
+            } else if (((!existence) || (existence && existence.score < props.threshold)) && item.score > state.threshold) {
                 dataNew.push({
                     name: item.title,
                     y: item.score,
                     drilldown: item.paperId
                 })
                 let dData = []
-                interests.forEach((tag) => {
+                state.interests.forEach((tag) => {
                     dData.push({
                         name: tag.text,
                         y: item.interests_similarity[tag.text],
@@ -215,13 +215,12 @@ export const WhatIfGeneral = (props) => {
         series.old.data = dataOld
         series.out.data = dataOut
         series.new.data = dataNew
-        // }
         return { series, drilldown }
     }
     const { series, drilldown } = chartSeries();
     return (
         <Grid>
-            <InterestControlPanel interests={interests} />
+            <InterestControlPanel />
 
             <hr style={{ marginTop: '1rem' }} />
             <Grid container sx={{ justifyContent: 'center' }}>
@@ -231,8 +230,8 @@ export const WhatIfGeneral = (props) => {
                     <Grid item xs>
                         <Slider
                             md={6}
-                            value={threshold}
-                            defaultValue={threshold}
+                            value={state.threshold}
+                            defaultValue={state.threshold}
                             min={0}
                             step={5}
                             max={100}
@@ -247,7 +246,8 @@ export const WhatIfGeneral = (props) => {
                 </Grid>
             </Grid>
             <hr style={{ marginTop: '1rem' }} />
-            <BarChart tags={interests} threshold={threshold} items={series} drilldownData={drilldown} />
-        </Grid>
+            {(state.done)?(
+            <BarChart tags={state.interests} threshold={state.threshold} items={series} drilldownData={drilldown} />
+       ):<Grid><CircularProgress size={20}/></Grid>} </Grid>
     )
 }

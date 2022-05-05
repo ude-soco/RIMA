@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
 import { Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -43,15 +42,6 @@ export default function PublicationRecommendation() {
   useEffect(() => {
     getRecommendedPapers();
   }, [state.interests]);
-
-  // getRecommendedPapers = getRecommendedPapers.bind(this);
-  // handleDeleteTag = handleDeleteTag.bind(this);
-  // handleTagAddition = handleTagAddition.bind(this);
-  // handleDragTag = handleDragTag.bind(this);
-  // handleTagSettingsChange = handleTagSettingsChange.bind(this);
-
-  //1changeHandler = changeHandler.bind(this);
-
   //What if modal - Jaleh:
   const openWhatIfModal = () => {
     setState({
@@ -372,6 +362,7 @@ export default function PublicationRecommendation() {
                     index={paper.paperId}
                     paper={paper}
                     interests={refineInterests(state.interests)}
+                    threshold={state.threshold}
                   />
                 );
               }

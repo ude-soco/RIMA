@@ -54,7 +54,7 @@ export const BarChart = (props) => {
                     style: {
                         fontStyle: 'italic'
                     },
-                    text: 'SImilarity Threshold',
+                    text: 'Similarity Threshold',
                     x: -10
                 },
                 zIndex: 13

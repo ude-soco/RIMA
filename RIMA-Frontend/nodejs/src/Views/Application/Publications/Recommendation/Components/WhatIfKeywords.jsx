@@ -1,201 +1,181 @@
-import React, { useState, useEffect } from "react";
-import { BarChart } from "./BarChart"
-import { Grid } from "@material-ui/core";
-import RestAPI from "Services/api";
+import React, { useEffect, useState } from 'react';
+import { Grid, FormControl, Chip, makeStyles, InputLabel, Select } from "@material-ui/core";
+import RestAPI from 'Services/api';
+import Slider from "@material-ui/core/Slider";
+import Divider from '@material-ui/core/Divider';
+import {BarChart} from './BarChartKeywords'
 
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
+    },
+    chip: {
+        margin: theme.spacing(0.5),
+    },
+}));
 export const WhatIfKeywords = (props) => {
+    const classes = useStyles();
     const [state, setState] = useState({
-        Keywords_relevance: [],
-        tags: props.tags,
-        paper : props.paper,
-        paper_keywords:props.paper.paper_keywords
+        paper: props.paper,
+        keywords: Object.entries(props.paper.paper_keywords),
+        potentialKeywords: [['real-time', 2], ['interest', 1.8], ['Significance analysis', 1.6], ['prediction', 1.1], ['tag sparsity', 1],],
+        interests: props.interests,
+        index: props.index,
+        threshold: props.threshold
     })
-    useEffect(() => {
-        RestAPI.keywordSimilarities({keywords:state.paper_keywords, interests:state.tags}).then((res,err) => {
-            console.log('res',res)
-            console.log('err',err)
-        })
+
+    useEffect(()=>{
+        handleKeywordsChange()
+    },[state.keywords.length])
+
+    //Method:
+
+    const handleDelete = (keywordToDelete) => () => {
+        const keywords = state.keywords.filter((chip) => chip !== keywordToDelete)
+        state.potentialKeywords.push(keywordToDelete)
+        setState({ ...state, keywords })
+    };
+    const handleChange = (event) => {
+        if (!event.target.value) {
+            return null
+        }
+        const selectedKeyword = state.potentialKeywords[event.target.value]
+        state.keywords.push(selectedKeyword)
+        const potentialKeywords = state.potentialKeywords.filter((keyword) => keyword !== selectedKeyword)
+        setState({ ...state, potentialKeywords })
+    };
+    const handleKeywordDelete = (index) => {
+        if (index > -1) {
+            let interests = state.interests;
+            delete state.paper.interests_similarity[interests[index].text];
+            interests.splice(index, 1);
+            setState({ ...state, interests })
+        }
     }
-    )
 
-    // const getRecommendedPapers = (newTagAdded = false) => {
+    const handleNewKeyword = ((e) => {
+        if ((e.key === 'Enter' || e.type == 'click') && state.interests.length < 10) {
+            const interests = state.interests
+            const newInterest = document.getElementById(`newInterest_${state.index}`).value
+            interests.push({
+                _id: interests.length,
+                text: newInterest,
+                color: '#303F9F',
+                weight: 2.5,
+            })
+            setState({
+                ...state,
+                interests
+            })
+        }
+    })
+    const handleKeywordsChange = () => {
+        const params = {
+            "interests": state.interests,
+            "keywords": state.keywords.reduce((a, v) => ({ ...a, [v[0]]: v[1]}), {})
+        }
+        const paper = state.paper
+        RestAPI.getKeywordsSimilarities(params)
+            .then((res) => {
+                console.log(res)
+                paper.new_score = res.data.data.score
+                paper.keywords_similarity = res.data.data.keywords_similarity
+                setState({
+                    ...state,
+                    paper: paper,
+                })
+            })
+            .catch((err) => console.error("Error Getting Papers:", err));
+    }
+    const handleChangeThreshold = (event, threshold) => {
+        if (typeof threshold === 'number') {
+            setState({ ...state, threshold });
+        }
+    };
 
-    //     RestAPI.extractPapersFromTags(state.tags)
-    //         .then((res) => {
-    //             setItems(res.data.data)
+    function valueLabelFormat(value) {
+        let scaledValue = value;
+        return `${scaledValue}%`;
+    }
 
-    //         })
-    //         .catch((err) => console.error("Error Getting Papers:", err));
 
-    // };
-    // function chartSeries() {
-    //     let series = {
-    //         old: {
-    //             name: "Already recommended",
-    //             colorByPoint: false,
-    //             data: []
-    //         },
-    //         new: {
-    //             name: 'New recommendations',
-    //             color: 'green',
-    //             data: []
-    //         },
-    //         out: {
-    //             name: 'Out of recommendation',
-    //             color: 'red',
-    //             data: []
-    //         }
-    //     }
-    //     let drilldown = []
-    //     if (initialItems == items) {
-    //         let dataOld = []
-    //         let dataOut = []
-    //         let dataNew = []
-    //         initialItems.map((item) => {
-    //             if (item.score > threshold && item.score > props.threshold) {
-    //                 dataOld.push({
-    //                     name: item.title,
-    //                     y: item.score,
-    //                     drilldown: item.id
-    //                 })
-    //                 let dData = []
-    //                 tags.forEach((tag) => {
-    //                     dData.push({
-    //                         name: tag.text,
-    //                         y: item.interests_similarity[tag.text],
-    //                         color: tag.color
-    //                     })
-    //                 })
-    //                 drilldown.push({
-    //                     name: item.title,
-    //                     id: item.id,
-    //                     data: dData
-    //                 })
-    //             }
-    //             else if (props.threshold < item.score && item.score < threshold && threshold != props.threshold) {
-    //                 dataOut.push({
-    //                     name: item.title,
-    //                     y: item.score,
-    //                     drilldown: item.id
-    //                 })
-    //                 let dData = []
-    //                 tags.forEach((tag) => {
-    //                     dData.push({
-    //                         name: tag.text,
-    //                         y: item.interests_similarity[tag.text],
-    //                         color: tag.color
-    //                     })
-    //                 })
-    //                 drilldown.push({
-    //                     name: item.title,
-    //                     id: item.id,
-    //                     data: dData
-    //                 })
-    //             }
-    //             else if (item.score > threshold && item.score < props.threshold) {
-    //                 dataNew.push({
-    //                     name: item.title,
-    //                     y: item.score,
-    //                     drilldown: item.id
-    //                 })
-    //                 let dData = []
-    //                 tags.forEach((tag) => {
-    //                     dData.push({
-    //                         name: tag.text,
-    //                         y: item.interests_similarity[tag.text],
-    //                         color: tag.color
-    //                     })
-    //                 })
-    //                 drilldown.push({
-    //                     name: item.title,
-    //                     id: item.id,
-    //                     data: dData
-    //                 })
-    //             }
-    //         })
-
-    //         series.old.data = dataOld
-    //         series.out.data = dataOut
-    //         series.new.data = dataNew
-
-    //     } else {
-
-    //         let dataOld = []
-    //         let dataOut = []
-    //         let dataNew = []
-    //         items.map((item) => {
-    //             let existence = initialItems.find((i) => i.id == item.paperId)
-    //             if (existence && item.score > threshold && existence.score > props.threshold) {
-    //                 dataOld.push({
-    //                     name: item.title,
-    //                     y: item.score,
-    //                     drilldown: item.paperId
-    //                 })
-    //                 let dData = []
-    //                 tags.forEach((tag) => {
-    //                     dData.push({
-    //                         name: tag.text,
-    //                         y: item.interests_similarity[tag.text],
-    //                         color: tag.color
-    //                     })
-    //                 })
-    //                 drilldown.push({
-    //                     name: item.title,
-    //                     id: item.paperId,
-    //                     data: dData
-    //                 })
-    //             } else if (existence && item.score < threshold && existence.score > props.threshold) {
-    //                 dataOut.push({
-    //                     name: item.title,
-    //                     y: item.score,
-    //                     drilldown: item.paperId
-    //                 })
-    //                 let dData = []
-    //                 tags.forEach((tag) => {
-    //                     dData.push({
-    //                         name: tag.text,
-    //                         y: item.interests_similarity[tag.text],
-    //                         color: tag.color
-    //                     })
-    //                 })
-    //                 drilldown.push({
-    //                     name: item.title,
-    //                     id: item.paperId,
-    //                     data: dData
-    //                 })
-    //             } else if (((!existence) || (existence && existence.score < props.threshold)) && item.score > threshold) {
-    //                 dataNew.push({
-    //                     name: item.title,
-    //                     y: item.score,
-    //                     drilldown: item.paperId
-    //                 })
-    //                 let dData = []
-    //                 tags.forEach((tag) => {
-    //                     dData.push({
-    //                         name: tag.text,
-    //                         y: item.interests_similarity[tag.text],
-    //                         color: tag.color
-    //                     })
-    //                 })
-    //                 drilldown.push({
-    //                     name: item.title,
-    //                     id: item.paperId,
-    //                     data: dData
-    //                 })
-    //             }
-    //         })
-    //         series.old.data = dataOld
-    //         series.out.data = dataOut
-    //         series.new.data = dataNew
-    //     }
-    //     return { series, drilldown }
-    // }
-    // const { series, drilldown } = chartSeries();
+    let key = 0
     return (
-        <Grid>
-            New keywords should come here
-            {/* <hr style={{ marginTop: '1rem' }} /> */}
-            {/* <BarChart tags={tags} threshold={threshold} items={series} drilldownData={drilldown} /> */}
+        <Grid container>
+            <Grid container>
+                <Grid component="ul" className={classes.root} >
+                    {state.keywords.map((data) => {
+                        return (
+                            <li key={key++}>
+                                <Chip
+                                    label={data[0]}
+                                    onDelete={handleDelete(data)}
+                                    className={classes.chip}
+                                />
+                            </li>
+                        );
+                    })}
+
+                </Grid>
+                <Grid container>
+                    <FormControl variant="outlined" >
+                        <InputLabel>Select another Keyword</InputLabel>
+                        <Select
+                            native
+                            onChange={handleChange}
+                            label="Keyword"
+                            inputProps={{
+                                name: 'potentialKeywords',
+                                id: 'outlined-potential-keywords',
+                            }}
+                        >
+                            <option aria-label="None" value="" />
+                            {state.potentialKeywords.map((keyword, index) => {
+                                return (
+                                    <option key={index} value={index}>{keyword[0]}</option>
+                                )
+                            })}
+
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
+
+            <Divider style={{ width: '100%', marginTop: '10px' }} />
+            <Grid container style={{ justifyContent: 'center', marginTop: '40px' }}>
+                <Grid item md={3}><span>Similarity Threshold:</span></Grid>
+                <Grid container spacing={2} alignItems="center" item md={9}>
+                    <Grid item>0%</Grid>
+                    <Grid item xs>
+                        <Slider
+                            md={6}
+                            value={state.threshold}
+                            defaultValue={state.threshold}
+                            min={0}
+                            step={5}
+                            max={100}
+                            marks
+                            getAriaValueText={valueLabelFormat}
+                            valueLabelFormat={valueLabelFormat}
+                            onChange={handleChangeThreshold}
+                            valueLabelDisplay="on"
+                        />
+                    </Grid>
+                    <Grid item>100%</Grid>
+                </Grid>
+            </Grid>
+            <Divider style={{ width: '100%', marginTop: '10px' }} />
+            <Grid item container md={12}>
+                <BarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
+            </Grid>
         </Grid>
     )
+
 }
+
