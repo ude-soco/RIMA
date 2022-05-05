@@ -1,0 +1,52 @@
+name: Build RIMA-Model-Server Image
+
+on:
+  push:
+    tags:
+    - '*'
+    branches:
+    - 'master'
+    - 'dev-*'
+    paths:
+    - '.github/workflows/build-model-downloader.yml'
+    - 'model/downloader'
+  pull_request:
+    branches:
+    - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Get tagging metadata
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: "${{ secrets.DOCKERHUB_USERNAME }}/rima-model-downloader"
+        tags: |
+          type=semver,pattern={{version}}
+          type=ref,event=branch
+
+    - name: Build and push container image
+      uses: docker/build-push-action@v2
+      with:
+        context: ./model/downloader
+        tags:   ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        push:   ${{ github.event_name != 'pull_request' }}
+        cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/rima-model-downloader:buildcache
+        cache-to:   type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/rima-model-downloader:buildcache,mode=max
