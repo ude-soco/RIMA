@@ -6,7 +6,18 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import RestAPI from "Services/api";
 
 import Slider from "@material-ui/core/Slider";
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
+const otherOptions = [
+    { title: 'Big data' },
+    { title: 'Educational technology' },
+    { title: 'Usability' },
+    { title: 'User Model'},
+    { title: 'Systems' },
+    { title: 'Artificial Intelligent' },
+    { title: 'LA'},
+  ];
 
 function valueLabelFormat(value) {
     let scaledValue = value;
@@ -102,26 +113,34 @@ export const WhatIfGeneral = (props) => {
                 {res}
                 {(state.interests.length < 10) ?
                     (<Grid item container xs={2} sm={3} md={3}>
-                        <Grid item style={{ paddingTop: '3px', paddingLeft: '5px', width: '100%', height: '100%' }}>
-                            <FormControl variant="outlined">
-                                <OutlinedInput
-                                    id={'WhatIfGnewInterest'}
-                                    className={'outlined-new-interest'}
-                                    placeholder='New Interest...'
-                                    onKeyDown={handleNewInterest}
-                                    endAdornment={<InputAdornment position="end">
-                                        <IconButton aria-label="add" color={'primary'} style={{ padding: '0px' }} onClick={handleNewInterest}>
-                                            <AddBoxIcon fontSize="small" />
-                                        </IconButton>
-                                    </InputAdornment>}
-                                    labelWidth={0}
-                                />
-                            </FormControl>
+                        <Grid item style={{ padding: '5px', width: '100%',height: '50px' }}>
+                            <Autocomplete
+                            id="WhatIfGnewInterest"
+                            placeholder="Add a New Interest..." 
+                            onKeyDown={handleNewInterest} 
+                            style={{ borderRadius: "5px" }}
+                            options={otherOptions}
+                            getOptionLabel={(option) => option.title}
+                            renderInput={(params) => <TextField {...params} label="Add new interest"  />}
+                            />
                             {/* <input id="WhatIfGnewInterest" placeholder="Add a New Interest..." onKeyDown={handleNewInterest} style={{ width: '100%', height: '100%' }} /> */}
                         </Grid>
                     </Grid>) : null}
             </Grid>
         )
+    }
+
+    const handleInterestDelete = (index) => {
+        if (index > -1) {
+            let tempInterests = interests;
+            tempInterests.splice(index, 1); 
+            setInterests(tempInterests)
+        }
+    }
+    const changeInterestWeight = (index, newWeight) => {
+        let tempInterests = interests;
+        tempInterests[index].weight = newWeight
+        setInterests(tempInterests)
     }
 
     function chartSeries() {

@@ -54,7 +54,6 @@ def get_recommended_papers(interests):
         # calculate similarity score
         score = round((get_weighted_interest_similarity_score(
                 user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
-        # if score > 40:
         interest_score = 0
         interests_similarity = {}
         keywords_similarity={}
