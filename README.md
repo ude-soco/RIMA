@@ -23,9 +23,9 @@ Developed by ... at ... for ... since ...
 
 ### Container images
 
-* [RIMA-Backend](https://hub.docker.com/repository/docker/inko/soco-rima-backend)
-* [RIMA-Frontend](https://hub.docker.com/repository/docker/inko/soco-rima-frontend)
-* [model-downloader](https://hub.docker.com/repository/docker/inko/soco-rima-model-downloader)
+* Backend: [socialcomputing/rima-backend](https://hub.docker.com/repository/docker/socialcomputing/rima-backend)
+* Frontend: [socialcomputing/rima-frontend](https://hub.docker.com/repository/docker/socialcomputing/rima-frontend)
+* Model Downloader: [socialcomputing/rima-model-downloader](https://hub.docker.com/repository/docker/socialcomputing/rima-model-downloader)
 
 ### Live deployments
 
