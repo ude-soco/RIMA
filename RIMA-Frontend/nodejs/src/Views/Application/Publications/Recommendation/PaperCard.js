@@ -232,7 +232,11 @@ export default function PaperCard(props) {
           <Grid container className="card-body">
             <Title paper={paperDetails} similarityScore={paper.score} />
 
-            <Grid item md={12} sx={{ padding: "10px", textAlign: "justify" }}>
+            <Grid
+              item
+              md={12}
+              style={{ padding: "10px", textAlign: "justify" }}
+            >
               {/* <a
                 href="PAPER_URL"
                 target="_blank"
@@ -245,11 +249,17 @@ export default function PaperCard(props) {
 
               {/* </a> */}
             </Grid>
-            <ExpansionPanel
-              paper={paper}
-              interests={state.interests}
-              index={state.index}
-            />
+            <Grid
+              item
+              md={12}
+              style={{ padding: "10px", textAlign: "justify" }}
+            >
+              <ExpansionPanel
+                paper={paper}
+                interests={state.interests}
+                index={state.index}
+              />
+            </Grid>
           </Grid>
         </>
       ) : (

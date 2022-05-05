@@ -143,7 +143,7 @@ export default function HowExplanation(props) {
             id: "four",
             label: "Split Keyphrase into Keywords",
             faveColor: "#3385ff",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 200,
           },
           position: { x: 410, y: 110 },
@@ -163,7 +163,7 @@ export default function HowExplanation(props) {
             id: "six",
             label: "Word Embedding",
             faveColor: "#0052cc",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 120,
           },
           position: { x: 100, y: 190 },
@@ -173,7 +173,7 @@ export default function HowExplanation(props) {
             id: "seven",
             label: "Word Embedding",
             faveColor: "#0052cc",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 120,
           },
           position: { x: 330, y: 190 },
@@ -183,7 +183,7 @@ export default function HowExplanation(props) {
             id: "eight",
             label: "Word Embedding",
             faveColor: "#0052cc",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 120,
           },
           position: { x: 490, y: 190 },
@@ -193,7 +193,7 @@ export default function HowExplanation(props) {
             id: "nine",
             label: "Word Embedding",
             faveColor: "#0052cc",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 120,
           },
           position: { x: 750, y: 190 },
@@ -203,7 +203,7 @@ export default function HowExplanation(props) {
             id: "ten",
             label: "Interest Embeddings",
             faveColor: "#0052cc",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 130,
           },
           position: { x: 150, y: 260 },
@@ -213,7 +213,7 @@ export default function HowExplanation(props) {
             id: "eleven",
             label: "Publication Keyword Embeddings",
             faveColor: "#0052cc",
-            shape: "round-rectangle",
+            shape: "rectangle",
             width: 210,
           },
           position: { x: 700, y: 260 },
@@ -285,7 +285,7 @@ export default function HowExplanation(props) {
         id: "three",
         label: "Interests",
         faveColor: "#3385ff",
-        shape: "round-rectangle",
+        shape: "rectangle",
         width: 150,
         },
         position: { x: 110, y: 150 },
@@ -295,7 +295,7 @@ export default function HowExplanation(props) {
         id: "four",
         label: "Keywords",
         faveColor: "#3385ff",
-        shape: "round-rectangle",
+        shape: "rectangle",
         width: 150,
         },
         position: { x: 310, y: 150 },
@@ -305,7 +305,7 @@ export default function HowExplanation(props) {
         id: "five",
         label: "Word2Vec",
         faveColor: "#0052cc",
-        shape: "round-rectangle",
+        shape: "rectangle",
         width: 150,
         },
         position: { x: 110, y: 250 },
@@ -315,7 +315,7 @@ export default function HowExplanation(props) {
         id: "six",
         label: "Word2Vec",
         faveColor: "#0052cc",
-        shape: "round-rectangle",
+        shape: "rectangle",
         width: 150,
         },
         position: { x: 310, y: 250 },
@@ -338,6 +338,32 @@ export default function HowExplanation(props) {
     { data: { source: "six", target: "seven", label: "" } },
     { data: { source: "five", target: "seven", label: "" } },
     ];
+    var sampleData = [
+      // nodes
+      {
+          data: {
+          id: "one",
+          label: "Node1",
+          faveColor: "#80b3ff",
+          shape: "round-rectangle",
+          width: 150,
+          },
+          position: { x: 110, y: 50 },
+      },
+      {
+          data: {
+          id: "two",
+          label: "Node1",
+          faveColor: "#80b3ff",
+          shape: "round-rectangle",
+          width: 150,
+          },
+          position: { x: 310, y: 50 },
+      },
+      // edges
+      { data: { source: "one", target: "two", label: "" } },
+      ];
+  
 
     // Additional Components
     const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} />;
@@ -368,7 +394,7 @@ export default function HowExplanation(props) {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {state.interests.map((interest) => (
+                    {/* {state.interests.map((interest) => (
                         <TableRow key={interest._id}>
                             <TableCell component="th" scope="row">
                                 <Typography variant="subtitle2" align="center">
@@ -381,7 +407,7 @@ export default function HowExplanation(props) {
                                 </Typography>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    ))} */}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -404,7 +430,7 @@ export default function HowExplanation(props) {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {Object.keys(state.paper.paper_keywords).map((keyword, i) => (
+                    {/* {Object.keys(state.paper.paper_keywords).map((keyword, i) => (
                         <TableRow key={i}>
                             <TableCell component="th" scope="row">
                                 <Typography variant="subtitle2" align="center">
@@ -417,7 +443,7 @@ export default function HowExplanation(props) {
                                 </Typography>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    ))} */}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -453,7 +479,7 @@ export default function HowExplanation(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Flowchart elements={lessDetailFlowchart} height={320}/>
+            <Flowchart elements={sampleData} height={320}/>
         </Grid>
         <Grid item md={6} >
         <TableContainer >
@@ -476,7 +502,7 @@ export default function HowExplanation(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Flowchart elements={lessDetailFlowchart} height={320} />
+            <Flowchart elements={sampleData} height={320} />
         </Grid>
     </Grid>
     const embeddingBox = <Grid container md={12}
@@ -509,7 +535,7 @@ export default function HowExplanation(props) {
                       </TableBody>
                   </Table>
               </TableContainer>
-              <Flowchart elements={lessDetailFlowchart} height={320}/>
+              <Flowchart elements={sampleData} height={320}/>
           </Grid>
           <Grid item md={6} >
           <TableContainer >
@@ -532,7 +558,7 @@ export default function HowExplanation(props) {
                       </TableBody>
                   </Table>
               </TableContainer>
-              <Flowchart elements={lessDetailFlowchart} height={320}/>
+              <Flowchart elements={sampleData} height={320}/>
           </Grid>
       </Grid>;
     const similarityBox = <>
@@ -596,7 +622,7 @@ export default function HowExplanation(props) {
         alignContent: "center",
         margin: "0px 10px",
     }}>
-        <Flowchart elements={lessDetailFlowchart} height={320}/>
+        <Flowchart elements={sampleData} height={320}/>
     </Grid></>;
 
       // end Tannaz
