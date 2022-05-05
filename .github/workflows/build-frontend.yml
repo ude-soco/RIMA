@@ -14,9 +14,6 @@ on:
     - 'RIMA-Frontend'
   pull_request:
     branches: ['master']
-    paths:
-    - '.github/workflows/build-frontend.yml'
-    - 'RIMA-Frontend'
 
 jobs:
   build:

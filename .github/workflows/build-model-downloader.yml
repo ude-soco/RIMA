@@ -14,9 +14,6 @@ on:
     - 'model/downloader'
   pull_request:
     branches: ['master']
-    paths:
-    - '.github/workflows/build-model-downloader.yml'
-    - 'model/downloader'
 
 jobs:
   build:

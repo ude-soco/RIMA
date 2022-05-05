@@ -14,9 +14,6 @@ on:
     - 'RIMA-Backend'
   pull_request:
     branches: ['master']
-    paths:
-    - '.github/workflows/build-backend.yml'
-    - 'RIMA-Backend'
 
 jobs:
   build:
