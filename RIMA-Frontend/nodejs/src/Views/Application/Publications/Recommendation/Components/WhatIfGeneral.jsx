@@ -37,20 +37,6 @@ export const WhatIfGeneral = (props) => {
         getRecommendedPapers()
     },[state.interests.length])
 
-    const handleInterestDelete = (index) => {
-        if (index > -1) {
-            let interests = state.interests;
-            interests.splice(index, 1);
-            setState({ ...state, interests })
-        }
-    }
-    const changeInterestWeight = (index, newWeight) => {
-        let interests = state.interests;
-        interests[index].weight = newWeight
-        setState({ ...state, interests })
-        getRecommendedPapers()
-    }
-
     const handleInterestsChange = ((e) => {
 
     })

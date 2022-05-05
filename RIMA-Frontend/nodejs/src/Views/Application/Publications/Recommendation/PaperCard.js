@@ -133,7 +133,6 @@ export default function PaperCard(props) {
                 threshold={state.threshold}
               />
             </Grid>
-                        <ExpansionPanel paper={paper} interests={state.interests} index={state.index} threshold={state.threshold} />
                     
                     </Grid>
                 </>
