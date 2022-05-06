@@ -48,7 +48,7 @@
     "chart.js": "^2.9.3",
     "classnames": "2.2.6",
     "d3": "^5.5.0",
-    "konva": "^4.2.2",
+    "konva": "^8.3.8",
     "moment": "2.24.0",
     "node-sass": "4.13.1",
     "re-resizable": "^6.5.5",
