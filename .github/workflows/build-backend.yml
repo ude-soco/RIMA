@@ -40,7 +40,6 @@ jobs:
           type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
           type=ref,event=branch
           type=ref,event=pr
-          type=sha
     - name: Build and push container image
       uses: docker/build-push-action@v3
       with:
