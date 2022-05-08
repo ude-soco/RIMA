@@ -116,7 +116,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 150,
           },
-          position: { x: 303, y: 30 },
+          position: { x: 203, y: 30 },
         },
         {
           data: {
@@ -126,7 +126,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 150,
           },
-          position: { x: 515, y: 30 },
+          position: { x: 415, y: 30 },
         },
         {
           data: {
@@ -136,7 +136,7 @@ export default function HowExplanation(props) {
             shape: "diamond",
             width: 110,
           },
-          position: { x: 150, y: 110 },
+          position: { x: 50, y: 110 },
         },
         {
           data: {
@@ -146,7 +146,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 200,
           },
-          position: { x: 410, y: 110 },
+          position: { x: 310, y: 110 },
         },
         {
           data: {
@@ -156,7 +156,7 @@ export default function HowExplanation(props) {
             shape: "diamond",
             width: 110,
           },
-          position: { x: 680, y: 110 },
+          position: { x: 580, y: 110 },
         },
         {
           data: {
@@ -166,7 +166,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 120,
           },
-          position: { x: 100, y: 190 },
+          position: { x: 0, y: 190 },
         },
         {
           data: {
@@ -176,7 +176,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 120,
           },
-          position: { x: 330, y: 190 },
+          position: { x: 230, y: 190 },
         },
         {
           data: {
@@ -186,7 +186,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 120,
           },
-          position: { x: 490, y: 190 },
+          position: { x: 390, y: 190 },
         },
         {
           data: {
@@ -196,7 +196,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 120,
           },
-          position: { x: 750, y: 190 },
+          position: { x: 650, y: 190 },
         },
         {
           data: {
@@ -206,7 +206,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 130,
           },
-          position: { x: 150, y: 260 },
+          position: { x: 50, y: 260 },
         },
         {
           data: {
@@ -216,7 +216,7 @@ export default function HowExplanation(props) {
             shape: "rectangle",
             width: 210,
           },
-          position: { x: 700, y: 260 },
+          position: { x: 600, y: 260 },
         },
         {
           data: {
@@ -226,7 +226,7 @@ export default function HowExplanation(props) {
             shape: "round-rectangle",
             width: 120,
           },
-          position: { x: 410, y: 350 },
+          position: { x: 310, y: 350 },
         },
         // edges
         { data: { source: "one", target: "three", label: "Weighted Interests" } },
@@ -366,8 +366,8 @@ export default function HowExplanation(props) {
   
 
     // Additional Components
-    const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} />;
-    const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} />;
+    const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} xStartPoint={50}  yStartPoint={10}/>;
+    const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} xStartPoint={170}  yStartPoint={0}/>;
     const interestsKeywordsBox = <Grid container md={12}
     style={{
         borderBottom: "1px solid #2d3985",

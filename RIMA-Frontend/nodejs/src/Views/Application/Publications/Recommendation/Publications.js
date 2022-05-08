@@ -173,12 +173,11 @@ export default function PublicationRecommendation() {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "70%",
-    bgcolor: "background.paper",
+    backgroundColor: "#FFFFFF",
     border: "1px solid #ccc",
     overflow: "scroll",
     height: "100%",
     display: "block",
-    // boxShadow: 24,
     p: 4,
   };
   const whatStyle = {
@@ -187,7 +186,7 @@ export default function PublicationRecommendation() {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "70%",
-    bgcolor: "background.paper",
+    backgroundColor: "#FFFFFF",
     border: "1px solid #ccc",
     height: "70%",
     display: "block",
@@ -238,15 +237,15 @@ export default function PublicationRecommendation() {
                 size="md"
                 className="publication-modal"
               >
-                <Box sx={style}>
+                <Box style={style}>
                   <Grid item md={12}>
-                    <DialogTitle sx={{ m: 0, p: 2 }}>
+                    <DialogTitle style={{ m: 0, p: 2 }}>
                       <Seperator Label="What if?" Width="130" />
                       {state.modal ? (
                         <IconButton
                           aria-label="close"
                           onClick={closeWhatIfModal}
-                          sx={{
+                          style={{
                             position: "absolute",
                             right: 8,
                             top: 8,
@@ -301,15 +300,15 @@ export default function PublicationRecommendation() {
           size="md"
           className="publication-modal"
         >
-          <Box sx={whatStyle}>
-            <Grid item md={12}>
-              <DialogTitle sx={{ m: 0, p: 2 }}>
+          <Box style={whatStyle}>
+            <Grid item md={12} sm={12}>
+              <DialogTitle style={{ m: 0, p: 2 }}>
                 <Seperator Label="What the system knows?" Width="200" />
                 {state.whatModal ? (
                   <IconButton
                     aria-label="close"
                     onClick={closeWhatModal}
-                    sx={{
+                    style={{
                       position: "absolute",
                       right: 8,
                       top: 8,
@@ -320,12 +319,12 @@ export default function PublicationRecommendation() {
                 ) : null}
               </DialogTitle>
             </Grid>
-            <Grid item md={12}>
+            <Grid item md={12} sm={12}>
               <Typography align="left" variant="subtitle2" className="ml-3">
                 Your Top Interests have been chosen from this wordcloud:
               </Typography>
             </Grid>
-            <Grid item md={12}>
+            <Grid item md={12} sm={12}>
               <DialogContent>
                 <CloudChart />
               </DialogContent>

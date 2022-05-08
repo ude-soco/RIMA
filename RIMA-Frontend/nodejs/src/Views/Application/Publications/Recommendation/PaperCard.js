@@ -10,8 +10,8 @@ import Button from "@mui/material/Button";
 import RestAPI from "Services/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Grid } from "@material-ui/core";
-import ExpansionPanel from './Components/ExpansionPanel';
-import PaperContent from './Components/PaperContent';
+import ExpansionPanel from "./Components/ExpansionPanel";
+import PaperContent from "./Components/PaperContent";
 import { Typography } from "@material-ui/core";
 
 function ColoredBand({ interests_similarity, tags }) {
@@ -85,77 +85,75 @@ export default function PaperCard(props) {
             props.paper.keywords_similarity[p1]={...interests,data_max_score:max_score,data_max_interest:max_interest,data_max_interest_color:max_interest_color}
         }
     }
-    //---------------Hoda end-----------------
-    useEffect(() => {
-      // calculateSimilarity();
-      // let modified_text = convertUnicode(text);
-      let modified_text = state.paper.abstract;
-      let merged = [];
-  
-  
-      setState(() => ({
-        ...state,
-        paperModiText: modified_text,
-        done: true,
-      }));
-    }, [state.done]);
-  
+  //---------------Hoda end-----------------
+  useEffect(() => {
+    // calculateSimilarity();
+    // let modified_text = convertUnicode(text);
+    let modified_text = state.paper.abstract;
+    let merged = [];
 
-    const { paper } = props;
-    const paperDetails = paper;
-    const text = paper.title + ' ' + paper.abstrcat;
-    return (
-      <Grid
-        container
-        className="card mt-4"
-        style={{ position: "relative", border: "1px solid" }}
-      >  
-            {state.done ? (
-                <>
-                    <ColoredBand interests_similarity={paper.interests_similarity} tags={state.interests} />
-                    <Grid container className="card-body">
-                      <Grid
-                        item
-                        md={12}
-                        style={{ padding: "10px", textAlign: "justify" }}
-                      >  
-                        <PaperContent paper={paper} /> 
-                      </Grid>
-                      <Grid
-                        item
-                        md={12}
-                        style={{ padding: "10px", textAlign: "justify" }}
-                      >
-                        <ExpansionPanel
-                          paper={paper}
-                          interests={state.interests}
-                          index={state.index}
-                          threshold={state.threshold}
-                        />
-                      </Grid>
-                    
-                    </Grid>
-                </>
-            ) : (
-                <Button
-                    disabled
-                    style={{
-                        fontWeight: "bold",
-                        textTransform: "none",
-                        marginLeft: "5px",
-                        fontSize: "16px",
-                    }}
-                >
-                    <CircularProgress
-                        style={{
-                            marginRight: "5px",
-                        }}
-                    />
-                    Calculating similarity...
-                </Button>
-            )
-            }
-        </Grid >
+    setState(() => ({
+      ...state,
+      paperModiText: modified_text,
+      done: true,
+    }));
+  }, [state.done]);
 
-    );
+  const { paper } = props;
+  return (
+    <Grid
+      container
+      className="card mt-4"
+      style={{ position: "relative", border: "1px solid" }}
+    >
+      {state.done ? (
+        <>
+          <ColoredBand
+            interests_similarity={paper.interests_similarity}
+            tags={state.interests}
+          />
+          <Grid container className="card-body">
+            <Grid
+              item
+              md={12}
+              sm={12}
+              style={{ padding: "10px", textAlign: "justify" }}
+            >
+              <PaperContent paper={paper} />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              sm={12}
+              style={{ padding: "10px", textAlign: "justify" }}
+            >
+              <ExpansionPanel
+                paper={paper}
+                interests={state.interests}
+                index={state.index}
+                threshold={state.threshold}
+              />
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <Button
+          disabled
+          style={{
+            fontWeight: "bold",
+            textTransform: "none",
+            marginLeft: "5px",
+            fontSize: "16px",
+          }}
+        >
+          <CircularProgress
+            style={{
+              marginRight: "5px",
+            }}
+          />
+          Calculating similarity...
+        </Button>
+      )}
+    </Grid>
+  );
 }
