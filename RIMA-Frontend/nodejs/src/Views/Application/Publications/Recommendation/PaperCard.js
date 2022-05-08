@@ -114,25 +114,25 @@ export default function PaperCard(props) {
                 <>
                     <ColoredBand interests_similarity={paper.interests_similarity} tags={state.interests} />
                     <Grid container className="card-body">
-                    <Grid
-              item
-              md={12}
-              style={{ padding: "10px", textAlign: "justify" }}
-            >  
+                      <Grid
+                        item
+                        md={12}
+                        style={{ padding: "10px", textAlign: "justify" }}
+                      >  
                         <PaperContent paper={paper} /> 
-                        </Grid>
-                        <Grid
-              item
-              md={12}
-              style={{ padding: "10px", textAlign: "justify" }}
-            >
-              <ExpansionPanel
-                paper={paper}
-                interests={state.interests}
-                index={state.index}
-                threshold={state.threshold}
-              />
-            </Grid>
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        style={{ padding: "10px", textAlign: "justify" }}
+                      >
+                        <ExpansionPanel
+                          paper={paper}
+                          interests={state.interests}
+                          index={state.index}
+                          threshold={state.threshold}
+                        />
+                      </Grid>
                     
                     </Grid>
                 </>

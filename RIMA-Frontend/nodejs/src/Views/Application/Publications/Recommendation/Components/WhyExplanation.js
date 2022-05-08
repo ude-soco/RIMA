@@ -1,9 +1,28 @@
 //---------------Hoda Start-----------------
 import React, { Component } from "react";
-import {Paper, CardContent, Grid, Typography} from "@material-ui/core";
+import {Paper, CardContent, Grid, Typography,makeStyles} from "@material-ui/core";
 import "../assets/styles.css";
 import KeywordCloud from "./KeywordCloud"
 import TopSimilarityChart from "./TopSimilarityChart"
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    padding: "10px",
+  },
+  collapse: {
+    backgroundColor: theme.palette.common.white,
+  },
+  collapseButton: {
+    margin: "10px",
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  center: {
+    display: "flex",
+    justifyContent: "center ",
+  },
+}));
 
 let activeTimeout=null;
 
@@ -17,7 +36,22 @@ function WhyExplanation({paper}) {
     if(!!activeTimeout) {
       clearTimeout(activeTimeout);
     }
-    activeTimeout=setTimeout(()=>setActiveChart(!interests?null:{word,interests}),300);
+    activeTimeout=setTimeout(()=>{
+      if(!interests){
+        setActiveChart(null);
+      }
+      else
+      {
+        try
+        {
+          setActiveChart({word,interests});
+        }
+        catch(ex)
+        {
+          ex.message.toLowerCase();
+        }
+      }
+    },300);
   }  
   const chartTitle="";
   return (

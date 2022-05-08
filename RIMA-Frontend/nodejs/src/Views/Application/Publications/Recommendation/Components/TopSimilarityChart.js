@@ -14,7 +14,7 @@ function getInterestScore(interests,max)
   let i=0;
   for(let p2 in interests)
   {
-    if(p2.toLowerCase().indexOf("max_")>=0)
+    if(p2.toLowerCase().indexOf("data_")>=0)
     {
         continue;
     }
