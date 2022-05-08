@@ -12,35 +12,25 @@
 
 3. Install and activate python virtual environment for Windows
 
-	- Open a command prompt with **administration rights**
+   - Open a command prompt with **administration rights**
 
-	- Move to the directory `RIMA-Backend` in your command prompt
+   - Move to the directory `RIMA-Backend` in your command prompt
 
-	- Type the following commands and do not close the command prompt after executing the fourth command:
+   - Type the following commands and do not close the command prompt after executing the fourth command:
 
-	- Install python virtual environment
+```sh
+# Installs a python virtual environment
+python -m venv venv
 
-        ```
-        python -m venv venv
-        ```
+# Activates the python virtual environment
+.\venv\Scripts\activate
 
-    -  Activate python virtual environment
+# Upgrades pip version
+python -m pip install --upgrade pip
 
-		```
-        .\venv\Scripts\activate
-        ```
-	-  Upgrade pip version
-
-		```
-        python -m pip install --upgrade pip
-        ```
-
-	-  Install the required packages
-
-		```
-        pip install -r requirements-offline.txt
-        ```
-
+# Installs the required packages
+pip install -r requirements-offline.txt
+```
 
 4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
 
@@ -48,49 +38,27 @@
 
 6. In the command prompt, type the following commands to install spacy and nltk packages. Do not close the command prompt after the last command
 
-	-  Download the spacy package
+```sh
+# Downloads the spacy package
+python -m spacy download en
 
-		```
-        python -m spacy download en
-        ```
-
-	-  Download the necessary nltk packages
-
-		```
-        python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
-        ```
-
+# Downloads the necessary nltk packages
+python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
+```
 
 7. Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) 
 
 8. Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the `RIMA-Backend`
 
-9. In the command prompt to create the database
+9. In the command prompt, type `python manage.py migrate` to create the database
 
-	```
-	python manage.py migrate
-	```
-
-10. Run the django server and do not close it
-
-	```
-	python manage.py runserver
-	```
+10. Then type `python manage.py runserver` in the command prompt, to run the django server and do not close it
 
 11. Open a new command prompt with **administration rights**
 
     - Move to the `RIMA-Backend` in your command prompt
-
-    - Activate the virtual environment
-
-		```
-		.\venv\Scripts\activate
-		```
-    - Start the celery workers and do not close the command prompt
-
-		```
-		celery worker --app=interest_miner_api -l info -P eventlet
-		```
+    - Activate the virtual environment by typing `.\venv\Scripts\activate`
+    - Type `celery worker --app=interest_miner_api -l info -P eventlet` to start the celery workers and do not close the command prompt
 
 **FAQ**
 
