@@ -2,24 +2,45 @@ import React, { useEffect, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 
 const layout = { name: "preset" };
-// const initialPos = { x: 550, y: 0 };
-// const minZoom = 0;
-// const maxZoom = 4;
+const minZoom = 0.5;
+const maxZoom = 1e1;
 
 export default function Flowchart(props) {
   // start Tannaz
 
-  const { elements, height } = props;
+  const { elements, height, xStartPoint, yStartPoint } = props;
 
   return (
     <div style={{ display: "flex", flex: 1, height: height }}>
       <CytoscapeComponent
-        cy={(cy) =>
+        cy={(cy) => {
           cy.on("resize", (_evt) => {
-            cy.layout(layout).run();
-            cy.fit(10);
-          })
-        }
+            cy.layout({
+              name: "preset",
+              spacingFactor: 1,
+              avoidOverlap: true,
+              fit: true,
+              padding: 10,
+              animate: true,
+              animationDuration: 500,
+            }).run();
+          });
+          cy.on("mouseover", "node", function (evt) {
+            document.body.style.cursor = "grab";
+          });
+
+          cy.on("mouseout", "node", function (evt) {
+            document.body.style.cursor = "default";
+          });
+
+          cy.on("mousedown", "node", function (evt) {
+            document.body.style.cursor = "grabbing";
+          });
+
+          cy.on("mouseup", "node", function (evt) {
+            document.body.style.cursor = "grab";
+          });
+        }}
         elements={elements}
         style={{
           width: "100%",
@@ -76,10 +97,9 @@ export default function Flowchart(props) {
             },
           },
         ]}
-        // layout={layout}
-        // pan={initialPos}
-        // minZoom={minZoom}
-        // maxZoom={maxZoom}
+        pan={{ x: xStartPoint, y: yStartPoint }}
+        minZoom={minZoom}
+        maxZoom={maxZoom}
       />
     </div>
     // end Tannaz
