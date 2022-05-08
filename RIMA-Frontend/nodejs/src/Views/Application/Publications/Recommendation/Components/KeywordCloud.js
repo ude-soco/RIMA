@@ -14,16 +14,16 @@ export function getKeywordScore(keywords)
   for(let p2 in keywords)
   {
     let value=keywords[p2];
-    items.push({keyword:p2,score:value.max_score,color:value.max_interest_color});
+    items.push({keyword:p2,score:value.data_max_score,color:value.data_max_interest_color});
   }
   return items.sort((a,b)=>a.score<b.score?1:a.score==b.score?0:-1);
 }
 
-function KeywordCloud({keywords,onClickItem}) {
-  let simKeywords=keywords;
+function KeywordCloud({keywords,onSelectedItem}) {
+  const simKeywords=keywords;
   keywords=getKeywordScore(simKeywords);
-  let words=keywords.map(x=> ({text:x.keyword,value:x.score}));
-  let colors=keywords.map(x=>x.color);
+  const words=keywords.map(x=> ({text:x.keyword,value:x.score}));
+  const colors=keywords.map(x=>x.color);
 
 
   const options = {
@@ -58,10 +58,10 @@ function KeywordCloud({keywords,onClickItem}) {
         text.transition().attr("font-size",actualFontSize )
         
         if (isActive) {
-          if(!!onClickItem) onClickItem(word.text,simKeywords[word.text]);
+          if(!!onSelectedItem) onSelectedItem(word.text,simKeywords[word.text]);
         }
         else{
-          if(!!onClickItem) onClickItem(null,null);
+          if(!!onSelectedItem) onSelectedItem(null,null);
         }
       };
     }

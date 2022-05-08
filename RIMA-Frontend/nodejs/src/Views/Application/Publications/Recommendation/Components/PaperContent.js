@@ -59,8 +59,9 @@ function KeywordSimObjToArray(keywords_similarity) {
     let value = keywords_similarity[p2];
     items.push({
       keyword: p2,
-      max_score: value.max_score,
-      max_interest_color: value.max_interest_color,
+      weight: value.data_weight,
+      max_score: value.data_max_score,
+      max_interest_color: value.data_max_interest_color,
       numberOfWord: p2.split(" ").length,
     });
   }
@@ -80,6 +81,7 @@ function HighlightText(paperId, keywords_similarity, text) {
     let regEx = new RegExp(value.keyword, "ig");
     let matches = regEx.exec(modified_text);
     if (matches === null) continue;
+    //deform originalText to prevent nested highlighting keyword/s
     let originalText = matches[0]
       .split(" ")
       .map((x) => "<x>" + x[0] + "</x>" + x.substring(1))

@@ -65,7 +65,7 @@ export default function PaperCard(props) {
         let max_interest_color=""
         for(let p2 in interests)
         {
-            if(p2.toLowerCase().indexOf("max_")>=0)
+            if(p2.toLowerCase().indexOf("data_")>=0)
             {
                 continue;
             }
@@ -82,7 +82,7 @@ export default function PaperCard(props) {
         }
         if(max_score>0)
         {
-            props.paper.keywords_similarity[p1]={...interests,max_score,max_interest,max_interest_color}
+            props.paper.keywords_similarity[p1]={...interests,data_max_score:max_score,data_max_interest:max_interest,data_max_interest_color:max_interest_color}
         }
     }
     //---------------Hoda end-----------------
