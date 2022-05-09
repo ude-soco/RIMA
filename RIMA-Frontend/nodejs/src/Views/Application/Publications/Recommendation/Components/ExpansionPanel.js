@@ -563,10 +563,10 @@ export default function ExpansionPanel(props) {
                             </Tabs>
                         </Grid>
                         <TabPanel value={value} index={0}>
-                            <WhatIfInterests paper={paper} interests={interests} index={index} threshold={threshold}/>
+                            <WhatIfInterests paper={paper} interests={interests} index={index} threshold={threshold} handleApplyWhatIfChanges={props.handleApplyWhatIfChanges}/>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                            <WhatIfKeywords paper={paper} interests={interests} index={index} threshold={threshold}/>
+                            <WhatIfKeywords paper={paper} interests={interests} index={index} threshold={threshold} handleApplyWhatIfChanges={props.handleApplyWhatIfChanges}/>
                         </TabPanel>
                     </Grid>
                 </Grid>

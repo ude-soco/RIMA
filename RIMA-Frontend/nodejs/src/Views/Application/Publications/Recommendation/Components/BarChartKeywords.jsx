@@ -3,39 +3,27 @@ import Highcharts, { color } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import drilldown from "highcharts/modules/drilldown";
 import { Grid } from "@material-ui/core";
+import blueGrey from '@material-ui/core/colors/blueGrey';
 
 drilldown(Highcharts)
 export const BarChart = (props) => {
-    if(!props.paper.keywords_similarity){
+    if (!props.paper.keywords_similarity) {
         return null
     }
     const paper = props.paper
     const interests = props.interests
-    const keywords_similarity = Object.entries(props.paper.keywords_similarity).map((data)=>Object.assign({'name':data[0],'y':data[1]}))
+    const keywords_similarity = Object.entries(props.paper.keywords_similarity).map((data) => Object.assign({ 'name': data[0], 'y': data[1] }))
     const threshold = props.threshold || 40
-    // const data = Object.entries(paper.interests_similarity);
     const scorePrev = paper.score
     const score = paper.new_score
     const scoreColor = (score > threshold) ? 'green' : 'red'
     const status = (score > threshold) ? 'Recommended' : 'Not Recommended'
-    // const getData = data => data.map((interest, i) => {
-    //     if (interests[i]) {
-    //         return ({
-    //             name: interest[0],
-    //             y: interest[1],
-    //             color: interests[i].color
-    //         })
-    //     }
-    // });
     const options = {
         chart: {
             type: 'column'
         },
         title: {
-            text: 'The relevance of the paper keywords to your interests'
-        },
-        subtitle: {
-            // text: 'Click the columns to view interests similarities.'
+            text: 'The relevance of the paper keywords to your interests model'
         },
         accessibility: {
             announceNewData: {
@@ -61,6 +49,7 @@ export const BarChart = (props) => {
                 dataLabels: {
                     enabled: true,
                 },
+                color: blueGrey[500]
 
             }
         },
@@ -169,11 +158,11 @@ export const BarChart = (props) => {
     }
     return (
         <Grid item container spacing={8} style={{ paddingTop: '30px' }}>
-            <Grid item md={4}>
-                <HighchartsReact highcharts={Highcharts} options={scoreOptions} />
-            </Grid>
             <Grid item md={8}>
                 <HighchartsReact highcharts={Highcharts} options={options} />
+            </Grid>
+            <Grid item md={4}>
+                <HighchartsReact highcharts={Highcharts} options={scoreOptions} />
             </Grid>
         </Grid>
     );
