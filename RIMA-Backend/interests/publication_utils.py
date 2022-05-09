@@ -1,4 +1,4 @@
-#LK
+#LK - #Jaleh
 import pytz
 import os
 import random
@@ -59,26 +59,34 @@ def get_recommended_papers(interests):
         # calculate similarity score
         score = round((get_weighted_interest_similarity_score(
                 user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
+
         interest_score = 0
         interests_similarity = {}
+        keywords_similarity={}
         for interest in interests: 
             interest_score = round((get_single_interest_similarity_score(
                 [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
             interests_similarity[interest['text']] = interest_score
+            #keyword Interest similarity-Hoda    
+            for keyword,weight in paper_keywords.items():
+                keyword_score = round((get_weighted_interest_similarity_score(
+                    [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
+                keyword_score=keyword_score* (weight/5)
+                if not keywords_similarity.__contains__(keyword):
+                    keywords_similarity[keyword]={'data_weight':weight}    
+                keywords_similarity[keyword][interest['text']]={'score':keyword_score,'color':''}
         
-        # if score > 40:
         paper["score"] = score
-        paper["paper_keywords"] = top_ten_keywords
-        paper["extra_keywords"] = extra_keywords
+        paper["paper_keywords"] = paper_keywords
         paper['interests_similarity'] = interests_similarity
+        paper['keywords_similarity'] = keywords_similarity
 
         papers_with_scores.append(paper)
-
-
+        
     sorted_list = sorted(papers_with_scores,
                          key=lambda k: k['score'],
                          reverse=True)
-    # print('sorted_list',sorted_list)
+                         
     return sorted_list
 
 def get_interest_paper_similarity(data):

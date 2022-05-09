@@ -131,7 +131,6 @@ def generate_geo_code(tag):
 
 
 def get_recommended_tweets(tags):
-    print('get_recommended_tweets')
     # First step
     # tags: Array of objects (5 Elements) = interests
     #  E.X : {'text': 'learning', 'weight': 5, 'id': 2, 'color': '#55e48c', 'n_tweets': '5', 'lng': 150.644, 'lat': -34.397, 'radius': 10, 'language': 'ANY', 'type': 'ALL', 'retweets': 0, 'favorites': 0, 'place': {'lat': -34.397, 'lng': 150.644, 'radius': 0}}

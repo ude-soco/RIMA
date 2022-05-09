@@ -95,13 +95,14 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   border: 1px solid rgb(140, 140, 137, 0.6);
   padding-left: 20px;
 }
-.publication-modal h5{
+.publication-modal h5 , .modalCSS h5{
   width: 100%;
+  margin-top: 10px;
 }
 /* Tannaz */
 #WhatifButton {
   width: 100%;
-  height: 80px;
+  height: 90px;
   margin-right: 20px;
   margin-top: 10px;
   display: flex;
@@ -134,6 +135,134 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
 }
 
+.box {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px 10px;
+  overflow: hidden; }
+
+.box-item {
+  display: flex;
+  position: relative;
+  float: left;
+  width: 50% ;
+  height: 80px;
+  line-height: 150%;
+  margin-right: 0px;
+  padding: 0px 5px;
+  border-radius: 4px; 
+  margin-top: 0px;
+  margin-bottom: 0px;
+  transition: 0.3s;
+}
+  .box-item:before {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top:15px;
+    height: 40px;
+    width: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    transition: 0.3s;
+     }
+  .box-item:after {
+    content: '';
+    position: absolute;
+    left: -1px;
+    height: 40px;
+    width: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    }
+  .box-item:first-child:after {
+    display: none; }
+   .box-item:last-child {
+    margin-right: 0; } 
+.interestsBox{
+  background-color:#80b3ff;
+  transition: 0.3s;
+}
+.interestsBox:before {
+  border-left: 10px solid #80b3ff;
+  transition: 0.3s;
+}
+.dataBox{
+  background-color:#3385ff;
+  transition: 0.3s;
+}
+.dataBox:before {
+  border-left: 10px solid #3385ff;
+  transition: 0.3s;
+}
+.embeddingsBox{
+  background-color:#0052cc;
+  transition: 0.3s;
+}
+.embeddingsBox:before {
+  border-left: 10px solid #0052cc;
+  transition: 0.3s;
+}
+.similarityBox{
+  background-color:#002966;
+  transition: 0.3s;
+}
+.similarityBox:before {
+  border-left: 10px solid #002966;
+  transition: 0.3s;
+}
+.interestsBox:hover  {
+  background-color: rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.interestsBox:hover , .interestsBox:hover:before {
+  border-left: 10px solid rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.dataBox:hover {
+  background-color: rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.dataBox:hover , .dataBox:hover:before {
+  border-left: 10px solid rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.embeddingsBox:hover {
+  background-color: rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.embeddingsBox:hover , .embeddingsBox:hover:before {
+  border-left: 10px solid rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.similarityBox:hover {
+  background-color: rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.similarityBox:hover , .similarityBox:hover:before {
+  border-left: 10px solid rgb(87, 87, 87);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.arrowBox{
+  color: white;
+  margin:5px;
+}
+
+
+/* saturation blue
+#80b3ff;
+#3385ff;
+#0052cc;
+#002966; */
 /* end Tannaz */
 
 

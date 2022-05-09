@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 
 import {
   Grid, Paper, Typography, Button,
-  Box, Modal,
-  DialogTitle, DialogContent, DialogActions,
+  Modal,
+  DialogTitle, DialogContent,
   IconButton, CircularProgress
 } from "@material-ui/core";
 
@@ -257,14 +257,14 @@ export default function PublicationRecommendation() {
             </Grid>
           </Grid>
         </Grid>
-        {/* <div className="d-flex align-items-center ml-4 mt-2">
-              <Button variant="string">
-                <CloudQueueIcon color="action" fontSize="small" />
-                <Typography align="center" variant="subtitle2" className="ml-2">
-                  Interests Sources
-                </Typography >
-              </Button>
-            </div> */}
+        <div className="d-flex align-items-center ml-4 mt-2">
+          <Button variant="string">
+            <CloudQueueIcon color="action" fontSize="small" />
+            <Typography align="center" variant="subtitle2" className="ml-2">
+              Interests Sources
+            </Typography >
+          </Button>
+        </div>
         <Seperator Label="Publications" Width="130" />
         {/* end Tannaz */}
         <Grid container style={{ padding: "20px" }} id="paper-card-container">
