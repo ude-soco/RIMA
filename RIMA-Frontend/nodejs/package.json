@@ -38,7 +38,7 @@
     "@antv/g2": "^4.0.12",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
     "@material-ui/core": "^4.9.13",
     "@sweetalert/with-react": "^0.1.1",
