@@ -46,49 +46,45 @@ function ColoredBand({ interests_similarity, tags }) {
   );
 }
 export default function PaperCard(props) {
-  const [state, setState] = useState({
-    timer: null,
-    interests: props.interests,
-    // mainKewords: props.paper_keywords,
-    paper: props.paper,
-    index: props.index,
-    threshold: props.threshold,
-    paperModiText: "",
-    done: false,
-  });
-  //---------------Hoda Start-----------------
-  for (let p1 in props.paper.keywords_similarity) {
-    let interests = props.paper.keywords_similarity[p1];
-    let max_score = 0;
-    let max_interest = "";
-    let max_interest_color = "";
-    for (let p2 in interests) {
-      if (p2.toLowerCase().indexOf("max_") >= 0) {
-        continue;
-      }
-      let value = interests[p2];
-      interests[p2] = {
-        ...value,
-        color:
-          value.color ||
-          props.interests.find((x) => x.text.toLowerCase() === p2.toLowerCase())
-            .color,
-      };
-      if (max_score < value.score) {
-        max_score = value.score;
-        max_interest_color = value.color;
-        max_interest = p2;
-      }
+    const [state, setState] = useState({
+        timer: null,
+        interests: props.interests,
+        // mainKewords: props.paper_keywords,
+        paper: props.paper,
+        index: props.index,
+        threshold: props.threshold,
+        paperModiText: "",
+        done: false,
+    });
+    //---------------Hoda Start-----------------
+    for(let p1 in props.paper.keywords_similarity)
+    {
+        let interests=props.paper.keywords_similarity[p1];
+        let max_score=0
+        let max_interest=""
+        let max_interest_color=""
+        for(let p2 in interests)
+        {
+            if(p2.toLowerCase().indexOf("data_")>=0)
+            {
+                continue;
+            }
+            let value=interests[p2];
+            interests[p2]={
+                ...value,color:value.color||props.interests.find(x=> x.text.toLowerCase()===p2.toLowerCase()).color
+                };   
+            if(max_score<value.score)
+            {
+                max_score=value.score
+                max_interest_color=value.color
+                max_interest=p2
+            }
+        }
+        if(max_score>0)
+        {
+            props.paper.keywords_similarity[p1]={...interests,data_max_score:max_score,data_max_interest:max_interest,data_max_interest_color:max_interest_color}
+        }
     }
-    if (max_score > 0) {
-      props.paper.keywords_similarity[p1] = {
-        ...interests,
-        max_score,
-        max_interest,
-        max_interest_color,
-      };
-    }
-  }
   //---------------Hoda end-----------------
   useEffect(() => {
     // calculateSimilarity();
@@ -104,8 +100,6 @@ export default function PaperCard(props) {
   }, [state.done]);
 
   const { paper } = props;
-  const paperDetails = paper;
-  const text = paper.title + " " + paper.abstrcat;
   return (
     <Grid
       container
