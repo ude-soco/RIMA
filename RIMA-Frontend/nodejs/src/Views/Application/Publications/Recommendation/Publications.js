@@ -1,18 +1,32 @@
-import React, { useEffect, useRef, createRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import {
-  Grid, Paper, Typography, Button,
-  Modal,
-  DialogTitle, DialogContent,
-  IconButton, CircularProgress
-} from "@material-ui/core";
-
-import CloseIcon from '@material-ui/icons/Close';
+import {CircularProgress} from "@material-ui/core";
+import Box from '@mui/material/Box';
 
 import Seperator from './Components/Seperator';
 import { WhatIfGeneral } from './Components/WhatIfGeneral.jsx';
 import { handleServerErrors } from "Services/utils/errorHandler";
+import Modal from '@mui/material/Modal';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Button from '@mui/material/Button';
+import { Grid, Paper, Typography } from "@material-ui/core";
+import Divider from '@material-ui/core/Divider';
+import {
+  // Modal,
+  // ModalHeader,
+  // ModalBody,
+  // ModalFooter,
+  Card,
+  CardHeader,
+  Container,
+  Row,
+  Col,
+} from "reactstrap";
 import InterestsTags from "./TagSearch.js";
 import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
@@ -27,53 +41,28 @@ export default function PublicationRecommendation() {
     interests: [],
     papers: [],
     loading: true,
+    //New States added by Yasmin for showing pie chart
     reloadPapers: true,
     modal: false,
     threshold: 40,
-
+    test: 'test'
   })
 
   useEffect(() => {
     getInterests()
   }, [])
-
   useEffect(() => {
     getRecommendedPapers()
   }, [state.interests])
 
-  const handleApplyGeneralChanges = (newInterests) => {
-    closeWhatIfModal()
-    setState({
-      ...state,
-      interests: newInterests,
-      loading: true,
-      modal: false,
-    })
-  }
-  const handleApplyWhatIfChanges = (index, newPaperProps, ref) => {
-    setState({
-      ...state,
-      loading: true,
-    })
-    const newPaperList = state.papers.filter(function (obj) {
-      return obj.paperId !== index;
-    });
-    if (newPaperProps.score > newPaperProps.threshold) {
-      newPaperList.push(newPaperProps)
+  // getRecommendedPapers = getRecommendedPapers.bind(this);
+  // handleDeleteTag = handleDeleteTag.bind(this);
+  // handleTagAddition = handleTagAddition.bind(this);
+  // handleDragTag = handleDragTag.bind(this);
+  // handleTagSettingsChange = handleTagSettingsChange.bind(this);
 
-      newPaperList.sort((a, b) => {
-        return b.score - a.score;
-      });
-    }
-    const timer = setTimeout(() => {
-      setState({
-        ...state,
-        papers: newPaperList,
-        loading: false
-      })
-    }, 2000);
+  //1changeHandler = changeHandler.bind(this);
 
-  }
 
   //What if modal - Jaleh:
   const openWhatIfModal = () => {
@@ -118,7 +107,7 @@ export default function PublicationRecommendation() {
           rowArray.push({
             text: response.data[i].keyword,
             weight: response.data[i].weight,
-            id: i.toString(),
+            id: response.data[i].id.toString(),
             color: generateRandomRGB(i),
           });
         }
@@ -154,6 +143,11 @@ export default function PublicationRecommendation() {
     }
   };
 
+  const getTagColorByName = (tagName) => {
+    const { interests } = state;
+    const color = interests.find(tag => tag.text === tagName).color
+    return color
+  }
   const refinePapers = (papers) => {
     let res = []
     papers.map((paper) => {
@@ -169,11 +163,12 @@ export default function PublicationRecommendation() {
   }
   const refineInterests = (interests) => {
     let res = []
+    let idCounter = 0
     interests.map((interest) => {
       res.push({
-        id: interest.id,
+        _id: idCounter++,
         text: interest.text,
-        color: generateRandomRGB(interest.id),
+        color: interest.color,
         weight: interest.weight,
       })
     })
@@ -214,7 +209,7 @@ export default function PublicationRecommendation() {
                 <Grid container className="align-items-center">
                   <Grid item md={12}>
                     <InterestsTags
-                      tags={refineInterests(state.interests)}
+                      tags={state.interests}
                     />
                   </Grid>
 
@@ -227,16 +222,16 @@ export default function PublicationRecommendation() {
                   What-if?
                 </Typography >
               </Grid>
-              <Modal open={state.modal} onClose={closeWhatIfModal} size="md">
-                <Paper style={style}>
+              <Modal open={state.modal} onClose={closeWhatIfModal} size="md" className="publication-modal">
+                <Box sx={style}>
                   <Grid item md={12}>
-                    <DialogTitle style={{ m: 0, p: 2 }} >
+                    <DialogTitle sx={{ m: 0, p: 2 }} >
                       <Seperator Label="What if?" Width="130" />
                       {state.modal ? (
                         <IconButton
                           aria-label="close"
                           onClick={closeWhatIfModal}
-                          style={{
+                          sx={{
                             position: 'absolute',
                             right: 8,
                             top: 8,
@@ -249,10 +244,23 @@ export default function PublicationRecommendation() {
                   </Grid>
                   <Grid item md={12}>
                     <DialogContent>
-                      <WhatIfGeneral interests={refineInterests(state.interests)} threshold={state.threshold} items={refinePapers(papers)} handleApplyGeneralChanges={handleApplyGeneralChanges} />
+                      <WhatIfGeneral interests={refineInterests(state.interests)} threshold={state.threshold} items={refinePapers(papers)} />
                     </DialogContent>
                   </Grid>
-                </Paper>
+                  {/* <ModalHeader closeWhatIfModal={closeWhatIfModal} style={{ paddingBottom: '0px' }}>
+                  <Seperator Label="What if?" Width="130" />
+                  </ModalHeader> */}
+                  {/* <ModalBody style={{ paddingTop: '10px' }}> */}
+                  {/*  */}
+                  {/* </ModalBody> */}
+                  <Grid item md={12}>
+                    <DialogActions>
+                      <Button color="primary" onClick={closeWhatIfModal}>
+                        Apply changes
+                      </Button>
+                    </DialogActions>
+                  </Grid>
+                </Box>
               </Modal>
             </Grid>
           </Grid>
@@ -282,7 +290,7 @@ export default function PublicationRecommendation() {
               </Grid>
             </Grid>
           ) : (
-            papers ? (papers.map((paper, i) => {
+            papers ? (papers.map((paper) => {
               if (paper.score > state.threshold) {
                 return (
                   <PaperCard
@@ -291,7 +299,6 @@ export default function PublicationRecommendation() {
                     paper={paper}
                     interests={refineInterests(state.interests)}
                     threshold={state.threshold}
-                    handleApplyWhatIfChanges={handleApplyWhatIfChanges}
                   />
                 );
               }

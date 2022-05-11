@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { BarChart } from "./BarChartDrilldown"
 import InterestSlider from "./Slider"
-import { CircularProgress, Divider, FormControl, Grid, IconButton, InputAdornment, OutlinedInput } from "@material-ui/core";
+import { CircularProgress, FormControl, Grid, IconButton, InputAdornment, OutlinedInput } from "@material-ui/core";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import RestAPI from "Services/api";
 
-import { Slider, Button } from "@material-ui/core";
+import Slider from "@material-ui/core/Slider";
 
 
 function valueLabelFormat(value) {
@@ -13,17 +13,18 @@ function valueLabelFormat(value) {
     return `${scaledValue}%`;
 }
 export const WhatIfGeneral = (props) => {
+    // const [initialInterests] = useState(props.interests)
     const [state, setState] = useState({
         interests: props.interests,
         threshold: props.threshold,
         initialItems: props.items,
         items: props.items,
-        done: false
+        done:false
     })
 
     useEffect(() => {
         getRecommendedPapers()
-    }, [state.interests.length])
+    },[state.interests.length])
 
     const handleInterestDelete = (index) => {
         if (index > -1) {
@@ -49,10 +50,10 @@ export const WhatIfGeneral = (props) => {
     };
 
     const getRecommendedPapers = (newTagAdded = false) => {
-        setState({ ...state, done: false })
+        setState({...state,done:false})
         RestAPI.extractPapersFromTags(state.interests)
             .then((res) => {
-                setState({ ...state, items: res.data.data, done: true })
+                setState({...state,items:res.data.data,done:true})
             })
             .catch((err) => console.error("Error Getting Papers:", err));
 
@@ -63,18 +64,16 @@ export const WhatIfGeneral = (props) => {
             const newInterest = document.getElementById("WhatIfGnewInterest").value
             if (newInterest != '') {
                 interests.push({
-                    id: (state.interests.length).toString(),
+                    _id: state.interests.length,
                     text: newInterest,
                     color: '#aaa',
                     weight: 2.5,
                 })
                 setState({ ...state, interests })
+                // getRecommendedPapers()
             }
         }
     })
-    const handleApplyGeneralChanges = () => {
-        props.handleApplyGeneralChanges(state.interests)
-    }
     function InterestControlPanel() {
         let res = []
         state.interests.map((interest, index) => (
@@ -104,7 +103,7 @@ export const WhatIfGeneral = (props) => {
                 {(state.interests.length < 10) ?
                     (<Grid item container xs={2} sm={3} md={3}>
                         <Grid item style={{ paddingTop: '3px', paddingLeft: '5px', width: '100%', height: '100%' }}>
-                            <FormControl variant="outlined" style={{paddingRight: '3px', width: '100%'}}>
+                            <FormControl variant="outlined">
                                 <OutlinedInput
                                     id={'WhatIfGnewInterest'}
                                     className={'outlined-new-interest'}
@@ -118,6 +117,7 @@ export const WhatIfGeneral = (props) => {
                                     labelWidth={0}
                                 />
                             </FormControl>
+                            {/* <input id="WhatIfGnewInterest" placeholder="Add a New Interest..." onKeyDown={handleNewInterest} style={{ width: '100%', height: '100%' }} /> */}
                         </Grid>
                     </Grid>) : null}
             </Grid>
@@ -217,7 +217,7 @@ export const WhatIfGeneral = (props) => {
         <Grid>
             <InterestControlPanel />
 
-            <Divider style={{ width: '100%', marginTop: '10px' }} />
+            <hr style={{ marginTop: '1rem' }} />
             <Grid container sx={{ justifyContent: 'center' }}>
                 <Grid item md={3}><span>Similarity Threshold:</span></Grid>
                 <Grid container spacing={2} alignItems="center" item md={9}>
@@ -240,14 +240,9 @@ export const WhatIfGeneral = (props) => {
                     <Grid item>100%</Grid>
                 </Grid>
             </Grid>
-            <Divider style={{ width: '100%', marginTop: '10px' }} />
-            <Grid container justify="flex-end" style={{ padding: 10 }}>
-                <Button color="primary" disabled={!state.done} variant='contained' onClick={handleApplyGeneralChanges}>
-                    Apply changes
-                </Button>
-            </Grid>
-            {(state.done) ? (
-                <BarChart tags={state.interests} threshold={state.threshold} items={series} drilldownData={drilldown} />
-            ) : <Grid><CircularProgress size={20} /></Grid>} </Grid>
+            <hr style={{ marginTop: '1rem' }} />
+            {(state.done)?(
+            <BarChart tags={state.interests} threshold={state.threshold} items={series} drilldownData={drilldown} />
+       ):<Grid><CircularProgress size={20}/></Grid>} </Grid>
     )
 }

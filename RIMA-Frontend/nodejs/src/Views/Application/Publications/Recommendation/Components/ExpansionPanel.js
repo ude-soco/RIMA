@@ -223,9 +223,216 @@ export default function ExpansionPanel(props) {
           </Grid>
         </Grid>
       </Collapse>
-    </>
+            {/* Handling th Back button */}
 
-    // Jaleh end
-    // Tannaz end
-  );
+            {/* <Collapse in={whyExpanded} className={classes.collapse}>
+                {whyShow && (
+                    <Grid className="d-flex justify-content-start ">
+                        <ButtonMUI
+                            variant="string"
+                            onClick={() => {
+                                setWhyShow(false);
+                                setWhyExpanded(!whyExpanded);
+                            }}
+                        >
+                            <ArrowBackIosIcon color="action" fontSize="small" />
+                            <Typography align="center" variant="subtitle2">
+                                Back
+                            </Typography>
+                        </ButtonMUI>
+                    </Grid>
+                )} */}
+
+            {/* Why visualizations */}
+            {/* <Grid container className={classes.root} spacing={2}>
+                    <Seperator Label="Why this publication?" Width="170" />
+
+                    <Grid item md={12} className={classes.collapseButton}>
+                        <ButtonMUI
+                            variant="string"
+                            size="small"
+                            className="m-2 mr-4"
+                            onClick={() => {
+                                setHowExpanded(!howExpanded);
+                            }}
+                        >
+                            <SettingsIcon color="action" fontSize="small" />
+                            <Typography align="center" variant="subtitle2" className="ml-1">
+                                How?
+                            </Typography>
+                        </ButtonMUI>{" "}
+                    </Grid>
+
+                    <Grid item md={8}>
+                        <Grid style={{ width: "90%" }}>
+                            Wordcloud */}
+            {/* <ReplaceableCloudChart tags={props}/> */}
+            {/* </Grid>
+                    </Grid>
+                    <Grid item md={4}>
+                        Barchart
+                    </Grid>
+                </Grid> */}
+
+            {/* How Visualizations */}
+            {/* <Collapse in={howExpanded} className={classes.collapse}>
+                    <Grid container className={classes.root} spacing={0}>
+                        <Seperator Label="How the system works?" Width="200" />
+                        <Grid item md={12} className={classes.collapseButton}>
+                            {!moreDetail ? (
+                                <ButtonMUI
+                                    variant="string"
+                                    size="small"
+                                    className="m-2 mr-4"
+                                    onClick={() => {
+                                        setMoreDetail(true);
+                                    }}
+                                >
+                                    <AddCircleOutlineIcon color="action" fontSize="small" />
+                                    <Typography
+                                        align="center"
+                                        variant="subtitle2"
+                                        className="ml-1"
+                                    >
+                                        More
+                                    </Typography>
+                                </ButtonMUI>
+                            ) : (
+                                <ButtonMUI
+                                    variant="string"
+                                    size="small"
+                                    className="m-2 mr-4"
+                                    onClick={() => {
+                                        setMoreDetail(false);
+                                    }}
+                                >
+                                    <RemoveCircleOutlineIcon color="action" fontSize="small" />
+                                    <Typography
+                                        align="center"
+                                        variant="subtitle2"
+                                        className="ml-1"
+                                    >
+                                        Less
+                                    </Typography>
+                                </ButtonMUI>
+                            )}
+                        </Grid> */}
+            {/* Left Category Buttons */}
+            {/* <Grid item md={4} sm={12} className="mr-0 pr-0">
+                            <Grid className="table-responsive-sm">
+                                <table className="table">
+                                    <tbody>
+                                        <tr className="box">
+                                            <td className="box-item interestsBox">
+                                                <Typography
+                                                    align="left"
+                                                    variant="subtitle2"
+                                                    className="arrowBox"
+                                                >
+                                                    Interests
+                                                    <br />
+                                                    Keywords
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                        <tr className="box">
+                                            <td className="box-item dataBox">
+                                                <Typography
+                                                    align="left"
+                                                    variant="subtitle2"
+                                                    className="arrowBox"
+                                                >
+                                                    Data
+                                                    <br />
+                                                    Preprocess
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                        <tr className="box ">
+                                            <td className="box-item embeddingsBox">
+                                                <Typography
+                                                    align="left"
+                                                    variant="subtitle2"
+                                                    className="arrowBox"
+                                                >
+                                                    Embeddings
+                                                    <br />
+                                                    Generation
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                        <tr className="box">
+                                            <td className="box-item similarityBox">
+                                                <Typography
+                                                    align="left"
+                                                    variant="subtitle2"
+                                                    className="arrowBox"
+                                                >
+                                                    Similarity
+                                                    <br />
+                                                    Calculation
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </Grid>
+                        </Grid> */}
+            {/* Right Flowchart */}
+            {/* <Grid item md={8} sm={12} className="ml-0 pl-0">
+                             {!moreDetail ? (
+                                <Flowchart elements={lessDetailFlowchart} />
+                            ) : (
+                                <Flowchart elements={moreDetailFlowchart} />
+                            )} 
+                        </Grid>
+                    </Grid>
+                </Collapse>
+            </Collapse> */}
+
+            <Collapse in={whatIfExpanded} className={classes.collapse}>
+                {whatIfShow && (
+                    <Grid className="d-flex justify-content-start ">
+                        <ButtonMUI
+                            variant="text"
+                            onClick={() => {
+                                setWhatIfShow(false);
+                                setWhatIfExpanded(!whatIfExpanded);
+                            }}
+                        >
+                            <ArrowBackIosIcon color="action" fontSize="small" />
+                            <Typography align="center" variant="subtitle2">
+                                Back
+                            </Typography>
+                        </ButtonMUI>
+                    </Grid>
+                )}
+                <Grid container className={classes.root} spacing={2}>
+                    {/* What-if visualization */}
+
+                    {/* <Seperator Label="What-if I change?" Width="170" /> */}
+                    {/* Jaleh */}
+                    <Grid container>
+                        <Grid item md={12} style={{ borderBottom: '1px solid #2d3985', borderColor: '#2d3985', alignContent: 'center', margin: '0px 10px' }}>
+                            <Tabs centered value={value} onChange={handleTabChange}
+                                TabIndicatorProps={{
+                                    style: { background: "#2d3985", height: '3px', borderRadius: '5', color: '#2d3985' }
+                                }}>
+                                <Tab label="What if 'interests' changed?" className='tab' />
+                                <Tab label="What if 'Keywords' changed?" className='tab' />
+                            </Tabs>
+                        </Grid>
+                        <TabPanel value={value} index={0}>
+                            <WhatIfInterests paper={paper} interests={interests} index={index} threshold={threshold}/>
+                        </TabPanel>
+                        <TabPanel value={value} index={1}>
+                            <WhatIfKeywords paper={paper} interests={interests} index={index} threshold={threshold}/>
+                        </TabPanel>
+                    </Grid>
+                </Grid>
+            </Collapse>
+        </>
+
+        // Tannaz end
+    );
 }
