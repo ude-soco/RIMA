@@ -39,6 +39,12 @@ export const BarChart = (props) => {
         },
         xAxis: {
             type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
         },
         yAxis: {
             title: {

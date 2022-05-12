@@ -1,4 +1,4 @@
-#LK - #Jaleh
+#LK
 import pytz
 import os
 import random
@@ -38,50 +38,47 @@ def get_recommended_papers(interests):
     for paper in unique_papers:
         text = (paper['title'] if paper['title'] else '') + ' ' + paper['abstract']
         algorithm = 'Yake'
-        extract_keywords_from_paper = getKeyword(text, algorithm)
+        extract_keywords_from_paper = getKeyword(text, algorithm,15)
         #{'recommender systems based': 1, 'gained significant attention': 1, 'natural language processing': 1, 'deep learning-based recommender': 3,
         # 'deep learning': 8, 'learning-based recommender systems': 3, 'recommender systems': 5, 'deep learning technology': 2, 'systems based': 1, 'deep': 8}
 
-        # normalize weights of keywords for paper to be between 1 and 5 
+        # normalize weights of keywords for paper to be between 1 and 5 and sorting
         paper_keywords = normalize(extract_keywords_from_paper)
+        paper_keywords = dict(sorted(paper_keywords.items(), key=lambda item: item[1],reverse=True))
+
+        # Select top 10 keywords - keeping more 5 
+        top_ten_keywords = dict(list(paper_keywords.items())[:10])
+        extra_keywords = dict(list(paper_keywords.items())[10:15])
 
         # seperating keywords and weights for paper and for user interest
-        keywords_list = list(paper_keywords.keys())
-        keywords_weights = list(paper_keywords.values())
+        keywords_list = list(top_ten_keywords.keys())
+        keywords_weights = list(top_ten_keywords.values())
         user_interests = list(user_interest_model_dict.keys())
         user_interests_weights = list(user_interest_model_dict.values())
 
         # calculate similarity score
         score = round((get_weighted_interest_similarity_score(
                 user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
-
         interest_score = 0
         interests_similarity = {}
-        keywords_similarity={}
         for interest in interests: 
             interest_score = round((get_single_interest_similarity_score(
                 [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
             interests_similarity[interest['text']] = interest_score
-            #keyword Interest similarity-Hoda    
-            for keyword,weight in paper_keywords.items():
-                keyword_score = round((get_weighted_interest_similarity_score(
-                    [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
-                keyword_score=keyword_score* (weight/5)
-                if not keywords_similarity.__contains__(keyword):
-                    keywords_similarity[keyword]={'data_weight':weight}    
-                keywords_similarity[keyword][interest['text']]={'score':keyword_score,'color':''}
         
+        # if score > 40:
         paper["score"] = score
-        paper["paper_keywords"] = paper_keywords
+        paper["paper_keywords"] = top_ten_keywords
+        paper["extra_keywords"] = extra_keywords
         paper['interests_similarity'] = interests_similarity
-        paper['keywords_similarity'] = keywords_similarity
 
         papers_with_scores.append(paper)
-        
+
+
     sorted_list = sorted(papers_with_scores,
                          key=lambda k: k['score'],
                          reverse=True)
-                         
+    # print('sorted_list',sorted_list)
     return sorted_list
 
 def get_interest_paper_similarity(data):

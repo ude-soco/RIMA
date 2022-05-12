@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
-import { Typography } from '@mui/material';
-import {
-    convertUnicode,
-    keywordHighlighter,
-} from "../../../../Services/utils/unicodeCharacterEngine.js";
-import OptionDropDown from "../../../components/OptionDropDown";
-import styled from "styled-components";
-import Button from "@mui/material/Button";
-import RestAPI from "Services/api";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Grid } from "@material-ui/core";
+import { Typography, Button, CircularProgress, Grid } from '@material-ui/core';
 import ExpansionPanel from './Components/ExpansionPanel';
+import PaperContent from "./Components/PaperContent";
 
 
 function ColoredBand({ interests_similarity, tags }) {
@@ -31,33 +22,7 @@ function ColoredBand({ interests_similarity, tags }) {
 
 }
 
-function Title({ paper, similarityScore }) {
-    return <Grid container style={{ paddingLeft: '15px' }}>
-        <Grid item md={10}>
-            <Grid className="paper-title">
-                {paper.title}
-            </Grid>
-            <Grid className="paper-subtitle"><Authors authorsList={paper.authors} /></Grid>
-        </Grid>
-        <Grid item md={2} style={{ justifyContent: 'flex-end' }}>
-            <span className="paper-badge">
-                Similarity Score: {similarityScore} %
-            </span>
-            {paper.modified ? <span className="paper-badge">Modified</span> : null}
 
-        </Grid>
-    </Grid>
-}
-function Authors({ authorsList }) {
-    const res = []
-    authorsList.forEach(element => {
-        res.push(element.name)
-    });
-    return <span>{res.join(' , ')}</span>
-}
-function PaperContent({ text }) {
-    return <span dangerouslySetInnerHTML={{ __html: text }} />;
-}
 export default function PaperCard(props) {
     const [state, setState] = useState({
         timer: null,
@@ -68,7 +33,31 @@ export default function PaperCard(props) {
         paperModiText: "",
         done: false,
     });
-    const [error, setError] = useState("");
+    //---------------Hoda Start-----------------
+    for (let p1 in props.paper.keywords_similarity) {
+        let interests = props.paper.keywords_similarity[p1];
+        let max_score = 0
+        let max_interest = ""
+        let max_interest_color = ""
+        for (let p2 in interests) {
+            if (p2.toLowerCase().indexOf("data_") >= 0) {
+                continue;
+            }
+            let value = interests[p2];
+            interests[p2] = {
+                ...value, color: value.color || props.interests.find(x => x.text.toLowerCase() === p2.toLowerCase()).color
+            };
+            if (max_score < value.score) {
+                max_score = value.score
+                max_interest_color = value.color
+                max_interest = p2
+            }
+        }
+        if (max_score > 0) {
+            props.paper.keywords_similarity[p1] = { ...interests, data_max_score: max_score, data_max_interest: max_interest, data_max_interest_color: max_interest_color }
+        }
+    }
+    //---------------Hoda end-----------------
     useEffect(() => {
         let modified_text = state.paper.abstract;
         let merged = [];
@@ -92,23 +81,22 @@ export default function PaperCard(props) {
                 <>
                     <ColoredBand interests_similarity={paper.interests_similarity} tags={state.interests} />
                     <Grid container className="card-body">
-                        <Title paper={paperDetails} similarityScore={paper.score} />
-
-                        <Grid item md={12} style={{ padding: '10px', textAlign: 'justify' }}>
-                            {/* <a
-                href="PAPER_URL"
-                target="_blank"
-                style={{ textDecoration: "none", color: "inherit" }}
-                rel="noopener noreferrer"
-              > */}
-                            <Typography align="justify" style={{ padding: '0px 15px' }}>
-                                <PaperContent text={state.paperModiText} />
-                            </Typography>
-
-                            {/* </a> */}
-
+                        <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            style={{ padding: "10px", textAlign: "justify" }}
+                        >
+                            <PaperContent paper={paper} />
                         </Grid>
-                        <ExpansionPanel paper={paper} interests={state.interests} index={state.index} threshold={state.threshold} handleApplyWhatIfChanges={props.handleApplyWhatIfChanges} />
+                        <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            style={{ padding: "10px", textAlign: "justify" }}
+                        >
+                            <ExpansionPanel paper={paper} interests={state.interests} index={state.index} threshold={state.threshold} handleApplyWhatIfChanges={props.handleApplyWhatIfChanges} />
+                        </Grid>
                     </Grid>
                 </>
             ) : (

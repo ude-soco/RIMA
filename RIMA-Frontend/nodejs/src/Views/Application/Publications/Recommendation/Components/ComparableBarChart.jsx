@@ -174,11 +174,11 @@ export const ComapaerableBarChart = (props) => {
     }
     return (
         <Grid item container spacing={8} style={{ paddingTop: '30px' }}>
+        <Grid item md={8}>
+            <HighchartsReact highcharts={Highcharts} options={options} />
+        </Grid>
             <Grid item md={4}>
                 <HighchartsReact highcharts={Highcharts} options={scoreOptions} />
-            </Grid>
-            <Grid item md={8}>
-                <HighchartsReact highcharts={Highcharts} options={options} />
             </Grid>
         </Grid>
     );
