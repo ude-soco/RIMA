@@ -53,6 +53,7 @@
     "chart.js": "^2.9.3",
     "classnames": "2.2.6",
     "cytoscape": "^3.21.1",
+    "cytoscape-popper": "^2.0.0",
     "d3": "^5.5.0",
     "highcharts": "^9.3.0",
     "highcharts-react-official": "^3.1.0",
@@ -90,7 +91,9 @@
     "react-wordcloud": "^1.2.3",
     "reactstrap": "8.4.1",
     "styled-components": "^5.2.1",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "text-metrics": "^3.0.0",
+    "tippy.js": "^6.2.5"
   },
   "devDependencies": {
     "@types/googlemaps": "3.39.2",

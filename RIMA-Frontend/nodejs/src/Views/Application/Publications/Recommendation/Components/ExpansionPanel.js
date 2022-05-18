@@ -11,13 +11,13 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import SettingsIcon from "@material-ui/icons/Settings";
 import HowExplanation from "./HowExplanation";
 import Seperator from "./Seperator";
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import PropTypes from 'prop-types';
-import { WhatIfInterests } from './WhatIfInterests'
-import { WhatIfKeywords } from './WhatIfKeywords'
-import  WhyExplanation  from './WhyExplanation'
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import PropTypes from "prop-types";
+import { WhatIfInterests } from "./WhatIfInterests";
+import { WhatIfKeywords } from "./WhatIfKeywords";
+import WhyExplanation from "./WhyExplanation";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -147,8 +147,14 @@ export default function ExpansionPanel(props) {
         {/* Why visualizations */}
         <Grid container className={classes.root} spacing={2}>
           <Seperator Label="Why this publication?" Width="170" />
-          <Grid item xs={8} >
-            <Typography variant="subtitle1"> &nbsp; This word cloud diagram shows the main extracted keywords from this publication.<br /> &nbsp; You can hover over each keyword to see how it compares to the other interests.</Typography>
+          <Grid item xs={8}>
+            <Typography variant="subtitle1">
+              {" "}
+              &nbsp; This word cloud diagram shows the main extracted keywords
+              from this publication.
+              <br /> &nbsp; You can hover over each keyword to see how it
+              compares to the other interests.
+            </Typography>
           </Grid>
           <Grid item md={3} className={classes.collapseButton}>
             <ButtonMUI
