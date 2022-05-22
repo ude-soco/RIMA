@@ -25,7 +25,7 @@ const Legends = () => {
           borderRadius: 8,
           padding: 16,
           // Comment this line below if you wish a fixed width
-          maxWidth: 600,
+          maxWidth: 700,
 
         }}
       >
@@ -52,26 +52,6 @@ const Legends = () => {
               <Grid item xs={6} md={4}>
                 <Paper className={classes.paper} elevation={0}>
                   Interest Keywords / Keyphrase Embeddings
-                </Paper>
-              </Grid>
-              <Grid item xs={6} md={2}>
-                <Paper className={classes.paper} elevation={0}>
-                  <hr style={{ "border-top": "2px solid #F39617" }} />
-                </Paper>
-              </Grid>
-              <Grid item xs={6} md={4}>
-                <Paper className={classes.paper} elevation={0}>
-                  Publication Keywords / Keyphrase
-                </Paper>
-              </Grid>
-              <Grid item xs={6} md={2}>
-                <Paper className={classes.paper} elevation={0}>
-                  <hr style={{ "border-top": "2px dashed #F39617" }} />
-                </Paper>
-              </Grid>
-              <Grid item xs={6} md={4}>
-                <Paper className={classes.paper} elevation={0}>
-                  Publication Keywords / Keyphrase Embeddings
                 </Paper>
               </Grid>
             </Grid>
