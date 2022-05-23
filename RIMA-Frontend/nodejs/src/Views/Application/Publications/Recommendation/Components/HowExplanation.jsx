@@ -18,7 +18,6 @@ import {
 import Flowchart from "./Flowchart";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import PropTypes from 'prop-types';
 
 
@@ -108,132 +107,315 @@ export default function HowExplanation(props) {
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
-  
-
 
         // data
       var moreDetailFlowchart = [
           // nodes
+
           {
             data: {
               id: "one",
               label: "INTEREST MODEL",
               faveColor: "#303F9F",
-              shape: "round-rectangle",
+              shape: "rhomboid",
               borderStyle: "solid ",
-              width: metrics.width( "INTEREST MODEL" ),
+              width:364,
+              height: 70,
+  
             },
-            position: { x: 100, y: 0 },
+            position: { x: 0, y: 50 },
           },
           {
             data: {
               id: "two",
               label: "PUBLICATION",
               faveColor: "#F39617",
-              shape: "round-rectangle",
+              shape: "rhomboid",
               borderStyle: "solid ",
-              width: metrics.width( "PUBLICATION" ),
+              width:364,
+              height: 70,
             },
-            position: { x: 600, y: 0 },
+            position: { x: 700, y: 50 },
           },
           {
             data: {
               id: "three",
-              label: "INTEREST (KEYWORD)",
+              label: "INTEREST",
               faveColor: "#303F9F",
-              shape: "round-rectangle",
-              borderStyle: "dashed",
-              width: metrics.width( "INTEREST (KEYWORD)" ),
-              tooltip:"<p>An interet keyword embedding<br />is a vector representation of an<br />interest keyword</p>"
+              shape: "rhomboid",
+              borderStyle: "solid",
+              width:364,
+              height: 70,
+              tooltip:"<p>An interest from your<br />current interest model</p>"
             },
-            position: { x: -50, y: 150 },
+            position: { x: -100, y: 150 },
+          },
+          { data: { id: 'etc1' } ,
+          classes:"etc",
+          position: { x: 80, y: 150 },},
+          {
+            data: {
+              id: "four",
+              label: "INTEREST",
+              faveColor: "#303F9F",
+              shape: "rhomboid",
+              borderStyle: "solid",
+              width:364,
+              height: 70,
+              tooltip:"<p>An interest from your<br />current interest model</p>"
+
+            },
+            position: { x: 250, y: 150 },
           },
           {
             data: {
               id: "five",
-              label: "INTEREST (KEYWORD)",
-              faveColor: "#303F9F",
-              shape: "round-rectangle",
-              borderStyle: "dashed",
-              width: metrics.width( "INTEREST (KEYWORD)" ),
+              label: "PUBLICATION KEYWORD",
+              faveColor: "#F39617",
+              shape: "rhomboid",
+              borderStyle: "solid",
+              width:364,
+              height: 70,
+              tooltip:"<p>A publication keyword<br />extracted from the<br />current publication</p>"
+
             },
-            position: { x: 250, y: 200 },
+            position: { x: 600, y: 150 },
           },
+          { data: { id: 'etc2' } ,
+          classes:"etc",
+          position: { x: 780, y: 150 },},
           {
             data: {
               id: "six",
-              label: "PUBLICATION KEYWORD ",
+              label: "PUBLICATION KEYWORD",
               faveColor: "#F39617",
-              shape: "round-rectangle",
-              borderStyle: "dashed",
-              width: metrics.width( "PUBLICATION KEYWORD" ),
+              shape: "rhomboid",
+              borderStyle: "solid",
+              width:364,
+              height: 70,
+              tooltip:"<p>A publication keyword<br />extracted from the<br />current publication</p>"
             },
-            position: { x: 450, y: 150 },
+            position: { x: 950, y: 150 },
           },
+          {
+            data: {
+              id: "seven",
+              label: "EMBEDDING ",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Compution of the interest<br />embedding using SIFrank<br />algorithm</p>"
+
+            },
+            position: { x: -100, y: 250 },
+          },
+          { data: { id: 'etc3' } ,
+          classes:"etc",
+          position: { x: 80, y: 250 },},
           {
             data: {
               id: "eight",
-              label: "PUBLICATION KEYWORD",
-              faveColor: "#F39617",
-              shape: "round-rectangle",
-              borderStyle: "dashed",
-              width: metrics.width( "PUBLICATION KEYWORD" ),
-              tooltip:"<p>A publication keyword embedding<br />is a vector representation of a<br />publication keyword</p>"
+              label: "EMBEDDING",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Compution of the interest<br />embedding using SIFrank<br />algorithm</p>"
             },
-            position: { x: 750, y: 200 },
+            position: { x: 250, y: 250 },
           },
+          ,
           {
             data: {
               id: "nine",
-              label: "INTEREST MODEL ",
-              faveColor: "#303F9F",
-              shape: "round-rectangle",
-              borderStyle: "dashed",
-              width: metrics.width( "INTEREST MODEL " ),
-              tooltip:"<p>An interest embedding is a<br />vector represenation of an<br />interest</p>"
+              label: "EMBEDDING ",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Computation of the<br />publication keyword<br />embedding using SIFrank<br />algorithm</p>"
 
             },
-            position: { x: 100, y: 300 },
+            position: { x: 600, y: 250 },
           },
+          { data: { id: 'etc4' } ,
+          classes:"etc",
+          position: { x: 780, y: 250 },},
           {
             data: {
               id: "ten",
-              label: "PUBLICATION",
-              faveColor: "#F39617",
-              shape: "round-rectangle",
-              borderStyle: "dashed",
-              width: metrics.width( "PUBLICATION" ),
-              tooltip:"<p>A publication embedding is a<br />vector represenation of a<br />publication</p>"
+              label: "EMBEDDING",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Computation of the<br />publication keyword<br />embedding using SIFrank<br />algorithm</p>"
             },
-            position: { x: 600, y: 300 },
+            position: { x: 950, y: 250 },
           },
           {
             data: {
               id: "eleven",
-              label: "SIMILARITY SCORE:  "+state.paper.score+"%",
-              faveColor: "#000000",
-              shape: "round-rectangle",
-              borderStyle: "solid ",
-              width: metrics.width( "SIMILARITY SCORE"+state.paper.score+"%" ),
-              tooltip:"<p>Similarity is calculated using<br />cosine similarity between two<br />model embeddings</p>"
+              label: "INTEREST EMBEDDING",
+              faveColor: "#303F9F",
+              shape: "rhomboid",
+              borderStyle: "dashed ",
+              width:364,
+              height: 70,
+              tooltip:"<p>An interest embedding is<br />a vector representation<br />of an interest</p>"
             },
-            position: { x: 350, y: 400 },
+            position: { x: -100, y: 350 },
+          },
+          { data: { id: 'etc5' } ,
+          classes:"etc",
+          position: { x: 80, y: 350 },},
+          {
+            data: {
+              id: "twelve",
+              label: "INTEREST EMBEDDING",
+              faveColor: "#303F9F",
+              shape: "rhomboid",
+              borderStyle: "dashed ",
+              width:364,
+              height: 70,
+              tooltip:"<p>An interest embedding is<br />a vector representation<br />of an interest</p>"
+            },
+            position: { x: 250, y: 350 },
+          },
+          {
+            data: {
+              id: "thirteen",
+              label: "PUBLICATION KEYWORD EMBEDDING",
+              faveColor: "#F39617",
+              shape: "rhomboid",
+              borderStyle: "dashed ",
+              width:400,
+              height: 70,
+              tooltip:"<p>A publication keyword<br />embedding is a vector<br />representation of a<br />publication keyword</p>"
+            },
+            position: { x: 600, y: 350 },
+          },
+          { data: { id: 'etc6' } ,
+          classes:"etc",
+          position: { x: 780, y: 350 },},
+          {
+            data: {
+              id: "fourteen",
+              label: "PUBLICATION KEYWORD EMBEDDING",
+              faveColor: "#F39617",
+              shape: "rhomboid",
+              borderStyle: "dashed ",
+              width:400,
+              height: 70,
+              tooltip:"<p>A publication keyword<br />embedding is a vector<br />representation of a<br />publication keyword</p>"
+            },
+            position: { x: 950, y: 350 },
+          },
+          {
+            data: {
+              id: "fifteen",
+              label: "WEIGHTED AVERAGE",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Computation of the<br />weighted average of all<br />interest embeddings </p>"
+            },
+            position: { x: 80, y: 450 },
+          },
+          {
+            data: {
+              id: "sixteen",
+              label: "WEIGHTED AVERAGE",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Computation of the weighted<br />average of all publication<br />keyword embeddings </p>"
+            },
+            position: { x: 780, y: 450 },
+          },
+          {
+            data: {
+              id: "seventeen",
+              label: "INTEREST MODEL EMBEDDING",
+              faveColor: "#303F9F",
+              shape: "rhomboid",
+              borderStyle: "dashed ",
+              width:370,
+              height: 70,
+              tooltip:"<p>An interest model<br />embedding is a vector<br />represenation of an<br />interest model</p>"
+            },
+            position: { x: 80, y: 550 },
+          },
+          {
+            data: {
+              id: "eighteen",
+              label: "PUBLICATION EMBEDDING",
+              faveColor: "#F39617",
+              shape: "rhomboid",
+              borderStyle: "dashed ",
+              width:370,
+              height: 70,
+              tooltip:"<p>A publication embedding<br />is a vector represenation<br />of a publication</p>"
+            },
+            position: { x: 780, y: 550 },
+          },
+          {
+            data: {
+              id: "nineteen",
+              label: "COSINE SIMILARITY",
+              faveColor: "black",
+              shape: "rectangle",
+              borderStyle: "solid",
+              width:200,
+              height: 50,
+              tooltip:"<p>Similarity is calculated<br />using cosine similarity<br />between the embeddings</p>"
+            },
+            position: { x: 430, y: 650 },
+          },
+          ,
+          {
+            data: {
+              id: "twenty",
+              label: "SIMILARITY SCORE:  "+state.paper.score+"%",
+              faveColor: "black",
+              shape: "rhomboid",
+              borderStyle: "solid",
+              width:370,
+              height: 70,
+            },
+            position: { x: 430, y: 750 },
           },
           // edges
-          { data: { source: "one", target: "three", label: "Interests (keywords / keyphrases)" ,faveColor: "#303F9F", lineStyle: "solid " } },
-          { data: { source: "one", target: "five", label: "Interests (keywords / keyphrases)",faveColor: "#303F9F", lineStyle: "solid " } },
-          { data: { source: "two", target: "six", label: "publication keywords / keyphrases", faveColor: "#F39617",lineStyle: "solid " } },
-          { data: { source: "two", target: "eight", label: "publication keywords / keyphrases",faveColor: "#F39617", lineStyle: "solid " } },
-          { data: { source: "three", target: "nine", label: "weighted average",faveColor: "#303F9F", lineStyle: "dashed " ,
-          tooltip:"<p>Compute an interest embedding as<br />a weighted average of all interests<br />keyphrase / keyword embeddings </p>"
-        } },
-          { data: { source: "five", target: "nine", label: "weighted average" ,faveColor: "#303F9F", lineStyle: "dashed "} },
-          { data: { source: "six", target: "ten", label: "weighted average",faveColor: "#F39617", lineStyle: "dashed " } },
-          { data: { source: "eight", target: "ten", label: "weighted average",faveColor: "#F39617", lineStyle: "dashed " , 
-          tooltip:"<p>Compute a publication embedding as<br />a weighted average of all publication<br />keyphrase / keyword embeddings </p>"
-        } },
-          { data: { source: "nine", target: "eleven", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-          { data: { source: "ten", target: "eleven", label: "", faveColor: "#F39617",lineStyle: "dashed " } }
+          { data: { source: "one", target: "three", label: "" ,faveColor: "#303F9F", lineStyle: "solid " } },
+          { data: { source: "one", target: "four", label: "",faveColor: "#303F9F", lineStyle: "solid " } },
+          { data: { source: "two", target: "five", label: "", faveColor: "#F39617",lineStyle: "solid " } },
+          { data: { source: "two", target: "six", label: "",faveColor: "#F39617", lineStyle: "solid " } },
+          { data: { source: "three", target: "seven", label: "", faveColor: "#303F9F",lineStyle: "solid " } },
+          { data: { source: "four", target: "eight", label: "",faveColor: "#303F9F", lineStyle: "solid " } },
+          { data: { source: "five", target: "nine", label: "", faveColor: "#F39617",lineStyle: "solid " } },
+          { data: { source: "six", target: "ten", label: "",faveColor: "#F39617", lineStyle: "solid " } },
+          { data: { source: "seven", target: "eleven", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
+          { data: { source: "eight", target: "twelve", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
+          { data: { source: "nine", target: "thirteen", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+          { data: { source: "ten", target: "fourteen", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+          { data: { source: "eleven", target: "fifteen", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
+          { data: { source: "twelve", target: "fifteen", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
+          { data: { source: "thirteen", target: "sixteen", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+          { data: { source: "fourteen", target: "sixteen", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+          { data: { source: "fifteen", target: "seventeen", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
+          { data: { source: "sixteen", target: "eighteen", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+          { data: { source: "seventeen", target: "nineteen", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
+          { data: { source: "eighteen", target: "nineteen", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+          { data: { source: "nineteen", target: "twenty", label: "",faveColor: "black", lineStyle: "solid " } },
         ];
       var lessDetailFlowchart = [
       // nodes
@@ -242,80 +424,89 @@ export default function HowExplanation(props) {
           id: "one",
           label: "INTEREST MODEL",
           faveColor: "#303F9F",
-          shape: "round-rectangle",
+          shape: "rhomboid",
           borderStyle: "solid ",
-          width: metrics.width( "INTEREST MODEL" ),
+          width:332,
+          height: 70,
+
           },
-          position: { x: 110, y: 50 },
+          position: { x: 100, y: 50 },
       },
       {
           data: {
           id: "two",
-          label: "SEMANTIC SCHOLAR API",
+          label: "PUBLICATION",
           faveColor: "#F39617",
-          shape: "round-rectangle",
+          shape: "rhomboid",
           borderStyle: "solid ",
-          width: metrics.width( "SEMANTIC SCHOLAR API" ),
+          width: 332,
+          height: 70,
           },
-          position: { x: 310, y: 50 },
+          position: { x: 500, y: 50 },
       },
       {
           data: {
           id: "thre",
-          label: "INTEREST (KEYWORD / KEYPHRASE)",
+          label: "INTERESTS",
           faveColor: "#303F9F",
-          shape: "rectangle",
+          shape: "rhomboid",
           borderStyle: "solid ",
-          width: metrics.width( "INTEREST (KEYWORD / KEYPHRASE)" ),
+          width: 332,
+          height: 70,
+          tooltip:"<p>Interests from your<br />current interest<br />model</p>"
           },
-          position: { x: 50, y: 150 },
+          position: { x: 100, y: 200 },
       },
       {
           data: {
           id: "four",
-          label: "PUBLICATION (KEYWORD / KEYPHRASE)",
+          label: "KEYWORDS",
           faveColor: "#F39617",
-          shape: "rectangle",
+          shape: "rhomboid",
           borderStyle: "solid ",
-          width: metrics.width( "PUBLICATION (KEYWORD / KEYPHRASE)" ),
+          width: 332,
+          height: 70,
+          tooltip:"<p>Publication keywords extracted<br />from the current publication</p>"
           },
-          position: { x: 410, y: 150 },
+          position: { x: 500, y: 200 },
       },
       {
           data: {
           id: "five",
-          label: "Word2Vec",
+          label: "INTEREST MODEL EMBEDDING",
           faveColor: "#303F9F",
-          shape: "rectangle",
+          shape: "rhomboid",
           borderStyle: "dashed ",
-          width: metrics.width( "Word2Vec" ),
-          tooltip:"<p>An interet embedding will be<br />created via Word2Vec</p>"
+          width: 332,
+          height: 70,
+          tooltip:"<p>An interest model embedding<br />is a vector representation of<br />an interest model</p>"
           },
-          position: { x: 110, y: 250 },
+          position: { x: 100, y: 350 },
       },
       {
           data: {
           id: "six",
-          label: "Word2Vec",
+          label: "PUBLICATION EMBEDDING",
           faveColor: "#F39617",
-          shape: "rectangle",
+          shape: "rhomboid",
           borderStyle: "dashed ",
-          width: metrics.width( "Word2Vec" ),
-          tooltip:"<p>A keyword embedding will be<br />created via Word2Vec</p>"
+          width: 332,
+          height: 70,
+          tooltip:"<p>A publication embedding<br />is a vector representation<br />of a publication</p>"
           },
-          position: { x: 310, y: 250 },
+          position: { x: 500, y: 350 },
       },
       {
           data: {
           id: "seven",
-          label: "COSINE SIMILARITY",
+          label: "SIMILARITY SCORE:  "+state.paper.score+"%",
           faveColor: "#000000",
-          shape: "round-rectangle",
+          shape: "rhomboid",
           borderStyle: "solid ",
-          width: metrics.width( "COSINE SIMILARITY" ),
-          tooltip:"<p>Similarity is calculated using<br />cosine similarity between two<br /> embeddings</p>"
+          width: 332,
+          height: 70,
           },
-          position: { x: 210, y: 350 },
+          position: { x: 300, y: 500 },
       },
       // edges
       { data: { source: "one", target: "thre", label: "" ,faveColor: "#303F9F", lineStyle: "solid "} },

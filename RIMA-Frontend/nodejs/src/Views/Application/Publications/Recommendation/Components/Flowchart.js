@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import cytoscape from "cytoscape";
 
 import CytoscapeComponent from "react-cytoscapejs";
-import tippy from "tippy.js";
-import "tippy.js/dist/tippy.css";
+
 import popper from "cytoscape-popper";
 
-const minZoom = 0.5;
+const minZoom = 0.3;
 const maxZoom = 1e1;
 
 export default function Flowchart(props) {
@@ -29,60 +28,8 @@ export default function Flowchart(props) {
               animate: true,
               animationDuration: 500,
             }).run();
-
-            // it is nicer but is too slow
-            // cy.elements().forEach(function (ele) {
-            //   if (ele._private.data.tooltip != undefined) {
-            //     makePopperWithTippy(ele);
-            //   }
-            // });
-            // console.log("id2tip = ", id2tip);
           });
-
-          // var id2tip = {};
-
-          // let makePopperWithTippy = (node) => {
-          //   let ref = node.popperRef(); // used only for positioning
-
-          //   // A dummy element must be passed as tippy only accepts dom element(s) as the target
-          //   // https://atomiks.github.io/tippyjs/v6/constructor/#target-types
-          //   let dummyDomEle = document.createElement("div");
-
-          //   let tip = tippy(dummyDomEle, {
-          //     // tippy props:
-          //     getReferenceClientRect: ref.getBoundingClientRect, // https://atomiks.github.io/tippyjs/v6/all-props/#getreferenceclientrect
-          //     trigger: "manual", // mandatory, we cause the tippy to show programmatically.
-
-          //     // your own custom props
-          //     // content prop can be used when the target is a single element https://atomiks.github.io/tippyjs/v6/constructor/#prop
-          //     content: () => {
-          //       let content = document.createElement("div");
-
-          //       content.innerHTML = node.id();
-
-          //       return content;
-          //     },
-          //   });
-          //   id2tip[node.id()] = tip;
-          // };
-
-          // cy.nodes().unbind("mouseover");
-          // cy.nodes().bind("mouseover", (event) => {
-          //   if (event.target._private.data.tooltip != undefined) {
-          //     console.log("id = ", event.target.id());
-          //     id2tip[event.target.id()].show();
-          //   }
-          // });
-
-          // cy.nodes().unbind("mouseout");
-          // cy.nodes().bind("mouseout", (event) => {
-          //   if (event.target._private.data.tooltip != undefined) {
-          //     console.log("id = ", event.target.id());
-          //     id2tip[event.target.id()].hide();
-          //   }
-          // });
-
-          // it works:
+          // Tooltip start
           cy.elements().unbind("mouseover");
           cy.elements().bind("mouseover", (event) => {
             if (event.target._private.data.tooltip != undefined) {
@@ -113,6 +60,7 @@ export default function Flowchart(props) {
               document.body.style.cursor = "grab";
             });
           });
+          // Tooltip end
 
           cy.on("mouseout", "node", function (evt) {
             document.body.style.cursor = "default";
@@ -143,9 +91,8 @@ export default function Flowchart(props) {
             style: {
               label: "data(label)",
               "background-color": "rgba(255, 255, 255, 0)",
-
               width: "data(width)",
-              height: 40,
+              height: "data(height)",
               "text-background-opacity": 0,
               "text-background-padding": "2px",
               "border-color": "data(faveColor)",
@@ -181,12 +128,27 @@ export default function Flowchart(props) {
             style: {
               label: "data(label)",
               "font-size": "12",
-
               "text-background-color": "white",
               "text-background-opacity": 1,
               "text-background-padding": "2px",
-
-              // "text-rotation": "autorotate"
+            },
+          },
+          {
+            selector: ".etc",
+            style: {
+              "background-image": "https://i.ibb.co/G5F9KMT/etc.png",
+              "background-fit": "cover cover",
+              "border-color": "white",
+              width: 40,
+              height: 40,
+            },
+          },
+          {
+            selector: ".withTooltip",
+            style: {
+              // "background-image": "https://i.ibb.co/FbrHyHM/info.png",
+              // "background-fit": "cover cover",
+              // "background-image-opacity": 0.5,
             },
           },
         ]}
