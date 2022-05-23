@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Legends from "./Legends";
+import EmbeddingLegends from "./EmbeddingLegends";
 
 const textMetrics = require("text-metrics");
 const el = document.querySelector("h5");
@@ -19,6 +20,8 @@ import Flowchart from "./Flowchart";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import PropTypes from 'prop-types';
+import HowStep from "./HowStep";
+import HowFinalStep from "./HowFinalStep";
 
 
 
@@ -517,8 +520,8 @@ export default function HowExplanation(props) {
       { data: { source: "five", target: "seven", label: "" ,faveColor: "#303F9F", lineStyle: "dashed "} },
       ];
 
-    const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} xStartPoint={50}  yStartPoint={10}/>;
-    const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} xStartPoint={170}  yStartPoint={0}/>;
+    const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} xStartPoint={50}  yStartPoint={10} style={{border: "0.5px solid #E7E7E7",borderRadius: 8}}/>;
+    const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} xStartPoint={170}  yStartPoint={0} style={{border: "0.5px solid #E7E7E7",borderRadius: 8}}/>;
 
     return (
 
@@ -586,16 +589,21 @@ export default function HowExplanation(props) {
           </Grid>
 
         </TabPanel>
-        <TabPanel value={value} index={1}>
-        Item Two
-
+        {/*-----hoda-start---*/}
+        <TabPanel style={{width:"73%"}} value={value===1 || value===2?1:value} index={1}>
+          <HowStep
+              interests={state.interests}
+              keywords={state.paper.keyword}
+              isSplit={false}
+              inclEmbedding={value===2}
+            />
+          <EmbeddingLegends />
         </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
+        <TabPanel  style={{width:"73%"}} value={value} index={3}>
+          <HowFinalStep paper={state.paper} />
+          <EmbeddingLegends />
         </TabPanel>
-        <TabPanel value={value} index={3}>
-          Item Four
-        </TabPanel>
+        {/*-----hoda-end---*/}
       </>
     );
 
