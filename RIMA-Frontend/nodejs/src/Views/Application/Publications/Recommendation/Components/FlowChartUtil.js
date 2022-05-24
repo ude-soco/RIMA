@@ -72,7 +72,7 @@ export function wordElementProvider(
     const wordlable = `${modelLable}`;
     wordElements.push({
        // classes: "circlenode",
-        classes: "rhomboidnode",
+        classes: "polygonnode",
         data: {
         id: modelId,
         label: wordlable,
@@ -126,7 +126,7 @@ export function wordElementProvider(
         wordElements.push(
           {
             //classes: "circlenode",
-            classes: "rhomboidnode",
+            classes: "polygonnode",
             data: {
               id: subwordId,
               label: text,
@@ -162,7 +162,7 @@ export function wordElementProvider(
     // Keyphrase to Keyword link
     wordElements.push({
       //classes: "circlenode",
-      classes: "rhomboidnode",
+      classes: "polygonnode",
       data: {
         id: wordId,
         label: wordlable,
@@ -178,7 +178,7 @@ export function wordElementProvider(
       if (!!avgWordId) {
         wordElements.push({
           //classes: "circlenode",
-          classes: "rhomboidnode",
+          classes: "polygonnode",
           data: {
             id: avgWordId,
             label: wordlable,
@@ -212,7 +212,7 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
   const rightNodeId = prefixRight+"Model";
   return [
     {
-        classes: "rhomboidnode",
+        classes: "polygonnode",
       data: {
         id: scoreId,
         label: score,
@@ -251,7 +251,7 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
     },
     {
         //classes: "circlenode",
-        classes: "rhomboidnode",
+        classes: "polygonnode",
         data: {
         id: leftNodeId,
         label: titleLeft,
@@ -268,7 +268,7 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
     },
     {
         //classes: "circlenode",
-        classes: "rhomboidnode",
+        classes: "polygonnode",
         data: {
         id: rightNodeId,
         label: titleRight,

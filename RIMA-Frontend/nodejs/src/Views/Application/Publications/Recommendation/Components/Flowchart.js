@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import cytoscape from "cytoscape";
-
 import CytoscapeComponent from "react-cytoscapejs";
-
 import popper from "cytoscape-popper";
 import fcose from "cytoscape-fcose";
 import dagre from "cytoscape-dagre";
+//import breadthfirst from "cytoscape-breadthfirst";
+//import elk from "cytoscape-elk";
+
 import {getMaxWidthHeight, getHeight, getWidth } from "./FlowChartUtil";
 cytoscape.use(popper);
 cytoscape.use(fcose);
 cytoscape.use(dagre);
+//cytoscape.use(breadthfirst);
+//cytoscape.use(elk);
 
 const minZoom = 0.3;
 const maxZoom = 1e1;
@@ -116,6 +119,7 @@ export default function Flowchart(props) {
               "border-width": 2,
               "border-opacity": 1,
               shape: "data(shape)",
+              "shape-polygon-points": [-0.75, -1, 1, -1, 0.75, 1, -1, 1],
             },
           },
           {
@@ -151,7 +155,7 @@ export default function Flowchart(props) {
             }
           },
           {
-            selector: "node.rhomboidnode",
+            selector: "node.polygonnode",
             style: {
               label: "data(label)",
               color: "data(faveColorLabel)",
@@ -159,8 +163,9 @@ export default function Flowchart(props) {
               "text-wrap": "wrap",
               "text-max-width": getWidth(5,1.3),
                width: getWidth(50,1.5,true),
-               height: n=> Math.max(getWidth(13,2/3,true)(n), getHeight(5,1,true)(n)),
-              shape: "rhomboid",
+               height: getHeight(5,1,true),
+               //height: n=> Math.max(getWidth(13,4/5,true)(n), getHeight(5,1,true)(n)),
+              shape: "polygon",
               "background-image": "data(backgroundImage)",
               "background-fit": "data(backgroundSize)",
               "text-background-opacity": 0,
