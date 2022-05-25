@@ -78,33 +78,48 @@ export default function Flowchart(props) {
                 event.target.popperRefObj.destroy();
               }
             }
-            cy.on("mouseover", "node", function (evt) {
-              document.body.style.cursor = "grab";
-            });
           });
           // Tooltip end
+          cy.on("mouseover", function (evt) {
+            let evtTarget = evt.target;
 
-          // cy.on("mouseout", "node", function (evt) {
-          //   document.body.style.cursor = "default";
-          // });
+            if (evtTarget === cy) {
+              document.body.style.cursor = "move";
+            } else {
+              document.body.style.cursor = "default";
+            }
+          });
+          cy.on("mousemove", function (evt) {
+            let evtTarget = evt.target;
 
-          // cy.on("mousedown", "node", function (evt) {
-          //   document.body.style.cursor = "grabbing";
-          // });
-
-          // cy.on("mouseup", "node", function (evt) {
-          //   document.body.style.cursor = "grab";
-          // });
+            if (evtTarget === cy) {
+              document.body.style.cursor = "move";
+            } else {
+              document.body.style.cursor = "default";
+            }
+          });
           cy.on("mouseout", function (evt) {
             document.body.style.cursor = "default";
           });
 
           cy.on("mousedown", function (evt) {
-            document.body.style.cursor = "grabbing";
+            let evtTarget = evt.target;
+
+            if (evtTarget === cy) {
+              document.body.style.cursor = "move";
+            } else {
+              document.body.style.cursor = "not-allowed";
+            }
           });
 
           cy.on("mouseup", function (evt) {
-            document.body.style.cursor = "grab";
+            let evtTarget = evt.target;
+
+            if (evtTarget === cy) {
+              document.body.style.cursor = "move";
+            } else {
+              document.body.style.cursor = "default";
+            }
           });
 
           cy.on("add remove", () => {
@@ -123,8 +138,6 @@ export default function Flowchart(props) {
             style: {
               label: "data(label)",
               "background-color": "rgba(255, 255, 255, 0)",
-              // width: "data(width)",
-              // height: "data(height)",
               "text-wrap": "wrap",
               "text-max-width": getWidth(5, 1.3),
               width: getWidth(5, 1.5, true),
