@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
-import {
-  convertUnicode,
-  keywordHighlighter,
-} from "../../../../Services/utils/unicodeCharacterEngine.js";
-import OptionDropDown from "../../../components/OptionDropDown";
-import styled from "styled-components";
-import Button from "@mui/material/Button";
-import RestAPI from "Services/api";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Grid } from "@material-ui/core";
+import { Button, CircularProgress, Grid } from "@material-ui/core";
 import ExpansionPanel from "./Components/ExpansionPanel";
 import PaperContent from "./Components/PaperContent";
-import {CalcMaxkeyword,getKeywordScore } from "./Components/FlowChartUtil";
-import { Typography } from "@material-ui/core";
+import { CalcMaxkeyword, getKeywordScore } from "./Components/FlowChartUtil";
 
 function ColoredBand({ interests_similarity, tags }) {
   const totalValues = Math.round(
@@ -47,20 +37,20 @@ function ColoredBand({ interests_similarity, tags }) {
   );
 }
 export default function PaperCard(props) {
-    const [state, setState] = useState({
-        timer: null,
-        interests: props.interests,
-        // mainKewords: props.paper_keywords,
-        paper: props.paper,
-        index: props.index,
-        threshold: props.threshold,
-        paperModiText: "",
-        done: false,
-    });
-    //---------------Hoda Start-----------------
-    CalcMaxkeyword(state.paper,state.interests);
-    state.paper["keyword"]=getKeywordScore(state.paper.keywords_similarity);
-    //---------------Hoda end-----------------
+  const [state, setState] = useState({
+    timer: null,
+    interests: props.interests,
+    // mainKewords: props.paper_keywords,
+    paper: props.paper,
+    index: props.index,
+    threshold: props.threshold,
+    paperModiText: "",
+    done: false,
+  });
+  //---------------Hoda Start-----------------
+  CalcMaxkeyword(state.paper, state.interests);
+  state.paper["keyword"] = getKeywordScore(state.paper.keywords_similarity);
+  //---------------Hoda end-----------------
   useEffect(() => {
     // calculateSimilarity();
     // let modified_text = convertUnicode(text);

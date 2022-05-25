@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, IconButton, FormControl, OutlinedInput, InputAdornment } from "@material-ui/core";
+import { Grid, IconButton, FormControl, OutlinedInput, InputAdornment, Button } from "@material-ui/core";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import InterestSlider from "./Slider";
 import { ComapaerableBarChart } from "./ComparableBarChart"
@@ -11,13 +11,27 @@ import Divider from '@material-ui/core/Divider';
 export const WhatIfInterests = (props) => {
     const [state, setState] = useState({
         paper: props.paper,
-        interests: props.interests,
+        interests: props.paper.interests || props.interests,
         index: props.index,
         threshold: props.threshold
     })
-    useEffect(()=>{
+    useEffect(() => {
         handleInterestsChange()
-    },[state.interests.length])
+    }, [state.interests.length])
+
+    const handleApplyInterestsChanges = () => {
+        const newPaperProps = state.paper
+        newPaperProps.score = state.paper.new_score
+        newPaperProps.interests_similarity = state.paper.new_interests_similarity
+        newPaperProps.interests = state.interests
+        newPaperProps.threshold = state.threshold
+        newPaperProps.modified = true
+        setState({
+            ...state,
+            paper: newPaperProps
+        })
+        props.handleApplyWhatIfChanges(state.index,newPaperProps)
+    }
     //Method:
     const handleInterestDelete = (index) => {
         if (index > -1) {
@@ -37,7 +51,7 @@ export const WhatIfInterests = (props) => {
         handleInterestsChange()
     }
     const handleNewInterest = ((e) => {
-        if ((e.key === 'Enter' || e.type=='click') && state.interests.length < 10) {
+        if ((e.key === 'Enter' || e.type == 'click') && state.interests.length < 10) {
             const interests = state.interests
             const newInterest = document.getElementById(`newInterest_${state.index}`).value
             interests.push({
@@ -52,7 +66,7 @@ export const WhatIfInterests = (props) => {
             })
         }
     })
-    
+
     const handleInterestsChange = () => {
         const params = {
             "interests": state.interests,
@@ -126,6 +140,7 @@ export const WhatIfInterests = (props) => {
                     </Grid>
                     )
                     : null}
+                
             </Grid>
 
         )
@@ -159,6 +174,11 @@ export const WhatIfInterests = (props) => {
                 </Grid>
             </Grid>
             <Divider style={{ width: '100%', marginTop: '10px' }} />
+            <Grid container justify="flex-end" style={{padding:10}}>
+                <Button color="primary" variant='contained' onClick={handleApplyInterestsChanges}>
+                    Apply changes
+                </Button>
+            </Grid>
             <Grid item container md={12}>
                 <ComapaerableBarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
             </Grid>
@@ -166,4 +186,3 @@ export const WhatIfInterests = (props) => {
     )
 
 }
-

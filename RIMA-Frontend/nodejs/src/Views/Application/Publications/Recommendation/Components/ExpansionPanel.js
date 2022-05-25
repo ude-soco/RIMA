@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
+  ButtonGroup,
   Button as ButtonMUI,
   Collapse,
   Grid,
   makeStyles,
   Typography,
   CssBaseline,
+  Box,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import SettingsIcon from "@material-ui/icons/Settings";
 import HowExplanation from "./HowExplanation";
 import Seperator from "./Seperator";
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import { WhatIfInterests } from "./WhatIfInterests";
 import { WhatIfKeywords } from "./WhatIfKeywords";
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.white,
   },
   collapseButton: {
-    margin: "10px",
+    marginRight: "10px",
     display: "flex",
     justifyContent: "flex-end",
   },
@@ -71,6 +72,7 @@ export default function ExpansionPanel(props) {
   const paper = props.paper;
   const interests = props.interests;
   const index = props.index;
+  const threshold = props.threshold;
   const [value, setValue] = useState(0);
 
   const classes = useStyles();
@@ -101,27 +103,23 @@ export default function ExpansionPanel(props) {
     <>
       <CssBaseline />
 
-      <Grid container spacing={0} className={classes.collapseButton}>
-        <Grid md={1}>
+      <Grid container spacing={2} className={classes.collapseButton}>
+        <ButtonGroup color="primary" variant="outlined" size="small">
           <ButtonMUI
-            variant="string"
             onClick={() => {
               handleWhyExpandClick();
             }}
           >
             Why?
           </ButtonMUI>
-        </Grid>
-        <Grid item md={2}>
           <ButtonMUI
-            variant="text"
             onClick={() => {
               handleWhatIfExpandClick();
             }}
           >
             What-If?
           </ButtonMUI>
-        </Grid>
+        </ButtonGroup>
       </Grid>
 
       {/* Handling th Back button */}
@@ -130,7 +128,7 @@ export default function ExpansionPanel(props) {
         {whyShow && (
           <Grid className="d-flex justify-content-start ">
             <ButtonMUI
-              variant="string"
+              variant="outlined"
               onClick={() => {
                 setWhyShow(false);
                 setWhyExpanded(!whyExpanded);
@@ -187,7 +185,7 @@ export default function ExpansionPanel(props) {
         {whatIfShow && (
           <Grid className="d-flex justify-content-start ">
             <ButtonMUI
-              variant="text"
+              variant="outlined"
               onClick={() => {
                 setWhatIfShow(false);
                 setWhatIfExpanded(!whatIfExpanded);
@@ -202,8 +200,6 @@ export default function ExpansionPanel(props) {
         )}
         <Grid container className={classes.root} spacing={2}>
           {/* What-if visualization */}
-
-          {/* <Seperator Label="What-if I change?" Width="170" /> */}
           {/* Jaleh */}
           <Grid container>
             <Grid
@@ -238,15 +234,24 @@ export default function ExpansionPanel(props) {
                 paper={paper}
                 interests={interests}
                 index={index}
+                threshold={threshold}
+                handleApplyWhatIfChanges={props.handleApplyWhatIfChanges}
               />
             </TabPanel>
             <TabPanel value={value} index={1}>
-              {/* <WhatIfKeywords paper={paper} interests={tags} /> */}
+              <WhatIfKeywords
+                paper={paper}
+                interests={interests}
+                index={index}
+                threshold={threshold}
+                handleApplyWhatIfChanges={props.handleApplyWhatIfChanges}
+              />
             </TabPanel>
           </Grid>
         </Grid>
       </Collapse>
     </>
+
     // Tannaz end
   );
 }
