@@ -3,14 +3,20 @@
 // const metrics = textMetrics.init(el);
 
 const __measuretext_cache__ = {};
-function getMaxMeasure(node,sizeOnCtx){
-    const cy=node.cy();
-    cy._private.MaxMeasure=cy._private.MaxMeasure||{width:0,height:0};
-    cy._private.MaxMeasure.width=Math.max(cy._private.MaxMeasure.width,sizeOnCtx.width);
-    cy._private.MaxMeasure.height=Math.max(cy._private.MaxMeasure.height,sizeOnCtx.height);
-    return cy._private.MaxMeasure;
+function getMaxMeasure(node, sizeOnCtx) {
+  const cy = node.cy();
+  cy._private.MaxMeasure = cy._private.MaxMeasure || { width: 0, height: 0 };
+  cy._private.MaxMeasure.width = Math.max(
+    cy._private.MaxMeasure.width,
+    sizeOnCtx.width
+  );
+  cy._private.MaxMeasure.height = Math.max(
+    cy._private.MaxMeasure.height,
+    sizeOnCtx.height
+  );
+  return cy._private.MaxMeasure;
 }
-export function getSize(node, calcHeight,justMax) {
+export function getSize(node, calcHeight, justMax) {
   const label = node.data("label");
   const fStyle = node.pstyle("font-style").strValue;
   const size = node.pstyle("font-size").pfValue + "px";
@@ -19,7 +25,9 @@ export function getSize(node, calcHeight,justMax) {
   // This global variable is used to cache repeated calls with the same arguments
   const _cacheKey = `${label}:${fStyle}:${size}:${family}:${weight}:${calcHeight}`;
   if (__measuretext_cache__[_cacheKey]) {
-    return !justMax?__measuretext_cache__[_cacheKey]:getMaxMeasure(node,__measuretext_cache__[_cacheKey]);
+    return !justMax
+      ? __measuretext_cache__[_cacheKey]
+      : getMaxMeasure(node, __measuretext_cache__[_cacheKey]);
   }
   const ctx = document.createElement("canvas").getContext("2d");
   ctx.font = fStyle + " " + weight + " " + size + " " + family;
@@ -38,21 +46,27 @@ export function getSize(node, calcHeight,justMax) {
   // Add the sizes to the cache
   __measuretext_cache__[_cacheKey] = sizeOnCtx;
 
-  return !justMax?sizeOnCtx:getMaxMeasure(node,sizeOnCtx);
+  return !justMax ? sizeOnCtx : getMaxMeasure(node, sizeOnCtx);
 }
 
-export function getHeight(padding,ratio,justMax) {
-  return (node) => getSize(node, true,justMax).height*(ratio || 1 ) + (padding || 10);
+export function getHeight(padding, ratio, justMax) {
+  return (node) =>
+    getSize(node, true, justMax).height * (ratio || 1) + (padding || 10);
 }
 
-export function getWidth(padding,ratio,justMax) {
-  return (node) => Math.round(getSize(node,true,justMax).width*(ratio || 1 )+ (padding || 10));
+export function getWidth(padding, ratio, justMax) {
+  return (node) =>
+    Math.round(
+      getSize(node, true, justMax).width * (ratio || 1) + (padding || 10)
+    );
 }
 
-export function getMaxWidthHeight(padding,ratio,justMax) {
+export function getMaxWidthHeight(padding, ratio, justMax) {
   return (node) => {
-    const size = getSize(node,true,justMax);
-    const radius = Math.round(Math.max(size.width, size.height || 0)*(ratio || 1 )) + (padding || 10);
+    const size = getSize(node, true, justMax);
+    const radius =
+      Math.round(Math.max(size.width, size.height || 0) * (ratio || 1)) +
+      (padding || 10);
     return radius;
   };
 }
@@ -71,9 +85,9 @@ export function wordElementProvider(
     wAvgId = prefix + "Avg";
     const wordlable = `${modelLable}`;
     wordElements.push({
-       // classes: "circlenode",
-        classes: "polygonnode",
-        data: {
+      // classes: "circlenode",
+      classes: "polygonnode",
+      data: {
         id: modelId,
         label: wordlable,
         faveColor: "black",
@@ -94,7 +108,7 @@ export function wordElementProvider(
           faveColor: "black",
           faveColorLabel: "black",
         },
-        style: {"font-weight": "bold"},
+        style: { "font-weight": "bold" },
       },
       // edges
       {
@@ -153,7 +167,7 @@ export function wordElementProvider(
                 target: avgWordId,
                 label: "",
                 faveColor: word.color,
-            },
+              },
             }
           );
         }
@@ -205,14 +219,21 @@ export function wordElementProvider(
   });
   return wordElements;
 }
-export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cosineSim, score) {
+export function getFinalElement(
+  prefixLeft,
+  titleLeft,
+  prefixRight,
+  titleRight,
+  cosineSim,
+  score
+) {
   const scoreId = "scoreNode";
   const cosineSimId = "COSINE SIMILARITY";
-  const leftNodeId = prefixLeft+"Model";
-  const rightNodeId = prefixRight+"Model";
+  const leftNodeId = prefixLeft + "Model";
+  const rightNodeId = prefixRight + "Model";
   return [
     {
-        classes: "polygonnode",
+      classes: "polygonnode",
       data: {
         id: scoreId,
         label: score,
@@ -224,9 +245,8 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
         y: 300,
       },
       style: {
-          "font-weight": "bold"
-
-        },
+        "font-weight": "bold",
+      },
     },
     {
       classes: "recnode",
@@ -235,24 +255,25 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
         label: cosineSim,
         faveColor: "black",
         faveColorLabel: "black",
-        tooltip:"<p>A publication keyword<br />extracted from the<br />current publication</p>",
-        lock:true
+        tooltip:
+          "<p>A publication keyword<br />extracted from the<br />current publication</p>",
+        lock: true,
       },
       position: {
         x: 180,
         y: 180,
       },
       style: {
-          "font-weight": "bold",
-          "background-image": "url(https://i.ibb.co/FbrHyHM/info.png)",
-          "background-size": "cover",
-          "background-image-opacity": 0.5,
+        "font-weight": "bold",
+        "background-image": "url(https://i.ibb.co/FbrHyHM/info.png)",
+        "background-size": "cover",
+        "background-image-opacity": 0.5,
       },
     },
     {
-        //classes: "circlenode",
-        classes: "polygonnode",
-        data: {
+      //classes: "circlenode",
+      classes: "polygonnode",
+      data: {
         id: leftNodeId,
         label: titleLeft,
         faveColor: "#303F9F",
@@ -267,9 +288,9 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
       },
     },
     {
-        //classes: "circlenode",
-        classes: "polygonnode",
-        data: {
+      //classes: "circlenode",
+      classes: "polygonnode",
+      data: {
         id: rightNodeId,
         label: titleRight,
         faveColor: "#F39617",
@@ -306,16 +327,16 @@ export function getFinalElement(prefixLeft,titleLeft,prefixRight, titleRight,cos
       },
     },
     {
-        data: {
-          source: cosineSimId,
-          target: scoreId,
-          label: "",
-          faveColor: "black",
-        },
-        style: {
-          "line-style": "solid",
-        },
+      data: {
+        source: cosineSimId,
+        target: scoreId,
+        label: "",
+        faveColor: "black",
       },
+      style: {
+        "line-style": "solid",
+      },
+    },
   ];
 }
 export function CalcMaxkeyword(paper, interests) {

@@ -7,7 +7,7 @@ import dagre from "cytoscape-dagre";
 //import breadthfirst from "cytoscape-breadthfirst";
 //import elk from "cytoscape-elk";
 
-import {getMaxWidthHeight, getHeight, getWidth } from "./FlowChartUtil";
+import { getMaxWidthHeight, getHeight, getWidth } from "./FlowChartUtil";
 cytoscape.use(popper);
 cytoscape.use(fcose);
 cytoscape.use(dagre);
@@ -18,37 +18,38 @@ const minZoom = 0.3;
 const maxZoom = 1e1;
 
 //-----hoda-start---
-let activeTimeout={};
-function refreshLayout(key,cy,layout)
-{
-  if(!!activeTimeout[key]) {
+let activeTimeout = {};
+function refreshLayout(key, cy, layout) {
+  if (!!activeTimeout[key]) {
     clearTimeout(activeTimeout[key]);
-    activeTimeout[key]=undefined;
+    activeTimeout[key] = undefined;
   }
-  activeTimeout[key]=setTimeout(()=>{
+  activeTimeout[key] = setTimeout(() => {
     cy.layout(layout).run();
-  },300);
+  }, 300);
 }
 //-----hoda-end---
 
 export default function Flowchart(props) {
   // start Tannaz
-  const {keyChart, elements, height, xStartPoint, yStartPoint,style } = props;
-  const layout=props.layout || {
+  const { keyChart, elements, height, xStartPoint, yStartPoint, style } = props;
+  const layout = props.layout || {
     name: "preset",
     spacingFactor: 1,
     avoidOverlap: true,
     fit: true,
     padding: 10,
     animate: true,
-    animationDuration: 500
+    animationDuration: 500,
   };
   return (
-    <div style={{ display: "flex", flex: 1, height: height, maxWidth: "600px" }} >
+    <div
+      style={{ display: "flex", flex: 1, height: height, maxWidth: "1000px" }}
+    >
       <CytoscapeComponent
         cy={(cy) => {
           cy.on("resize", (_evt) => {
-            refreshLayout(keyChart,cy,layout);
+            refreshLayout(keyChart, cy, layout);
           });
           // Tooltip start
           cy.elements().unbind("mouseover");
@@ -83,19 +84,31 @@ export default function Flowchart(props) {
           });
           // Tooltip end
 
-          cy.on("mouseout", "node", function (evt) {
+          // cy.on("mouseout", "node", function (evt) {
+          //   document.body.style.cursor = "default";
+          // });
+
+          // cy.on("mousedown", "node", function (evt) {
+          //   document.body.style.cursor = "grabbing";
+          // });
+
+          // cy.on("mouseup", "node", function (evt) {
+          //   document.body.style.cursor = "grab";
+          // });
+          cy.on("mouseout", function (evt) {
             document.body.style.cursor = "default";
           });
 
-          cy.on("mousedown", "node", function (evt) {
+          cy.on("mousedown", function (evt) {
             document.body.style.cursor = "grabbing";
           });
 
-          cy.on("mouseup", "node", function (evt) {
+          cy.on("mouseup", function (evt) {
             document.body.style.cursor = "grab";
           });
-          cy.on('add remove', () => {
-            refreshLayout(keyChart,cy,layout);
+
+          cy.on("add remove", () => {
+            refreshLayout(keyChart, cy, layout);
           });
         }}
         elements={elements}
@@ -110,8 +123,12 @@ export default function Flowchart(props) {
             style: {
               label: "data(label)",
               "background-color": "rgba(255, 255, 255, 0)",
-              width: "data(width)",
-              height: "data(height)",
+              // width: "data(width)",
+              // height: "data(height)",
+              "text-wrap": "wrap",
+              "text-max-width": getWidth(5, 1.3),
+              width: getWidth(5, 1.5, true),
+              height: getHeight(5, 1, true),
               "text-background-opacity": 0,
               "text-background-padding": "2px",
               "border-color": "data(faveColor)",
@@ -129,20 +146,20 @@ export default function Flowchart(props) {
               "font-size": "13",
               color: "data(faveColor)",
               "text-halign": "center",
-            "text-valign": "center"
-            }
+              "text-valign": "center",
+            },
           },
- //-----hoda-start---
+          //-----hoda-start---
           {
-            selector: "node.circlenode", 
+            selector: "node.circlenode",
             style: {
               label: "data(label)",
               color: "data(faveColorLabel)",
               "background-color": "rgba(255, 255, 255, 0)",
               "text-wrap": "wrap",
               "text-max-width": getMaxWidthHeight(20),
-               width: getMaxWidthHeight(20),
-               height: getMaxWidthHeight(20),
+              width: getMaxWidthHeight(20),
+              height: getMaxWidthHeight(20),
               shape: "ellipse",
               "background-image": "data(backgroundImage)",
               "background-fit": "data(backgroundSize)",
@@ -151,8 +168,8 @@ export default function Flowchart(props) {
               "border-color": "data(faveColor)",
               "border-style": "solid",
               "border-width": 2,
-              "border-opacity": 1
-            }
+              "border-opacity": 1,
+            },
           },
           {
             selector: "node.polygonnode",
@@ -161,10 +178,10 @@ export default function Flowchart(props) {
               color: "data(faveColorLabel)",
               "background-color": "rgba(255, 255, 255, 0)",
               "text-wrap": "wrap",
-              "text-max-width": getWidth(5,1.3),
-               width: getWidth(50,1.5,true),
-               height: getHeight(5,1,true),
-               //height: n=> Math.max(getWidth(13,4/5,true)(n), getHeight(5,1,true)(n)),
+              "text-max-width": getWidth(5, 1.3),
+              width: getWidth(50, 1.5, true),
+              height: getHeight(5, 1, true),
+              //height: n=> Math.max(getWidth(13,4/5,true)(n), getHeight(5,1,true)(n)),
               shape: "polygon",
               "background-image": "data(backgroundImage)",
               "background-fit": "data(backgroundSize)",
@@ -173,8 +190,8 @@ export default function Flowchart(props) {
               "border-color": "data(faveColor)",
               "border-style": "solid",
               "border-width": 2,
-              "border-opacity": 1
-            }
+              "border-opacity": 1,
+            },
           },
           {
             selector: "node.recnode",
@@ -184,8 +201,8 @@ export default function Flowchart(props) {
               "background-color": "rgba(255, 255, 255, 0)",
               "text-wrap": "wrap",
               "text-max-width": getWidth(5),
-              width: getWidth(5,1.4,true),
-              height: getHeight(undefined,1,true),
+              width: getWidth(5, 1.4, true),
+              height: getHeight(undefined, 1, true),
               shape: "round-rectangle",
               "background-image": "data(backgroundImage)",
               "background-fit": "data(backgroundSize)",
@@ -194,10 +211,10 @@ export default function Flowchart(props) {
               "border-color": "data(faveColor)",
               "border-style": "solid",
               "border-width": 2,
-              "border-opacity": 1
-            }
+              "border-opacity": 1,
+            },
           },
-//-----hoda-end---
+          //-----hoda-end---
           {
             selector: "edge",
             style: {
@@ -232,9 +249,10 @@ export default function Flowchart(props) {
           {
             selector: ".withTooltip",
             style: {
-              // "background-image": "https://i.ibb.co/FbrHyHM/info.png",
-              // "background-fit": "cover cover",
-              // "background-image-opacity": 0.5,
+              // "background-image": "https://i.ibb.co/Jkck6R5/info-2-48.png",
+              // "background-fit": "cover",
+              // "background-position": "right top",
+              // "background-image-opacity": 0.7,
             },
           },
         ]}
