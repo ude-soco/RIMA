@@ -12,6 +12,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Grid } from "@material-ui/core";
 import ExpansionPanel from "./Components/ExpansionPanel";
 import PaperContent from "./Components/PaperContent";
+import {CalcMaxkeyword,getKeywordScore } from "./Components/FlowChartUtil";
 import { Typography } from "@material-ui/core";
 
 function ColoredBand({ interests_similarity, tags }) {
@@ -57,35 +58,9 @@ export default function PaperCard(props) {
         done: false,
     });
     //---------------Hoda Start-----------------
-    for(let p1 in props.paper.keywords_similarity)
-    {
-        let interests=props.paper.keywords_similarity[p1];
-        let max_score=0
-        let max_interest=""
-        let max_interest_color=""
-        for(let p2 in interests)
-        {
-            if(p2.toLowerCase().indexOf("data_")>=0)
-            {
-                continue;
-            }
-            let value=interests[p2];
-            interests[p2]={
-                ...value,color:value.color||props.interests.find(x=> x.text.toLowerCase()===p2.toLowerCase()).color
-                };   
-            if(max_score<value.score)
-            {
-                max_score=value.score
-                max_interest_color=value.color
-                max_interest=p2
-            }
-        }
-        if(max_score>0)
-        {
-            props.paper.keywords_similarity[p1]={...interests,data_max_score:max_score,data_max_interest:max_interest,data_max_interest_color:max_interest_color}
-        }
-    }
-  //---------------Hoda end-----------------
+    CalcMaxkeyword(state.paper,state.interests);
+    state.paper["keyword"]=getKeywordScore(state.paper.keywords_similarity);
+    //---------------Hoda end-----------------
   useEffect(() => {
     // calculateSimilarity();
     // let modified_text = convertUnicode(text);

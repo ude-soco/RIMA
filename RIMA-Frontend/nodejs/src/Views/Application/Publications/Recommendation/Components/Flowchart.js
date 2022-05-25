@@ -1,33 +1,54 @@
 import React, { useEffect, useState } from "react";
 import cytoscape from "cytoscape";
-
 import CytoscapeComponent from "react-cytoscapejs";
-
 import popper from "cytoscape-popper";
+import fcose from "cytoscape-fcose";
+import dagre from "cytoscape-dagre";
+//import breadthfirst from "cytoscape-breadthfirst";
+//import elk from "cytoscape-elk";
+
+import {getMaxWidthHeight, getHeight, getWidth } from "./FlowChartUtil";
+cytoscape.use(popper);
+cytoscape.use(fcose);
+cytoscape.use(dagre);
+//cytoscape.use(breadthfirst);
+//cytoscape.use(elk);
 
 const minZoom = 0.3;
 const maxZoom = 1e1;
 
+//-----hoda-start---
+let activeTimeout={};
+function refreshLayout(key,cy,layout)
+{
+  if(!!activeTimeout[key]) {
+    clearTimeout(activeTimeout[key]);
+    activeTimeout[key]=undefined;
+  }
+  activeTimeout[key]=setTimeout(()=>{
+    cy.layout(layout).run();
+  },300);
+}
+//-----hoda-end---
+
 export default function Flowchart(props) {
   // start Tannaz
-  cytoscape.use(popper);
-  const { elements, height, xStartPoint, yStartPoint } = props;
+  const {keyChart, elements, height, xStartPoint, yStartPoint,style } = props;
+  const layout=props.layout || {
+    name: "preset",
+    spacingFactor: 1,
+    avoidOverlap: true,
+    fit: true,
+    padding: 10,
+    animate: true,
+    animationDuration: 500
+  };
   return (
-    <div
-      style={{ display: "flex", flex: 1, height: height, maxWidth: "600px" }}
-    >
+    <div style={{ display: "flex", flex: 1, height: height, maxWidth: "600px" }} >
       <CytoscapeComponent
         cy={(cy) => {
           cy.on("resize", (_evt) => {
-            cy.layout({
-              name: "preset",
-              spacingFactor: 1,
-              avoidOverlap: true,
-              fit: true,
-              padding: 10,
-              animate: true,
-              animationDuration: 500,
-            }).run();
+            refreshLayout(keyChart,cy,layout);
           });
           // Tooltip start
           cy.elements().unbind("mouseover");
@@ -73,17 +94,15 @@ export default function Flowchart(props) {
           cy.on("mouseup", "node", function (evt) {
             document.body.style.cursor = "grab";
           });
-          // cy.on("click", "node", function (evt) {
-          //   var ele = evt.target;
-          //   ele.style("background-color", "blue");
-          // });
+          cy.on('add remove', () => {
+            refreshLayout(keyChart,cy,layout);
+          });
         }}
         elements={elements}
         style={{
           width: "100%",
           height: "100%",
-          border: "0.5px solid #E7E7E7",
-          borderRadius: 8,
+          ...style,
         }}
         stylesheet={[
           {
@@ -100,6 +119,7 @@ export default function Flowchart(props) {
               "border-width": 2,
               "border-opacity": 1,
               shape: "data(shape)",
+              "shape-polygon-points": [-0.75, -1, 1, -1, 0.75, 1, -1, 1],
             },
           },
           {
@@ -109,9 +129,75 @@ export default function Flowchart(props) {
               "font-size": "13",
               color: "data(faveColor)",
               "text-halign": "center",
-              "text-valign": "center",
-            },
+            "text-valign": "center"
+            }
           },
+ //-----hoda-start---
+          {
+            selector: "node.circlenode", 
+            style: {
+              label: "data(label)",
+              color: "data(faveColorLabel)",
+              "background-color": "rgba(255, 255, 255, 0)",
+              "text-wrap": "wrap",
+              "text-max-width": getMaxWidthHeight(20),
+               width: getMaxWidthHeight(20),
+               height: getMaxWidthHeight(20),
+              shape: "ellipse",
+              "background-image": "data(backgroundImage)",
+              "background-fit": "data(backgroundSize)",
+              "text-background-opacity": 0,
+              "text-background-padding": "2px",
+              "border-color": "data(faveColor)",
+              "border-style": "solid",
+              "border-width": 2,
+              "border-opacity": 1
+            }
+          },
+          {
+            selector: "node.polygonnode",
+            style: {
+              label: "data(label)",
+              color: "data(faveColorLabel)",
+              "background-color": "rgba(255, 255, 255, 0)",
+              "text-wrap": "wrap",
+              "text-max-width": getWidth(5,1.3),
+               width: getWidth(50,1.5,true),
+               height: getHeight(5,1,true),
+               //height: n=> Math.max(getWidth(13,4/5,true)(n), getHeight(5,1,true)(n)),
+              shape: "polygon",
+              "background-image": "data(backgroundImage)",
+              "background-fit": "data(backgroundSize)",
+              "text-background-opacity": 0,
+              "text-background-padding": "2px",
+              "border-color": "data(faveColor)",
+              "border-style": "solid",
+              "border-width": 2,
+              "border-opacity": 1
+            }
+          },
+          {
+            selector: "node.recnode",
+            style: {
+              label: "data(label)",
+              color: "data(faveColorLabel)",
+              "background-color": "rgba(255, 255, 255, 0)",
+              "text-wrap": "wrap",
+              "text-max-width": getWidth(5),
+              width: getWidth(5,1.4,true),
+              height: getHeight(undefined,1,true),
+              shape: "round-rectangle",
+              "background-image": "data(backgroundImage)",
+              "background-fit": "data(backgroundSize)",
+              "text-background-opacity": 0,
+              "text-background-padding": "2px",
+              "border-color": "data(faveColor)",
+              "border-style": "solid",
+              "border-width": 2,
+              "border-opacity": 1
+            }
+          },
+//-----hoda-end---
           {
             selector: "edge",
             style: {
@@ -152,6 +238,7 @@ export default function Flowchart(props) {
             },
           },
         ]}
+        layout={layout} //----Hoda--
         pan={{ x: xStartPoint, y: yStartPoint }}
         minZoom={minZoom}
         maxZoom={maxZoom}

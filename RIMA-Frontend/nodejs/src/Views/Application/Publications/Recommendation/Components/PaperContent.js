@@ -50,7 +50,7 @@ function highlighter(
   let lookupkey = btoa(unescape(encodeURIComponent(keyword)));
   return `<a data-tip="${lookupkey}" aria-describedby="${paperId}"  data-for="${paperId}" data-event="click" title="Similarity Score: ${
     Math.round(max_score * 100) / 100
-  }" className="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
+  }" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
 }
 function KeywordSimObjToArray(keywords_similarity) {
   let items = [];
@@ -243,6 +243,7 @@ export default function PaperContent({ paper }) {
       </>):"")}
       {!popoverActive ? (
         <ReactTooltip
+          class="chart"
           id={paper.paperId}
           event={"click"}
           globalEventOff={"click"}
