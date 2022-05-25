@@ -6,10 +6,10 @@ export default function Seperator(props) {
 
   return (
     <Grid className="Seperator">
-      <Grid item md={11} style={{ color: "#2d3985" }}>
+      <Grid item md={12} style={{ color: "#2d3985" }}>
         {Label}
       </Grid>
-      <Grid item md={11} className="d-flex justify-content-center">
+      <Grid item md={12} className="d-flex justify-content-center">
         <Grid
           style={{
             width: Width + "px",

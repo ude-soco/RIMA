@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, createRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
   Grid, Paper, Typography, Button,
   Box, Modal,
-  DialogTitle, DialogContent, DialogActions,
+  DialogTitle, DialogContent,
   IconButton, CircularProgress
 } from "@material-ui/core";
 
@@ -17,8 +17,9 @@ import InterestsTags from "./TagSearch.js";
 import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
-import { pink, purple,  indigo, blue, cyan, teal, green,lime,amber,brown } from '@material-ui/core/colors';
-
+import { pink, purple, indigo, blue, cyan, teal, green, lime, amber, brown } from '@material-ui/core/colors';
+// import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
+// import CloudQueueIcon from "@material-ui/icons/CloudQueue";
 
 export default function PublicationRecommendation() {
 
@@ -27,10 +28,10 @@ export default function PublicationRecommendation() {
     interests: [],
     papers: [],
     loading: true,
-    reloadPapers: true,
     modal: false,
     threshold: 40,
-
+    //New States added by Tannaz
+    // whatModal: false,
   })
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function PublicationRecommendation() {
     getRecommendedPapers()
   }, [state.interests])
 
+  //Jaleh - Apply changes from what-if general
   const handleApplyGeneralChanges = (newInterests) => {
     closeWhatIfModal()
     setState({
@@ -50,6 +52,8 @@ export default function PublicationRecommendation() {
       modal: false,
     })
   }
+
+  //Jaleh - Apply local changes of a paper
   const handleApplyWhatIfChanges = (index, newPaperProps, ref) => {
     setState({
       ...state,
@@ -75,7 +79,7 @@ export default function PublicationRecommendation() {
 
   }
 
-  //What if modal - Jaleh:
+  //Jaleh - What if modal:
   const openWhatIfModal = () => {
     setState({
       ...state,
@@ -88,11 +92,24 @@ export default function PublicationRecommendation() {
       modal: false,
     });
   };
+  //What modal - Tannaz:
+  // const openWhatModal = () => {
+  //   setState({
+  //     ...state,
+  //     whatModal: true,
+  //   });
+  // };
+  // const closeWhatModal = (id) => {
+  //   setState({
+  //     ...state,
+  //     whatModal: false,
+  //   });
+  // };
 
   //Hoda 
   const generateRandomRGB = (indexcolor) => {
     var hexValues = [
-      pink[300], purple[300], indigo[300], blue[300], cyan[300], teal[300], green[300],lime[300],amber[300],brown[300]
+      pink[300], purple[300], indigo[300], blue[300], cyan[300], teal[300], green[300], lime[300], amber[300], brown[300]
     ];
 
     return hexValues[indexcolor];
@@ -145,6 +162,14 @@ export default function PublicationRecommendation() {
     }
   };
 
+  //Hoda - Tanaz
+  // const getTagColorByName = (tagName) => {
+  //   const { interests } = state;
+  //   const color = interests.find((tag) => tag.text === tagName).color;
+  //   return color;
+  // };
+
+  //Jaleh
   const refinePapers = (papers) => {
     let res = []
     papers.map((paper) => {
@@ -158,6 +183,7 @@ export default function PublicationRecommendation() {
     })
     return res
   }
+  //Jaleh
   const refineInterests = (interests) => {
     let res = []
     interests.map((interest, i) => {
@@ -177,14 +203,26 @@ export default function PublicationRecommendation() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '70%',
-    bgcolor: 'background.paper',
+    bgcolor: '#fff',
     border: '1px solid #ccc',
     overflow: 'scroll',
     height: '100%',
     display: 'block',
-    // boxShadow: 24,
     p: 4,
   };
+  //Tanaz
+  // const whatStyle = {
+  //   position: "absolute",
+  //   top: "50%",
+  //   left: "50%",
+  //   transform: "translate(-50%, -50%)",
+  //   width: "70%",
+  //   backgroundColor: "#FFFFFF",
+  //   border: "1px solid #ccc",
+  //   height: "70%",
+  //   display: "block",
+  //   p: 4,
+  // };
   return (
     <>
       <Grid container component={Paper} className="bg-gradient-default1 shadow">
@@ -196,7 +234,7 @@ export default function PublicationRecommendation() {
               <fieldset className="paper-interests-box">
                 <legend
                   style={{
-                    fontSize: "12px",
+                    fontSize: "16px",
                     fontWeight: "bold",
                   }}
                 >
@@ -249,14 +287,54 @@ export default function PublicationRecommendation() {
 
           </Grid>
         </Grid>
+        {/* Tanaz */}
         {/* <div className="d-flex align-items-center ml-4 mt-2">
-              <Button variant="string">
-                <CloudQueueIcon color="action" fontSize="small" />
-                <Typography align="center" variant="subtitle2" className="ml-2">
-                  Interests Sources
-                </Typography >
-              </Button>
-            </div> */}
+          <Button variant="string" onClick={() => openWhatModal()}>
+            <CloudQueueIcon color="action" fontSize="small" />
+            <Typography align="center" variant="subtitle2" className="ml-2">
+              Interests Sources
+            </Typography>
+          </Button>
+        </div> */}
+        {/* What Modal */}
+
+        {/* <Modal
+          open={state.whatModal}
+          onClose={closeWhatModal}
+          size="md"
+          className="publication-modal"
+        >
+          <Box style={whatStyle}>
+            <Grid item md={12} sm={12}>
+              <DialogTitle style={{ m: 0, p: 2 }}>
+                <Seperator Label="What the system knows?" Width="200" />
+                {state.whatModal ? (
+                  <IconButton
+                    aria-label="close"
+                    onClick={closeWhatModal}
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                ) : null}
+              </DialogTitle>
+            </Grid>
+            <Grid item md={12} sm={12}>
+              <Typography align="left" variant="subtitle2" className="ml-3">
+                Your Top Interests have been chosen from this wordcloud:
+              </Typography>
+            </Grid>
+            <Grid item md={12} sm={12}>
+              <DialogContent>
+                <CloudChart />
+              </DialogContent>
+            </Grid>
+          </Box>
+        </Modal> */}
         <Seperator Label="Publications" Width="130" />
         {/* end Tannaz */}
         <Grid container style={{ padding: "20px" }} id="paper-card-container">

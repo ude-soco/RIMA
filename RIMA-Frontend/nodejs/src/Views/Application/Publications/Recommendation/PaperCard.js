@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
-import { Typography, Button, CircularProgress, Grid } from '@material-ui/core';
+import { Button, CircularProgress, Grid } from '@material-ui/core';
 import ExpansionPanel from './Components/ExpansionPanel';
 import PaperContent from "./Components/PaperContent";
-
 
 function ColoredBand({ interests_similarity, tags }) {
     const totalValues = Math.round(Object.values(interests_similarity).reduce((a, b) => a + b));
