@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Flowchart from "./Flowchart";
 import {getFinalElement} from "./FlowChartUtil";
 import ReactTooltip from "react-tooltip";
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 const useStyles = makeStyles((theme) => ({
   paperCustom: {
@@ -42,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   itemBox: {
     margin: 0,
     padding: 10
+  },
+  tooltipText: {
+      textAlign:'center',
+      fontSize:13,
+      fontFamily:'"Roboto", "Helvetica", "Arial", sans-serif'
   }
 }));
 
@@ -50,11 +56,11 @@ function Title({title,prefix,tooltipContent,}){
   const classes = useStyles();
   return (
     <>
-    {tooltipContent?(<ReactTooltip
-        id={tooltipId}
+    {tooltipContent?(<ReactTooltip className={classes.tooltipText}  place="bottom" 
+        id={tooltipId} 
         effect={"solid"}>{tooltipContent}</ReactTooltip>):""}
           <Typography variant="subtitle2" className={classes.typographyCustom}>
-            <span className={""}>{title} {tooltipContent?(<span data-tip data-for={tooltipId} style={{fontWeight:"bold"}} >ⓘ</span>):""}</span>
+            <span className={""}>{title} {tooltipContent?(<span data-tip data-for={tooltipId}><sup><InfoOutlinedIcon  fontSize="small" color= "disabled" /></sup></span>):""}</span>
           </Typography>
     </>
   );

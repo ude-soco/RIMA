@@ -96,6 +96,7 @@ export function wordElementProvider(
       style: {
         "border-style": "dashed",
         "font-weight": "bold",
+        "font-size": "17",
       },
     });
     const avglable = `WEIGHTED AVERAGE`;
@@ -108,7 +109,10 @@ export function wordElementProvider(
           faveColor: "black",
           faveColorLabel: "black",
         },
-        style: { "font-weight": "bold" },
+        style: {
+          "font-weight": "bold",
+          "font-size": "17",
+        },
       },
       // edges
       {
@@ -245,8 +249,10 @@ export function getFinalElement(
         y: 300,
       },
       style: {
-        "font-weight": "bold",
-      },
+          "font-size" : "17",
+          "font-weight": "bold"
+
+        },
     },
     {
       classes: "recnode",
@@ -264,11 +270,13 @@ export function getFinalElement(
         y: 180,
       },
       style: {
-        "font-weight": "bold",
-        "background-image": "url(https://i.ibb.co/FbrHyHM/info.png)",
-        "background-size": "cover",
-        "background-image-opacity": 0.5,
-      },
+          "font-weight": "bold",
+          "font-size" : "17",
+          "background-image": "https://i.ibb.co/Jkck6R5/info-2-48.png",
+          "background-fit": "cover",
+          "background-position": "left top",
+          "background-image-opacity": 0.7,
+ },
     },
     {
       //classes: "circlenode",

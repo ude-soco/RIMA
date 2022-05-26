@@ -259,6 +259,7 @@ export default function PaperContent({ paper }) {
             return (
               <TopSimilarityChart
                 onClick={(e) => e.stopPropagation()}
+                width={350}
                 interests={interests}
               />
             );

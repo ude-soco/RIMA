@@ -24,12 +24,13 @@ function getInterestScore(interests,max)
   return items.sort((a,b)=>a.score<b.score?1:a.score==b.score?0:-1).filter((_, i) => i < max);
 }
 
-function TopSimilarityChart({onClick,interests,height,maxItem,title}) {
+function TopSimilarityChart({onClick,interests,height,width,maxItem,title}) {
   title=title||"The top three similarity score between your interests and selected keyword. ";
   interests=getInterestScore(interests,maxItem||3);
   let cats=interests.map(x=>x.interest);
   let scores=interests.map(x=>x.score);
   let colors=interests.map(x=>x.color);
+  let size={width:width,height:height||150};
   let options ={
       series: [{name: "Similarity to keyword", data: scores}],
       options: {
@@ -91,7 +92,7 @@ function TopSimilarityChart({onClick,interests,height,maxItem,title}) {
     };
   return  <Paper elevation={0}  onClick={onClick}  >
               <Typography variant="body2" gutterBottom>{title}</Typography>
-              <Chart options={options.options} series={options.series} type="bar" height={height||150}/>
+              <Chart options={options.options} series={options.series} type="bar" {...size} />
           </Paper >;
 }
 
