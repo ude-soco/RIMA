@@ -81,6 +81,7 @@ export function wordElementProvider(
   let wordElements = [];
   const modelId = prefix + "Model";
   let wAvgId = null;
+  let wParentId = null;
   if (inclEmbedding) {
     wAvgId = prefix + "Avg";
     const wordlable = `${modelLable}`;
@@ -99,6 +100,21 @@ export function wordElementProvider(
         "font-size": "17",
       },
     });
+    wParentId = prefix +  + "Parent";
+    if (!!wParentId) {
+      wordElements.push({
+        //classes: "circlenode",
+        data: {
+          id: wParentId,
+          label: "",
+          faveColor: "gray",
+          faveColorLabel: "black", //word.color,
+        },
+        style: {
+          "border-style": "solid",
+        },
+      });
+    }
     const avglable = `WEIGHTED AVERAGE`;
     wordElements.push(
       {
@@ -149,7 +165,10 @@ export function wordElementProvider(
               id: subwordId,
               label: text,
               faveColor: word.color,
-              faveColorLabel: "black",
+              faveColorLabel: "black",  
+            },
+            style: {
+              "border-style": "solid",
             },
           },
           // edges
@@ -158,7 +177,7 @@ export function wordElementProvider(
               source: wordId,
               target: subwordId,
               label: "",
-              faveColor: word.color,
+              faveColor: word.color, 
             },
           }
         );
@@ -186,6 +205,7 @@ export function wordElementProvider(
         label: wordlable,
         faveColor: word.color,
         faveColorLabel: "black", //word.color,
+        ...(!!wParentId?{parent:wParentId}:{})
       },
       style: {
         "border-style": "dashed",
@@ -223,6 +243,134 @@ export function wordElementProvider(
   });
   return wordElements;
 }
+
+export function wordElementProviderWithCoordinate(words, prefix, isSplit, inclEmbedding, modelLable) {
+  let wordElements = [];
+  let modelObj = null;
+  let wAvgObj = null;
+  let wParentObj = null;
+  //Show more extracted keywords/interest
+  //words=words.concat(words);
+  wParentObj={
+    //classes: "circlenode",
+    data: {
+      id: prefix +  "Parent",
+      label: "",
+      faveColor: !!inclEmbedding?"#C4C4C4":"white",
+      faveColorLabel: "black", //word.color,
+    },
+    style: {
+      "border-style": "solid",
+    },
+  };
+
+wordElements.push(wParentObj);
+if (inclEmbedding) {
+    
+    const wordlable = `${modelLable}`;
+    modelObj={
+      // classes: "circlenode",
+      classes: "polygonnode",
+      data: {
+        id: prefix + "Model",
+        label: wordlable,
+        faveColor: "black",
+        faveColorLabel: "black",
+      },
+      style: {
+        "border-style": "dashed",
+        "font-weight": "bold",
+        "font-size": "17",
+      },
+    };
+
+    wordElements.push(modelObj);
+    
+    const avglable = `WEIGHTED AVERAGE`;
+
+    wAvgObj={
+      classes: "recnode",
+      data: {
+        id: prefix + "Avg",
+        label: avglable,
+        faveColor: "black",
+        faveColorLabel: "black",
+      },
+      style: {
+        "font-weight": "bold",
+        "font-size": "17",
+      },
+    };
+
+    wordElements.push(wAvgObj);
+
+    wordElements.push(
+      // edges
+      {
+        data: {
+          source: wAvgObj.data.id,
+          target: modelObj.data.id,
+          label: "",
+          faveColor: "black",
+        },
+        style: {
+          "line-style": "dashed",
+        },
+      }
+    );
+  }
+
+  words.forEach((word, index) => {
+    let wordObj = null;
+    const wordlable = `${word.text} (${word.weight})`;
+    wordObj={
+      //classes: "circlenode",
+      classes: "polygonnode",
+      data: {
+        id: `${prefix}wordName${index}`,
+        label: wordlable,
+        faveColor: word.color,
+        faveColorLabel: "black", //word.color,
+        parent:wParentObj.data.id
+      },
+      position:{
+          x:200*(index%2),
+          y:100*Math.round(index/2-0.1)
+      },
+      style: {
+        "border-style": inclEmbedding?"dashed":"solid",
+      },
+    };
+    wordElements.push(wordObj);
+    // edges
+    if (!!wAvgObj) {
+      wordElements.push({
+        data: {
+          source: wordObj.data.id,
+          target: wAvgObj.data.id,
+          label: "",
+          faveColor: word.color,
+        },
+        style: {
+          "line-style": "dashed",
+        },
+      });
+    }
+  });
+  if (!!wAvgObj) {
+    wAvgObj.position={
+      x:100,
+      y:100*Math.round(words.length/2)
+    };
+    modelObj.position={
+      x:wAvgObj.position.x,
+      y:wAvgObj.position.y+150
+    }
+  }
+  return wordElements;
+}
+
+
 export function getFinalElement(
   prefixLeft,
   titleLeft,
@@ -284,7 +432,7 @@ export function getFinalElement(
       data: {
         id: leftNodeId,
         label: titleLeft,
-        faveColor: "#303F9F",
+        faveColor: "black",
         faveColorLabel: "black",
       },
       position: {
@@ -301,7 +449,7 @@ export function getFinalElement(
       data: {
         id: rightNodeId,
         label: titleRight,
-        faveColor: "#F39617",
+        faveColor: "black",
         faveColorLabel: "black",
       },
       position: {

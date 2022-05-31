@@ -82,6 +82,7 @@ export default function HowFinalStep({ paper }) {
                                    "PUBLICATION EMBEDDING","COSINE SIMILARITY", "SIMILARITY SCORE:" + paper.score + "%");
   return (
     <Paper  className={classes.paperCustom} elevation={0}>
+       {/* Title 
        <Grid container direction="row" spacing={0}>
         <Grid item sx={12} sm={6}>
           <Title {...titleLeft} />
@@ -89,7 +90,7 @@ export default function HowFinalStep({ paper }) {
         <Grid item sx={12} sm={6}>
           <Title {...titleRight} />
         </Grid>
-      </Grid> 
+      </Grid>  */}
       <Grid container direction="row" justify="space-between">
         <Hidden smDown>
           <Grid item xs={false} sm={false} md={1} lg={2} xl={3} />

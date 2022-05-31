@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Flowchart from "./Flowchart";
 import { Divider, Paper, Grid, Hidden, Typography } from "@material-ui/core";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
-import { wordElementProvider,getFinalElement } from "./FlowChartUtil";
+import { wordElementProviderWithCoordinate } from "./FlowChartUtil";
 import ReactTooltip from "react-tooltip";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
@@ -52,9 +52,9 @@ function WordList({
   const classes = useStyles();
   //const  wordElements  =(secondCol?
     //getFinalElement(prefix,modelLabel,secondCol.prefix,secondCol.modelLabel,secondCol.scoreTitle): 
-    const  wordElements =wordElementProvider(
+    const  wordElements =wordElementProviderWithCoordinate(
       words,
-      prefix,
+      prefix+(inclEmbedding?"E":"D"),
       isSplit,
       inclEmbedding,
       modelLabel
@@ -90,7 +90,7 @@ function WordList({
                     height={400}
                     xStartPoint={0}
                     yStartPoint={0}
-                    layout={{ name: "fcose" }}
+                    //layout={{ name: "fcose" }}
                     //layout={!secondCol?{ name: "fcose" }:undefined}
                 />
             </Paper>
