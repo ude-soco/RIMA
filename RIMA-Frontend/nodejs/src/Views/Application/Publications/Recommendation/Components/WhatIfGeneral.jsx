@@ -104,7 +104,7 @@ export const WhatIfGeneral = (props) => {
                 {(state.interests.length < 10) ?
                     (<Grid item container xs={2} sm={3} md={3}>
                         <Grid item style={{ paddingTop: '3px', paddingLeft: '5px', width: '100%', height: '100%' }}>
-                            <FormControl variant="outlined" style={{paddingRight: '3px', width: '100%'}}>
+                            <FormControl variant="outlined" style={{ paddingRight: '3px', width: '100%' }}>
                                 <OutlinedInput
                                     id={'WhatIfGnewInterest'}
                                     className={'outlined-new-interest'}
@@ -241,13 +241,16 @@ export const WhatIfGeneral = (props) => {
                 </Grid>
             </Grid>
             <Divider style={{ width: '100%', marginTop: '10px' }} />
+
+            {(state.done) ? (
+                <BarChart tags={state.interests} threshold={state.threshold} items={series} drilldownData={drilldown} />
+            ) : <Grid><CircularProgress size={20} /></Grid>}
             <Grid container justify="flex-end" >
                 <Button color="primary" disabled={!state.done} variant='contained' onClick={handleApplyGeneralChanges}>
                     Apply changes
                 </Button>
             </Grid>
-            {(state.done) ? (
-                <BarChart tags={state.interests} threshold={state.threshold} items={series} drilldownData={drilldown} />
-            ) : <Grid><CircularProgress size={20} /></Grid>} </Grid>
+        </Grid>
+
     )
 }
