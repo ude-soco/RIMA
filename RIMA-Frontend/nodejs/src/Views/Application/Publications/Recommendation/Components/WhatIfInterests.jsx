@@ -174,15 +174,17 @@ export const WhatIfInterests = (props) => {
                 </Grid>
             </Grid>
             <Divider style={{ width: '100%', marginTop: '10px' }} />
+            
+            <Grid item container md={12}>
+                <ComapaerableBarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
+            </Grid>
             <Grid container justify="flex-end" style={{padding:10}}>
                 <Button color="primary" variant='contained' onClick={handleApplyInterestsChanges}>
                     Apply changes
                 </Button>
             </Grid>
-            <Grid item container md={12}>
-                <ComapaerableBarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
-            </Grid>
         </Grid>
     )
 
 }
+

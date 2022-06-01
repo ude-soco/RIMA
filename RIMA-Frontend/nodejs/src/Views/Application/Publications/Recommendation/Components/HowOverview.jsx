@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2rem"
   },  
   collapseButton: {
-    width: "100%",
     display: "flex",
     justifyContent: "flex-end",
     },
@@ -52,7 +51,7 @@ export default function HowOverview({ paper }) {
         data: {
         id: "oneLess",
         label: "INTEREST MODEL",
-        faveColor: "#303F9F",
+        faveColor: "black",
         shape: "polygon",
         borderStyle: "solid ",
         },
@@ -63,7 +62,7 @@ export default function HowOverview({ paper }) {
         data: {
         id: "twoLess",
         label: "PUBLICATION",
-        faveColor: "#F39617",
+        faveColor: "black",
         shape: "polygon",
         borderStyle: "solid ",
         },
@@ -74,7 +73,7 @@ export default function HowOverview({ paper }) {
         data: {
         id: "threLess",
         label: "INTERESTS",
-        faveColor: "#303F9F",
+        faveColor: "black",
         shape: "polygon",
         borderStyle: "solid ",
         tooltip:"<p>Interests from your<br />current interest<br />model</p>"
@@ -87,7 +86,7 @@ export default function HowOverview({ paper }) {
         data: {
         id: "fourLess",
         label: "KEYWORDS",
-        faveColor: "#F39617",
+        faveColor: "black",
         shape: "polygon",
         borderStyle: "solid ",
         tooltip:"<p>Publication keywords extracted<br />from the current publication</p>"
@@ -100,7 +99,7 @@ export default function HowOverview({ paper }) {
         data: {
         id: "fiveLess",
         label: "INTEREST MODEL EMBEDDING",
-        faveColor: "#303F9F",
+        faveColor: "black",
         shape: "polygon",
         borderStyle: "dashed ",
         tooltip:"<p>An interest model embedding<br />is a vector representation of<br />an interest model</p>"
@@ -113,7 +112,7 @@ export default function HowOverview({ paper }) {
         data: {
         id: "sixLess",
         label: "PUBLICATION EMBEDDING",
-        faveColor: "#F39617",
+        faveColor: "black",
         shape: "polygon",
         borderStyle: "dashed ",
         tooltip:"<p>A publication embedding<br />is a vector representation<br />of a publication</p>"
@@ -137,12 +136,12 @@ export default function HowOverview({ paper }) {
         locked: true
     },
     // edges
-    { data: { source: "oneLess", target: "threLess", label: "" ,faveColor: "#303F9F", lineStyle: "solid "} },
-    { data: { source: "twoLess", target: "fourLess", label: "" ,faveColor: "#F39617", lineStyle: "solid "} },
-    { data: { source: "threLess", target: "fiveLess", label: "",faveColor: "#303F9F", lineStyle: "solid " } },
-    { data: { source: "fourLess", target: "sixLess", label: "" ,faveColor: "#F39617", lineStyle: "solid"} },
-    { data: { source: "sixLess", target: "sevenLess", label: "" ,faveColor: "#F39617", lineStyle: "dashed "} },
-    { data: { source: "fiveLess", target: "sevenLess", label: "" ,faveColor: "#303F9F", lineStyle: "dashed "} },
+    { data: { source: "oneLess", target: "threLess", label: "" ,faveColor: "black", lineStyle: "solid "} },
+    { data: { source: "twoLess", target: "fourLess", label: "" ,faveColor: "black", lineStyle: "solid "} },
+    { data: { source: "threLess", target: "fiveLess", label: "",faveColor: "black", lineStyle: "solid " } },
+    { data: { source: "fourLess", target: "sixLess", label: "" ,faveColor: "black", lineStyle: "solid"} },
+    { data: { source: "sixLess", target: "sevenLess", label: "" ,faveColor: "black", lineStyle: "dashed "} },
+    { data: { source: "fiveLess", target: "sevenLess", label: "" ,faveColor: "black", lineStyle: "dashed "} },
     ];
 
     var moreDetailFlowchart = [
@@ -152,18 +151,18 @@ export default function HowOverview({ paper }) {
         data: {
           id: "oneMore",
           label: "INTEREST MODEL",
-          faveColor: "#303F9F",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "solid ",
         },
-        position: { x: 80, y: 50 },
+        position: { x: 0, y: 50 },
         locked: true
       },
       {
         data: {
           id: "twoMore",
           label: "PUBLICATION",
-          faveColor: "#F39617",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "solid ",
         },
@@ -174,38 +173,38 @@ export default function HowOverview({ paper }) {
         data: {
           id: "threeMore",
           label: "INTEREST",
-          faveColor: "#303F9F",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "solid",
           tooltip:"<p>An interest from your<br />current interest model</p>"
         },
         classes: "withTooltip",
-        position: { x: -100, y: 150 },
+        position: { x: -180, y: 150 },
         locked: true
       },
       { data: { id: 'etc1',label: "" } ,
       classes:"etc",
-      position: { x: 80, y: 150 },
+      position: { x: 0, y: 150 },
       locked: true},
       {
         data: {
           id: "fourMore",
           label: "INTEREST",
-          faveColor: "#303F9F",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "solid",
           tooltip:"<p>An interest from your<br />current interest model</p>"
 
         },
         classes: "withTooltip",
-        position: { x: 250, y: 150 },
+        position: { x: 170, y: 150 },
         locked: true
       },
       {
         data: {
           id: "fiveMore",
           label: "PUBLICATION KEYWORD",
-          faveColor: "#F39617",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "solid",
           tooltip:"<p>A publication keyword<br />extracted from the<br />current publication</p>"
@@ -223,7 +222,7 @@ export default function HowOverview({ paper }) {
         data: {
           id: "sixMore",
           label: "PUBLICATION KEYWORD",
-          faveColor: "#F39617",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "solid",
           tooltip:"<p>A publication keyword<br />extracted from the<br />current publication</p>"
@@ -243,12 +242,12 @@ export default function HowOverview({ paper }) {
 
         },
         classes: "withTooltip",
-        position: { x: -100, y: 250 },
+        position: { x: -180, y: 250 },
         locked: true
       },
       { data: { id: 'etc3',label: "" } ,
       classes:"etc",
-      position: { x: 80, y: 250 },
+      position: { x: 0, y: 250 },
       locked: true},
       {
         data: {
@@ -260,7 +259,7 @@ export default function HowOverview({ paper }) {
           tooltip:"<p>Compution of the interest<br />embedding using SIFrank<br />algorithm</p>"
         },
         classes: "withTooltip",
-        position: { x: 250, y: 250 },
+        position: { x: 170, y: 250 },
         locked: true
       },
       ,
@@ -299,37 +298,37 @@ export default function HowOverview({ paper }) {
         data: {
           id: "elevenMore",
           label: "INTEREST EMBEDDING",
-          faveColor: "#303F9F",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "dashed ",
           tooltip:"<p>An interest embedding is<br />a vector representation<br />of an interest</p>"
         },
         classes: "withTooltip",
-        position: { x: -100, y: 350 },
+        position: { x: -180, y: 350 },
         locked: true
       },
       { data: { id: 'etc5',label: "" } ,
       classes:"etc",
-      position: { x: 80, y: 350 },
+      position: { x: 0, y: 350 },
       locked: true},
       {
         data: {
           id: "twelveMore",
           label: "INTEREST EMBEDDING",
-          faveColor: "#303F9F",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "dashed ",
           tooltip:"<p>An interest embedding is<br />a vector representation<br />of an interest</p>"
         },
         classes: "withTooltip",
-        position: { x: 250, y: 350 },
+        position: { x: 170, y: 350 },
         locked: true
       },
       {
         data: {
           id: "thirteenMore",
           label: "PUBLICATION KEYWORD EMBEDDING",
-          faveColor: "#F39617",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "dashed ",
           tooltip:"<p>A publication keyword<br />embedding is a vector<br />representation of a<br />publication keyword</p>"
@@ -346,7 +345,7 @@ export default function HowOverview({ paper }) {
         data: {
           id: "fourteenMore",
           label: "PUBLICATION KEYWORD EMBEDDING",
-          faveColor: "#F39617",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "dashed ",
           tooltip:"<p>A publication keyword<br />embedding is a vector<br />representation of a<br />publication keyword</p>"
@@ -365,7 +364,7 @@ export default function HowOverview({ paper }) {
           tooltip:"<p>Computation of the<br />weighted average of all<br />interest embeddings </p>"
         },
         classes: "withTooltip",
-        position: { x: 80, y: 450 },
+        position: { x: 0, y: 450 },
         locked: true
       },
       {
@@ -385,20 +384,20 @@ export default function HowOverview({ paper }) {
         data: {
           id: "seventeenMore",
           label: "INTEREST MODEL EMBEDDING",
-          faveColor: "#303F9F",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "dashed ",
           tooltip:"<p>An interest model<br />embedding is a vector<br />represenation of an<br />interest model</p>"
         },
         classes: "withTooltip",
-        position: { x: 80, y: 550 },
+        position: { x: 0, y: 550 },
         locked: true
       },
       {
         data: {
           id: "eighteenMore",
           label: "PUBLICATION EMBEDDING",
-          faveColor: "#F39617",
+          faveColor: "black",
           shape: "polygon",
           borderStyle: "dashed ",
           tooltip:"<p>A publication embedding<br />is a vector represenation<br />of a publication</p>"
@@ -417,7 +416,7 @@ export default function HowOverview({ paper }) {
           tooltip:"<p>Similarity is calculated<br />using cosine similarity<br />between the embeddings</p>"
         },
         classes: "withTooltip",
-        position: { x: 380, y: 650 },
+        position: { x: 300, y: 650 },
         locked: true
       },
       ,
@@ -431,34 +430,34 @@ export default function HowOverview({ paper }) {
           tooltip:"<p>Similarity score for this publication</p>"
         },
         classes: "withTooltip",
-        position: { x: 380, y: 750 },
+        position: { x: 300, y: 750 },
         locked: true
       },
       // edges
-      { data: { source: "oneMore", target: "threeMore", label: "" ,faveColor: "#303F9F", lineStyle: "solid " } },
-      { data: { source: "oneMore", target: "fourMore", label: "",faveColor: "#303F9F", lineStyle: "solid " } },
-      { data: { source: "twoMore", target: "fiveMore", label: "", faveColor: "#F39617",lineStyle: "solid " } },
-      { data: { source: "twoMore", target: "sixMore", label: "",faveColor: "#F39617", lineStyle: "solid " } },
-      { data: { source: "threeMore", target: "sevenMore", label: "", faveColor: "#303F9F",lineStyle: "solid " } },
-      { data: { source: "fourMore", target: "eightMore", label: "",faveColor: "#303F9F", lineStyle: "solid " } },
-      { data: { source: "fiveMore", target: "nineMore", label: "", faveColor: "#F39617",lineStyle: "solid " } },
-      { data: { source: "sixMore", target: "tenMore", label: "",faveColor: "#F39617", lineStyle: "solid " } },
-      { data: { source: "sevenMore", target: "elevenMore", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-      { data: { source: "eightMore", target: "twelveMore", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-      { data: { source: "nineMore", target: "thirteenMore", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
-      { data: { source: "tenMore", target: "fourteenMore", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
-      { data: { source: "elevenMore", target: "fifteenMore", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-      { data: { source: "twelveMore", target: "fifteenMore", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-      { data: { source: "thirteenMore", target: "sixteenMore", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
-      { data: { source: "fourteenMore", target: "sixteenMore", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
-      { data: { source: "fifteenMore", target: "seventeenMore", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-      { data: { source: "sixteenMore", target: "eighteenMore", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
-      { data: { source: "seventeenMore", target: "nineteenMore", label: "",faveColor: "#303F9F", lineStyle: "dashed " } },
-      { data: { source: "eighteenMore", target: "nineteenMore", label: "",faveColor: "#F39617", lineStyle: "dashed " } },
+      { data: { source: "oneMore", target: "threeMore", label: "" ,faveColor: "black", lineStyle: "solid " } },
+      { data: { source: "oneMore", target: "fourMore", label: "",faveColor: "black", lineStyle: "solid " } },
+      { data: { source: "twoMore", target: "fiveMore", label: "", faveColor: "black",lineStyle: "solid " } },
+      { data: { source: "twoMore", target: "sixMore", label: "",faveColor: "black", lineStyle: "solid " } },
+      { data: { source: "threeMore", target: "sevenMore", label: "", faveColor: "black",lineStyle: "solid " } },
+      { data: { source: "fourMore", target: "eightMore", label: "",faveColor: "black", lineStyle: "solid " } },
+      { data: { source: "fiveMore", target: "nineMore", label: "", faveColor: "black",lineStyle: "solid " } },
+      { data: { source: "sixMore", target: "tenMore", label: "",faveColor: "black", lineStyle: "solid " } },
+      { data: { source: "sevenMore", target: "elevenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "eightMore", target: "twelveMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "nineMore", target: "thirteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "tenMore", target: "fourteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "elevenMore", target: "fifteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "twelveMore", target: "fifteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "thirteenMore", target: "sixteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "fourteenMore", target: "sixteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "fifteenMore", target: "seventeenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "sixteenMore", target: "eighteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "seventeenMore", target: "nineteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
+      { data: { source: "eighteenMore", target: "nineteenMore", label: "",faveColor: "black", lineStyle: "dashed " } },
       { data: { source: "nineteenMore", target: "twentyMore", label: "",faveColor: "black", lineStyle: "solid " } },
     ];
 
-  const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} xStartPoint={50}  yStartPoint={10} style={{border: "0.5px solid #E7E7E7",borderRadius: 8}} layout={{
+  const moreDetailFlowchartBox = <Flowchart elements={moreDetailFlowchart} height={400} xStartPoint={50}  yStartPoint={10} layout={{
     name: "preset",
     spacingFactor: 1,
     avoidOverlap: true,
@@ -467,7 +466,7 @@ export default function HowOverview({ paper }) {
     animate: true,
     animationDuration: 500,
   }}/>;
-  const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} xStartPoint={170}  yStartPoint={0} style={{border: "0.5px solid #E7E7E7",borderRadius: 8}} layout={{
+  const lessDetailFlowchartBox = <Flowchart elements={lessDetailFlowchart} height={400} xStartPoint={170}  yStartPoint={0} layout={{
     name: "preset",
     spacingFactor: 1,
     avoidOverlap: true,
@@ -481,12 +480,11 @@ export default function HowOverview({ paper }) {
     <Paper  className={classes.paperCustom} elevation={0}>
 
        <Grid container direction="row" spacing={0}>
-        <Grid item sx={12} sm={12}>
+        <Grid item xs={12} className={classes.collapseButton}>
             {!moreDetail ?
                 <ButtonMUI
-                  variant="string"
-                  size="small"
-                  className={classes.collapseButton}
+                  variant="outlined"
+                  size="xsmall"
                   onClick={() => {
                     setMoreDetail(true);
                   }}
@@ -494,7 +492,7 @@ export default function HowOverview({ paper }) {
                   <AddCircleOutlineIcon color="action" fontSize="small" />
                   <Typography
                     align="center"
-                    variant="subtitle2"
+                    variant="caption"
                     className="ml-1"
                   >
                     More
@@ -502,9 +500,8 @@ export default function HowOverview({ paper }) {
                 </ButtonMUI>
                 :
                 <ButtonMUI
-                  variant="string"
-                  size="small"
-                  className={classes.collapseButton}
+                  variant="outlined"
+                  size="xsmall"
                   onClick={() => {
                     setMoreDetail(false);
                   }}
@@ -512,7 +509,7 @@ export default function HowOverview({ paper }) {
                   <RemoveCircleOutlineIcon color="action" fontSize="small" />
                   <Typography
                     align="center"
-                    variant="subtitle2"
+                    variant="caption"
                     className="ml-1"
                   >
                     Less
@@ -520,26 +517,9 @@ export default function HowOverview({ paper }) {
                 </ButtonMUI>
               }
         </Grid>
-      </Grid> 
-      <Grid container direction="row" justify="space-between">
-        <Hidden smDown>
-          <Grid item xs={false} sm={false} md={1} lg={2} xl={3} />
-        </Hidden>
-        <Grid
-          item
-          xs={11}
-          sm={12}
-          container
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="stretch"
-          style={{ maxHeight: "400px", height: "400px" }}
-        >
-          {moreDetail ? moreDetailFlowchartBox : lessDetailFlowchartBox}
+        <Grid item xs={12}>
+            {moreDetail ? moreDetailFlowchartBox : lessDetailFlowchartBox}
         </Grid>
-        <Hidden smDown>
-          <Grid item xs={false} sm={false} md={1} lg={2} xl={3} />
-        </Hidden>
       </Grid>
     </Paper>
   );

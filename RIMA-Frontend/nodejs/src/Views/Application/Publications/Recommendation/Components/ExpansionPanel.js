@@ -143,9 +143,9 @@ export default function ExpansionPanel(props) {
         )}
 
         {/* Why visualizations */}
-        <Grid container className={classes.root} spacing={2}>
+        <Grid container className={classes.root} spacing={0}>
           <Seperator Label="Why this publication?" Width="170" />
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             <Typography variant="subtitle1">
               {" "}
               &nbsp; This word cloud diagram shows the main extracted keywords
@@ -154,11 +154,12 @@ export default function ExpansionPanel(props) {
               compares to the other interests.
             </Typography>
           </Grid>
-          <Grid item md={3} className={classes.collapseButton}>
+          <WhyExplanation index={index} paper={paper} interests={interests} />
+          <Grid item xs={12} className={classes.collapseButton}>
             <ButtonMUI
-              variant="string"
+              variant="outlined"
               size="small"
-              className="m-2 mr-4"
+              className="m-2"
               onClick={() => {
                 setHowExpanded(!howExpanded);
               }}
@@ -169,7 +170,6 @@ export default function ExpansionPanel(props) {
               </Typography>
             </ButtonMUI>{" "}
           </Grid>
-          <WhyExplanation index={index} paper={paper} interests={interests} />
         </Grid>
 
         {/* How Visualizations */}

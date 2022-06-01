@@ -4,40 +4,6 @@ import ReactTooltip from "react-tooltip";
 import TopSimilarityChart from "./TopSimilarityChart";
 import { Typography, Grid, Box, Chip, Switch } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
-//import Popover from '@mui/material/Popover';
-// class ErrorBoundary extends React.Component {
-//     constructor(props) {
-//       super(props);
-//       this.state = { error: null, errorInfo: null };
-//     }
-
-//     componentDidCatch(error, errorInfo) {
-//       // Catch errors in any components below and re-render with error message
-//       this.setState({
-//         error: error,
-//         errorInfo: errorInfo
-//       })
-//       // You can also log error messages to an error reporting service here
-//     }
-
-//     render() {
-//       if (this.state.errorInfo) {
-//         // Error path
-//         return (
-//           <div>
-//             <h2>Something went wrong.</h2>
-//             <details style={{ whiteSpace: 'pre-wrap' }}>
-//               {this.state.error && this.state.error.toString()}
-//               <br />
-//               {this.state.errorInfo.componentStack}
-//             </details>
-//           </div>
-//         );
-//       }
-//       // Normally, just render children
-//       return this.props.children;
-//     }
-//   }
 
 //---------------Hoda Start-----------------
 function highlighter(
@@ -167,7 +133,8 @@ function PaperAbstract({ paper }) {
   return (
     <Typography
       variant="body1"
-      align="justify" sx={{padding:'0px 15px'}}
+      align="justify"
+      sx={{ padding: "0px 15px" }}
       dangerouslySetInnerHTML={{ __html: modified_text }}
     />
   );
@@ -219,28 +186,32 @@ export default function PaperContent({ paper }) {
 
   return (
     <>
-      {(false?(<>
-      <Switch
-        checked={popoverActive}
-        onChange={popoverActiveHandleChange}
-        inputProps={{ "aria-label": "Switch between tooltip and popover" }}
-      />{" "}
-      {popoverActive ? (
+      {false ? (
         <>
-          Popover{" "}
           <Switch
-            checked={modalActive}
-            onChange={modalActiveHandleChange}
-            inputProps={{
-              "aria-label": "Switch between Popover Modal and none-Modal",
-            }}
+            checked={popoverActive}
+            onChange={popoverActiveHandleChange}
+            inputProps={{ "aria-label": "Switch between tooltip and popover" }}
           />{" "}
-          {modalActive ? " With Backdrop" : "Without Backdrop"}
+          {popoverActive ? (
+            <>
+              Popover{" "}
+              <Switch
+                checked={modalActive}
+                onChange={modalActiveHandleChange}
+                inputProps={{
+                  "aria-label": "Switch between Popover Modal and none-Modal",
+                }}
+              />{" "}
+              {modalActive ? " With Backdrop" : "Without Backdrop"}
+            </>
+          ) : (
+            "Tooltip"
+          )}
         </>
       ) : (
-        "Tooltip"
+        ""
       )}
-      </>):"")}
       {!popoverActive ? (
         <ReactTooltip
           class="chart"
