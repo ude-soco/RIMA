@@ -46,8 +46,6 @@ export default function PublicationRecommendation() {
     loading: true,
     modal: false,
     threshold: 40,
-    //New States added by Tannaz
-    // whatModal: false,
   });
 
   useEffect(() => {
@@ -186,13 +184,6 @@ export default function PublicationRecommendation() {
     }
   }
 
-  //Hoda - Tanaz
-  const getTagColorByName = (tagName) => {
-    const { interests } = state;
-    const color = interests.find((tag) => tag.text === tagName).color;
-    return color;
-  };
-
   //Jaleh
   const refinePapers = (papers) => {
     let res = [];
@@ -329,14 +320,14 @@ export default function PublicationRecommendation() {
           </Grid>
         </Grid>
         {/* Tanaz */}
-        <div className="d-flex align-items-center ml-4 mt-2">
-          <Button variant="string" onClick={() => openWhatModal()}>
+        <Grid className="d-flex align-items-center ml-3">
+          <Button variant="outlined" onClick={() => openWhatModal()}>
             <CloudQueueIcon color="action" fontSize="small" />
             <Typography align="center" variant="subtitle2" className="ml-2">
               Interests Sources
             </Typography>
           </Button>
-        </div>
+        </Grid>
         {/* What Modal */}
 
         <Modal

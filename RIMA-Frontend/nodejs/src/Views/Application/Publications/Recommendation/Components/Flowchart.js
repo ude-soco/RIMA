@@ -76,9 +76,11 @@ export default function Flowchart(props) {
               if (event.target.popper) {
                 event.target.popperRefObj.state.elements.popper.remove();
                 event.target.popperRefObj.destroy();
+                // document.body.appendChild(content);
               }
             }
           });
+
           // Tooltip end
           cy.on("mouseover", function (evt) {
             let evtTarget = evt.target;
@@ -141,7 +143,7 @@ export default function Flowchart(props) {
               "text-wrap": "wrap",
               "text-max-width": getWidth(5, 1.3),
               width: getWidth(5, 1.5, true),
-              height: getHeight(5, 1, true),
+              height: 70,
               "text-background-opacity": 0,
               "text-background-padding": "2px",
               "border-color": "data(faveColor)",
@@ -260,12 +262,22 @@ export default function Flowchart(props) {
             },
           },
           {
+            selector: ".iIcon",
+            style: {
+              "background-image": "https://i.ibb.co/f9p8h0Q/info.png",
+              "background-fit": "cover cover",
+              "border-color": "white",
+              width: 20,
+              height: 20,
+            },
+          },
+          {
             selector: ".withTooltip",
             style: {
-              // "background-image": "https://i.ibb.co/Jkck6R5/info-2-48.png",
-              // "background-fit": "cover",
-              // "background-position": "right top",
-              // "background-image-opacity": 0.7,
+              "background-image": "https://i.ibb.co/Jkck6R5/info-2-48.png",
+              "background-fit": "cover",
+              "background-position": "right top",
+              "background-image-opacity": 0.7,
             },
           },
         ]}
