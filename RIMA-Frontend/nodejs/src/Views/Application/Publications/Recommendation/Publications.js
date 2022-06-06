@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Sticky from "react-sticky-el";
 
 import {
   Grid, Paper, Typography, Button,
@@ -73,7 +74,7 @@ export default function PublicationRecommendation() {
       setState({
         ...state,
         papers: newPaperList,
-        loading: false
+        loading: false,
       })
     }, 2000);
 
@@ -131,6 +132,7 @@ export default function PublicationRecommendation() {
           });
         }
       }
+      console.log('rowArray', rowArray)
       setState({
         ...state,
         isLoding: true,
@@ -225,70 +227,81 @@ export default function PublicationRecommendation() {
   // };
   return (
     <>
-      <Grid container component={Paper} className="bg-gradient-default1 shadow">
-        <Grid item md={12} style={{ padding: '15px' }} className="bg-transparent">
-          <Typography variant="h6">Publications Recommendation</Typography>
-          {/* start Tannaz */}
-          <Grid container style={{ justifyContent: "flex-end" }} spacing={2} className="d-flex align-items-center mt-3">
-            <Grid item md={12}>
-              <fieldset className="paper-interests-box">
-                <legend
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Your interests:
-                </legend>
-                <Grid container >
-                  <Grid item md={12}>
-                    <InterestsTags
-                      tags={refineInterests(state.interests)}
-                    />
-                  </Grid>
+      <Grid container>
+        <Grid container component={Paper}>
+          <Grid item md={12} style={{ padding: '15px' }} className="">
+            <Typography variant="h6">Publications Recommendation</Typography>
+            {/* start Tannaz */}
+            <Grid container style={{ justifyContent: "flex-end" }} spacing={2} className="">
+              <Grid item md={12}>
 
-                </Grid>
-                <Grid item md={1} style={{ float: 'right' }}>
-                  <Grid onClick={() => openWhatIfModal()}>
-                    <Button variant="outlined" color="primary" size="small">
-                      What-if?
-                    </Button >
+
+
+                <fieldset className="paper-interests-box">
+                  <legend
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Your interests:
+                  </legend>
+                  <Grid container >
+                    <Grid item md={12}>
+                      <Sticky stickyClassName="sticky-topbar"
+                        topOffset={-100}
+                        bottomOffset={100}
+                        hideOnBoundaryHit={false}>
+                        <Grid style={{ backgroundColor:'#fff' }}>
+                          <InterestsTags
+                            tags={refineInterests(state.interests)}
+                          />
+                        </Grid>
+                      </Sticky>
+                    </Grid>
+
                   </Grid>
-                  <Modal open={state.modal} onClose={closeWhatIfModal} size="md">
-                    <Paper style={style}>
-                      <Grid item md={12}>
-                        <DialogTitle style={{ m: 0, p: 2 }} >
-                          <Seperator Label="What if?" Width="130" />
-                          {state.modal ? (
-                            <IconButton
-                              aria-label="close"
-                              onClick={closeWhatIfModal}
-                              style={{
-                                position: 'absolute',
-                                right: 8,
-                                top: 8,
-                              }}
-                            >
-                              <CloseIcon />
-                            </IconButton>
-                          ) : null}
-                        </DialogTitle>
-                      </Grid>
-                      <Grid item md={12}>
-                        <DialogContent>
-                          <WhatIfGeneral interests={refineInterests(state.interests)} threshold={state.threshold} items={refinePapers(papers)} handleApplyGeneralChanges={handleApplyGeneralChanges} />
-                        </DialogContent>
-                      </Grid>
-                    </Paper>
-                  </Modal>
-                </Grid>
-              </fieldset>
+                  <Grid item md={1} style={{ float: 'right' }}>
+                    <Grid onClick={() => openWhatIfModal()}>
+                      <Button variant="outlined" color="primary" size="small">
+                        What-if?
+                      </Button >
+                    </Grid>
+                    <Modal open={state.modal} onClose={closeWhatIfModal} size="md">
+                      <Paper style={style}>
+                        <Grid item md={12}>
+                          <DialogTitle style={{ m: 0, p: 2 }} >
+                            <Seperator Label="What if?" Width="130" />
+                            {state.modal ? (
+                              <IconButton
+                                aria-label="close"
+                                onClick={closeWhatIfModal}
+                                style={{
+                                  position: 'absolute',
+                                  right: 8,
+                                  top: 8,
+                                }}
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            ) : null}
+                          </DialogTitle>
+                        </Grid>
+                        <Grid item md={12}>
+                          <DialogContent>
+                            <WhatIfGeneral interests={refineInterests(state.interests)} threshold={state.threshold} items={refinePapers(papers)} handleApplyGeneralChanges={handleApplyGeneralChanges} />
+                          </DialogContent>
+                        </Grid>
+                      </Paper>
+                    </Modal>
+                  </Grid>
+                </fieldset>
+              </Grid>
+
             </Grid>
-
           </Grid>
-        </Grid>
-        {/* Tanaz */}
-        {/* <div className="d-flex align-items-center ml-4 mt-2">
+          {/* Tanaz */}
+          {/* <div className="d-flex align-items-center ml-4 mt-2">
           <Button variant="string" onClick={() => openWhatModal()}>
             <CloudQueueIcon color="action" fontSize="small" />
             <Typography align="center" variant="subtitle2" className="ml-2">
@@ -296,9 +309,9 @@ export default function PublicationRecommendation() {
             </Typography>
           </Button>
         </div> */}
-        {/* What Modal */}
+          {/* What Modal */}
 
-        {/* <Modal
+          {/* <Modal
           open={state.whatModal}
           onClose={closeWhatModal}
           size="md"
@@ -335,11 +348,14 @@ export default function PublicationRecommendation() {
             </Grid>
           </Box>
         </Modal> */}
-        <Seperator Label="Publications" Width="130" />
+          <Seperator Label="Publications" Width="130" />
+        </Grid>
         {/* end Tannaz */}
-        <Grid container style={{ padding: "20px" }} id="paper-card-container">
+        <Grid container id="paper-card-container">
           {state.loading ? (
             <Grid container
+              component={Paper}
+              style={{ marginTop: 5, padding: 5 }}
               spacing={0}
               direction="column"
               alignItems="center"
@@ -347,7 +363,7 @@ export default function PublicationRecommendation() {
               <Grid item md={3}>
                 <CircularProgress />
               </Grid>
-              <Grid item md={3}>
+              <Grid item md={3} >
                 <Typography align="center" variant="subtitle2" className="ml-2">Loading Publications.. please wait</Typography>
               </Grid>
             </Grid>
@@ -369,7 +385,7 @@ export default function PublicationRecommendation() {
               <Typography align="center" variant="subtitle2" className="ml-2">No publication Found</Typography>
             ))}
         </Grid>
-      </Grid>
+      </Grid >
       <ScrollTopWrapper />
     </>
   );

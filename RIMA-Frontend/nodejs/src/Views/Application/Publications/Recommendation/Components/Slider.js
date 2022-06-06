@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 
-import { Typography,Grid } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 const useStyles = makeStyles({
@@ -22,11 +22,6 @@ export default function CustomizedSlider(props) {
     setValue(newValue);
     props.changeTagWeight(props.index, newValue);
   };
-
-  const handleTagChange = (event) => {
-    props.handleTagsChange();
-  };
-
 
   return (
 
@@ -68,12 +63,10 @@ export default function CustomizedSlider(props) {
               padding: '0px'
             }}
             min={1}
-            max={5}
             step={0.5}
-            value={value}
-            onChange={handleChange}
-            onMouseUp={handleTagChange}
-            aria-labelledby="continuous-slider"
+            max={5}
+            defaultValue={props.weight}
+            onChangeCommitted={handleChange}
           />
         </Grid>
         <Grid item xs md={3} style={{ marginTop: "-10px" }}>

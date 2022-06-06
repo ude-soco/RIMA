@@ -30,13 +30,7 @@ div.ReactTags__tagInput input.ReactTags__tagInputField:focus {
   padding: 0 4px;
 }
 
-/* Styles for selected tags */
-/* div.ReactTags__selected span.ReactTags__tag::before {
-      content: "<i class='far fa-ellipsis-v'></i>";
-      width: 15px;
-      font-size: 10px;
-  }
-   */
+
 div.ReactTags__selected span.ReactTags__tag {
   border: 1px solid #ddd;
   color: #000;
@@ -167,4 +161,9 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 #outlined-potential-keywords{
   width: 100%;
   padding: 0px 100px 35px 100px;
+}
+
+.sticky-topbar{
+  top: 65px !important;
+  z-index: 99999 !important;
 }

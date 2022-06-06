@@ -76,7 +76,7 @@ function Title({ paper, similarityScore }) {
     );
     //---------------Hoda end-----------------
     return (
-        <Grid container justifyContent="space-between">
+        <Grid container style={{justifyContent:"space-between"}}>
             <Grid
                 item
                 xs={9}
@@ -105,7 +105,7 @@ function Title({ paper, similarityScore }) {
                 justify="flex-end"
                 alignItems="flex-start"
             >
-                {paper.modified ? <Chip style={{borderRadius:5}} variant="default" size="medium" avatar={<Avatar color='primary'>M</Avatar>} title="Modified" label={`Similarity Score: ${similarityScore} %`} /> : <Chip label={`Similarity Score: ${similarityScore} %`} style={{borderRadius:5}} variant="default" size="medium"  />}
+                {paper.modified ? <Chip style={{borderRadius:5}} variant="default" size="medium" title="Modified" label={`Similarity Score: ${similarityScore} % (Modified)`} /> : <Chip label={`Similarity Score: ${similarityScore} %`} style={{borderRadius:5}} variant="default" size="medium"  />}
 
             </Grid>
         </Grid>

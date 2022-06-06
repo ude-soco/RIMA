@@ -43,6 +43,7 @@ export const WhatIfKeywords = (props) => {
     const handleApplyKeywordsChanges = () => {
         const newPaperProps = state.paper
         newPaperProps.score = state.paper.new_score
+        newPaperProps.keywords_relevancy = state.paper.keywords_relevancy
         newPaperProps.interests_similarity = state.paper.new_interests_similarity
         newPaperProps.paper_keywords = state.keywords.reduce((a, v) => ({ ...a, [v[0]]: v[1] }), {})
         newPaperProps.threshold = state.threshold
@@ -66,27 +67,6 @@ export const WhatIfKeywords = (props) => {
         setState({ ...state, potentialKeywords })
     };
 
-    const handleKeywordsChange = (keywords) => {
-        if (!keywords)
-            return null
-        const params = {
-            "interests": state.interests,
-            // "keywords": state.keywords.reduce((a, v) => ({ ...a, [v[0]]: v[1] }), {})
-            "keywords": keywords.reduce((a, v) => ({ ...a, [v[0]]: v[1] }), {})
-        }
-
-        const paper = state.paper
-        RestAPI.getKeywordsSimilarities(params)
-            .then((res) => {
-                paper.new_score = res.data.data.score
-                paper.keywords_similarity = res.data.data.keywords_similarity
-                setState({
-                    ...state,
-                    paper: paper,
-                })
-            })
-            .catch((err) => console.error("Error Getting Papers:", err));
-    }
     const handleKeywordsChangeChip = () => {
         const params = {
             "interests": state.interests,
@@ -97,7 +77,7 @@ export const WhatIfKeywords = (props) => {
         RestAPI.getKeywordsSimilarities(params)
             .then((res) => {
                 paper.new_score = res.data.data.score
-                paper.keywords_similarity = res.data.data.keywords_similarity
+                paper.keywords_relevancy = res.data.data.keywords_similarity
                 setState({
                     ...state,
                     paper: paper,
@@ -121,6 +101,29 @@ export const WhatIfKeywords = (props) => {
         <Grid container>
 
             <Grid container alignItems="center">
+
+                <Grid item md={5} >
+                    <Typography style={{ marginBottom: '10px' }}>Exteracted Keywords:
+                        <Typography variant='caption' > (Included in calculations)</Typography>
+                    </Typography>
+
+                    <Paper className={classes.root} >
+                        {state.keywords.map((data) => {
+                            return (
+                                <Chip
+                                    label={data[0]}
+                                    onDelete={handleDeleteFromList(data)}
+                                    className={`${classes.chip} ${classes.chipAdded}`}
+                                    color='primary'
+                                />
+                            );
+                        })}
+
+                    </Paper>
+                </Grid>
+                <Grid item md={2} style={{ textAlign: 'center' }} >
+                    <SyncAltOutlinedIcon style={{ fontSize: '5.5rem', color: '#ccc' }} />
+                </Grid>
                 <Grid item md={5} style={{ height: '100%' }}>
                     <Typography style={{ marginBottom: '10px' }}>More Keywords:
                         <Typography variant='caption' >  (Excluded from calculations)</Typography>
@@ -142,28 +145,6 @@ export const WhatIfKeywords = (props) => {
                     </Paper>
                 </Grid>
 
-                <Grid item md={2} style={{ textAlign: 'center' }} >
-                    <SyncAltOutlinedIcon style={{ fontSize: '5.5rem', color: '#ccc' }} />
-                </Grid>
-                <Grid item md={5} >
-                    <Typography style={{ marginBottom: '10px' }}>Exteracted Keywords:
-                        <Typography variant='caption' > (Included in calculations)</Typography>
-                    </Typography>
-
-                    <Paper className={classes.root} >
-                        {state.keywords.map((data) => {
-                            return (
-                                <Chip
-                                    label={data[0]}
-                                    onDelete={handleDeleteFromList(data)}
-                                    className={`${classes.chip} ${classes.chipAdded}`}
-                                    color='primary'
-                                />
-                            );
-                        })}
-
-                    </Paper>
-                </Grid>
             </Grid>
 
             <Divider style={{ width: '100%', marginTop: '10px' }} />
@@ -190,13 +171,14 @@ export const WhatIfKeywords = (props) => {
                 </Grid>
             </Grid>
             <Divider style={{ width: '100%', marginTop: '10px' }} />
-            <Grid container justify="flex-end" style={{padding:10}}>
+
+            <Grid item container md={12}>
+                <BarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
+            </Grid>
+            <Grid container justify="flex-end" style={{ padding: 10 }}>
                 <Button color="primary" variant='contained' onClick={handleApplyKeywordsChanges}>
                     Apply changes
                 </Button>
-            </Grid>
-            <Grid item container md={12}>
-                <BarChart paper={state.paper} interests={state.interests} threshold={state.threshold} />
             </Grid>
         </Grid >
     )

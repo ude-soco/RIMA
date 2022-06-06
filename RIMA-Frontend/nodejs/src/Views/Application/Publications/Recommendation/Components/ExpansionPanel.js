@@ -107,13 +107,13 @@ export default function ExpansionPanel(props) {
 
             <Grid container spacing={2} className={classes.collapseButton}>
                 <ButtonGroup color="primary" variant="outlined" size='small'>
-                    <ButtonMUI
+                    {/* <ButtonMUI
                         onClick={() => {
                             handleWhyExpandClick();
                         }}
                     >
                         Why?
-                    </ButtonMUI>
+                    </ButtonMUI> */}
                     <ButtonMUI
                         onClick={() => {
                             handleWhatIfExpandClick();
@@ -204,7 +204,7 @@ export default function ExpansionPanel(props) {
                     {/* What-if visualization */}
                     {/* Jaleh */}
                     <Grid container>
-                        <Grid item md={12} style={{ borderBottom: '1px solid #2d3985', borderColor: '#2d3985', alignContent: 'center', margin: '0px 10px' }}>
+                        <Grid item md={12} style={{ borderBottom: '1px solid #2d3985', borderColor: '#2d3985', alignContent: 'center', margin: '0px 10px 15px 10px' }}>
                             <Tabs centered value={value} onChange={handleTabChange}
                                 TabIndicatorProps={{
                                     style: { background: "#2d3985", height: '3px', borderRadius: '5', color: '#2d3985' }

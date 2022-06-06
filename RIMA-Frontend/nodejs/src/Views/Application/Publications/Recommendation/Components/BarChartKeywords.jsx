@@ -7,12 +7,12 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 
 drilldown(Highcharts)
 export const BarChart = (props) => {
-    if (!props.paper.keywords_similarity) {
+    if (!props.paper.keywords_relevancy) {
         return null
     }
     const paper = props.paper
     const interests = props.interests
-    const keywords_similarity = Object.entries(props.paper.keywords_similarity).map((data) => Object.assign({ 'name': data[0], 'y': data[1] }))
+    const keywords_relevancy = Object.entries(props.paper.keywords_relevancy).map((data) => Object.assign({ 'name': data[0], 'y': data[1] }))
     const threshold = props.threshold || 40
     const scorePrev = paper.score
     const score = paper.new_score
@@ -61,7 +61,7 @@ export const BarChart = (props) => {
 
         series: [
             {
-                data: keywords_similarity || []
+                data: keywords_relevancy || []
             }
 
         ],

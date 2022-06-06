@@ -108,13 +108,26 @@ export const BarChart = (props) => {
         ],
 
         drilldown: {
+            breadcrumbs: {
+                buttonTheme: {
+                    fill: '#f7f7f7',
+                    padding: 8,
+                    stroke: '#cccccc',
+                    'stroke-width': 1
+                },
+                floating: true,
+                position: {
+                    align: 'left'
+                },
+                showFullPath: false
+            },
             series: drilldownData
         }
     }
 
     return (
         <Grid>
-            <HighchartsReact highcharts={Highcharts} options={options} />
+            <HighchartsReact highcharts={Highcharts} options={options} style={{height:'800px'}} />
         </Grid>
     );
 }
