@@ -256,11 +256,12 @@ export function wordElementProviderWithCoordinate(words, prefix, isSplit, inclEm
     data: {
       id: prefix +  "Parent",
       label: "",
-      faveColor: !!inclEmbedding?"#C4C4C4":"white",
+      faveColor: /*!!inclEmbedding?"#C4C4C4":*/"white",
       faveColorLabel: "black", //word.color,
     },
     style: {
       "border-style": "solid",
+      "opacity": "0.80",
     },
   };
 
@@ -350,6 +351,7 @@ if (inclEmbedding) {
           target: wAvgObj.data.id,
           label: "",
           faveColor: word.color,
+          transparent:1,
         },
         style: {
           "line-style": "dashed",
@@ -360,7 +362,7 @@ if (inclEmbedding) {
   if (!!wAvgObj) {
     wAvgObj.position={
       x:100,
-      y:100*Math.round(words.length/2)
+      y:100*Math.round(words.length/2)+80
     };
     modelObj.position={
       x:wAvgObj.position.x,

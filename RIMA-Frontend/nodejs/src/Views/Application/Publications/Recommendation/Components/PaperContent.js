@@ -11,9 +11,9 @@ function highlighter(
   keyword,
   max_score,
   max_interest_color,
-  originalText
+  originalText,
+  lookupkey
 ) {
-  let lookupkey = btoa(unescape(encodeURIComponent(keyword)));
   return `<a data-tip="${lookupkey}" aria-describedby="${paperId}"  data-for="${paperId}" data-event="click" title="Similarity Score: ${
     Math.round(max_score * 100) / 100
   }" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
@@ -42,6 +42,7 @@ function KeywordSimObjToArray(keywords_similarity) {
 function HighlightText(paperId, keywords_similarity, text) {
   keywords_similarity = KeywordSimObjToArray(keywords_similarity);
   let modified_text = text;
+  let replaceList=[];
   for (let index in keywords_similarity) {
     let value = keywords_similarity[index];
     let regEx = new RegExp(value.keyword, "ig");
@@ -49,21 +50,23 @@ function HighlightText(paperId, keywords_similarity, text) {
     if (matches === null) continue;
     //deform originalText to prevent nested highlighting keyword/s
     let originalText = matches[0]
-      .split(" ")
-      .map((x) => "<x>" + x[0] + "</x>" + x.substring(1))
-      .join("&nbsp;");
-
-    modified_text = modified_text.replace(
-      regEx,
-      highlighter(
-        paperId,
-        value.keyword,
-        value.max_score,
-        value.max_interest_color,
-        originalText
-      )
-    );
+      //.split(" ")
+      //.map((x) => "<x>" + x[0] + "</x>" + x.substring(1))
+      //.join("&nbsp;");
+    let replaceKey=btoa(unescape(encodeURIComponent(value.keyword)))
+    const replaceText=highlighter(
+      paperId,
+      value.keyword,
+      value.max_score,
+      value.max_interest_color,
+      originalText,
+      replaceKey
+    )
+    replaceKey=`<-${replaceKey}->`;  
+    replaceList.push({replaceKey,replaceText})  
+    modified_text = modified_text.replace(regEx,replaceKey);
   }
+  replaceList.forEach(({replaceKey,replaceText})=>modified_text = modified_text.replaceAll(replaceKey,replaceText))
   return modified_text;
 }
 
