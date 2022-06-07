@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
+import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
 import { Typography, Grid, Box, Chip, Switch } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
@@ -69,7 +70,20 @@ function HighlightText(paperId, keywords_similarity, text) {
   replaceList.forEach(({replaceKey,replaceText})=>modified_text = modified_text.replaceAll(replaceKey,replaceText))
   return modified_text;
 }
+// start Tannaz
+function SplitText(text) {
+  let textArray = text.split(/[\.\!]+(?!\d)\s*|\n+\s*/);
+  return textArray;
+}
+function ArraytoString(array) {
+  let string = array.join(". ");
+  return string;
+}
 
+function executeOnClick(isExpanded) {
+  console.log(isExpanded);
+}
+// End Tannaz
 function Title({ paper, similarityScore }) {
   //highlight title
   let modified_title = HighlightText(
@@ -79,7 +93,7 @@ function Title({ paper, similarityScore }) {
   );
   //---------------Hoda end-----------------
   return (
-    <Grid container justifyContent="space-between">
+    <Grid container style={{ justifyContent: "space-between" }}>
       <Grid
         item
         xs={10}
@@ -108,7 +122,22 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-end"
         alignItems="flex-start"
       >
-        <Chip label={`Similarity Score: ${similarityScore} %`} />
+        {paper.modified ? (
+          <Chip
+            style={{ borderRadius: 5 }}
+            variant="default"
+            size="medium"
+            title="Modified"
+            label={`Similarity Score: ${similarityScore} % (Modified)`}
+          />
+        ) : (
+          <Chip
+            label={`Similarity Score: ${similarityScore} %`}
+            style={{ borderRadius: 5 }}
+            variant="default"
+            size="medium"
+          />
+        )}
       </Grid>
     </Grid>
   );
@@ -133,13 +162,42 @@ function PaperAbstract({ paper }) {
     paper.abstract
   );
 
+  // Tannaz start
+  let SplitTextArry = SplitText(modified_text);
+  let firstPart = SplitTextArry.slice(0, 3);
+  let secondPart = SplitTextArry.slice(3);
+  firstPart.push(" ");
+  let firstPartString = ArraytoString(firstPart);
+  let secondPartString = ArraytoString(secondPart);
+
   return (
-    <Typography
-      variant="body1"
-      align="justify"
-      sx={{ padding: "0px 15px" }}
-      dangerouslySetInnerHTML={{ __html: modified_text }}
-    />
+    <>
+      <Typography
+        variant="body1"
+        align="left"
+        dangerouslySetInnerHTML={{ __html: firstPartString }}
+        style={{ display: "contents" }}
+      />
+      <ShowMoreText
+        lines={1}
+        more="... Show more"
+        less="Show less"
+        className="showMoreText"
+        anchorClass="oooeeer"
+        onClick={executeOnClick}
+        expanded={false}
+        width={2}
+        truncatedEndingComponent={""}
+        style={{ display: "contents" }}
+      >
+        <Typography
+          variant="body1"
+          align="left"
+          dangerouslySetInnerHTML={{ __html: secondPartString }}
+          style={{ display: "contents" }}
+        />
+      </ShowMoreText>
+    </>
   );
 }
 
@@ -262,7 +320,7 @@ export default function PaperContent({ paper }) {
             vertical: "top",
             horizontal: "center",
           }}
-          sx={{ width: 350 }}
+          style={{ width: 350 }}
           {...(!modalActive
             ? {
                 keepMounted: true,

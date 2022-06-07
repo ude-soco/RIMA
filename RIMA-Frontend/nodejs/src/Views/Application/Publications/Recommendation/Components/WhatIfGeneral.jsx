@@ -39,9 +39,6 @@ export const WhatIfGeneral = (props) => {
         getRecommendedPapers()
     }
 
-    const handleInterestsChange = ((e) => {
-
-    })
     const handleChangeThreshold = (event, newValue) => {
         if (typeof newValue === 'number') {
             setState({ ...state, threshold: newValue });
@@ -86,7 +83,6 @@ export const WhatIfGeneral = (props) => {
                 >
                     <InterestSlider
                         key={interest.text}
-                        handleTagsChange={handleInterestsChange}
                         changeTagWeight={changeInterestWeight}
                         handleDelete={handleInterestDelete}
                         name={interest.text}

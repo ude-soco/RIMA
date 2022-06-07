@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Sticky from "react-sticky-el";
 
 import {
   Grid,
@@ -267,7 +268,18 @@ export default function PublicationRecommendation() {
                 </legend>
                 <Grid container>
                   <Grid item md={12}>
-                    <InterestsTags tags={refineInterests(state.interests)} />
+                    <Sticky
+                      stickyClassName="sticky-topbar"
+                      topOffset={-100}
+                      bottomOffset={100}
+                      hideOnBoundaryHit={false}
+                    >
+                      <Grid style={{ backgroundColor: "#fff" }}>
+                        <InterestsTags
+                          tags={refineInterests(state.interests)}
+                        />
+                      </Grid>
+                    </Sticky>
                   </Grid>
                 </Grid>
                 <Grid item md={1} style={{ float: "right" }}>
