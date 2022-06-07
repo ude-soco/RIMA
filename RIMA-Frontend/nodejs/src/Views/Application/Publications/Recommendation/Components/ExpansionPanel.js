@@ -104,8 +104,9 @@ export default function ExpansionPanel(props) {
       <CssBaseline />
 
       <Grid container spacing={2} className={classes.collapseButton}>
-        <ButtonGroup color="primary" variant="outlined" size="small">
+        <ButtonGroup color="primary" size="small">
           <ButtonMUI
+            variant={whyExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhyExpandClick();
             }}
@@ -113,6 +114,7 @@ export default function ExpansionPanel(props) {
             Why?
           </ButtonMUI>
           <ButtonMUI
+            variant={whatIfExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhatIfExpandClick();
             }}
@@ -209,7 +211,7 @@ export default function ExpansionPanel(props) {
                 borderBottom: "1px solid #2d3985",
                 borderColor: "#2d3985",
                 alignContent: "center",
-                margin: "0px 10px",
+                margin: "0px 10px 15px 10px",
               }}
             >
               <Tabs

@@ -162,3 +162,13 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   width: 100%;
   padding: 0px 100px 35px 100px;
 }
+.sticky-topbar{
+  top: 65px !important;
+  z-index: 99999 !important;
+}
+
+.showMoreText{
+  display: contents;
+  color: #2d3985;
+
+}
