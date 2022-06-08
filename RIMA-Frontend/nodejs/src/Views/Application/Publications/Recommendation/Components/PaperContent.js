@@ -5,7 +5,7 @@ import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
 import { Typography, Grid, Box, Chip, Switch } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
-
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 //---------------Hoda Start-----------------
 function highlighter(
   paperId,
@@ -102,15 +102,20 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-start"
         alignItems="flex-start"
       >
-        <Grid item xs>
-          <Typography
+        <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
+          <Grid item xs>
+        <Typography  
             noWrap
             gutterBottom
             variant="h6"
             dangerouslySetInnerHTML={{ __html: modified_title }}
-          />
+            />
+            </Grid>
+          <Grid item xs>
+            <a href={"https://www.semanticscholar.org/paper/"+paper.paperId} target="_blank" title="open paper in the semantic scholar website"><OpenInNewIcon /></a>
+          </Grid>
         </Grid>
-        <Grid item>
+        <Grid item xs>
           <Authors authorsList={paper.authors} />
         </Grid>
       </Grid>

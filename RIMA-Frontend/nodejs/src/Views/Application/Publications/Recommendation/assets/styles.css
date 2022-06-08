@@ -208,3 +208,17 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   font-size: 1rem;
   margin-top: -5px;
 }
+
+.new-window > div:last-child{
+  display: none;
+}
+.new-window:hover{
+  position: relative;
+}
+
+.new-window:hover > div:last-child{
+  display: inherit !important;
+  position: absolute;
+  right: 0;
+  top: -20px;
+}
