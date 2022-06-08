@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Flowchart from "./Flowchart";
 import { Divider, Paper, Grid, Hidden, Typography } from "@material-ui/core";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
-import { wordElementProvider,getFinalElement } from "./FlowChartUtil";
+import { wordElementProviderWithCoordinate } from "./FlowChartUtil";
 import ReactTooltip from "react-tooltip";
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 const useStyles = makeStyles((theme) => ({
   paperCustom: {
@@ -29,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
   },
   dividerCustom: {
     marginTop: "2rem"
+  },
+  tooltipText: {
+      textAlign:'center',
+      fontSize:13,
+      fontFamily:'"Roboto", "Helvetica", "Arial", sans-serif'
   }
 }));
 
@@ -46,9 +52,9 @@ function WordList({
   const classes = useStyles();
   //const  wordElements  =(secondCol?
     //getFinalElement(prefix,modelLabel,secondCol.prefix,secondCol.modelLabel,secondCol.scoreTitle): 
-    const  wordElements =wordElementProvider(
+    const  wordElements =wordElementProviderWithCoordinate(
       words,
-      prefix,
+      prefix+(inclEmbedding?"E":"D"),
       isSplit,
       inclEmbedding,
       modelLabel
@@ -60,11 +66,11 @@ function WordList({
           <Grid item xs={12} 
             // sm={secondCol?6:12}
             >
-        {tooltipContent?(<ReactTooltip
+        {tooltipContent?(<ReactTooltip className={classes.tooltipText}  place="bottom" 
           id={tooltipId}
           effect={"solid"}>{tooltipContent}</ReactTooltip>):""}
             <Typography variant="subtitle2" className={classes.typographyCustom}>
-              <span className={""}>{title} {tooltipContent?(<span data-tip data-for={tooltipId} style={{fontWeight:"bold"}} >ⓘ</span>):""}</span>
+              <span className={""}>{title} {tooltipContent?(<span data-tip data-for={tooltipId} ><sup><InfoOutlinedIcon  fontSize="small" color= "disabled" /></sup></span>):""}</span>             
             </Typography>
             </Grid>
           {/* {secondCol?(<Grid item sx={12} sm={6}>
@@ -84,7 +90,7 @@ function WordList({
                     height={400}
                     xStartPoint={0}
                     yStartPoint={0}
-                    layout={{ name: "fcose" }}
+                    //layout={{ name: "fcose" }}
                     //layout={!secondCol?{ name: "fcose" }:undefined}
                 />
             </Paper>

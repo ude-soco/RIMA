@@ -67,7 +67,8 @@ def get_recommended_papers(interests):
                 [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
             interests_similarity[interest['text']] = interest_score
             #keyword Interest similarity-Hoda    
-            for keyword,weight in paper_keywords.items():
+            lst=list(paper_keywords.items())[:10]
+            for keyword,weight in lst:
                 keyword_score = round((get_weighted_interest_similarity_score(
                     [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
                 keyword_score=keyword_score* (weight/5)
