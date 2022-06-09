@@ -49,7 +49,7 @@ function StickyInterestTags({tags})
 
   return                     <Sticky 
   stickyClassName="sticky-topbar"
-  className="none-stinky"
+  className="none-sticky"
   topOffset={-100}
   bottomOffset={100}
   hideOnBoundaryHit={false}
