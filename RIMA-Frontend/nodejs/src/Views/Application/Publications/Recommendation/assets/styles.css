@@ -30,7 +30,7 @@ div.ReactTags__tagInput input.ReactTags__tagInputField:focus {
   padding: 0 4px;
 }
 
-
+/* Styles for selected tags */
 div.ReactTags__selected span.ReactTags__tag {
   border: 1px solid #ddd;
   color: #000;
@@ -165,5 +165,61 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
 .sticky-topbar{
   top: 65px !important;
-  z-index: 99999 !important;
+  z-index: 999 !important;
+}
+
+.showMoreText{
+  display: contents;
+  color: #2d3985;
+
+}
+
+.collapse-button{
+  display: none;
+}
+.none-sticky > div:not(.sticky-topbar) .collapse:not(.show){
+  display: inherit !important;
+}
+.sticky-topbar > div:first-child{
+  /* border:1px solid black */
+  /* background-color: rgb(245, 245, 245); */
+  background-color: white;
+  box-shadow: 0 3px 3px 3px #bdbdbd;
+  border-bottom-left-radius: 10px;
+}
+.sticky-topbar .collapse-button{
+  display: block !important;
+  position: absolute;
+  bottom:-14px;
+  right:0;
+  /* background-color:rgb(245, 245, 245); */
+  background-color: white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  /* border:1px solid rgb(211, 211, 211); */
+  border-top-width: 0;
+  width: 40px;
+  height: 15px;
+  padding-top: 0;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 3px 3px 3px #bdbdbd;
+}
+.sticky-topbar .collapse-button .MuiSvgIcon-root{
+  font-size: 1rem;
+  margin-top: -5px;
+}
+
+.new-window > div:last-child{
+  display: none;
+}
+.new-window:hover{
+  position: relative;
+}
+
+.new-window:hover > div:last-child{
+  display: inherit !important;
+  position: absolute;
+  left: 0;
+  top: -20px;
 }

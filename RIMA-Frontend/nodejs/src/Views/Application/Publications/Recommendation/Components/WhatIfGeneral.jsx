@@ -102,6 +102,7 @@ export const WhatIfGeneral = (props) => {
                         <Grid item style={{ paddingTop: '3px', paddingLeft: '5px', width: '100%', height: '100%' }}>
                             <FormControl variant="outlined" style={{ paddingRight: '3px', width: '100%' }}>
                                 <OutlinedInput
+                                    disabled={!state.done}
                                     id={'WhatIfGnewInterest'}
                                     className={'outlined-new-interest'}
                                     placeholder='New Interest...'

@@ -106,8 +106,9 @@ export default function ExpansionPanel(props) {
             <CssBaseline />
 
             <Grid container spacing={2} className={classes.collapseButton}>
-                <ButtonGroup color="primary" variant="outlined" size='small'>
+                <ButtonGroup color="primary" size="small">
                     {/* <ButtonMUI
+                        variant={whyExpanded ? "contained" : "outlined"}
                         onClick={() => {
                             handleWhyExpandClick();
                         }}
@@ -115,6 +116,7 @@ export default function ExpansionPanel(props) {
                         Why?
                     </ButtonMUI> */}
                     <ButtonMUI
+                        variant={whatIfExpanded ? "contained" : "outlined"}
                         onClick={() => {
                             handleWhatIfExpandClick();
                         }}
@@ -131,12 +133,13 @@ export default function ExpansionPanel(props) {
           <Grid className="d-flex justify-content-start ">
             <ButtonMUI
               variant="outlined"
+              color="primary"
               onClick={() => {
                 setWhyShow(false);
                 setWhyExpanded(!whyExpanded);
               }}
             >
-              <ArrowBackIosIcon color="action" fontSize="small" />
+              <ArrowBackIosIcon style={{ color: "#333fa1" }} fontSize="small" />
               <Typography align="center" variant="subtitle2">
                 Back
               </Typography>
@@ -145,9 +148,9 @@ export default function ExpansionPanel(props) {
         )} */}
 
             {/* Why visualizations */}
-            {/* <Grid container className={classes.root} spacing={2}>
+            {/* <Grid container className={classes.root} spacing={0}>
           <Seperator Label="Why this publication?" Width="170" />
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             <Typography variant="subtitle1">
               {" "}
               &nbsp; This word cloud diagram shows the main extracted keywords
@@ -156,22 +159,25 @@ export default function ExpansionPanel(props) {
               compares to the other interests.
             </Typography>
           </Grid>
-          <Grid item md={3} className={classes.collapseButton}>
+          <WhyExplanation index={index} paper={paper} interests={interests} />
+          <Grid item xs={12} className={classes.collapseButton}>
             <ButtonMUI
-              variant="string"
+              variant={howExpanded ? "contained" : "outlined"}
+              color="primary"
               size="small"
-              className="m-2 mr-4"
+              className="m-2"
               onClick={() => {
                 setHowExpanded(!howExpanded);
               }}
             >
-              <SettingsIcon color="action" fontSize="small" />
-              <Typography align="center" variant="subtitle2" className="ml-1">
-                How?
-              </Typography>
+              {howExpanded ? (
+                <SettingsIcon style={{ color: "white" }} fontSize="small" />
+              ) : (
+                <SettingsIcon style={{ color: "#333fa1" }} fontSize="small" />
+              )}
+              How?
             </ButtonMUI>{" "}
           </Grid>
-          <WhyExplanation index={index} paper={paper} interests={interests} />
         </Grid> */}
 
             {/* How Visualizations */}
@@ -183,47 +189,77 @@ export default function ExpansionPanel(props) {
         </Collapse>
       </Collapse> */}
 
-            <Collapse in={whatIfExpanded} className={classes.collapse}>
-                {whatIfShow && (
-                    <Grid className="d-flex justify-content-start ">
-                        <ButtonMUI
-                            variant="outlined"
-                            onClick={() => {
-                                setWhatIfShow(false);
-                                setWhatIfExpanded(!whatIfExpanded);
-                            }}
-                        >
-                            <ArrowBackIosIcon color="action" fontSize="small" />
-                            <Typography align="center" variant="subtitle2">
-                                Back
-                            </Typography>
-                        </ButtonMUI>
-                    </Grid>
-                )}
-                <Grid container className={classes.root} spacing={2}>
-                    {/* What-if visualization */}
-                    {/* Jaleh */}
-                    <Grid container>
-                        <Grid item md={12} style={{ borderBottom: '1px solid #2d3985', borderColor: '#2d3985', alignContent: 'center', margin: '0px 10px 15px 10px' }}>
-                            <Tabs centered value={value} onChange={handleTabChange}
-                                TabIndicatorProps={{
-                                    style: { background: "#2d3985", height: '3px', borderRadius: '5', color: '#2d3985' }
-                                }}>
-                                <Tab label="What if 'interests' changed?" className='tab' />
-                                <Tab label="What if 'Keywords' changed?" className='tab' />
-                            </Tabs>
-                        </Grid>
-                        <TabPanel value={value} index={0}>
-                            <WhatIfInterests paper={paper} interests={interests} index={index} threshold={threshold} handleApplyWhatIfChanges={props.handleApplyWhatIfChanges} />
-                        </TabPanel>
-                        <TabPanel value={value} index={1}>
-                            <WhatIfKeywords paper={paper} interests={interests} index={index} threshold={threshold} handleApplyWhatIfChanges={props.handleApplyWhatIfChanges} />
-                        </TabPanel>
-                    </Grid>
-                </Grid>
-            </Collapse>
-        </>
+        <Collapse in={whatIfExpanded} className={classes.collapse}>
+        {whatIfShow && (
+          <Grid className="d-flex justify-content-start ">
+            <ButtonMUI
+              variant="outlined"
+              onClick={() => {
+                setWhatIfShow(false);
+                setWhatIfExpanded(!whatIfExpanded);
+              }}
+            >
+              <ArrowBackIosIcon color="action" fontSize="small" />
+              <Typography align="center" variant="subtitle2">
+                Back
+              </Typography>
+            </ButtonMUI>
+          </Grid>
+        )}
+        <Grid container className={classes.root} spacing={2}>
+          {/* What-if visualization */}
+          {/* Jaleh */}
+          <Grid container>
+            <Grid
+              item
+              md={12}
+              style={{
+                borderBottom: "1px solid #2d3985",
+                borderColor: "#2d3985",
+                alignContent: "center",
+                margin: "0px 10px 15px 10px",
+              }}
+            >
+              <Tabs
+                centered
+                value={value}
+                onChange={handleTabChange}
+                TabIndicatorProps={{
+                  style: {
+                    background: "#2d3985",
+                    height: "3px",
+                    borderRadius: "5",
+                    color: "#2d3985",
+                  },
+                }}
+              >
+                <Tab label="What if 'interests' changed?" className="tab" />
+                <Tab label="What if 'Keywords' changed?" className="tab" />
+              </Tabs>
+            </Grid>
+            <TabPanel value={value} index={0}>
+              <WhatIfInterests
+                paper={paper}
+                interests={interests}
+                index={index}
+                threshold={threshold}
+                handleApplyWhatIfChanges={props.handleApplyWhatIfChanges}
+              />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <WhatIfKeywords
+                paper={paper}
+                interests={interests}
+                index={index}
+                threshold={threshold}
+                handleApplyWhatIfChanges={props.handleApplyWhatIfChanges}
+              />
+            </TabPanel>
+          </Grid>
+        </Grid>
+      </Collapse>
+    </>
 
-        // Tannaz end
+    // Tannaz end
     );
 }

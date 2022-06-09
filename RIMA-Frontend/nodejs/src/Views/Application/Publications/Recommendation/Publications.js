@@ -6,7 +6,8 @@ import {
   Grid, Paper, Typography, Button,
   Box, Modal,
   DialogTitle, DialogContent,
-  IconButton, CircularProgress
+  IconButton, CircularProgress,
+  Icon,
 } from "@material-ui/core";
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -21,6 +22,34 @@ import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollT
 import { pink, purple, indigo, blue, cyan, teal, green, lime, amber, brown } from '@material-ui/core/colors';
 // import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
 // import CloudQueueIcon from "@material-ui/icons/CloudQueue";
+
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { Collapse } from "react-bootstrap";
+
+function StickyInterestTags({tags})
+{
+  const [collapseInterest,setCollapseInterest]=useState(true);
+
+  return                     <Sticky 
+  stickyClassName="sticky-topbar"
+  className="none-sticky"
+  topOffset={-100}
+  bottomOffset={100}
+  hideOnBoundaryHit={false}
+>
+<Collapse in={collapseInterest} >
+<Grid container style={{ }}>
+    <InterestsTags
+      tags={tags}
+    />
+</Grid>
+</Collapse>
+<Grid className={"collapse-button"} onClick={e=>setCollapseInterest(!collapseInterest)}>
+{collapseInterest?<KeyboardArrowUpIcon />:<KeyboardArrowDownIcon />}
+</Grid>
+</Sticky>;
+}
 
 export default function PublicationRecommendation() {
 
@@ -132,7 +161,6 @@ export default function PublicationRecommendation() {
           });
         }
       }
-      console.log('rowArray', rowArray)
       setState({
         ...state,
         isLoding: true,
@@ -163,13 +191,6 @@ export default function PublicationRecommendation() {
         .catch((err) => console.error("Error Getting Papers:", err));
     }
   };
-
-  //Hoda - Tanaz
-  // const getTagColorByName = (tagName) => {
-  //   const { interests } = state;
-  //   const color = interests.find((tag) => tag.text === tagName).color;
-  //   return color;
-  // };
 
   //Jaleh
   const refinePapers = (papers) => {
@@ -246,21 +267,9 @@ export default function PublicationRecommendation() {
                   >
                     Your interests:
                   </legend>
-                  <Grid container >
-                    <Grid item md={12}>
-                      <Sticky stickyClassName="sticky-topbar"
-                        topOffset={-100}
-                        bottomOffset={100}
-                        hideOnBoundaryHit={false}>
-                        <Grid style={{ backgroundColor:'#fff' }}>
-                          <InterestsTags
-                            tags={refineInterests(state.interests)}
-                          />
-                        </Grid>
-                      </Sticky>
-                    </Grid>
-
-                  </Grid>
+                  <StickyInterestTags
+                  tags={refineInterests(state.interests)}
+                />
                   <Grid item md={1} style={{ float: 'right' }}>
                     <Grid onClick={() => openWhatIfModal()}>
                       <Button variant="outlined" color="primary" size="small">
@@ -301,14 +310,14 @@ export default function PublicationRecommendation() {
             </Grid>
           </Grid>
           {/* Tanaz */}
-          {/* <div className="d-flex align-items-center ml-4 mt-2">
-          <Button variant="string" onClick={() => openWhatModal()}>
+          {/* <Grid className="d-flex align-items-center ml-3">
+          <Button variant="outlined" onClick={() => openWhatModal()}>
             <CloudQueueIcon color="action" fontSize="small" />
             <Typography align="center" variant="subtitle2" className="ml-2">
               Interests Sources
             </Typography>
           </Button>
-        </div> */}
+        </Grid> */}
           {/* What Modal */}
 
           {/* <Modal
