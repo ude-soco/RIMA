@@ -39,32 +39,34 @@ import {
 } from "@material-ui/core/colors";
 import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
 import CloudQueueIcon from "@material-ui/icons/CloudQueue";
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { Collapse } from "react-bootstrap";
 
-function StickyInterestTags({tags})
-{
-  const [collapseInterest,setCollapseInterest]=useState(true);
+function StickyInterestTags({ tags }) {
+  const [collapseInterest, setCollapseInterest] = useState(true);
 
-  return                     <Sticky 
-  stickyClassName="sticky-topbar"
-  className="none-sticky"
-  topOffset={-100}
-  bottomOffset={100}
-  hideOnBoundaryHit={false}
->
-<Collapse in={collapseInterest} >
-<Grid container style={{ }}>
-    <InterestsTags
-      tags={tags}
-    />
-</Grid>
-</Collapse>
-<Grid className={"collapse-button"} onClick={e=>setCollapseInterest(!collapseInterest)}>
-{collapseInterest?<KeyboardArrowUpIcon />:<KeyboardArrowDownIcon />}
-</Grid>
-</Sticky>;
+  return (
+    <Sticky
+      stickyClassName="sticky-topbar"
+      className="none-sticky"
+      topOffset={-100}
+      bottomOffset={100}
+      hideOnBoundaryHit={false}
+    >
+      <Collapse in={collapseInterest}>
+        <Grid container style={{}}>
+          <InterestsTags tags={tags} />
+        </Grid>
+      </Collapse>
+      <Grid
+        className={"collapse-button"}
+        onClick={(e) => setCollapseInterest(!collapseInterest)}
+      >
+        {collapseInterest ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+      </Grid>
+    </Sticky>
+  );
 }
 
 export default function PublicationRecommendation() {
@@ -76,7 +78,7 @@ export default function PublicationRecommendation() {
     modal: false,
     threshold: 40,
   });
-  
+
   useEffect(() => {
     getInterests();
   }, []);
@@ -294,9 +296,7 @@ export default function PublicationRecommendation() {
                 >
                   Your interests:
                 </legend>
-                <StickyInterestTags
-                  tags={refineInterests(state.interests)}
-                />
+                <StickyInterestTags tags={refineInterests(state.interests)} />
                 <Grid item md={1} style={{ float: "right" }}>
                   <Grid onClick={() => openWhatIfModal()}>
                     <Button variant="outlined" color="primary" size="small">
@@ -348,8 +348,12 @@ export default function PublicationRecommendation() {
         </Grid>
         {/* Tanaz */}
         <Grid className="d-flex align-items-center ml-3">
-          <Button variant="outlined" onClick={() => openWhatModal()}>
-            <CloudQueueIcon color="action" fontSize="small" />
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => openWhatModal()}
+          >
+            <CloudQueueIcon style={{ color: "#333fa1" }} fontSize="small" />
             <Typography align="center" variant="subtitle2" className="ml-2">
               Interests Sources
             </Typography>

@@ -113,14 +113,14 @@ export default function ExpansionPanel(props) {
           >
             Why?
           </ButtonMUI>
-          <ButtonMUI
+          {/* <ButtonMUI
             variant={whatIfExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhatIfExpandClick();
             }}
           >
             What-If?
-          </ButtonMUI>
+          </ButtonMUI> */}
         </ButtonGroup>
       </Grid>
 
@@ -131,12 +131,13 @@ export default function ExpansionPanel(props) {
           <Grid className="d-flex justify-content-start ">
             <ButtonMUI
               variant="outlined"
+              color="primary"
               onClick={() => {
                 setWhyShow(false);
                 setWhyExpanded(!whyExpanded);
               }}
             >
-              <ArrowBackIosIcon color="action" fontSize="small" />
+              <ArrowBackIosIcon style={{ color: "#333fa1" }} fontSize="small" />
               <Typography align="center" variant="subtitle2">
                 Back
               </Typography>
@@ -159,17 +160,20 @@ export default function ExpansionPanel(props) {
           <WhyExplanation index={index} paper={paper} interests={interests} />
           <Grid item xs={12} className={classes.collapseButton}>
             <ButtonMUI
-              variant="outlined"
+              variant={howExpanded ? "contained" : "outlined"}
+              color="primary"
               size="small"
               className="m-2"
               onClick={() => {
                 setHowExpanded(!howExpanded);
               }}
             >
-              <SettingsIcon color="action" fontSize="small" />
-              <Typography align="center" variant="subtitle2" className="ml-1">
-                How?
-              </Typography>
+              {howExpanded ? (
+                <SettingsIcon style={{ color: "white" }} fontSize="small" />
+              ) : (
+                <SettingsIcon style={{ color: "#333fa1" }} fontSize="small" />
+              )}
+              How?
             </ButtonMUI>{" "}
           </Grid>
         </Grid>
