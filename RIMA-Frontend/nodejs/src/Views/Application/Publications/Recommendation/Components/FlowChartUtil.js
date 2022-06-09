@@ -412,7 +412,7 @@ export function getFinalElement(
         faveColor: "black",
         faveColorLabel: "black",
         tooltip:
-          "<p>A publication keyword<br />extracted from the<br />current publication</p>",
+        "<p>Similarity is calculated<br />using cosine similarity<br />between the embeddings</p>",
         lock: true,
       },
       position: {

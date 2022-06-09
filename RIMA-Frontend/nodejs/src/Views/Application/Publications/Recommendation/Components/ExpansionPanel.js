@@ -152,8 +152,7 @@ export default function ExpansionPanel(props) {
               {" "}
               &nbsp; This word cloud diagram shows the main extracted keywords
               from this publication.
-              <br /> &nbsp; You can hover over each keyword to see how it
-              compares to the other interests.
+              <br /> &nbsp; You can hover over each keyword to see its similarity to all interests.
             </Typography>
           </Grid>
           <WhyExplanation index={index} paper={paper} interests={interests} />

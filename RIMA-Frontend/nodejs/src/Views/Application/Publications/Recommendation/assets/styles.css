@@ -219,6 +219,6 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 .new-window:hover > div:last-child{
   display: inherit !important;
   position: absolute;
-  right: 0;
+  left: 0;
   top: -20px;
 }
