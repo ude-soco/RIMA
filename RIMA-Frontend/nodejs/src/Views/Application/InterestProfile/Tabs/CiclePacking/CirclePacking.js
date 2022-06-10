@@ -1,71 +1,6 @@
 import React from "react";
 import { ResponsiveCirclePacking } from "@nivo/circle-packing";
 
-const data = {
-  name: "Your Interest Profile",
-  color: "hsl(290, 70%, 50%)",
-  children: [
-    {
-      name: "learning environment",
-      color: "hsl(358, 70%, 50%)",
-      loc: 181262
-    },
-    {
-      name: "personalized learning",
-      color: "hsl(84, 70%, 50%)",
-      loc: 141262
-    },
-    {
-      name: "recommender system",
-      color: "hsl(87, 70%, 50%)",
-      loc: 151262
-      
-    },
-
-    {
-      name: "user model",
-      color: "hsl(49, 70%, 50%)",
-      loc: 121262
-    },
-
-    {
-      name: "peer assessment",
-      color: "hsl(296, 70%, 50%)",
-      loc: 111262
-   },
-   {
-    name: "theory",
-    color: "hsl(296, 70%, 50%)",
-    loc: 111262
- },
-  {
-    name: "visual analytics",
-    color: "hsl(296, 70%, 50%)",
-    loc: 111262
-  },
-  {
-    name: "ola",
-    color: "hsl(250, 20%, 50%)",
-    loc: 111262
-  },
-  {
-    name: "end user",
-    color: "hsl(170, 30%, 50%)",
-    loc: 111262
-  },
-  {
-    name: "open assessment",
-    color: "hsl(296, 70%, 50%)",
-    loc: 111262
-  },
-  {
-    name: "analytics",
-    color: "hsl(296, 70%, 50%)",
-    loc: 111262
-  },
-
-       ]
-};
 
 const MyResponsiveCirclePacking = ({ data }) => (
   <ResponsiveCirclePacking
@@ -113,7 +48,24 @@ const MyResponsiveCirclePacking = ({ data }) => (
   />
 );
 
-export default function CirclePackingExample() {
+export default function CirclePackingExample(props) {
+    // interests & weights are passed down as props, see InterestOverviewNew - Clara
+    const interests = props.interests;
+    const weights = props.weights;
+    //For each interest create a new object and put them in an array - Clara
+    let dataArray=[];
+    for (let i = 0; i < interests.length; i++){
+        //name = title inside circle, loc = size circle, depending on weight of keywords - Clara
+        dataArray.push({name:interests[i],
+            loc: weights[i]})
+    };
+    const data ={
+        //name: "Your Interest Profile",
+            //color: "hsl(0, 0%, 93%)",
+        // the inside circles
+        children: dataArray,
+    }
+
   return (
     <div style={{ width: 500, height: 500, margin: "auto" }}>
       <MyResponsiveCirclePacking data={data} />
