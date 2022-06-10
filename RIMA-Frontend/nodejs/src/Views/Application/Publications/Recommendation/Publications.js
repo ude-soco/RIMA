@@ -268,142 +268,157 @@ export default function PublicationRecommendation() {
     height: "70%",
     display: "block",
     p: 4,
+    zIndex: "999 !important",
   };
   return (
     <>
-      <Grid container component={Paper} className="bg-gradient-default1 shadow">
-        <Grid
-          item
-          md={12}
-          style={{ padding: "15px" }}
-          className="bg-transparent"
-        >
-          <Typography variant="h6">Publications Recommendation</Typography>
-          {/* start Tannaz */}
-          <Grid
-            container
-            style={{ justifyContent: "flex-end" }}
-            spacing={2}
-            className="d-flex align-items-center mt-3"
-          >
-            <Grid item md={12}>
-              <fieldset className="paper-interests-box">
-                <legend
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Your interests:
-                </legend>
-                <StickyInterestTags tags={refineInterests(state.interests)} />
-                <Grid item md={1} style={{ float: "right" }}>
-                  <Grid onClick={() => openWhatIfModal()}>
-                    <Button variant="outlined" color="primary" size="small">
-                      What-if?
-                    </Button>
-                  </Grid>
-                  <Modal
-                    open={state.modal}
-                    onClose={closeWhatIfModal}
-                    size="md"
-                  >
-                    <Paper style={style}>
-                      <Grid item md={12}>
-                        <DialogTitle style={{ m: 0, p: 2 }}>
-                          <Seperator Label="What if?" Width="130" />
-                          {state.modal ? (
-                            <IconButton
-                              aria-label="close"
-                              onClick={closeWhatIfModal}
-                              style={{
-                                position: "absolute",
-                                right: 8,
-                                top: 8,
-                              }}
-                            >
-                              <CloseIcon />
-                            </IconButton>
-                          ) : null}
-                        </DialogTitle>
-                      </Grid>
-                      <Grid item md={12}>
-                        <DialogContent>
-                          <WhatIfGeneral
-                            interests={refineInterests(state.interests)}
-                            threshold={state.threshold}
-                            items={refinePapers(papers)}
-                            handleApplyGeneralChanges={
-                              handleApplyGeneralChanges
-                            }
-                          />
-                        </DialogContent>
-                      </Grid>
-                    </Paper>
-                  </Modal>
-                </Grid>
-              </fieldset>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* Tanaz */}
-        <Grid className="d-flex align-items-center ml-3">
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => openWhatModal()}
-          >
-            <CloudQueueIcon style={{ color: "#333fa1" }} fontSize="small" />
-            <Typography align="center" variant="subtitle2" className="ml-2">
-              Interests Sources
-            </Typography>
-          </Button>
-        </Grid>
-        {/* What Modal */}
-
-        <Modal
-          open={state.whatModal}
-          onClose={closeWhatModal}
-          size="md"
-          className="publication-modal"
-        >
-          <Box style={whatStyle}>
-            <Grid item md={12} sm={12}>
-              <DialogTitle style={{ m: 0, p: 2 }}>
-                <Seperator Label="What the system knows?" Width="200" />
-                {state.whatModal ? (
-                  <IconButton
-                    aria-label="close"
-                    onClick={closeWhatModal}
+      <Grid container>
+        <Grid container component={Paper}>
+          <Grid item md={12} style={{ padding: "15px" }} className="">
+            <Typography variant="h6">Publications Recommendation</Typography>
+            {/* start Tannaz */}
+            <Grid
+              container
+              style={{ justifyContent: "flex-end" }}
+              spacing={2}
+              className=""
+            >
+              <Grid item md={12}>
+                <fieldset className="paper-interests-box">
+                  <legend
                     style={{
-                      position: "absolute",
-                      right: 8,
-                      top: 8,
+                      fontSize: "16px",
+                      fontWeight: "bold",
                     }}
                   >
-                    <CloseIcon />
-                  </IconButton>
-                ) : null}
-              </DialogTitle>
+                    Your interests:
+                  </legend>
+                  <Grid container>
+                    <Grid item md={12}>
+                      <Sticky
+                        stickyClassName="sticky-topbar"
+                        topOffset={-100}
+                        bottomOffset={100}
+                        hideOnBoundaryHit={false}
+                      >
+                        <Grid style={{ backgroundColor: "#fff" }}>
+                          <InterestsTags
+                            tags={refineInterests(state.interests)}
+                          />
+                        </Grid>
+                      </Sticky>
+                    </Grid>
+                  </Grid>
+                  <Grid item md={1} style={{ float: "right" }}>
+                    <Grid onClick={() => openWhatIfModal()}>
+                      <Button variant="outlined" color="primary" size="small">
+                        What-if?
+                      </Button>
+                    </Grid>
+                    <Modal
+                      open={state.modal}
+                      onClose={closeWhatIfModal}
+                      size="md"
+                    >
+                      <Paper style={style}>
+                        <Grid item md={12}>
+                          <DialogTitle style={{ m: 0, p: 2 }}>
+                            <Seperator Label="What if?" Width="130" />
+                            {state.modal ? (
+                              <IconButton
+                                aria-label="close"
+                                onClick={closeWhatIfModal}
+                                style={{
+                                  position: "absolute",
+                                  right: 8,
+                                  top: 8,
+                                }}
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            ) : null}
+                          </DialogTitle>
+                        </Grid>
+                        <Grid item md={12}>
+                          <DialogContent>
+                            <WhatIfGeneral
+                              interests={refineInterests(state.interests)}
+                              threshold={state.threshold}
+                              items={refinePapers(papers)}
+                              handleApplyGeneralChanges={
+                                handleApplyGeneralChanges
+                              }
+                            />
+                          </DialogContent>
+                        </Grid>
+                      </Paper>
+                    </Modal>
+                  </Grid>
+                </fieldset>
+              </Grid>
             </Grid>
-            <Grid item md={12} sm={12}>
-              <Typography align="left" variant="subtitle2" className="ml-3">
-                Your Top Interests have been chosen from this wordcloud:
+          </Grid>
+          {/* Tanaz */}
+          <Grid className="d-flex align-items-center ml-3">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => openWhatModal()}
+            >
+              <CloudQueueIcon style={{ color: "#333fa1" }} fontSize="small" />
+              <Typography align="center" variant="subtitle2" className="ml-2">
+                Interests Sources
               </Typography>
-            </Grid>
-            <Grid item md={12} sm={12}>
-              <DialogContent>
-                <CloudChart />
-              </DialogContent>
-            </Grid>
-          </Box>
-        </Modal>
-        <Seperator Label="Publications" Width="130" />
+            </Button>
+          </Grid>
+          {/* What Modal */}
+
+          <Modal
+            open={state.whatModal}
+            onClose={closeWhatModal}
+            size="md"
+            className="publication-modal"
+          >
+            <Box style={whatStyle}>
+              <Grid item md={12} sm={12}>
+                <DialogTitle style={{ m: 0, p: 2 }}>
+                  <Seperator Label="What the system knows?" Width="200" />
+                  {state.whatModal ? (
+                    <IconButton
+                      aria-label="close"
+                      onClick={closeWhatModal}
+                      style={{
+                        position: "absolute",
+                        right: 8,
+                        top: 8,
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  ) : null}
+                </DialogTitle>
+              </Grid>
+              <Grid item md={12} sm={12}>
+                <Typography align="left" variant="subtitle2" className="ml-3">
+                  Your Top Interests have been chosen from this wordcloud:
+                </Typography>
+              </Grid>
+              <Grid item md={12} sm={12}>
+                <DialogContent>
+                  <CloudChart />
+                </DialogContent>
+              </Grid>
+            </Box>
+          </Modal>
+          <Seperator Label="Publications" Width="130" />
+        </Grid>
         {/* end Tannaz */}
-        <Grid container style={{ padding: "20px" }} id="paper-card-container">
+        <Grid container id="paper-card-container">
           {state.loading ? (
             <Grid
               container
+              component={Paper}
+              style={{ marginTop: 5, padding: 5 }}
               spacing={0}
               direction="column"
               alignItems="center"

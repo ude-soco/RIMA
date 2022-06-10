@@ -164,7 +164,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 }
 .sticky-topbar{
   top: 65px !important;
-  z-index: 99999 !important;
+  z-index: 999 !important;
 }
 
 .showMoreText{
