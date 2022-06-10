@@ -293,22 +293,7 @@ export default function PublicationRecommendation() {
                   >
                     Your interests:
                   </legend>
-                  <Grid container>
-                    <Grid item md={12}>
-                      <Sticky
-                        stickyClassName="sticky-topbar"
-                        topOffset={-100}
-                        bottomOffset={100}
-                        hideOnBoundaryHit={false}
-                      >
-                        <Grid style={{ backgroundColor: "#fff" }}>
-                          <InterestsTags
-                            tags={refineInterests(state.interests)}
-                          />
-                        </Grid>
-                      </Sticky>
-                    </Grid>
-                  </Grid>
+                  <StickyInterestTags tags={refineInterests(state.interests)} />
                   <Grid item md={1} style={{ float: "right" }}>
                     <Grid onClick={() => openWhatIfModal()}>
                       <Button variant="outlined" color="primary" size="small">
