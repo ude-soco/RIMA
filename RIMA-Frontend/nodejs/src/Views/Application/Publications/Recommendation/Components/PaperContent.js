@@ -6,7 +6,7 @@ import TopSimilarityChart from "./TopSimilarityChart";
 import { Typography, Grid, Box, Chip, Switch } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-//---------------Hoda Start-----------------
+// Hoda Start
 function highlighter(
   paperId,
   keyword,
@@ -91,7 +91,7 @@ function Title({ paper, similarityScore }) {
     paper.keywords_similarity,
     paper.title
   );
-  //---------------Hoda end-----------------
+  // Hoda end
   return (
     <Grid container style={{ justifyContent: "space-between" }}>
       <Grid
@@ -102,6 +102,7 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-start"
         alignItems="flex-start"
       >
+        {/* Hoda start- External link on title */}
         <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
           <Grid item xs>
         <Typography  
@@ -127,6 +128,7 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-end"
         alignItems="flex-start"
       >
+        {/* Hoda end */}
         {paper.modified ? (
           <Chip
             style={{ borderRadius: 5 }}
@@ -205,7 +207,7 @@ function PaperAbstract({ paper }) {
     </>
   );
 }
-
+// Hoda start- Tooltip on extracted keywords
 export default function PaperContent({ paper }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [popoverActive, setPopoverActive] = React.useState(false);
@@ -357,5 +359,4 @@ export default function PaperContent({ paper }) {
     </>
   );
 }
-
-//---------------Hoda end-----------------
+// Hoda end

@@ -66,7 +66,7 @@ def get_recommended_papers(interests):
             interest_score = round((get_single_interest_similarity_score(
                 [interest['text']],keywords_list,interest['weight'],keywords_weights)or 0)* 100,2)
             interests_similarity[interest['text']] = interest_score
-            #keyword Interest similarity-Hoda    
+            # keyword Interest similarity-Hoda    
             for keyword, weight in top_ten_keywords.items():
                 keyword_score = round((get_weighted_interest_similarity_score(
                     [interest['text']],[keyword],[interest['weight']],[weight])or 0)* 100,2)
@@ -103,7 +103,7 @@ def get_interest_paper_similarity(data):
     user_interests = list(user_interest_model_dict.keys())
     user_interests_weights = list(user_interest_model_dict.values())
 
-    # calculate similarity score
+    # Hoda start- Calculate similarity score
     score = round((get_weighted_interest_similarity_score(
             user_interests, keywords_list, user_interests_weights, keywords_weights ) or 0) * 100, 2)
     interest_score = 0

@@ -164,7 +164,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 }
 .sticky-topbar{
   top: 65px !important;
-  z-index: 99999 !important;
+  z-index: 999 !important;
 }
 
 .showMoreText{
@@ -219,6 +219,6 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 .new-window:hover > div:last-child{
   display: inherit !important;
   position: absolute;
-  left: 0;
+  right: 0;
   top: -20px;
 }

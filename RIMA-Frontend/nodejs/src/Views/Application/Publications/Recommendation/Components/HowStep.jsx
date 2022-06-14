@@ -5,7 +5,7 @@ import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import { wordElementProviderWithCoordinate } from "./FlowChartUtil";
 import ReactTooltip from "react-tooltip";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-
+// Hoda start
 const useStyles = makeStyles((theme) => ({
   paperCustom: {
     width: "100%"
@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
       fontFamily:'"Roboto", "Helvetica", "Arial", sans-serif'
   }
 }));
-
+// Create keyword list of user interest and publication keywords
+// Display 'USER INTERESTS AND PUBLICATION KEYWORDS' 
 function WordList({
   words,
   prefix,
