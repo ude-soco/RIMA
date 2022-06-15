@@ -38,10 +38,11 @@ import {
   brown,
 } from "@material-ui/core/colors";
 import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
-import CloudQueueIcon from "@material-ui/icons/CloudQueue";
+import CloudIcon from "@material-ui/icons/Cloud";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { Collapse } from "react-bootstrap";
+import TuneIcon from "@material-ui/icons/Tune";
 
 function StickyInterestTags({ tags }) {
   const [collapseInterest, setCollapseInterest] = useState(true);
@@ -294,10 +295,20 @@ export default function PublicationRecommendation() {
                     Your interests:
                   </legend>
                   <StickyInterestTags tags={refineInterests(state.interests)} />
-                  <Grid item md={1} style={{ float: "right" }}>
+                  <Grid item md={2} style={{ float: "right" }}>
                     <Grid onClick={() => openWhatIfModal()}>
                       <Button variant="outlined" color="primary" size="small">
-                        What-if?
+                        <TuneIcon
+                          style={{ color: "#333fa1" }}
+                          fontSize="small"
+                        />
+                        <Typography
+                          align="center"
+                          variant="subtitle2"
+                          className="ml-2"
+                        >
+                          What-If?
+                        </Typography>
                       </Button>
                     </Grid>
                     <Modal
@@ -350,7 +361,7 @@ export default function PublicationRecommendation() {
               color="primary"
               onClick={() => openWhatModal()}
             >
-              <CloudQueueIcon style={{ color: "#333fa1" }} fontSize="small" />
+              <CloudIcon style={{ color: "#333fa1" }} fontSize="small" />
               <Typography align="center" variant="subtitle2" className="ml-2">
                 Interests Sources
               </Typography>
