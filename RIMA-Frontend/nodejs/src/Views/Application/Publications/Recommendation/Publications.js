@@ -13,7 +13,6 @@ import {
   DialogContent,
   IconButton,
   CircularProgress,
-  Icon,
 } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
@@ -292,7 +291,7 @@ export default function PublicationRecommendation() {
                       fontWeight: "bold",
                     }}
                   >
-                    Your interests:
+                    Your Interests
                   </legend>
                   <StickyInterestTags tags={refineInterests(state.interests)} />
                   <Grid item md={2} style={{ float: "right" }}>
@@ -378,7 +377,7 @@ export default function PublicationRecommendation() {
             <Box style={whatStyle}>
               <Grid item md={12} sm={12}>
                 <DialogTitle style={{ m: 0, p: 2 }}>
-                  <Seperator Label="What the system knows?" Width="200" />
+                  <Seperator Label="What does the system know?" Width="250" />
                   {state.whatModal ? (
                     <IconButton
                       aria-label="close"
@@ -395,8 +394,14 @@ export default function PublicationRecommendation() {
                 </DialogTitle>
               </Grid>
               <Grid item md={12} sm={12}>
-                <Typography align="left" variant="subtitle2" className="ml-3">
-                  Your Top Interests have been chosen from this wordcloud:
+                <Typography align="left" variant="subtitle2" className="ml-4">
+                  <Box style={{ fontStyle: "italic", display: "contents" }}>
+                    Your Interests
+                  </Box>
+                  <Box style={{ fontStyle: "normal", display: "contents" }}>
+                    {" "}
+                    have been chosen from the word cloud
+                  </Box>
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12}>
