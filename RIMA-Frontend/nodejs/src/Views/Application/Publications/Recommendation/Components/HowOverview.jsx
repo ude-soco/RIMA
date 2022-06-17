@@ -485,11 +485,12 @@ export default function HowOverview({ paper }) {
                 <ButtonMUI
                   variant="outlined"
                   size="xsmall"
+                  color="primary"
                   onClick={() => {
                     setMoreDetail(true);
                   }}
                 >
-                  <AddCircleOutlineIcon color="action" fontSize="small" />
+                  <AddCircleOutlineIcon style={{ color: "#333fa1" }} fontSize="small" />
                   <Typography
                     align="center"
                     variant="caption"
@@ -502,11 +503,12 @@ export default function HowOverview({ paper }) {
                 <ButtonMUI
                   variant="outlined"
                   size="xsmall"
+                  color="primary"
                   onClick={() => {
                     setMoreDetail(false);
                   }}
                 >
-                  <RemoveCircleOutlineIcon color="action" fontSize="small" />
+                  <RemoveCircleOutlineIcon style={{ color: "#333fa1" }} fontSize="small" />
                   <Typography
                     align="center"
                     variant="caption"

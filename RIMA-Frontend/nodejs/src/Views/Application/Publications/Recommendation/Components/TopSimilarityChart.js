@@ -1,6 +1,6 @@
 // Hoda Start
 import React, { Component } from "react";
-import {Paper, CardContent, Grid, Typography} from "@material-ui/core";
+import {Paper, CardContent, Grid, Typography, Box,makeStyles} from "@material-ui/core";
 import Chart from "react-apexcharts";
 //import ReactTags from "../../../components/react-tags/ReactTags.js";
 
@@ -23,9 +23,12 @@ function getInterestScore(interests,max)
   }
   return items.sort((a,b)=>a.score<b.score?1:a.score==b.score?0:-1).filter((_, i) => i < max);
 }
+
 // Display a Barchart after clicking on a extracted keywords from abstract
 function TopSimilarityChart({onClick,interests,height,width,maxItem,title}) {
-  title=title||"The top three similarity scores between your interests and selected keyword.";
+
+  // title=title||"The top three similarity scores between Your Interests and this keyword";
+  //title=title||;
   interests=getInterestScore(interests,maxItem||3);
   let cats=interests.map(x=>x.interest);
   let scores=interests.map(x=>x.score);
@@ -91,7 +94,7 @@ function TopSimilarityChart({onClick,interests,height,width,maxItem,title}) {
       }
     };
   return  <Paper elevation={0}  onClick={onClick}  >
-              <Typography variant="body2" gutterBottom>{title}</Typography>
+              <Typography variant="body2" align="left"  gutterBottom>{title}</Typography>
               <Chart options={options.options} series={options.series} type="bar" {...size} />
           </Paper >;
 }

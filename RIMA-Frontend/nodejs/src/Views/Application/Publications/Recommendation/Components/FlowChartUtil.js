@@ -426,6 +426,8 @@ export function getFinalElement(
           "background-fit": "cover",
           "background-position": "left top",
           "background-image-opacity": 0.7,
+          "height": 70,
+          "width": 150,
  },
     },
     {
