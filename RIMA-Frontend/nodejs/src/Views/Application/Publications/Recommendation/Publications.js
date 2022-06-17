@@ -13,7 +13,6 @@ import {
   DialogContent,
   IconButton,
   CircularProgress,
-  Icon,
 } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
@@ -38,10 +37,11 @@ import {
   brown,
 } from "@material-ui/core/colors";
 import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
-import CloudQueueIcon from "@material-ui/icons/CloudQueue";
+import CloudIcon from "@material-ui/icons/Cloud";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { Collapse } from "react-bootstrap";
+import TuneIcon from "@material-ui/icons/Tune";
 
 // Hoda start- Sticky bar with collapse button
 function StickyInterestTags({tags})
@@ -294,13 +294,23 @@ export default function PublicationRecommendation() {
                       fontWeight: "bold",
                     }}
                   >
-                    Your interests:
+                    Your Interests
                   </legend>
                   <StickyInterestTags tags={refineInterests(state.interests)} />
-                  <Grid item md={1} style={{ float: "right" }}>
+                  <Grid item md={2} style={{ float: "right" }}>
                     <Grid onClick={() => openWhatIfModal()}>
                       <Button variant="outlined" color="primary" size="small">
-                        What-if?
+                        <TuneIcon
+                          style={{ color: "#333fa1" }}
+                          fontSize="small"
+                        />
+                        <Typography
+                          align="center"
+                          variant="subtitle2"
+                          className="ml-2"
+                        >
+                          What-If?
+                        </Typography>
                       </Button>
                     </Grid>
                     <Modal
@@ -353,7 +363,7 @@ export default function PublicationRecommendation() {
               color="primary"
               onClick={() => openWhatModal()}
             >
-              <CloudQueueIcon style={{ color: "#333fa1" }} fontSize="small" />
+              <CloudIcon style={{ color: "#333fa1" }} fontSize="small" />
               <Typography align="center" variant="subtitle2" className="ml-2">
                 Interests Sources
               </Typography>
@@ -370,7 +380,7 @@ export default function PublicationRecommendation() {
             <Box style={whatStyle}>
               <Grid item md={12} sm={12}>
                 <DialogTitle style={{ m: 0, p: 2 }}>
-                  <Seperator Label="What the system knows?" Width="200" />
+                  <Seperator Label="What does the system know?" Width="250" />
                   {state.whatModal ? (
                     <IconButton
                       aria-label="close"
@@ -387,8 +397,14 @@ export default function PublicationRecommendation() {
                 </DialogTitle>
               </Grid>
               <Grid item md={12} sm={12}>
-                <Typography align="left" variant="subtitle2" className="ml-3">
-                  Your Top Interests have been chosen from this wordcloud:
+                <Typography align="left" variant="subtitle2" className="ml-4">
+                  <Box style={{ fontStyle: "italic", display: "contents" }}>
+                    Your Interests
+                  </Box>
+                  <Box style={{ fontStyle: "normal", display: "contents" }}>
+                    {" "}
+                    have been chosen from the word cloud
+                  </Box>
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12}>

@@ -128,10 +128,7 @@ export default function HowOverview({ paper }) {
         faveColor: "#000000",
         shape: "polygon",
         borderStyle: "solid ",
-        tooltip:"<p>Similarity score for this publication</p>"
-
         },
-        classes: "withTooltip",
         position: { x: 300, y: 500 },
         locked: true
     },
@@ -427,9 +424,7 @@ export default function HowOverview({ paper }) {
           faveColor: "black",
           shape: "polygon",
           borderStyle: "solid",
-          tooltip:"<p>Similarity score for this publication</p>"
         },
-        classes: "withTooltip",
         position: { x: 300, y: 750 },
         locked: true
       },

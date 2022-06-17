@@ -6,7 +6,7 @@ import TopSimilarityChart from "./TopSimilarityChart";
 import { Typography, Grid, Box, Chip, Switch, makeStyles } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-// Hoda Start
+//Hoda Start
 const useStyles = makeStyles((theme) => ({
   italicBody2: {
     fontStyle: "italic",
@@ -49,31 +49,34 @@ function KeywordSimObjToArray(keywords_similarity) {
 function HighlightText(paperId, keywords_similarity, text) {
   keywords_similarity = KeywordSimObjToArray(keywords_similarity);
   let modified_text = text;
-  let replaceList=[];
+  let replaceList = [];
   for (let index in keywords_similarity) {
     let value = keywords_similarity[index];
     let regEx = new RegExp(value.keyword, "ig");
     let matches = regEx.exec(modified_text);
     if (matches === null) continue;
     //deform originalText to prevent nested highlighting keyword/s
-    let originalText = matches[0]
-      //.split(" ")
-      //.map((x) => "<x>" + x[0] + "</x>" + x.substring(1))
-      //.join("&nbsp;");
-    let replaceKey=btoa(unescape(encodeURIComponent(value.keyword)))
-    const replaceText=highlighter(
+    let originalText = matches[0];
+    //.split(" ")
+    //.map((x) => "<x>" + x[0] + "</x>" + x.substring(1))
+    //.join("&nbsp;");
+    let replaceKey = btoa(unescape(encodeURIComponent(value.keyword)));
+    const replaceText = highlighter(
       paperId,
       value.keyword,
       value.max_score,
       value.max_interest_color,
       originalText,
       replaceKey
-    )
-    replaceKey=`<-${replaceKey}->`;  
-    replaceList.push({replaceKey,replaceText})  
-    modified_text = modified_text.replace(regEx,replaceKey);
+    );
+    replaceKey = `<-${replaceKey}->`;
+    replaceList.push({ replaceKey, replaceText });
+    modified_text = modified_text.replace(regEx, replaceKey);
   }
-  replaceList.forEach(({replaceKey,replaceText})=>modified_text = modified_text.replaceAll(replaceKey,replaceText))
+  replaceList.forEach(
+    ({ replaceKey, replaceText }) =>
+      (modified_text = modified_text.replaceAll(replaceKey, replaceText))
+  );
   return modified_text;
 }
 // start Tannaz
@@ -111,15 +114,21 @@ function Title({ paper, similarityScore }) {
         {/* Hoda start- External link on title */}
         <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
           <Grid item xs>
-        <Typography  
-            noWrap
-            gutterBottom
-            variant="h6"
-            dangerouslySetInnerHTML={{ __html: modified_title }}
+            <Typography
+              noWrap
+              gutterBottom
+              variant="h6"
+              dangerouslySetInnerHTML={{ __html: modified_title }}
             />
-            </Grid>
+          </Grid>
           <Grid item xs>
-            <a href={"https://www.semanticscholar.org/paper/"+paper.paperId} target="_blank" title="open paper in the semantic scholar website"><OpenInNewIcon /></a>
+            <a
+              href={"https://www.semanticscholar.org/paper/" + paper.paperId}
+              target="_blank"
+              title="open paper in the semantic scholar website"
+            >
+              <OpenInNewIcon />
+            </a>
           </Grid>
         </Grid>
         <Grid item xs>
@@ -193,8 +202,8 @@ function PaperAbstract({ paper }) {
       />
       <ShowMoreText
         lines={1}
-        more="... Show more"
-        less="Show less"
+        more="... show more"
+        less="show less"
         className="showMoreText"
         anchorClass="oooeeer"
         onClick={executeOnClick}
