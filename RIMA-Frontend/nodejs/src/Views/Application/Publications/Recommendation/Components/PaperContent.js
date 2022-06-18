@@ -3,10 +3,16 @@ import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
-import { Typography, Grid, Box, Chip, Switch } from "@material-ui/core";
+import { Typography, Grid, Box, Chip, Switch, makeStyles } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-//---------------Hoda Start-----------------
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+//Hoda Start
+const useStyles = makeStyles((theme) => ({
+  italicBody2: {
+    fontStyle: "italic",
+  },
+}));
+
 function highlighter(
   paperId,
   keyword,
@@ -94,7 +100,7 @@ function Title({ paper, similarityScore }) {
     paper.keywords_similarity,
     paper.title
   );
-  //---------------Hoda end-----------------
+  // Hoda end
   return (
     <Grid container style={{ justifyContent: "space-between" }}>
       <Grid
@@ -105,14 +111,8 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-start"
         alignItems="flex-start"
       >
-        <Grid
-          item
-          xs
-          container
-          direction="row"
-          style={{ justifyContent: "space-between" }}
-          className="new-window"
-        >
+        {/* Hoda start- External link on title */}
+        <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
           <Grid item xs>
             <Typography
               noWrap
@@ -143,6 +143,7 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-end"
         alignItems="flex-start"
       >
+        {/* Hoda end */}
         {paper.modified ? (
           <Chip
             style={{ borderRadius: 5 }}
@@ -221,8 +222,9 @@ function PaperAbstract({ paper }) {
     </>
   );
 }
-
+// Hoda start- Tooltip on extracted keywords
 export default function PaperContent({ paper }) {
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [popoverActive, setPopoverActive] = React.useState(false);
   const [modalActive, setModalActive] = React.useState(true);
@@ -268,33 +270,6 @@ export default function PaperContent({ paper }) {
 
   return (
     <>
-      {false ? (
-        <>
-          <Switch
-            checked={popoverActive}
-            onChange={popoverActiveHandleChange}
-            inputProps={{ "aria-label": "Switch between tooltip and popover" }}
-          />{" "}
-          {popoverActive ? (
-            <>
-              Popover{" "}
-              <Switch
-                checked={modalActive}
-                onChange={modalActiveHandleChange}
-                inputProps={{
-                  "aria-label": "Switch between Popover Modal and none-Modal",
-                }}
-              />{" "}
-              {modalActive ? " With Backdrop" : "Without Backdrop"}
-            </>
-          ) : (
-            "Tooltip"
-          )}
-        </>
-      ) : (
-        ""
-      )}
-      {!popoverActive ? (
         <ReactTooltip
           class="chart"
           id={paper.paperId}
@@ -312,66 +287,22 @@ export default function PaperContent({ paper }) {
             return (
               <TopSimilarityChart
                 onClick={(e) => e.stopPropagation()}
-                width={350}
+                width={400}
                 interests={interests}
+                title={(<>
+                  The top three similarity scores between
+                <Typography  className={classes.italicBody2} variant="Body2" component="span">
+                  Your Interests
+                </Typography>
+                  &nbsp;and {keyword}
+              </>)}
               />
             );
           }}
         />
-      ) : (
-        // <>
-        //     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}
-        //         onClose={handleClose}
-        //         >
-        //         <MenuItem>
-        //         {(anchorEl ?<TopSimilarityChart  interests={anchorEl?.interests} />:<>No Data!</>)}
-        //         </MenuItem>
-        //     </Menu>
-        // </>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl && anchorEl.element}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          style={{ width: 350 }}
-          {...(!modalActive
-            ? {
-                keepMounted: true,
-                hideBackdrop: true,
-                TransitionProps: {
-                  unmountOnExit: true,
-                },
-              }
-            : {})}
-          //event={'click'}
-          // globalEventOff={'click'} border={true}
-          // type={'light'} place={'bottom'}
-          // effect={'solid'} clickable={true} getContent={(dataTip) => {
-          //         if(!dataTip) return <>No Data!</>;
-          //         let keyword=decodeURIComponent(escape(atob(dataTip)));
-          //         let interests=paper.keywords_similarity[keyword];
-          //         return <TopSimilarityChart onClick={e => e.stopPropagation()} interests={interests} keyword={keyword} />;
-          //     }}
-        >
-          {anchorEl ? (
-            <TopSimilarityChart interests={anchorEl?.interests} />
-          ) : (
-            <>No Data!</>
-          )}
-        </Popover>
-      )}
       <Title paper={paper} similarityScore={paper.score} />
       <PaperAbstract paper={paper} />
     </>
   );
 }
-
-//---------------Hoda end-----------------
+// Hoda end

@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center ",
   },
+  italicSubtitle2: {
+    fontStyle: "italic",
+  },
 }));
 
 // Jaleh start
@@ -181,13 +184,14 @@ export default function ExpansionPanel(props) {
         <Grid container className={classes.root} spacing={0}>
           <Seperator Label="Why this publication?" Width="170" />
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
-              {" "}
-              &nbsp; This word cloud diagram shows the main extracted keywords
-              from this publication.
-              <br /> &nbsp; You can hover over each keyword to see its
-              similarity to all interests.
-            </Typography>
+            <Typography align="left" variant="subtitle2" className="ml-4">
+                  The Word cloud diagram shows the extracted keywords from this publication.
+                    <br />
+                  Hover over each keyword to see its similarity to
+                  <Typography  className={classes.italicSubtitle2} variant="subtitle2" component="span">
+                  Your Interests
+                  </Typography>
+                </Typography>
           </Grid>
           <WhyExplanation index={index} paper={paper} interests={interests} />
           <Grid item xs={12} className={classes.collapseButton}>

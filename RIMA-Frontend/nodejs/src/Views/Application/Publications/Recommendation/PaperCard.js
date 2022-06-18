@@ -47,10 +47,10 @@ export default function PaperCard(props) {
     paperModiText: "",
     done: false,
   });
-  //---------------Hoda Start-----------------
+  // Hoda Start-Calculate maximum keyword
   CalcMaxkeyword(state.paper, state.interests);
   state.paper["keyword"] = getKeywordScore(state.paper.keywords_similarity);
-  //---------------Hoda end-----------------
+  // Hoda end
   useEffect(() => {
     // calculateSimilarity();
     // let modified_text = convertUnicode(text);

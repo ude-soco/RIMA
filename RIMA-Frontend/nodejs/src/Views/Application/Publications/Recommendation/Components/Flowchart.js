@@ -17,7 +17,7 @@ cytoscape.use(dagre);
 const minZoom = 0.3;
 const maxZoom = 1e1;
 
-//-----hoda-start---
+// Hoda start
 let activeTimeout = {};
 function refreshLayout(key, cy, layout) {
   if (!!activeTimeout[key]) {
@@ -28,7 +28,7 @@ function refreshLayout(key, cy, layout) {
     cy.layout(layout).run();
   }, 300);
 }
-//-----hoda-end---
+// Hoda end
 
 export default function Flowchart(props) {
   // start Tannaz
@@ -164,7 +164,7 @@ export default function Flowchart(props) {
               "text-valign": "center",
             },
           },
-          //-----hoda-start---
+          // Hoda start
           {
             selector: "node.circlenode",
             style: {
@@ -229,7 +229,7 @@ export default function Flowchart(props) {
               "border-opacity": 1,
             },
           },
-          //-----hoda-end---
+          // Hoda end
           {
             selector: "edge",
             style: {
@@ -281,7 +281,7 @@ export default function Flowchart(props) {
             },
           },
         ]}
-        layout={layout} //----Hoda--
+        layout={layout} //Hoda
         pan={{ x: xStartPoint, y: yStartPoint }}
         minZoom={minZoom}
         maxZoom={maxZoom}

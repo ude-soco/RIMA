@@ -4,7 +4,7 @@ import {Paper, CardContent, Grid, Typography,makeStyles} from "@material-ui/core
 import "../assets/styles.css";
 import KeywordCloud from "./KeywordCloud"
 import TopSimilarityChart from "./TopSimilarityChart"
-
+// Hoda start
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -69,4 +69,4 @@ function WhyExplanation({paper}) {
 }
 
 export default WhyExplanation;
-//---------------Hoda End-----------------
+// Hoda End

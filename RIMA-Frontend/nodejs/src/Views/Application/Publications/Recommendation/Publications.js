@@ -43,8 +43,10 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { Collapse } from "react-bootstrap";
 import TuneIcon from "@material-ui/icons/Tune";
 
-function StickyInterestTags({ tags }) {
-  const [collapseInterest, setCollapseInterest] = useState(true);
+// Hoda start- Sticky bar with collapse button
+function StickyInterestTags({tags})
+{
+  const [collapseInterest,setCollapseInterest]=useState(true);
 
   return (
     <Sticky
@@ -68,6 +70,7 @@ function StickyInterestTags({ tags }) {
     </Sticky>
   );
 }
+// Hoda end
 
 export default function PublicationRecommendation() {
   const [state, setState] = useState({
@@ -150,7 +153,7 @@ export default function PublicationRecommendation() {
     });
   };
 
-  //Hoda
+  // Hoda start- defined static colors 
   const generateRandomRGB = (indexcolor) => {
     var hexValues = [
       pink[300],
@@ -164,9 +167,9 @@ export default function PublicationRecommendation() {
       amber[300],
       brown[300],
     ];
-
     return hexValues[indexcolor];
   };
+  // Hoda end
   /**
    * Get Interest to show on the top of the page
    */

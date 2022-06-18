@@ -70,7 +70,7 @@ export function getMaxWidthHeight(padding, ratio, justMax) {
     return radius;
   };
 }
-
+// Hoda start
 export function wordElementProvider(
   words,
   prefix,
@@ -243,7 +243,8 @@ export function wordElementProvider(
   });
   return wordElements;
 }
-
+// Hoda end
+// Hoda start- Visualization for 'GENERATE EMBEDDINGS' step
 export function wordElementProviderWithCoordinate(words, prefix, isSplit, inclEmbedding, modelLable) {
   let wordElements = [];
   let modelObj = null;
@@ -371,8 +372,7 @@ if (inclEmbedding) {
   }
   return wordElements;
 }
-
-
+// Hoda end
 export function getFinalElement(
   prefixLeft,
   titleLeft,
@@ -426,6 +426,8 @@ export function getFinalElement(
           "background-fit": "cover",
           "background-position": "left top",
           "background-image-opacity": 0.7,
+          "height": 70,
+          "width": 150,
  },
     },
     {
@@ -497,6 +499,7 @@ export function getFinalElement(
     },
   ];
 }
+//Hoda start calculate the maximum keyword similarity and score
 export function CalcMaxkeyword(paper, interests) {
   for (let p1 in paper.keywords_similarity) {
     let tInterests = paper.keywords_similarity[p1];
@@ -550,3 +553,4 @@ export function getKeywordScore(keywords) {
     a.score < b.score ? 1 : a.score == b.score ? 0 : -1
   );
 }
+// Hoda end

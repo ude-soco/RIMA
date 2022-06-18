@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Flowchart from "./Flowchart";
-import { Divider, Paper, Grid, Hidden, Typography } from "@material-ui/core";
+import { Divider, Paper, Grid, Hidden, Typography, Box } from "@material-ui/core";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import { wordElementProviderWithCoordinate } from "./FlowChartUtil";
 import ReactTooltip from "react-tooltip";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-
+// Hoda start
 const useStyles = makeStyles((theme) => ({
   paperCustom: {
     width: "100%"
@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
       fontFamily:'"Roboto", "Helvetica", "Arial", sans-serif'
   }
 }));
-
+// Create keyword list of user interest and publication keywords
+// Display 'USER INTERESTS AND PUBLICATION KEYWORDS' 
 function WordList({
   words,
   prefix,
@@ -110,7 +111,12 @@ export default function HowStep({
         prefix:"Interest",
         titleBorderColor:"blue",
         modelLabel:"INTEREST MODEL EMBEDDING",
-        tooltipContent:"The colors of the interest keywords is based on their similarity to the relevant interest and the numbers show the interest weights",
+        // tooltipContent:"The colors of the interest keywords is based on their similarity to the relevant interest and the numbers show the interest weights",
+         tooltipContent: (<>Consists of 
+          <Typography  style={{fontStyle:"italic"}} variant="xx" component="span">
+          &nbsp;Your Interests
+          </Typography>
+          &nbsp;and respective weights</>),
         words:interests,
       };
       const secondCol={
@@ -118,7 +124,12 @@ export default function HowStep({
         prefix:"Publication",
         titleBorderColor:"orange",
         modelLabel:"PUBLICATION EMBEDDING",
-        tooltipContent:"The colors of the publication keywords is based on their similarity to the relevant interest and the numbers show the keywords weights",
+        // tooltipContent:"The colors of the publication keywords is based on their similarity to the relevant interest and the numbers show the keywords weights",
+        tooltipContent: (<>Consists of extracted publication keywords and their respective weights. Color is based on the most relevant interest in 
+          <Typography  style={{fontStyle:"italic"}} variant="xx" component="span">
+          &nbsp;Your Interests
+          </Typography>
+        </>),
         words:keywords
       };
 return (
