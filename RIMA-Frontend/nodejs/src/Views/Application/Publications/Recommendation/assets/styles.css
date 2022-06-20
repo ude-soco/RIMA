@@ -222,3 +222,21 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   right: 0;
   top: -20px;
 }
+
+.rectangle {
+  height: 20px;
+  width: 40px;
+  border : 1px solid black;
+
+}
+
+.parallelogram {
+	width: 40px;
+	height: 20px;
+	transform: skew(-20deg);
+  border : 1px solid black;
+}
+.MuiTableCell-root{
+  padding:2px !important;
+  border: none !important;
+}
