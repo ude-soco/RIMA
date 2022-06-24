@@ -128,10 +128,13 @@ const ManageInterests = (props) => {
     let newInterests = interests;
     const index = newInterests.findIndex(i => i.id === interest.id);
     if (index !== -1) {
-      newInterests[index].text = enterInterest
+      if (enterInterest !== "") {
+        newInterests[index].text = enterInterest
+      }
     }
     setInterests(newInterests);
-    setEditInterest(false)
+    setEditInterest(false);
+    setEnterInterest("");
   }
 
   const handleSaveInterests = () => {
@@ -139,6 +142,7 @@ const ManageInterests = (props) => {
     newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
     setKeywords([]);
     setKeywords(newInterests);
+    setEnterInterest("");
     handleClose()
   }
 
@@ -188,7 +192,10 @@ const ManageInterests = (props) => {
                       <>
                         <Grid item xs={1}>
                           <IconButton
-                            onClick={() => setEditInterest(interest.id)}>
+                            onClick={() => {
+                              setEditInterest(interest.id);
+                              setEnterInterest("");
+                            }}>
                             <EditIcon/>
                           </IconButton>
                         </Grid>
