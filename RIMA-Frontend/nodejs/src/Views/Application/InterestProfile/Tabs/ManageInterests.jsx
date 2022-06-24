@@ -109,7 +109,10 @@ const ManageInterests = (props) => {
     setInterests([]);
     let newInterests = interests;
     const index = newInterests.findIndex(i => i.id === interest.id);
-    index !== -1 ? newInterests[index].value = value : null;
+    if (index !== -1) {
+      newInterests[index].value = value
+      newInterests[index].text = enterInterest
+    }
     setInterests(newInterests);
   }
 
@@ -122,14 +125,16 @@ const ManageInterests = (props) => {
     setInterests([]);
     let newInterests = interests;
     const index = newInterests.findIndex(i => i.id === interest.id);
-    index !== -1 ? newInterests[index].text = enterInterest : "";
+    if (index !== -1) {
+      newInterests[index].text = enterInterest
+    }
     setInterests(newInterests);
     setEditInterest(false)
   }
 
   const handleSaveInterests = () => {
     let newInterests = interests;
-    newInterests.sort((a,b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
+    newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
     setKeywords([]);
     setKeywords(newInterests);
     handleClose()
@@ -177,15 +182,15 @@ const ManageInterests = (props) => {
                         {interest.value}
                       </Typography>
                     </Grid>
-                    <Grid item xs={1}>
-                      {editInterest === interest.id ? <></> :
-                        <>
+                    {editInterest === interest.id ? <></> :
+                      <>
+                        <Grid item xs={1}>
                           <IconButton
                             onClick={() => setEditInterest(interest.id)}>
                             <EditIcon/>
                           </IconButton>
-                        </>}
-                    </Grid>
+                        </Grid>
+                      </>}
                   </Grid>
                   <Collapse in={Boolean(interest.id === editInterest)}>
                     <Grid container style={{paddingTop: 8, paddingBottom: 16}}>
