@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,8 +13,6 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import CloseIcon from '@material-ui/icons/Close';
-import AddIcon from '@material-ui/icons/Add';
-import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import ManageInterests from "./ManageInterests";
 import RestAPI from "../../../../Services/api";
 import WordCloud from "./WordCloud/WordCloud";
@@ -33,6 +32,23 @@ export default function MyInterests() {
 
   const [keywords, setKeywords] = useState([]);
   const [interestsWeight, setInterestsWeight] = useState();
+
+  const loading = <>
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+    >
+      <Grid item>
+        <CircularProgress/>
+      </Grid>
+      <Grid item>
+        <Typography variant="overline"> Loading data </Typography>
+      </Grid>
+    </Grid>
+  </>
+
   const [allNewInterests, setAllNewInterests] = useState({});
   const [changeInterests, setChangeInterests] = useState(false);
   const [cancel, setCancel] = useState(false);
@@ -161,22 +177,23 @@ export default function MyInterests() {
 
   //End Clara
   return (<>
-    <Grid container justify="flex-end" style={{paddingTop: 32, paddingBottom: 32}}>
+    <Grid container justify="flex-end" style={{paddingTop: 32, height: "75vh"}}>
       <Grid item>
         <Button color="primary" startIcon={<EditIcon/>} onClick={handleOpen}>
           Manage Interests
         </Button>
       </Grid>
       <Grid item xs={12}>
+
         <AwesomeSlider style={{height: "60vh"}}>
           <Box style={{backgroundColor: "#fff"}}>
-            <WordCloud keywords={keywords}/>
+            {keywords.length !== 0 ? <WordCloud keywords={keywords}/> : <> {loading} </>}
           </Box>
           <Box style={{backgroundColor: "#fff"}}>
-            <BarChart keywords={keywords}/>
+            {keywords.length !== 0 ? <BarChart keywords={keywords}/> : <> {loading} </>}
           </Box>
           <Box style={{backgroundColor: "#fff"}}>
-            <CirclePacking keywords={keywords}/>
+            {keywords.length !== 0 ? <CirclePacking keywords={keywords}/> : <> {loading} </>}
           </Box>
         </AwesomeSlider>
       </Grid>

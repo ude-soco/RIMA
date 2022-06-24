@@ -109,7 +109,13 @@ const ManageInterests = (props) => {
     setInterests([]);
     let newInterests = interests;
     const index = newInterests.findIndex(i => i.id === interest.id);
-    index !== -1 ? newInterests[index].value = value : null;
+    if (index !== -1) {
+      newInterests[index].value = value
+      if (enterInterest !== "") {
+        newInterests[index].text = enterInterest;
+        setEnterInterest("");
+      }
+    }
     setInterests(newInterests);
   }
 
@@ -122,16 +128,21 @@ const ManageInterests = (props) => {
     setInterests([]);
     let newInterests = interests;
     const index = newInterests.findIndex(i => i.id === interest.id);
-    index !== -1 ? newInterests[index].text = enterInterest : "";
+    if (index !== -1 && enterInterest !== "") {
+      newInterests[index].text = enterInterest;
+      setEnterInterest("");
+    }
     setInterests(newInterests);
     setEditInterest(false)
   }
 
   const handleSaveInterests = () => {
     let newInterests = interests;
-    newInterests.sort((a,b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
+    newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
     setKeywords([]);
-    setKeywords(newInterests);
+    setTimeout(() => {
+      setKeywords(newInterests);
+    }, 500)
     handleClose()
   }
 
