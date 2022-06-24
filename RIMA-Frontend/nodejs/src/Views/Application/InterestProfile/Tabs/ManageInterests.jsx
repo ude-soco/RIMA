@@ -9,6 +9,7 @@ import {
   Grid,
   IconButton,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import * as React from "react";
@@ -175,7 +176,7 @@ const ManageInterests = (props) => {
                     <Grid item xs>
                       {editInterest === interest.id ?
                         <>
-                          <TextField variant="outlined" defaultValue={interest.text} size="small"
+                          <TextField variant="outlined" defaultValue={interest.text} fullWidth
                                      style={{backgroundColor: "#FFF"}} onChange={handleChangeInterest}/>
                         </> :
                         <>
@@ -183,32 +184,41 @@ const ManageInterests = (props) => {
                         </>}
 
                     </Grid>
-                    <Grid item xs={1}>
-                      <Typography style={{fontWeight: editInterest === interest.id ? "bold" : ""}}>
-                        {interest.value}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1}>
-                      {editInterest === interest.id ? <></> :
-                        <>
+                    {editInterest === interest.id ? <></> :
+                      <>
+                        <Grid item xs={1}>
+                          <Typography> {interest.value} </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
                           <IconButton
+                            disabled={editInterest === interest.id || editInterest}
                             onClick={() => setEditInterest(interest.id)}>
                             <EditIcon/>
                           </IconButton>
-                        </>}
-                    </Grid>
+                        </Grid>
+                      </>
+                    }
                   </Grid>
                   <Collapse in={Boolean(interest.id === editInterest)}>
-                    <Grid container style={{paddingTop: 8, paddingBottom: 16}}>
-                      <Slider onChangeCommitted={(event, value) => handleInterestWeights(event, value, interest)}
-                              defaultValue={interest.value} valueLabelDisplay="auto" step={0.1} min={0} max={5}/>
+                    <Grid container alignItems="center" style={{paddingTop: 24, paddingBottom: 16}}>
+                      <Grid item xs>
+                        <Slider onChangeCommitted={(event, value) => handleInterestWeights(event, value, interest)}
+                                defaultValue={interest.value} valueLabelDisplay="auto" step={0.1} min={1} max={5}/>
+                      </Grid>
+                      <Grid item style={{marginLeft: 32}}>
+                        <Typography variant="h4" style={{fontWeight: "bold"}}>
+                          {interest.value}
+                        </Typography>
+                      </Grid>
                     </Grid>
                     <Grid container justify="space-between">
-                      <IconButton color="secondary">
-                        <DeleteIcon/>
-                      </IconButton>
-                      <Button color="primary" onClick={() => handleUpdateInterest(interest)}>
-                        Save
+                      <Tooltip title="Delete interest" arrow>
+                        <IconButton color="secondary">
+                          <DeleteIcon/>
+                        </IconButton>
+                      </Tooltip>
+                      <Button color="primary" variant="contained" onClick={() => handleUpdateInterest(interest)}>
+                        Update
                       </Button>
                     </Grid>
                   </Collapse>
