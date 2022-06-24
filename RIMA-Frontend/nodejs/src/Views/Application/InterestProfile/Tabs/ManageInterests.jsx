@@ -192,6 +192,7 @@ const ManageInterests = (props) => {
                       <>
                         <Grid item xs={1}>
                           <IconButton
+                            disabled={editInterest === interest.id || editInterest}
                             onClick={() => {
                               setEditInterest(interest.id);
                               setEnterInterest("");
