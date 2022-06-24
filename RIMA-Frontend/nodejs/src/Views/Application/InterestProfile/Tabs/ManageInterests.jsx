@@ -111,9 +111,7 @@ const ManageInterests = (props) => {
     const index = newInterests.findIndex(i => i.id === interest.id);
     if (index !== -1) {
       newInterests[index].value = value
-      if (enterInterest !== "") {
-        newInterests[index].text = enterInterest
-      }
+      newInterests[index].text = enterInterest
     }
     setInterests(newInterests);
   }
