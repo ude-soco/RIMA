@@ -50,8 +50,11 @@ const MyResponsiveCirclePacking = ({ data }) => (
 
 export default function CirclePackingExample(props) {
     // interests & weights are passed down as props, see InterestOverviewNew - Clara
-    const interests = props.interests;
-    const weights = props.weights;
+    const interestsWeights = props.interestsWeights
+    const interests = Object.keys(interestsWeights)
+    let weights = []
+    interests.map((interest) =>
+        weights.push(interestsWeights[interest]["weight"]))
     //For each interest create a new object and put them in an array - Clara
     let dataArray=[];
     for (let i = 0; i < interests.length; i++){

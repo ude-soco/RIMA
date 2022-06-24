@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Chart from "chart.js";
 import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
 import { useHistory } from "react-router-dom";
 import AwesomeSlider from "react-awesome-slider";
@@ -7,38 +6,19 @@ import "react-awesome-slider/dist/styles.css";
 import {Box} from "@material-ui/core";
 import BarChart from "./BarChart/BarChart";
 import CirclePackingExample from "./CiclePacking/CirclePacking";
-import RestAPI from "../../../../Services/api";
 
 
 
-export default function InterestOverviewNew({ classes }) {
+
+export default function InterestOverviewNew(props) {
   const history = useHistory();
-  //Start Clara
-  let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-  const [interests, setInterests] = React.useState(null);
-  const [weights, setWeights] = React.useState(null);
+  const interestsWeight = props.interestsWeights;
 
-  React.useEffect(() => {
-    RestAPI.longTermInterest(currentUser)
-        .then((response) => {
-          console.log(response.data, "data")
-          let interestsArray=[];
-          let weightsArray = [];
-          for (let i = 0; i < response.data.length; i++){
-            interestsArray.push(response.data[i].keyword)
-            weightsArray.push(response.data[i].weight)
-          };
+  console.log(interestsWeight, "test overview")
+  let items = [<CloudChart />,
 
-          //console.log(interestsArray, weightsArray, "test");
-
-          setInterests(interestsArray);
-          setWeights(weightsArray);
-        });
-  }, []);
-  //End Clara
-  let items = [<CloudChart/>,
-      <BarChart interests={interests} weights={weights}/>,
-      <CirclePackingExample interests={interests} weights={weights}/>];
+      <BarChart interestsWeights={interestsWeight}/>,
+      <CirclePackingExample interestsWeights={interestsWeight}/>];
 
 
   return (

@@ -9,8 +9,11 @@ import RestAPI from "../../../../../Services/api";
 const BarChart = (props) => {
     // the weights & interest are passed down as props from the parent component => only fetching them once for
     // all visualizations on my interest page - Clara
-  const weights = props.weights;
-  const interests= props.interests;
+    const interestsWeights = props.interestsWeights
+    const interests = Object.keys(interestsWeights)
+    let weights = []
+    interests.map((interest) =>
+    weights.push(interestsWeights[interest]["weight"]))
 
     // The styling of the bar chart - Clara
   const options=
@@ -28,6 +31,7 @@ const BarChart = (props) => {
         },
         yaxis: { title: { text: "Weight of interests" } },
       };
+  console.log(options, "test")
   const series = [
       {
         name: "Interests",
