@@ -11,15 +11,13 @@ import {
   Grid,
 } from "@material-ui/core";
 import ActivitiesNew from "./ActivitiesNew";
-import InterestOverviewNew from "./InterestOverviewNew";
 import RestAPI from "Services/api";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
-  addEdge
+  addEdge,
 } from "react-flow-renderer";
 import CloudChart from "Views/Application/ReuseableComponents/Charts/CloudChart/CloudChart";
-
 
 export default function HowDoesItWork() {
   const [activeStep, setActiveStep] = React.useState(0);
