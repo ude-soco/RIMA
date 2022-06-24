@@ -1,16 +1,6 @@
 import * as React from "react";
-import {
-  Tabs,
-  Tab,
-  Box,
-  Button,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  makeStyles,
-  AppBar,
-} from "@material-ui/core";
+import {useState} from "react";
+import {Box, Divider, Paper, Tab, Tabs, Typography,} from "@material-ui/core";
 import MyInterests from "./MyInterests";
 
 import HowDoesItWork from "./HowDoesItWork";
@@ -19,7 +9,7 @@ import HorizontalFlow from "./Explore";
 import Discover from "./Discover";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {children, value, index, ...other} = props;
 
   return (
     <div
@@ -30,7 +20,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{p: 3}}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -38,45 +28,43 @@ function TabPanel(props) {
   );
 }
 
-export default function InterestProfileTabs({ classes }) {
-  const [value, setValue] = React.useState(0);
+export default function InterestProfileTabs({classes}) {
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <Card className={classes.cardHeight}>
-      <CardContent>
-        <AppBar position="static">
-          <Tabs
-            value={value}
-            indicatorColor="secondary"
-            onChange={handleChange}
-          >
-            <Tab label="My Interests" />
-            <Tab label="Explore" />
-            <Tab label="Discover" />
-            <Tab label="Connect" />
-            <Tab label="How does it work?" />
-          </Tabs>
-        </AppBar>
-        <TabPanel value={value} index={0}>
-          <MyInterests />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <HorizontalFlow />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <Discover />
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <Connect />
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          <HowDoesItWork />
-        </TabPanel>
-      </CardContent>
-    </Card>
+    <Paper className={classes.cardHeight} style={{flexGrow: 1}}>
+      <Tabs
+        value={value}
+        indicatorColor="secondary"
+        onChange={handleChange}
+        centered
+      >
+        <Tab label="My Interests"/>
+        <Tab label="Explore"/>
+        <Tab label="Discover"/>
+        <Tab label="Connect"/>
+        <Tab label="How does it work?"/>
+      </Tabs>
+      <Divider/>
+      <TabPanel value={value} index={0}>
+        <MyInterests/>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <HorizontalFlow/>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Discover/>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <Connect/>
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <HowDoesItWork/>
+      </TabPanel>
+    </Paper>
   );
 }

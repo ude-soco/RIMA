@@ -164,7 +164,9 @@ const ManageInterests = (props) => {
           <>
             {interests.map(interest => {
               return (
-                <Box style={{
+                <Box
+                  key={interest.id}
+                  style={{
                   borderRadius: 8,
                   paddingLeft: 16,
                   paddingRight: Boolean(interest.id === editInterest) ? 24 : 16,
