@@ -36,13 +36,8 @@ export default function InterestProfileTabs({classes}) {
   };
 
   return (
-    <Paper className={classes.cardHeight} style={{flexGrow: 1}}>
-      <Tabs
-        value={value}
-        indicatorColor="secondary"
-        onChange={handleChange}
-        centered
-      >
+    <Paper style={{flexGrow: 1, height: "100%", padding: 16, borderRadius: 16}}>
+      <Tabs value={value} indicatorColor="primary" onChange={handleChange} centered>
         <Tab label="My Interests"/>
         <Tab label="Explore"/>
         <Tab label="Discover"/>

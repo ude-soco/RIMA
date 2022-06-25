@@ -3,11 +3,13 @@ import {
   Button,
   CircularProgress,
   Collapse,
-  Dialog,
   DialogActions,
   DialogContent,
   Grid,
   IconButton,
+  Paper,
+  Popper,
+  Snackbar,
   TextField,
   Tooltip,
   Typography,
@@ -19,92 +21,22 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Slider from "@material-ui/core/Slider";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
 import AddIcon from "@material-ui/icons/Add";
+import Fade from '@material-ui/core/Fade';
+
 
 const ManageInterests = (props) => {
-  const {
-    keywords,
-    setKeywords,
-    handleClose,
-    ids,
-    interestsWeights,
-    setRememberDelete,
-    allNewInterests,
-    setAllNewInterests,
-    setChangeInterests,
-    handleIdsDelete,
-  } = props;
+  const {keywords, setKeywords, handleClose} = props;
 
-  //handle PopUp
   const [interests, setInterests] = useState(keywords)
   const [editInterest, setEditInterest] = useState(false);
   const [enterInterest, setEnterInterest] = useState("");
+  const [enterInterestWeight, setEnterInterestWeight] = useState(1);
   const [reset, setReset] = useState(false);
-
-  const [open, setOpen] = React.useState(false);
-  const [buttonInterest, setButtonInterest] = React.useState(false);
-  const [newInterest, setNewInterest] = React.useState("");
-  const [newInterestWeight, setNewInterestWeight] = React.useState(2.5);
-  const [inputNewInterest, setInputNewInterest] = React.useState("");
-  const [defaultNewInterest, setDefaultNewInterest] = React.useState(2.5);
-
-  // const handleClose = () => setOpen(false);
-
-  const handleChange = (sliderId) => (e, value) => {
-    //track changing slider values & apply as new value
-    allNewInterests[sliderId]["weight"] = value;
-    setAllNewInterests(allNewInterests);
-    setChangeInterests(true);
-    console.log(
-      sliderId,
-      "test handleChange",
-      interestsWeights[sliderId]["weight"],
-      allNewInterests[sliderId]["weight"]
-    );
-  };
-
-  //delete interest
-  const handleDelete = (name) => (e, value) => {
-    const id = allNewInterests[name]["id"];
-    const weight = allNewInterests[name]["weight"];
-    delete allNewInterests[name];
-    //remeber deleted interest
-    setRememberDelete([name, weight, id]);
-    setReset(false);
-    setAllNewInterests(allNewInterests);
-    handleIdsDelete(id);
-    handleClose();
-  };
-
-  //changes value new interest
-  const handleNewInterest = (e) => {
-    setNewInterest(e.target.value);
-    setInputNewInterest(e.target.value);
-  };
-
-  //changes new interest
-  const handleChangeNewInterest = (e, value) => {
-    setNewInterestWeight(value);
-    setDefaultNewInterest(value);
-  };
-
-  const saveNewInterest = () => {
-    //find not used ID
-    const id = Math.max(...ids) + 1;
-    //add new interest
-    allNewInterests[newInterest] = {weight: newInterestWeight, id: id};
-    setAllNewInterests(allNewInterests);
-    setChangeInterests(true);
-    //reset values
-    setInputNewInterest("");
-    setDefaultNewInterest(2.5);
-  };
-
-  //want to delete interest?
-  const handleOpenConfirmation = (name) => () => {
-    setOpen(true);
-    setButtonInterest(name);
-    handleDelete(name);
-  };
+  const [enterNewInterest, setEnterNewInterest] = useState(false)
+  const [exist, setExist] = useState(false);
+  const [deleteAnchorEl, setDeleteAnchorEl] = useState(null);
+  const [interestToDelete, setInterestToDelete] = useState({});
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleInterestWeights = (event, value, interest) => {
     setInterests([]);
@@ -121,20 +53,28 @@ const ManageInterests = (props) => {
   }
 
   const handleChangeInterest = (event) => {
+    if (exist) {
+      setExist(false);
+    }
     const {target: {value}} = event;
     setEnterInterest(value)
   }
 
   const handleUpdateInterest = (interest) => {
-    setInterests([]);
-    let newInterests = interests;
-    const index = newInterests.findIndex(i => i.id === interest.id);
-    if (index !== -1 && enterInterest !== "") {
-      newInterests[index].text = enterInterest;
-      setEnterInterest("");
+    let alreadyExist = validateInterest(enterInterest);
+    if (!alreadyExist) {
+      setInterests([]);
+      let newInterests = interests;
+      const index = newInterests.findIndex(i => i.id === interest.id);
+      if (index !== -1 && enterInterest !== "") {
+        newInterests[index].text = enterInterest;
+        setEnterInterest("");
+      }
+      setInterests(newInterests);
+      setEditInterest(false);
+    } else {
+      setExist(true);
     }
-    setInterests(newInterests);
-    setEditInterest(false)
   }
 
   const handleSaveInterests = () => {
@@ -147,10 +87,55 @@ const ManageInterests = (props) => {
     handleClose()
   }
 
+  const handleAddNewInterest = () => {
+    let alreadyExist = validateInterest(enterInterest);
+    if (!alreadyExist) {
+      setExist(false);
+      let newInterests = interests;
+      let newInterest = {
+        id: Date.now(),
+        categories: [],
+        originalKeywords: [],
+        source: "Manual",
+        text: enterInterest,
+        value: enterInterestWeight,
+      }
+      newInterests.push(newInterest);
+      setInterests(newInterests);
+      setEnterNewInterest(false);
+    } else {
+      setExist(true);
+    }
+  }
+
+  const handleCancelNewInterest = () => {
+    setEnterNewInterest(false);
+    setEnterInterest("");
+    setEnterInterestWeight(1);
+  }
+
+  const validateInterest = (interest) => {
+    return interests.some((i) => i.text === interest);
+  };
+
+  const handleDeleteClick = (event, interest) => {
+    setInterestToDelete(interest);
+    setDeleteAnchorEl(deleteAnchorEl ? null : event.currentTarget);
+  };
+
+  const handleDeleteInterest = () => {
+    let newInterests = interests.filter(i => i.id !== interestToDelete.id)
+    setInterests([]);
+    setInterests(newInterests);
+    setConfirmDelete(true);
+    setEditInterest(false);
+    setDeleteAnchorEl(null);
+  }
+
   return (
     <>
       <DialogContent>
-        {!interests ?
+        {interests.length === 0 ?
           <>
             <Grid container direction="column" justify="center" alignItems="center">
               <Grid item>
@@ -167,19 +152,21 @@ const ManageInterests = (props) => {
                 <Box
                   key={interest.id}
                   style={{
-                  borderRadius: 8,
-                  paddingLeft: 16,
-                  paddingRight: Boolean(interest.id === editInterest) ? 24 : 16,
-                  paddingBottom: Boolean(interest.id === editInterest) ? 16 : "",
-                  paddingTop: Boolean(interest.id === editInterest) ? 16 : "",
-                  backgroundColor: Boolean(interest.id === editInterest) ? "#E6E6E6" : ""
-                }}>
+                    borderRadius: 8,
+                    paddingLeft: 16,
+                    paddingRight: Boolean(interest.id === editInterest) ? 24 : 16,
+                    paddingBottom: Boolean(interest.id === editInterest) ? 16 : "",
+                    paddingTop: Boolean(interest.id === editInterest) ? 16 : "",
+                    backgroundColor: Boolean(interest.id === editInterest) ? "#E6E6E6" : ""
+                  }}>
                   <Grid container alignItems="center">
                     <Grid item xs>
                       {editInterest === interest.id ?
                         <>
-                          <TextField variant="outlined" defaultValue={interest.text} fullWidth
-                                     style={{backgroundColor: "#FFF"}} onChange={handleChangeInterest}/>
+                          <TextField variant="outlined" defaultValue={interest.text} fullWidth label="Interest"
+                                     style={{backgroundColor: "#FFF"}} onChange={handleChangeInterest} error={exist}/>
+                          {exist ?
+                            <Typography variant="caption" color="error">Interest already exists!</Typography> : <></>}
                         </> :
                         <>
                           <Typography>{interest.text}</Typography>
@@ -215,67 +202,95 @@ const ManageInterests = (props) => {
                     </Grid>
                     <Grid container justify="space-between">
                       <Tooltip title="Delete interest" arrow>
-                        <IconButton color="secondary">
+                        <IconButton color="secondary" onClick={(event) => handleDeleteClick(event, interest)}>
                           <DeleteIcon/>
                         </IconButton>
                       </Tooltip>
-                      <Button color="primary" variant="contained" onClick={() => handleUpdateInterest(interest)}>
+                      <Popper open={Boolean(deleteAnchorEl)} anchorEl={deleteAnchorEl}
+                              style={{zIndex: 11}}
+                              transition placement="bottom">
+                        {({TransitionProps}) => (
+                          <Fade {...TransitionProps} timeout={0}>
+                            <Paper style={{padding: 16, width: 280}}>
+                              <Grid container>
+                                <Typography gutterBottom>Are you sure you want to delete?</Typography>
+                                <Grid container>
+                                  <Grid item xs/>
+                                  <Grid item>
+                                    <Button style={{marginRight: 16}} onClick={(event) => handleDeleteClick(event, {})}>
+                                      No
+                                    </Button>
+                                    <Button color="secondary" variant="contained" onClick={handleDeleteInterest}>
+                                      Yes
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Paper>
+                          </Fade>
+                        )}
+                      </Popper>
+                      <Button color="primary" variant="contained" size="small"
+                              onClick={() => handleUpdateInterest(interest)}>
                         Update
                       </Button>
                     </Grid>
                   </Collapse>
+
+                  <Snackbar
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                    open={confirmDelete}
+                    autoHideDuration={6000}
+                    onClose={() => setConfirmDelete(false)}
+                    message="Interest deleted!"
+                  />
                 </Box>
               )
             })}
           </>}
 
-
-        {/*<Grid item xs={4}>*/}
-        {/*  <TextField*/}
-        {/*    label="Enter new interest"*/}
-        {/*    value={inputNewInterest}*/}
-        {/*    onChange={handleNewInterest}*/}
-        {/*  ></TextField>*/}
-        {/*</Grid>*/}
-
-        {/*<Grid item xs={7}>*/}
-        {/*  <Slider*/}
-        {/*    defaultValue={defaultNewInterest}*/}
-        {/*    value={defaultNewInterest}*/}
-        {/*    step={0.1}*/}
-        {/*    marks*/}
-        {/*    min={0}*/}
-        {/*    max={5}*/}
-        {/*    valueLabelDisplay="on"*/}
-        {/*    sliderId={newInterest}*/}
-        {/*    onChange={handleChangeNewInterest}*/}
-        {/*  ></Slider>*/}
-        {/*</Grid>*/}
-
-        {/*<Grid item xs={1}>*/}
-        {/*  <IconButton*/}
-        {/*    aria-label="delete"*/}
-        {/*    size="small"*/}
-        {/*    onClick={saveNewInterest}*/}
-        {/*  >*/}
-        {/*    <AddIcon />*/}
-        {/*  </IconButton>*/}
-        {/*</Grid>*/}
-
-
-        <Dialog open={open}>
-          <DialogContent>
-            <Typography variant="p">
-              Are you sure you want to delete the interest {buttonInterest}?
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDelete(buttonInterest)}>Yes</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
-
+        {enterNewInterest ?
+          <>
+            <Box
+              style={{
+                borderRadius: 8,
+                paddingLeft: 16,
+                paddingRight: 24,
+                paddingBottom: 16,
+                paddingTop: 16,
+                backgroundColor: "#E6E6E6"
+              }}>
+              <Grid container alignItems="center">
+                <Grid item xs>
+                  <TextField variant="outlined" defaultValue={enterInterest} fullWidth
+                             style={{backgroundColor: "#FFF"}} error={exist} label="New interest"
+                             onChange={(event) => setEnterInterest(event.target.value)}/>
+                  {exist ? <Typography variant="caption" color="error">Interest already exists!</Typography> : <></>}
+                </Grid>
+              </Grid>
+              <Grid container alignItems="center" style={{paddingTop: 24, paddingBottom: 16}}>
+                <Grid item xs>
+                  <Slider onChangeCommitted={(event, value) => setEnterInterestWeight(value)}
+                          defaultValue={enterInterestWeight} valueLabelDisplay="auto" step={0.1} min={1} max={5}/>
+                </Grid>
+                <Grid item style={{marginLeft: 32}}>
+                  <Typography variant="h4" style={{fontWeight: "bold"}}>
+                    {enterInterestWeight}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Button onClick={handleCancelNewInterest}>
+                  Cancel
+                </Button>
+                <Button color="primary" variant="contained" onClick={handleAddNewInterest}>
+                  Save
+                </Button>
+              </Grid>
+            </Box>
+          </> : <></>}
       </DialogContent>
+
       <DialogActions>
         <Grid container justify="space-between" style={{paddingLeft: 16, paddingRight: 16}}>
           <Grid item xs>
@@ -285,8 +300,15 @@ const ManageInterests = (props) => {
           </Grid>
           <Grid item>
             <Grid container>
-              <Button color="primary" startIcon={<AddIcon/>} style={{paddingRight: 16}}>Add interest</Button>
-              <Button color="primary" onClick={handleSaveInterests}>Save</Button>
+              <Button color="primary" startIcon={<AddIcon/>} style={{paddingRight: 16}}
+                      disabled={enterNewInterest || Boolean(editInterest)}
+                      onClick={() => setEnterNewInterest(true)}>
+                Add interest
+              </Button>
+              <Button color="primary" variant="contained" onClick={handleSaveInterests}
+                      disabled={enterNewInterest || Boolean(editInterest)}>
+                Save
+              </Button>
             </Grid>
           </Grid>
         </Grid>

@@ -202,7 +202,7 @@ export default function MyInterests() {
       //start Clara
     }
 
-    <Dialog open={open} maxWidth="xs" fullWidth>
+    <Dialog open={open} maxWidth="xs" fullWidth style={{zIndex: 11}}>
       <DialogTitle>
         <Grid container justify="space-between" alignItems="center">
           <Typography variant="h5">Manage Interests</Typography>
@@ -213,37 +213,8 @@ export default function MyInterests() {
         </Grid>
       </DialogTitle>
 
-      <ManageInterests
-        keywords={keywords}
-        setKeywords={setKeywords}
-        handleClose={handleCancel}
-        interestsWeights={interestsWeight}
-        allNewInterests={allNewInterests}
-        setAllNewInterests={setAllNewInterests}
-        setWeightsInterests={setInterestsWeight}
-        setRememberDelete={setRememberDelete}
-        setChangeInterests={setChangeInterests}
-        handleIdsDelete={handleIdsDelete}
-        ids={idArray}
-        setReset={setReset}
-      />
+      <ManageInterests keywords={keywords} setKeywords={setKeywords} handleClose={handleCancel}/>
 
-      {/*<DialogActions>*/}
-      {/*  <Grid container justify="space-between" style={{paddingLeft: 16, paddingRight: 16}}>*/}
-      {/*    <Grid item xs>*/}
-      {/*      <Button onClick={handleReset} disabled={reset}*/}
-      {/*              startIcon={<SettingsBackupRestoreIcon color={!reset ? "secondary" : ""}/>}>*/}
-      {/*        Reset*/}
-      {/*      </Button>*/}
-      {/*    </Grid>*/}
-      {/*    <Grid item>*/}
-      {/*      <Grid container>*/}
-      {/*        <Button color="primary" startIcon={<AddIcon/>} style={{paddingRight: 16}}>Add interest</Button>*/}
-      {/*        <Button onClick={handleSave} color="primary">Save</Button>*/}
-      {/*      </Grid>*/}
-      {/*    </Grid>*/}
-      {/*  </Grid>*/}
-      {/*</DialogActions>*/}
     </Dialog>
 
     <Dialog open={cancel}>
