@@ -41,11 +41,11 @@ const WordCloud = (props) => {
           onWordClick: (word) => openModal(word.text),
           getWordTooltip: (word) =>
             `${
-              word.source == "Scholar"
+              word.source === "Scholar"
                 ? "Extracted from publications"
-                : word.source == "Twitter"
+                : word.source === "Twitter"
                 ? "Extracted from tweets"
-                : word.source == "Manual"
+                : word.source === "Manual"
                 ? "Manually added"
                 : "Extracted from publications & tweets"
             }`,

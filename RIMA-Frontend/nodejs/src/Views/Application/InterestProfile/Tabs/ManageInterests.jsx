@@ -14,8 +14,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import * as React from "react";
-import {useState} from "react";
+import React, {useState} from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from '@material-ui/icons/Delete';
 import Slider from "@material-ui/core/Slider";
@@ -25,7 +24,7 @@ import Fade from '@material-ui/core/Fade';
 
 
 const ManageInterests = (props) => {
-  const {keywords, setKeywords, handleClose} = props;
+  const {keywords, setKeywords, open, setOpen} = props;
 
   const [interests, setInterests] = useState(keywords)
   const [editInterest, setEditInterest] = useState(false);
@@ -47,6 +46,7 @@ const ManageInterests = (props) => {
       newInterests[index].text = updateInterestText;
     }
     setInterests(newInterests);
+    deleteAnchorEl ? setDeleteAnchorEl(null) : null;
   }
 
   const handleUpdateInterestText = (event) => {
@@ -58,6 +58,7 @@ const ManageInterests = (props) => {
   }
 
   const handleUpdateInterest = (interest) => {
+    deleteAnchorEl ? setDeleteAnchorEl(null) : null;
     let filteredInterest = interests.filter(i => i.id !== interest.id);
     let alreadyExist = validateInterest(filteredInterest, updateInterestText);
     if (!alreadyExist) {
@@ -66,6 +67,7 @@ const ManageInterests = (props) => {
       const index = newInterests.findIndex(i => i.id === interest.id);
       if (index !== -1 && updateInterestText !== "") {
         newInterests[index].text = updateInterestText;
+        // TODO: When the interest is updated, should it replace the existing data?
         setUpdateInterestText("");
       }
       setInterests(newInterests);
@@ -82,7 +84,7 @@ const ManageInterests = (props) => {
     setTimeout(() => {
       setKeywords(newInterests);
     }, 500)
-    handleClose()
+    setOpen(!open);
   }
 
   const handleAddNewInterest = () => {
