@@ -119,3 +119,4 @@ venv/*
 /RIMA-Backend/datatest_word2vec.txt
 /RIMA-Backend/venv/
 /RIMA-Frontend/nodejs/.env
+RIMA-Frontend/nodejs/.idea/*
