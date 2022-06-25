@@ -181,11 +181,7 @@ const ManageInterests = (props) => {
                         <Grid item xs={1}>
                           <IconButton
                             disabled={editInterest === interest.id || editInterest}
-                            onClick={() => {
-                              setEditInterest(interest.id);
-                              setEnterInterest(interest.text);
-                            }
-                            }>
+                            onClick={() => setEditInterest(interest.id)}>
                             <EditIcon/>
                           </IconButton>
                         </Grid>
@@ -234,7 +230,7 @@ const ManageInterests = (props) => {
                           </Fade>
                         )}
                       </Popper>
-                      <Button color="primary" variant="contained" size="small" disabled={!Boolean(enterInterest)}
+                      <Button color="primary" variant="contained" size="small"
                               onClick={() => handleUpdateInterest(interest)}>
                         Update
                       </Button>
