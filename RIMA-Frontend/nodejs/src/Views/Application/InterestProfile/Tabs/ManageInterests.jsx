@@ -29,51 +29,49 @@ const ManageInterests = (props) => {
 
   const [interests, setInterests] = useState(keywords)
   const [editInterest, setEditInterest] = useState(false);
-  const [enterInterest, setEnterInterest] = useState("");
-  const [enterInterestWeight, setEnterInterestWeight] = useState(1);
+  const [updateInterestText, setUpdateInterestText] = useState("");
+  const [updateInterestWeight, setUpdateInterestWeight] = useState(1);
   const [reset, setReset] = useState(false);
   const [enterNewInterest, setEnterNewInterest] = useState(false)
-  const [exist, setExist] = useState(false);
+  const [existInterest, setExistInterest] = useState(false);
   const [deleteAnchorEl, setDeleteAnchorEl] = useState(null);
   const [interestToDelete, setInterestToDelete] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const handleInterestWeights = (event, value, interest) => {
+  const handleUpdateInterestWeights = (event, value, interest) => {
     setInterests([]);
     let newInterests = interests;
     const index = newInterests.findIndex(i => i.id === interest.id);
     if (index !== -1) {
       newInterests[index].value = value
-      if (enterInterest !== "") {
-        newInterests[index].text = enterInterest;
-        setEnterInterest("");
-      }
+      newInterests[index].text = updateInterestText;
     }
     setInterests(newInterests);
   }
 
-  const handleChangeInterest = (event) => {
-    if (exist) {
-      setExist(false);
+  const handleUpdateInterestText = (event) => {
+    if (existInterest) {
+      setExistInterest(false);
     }
     const {target: {value}} = event;
-    setEnterInterest(value)
+    setUpdateInterestText(value)
   }
 
   const handleUpdateInterest = (interest) => {
-    let alreadyExist = validateInterest(enterInterest);
+    let filteredInterest = interests.filter(i => i.id !== interest.id);
+    let alreadyExist = validateInterest(filteredInterest, updateInterestText);
     if (!alreadyExist) {
       setInterests([]);
       let newInterests = interests;
       const index = newInterests.findIndex(i => i.id === interest.id);
-      if (index !== -1 && enterInterest !== "") {
-        newInterests[index].text = enterInterest;
-        setEnterInterest("");
+      if (index !== -1 && updateInterestText !== "") {
+        newInterests[index].text = updateInterestText;
+        setUpdateInterestText("");
       }
       setInterests(newInterests);
       setEditInterest(false);
     } else {
-      setExist(true);
+      setExistInterest(true);
     }
   }
 
@@ -88,37 +86,37 @@ const ManageInterests = (props) => {
   }
 
   const handleAddNewInterest = () => {
-    let alreadyExist = validateInterest(enterInterest);
+    let alreadyExist = validateInterest(interests, updateInterestText);
     if (!alreadyExist) {
-      setExist(false);
+      setExistInterest(false);
       let newInterests = interests;
       let newInterest = {
         id: Date.now(),
         categories: [],
         originalKeywords: [],
         source: "Manual",
-        text: enterInterest,
-        value: enterInterestWeight,
+        text: updateInterestText,
+        value: updateInterestWeight,
       }
       newInterests.push(newInterest);
       setInterests(newInterests);
       setEnterNewInterest(false);
     } else {
-      setExist(true);
+      setExistInterest(true);
     }
   }
 
   const handleCancelNewInterest = () => {
     setEnterNewInterest(false);
-    setEnterInterest("");
-    setEnterInterestWeight(1);
+    setUpdateInterestText("");
+    setUpdateInterestWeight(1);
   }
 
-  const validateInterest = (interest) => {
+  const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest);
   };
 
-  const handleDeleteClick = (event, interest) => {
+  const handleOpenDeleteModal = (event, interest) => {
     setInterestToDelete(interest);
     setDeleteAnchorEl(deleteAnchorEl ? null : event.currentTarget);
   };
@@ -164,8 +162,9 @@ const ManageInterests = (props) => {
                       {editInterest === interest.id ?
                         <>
                           <TextField variant="outlined" defaultValue={interest.text} fullWidth label="Interest"
-                                     style={{backgroundColor: "#FFF"}} onChange={handleChangeInterest} error={exist}/>
-                          {exist ?
+                                     style={{backgroundColor: "#FFF"}} onChange={handleUpdateInterestText}
+                                     error={existInterest}/>
+                          {existInterest ?
                             <Typography variant="caption" color="error">Interest already exists!</Typography> : <></>}
                         </> :
                         <>
@@ -181,7 +180,10 @@ const ManageInterests = (props) => {
                         <Grid item xs={1}>
                           <IconButton
                             disabled={editInterest === interest.id || editInterest}
-                            onClick={() => setEditInterest(interest.id)}>
+                            onClick={() => {
+                              setUpdateInterestText(interest.text);
+                              setEditInterest(interest.id);
+                            }}>
                             <EditIcon/>
                           </IconButton>
                         </Grid>
@@ -191,8 +193,9 @@ const ManageInterests = (props) => {
                   <Collapse in={Boolean(interest.id === editInterest)}>
                     <Grid container alignItems="center" style={{paddingTop: 24, paddingBottom: 16}}>
                       <Grid item xs>
-                        <Slider onChangeCommitted={(event, value) => handleInterestWeights(event, value, interest)}
-                                defaultValue={interest.value} valueLabelDisplay="auto" step={0.1} min={1} max={5}/>
+                        <Slider
+                          onChangeCommitted={(event, value) => handleUpdateInterestWeights(event, value, interest)}
+                          defaultValue={interest.value} valueLabelDisplay="auto" step={0.1} min={1} max={5}/>
                       </Grid>
                       <Grid item style={{marginLeft: 32}}>
                         <Typography variant="h4" style={{fontWeight: "bold"}}>
@@ -202,7 +205,7 @@ const ManageInterests = (props) => {
                     </Grid>
                     <Grid container justify="space-between">
                       <Tooltip title="Delete interest" arrow>
-                        <IconButton color="secondary" onClick={(event) => handleDeleteClick(event, interest)}>
+                        <IconButton color="secondary" onClick={(event) => handleOpenDeleteModal(event, interest)}>
                           <DeleteIcon/>
                         </IconButton>
                       </Tooltip>
@@ -217,7 +220,8 @@ const ManageInterests = (props) => {
                                 <Grid container>
                                   <Grid item xs/>
                                   <Grid item>
-                                    <Button style={{marginRight: 16}} onClick={(event) => handleDeleteClick(event, {})}>
+                                    <Button style={{marginRight: 16}}
+                                            onClick={(event) => handleOpenDeleteModal(event, {})}>
                                       No
                                     </Button>
                                     <Button color="secondary" variant="contained" onClick={handleDeleteInterest}>
@@ -231,6 +235,7 @@ const ManageInterests = (props) => {
                         )}
                       </Popper>
                       <Button color="primary" variant="contained" size="small"
+                              disabled={!Boolean(updateInterestText)}
                               onClick={() => handleUpdateInterest(interest)}>
                         Update
                       </Button>
@@ -262,28 +267,33 @@ const ManageInterests = (props) => {
               }}>
               <Grid container alignItems="center">
                 <Grid item xs>
-                  <TextField variant="outlined" defaultValue={enterInterest} fullWidth
-                             style={{backgroundColor: "#FFF"}} error={exist} label="New interest"
-                             onChange={(event) => setEnterInterest(event.target.value)}/>
-                  {exist ? <Typography variant="caption" color="error">Interest already exists!</Typography> : <></>}
+                  <TextField variant="outlined" defaultValue={updateInterestText} fullWidth
+                             style={{backgroundColor: "#FFF"}} error={existInterest} label="New interest"
+                             onChange={(event) => setUpdateInterestText(event.target.value)}/>
+                  {existInterest ?
+                    <Typography variant="caption" color="error">Interest already exists!</Typography> : <></>}
                 </Grid>
               </Grid>
               <Grid container alignItems="center" style={{paddingTop: 24, paddingBottom: 16}}>
                 <Grid item xs>
-                  <Slider onChangeCommitted={(event, value) => setEnterInterestWeight(value)}
-                          defaultValue={enterInterestWeight} valueLabelDisplay="auto" step={0.1} min={1} max={5}/>
+                  <Slider onChangeCommitted={(event, value) => setUpdateInterestWeight(value)}
+                          defaultValue={updateInterestWeight} valueLabelDisplay="auto" step={0.1} min={1} max={5}/>
                 </Grid>
                 <Grid item style={{marginLeft: 32}}>
                   <Typography variant="h4" style={{fontWeight: "bold"}}>
-                    {enterInterestWeight}
+                    {updateInterestWeight}
                   </Typography>
                 </Grid>
               </Grid>
               <Grid container justify="space-between">
-                <Button onClick={handleCancelNewInterest}>
+                <Button onClick={handleCancelNewInterest}
+                        variant={Boolean(updateInterestText) ? "" : "contained"}
+                        color={Boolean(updateInterestText) ? "" : "primary"}>
                   Cancel
                 </Button>
-                <Button color="primary" variant="contained" onClick={handleAddNewInterest}>
+                <Button color="primary" variant="contained"
+                        disabled={!Boolean(updateInterestText)}
+                        onClick={handleAddNewInterest}>
                   Save
                 </Button>
               </Grid>
@@ -302,7 +312,10 @@ const ManageInterests = (props) => {
             <Grid container>
               <Button color="primary" startIcon={<AddIcon/>} style={{paddingRight: 16}}
                       disabled={enterNewInterest || Boolean(editInterest)}
-                      onClick={() => setEnterNewInterest(true)}>
+                      onClick={() => {
+                        setUpdateInterestText("");
+                        setEnterNewInterest(true);
+                      }}>
                 Add interest
               </Button>
               <Button color="primary" variant="contained" onClick={handleSaveInterests}
