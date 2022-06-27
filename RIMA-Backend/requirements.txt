@@ -22,7 +22,7 @@ gunicorn==20.0.4
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#en_core_web_sm
 idna==2.9
 image
-importlib-metadata==1.6.0
+importlib-metadata==4.12.0
 jellyfish==0.7.2
 joblib==0.14.1
 kombu==4.6.8
