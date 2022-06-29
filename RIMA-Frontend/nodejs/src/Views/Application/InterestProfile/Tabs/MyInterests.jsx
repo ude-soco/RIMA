@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Box, Button, CircularProgress, Dialog, DialogTitle, Grid, Typography,} from "@material-ui/core";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  CircularProgress,
+  Dialog, DialogActions, DialogContent,
+  DialogTitle,
+  Grid,
+  Popover,
+  Typography,
+} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import ManageInterests from "./ManageInterests";
 import RestAPI from "../../../../Services/api";
@@ -8,11 +18,39 @@ import BarChart from "./BarChart/BarChart";
 import CirclePacking from "./CiclePacking/CirclePacking";
 import AwesomeSlider from "react-awesome-slider";
 import "react-awesome-slider/dist/styles.css";
+import SearchIcon from "@material-ui/icons/Search";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import WhyInterest from "../WhyInterest/WhyInterest";
 
 
 export default function MyInterests() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [keywords, setKeywords] = useState([]);
+  const [openWhy, setOpenWhy] = useState(false);
+  const [currInterest, setCurrInterest] = useState("")
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClickPopOver = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClosePopOver = () => {
+    setAnchorEl(null);
+  };
+  const openPopOver = Boolean(anchorEl);
+  const id = openPopOver ? 'simple-popover' : undefined;
+
+  const handleOpenEdit = () =>{
+
+    setOpen(!open);
+    handleClosePopOver()
+
+  }
+  const handleOpenWhy = () =>{
+    handleClosePopOver()
+    setOpenWhy(!openWhy)
+  }
+
 
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
   const loading = <>
@@ -44,10 +82,17 @@ export default function MyInterests() {
           source: d.source,
           text: d.keyword,
           value: d.weight,
+          papers: d.papers,
+
         };
+
         dataArray.push(newData);
+        //console.log("test original keywords",newData)
+
       });
       setKeywords(dataArray);
+      //console.log("test original keywords",dataArray)
+
     });
   }, []);
 
@@ -64,10 +109,18 @@ export default function MyInterests() {
 
         <AwesomeSlider style={{height: "60vh"}}>
           <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <WordCloud keywords={keywords}/> : <> {loading} </>}
+            {keywords.length !== 0 ? <WordCloud keywords={keywords}
+                                                handleClickPopOver={handleClickPopOver}
+                                                id={id}
+                                                setCurrInterest={setCurrInterest}/> : <> {loading} </>}
           </Box>
           <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <BarChart keywords={keywords}/> : <> {loading} </>}
+            {keywords.length !== 0 ? <BarChart keywords={keywords}
+                                               handleClickPopOver={handleClickPopOver}
+                                               id={id}
+                                               setCurrInterest={setCurrInterest}
+                />
+                : <> {loading} </>}
           </Box>
           <Box style={{backgroundColor: "#fff"}}>
             {keywords.length !== 0 ? <CirclePacking keywords={keywords}/> : <> {loading} </>}
@@ -83,6 +136,32 @@ export default function MyInterests() {
       </DialogTitle>
       <ManageInterests keywords={keywords} setKeywords={setKeywords} open={open} setOpen={setOpen}/>
 
+    </Dialog>
+
+    <Popover
+        id={id}
+        open={openPopOver}
+        anchorEl={anchorEl}
+        onClose={handleClosePopOver}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+    >
+      <ButtonGroup orientation="vertical" variant="contained" size="small" aria-label="small button group">
+        <Button startIcon={<SearchIcon />}>Similar Interests</Button>
+        <Button startIcon={<HelpOutlineIcon/>} onClick={handleOpenWhy}>Why this Interest</Button>
+        <Button startIcon={<EditIcon />} onClick={handleOpenEdit}>Edit</Button>
+      </ButtonGroup>
+    </Popover>
+    <Dialog open={openWhy} fullWidth={true}>
+      <Typography variant="h5">Why this interest?</Typography>
+      <DialogContent> <WhyInterest keywords = {keywords} currInterest={currInterest} /></DialogContent>
+      <DialogActions> <Button onClick={handleOpenWhy}>Close</Button></DialogActions>
     </Dialog>
 
   </>);

@@ -5,10 +5,12 @@ import "tippy.js/animations/scale.css";
 import { Grid } from "@material-ui/core";
 
 const WordCloud = (props) => {
-  const { keywords } = props;
+  const { keywords, handleClickPopOver, id, setCurrInterest } = props;
 
-  const openModal = (word) => {
-    console.log(`Word clicked: ${word}`);
+  const handleWordClicked = (word, event) => {
+    console.log("test", word, event);
+    handleClickPopOver(event);
+    setCurrInterest(word)
   };
 
   return (
@@ -38,7 +40,7 @@ const WordCloud = (props) => {
           transitionDuration: 1000,
         }}
         callbacks={{
-          onWordClick: (word) => openModal(word.text),
+          onWordClick: (word, event) => handleWordClicked(word,event),
           getWordTooltip: (word) =>
             `${
               word.source === "Scholar"
@@ -50,6 +52,7 @@ const WordCloud = (props) => {
                 : "Extracted from publications & tweets"
             }`,
         }}
+
       />
     </Grid>
   );

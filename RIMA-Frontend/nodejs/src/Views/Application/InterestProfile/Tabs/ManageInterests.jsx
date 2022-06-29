@@ -26,6 +26,7 @@ import Fade from '@material-ui/core/Fade';
 const ManageInterests = (props) => {
   const {keywords, setKeywords, open, setOpen} = props;
 
+
   const [interests, setInterests] = useState(keywords)
   const [editInterest, setEditInterest] = useState(false);
   const [updateInterestText, setUpdateInterestText] = useState("");
@@ -46,7 +47,9 @@ const ManageInterests = (props) => {
       newInterests[index].text = updateInterestText;
     }
     setInterests(newInterests);
-    deleteAnchorEl ? setDeleteAnchorEl(null) : null;
+    if (deleteAnchorEl) {
+      setDeleteAnchorEl(null);
+    }
   }
 
   const handleUpdateInterestText = (event) => {
@@ -58,7 +61,9 @@ const ManageInterests = (props) => {
   }
 
   const handleUpdateInterest = (interest) => {
-    deleteAnchorEl ? setDeleteAnchorEl(null) : null;
+    if (deleteAnchorEl) {
+      setDeleteAnchorEl(null);
+    }
     let filteredInterest = interests.filter(i => i.id !== interest.id);
     let alreadyExist = validateInterest(filteredInterest, updateInterestText);
     if (!alreadyExist) {
@@ -328,6 +333,7 @@ const ManageInterests = (props) => {
           </Grid>
         </Grid>
       </DialogActions>
+
     </>
   );
 };
