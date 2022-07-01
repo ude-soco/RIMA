@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import {
-  Button,
-  ButtonGroup,
   CircularProgress,
   Dialog,
-  DialogActions,
   DialogContent,
   Grid,
   Typography,
-  Popover
+  MenuItem, ListItemIcon, Menu, Paper, IconButton
 } from "@material-ui/core";
 
 import SearchIcon from "@material-ui/icons/Search";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
+import CloseIcon from "@material-ui/icons/Close";
 
 
 // changed the original Class component to a functional component - Clara
@@ -25,8 +23,22 @@ const BarChart = (props) => {
   const [interests, setInterests] = useState([]);
   const [weights, setWeights] = useState([]);
 
+  const [state, setState] = useState({
+    openMenu: null,
+    openWhyInterest: false,
+    currentInterest: ""
+  })
 
-
+  const handleCloseMenu = () => {
+    setState({...state, openMenu: null})
+  }
+  const handleToggleWhyInterest = () => {
+    setState({
+      ...state,
+      openMenu: null,
+      openWhyInterest: !state.openWhyInterest
+    });
+  }
 
 
   useEffect(() => {
@@ -50,11 +62,11 @@ const BarChart = (props) => {
     chart: {
       events: {
         dataPointSelection: (event, chartContext, config) => {
-          /*console.log(config, "test barchart", options.xaxis.categories[config.dataPointIndex],
-              options.xaxis.categories,config.dataPointIndex);*/
-         // popUp()
-          handleClickPopOver(event)
-          setCurrInterest(options.xaxis.categories[config.dataPointIndex])
+          setState({
+            ...state,
+            openMenu: event.currentTarget,
+            currentInterest: keywords[config.dataPointIndex]
+          })
 
 
 
@@ -102,7 +114,67 @@ const BarChart = (props) => {
         </>
       )}
 
+      <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
+            anchorOrigin={{vertical: 'center', horizontal: 'right'}}
+            transformOrigin={{vertical: 'top', horizontal: 'center'}}>
+        <MenuItem>
+          <ListItemIcon>
+            <SearchIcon fontSize="small"/>
+          </ListItemIcon>
+          <Typography variant="inherit">
+            Similar Interests
+          </Typography>
+        </MenuItem>
 
+        <MenuItem onClick={handleToggleWhyInterest}>
+          <ListItemIcon>
+            <HelpOutlineIcon fontSize="small"/>
+          </ListItemIcon>
+          <Typography variant="inherit">
+            Why this Interest
+          </Typography>
+        </MenuItem>
+
+        <MenuItem>
+          <ListItemIcon>
+            <EditIcon fontSize="small"/>
+          </ListItemIcon>
+          <Typography variant="inherit">
+            Edit
+          </Typography>
+        </MenuItem>
+      </Menu>
+
+      <Dialog open={state.openWhyInterest} fullWidth={true}>
+        <DialogContent>
+          <Paper elevation={0}>
+            <Grid container alignItems="center">
+
+              <Grid item xs={11}>
+                <Typography variant="h6" style={{textTransform: "capitalize"}}> Why this
+                  interest? </Typography>
+              </Grid>
+              <Grid item xs={1} >
+                <IconButton onClick={handleToggleWhyInterest}> <CloseIcon fontSize="small"/> </IconButton>
+              </Grid>
+
+
+            </Grid>
+            <Grid container >
+              <Grid item xs={12}>
+                {state.currentInterest.papers !=0?
+                    <WhyInterest
+                        papers={state.currentInterest.papers}
+                    />:
+                    <Typography>The interest {state.currentInterest.text} has been added manually.</Typography>}
+
+              </Grid>
+            </Grid>
+
+          </Paper>
+        </DialogContent>
+
+      </Dialog>
     </>
   );
 };

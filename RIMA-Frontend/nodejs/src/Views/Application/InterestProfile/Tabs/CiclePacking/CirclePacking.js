@@ -1,56 +1,59 @@
 import React, { useState, useEffect } from "react";
 import { ResponsiveCirclePacking } from "@nivo/circle-packing";
-import { CircularProgress, Grid, Typography } from "@material-ui/core";
+import {
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  Grid, IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem, Paper,
+  Typography
+} from "@material-ui/core";
+import MyResponsiveCirclePacking from "./MyResponsiveCirclePacking";
+import SearchIcon from "@material-ui/icons/Search";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import EditIcon from "@material-ui/icons/Edit";
+import CloseIcon from "@material-ui/icons/Close";
+import WhyInterest from "../../WhyInterest/WhyInterest";
 
-const MyResponsiveCirclePacking = ({ data }) => (
-  <ResponsiveCirclePacking
-    data={data}
-    margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-    id="name"
-    value="loc"
-    colors={{ scheme: "nivo" }}
-    colorBy="id"
-    childColor={{
-      from: "color",
-      modifiers: [["brighter", 0.4]],
-    }}
-    padding={4}
-    enableLabels={true}
-    labelsSkipRadius={10}
-    labelTextColor={{
-      from: "color",
-      modifiers: [["darker", 2]],
-    }}
-    borderWidth={1}
-    borderColor={{
-      from: "color",
-      modifiers: [["darker", 0.5]],
-    }}
-    defs={[
-      {
-        id: "lines",
-        background: "none",
-        color: "inherit",
-        rotation: -45,
-        lineWidth: 5,
-        spacing: 8,
-      },
-    ]}
-    fill={[
-      {
-        match: {
-          depth: 1,
-        },
-        id: "lines",
-      },
-    ]}
-  />
-);
 
 export default function CirclePacking(props) {
   const { keywords } = props;
 
   const [interests, setInterests] = useState([]);
+  const [state, setState] = useState({
+    openMenu: null,
+    openWhyInterest: false,
+    currentInterest: ""
+  })
+
+  const handleWordClicked = (word, event) => {
+    let interest = {}
+    keywords.map((i)=>{
+      if(i.text == word.id){
+        interest = i;
+      }
+    })
+    setState({
+      ...state,
+      openMenu: event.currentTarget,
+      currentInterest: interest
+    })
+    console.log("test word", word, event, interest);
+  };
+
+  const handleCloseMenu = () => {
+    setState({...state, openMenu: null})
+  }
+  const handleToggleWhyInterest = () => {
+    setState({
+      ...state,
+      openMenu: null,
+      openWhyInterest: !state.openWhyInterest
+    });
+  }
+
 
   useEffect(() => {
     let tempInterests = [];
@@ -84,10 +87,72 @@ export default function CirclePacking(props) {
       ) : (
         <>
           <div style={{ width: 500, height: 500, margin: "auto" }}>
-            <MyResponsiveCirclePacking data={{ children: interests }} />
+            <MyResponsiveCirclePacking data={{ children: interests }} handleWordClicked={handleWordClicked}  />
           </div>
         </>
       )}
+
+      <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
+            anchorOrigin={{vertical: 'center', horizontal: 'right'}}
+            transformOrigin={{vertical: 'top', horizontal: 'center'}}>
+        <MenuItem>
+          <ListItemIcon>
+            <SearchIcon fontSize="small"/>
+          </ListItemIcon>
+          <Typography variant="inherit">
+            Similar Interests
+          </Typography>
+        </MenuItem>
+
+        <MenuItem onClick={handleToggleWhyInterest}>
+          <ListItemIcon>
+            <HelpOutlineIcon fontSize="small"/>
+          </ListItemIcon>
+          <Typography variant="inherit">
+            Why this Interest
+          </Typography>
+        </MenuItem>
+
+        <MenuItem>
+          <ListItemIcon>
+            <EditIcon fontSize="small"/>
+          </ListItemIcon>
+          <Typography variant="inherit">
+            Edit
+          </Typography>
+        </MenuItem>
+      </Menu>
+
+      <Dialog open={state.openWhyInterest} fullWidth={true}>
+        <DialogContent>
+          <Paper elevation={0}>
+            <Grid container alignItems="center">
+
+              <Grid item xs={11}>
+                <Typography variant="h6" style={{textTransform: "capitalize"}}> Why this
+                  interest? </Typography>
+              </Grid>
+              <Grid item xs={1} >
+                <IconButton onClick={handleToggleWhyInterest}> <CloseIcon fontSize="small"/> </IconButton>
+              </Grid>
+
+
+            </Grid>
+            <Grid container >
+              <Grid item xs={12}>
+                {state.currentInterest.papers !=0?
+                    <WhyInterest
+                        papers={state.currentInterest.papers}
+                    />:
+                    <Typography>The interest {state.currentInterest.text} has been added manually.</Typography>}
+
+              </Grid>
+            </Grid>
+
+          </Paper>
+        </DialogContent>
+
+      </Dialog>
     </>
   );
 }

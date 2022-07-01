@@ -13,16 +13,6 @@ import "react-awesome-slider/dist/styles.css";
 export default function MyInterests() {
   const [open, setOpen] = useState(false);
   const [keywords, setKeywords] = useState([]);
-  const [currInterest, setCurrInterest] = useState("")
-
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClickPopOver = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const openPopOver = Boolean(anchorEl);
-  const id = openPopOver ? 'simple-popover' : undefined;
 
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
   const loading = <>
@@ -82,17 +72,10 @@ export default function MyInterests() {
 
         <AwesomeSlider style={{height: "60vh"}}>
           <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <WordCloud keywords={keywords}
-                                                handleClickPopOver={handleClickPopOver}
-                                                id={id}
-                                                setCurrInterest={setCurrInterest}/> : <> {loading} </>}
+            {keywords.length !== 0 ? <WordCloud keywords={keywords}/> : <> {loading} </>}
           </Box>
           <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <BarChart keywords={keywords}
-                                               handleClickPopOver={handleClickPopOver}
-                                               id={id}
-                                               setCurrInterest={setCurrInterest}
-              />
+            {keywords.length !== 0 ? <BarChart keywords={keywords}/>
               : <> {loading} </>}
           </Box>
           <Box style={{backgroundColor: "#fff"}}>
