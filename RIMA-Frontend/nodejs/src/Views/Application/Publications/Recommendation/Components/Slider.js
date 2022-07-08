@@ -1,22 +1,24 @@
-import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+/**
+ * Slider.js - Interest slider component
+ * is used for what-if explanations' control panel
+ * contains:
+ * 1. slider component
+ */
+import React from "react";
 import Slider from "@material-ui/core/Slider";
 
 import { Typography, Grid } from "@material-ui/core";
 
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-const useStyles = makeStyles({
-  root: {
-    width: 210,
-  },
-});
-
-export default function CustomizedSlider(props) {
-  const classes = useStyles();
+/**
+ * @function CustomizedSlider
+ * Interest slider component
+ * @param {Object} props name(String),weight(Number),color(String),index(Number),
+ * handleTagsChange(function),changeTagWeight(function),handleDelete(function)
+ * @returns The slider component
+ */
+const CustomizedSlider = (props) => {
   const [value, setValue] = React.useState(props.weight);
-  // useEffect(() => {
-  //   setValue(props.weight);
-  // }, [props]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -83,4 +85,5 @@ export default function CustomizedSlider(props) {
       </Grid>
     </Grid>
   );
-}
+};
+export default CustomizedSlider;

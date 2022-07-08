@@ -12,7 +12,7 @@ import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
 import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/RecentInterest";
 // import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
-import PublicationRecommendation from "../Views/Application/Publications/Recommendation/Publications";
+import {PublicationRecommendation} from "../Views/Application/Publications/Recommendation/Publications";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
 import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";

@@ -58,7 +58,7 @@
     "cytoscape-fcose": "^2.1.0",
     "cytoscape-popper": "^2.0.0",
     "d3": "^5.5.0",
-    "highcharts": "^9.3.0",
+    "highcharts": "^9.3.3",
     "highcharts-react-official": "^3.1.0",
     "konva": "^4.2.2",
     "material-ui-popup-state": "^1.9.3",

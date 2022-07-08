@@ -1,3 +1,12 @@
+/**
+ * Publication.js - Main component of publication recommendation.
+ * contains:
+ * 1. A box of interests (colored and sticky)
+ * 2. What-if general explanation button and modal
+ * 3. What explanation
+ * 4. Paper cards
+ */
+
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Sticky from "react-sticky-el";
@@ -17,11 +26,11 @@ import {
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import Seperator from "./Components/Seperator";
-import { WhatIfGeneral } from "./Components/WhatIfGeneral.jsx";
+import Seperator from "./components/Seperator";
+import { WhatIfGeneral } from "./components/WhatIfGeneral.jsx";
 import { handleServerErrors } from "Services/utils/errorHandler";
-import InterestsTags from "./TagSearch.js";
-import PaperCard from "./PaperCard.js";
+import { TagSearch } from "./TagSearch.js";
+import { PaperCard } from "./PaperCard.js";
 import RestAPI from "Services/api";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import {
@@ -44,9 +53,14 @@ import { Collapse } from "react-bootstrap";
 import TuneIcon from "@material-ui/icons/Tune";
 
 // Hoda start- Sticky bar with collapse button
-function StickyInterestTags({tags})
-{
-  const [collapseInterest,setCollapseInterest]=useState(true);
+
+/**
+ * A box of user's interests with their colors. The box is sticky
+ * @param {tags} param0 User's Intersts
+ * @returns HTML
+ */
+const StickyInterestTags = ({ tags }) => {
+  const [collapseInterest, setCollapseInterest] = useState(true);
 
   return (
     <Sticky
@@ -58,7 +72,7 @@ function StickyInterestTags({tags})
     >
       <Collapse in={collapseInterest}>
         <Grid container style={{}}>
-          <InterestsTags tags={tags} />
+          <TagSearch tags={tags} />
         </Grid>
       </Collapse>
       <Grid
@@ -69,10 +83,12 @@ function StickyInterestTags({tags})
       </Grid>
     </Sticky>
   );
-}
-// Hoda end
-
-export default function PublicationRecommendation() {
+};
+/**
+ * Main component of publication recommendation.
+ * @returns Main component
+ */
+export const PublicationRecommendation = () => {
   const [state, setState] = useState({
     papersLoaded: false,
     interests: [],
@@ -80,29 +96,38 @@ export default function PublicationRecommendation() {
     loading: true,
     modal: false,
     threshold: 40,
+    //New States added by Tannaz
+    whatModal: false,
   });
 
+  // Getting Interestrs for first call
   useEffect(() => {
     getInterests();
   }, []);
 
+  // Changing recommendation list by changing the interests
   useEffect(() => {
     getRecommendedPapers();
   }, [state.interests]);
 
   //Jaleh - Apply changes from what-if general
-  const handleApplyGeneralChanges = (newInterests) => {
+  const handleApplyGeneralChanges = (newInterests, threshold) => {
     closeWhatIfModal();
     setState({
       ...state,
       interests: newInterests,
+      threshold: threshold,
       loading: true,
       modal: false,
     });
   };
 
-  //Jaleh - Apply local changes of a paper
-  const handleApplyWhatIfChanges = (index, newPaperProps, ref) => {
+  /**
+   * Jaleh - Apply local changes of a paper
+   * @param {*String} index //PaperId
+   * @param {*Object} newPaperProps
+   */
+  const handleApplyWhatIfChanges = (index, newPaperProps) => {
     setState({
       ...state,
       loading: true,
@@ -126,17 +151,18 @@ export default function PublicationRecommendation() {
     }, 2000);
   };
 
-  //Jaleh - What if modal:
+  //Jaleh - What if modal , Open:
   const openWhatIfModal = () => {
     setState({
       ...state,
       modal: true,
     });
   };
+  //Jaleh - What if modal , Close:
   const closeWhatIfModal = (id) => {
     setState({
       ...state,
-      modal: false,
+      whatModal: false,
     });
   };
   //What modal - Tannaz:
@@ -153,7 +179,12 @@ export default function PublicationRecommendation() {
     });
   };
 
-  // Hoda start- defined static colors 
+  //Hoda
+  /**
+   * Picking up a color for interests
+   * @param {*Int} indexcolor
+   * @returns
+   */
   const generateRandomRGB = (indexcolor) => {
     var hexValues = [
       pink[300],
@@ -167,9 +198,9 @@ export default function PublicationRecommendation() {
       amber[300],
       brown[300],
     ];
+
     return hexValues[indexcolor];
   };
-  // Hoda end
   /**
    * Get Interest to show on the top of the page
    */
@@ -199,10 +230,11 @@ export default function PublicationRecommendation() {
         handleServerErrors(error, toast.error);
       });
   };
+
   /**
-   * Get Recommended Items
+   * Jaleh - Get Recommended Items
    */
-  function getRecommendedPapers() {
+  const getRecommendedPapers = () => {
     const { interests } = state;
     if (interests.length > 0) {
       RestAPI.extractPapersFromTags(interests)
@@ -216,9 +248,13 @@ export default function PublicationRecommendation() {
         })
         .catch((err) => console.error("Error Getting Papers:", err));
     }
-  }
+  };
 
-  //Jaleh
+  /**
+   * Jaleh - Preparing the paper object to pass it to children components
+   * @param {Object} papers
+   * @returns
+   */
   const refinePapers = (papers) => {
     let res = [];
     papers.map((paper) => {
@@ -232,7 +268,11 @@ export default function PublicationRecommendation() {
     });
     return res;
   };
-  //Jaleh
+  /**
+   * Jaleh - Preparing the interests object to pass it to children components
+   * @param {Array} interests
+   * @returns
+   */
   const refineInterests = (interests) => {
     let res = [];
     interests.map((interest, i) => {
@@ -287,6 +327,7 @@ export default function PublicationRecommendation() {
               className=""
             >
               <Grid item md={12}>
+                {/* Top 5 interests */}
                 <fieldset className="paper-interests-box">
                   <legend
                     style={{
@@ -462,4 +503,4 @@ export default function PublicationRecommendation() {
       <ScrollTopWrapper />
     </>
   );
-}
+};

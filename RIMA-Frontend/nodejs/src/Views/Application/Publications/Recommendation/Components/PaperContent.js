@@ -3,9 +3,17 @@ import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
-import { Typography, Grid, Box, Chip, Switch, makeStyles } from "@material-ui/core";
 import { Popover, Menu, MenuItem } from "@material-ui/core";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import {
+  Typography,
+  Grid,
+  Box,
+  Chip,
+  Switch,
+  makeStyles,
+} from "@material-ui/core";
+
 //Hoda Start
 const useStyles = makeStyles((theme) => ({
   italicBody2: {
@@ -13,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//---------------Hoda Start-----------------
 function highlighter(
   paperId,
   keyword,
@@ -100,7 +109,7 @@ function Title({ paper, similarityScore }) {
     paper.keywords_similarity,
     paper.title
   );
-  // Hoda end
+  //---------------Hoda end-----------------
   return (
     <Grid container style={{ justifyContent: "space-between" }}>
       <Grid
@@ -108,11 +117,17 @@ function Title({ paper, similarityScore }) {
         xs={10}
         container
         direction="column"
-        justifyContent="flex-start"
+        justify="flex-start"
         alignItems="flex-start"
       >
-        {/* Hoda start- External link on title */}
-        <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
+        <Grid
+          item
+          xs
+          container
+          direction="row"
+          style={{ justifyContent: "space-between" }}
+          className="new-window"
+        >
           <Grid item xs>
             <Typography
               noWrap
@@ -140,10 +155,9 @@ function Title({ paper, similarityScore }) {
         xs={2}
         container
         direction="row"
-        justifyContent="flex-end"
+        justify="flex-end"
         alignItems="flex-start"
       >
-        {/* Hoda end */}
         {paper.modified ? (
           <Chip
             style={{ borderRadius: 5 }}
@@ -270,39 +284,46 @@ export default function PaperContent({ paper }) {
 
   return (
     <>
-        <ReactTooltip
-          class="chart"
-          id={paper.paperId}
-          event={"click"}
-          globalEventOff={"click"}
-          border={true}
-          type={"light"}
-          place={"bottom"}
-          effect={"solid"}
-          clickable={true}
-          getContent={(dataTip) => {
-            if (!dataTip) return <>No Data!</>;
-            let keyword = decodeURIComponent(escape(atob(dataTip)));
-            let interests = paper.keywords_similarity[keyword];
-            return (
-              <TopSimilarityChart
-                onClick={(e) => e.stopPropagation()}
-                width={400}
-                interests={interests}
-                title={(<>
+      <ReactTooltip
+        class="chart"
+        id={paper.paperId}
+        event={"click"}
+        globalEventOff={"click"}
+        border={true}
+        type={"light"}
+        place={"bottom"}
+        effect={"solid"}
+        clickable={true}
+        getContent={(dataTip) => {
+          if (!dataTip) return <>No Data!</>;
+          let keyword = decodeURIComponent(escape(atob(dataTip)));
+          let interests = paper.keywords_similarity[keyword];
+          return (
+            <TopSimilarityChart
+              onClick={(e) => e.stopPropagation()}
+              width={400}
+              interests={interests}
+              title={
+                <>
                   The top three similarity scores between
-                <Typography  className={classes.italicBody2} variant="Body2" component="span">
-                  Your Interests
-                </Typography>
+                  <Typography
+                    className={classes.italicBody2}
+                    variant="Body2"
+                    component="span"
+                  >
+                    Your Interests
+                  </Typography>
                   &nbsp;and {keyword}
-              </>)}
-              />
-            );
-          }}
-        />
+                </>
+              }
+            />
+          );
+        }}
+      />
       <Title paper={paper} similarityScore={paper.score} />
       <PaperAbstract paper={paper} />
     </>
   );
 }
-// Hoda end
+
+//---------------Hoda end-----------------

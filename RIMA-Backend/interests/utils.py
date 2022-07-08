@@ -201,7 +201,7 @@ def generate_short_term_model(user_id, source):
         print("year_wise_text",year_wise_text)
         for year, text in year_wise_text.items():
             try:
-                keywords = getKeyword(text, model="SingleRank", num=20)
+                keywords = getKeyword(text, model="Yake", num=20)
             except:
                 # silencing errors like
                 # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
