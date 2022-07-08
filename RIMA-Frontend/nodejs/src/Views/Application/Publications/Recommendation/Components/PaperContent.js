@@ -2,10 +2,17 @@ import React, { useEffect, useState } from "react";
 import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 // import TopSimilarityChart from "./TopSimilarityChart";
-import { Typography, Grid, Box, Chip, Switch, makeStyles, Avatar } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  Box,
+  Chip,
+  Switch,
+  makeStyles,
+  Avatar,
+} from "@material-ui/core";
 // import { Popover, Menu, MenuItem } from "@material-ui/core";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 //---------------Hoda Start-----------------
 function highlighter(
@@ -16,8 +23,9 @@ function highlighter(
   originalText,
   lookupkey
 ) {
-  return `<a data-tip="${lookupkey}" aria-describedby="${paperId}"  data-for="${paperId}" data-event="click" title="Similarity Score: ${Math.round(max_score * 100) / 100
-    }" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
+  return `<a data-tip="${lookupkey}" aria-describedby="${paperId}"  data-for="${paperId}" data-event="click" title="Similarity Score: ${
+    Math.round(max_score * 100) / 100
+  }" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
 }
 function KeywordSimObjToArray(keywords_similarity) {
   let items = [];
@@ -36,8 +44,8 @@ function KeywordSimObjToArray(keywords_similarity) {
     a.numberOfWord < b.numberOfWord
       ? 1
       : a.numberOfWord == b.numberOfWord
-        ? 0
-        : -1
+      ? 0
+      : -1
   );
 }
 function HighlightText(paperId, keywords_similarity, text) {
@@ -50,11 +58,11 @@ function HighlightText(paperId, keywords_similarity, text) {
     let matches = regEx.exec(modified_text);
     if (matches === null) continue;
     //deform originalText to prevent nested highlighting keyword/s
-    let originalText = matches[0]
+    let originalText = matches[0];
     //.split(" ")
     //.map((x) => "<x>" + x[0] + "</x>" + x.substring(1))
     //.join("&nbsp;");
-    let replaceKey = btoa(unescape(encodeURIComponent(value.keyword)))
+    let replaceKey = btoa(unescape(encodeURIComponent(value.keyword)));
     const replaceText = highlighter(
       paperId,
       value.keyword,
@@ -62,12 +70,15 @@ function HighlightText(paperId, keywords_similarity, text) {
       value.max_interest_color,
       originalText,
       replaceKey
-    )
+    );
     replaceKey = `<-${replaceKey}->`;
-    replaceList.push({ replaceKey, replaceText })
+    replaceList.push({ replaceKey, replaceText });
     modified_text = modified_text.replace(regEx, replaceKey);
   }
-  replaceList.forEach(({ replaceKey, replaceText }) => modified_text = modified_text.replaceAll(replaceKey, replaceText))
+  replaceList.forEach(
+    ({ replaceKey, replaceText }) =>
+      (modified_text = modified_text.replaceAll(replaceKey, replaceText))
+  );
   return modified_text;
 }
 // start Tannaz
@@ -103,17 +114,30 @@ function Title({ paper, similarityScore }) {
         justify="flex-start"
         alignItems="flex-start"
       >
-        <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
+        <Grid
+          item
+          xs
+          container
+          direction="row"
+          style={{ justifyContent: "space-between" }}
+          className="new-window"
+        >
           <Grid item xs>
-        <Typography  
-            noWrap
-            gutterBottom
-            variant="h6"
-            dangerouslySetInnerHTML={{ __html: modified_title }}
+            <Typography
+              noWrap
+              gutterBottom
+              variant="h6"
+              dangerouslySetInnerHTML={{ __html: modified_title }}
             />
-            </Grid>
+          </Grid>
           <Grid item xs>
-            <a href={"https://www.semanticscholar.org/paper/"+paper.paperId} target="_blank" title="open paper in the semantic scholar website"><OpenInNewIcon /></a>
+            <a
+              href={"https://www.semanticscholar.org/paper/" + paper.paperId}
+              target="_blank"
+              title="open paper in the semantic scholar website"
+            >
+              <OpenInNewIcon />
+            </a>
           </Grid>
         </Grid>
         <Grid item xs>
@@ -149,87 +173,88 @@ function Title({ paper, similarityScore }) {
   );
 }
 
-      function Authors({authorsList}) {
+function Authors({ authorsList }) {
   const res = [];
   authorsList.forEach((element) => {
-        res.push(element.name);
+    res.push(element.name);
   });
-      return (
-      <Typography noWrap gutterBottom variant="subtitle2">
-        {res.join(" , ")}
-      </Typography>
-      );
+  return (
+    <Typography noWrap gutterBottom variant="subtitle2">
+      {res.join(" , ")}
+    </Typography>
+  );
 }
 
-      function PaperAbstract({paper}) {
-        let modified_text = HighlightText(
-      paper.paperId,
-      paper.keywords_similarity,
-      paper.abstract
-      );
+function PaperAbstract({ paper }) {
+  let modified_text = HighlightText(
+    paper.paperId,
+    paper.keywords_similarity,
+    paper.abstract
+  );
 
-      return (
-      <Typography
-        variant="body1"
-        align="justify" sx={{ padding: '0px 15px' }}
-        dangerouslySetInnerHTML={{ __html: modified_text }}
-      />
-      );
+  return (
+    <Typography
+      variant="body1"
+      align="justify"
+      sx={{ padding: "0px 15px" }}
+      dangerouslySetInnerHTML={{ __html: modified_text }}
+    />
+  );
 }
 
-      export default function PaperContent({paper}) {
+export default function PaperContent({ paper }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-      const [popoverActive, setPopoverActive] = React.useState(false);
-      const [modalActive, setModalActive] = React.useState(true);
-      const [menu, setMenu] = useState(null);
+  const [popoverActive, setPopoverActive] = React.useState(false);
+  const [modalActive, setModalActive] = React.useState(true);
+  const [menu, setMenu] = useState(null);
   const handleClick = (event) => {
-        let ele = anchorEl && anchorEl.element;
-      if (event.currentTarget === ele) {
-        setAnchorEl(null);
+    let ele = anchorEl && anchorEl.element;
+    if (event.currentTarget === ele) {
+      setAnchorEl(null);
       return;
     }
-      let dataTip = event.currentTarget.getAttribute("data-tip");
-      if (!dataTip) return;
-      let keyword = decodeURIComponent(escape(atob(dataTip)));
-      let interests = paper.keywords_similarity[keyword];
-      setAnchorEl({element: event.currentTarget, interests: interests });
+    let dataTip = event.currentTarget.getAttribute("data-tip");
+    if (!dataTip) return;
+    let keyword = decodeURIComponent(escape(atob(dataTip)));
+    let interests = paper.keywords_similarity[keyword];
+    setAnchorEl({ element: event.currentTarget, interests: interests });
   };
 
   const popoverActiveHandleChange = (event) => {
-        setPopoverActive(event.target.checked);
+    setPopoverActive(event.target.checked);
   };
 
   const modalActiveHandleChange = (event) => {
-        setModalActive(event.target.checked);
+    setModalActive(event.target.checked);
   };
   const handleClose = () => {
-        setAnchorEl(null);
+    setAnchorEl(null);
   };
 
-      const open = Boolean(anchorEl);
-      const id = open ? paper.paperId : undefined;
+  const open = Boolean(anchorEl);
+  const id = open ? paper.paperId : undefined;
 
   useEffect(() => {
-        ReactTooltip.rebuild();
-      document
+    ReactTooltip.rebuild();
+    document
       .querySelectorAll(`a[data-tip][aria-describedby="${paper.paperId}"]`)
       .forEach((ele, i) => {
         if (ele.previousHandleClick)
-      ele.removeEventListener("click", ele.previousHandleClick);
-      ele.addEventListener("click", handleClick);
-      ele.previousHandleClick = handleClick;
+          ele.removeEventListener("click", ele.previousHandleClick);
+        ele.addEventListener("click", handleClick);
+        ele.previousHandleClick = handleClick;
       });
   });
 
-      return (
-      <>
-        {/* {(false?(<>
+  return (
+    <>
+      {/* {(false?(<>
       <Switch
         checked={popoverActive}
         onChange={popoverActiveHandleChange}
         inputProps={{ "aria-label": "Switch between tooltip and popover" }}
       />{" "} */}
-        {/* {popoverActive ? (
+      {/* {popoverActive ? (
         <>
           Popover{" "}
           <Switch
@@ -246,7 +271,7 @@ function Title({ paper, similarityScore }) {
       )} 
         </>): "")
 }*/}
-        {/* {!popoverActive ? (
+      {/* {!popoverActive ? (
         <ReactTooltip
           id={paper.paperId}
           event={"click"}
@@ -318,10 +343,10 @@ function Title({ paper, similarityScore }) {
           )}
         </Popover>
       )} */}
-        <Title paper={paper} similarityScore={paper.score} />
-        <PaperAbstract paper={paper} />
-      </>
-      );
+      <Title paper={paper} similarityScore={paper.score} />
+      <PaperAbstract paper={paper} />
+    </>
+  );
 }
 
 //---------------Hoda end-----------------

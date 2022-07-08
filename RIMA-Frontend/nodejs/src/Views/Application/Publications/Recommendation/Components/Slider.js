@@ -1,22 +1,24 @@
-import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+/**
+ * Slider.js - Interest slider component
+ * is used for what-if explanations' control panel
+ * contains:
+ * 1. slider component
+ */
+import React from "react";
 import Slider from "@material-ui/core/Slider";
 
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid } from "@material-ui/core";
 
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-const useStyles = makeStyles({
-  root: {
-    width: 210,
-  },
-});
-
-export default function CustomizedSlider(props) {
-  const classes = useStyles();
+/**
+ * @function CustomizedSlider
+ * Interest slider component
+ * @param {Object} props name(String),weight(Number),color(String),index(Number),
+ * handleTagsChange(function),changeTagWeight(function),handleDelete(function)
+ * @returns The slider component
+ */
+const CustomizedSlider = (props) => {
   const [value, setValue] = React.useState(props.weight);
-  // useEffect(() => {
-  //   setValue(props.weight);
-  // }, [props]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -24,23 +26,26 @@ export default function CustomizedSlider(props) {
   };
 
   return (
-
     <Grid
-      item container
+      item
+      container
       style={{
         backgroundColor: `${props.color}`,
         maxHeight: "40px",
         borderRadius: "5px",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
       }}
-      className={`p-1 pt-0 Rounded text-white`}>
+      className={`p-1 pt-0 Rounded text-white`}
+    >
       <Grid container spacing={2}>
         <Grid item md={2} style={{ color: "#FFFFFF" }}>
-          <RemoveCircleOutlineIcon onClick={() => props.handleDelete(props.index)}
+          <RemoveCircleOutlineIcon
+            onClick={() => props.handleDelete(props.index)}
             aria-label="delete"
             style={{
               color: "#FFFFFF",
-            }} />
+            }}
+          />
         </Grid>
         <Grid item md={10}>
           <Typography
@@ -56,11 +61,16 @@ export default function CustomizedSlider(props) {
         </Grid>
       </Grid>
       <Grid container spacing={2} style={{ justifyContent: "flex-end" }}>
-        <Grid item xs md={8} style={{ display: 'flex', alignItems: "flex-start" }}>
+        <Grid
+          item
+          xs
+          md={8}
+          style={{ display: "flex", alignItems: "flex-start" }}
+        >
           <Slider
             style={{
               color: "#FFFFFF",
-              padding: '0px'
+              padding: "0px",
             }}
             min={1}
             step={0.5}
@@ -72,8 +82,8 @@ export default function CustomizedSlider(props) {
         <Grid item xs md={3} style={{ marginTop: "-10px" }}>
           <Typography align="center">{value}</Typography>
         </Grid>
-
       </Grid>
     </Grid>
   );
-}
+};
+export default CustomizedSlider;
