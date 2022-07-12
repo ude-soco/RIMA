@@ -10,87 +10,87 @@
 
 2. Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-3. Install and activate python virtual environment for Windows
+3. Install and activate python virtual environment for Windows (Links to the installation and activation instructions available: [MacOS](https://programwithus.com/learn/python/pip-virtualenv-mac) and [Ubuntu](https://linuxize.com/post/how-to-create-python-virtual-environments-on-ubuntu-18-04/))
 
-	- Open a command prompt with **administration rights**
+   - Open a command prompt with **administration rights**
 
-	- Move to the directory `RIMA-Backend` in your command prompt
+   - Move to the directory `RIMA-Backend` in your command prompt
 
-	- Type the following commands and do not close the command prompt after executing the fourth command:
+   - Type the following commands and do not close the command prompt after executing the fourth command:
 
-		- Install python virtual environment
+     - Install python virtual environment
 
-			```
-			python -m venv venv
-			```
+       ```
+       python -m venv venv
+       ```
 
-		-  Activate python virtual environment
+     - Activate python virtual environment
 
-			```
-			.\venv\Scripts\activate
-			```
-		-  Upgrade pip version
+       ```
+       .\venv\Scripts\activate
+       ```
 
-			```
-			python -m pip install --upgrade pip
-			```
+     - Upgrade pip version
 
-		-  Install the required packages
+       ```
+       python -m pip install --upgrade pip
+       ```
 
-			```
-			pip install -r requirements-offline.txt
-			```
+     - Install the required packages
 
+       ```
+       pip install -r requirements-offline.txt
+       ```
 
 4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
 
-5. Open the `.env` file and add additional environment variables (contact [Shoeb Joarder](mailto:shoeb.joarder@uni-due.de) for info)
+5. Open the `.env` file and add additional environment variables (contact the developers for the environment variables)
 
-6. In the command prompt, type the following commands to install spacy and nltk packages. Do not close the command prompt after the last command
+6. In the command prompt or terminal, type the following commands to install spacy and nltk packages. Do not close the command prompt or terminal after the last command
 
-	-  Download the spacy package
+   - Download the spacy package
 
-		```
-        python -m spacy download en
-        ```
+     ```
+      python -m spacy download en
+     ```
 
-	-  Download the necessary nltk packages
+   - Download the necessary nltk packages
 
-		```
-        python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
-        ```
+     ```
+      python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
+     ```
 
-
-7. Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) 
+7. Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) (Links to the installation instructions available: [MacOS](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298) and [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-de))
 
 8. Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the `RIMA-Backend`
 
 9. In the command prompt to create the database
 
-	```
-	python manage.py migrate
-	```
+   ```
+   python manage.py migrate
+   ```
 
 10. Run the django server and do not close it
 
-	```
-	python manage.py runserver
-	```
+    ```
+    python manage.py runserver
+    ```
 
-11. Open a new command prompt with **administration rights**
+11. Open a new command prompt with admin rights or terminal
 
     - Move to the `RIMA-Backend` in your command prompt
 
     - Activate the virtual environment
 
-		```
-		.\venv\Scripts\activate
-		```
+      ```
+      .\venv\Scripts\activate
+      ```
+
     - Start the celery workers and do not close the command prompt
 
-		```
-		celery worker --app=interest_miner_api -l info -P eventlet
-		```
+      ```
+      celery worker --app=interest_miner_api -l info -P eventlet
+      ```
 
 **FAQ**
 

@@ -7,6 +7,7 @@ urlpatterns = [
     path('trigger-data-updata/', views.TriggerDataUpdate.as_view()),
     path('long-term/', views.LongTermInterestView.as_view()),
     path('long-term/<int:pk>/', views.LongTermInterestItemView.as_view()),
+    path('recommended-papers', views.recommended_papers), #LK
     path('papers/', views.PaperView.as_view()),
     path('papers/<int:pk>/', views.PaperItemView.as_view()),
     path('similarity/<int:pk>/', views.SimilarityView.as_view()),

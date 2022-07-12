@@ -2,7 +2,8 @@ def normalize(dic):
     '''
     This function is used to map the weight of the interests to [1,5]
     '''
-    maxnum = sorted(dic.items(), key=lambda items: items[1],
+    # dict = ([('Learning analytics', 9), ('Open assessment', 1), ('Learning environment', 5), ('Peer assessment', 9)])
+    maxnum = sorted(dic.items(), key=lambda items: items[1], # key of sorting is the second element in dic which is the numbers(weights) of each keyword
                     reverse=True)[:1][0][1]
     for k, v in dic.items():
         f = v / maxnum * 5
@@ -12,16 +13,19 @@ def normalize(dic):
     return dic
 
 
-def update_interest_models(x, y):
+def update_interest_models(x, y): # x -> short_term_data, y -> long_term_data
     '''
     This function is used to update the new short-term interest model with the
     old long-term interest model after a certain time period to get the new
     long-term interest model
 
     '''
+    # divide the short term weight by 2 to apply the forget function # LK
     for k in x.keys():
         x[k] = x[k] / 2
 
+    # If the keyword in the short-term already exists in long-term then the weight will be added to the previous weight
+    # and if it is not exist then it will be added to the long-term set
     for k, v in x.items():
         if k in y.keys():
             y[k] += v

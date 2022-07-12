@@ -120,3 +120,9 @@ venv/*
 /RIMA-Backend/venv/
 /RIMA-Frontend/nodejs/.env
 RIMA-Frontend/nodejs/.idea/*
+RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27
+RIMA-Backend/scibert_scivocab_uncased/
+RIMA-Backend/spector/
+RIMA-Backend/transformers/
+RIMA-Backend/USE_model/
+RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
