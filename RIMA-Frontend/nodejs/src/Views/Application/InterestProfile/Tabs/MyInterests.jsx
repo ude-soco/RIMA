@@ -31,33 +31,30 @@ export default function MyInterests() {
     </Grid>
   </>
 
-  // get user data
-  useEffect(() => {
-    RestAPI.longTermInterest(currentUser).then((response) => {
-      const {data} = response;
-      console.log(data)
-      let dataArray = [];
-      data.forEach((d) => {
-        let newData = {
-          id: d.id,
-          categories: d.categories,
-          originalKeywords: d.original_keywords,
-          source: d.source,
-          text: d.keyword,
-          value: d.weight,
-          papers: d.papers,
-
-        };
-
-        dataArray.push(newData);
-        //console.log("test original keywords",newData)
-
-      });
-      setKeywords(dataArray);
-      //console.log("test original keywords",dataArray)
-
-    });
+  useEffect(async () => {
+    await fetchKeywords()
   }, []);
+
+  const fetchKeywords = async () => {
+    setKeywords([]);
+    const response = await RestAPI.longTermInterest(currentUser);
+    const {data} = response;
+    let dataArray = [];
+    data.forEach((d) => {
+      let newData = {
+        id: d.id,
+        categories: d.categories,
+        originalKeywords: d.original_keywords,
+        source: d.source,
+        text: d.keyword,
+        value: d.weight,
+        papers: d.papers,
+      };
+      dataArray.push(newData);
+    });
+    setKeywords(dataArray);
+    return dataArray;
+  };
 
   return (<>
     <Grid container justify="flex-end" style={{paddingTop: 32, height: "75vh"}}>
@@ -92,7 +89,8 @@ export default function MyInterests() {
           </Typography>
         </Grid>
       </DialogTitle>
-      <ManageInterests keywords={keywords} setKeywords={setKeywords} open={open} setOpen={setOpen}/>
+      <ManageInterests keywords={keywords} setKeywords={setKeywords} open={open} setOpen={setOpen}
+                       fetchKeywords={fetchKeywords}/>
 
     </Dialog>
   </>);

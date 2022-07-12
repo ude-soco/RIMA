@@ -3,9 +3,6 @@ import Login from "../Views/Website/Login/Login";
 import AddPaper from "../Views/Application/Publications/Paper/AddPaper.jsx";
 import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
 import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
-import InterestOverview from "../Views/Application/InterestProfile/InterestOverview/InterestOverview";
-import ConceptChartPage from "../Views/Application/InterestProfile/PotentialInterests/PotentialInterests";
-import Keyword from "../Views/Keyword.js";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
 import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
@@ -15,7 +12,6 @@ import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
 import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
-import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";
 import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
 import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
@@ -72,15 +68,6 @@ let routes = [
     component: ViewPaper,
     layout: "/app",
     // display: "none"
-  },
-
-  {
-    path: "/keyword",
-    name: "Keyword",
-    icon: "ni ni-archive-2 text-yellow",
-    component: Keyword,
-    layout: "/app",
-    display: "none",
   },
   {
     path: "/blacklisted-keywords",

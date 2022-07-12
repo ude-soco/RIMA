@@ -1,9 +1,20 @@
-import {Avatar, Box, Button, Collapse, Grid, IconButton, Paper, Typography} from "@material-ui/core";
+import {Avatar, Box, Button, Collapse, Grid, IconButton, makeStyles, Paper, Typography} from "@material-ui/core";
 import React, {useState} from "react";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SchoolIcon from '@material-ui/icons/School';
 
+const useStyles = makeStyles(theme => ({
+  card: {
+    "&:hover": {
+      // webkitBoxShadow: '-2px -1px 15px 7px rgba(0,0,0,0.5)',
+      // mozBoxShadow: "-3px -2px 30px 14px rgba(0,0,0,0.425)",
+      boxShadow: "2px 1px 5px 2px rgba(0,0,0,0.35)"
+    }
+  }
+}))
+
 const PublicationList = (props) => {
+  const classes = useStyles();
   const {publication} = props;
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -23,9 +34,9 @@ const PublicationList = (props) => {
   };
 
   return (
-    <Box style={{marginBottom: 8}}>
-      <Paper style={{padding: 16}}>
-        <Grid container spacing={2}>
+    // <Box style={{}} className={classes.card}>
+      <Paper className={classes.card} style={{padding: 16, marginBottom: 8}}>
+        <Grid container spacing={2} onClick={handleOpen} style={{cursor: "pointer"}}>
           <Grid item xs={1}>
             <Typography variant="body2" color="textSecondary">
               {publication.year}
@@ -44,7 +55,7 @@ const PublicationList = (props) => {
           <Grid item xs={1}>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <IconButton onClick={handleOpen} style={{transform: open ? "rotate(180deg)" : ""}}>
+                <IconButton disabled style={{transform: open ? "rotate(180deg)" : "", color: "inherit"}}>
                   <ExpandMoreIcon/>
                 </IconButton>
               </Grid>
@@ -89,13 +100,13 @@ const PublicationList = (props) => {
                 onClick={() => window.open(publication.url, "_blank")}
                 startIcon={<SchoolIcon/>}
               >
-                Semantic Scholar{" "}
+                Semantic Scholar
               </Button>
             </Grid>
           </Grid>
         </Collapse>
       </Paper>
-    </Box>
+    // </Box>
   );
 };
 

@@ -14,29 +14,32 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from '@material-ui/icons/Delete';
 import Slider from "@material-ui/core/Slider";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
 import AddIcon from "@material-ui/icons/Add";
 import Fade from '@material-ui/core/Fade';
+import RestAPI from "../../../../Services/api";
 
 
 const ManageInterests = (props) => {
-  const {keywords, setKeywords, open, setOpen} = props;
+  const {keywords, setKeywords, open, setOpen, fetchKeywords} = props;
 
-
-  const [interests, setInterests] = useState(keywords)
+  const [interests, setInterests] = useState([])
   const [editInterest, setEditInterest] = useState(false);
   const [updateInterestText, setUpdateInterestText] = useState("");
   const [updateInterestWeight, setUpdateInterestWeight] = useState(1);
-  const [reset, setReset] = useState(false);
   const [enterNewInterest, setEnterNewInterest] = useState(false)
   const [existInterest, setExistInterest] = useState(false);
   const [deleteAnchorEl, setDeleteAnchorEl] = useState(null);
   const [interestToDelete, setInterestToDelete] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    setInterests(keywords)
+  }, [keywords]);
 
   const handleUpdateInterestWeights = (event, value, interest) => {
     setInterests([]);
@@ -82,13 +85,27 @@ const ManageInterests = (props) => {
     }
   }
 
-  const handleSaveInterests = () => {
+  const handleSaveInterests = async () => {
     let newInterests = interests;
     newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
     setKeywords([]);
     setTimeout(() => {
       setKeywords(newInterests);
     }, 500)
+    let listOfInterests = [];
+    newInterests.forEach(interest => {
+      let item = {
+        name: interest.text,
+        weight: interest.value,
+        id: interest.id
+      }
+      listOfInterests.push(item);
+    });
+    try {
+      await RestAPI.addKeyword(listOfInterests);
+    } catch (err) {
+      console.log(err);
+    }
     setOpen(!open);
   }
 
@@ -137,6 +154,10 @@ const ManageInterests = (props) => {
     setDeleteAnchorEl(null);
   }
 
+  const resetInterest = async () => {
+    const data = await fetchKeywords();
+    setInterests(data)
+  }
   return (
     <>
       <DialogContent>
@@ -308,10 +329,11 @@ const ManageInterests = (props) => {
           </> : <></>}
       </DialogContent>
 
-      <DialogActions>
-        <Grid container justify="space-between" style={{paddingLeft: 16, paddingRight: 16}}>
+      <DialogActions style={{padding: 24}}>
+        <Grid container justify="space-between">
           <Grid item xs>
-            <Button startIcon={<SettingsBackupRestoreIcon/>} color={!reset ? "secondary" : ""} disabled={!reset}>
+            <Button startIcon={<SettingsBackupRestoreIcon/>} color="secondary"
+                    onClick={resetInterest}>
               Reset
             </Button>
           </Grid>

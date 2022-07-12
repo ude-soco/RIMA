@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CircularProgress,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
-import InterestOverview from "./InterestOverview/InterestOverview";
+import {Card, CardContent, CircularProgress, Grid, makeStyles, Typography,} from "@material-ui/core";
 import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
 import PotentialInterests from "./PotentialInterests/PotentialInterests";
 import InterestTrends from "./InterestsTrends/InterestTrends";
-import InterestProfileNew from "./Tabs/InterestProfileNew";
+import InterestOverview from "./Tabs/InterestOverview";
 
 const useStyles = makeStyles((theme) => ({
   spacing: {
@@ -51,9 +43,6 @@ export default function InterestProfile() {
   return (
     <>
       <Grid container direction="row" spacing={2}>
-        <Grid item xs={12}>
-          <InterestProfileNew classes={classes}/>
-        </Grid>
         <Grid item xs={12}>
           <InterestOverview classes={classes}/>
         </Grid>

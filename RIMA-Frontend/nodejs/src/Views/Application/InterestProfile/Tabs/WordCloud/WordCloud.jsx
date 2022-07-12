@@ -23,7 +23,6 @@ import WhyInterest from "../../WhyInterest/WhyInterest";
 
 const WordCloud = (props) => {
   const {keywords} = props;
-  console.log(keywords, "test keywords")
 
   const [state, setState] = useState({
     openMenu: null,
@@ -37,7 +36,6 @@ const WordCloud = (props) => {
       openMenu: event.currentTarget,
       currentInterest: word
     })
-    console.log("test word", word);
   };
 
   const handleCloseMenu = () => {
