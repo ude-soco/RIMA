@@ -10,7 +10,7 @@
 
 2. Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-3. Install and activate python virtual environment for Windows (Links to the installation and activation instructions available: [MacOS](https://programwithus.com/learn/python/pip-virtualenv-mac) and [Ubuntu](https://linuxize.com/post/how-to-create-python-virtual-environments-on-ubuntu-18-04/))
+3. Install and activate python virtual environment for Windows
 
    - Open a command prompt with **administration rights**
 
@@ -44,9 +44,9 @@
 
 4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
 
-5. Open the `.env` file and add additional environment variables (contact the developers for the environment variables)
+5. Open the `.env` file and add additional environment variables (contact [Shoeb Joarder](mailto:shoeb.joarder@uni-due.de) for info)
 
-6. In the command prompt or terminal, type the following commands to install spacy and nltk packages. Do not close the command prompt or terminal after the last command
+6. In the command prompt, type the following commands to install spacy and nltk packages. Do not close the command prompt after the last command
 
    - Download the spacy package
 
@@ -60,23 +60,25 @@
       python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
      ```
 
-7. Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi) (Links to the installation instructions available: [MacOS](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298) and [Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-de))
+7. Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi)
 
-8. Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the `RIMA-Backend`
+8. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
 
-9. In the command prompt to create the database
+9. Download [StanfordCoreNLP](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip) and extract the ZIP file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
 
-   ```
-   python manage.py migrate
-   ```
+10. In the command prompt to create the database
 
-10. Run the django server and do not close it
+    ```
+    python manage.py migrate
+    ```
+
+11. Run the django server and do not close it
 
     ```
     python manage.py runserver
     ```
 
-11. Open a new command prompt with admin rights or terminal
+12. Open a new command prompt with admin rights or terminal
 
     - Move to the `RIMA-Backend` in your command prompt
 
