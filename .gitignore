@@ -119,3 +119,8 @@ venv/*
 /RIMA-Backend/datatest_word2vec.txt
 /RIMA-Backend/venv/
 /RIMA-Frontend/nodejs/.env
+RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27
+RIMA-Backend/scibert_scivocab_uncased/
+RIMA-Backend/spector/
+RIMA-Backend/transformers/
+RIMA-Backend/USE_model/
