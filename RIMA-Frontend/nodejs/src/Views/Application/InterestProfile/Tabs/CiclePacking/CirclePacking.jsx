@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import Chart from "react-apexcharts";
 import {
   Button,
   CircularProgress,
@@ -14,29 +13,51 @@ import {
   Paper,
   Typography
 } from "@material-ui/core";
-
 import SearchIcon from "@material-ui/icons/Search";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
+import {ResponsiveCirclePacking} from "@nivo/circle-packing";
 
 
-// changed the original Class component to a functional component - Clara
-const BarChart = (props) => {
+const CirclePacking = (props) => {
   const {keywords, setWordCloudInterest, setOpen} = props;
 
   const [interests, setInterests] = useState([]);
-  const [weights, setWeights] = useState([]);
-
   const [state, setState] = useState({
     openMenu: null,
     openWhyInterest: false,
     currentInterest: ""
   })
 
+  useEffect(() => {
+    let tempInterests = [];
+    keywords.forEach((keyword) => {
+      tempInterests.push({
+        ...keyword,
+        name: keyword.text,
+        loc: keyword.value,
+      });
+    });
+    setInterests(tempInterests);
+  }, []);
+
+  const handleWordClicked = (word, event) => {
+    setState({
+      ...state,
+      openMenu: event.currentTarget,
+      currentInterest: word.data
+    })
+
+  };
+
   const handleCloseMenu = () => {
-    setState({...state, openMenu: null})
+    setState({
+      ...state,
+      openMenu: null
+    });
   }
+
   const handleToggleWhyInterest = () => {
     setState({
       ...state,
@@ -51,65 +72,47 @@ const BarChart = (props) => {
       openMenu: null,
     });
     setOpen(prevState => !prevState);
-    setWordCloudInterest(state.currentInterest)
+    setWordCloudInterest(state.currentInterest);
   }
 
-  useEffect(() => {
-    let tempInterests = [];
-    let tempWeights = [];
-    keywords.forEach((keyword) => {
-      tempInterests.push(keyword.text);
-      tempWeights.push(keyword.value);
-    });
-    setInterests(tempInterests);
-    setWeights(tempWeights);
-  }, []);
 
-  const options = {
-    chart: {
-      events: {
-        dataPointSelection: (event, chartContext, config) => {
-          setState({
-            ...state,
-            openMenu: event.currentTarget,
-            currentInterest: keywords[config.dataPointIndex]
-          });
-          // Can define at this point what happens when the user clicks on a bar - Alptug
-        },
-      },
-    },
-    xaxis: {
-      title: {text: "Interests"},
-      //what are the interests, fetched as keywords from the user model - Clara
-      categories: interests,
-    },
-    yaxis: {title: {text: "Weight of interests"}},
-  };
-  // console.log(options, "test");
-  const series = [
-    {
-      name: "Interests",
-      //the value of the bars, fetched as the weights from the keywords - Clara
-      data: weights,
-    },
-  ];
-  // console.log(options, "data");
   return (
     <>
       {!interests ? (
-          <>
-            <Grid container direction="column" justifyContent="center" alignItems="center">
-              <Grid item>
-                <CircularProgress/>
-              </Grid>
-              <Grid item>
-                <Typography variant="overline"> Loading data </Typography>
-              </Grid>
+        <>
+          <Grid container direction="column" justifyContent="center" alignItems="center">
+            <Grid item>
+              <CircularProgress/>
             </Grid>
-          </>
-        ) :
-        <Chart options={options} series={series} type="bar" width="700"/>
-      }
+            <Grid item>
+              <Typography variant="overline"> Loading data </Typography>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <>
+          <div style={{width: 500, height: 500, margin: "auto"}}>
+            <ResponsiveCirclePacking
+              data={{children: interests}}
+              margin={{top: 20, right: 20, bottom: 20, left: 20}}
+              id="name"
+              value="loc"
+              colors={{scheme: "nivo"}}
+              colorBy="id"
+              childColor={{from: "color", modifiers: [["brighter", 0.4]]}}
+              padding={4}
+              enableLabels={true}
+              labelsSkipRadius={10}
+              labelTextColor={{from: "color", modifiers: [["darker", 2]]}}
+              borderWidth={1}
+              borderColor={{from: "color", modifiers: [["darker", 0.5]]}}
+              defs={[{id: "lines", background: "none", color: "inherit", rotation: -45, lineWidth: 5, spacing: 8}]}
+              fill={[{match: {depth: 1,}, id: "lines"}]}
+              onClick={handleWordClicked}
+            />
+          </div>
+        </>
+      )}
 
       <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
             anchorOrigin={{vertical: 'center', horizontal: 'right'}}
@@ -151,7 +154,8 @@ const BarChart = (props) => {
             <Grid container>
               <Grid item xs={12}>
                 {state.currentInterest.papers !== 0 ?
-                  <WhyInterest papers={state.currentInterest.papers} originalKeywords={state.currentInterest.originalKeywords}/>
+                  <WhyInterest papers={state.currentInterest.papers}
+                               originalKeywords={state.currentInterest.originalKeywords}/>
                   : <Typography>The interest {state.currentInterest.text} has been added manually.</Typography>}
               </Grid>
             </Grid>
@@ -168,6 +172,6 @@ const BarChart = (props) => {
       </Dialog>
     </>
   );
-};
+}
 
-export default BarChart;
+export default CirclePacking;

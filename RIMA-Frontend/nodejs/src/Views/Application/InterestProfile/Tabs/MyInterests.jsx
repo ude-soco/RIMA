@@ -61,10 +61,14 @@ export default function MyInterests() {
                 <Loading/>}
             </Box>
             <Box style={{backgroundColor: "#fff"}}>
-              {keywords.length !== 0 ? <BarChart keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> : <Loading/>}
+              {keywords.length !== 0 ?
+                <BarChart keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> :
+                <Loading/>}
             </Box>
             <Box style={{backgroundColor: "#fff"}}>
-              {keywords.length !== 0 ? <CirclePacking keywords={keywords}/> : <Loading/>}
+              {keywords.length !== 0 ?
+                <CirclePacking keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> :
+                <Loading/>}
             </Box>
           </AwesomeSlider>
         </Grid>
