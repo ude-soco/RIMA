@@ -68,6 +68,9 @@ const BarChart = (props) => {
   const options = {
     chart: {
       events: {
+        dataPointMouseEnter: function(event) {
+          event.path[0].style.cursor = "pointer";
+        },
         dataPointSelection: (event, chartContext, config) => {
           setState({
             ...state,

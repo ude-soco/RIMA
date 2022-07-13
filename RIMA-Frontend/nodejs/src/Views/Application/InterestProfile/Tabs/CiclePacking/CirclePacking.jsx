@@ -97,9 +97,9 @@ const CirclePacking = (props) => {
               margin={{top: 20, right: 20, bottom: 20, left: 20}}
               id="name"
               value="loc"
-              colors={{scheme: "nivo"}}
+              colors={{scheme: "blues"}}
               colorBy="id"
-              childColor={{from: "color", modifiers: [["brighter", 0.4]]}}
+              childColor={{from: "color", modifiers: [["brighter", 3]]}}
               padding={4}
               enableLabels={true}
               labelsSkipRadius={10}
