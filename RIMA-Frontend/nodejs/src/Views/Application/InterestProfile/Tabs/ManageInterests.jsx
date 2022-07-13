@@ -86,9 +86,9 @@ const ManageInterests = (props) => {
   }
 
   const handleSaveInterests = async () => {
+    setKeywords([]);
     let newInterests = interests;
     newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
-    setKeywords([]);
     setTimeout(() => {
       setKeywords(newInterests);
     }, 500)
@@ -163,7 +163,7 @@ const ManageInterests = (props) => {
       <DialogContent>
         {interests.length === 0 ?
           <>
-            <Grid container direction="column" justify="center" alignItems="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
               <Grid item>
                 <CircularProgress/>
               </Grid>
@@ -231,7 +231,7 @@ const ManageInterests = (props) => {
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Grid container justify="space-between">
+                    <Grid container justifyContent="space-between">
                       <Tooltip title="Delete interest" arrow>
                         <IconButton color="secondary" onClick={(event) => handleOpenDeleteModal(event, interest)}>
                           <DeleteIcon/>
@@ -313,7 +313,7 @@ const ManageInterests = (props) => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container justify="space-between">
+              <Grid container justifyContent="space-between">
                 <Button onClick={handleCancelNewInterest}
                         variant={Boolean(updateInterestText) ? "" : "contained"}
                         color={Boolean(updateInterestText) ? "" : "primary"}>
@@ -330,7 +330,7 @@ const ManageInterests = (props) => {
       </DialogContent>
 
       <DialogActions style={{padding: 24}}>
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
           <Grid item xs>
             <Button startIcon={<SettingsBackupRestoreIcon/>} color="secondary"
                     onClick={resetInterest}>

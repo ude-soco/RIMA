@@ -18,7 +18,7 @@ export default function ActivitiesComparison({classes, loading, compareAuthor}) 
         </Grid>
       </Grid>
 
-      <Grid container className={classes.gutter} justify="center">
+      <Grid container className={classes.gutter} justifyContent="center">
         <Grid item xs={12} md={6}>
           <Grid container direction="column" alignItems="center">
             <Typography variant="h5" color="textSecondary">

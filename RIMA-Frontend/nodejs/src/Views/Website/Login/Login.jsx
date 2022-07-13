@@ -110,7 +110,7 @@ export default function Login() {
 
   return (
     <>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <CssBaseline/>
         <Grid item xs={12} sm={6} md={6} lg={4} component={Paper} className={classes.root}>
           <div className={classes.paper}>
@@ -148,7 +148,7 @@ export default function Login() {
                 onChange={handleChange}
               />
               {isLoading ?
-                <Grid container justify="center" className={classes.submit}>
+                <Grid container justifyContent="center" className={classes.submit}>
                   <CircularProgress/>
                 </Grid>
                 :
@@ -162,7 +162,7 @@ export default function Login() {
                   >
                     Sign In
                   </Button>
-                  <Grid container justify="flex-end">
+                  <Grid container justifyContent="flex-end">
                     <Grid item>
                       <Link href="#" variant="body2" onClick={() => history.push('/auth/register')}>
                         {"Don't have an account? Sign Up"}

@@ -1,6 +1,6 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
-import {AppBar, Button, Grid, makeStyles, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Button, Grid, makeStyles, Toolbar} from "@material-ui/core";
 
 const useStyle = makeStyles(theme => ({
   appBar: {

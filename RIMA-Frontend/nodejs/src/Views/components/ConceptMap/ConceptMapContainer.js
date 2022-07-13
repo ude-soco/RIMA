@@ -330,7 +330,7 @@ class ConceptMapContainer extends Component {
             </div>
           ) : this.state.isData ? (
             <>
-              <Grid container justify="center">
+              <Grid container justifyContent="center">
                 <Grid item>
                   <Stage width={width} height={this.stageHeight}>
                     <Layer>{this.getNodes()}</Layer>

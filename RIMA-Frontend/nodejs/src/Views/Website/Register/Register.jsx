@@ -207,7 +207,7 @@ export default function Register() {
                   value={details.authorID}
                   onChange={handleChange}
                 />
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                   <Button size="small" color="primary" className={classes.button}
                           name="semanticScholar" onClick={handleHelper}>
                     <Typography variant="body2">
@@ -259,7 +259,7 @@ export default function Register() {
                   value={details.twitterID}
                   onChange={handleChange}
                 />
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                   <Button size="small" color="primary" className={classes.button}
                           name="twitter" onClick={handleHelper}>
                     <Typography variant="body2">
@@ -304,7 +304,7 @@ export default function Register() {
             {/*  </Grid>*/}
             {/*) : <></>}*/}
             {isLoading ?
-              <Grid container justify="center" className={classes.submit}>
+              <Grid container justifyContent="center" className={classes.submit}>
                 <CircularProgress/>
               </Grid>
               :
@@ -318,7 +318,7 @@ export default function Register() {
                 >
                   Sign Up
                 </Button>
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                   <Grid item>
                     <Link href="#" variant="body2"
                           onClick={() => history.push('/auth/login')}>

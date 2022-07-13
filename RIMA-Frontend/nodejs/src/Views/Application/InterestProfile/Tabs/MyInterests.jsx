@@ -15,24 +15,9 @@ export default function MyInterests() {
   const [keywords, setKeywords] = useState([]);
 
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-  const loading = <>
-    <Grid
-      container
-      direction="column"
-      justify="center"
-      alignItems="center"
-    >
-      <Grid item>
-        <CircularProgress/>
-      </Grid>
-      <Grid item>
-        <Typography variant="overline"> Loading data </Typography>
-      </Grid>
-    </Grid>
-  </>
 
   useEffect(() => {
-    fetchKeywords()
+    fetchKeywords().then().catch(err => console.log(err))
   }, []);
 
   const fetchKeywords = async () => {
@@ -56,42 +41,63 @@ export default function MyInterests() {
     return dataArray;
   };
 
-  return (<>
-    <Grid container justify="flex-end" style={{paddingTop: 32, height: "75vh"}}>
-      <Grid item>
-        {keywords.length !== 0 ? <>
-          <Button color="primary" startIcon={<EditIcon/>} onClick={() => setOpen(!open)}>
-            Manage Interests
-          </Button>
-        </> : <> </>}
-      </Grid>
-      <Grid item xs={12}>
-
-        <AwesomeSlider style={{height: "60vh"}}>
-          <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <WordCloud keywords={keywords}/> : <> {loading} </>}
-          </Box>
-          <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <BarChart keywords={keywords}/>
-              : <> {loading} </>}
-          </Box>
-          <Box style={{backgroundColor: "#fff"}}>
-            {keywords.length !== 0 ? <CirclePacking keywords={keywords}/> : <> {loading} </>}
-          </Box>
-        </AwesomeSlider>
-      </Grid>
-    </Grid>
-    <Dialog open={open} maxWidth="xs" fullWidth style={{zIndex: 11}}>
-      <DialogTitle>
-        <Grid container justify="space-between" alignItems="center">
-          <Typography variant="h5">
-            Manage Interests
-          </Typography>
+  return (
+    <>
+      <Grid container justifyContent="flex-end" style={{paddingTop: 32, height: "75vh"}}>
+        <Grid item>
+          {keywords.length !== 0 ? <>
+            <Button color="primary" startIcon={<EditIcon/>} onClick={() => setOpen(!open)}>
+              Manage Interests
+            </Button>
+          </> : <> </>}
         </Grid>
-      </DialogTitle>
-      <ManageInterests keywords={keywords} setKeywords={setKeywords} open={open} setOpen={setOpen}
-                       fetchKeywords={fetchKeywords}/>
+        <Grid item xs={12}>
 
-    </Dialog>
-  </>);
+          <AwesomeSlider style={{height: "60vh"}}>
+            <Box style={{backgroundColor: "#fff"}}>
+              {keywords.length !== 0 ? <WordCloud keywords={keywords}/> : <Loading/>}
+            </Box>
+            <Box style={{backgroundColor: "#fff"}}>
+              {keywords.length !== 0 ? <BarChart keywords={keywords}/> : <Loading/>}
+            </Box>
+            <Box style={{backgroundColor: "#fff"}}>
+              {keywords.length !== 0 ? <CirclePacking keywords={keywords}/> : <Loading/>}
+            </Box>
+          </AwesomeSlider>
+        </Grid>
+      </Grid>
+      <Dialog open={open} maxWidth="xs" fullWidth style={{zIndex: 11}}>
+        <DialogTitle>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Typography variant="h5">
+              Manage Interests
+            </Typography>
+          </Grid>
+        </DialogTitle>
+        <ManageInterests keywords={keywords} setKeywords={setKeywords} open={open} setOpen={setOpen}
+                         fetchKeywords={fetchKeywords}/>
+
+      </Dialog>
+    </>);
+}
+
+
+export const Loading = () => {
+  return (
+    <>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid item>
+          <CircularProgress/>
+        </Grid>
+        <Grid item>
+          <Typography variant="overline"> Loading data </Typography>
+        </Grid>
+      </Grid>
+    </>
+  )
 }

@@ -129,7 +129,7 @@ export default function AdvancedExplanation({classes, loading, similarityScores,
 
       <Dialog open={openExplanation} onClose={() => setOpenExplanation(!openExplanation)} fullWidth maxWidth={"lg"}>
         <DialogContent >
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <img src={require("../../../../assets/img/wordEmbeddingBasedMeasure.png")}  alt="explanation"/>
           </Grid>
         </DialogContent>

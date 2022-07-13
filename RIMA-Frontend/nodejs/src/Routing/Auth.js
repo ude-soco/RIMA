@@ -63,7 +63,7 @@ export default function Auth() {
         </div>
 
         {/* Page content */}
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Switch>
             {getRoutes(routes)}
             <Redirect from="*" to="/auth/login"/>

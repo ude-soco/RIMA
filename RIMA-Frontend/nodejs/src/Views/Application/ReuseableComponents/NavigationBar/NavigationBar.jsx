@@ -253,7 +253,7 @@ export default function NavigationBar() {
 
       {/*Animation for logging out*/}
       <Backdrop className={classes.backdrop} open={loggingOut}>
-        <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="column" justifyContent="center" alignItems="center">
           <Grid item>
             <CircularProgress color="inherit"/>
           </Grid>

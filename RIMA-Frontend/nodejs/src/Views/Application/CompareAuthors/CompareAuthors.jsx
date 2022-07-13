@@ -58,7 +58,7 @@ export default function CompareAuthors() {
   const [tabValue, setTabValue] = React.useState(0);
 
   const loading =
-    <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
+    <Grid container direction="column" justifyContent="center" alignItems="center" className={classes.padding}>
       <Grid item>
         <CircularProgress/>
       </Grid>

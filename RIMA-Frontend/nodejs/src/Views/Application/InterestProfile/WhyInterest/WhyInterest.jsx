@@ -3,7 +3,7 @@ import PublicationList from "./PublicationList";
 import {Box, Grid, Paper, Typography} from "@material-ui/core";
 
 const WhyInterest = (props) => {
-  const {papers} = props
+  const {papers, originalKeywords} = props
   console.log("test ", papers)
   return (
     <>
@@ -42,7 +42,7 @@ const WhyInterest = (props) => {
         </Paper>
       </Box>
       {papers.map((paper) => {
-        return <PublicationList publication={paper}/>;
+        return <PublicationList publication={paper} originalKeywords={originalKeywords}/>;
       })}
     </>
   )

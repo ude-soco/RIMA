@@ -130,7 +130,7 @@ export default function SideBar({selection, setSelection}) {
 
   return (
     <>
-      <Grid container justify="center" alignItems="center" className={classes.toolBar}>
+      <Grid container justifyContent="center" alignItems="center" className={classes.toolBar}>
         <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
       </Grid>
       <Divider className={classes.divider}/>

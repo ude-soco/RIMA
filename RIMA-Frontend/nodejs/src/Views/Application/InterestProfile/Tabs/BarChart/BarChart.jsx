@@ -97,7 +97,7 @@ const BarChart = (props) => {
           <Grid
             container
             direction="column"
-            justify="center"
+            justifyContent="center"
             alignItems="center"
           >
             <Grid item>
