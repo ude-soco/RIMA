@@ -13,6 +13,7 @@ import "react-awesome-slider/dist/styles.css";
 export default function MyInterests() {
   const [open, setOpen] = useState(false);
   const [keywords, setKeywords] = useState([]);
+  const [wordCloudInterest, setWordCloudInterest] = useState({});
 
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
@@ -55,10 +56,12 @@ export default function MyInterests() {
 
           <AwesomeSlider style={{height: "60vh"}}>
             <Box style={{backgroundColor: "#fff"}}>
-              {keywords.length !== 0 ? <WordCloud keywords={keywords}/> : <Loading/>}
+              {keywords.length !== 0 ?
+                <WordCloud keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> :
+                <Loading/>}
             </Box>
             <Box style={{backgroundColor: "#fff"}}>
-              {keywords.length !== 0 ? <BarChart keywords={keywords}/> : <Loading/>}
+              {keywords.length !== 0 ? <BarChart keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> : <Loading/>}
             </Box>
             <Box style={{backgroundColor: "#fff"}}>
               {keywords.length !== 0 ? <CirclePacking keywords={keywords}/> : <Loading/>}
@@ -74,9 +77,13 @@ export default function MyInterests() {
             </Typography>
           </Grid>
         </DialogTitle>
-        <ManageInterests keywords={keywords} setKeywords={setKeywords} open={open} setOpen={setOpen}
-                         fetchKeywords={fetchKeywords}/>
 
+        <ManageInterests
+          keywords={keywords} setKeywords={setKeywords}
+          open={open} setOpen={setOpen}
+          wordCloudInterest={wordCloudInterest}
+          setWordCloudInterest={setWordCloudInterest}
+          fetchKeywords={fetchKeywords}/>
       </Dialog>
     </>);
 }

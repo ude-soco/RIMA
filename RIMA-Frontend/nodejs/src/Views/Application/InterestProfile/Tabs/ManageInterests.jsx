@@ -25,7 +25,7 @@ import RestAPI from "../../../../Services/api";
 
 
 const ManageInterests = (props) => {
-  const {keywords, setKeywords, open, setOpen, fetchKeywords} = props;
+  const {keywords, setKeywords, open, setOpen, wordCloudInterest, setWordCloudInterest, fetchKeywords} = props;
 
   const [interests, setInterests] = useState([])
   const [editInterest, setEditInterest] = useState(false);
@@ -38,6 +38,9 @@ const ManageInterests = (props) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
+    if (wordCloudInterest) {
+      handleEditInterest(wordCloudInterest);
+    }
     setInterests(keywords)
   }, [keywords]);
 
@@ -53,6 +56,11 @@ const ManageInterests = (props) => {
     if (deleteAnchorEl) {
       setDeleteAnchorEl(null);
     }
+  }
+
+  const handleEditInterest = (interest) => {
+    setUpdateInterestText(interest.text);
+    setEditInterest(interest.id);
   }
 
   const handleUpdateInterestText = (event) => {
@@ -107,6 +115,7 @@ const ManageInterests = (props) => {
       console.log(err);
     }
     setOpen(!open);
+    setWordCloudInterest({})
   }
 
   const handleAddNewInterest = () => {
@@ -208,10 +217,7 @@ const ManageInterests = (props) => {
                         <Grid item xs={1}>
                           <IconButton
                             disabled={editInterest === interest.id || editInterest}
-                            onClick={() => {
-                              setUpdateInterestText(interest.text);
-                              setEditInterest(interest.id);
-                            }}>
+                            onClick={() => handleEditInterest(interest)}>
                             <EditIcon/>
                           </IconButton>
                         </Grid>

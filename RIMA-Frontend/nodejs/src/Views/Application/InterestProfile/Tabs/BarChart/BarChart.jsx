@@ -1,24 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Chart from "react-apexcharts";
 import {
+  Button,
   CircularProgress,
   Dialog,
+  DialogActions,
   DialogContent,
+  DialogTitle,
   Grid,
-  Typography,
-  MenuItem, ListItemIcon, Menu, Paper, IconButton
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography
 } from "@material-ui/core";
 
 import SearchIcon from "@material-ui/icons/Search";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
-import CloseIcon from "@material-ui/icons/Close";
 
 
 // changed the original Class component to a functional component - Clara
 const BarChart = (props) => {
-  const { keywords, handleClickPopOver, id, setCurrInterest} = props;
+  const {keywords, setWordCloudInterest, setOpen} = props;
 
   const [interests, setInterests] = useState([]);
   const [weights, setWeights] = useState([]);
@@ -40,6 +45,14 @@ const BarChart = (props) => {
     });
   }
 
+  const handleToggleEditInterest = () => {
+    setState({
+      ...state,
+      openMenu: null,
+    });
+    setOpen(prevState => !prevState);
+    setWordCloudInterest(state.currentInterest)
+  }
 
   useEffect(() => {
     let tempInterests = [];
@@ -50,14 +63,8 @@ const BarChart = (props) => {
     });
     setInterests(tempInterests);
     setWeights(tempWeights);
-
   }, []);
 
-
-
-
-
-  // The styling of the bar chart - Clara
   const options = {
     chart: {
       events: {
@@ -66,20 +73,17 @@ const BarChart = (props) => {
             ...state,
             openMenu: event.currentTarget,
             currentInterest: keywords[config.dataPointIndex]
-          })
-
-
-
+          });
           // Can define at this point what happens when the user clicks on a bar - Alptug
         },
       },
     },
     xaxis: {
-      title: { text: "Interests" },
+      title: {text: "Interests"},
       //what are the interests, fetched as keywords from the user model - Clara
       categories: interests,
     },
-    yaxis: { title: { text: "Weight of interests" } },
+    yaxis: {title: {text: "Weight of interests"}},
   };
   // console.log(options, "test");
   const series = [
@@ -93,26 +97,19 @@ const BarChart = (props) => {
   return (
     <>
       {!interests ? (
-        <>
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item>
-              <CircularProgress />
+          <>
+            <Grid container direction="column" justifyContent="center" alignItems="center">
+              <Grid item>
+                <CircularProgress/>
+              </Grid>
+              <Grid item>
+                <Typography variant="overline"> Loading data </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="overline"> Loading data </Typography>
-            </Grid>
-          </Grid>
-        </>
-      ) : (
-        <>
-          <Chart options={options} series={series} type="bar" width="700" aria-describedby={id}  />
-        </>
-      )}
+          </>
+        ) :
+        <Chart options={options} series={series} type="bar" width="700"/>
+      }
 
       <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
             anchorOrigin={{vertical: 'center', horizontal: 'right'}}
@@ -135,7 +132,7 @@ const BarChart = (props) => {
           </Typography>
         </MenuItem>
 
-        <MenuItem>
+        <MenuItem onClick={handleToggleEditInterest}>
           <ListItemIcon>
             <EditIcon fontSize="small"/>
           </ListItemIcon>
@@ -145,34 +142,28 @@ const BarChart = (props) => {
         </MenuItem>
       </Menu>
 
-      <Dialog open={state.openWhyInterest} fullWidth={true}>
+      <Dialog open={state.openWhyInterest} fullWidth={true} maxWidth="lg">
+        <DialogTitle>
+          Why this interest?
+        </DialogTitle>
         <DialogContent>
           <Paper elevation={0}>
-            <Grid container alignItems="center">
-
-              <Grid item xs={11}>
-                <Typography variant="h6" style={{textTransform: "capitalize"}}> Why this
-                  interest? </Typography>
-              </Grid>
-              <Grid item xs={1} >
-                <IconButton onClick={handleToggleWhyInterest}> <CloseIcon fontSize="small"/> </IconButton>
-              </Grid>
-
-
-            </Grid>
-            <Grid container >
+            <Grid container>
               <Grid item xs={12}>
-                {state.currentInterest.papers !=0?
-                    <WhyInterest
-                        papers={state.currentInterest.papers}
-                    />:
-                    <Typography>The interest {state.currentInterest.text} has been added manually.</Typography>}
-
+                {state.currentInterest.papers !== 0 ?
+                  <WhyInterest papers={state.currentInterest.papers}/>
+                  : <Typography>The interest {state.currentInterest.text} has been added manually.</Typography>}
               </Grid>
             </Grid>
 
           </Paper>
         </DialogContent>
+
+        <DialogActions style={{padding: 16}}>
+          <Button onClick={handleToggleWhyInterest} variant="contained" color="primary">
+            Close
+          </Button>
+        </DialogActions>
 
       </Dialog>
     </>

@@ -22,7 +22,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
 
 const WordCloud = (props) => {
-  const {keywords} = props;
+  const {keywords, setWordCloudInterest, setOpen} = props;
 
   const [state, setState] = useState({
     openMenu: null,
@@ -48,6 +48,15 @@ const WordCloud = (props) => {
       openMenu: null,
       openWhyInterest: !state.openWhyInterest
     });
+  }
+
+  const handleToggleEditInterest = () => {
+    setState({
+      ...state,
+      openMenu: null,
+    });
+    setOpen(prevState => !prevState);
+    setWordCloudInterest(state.currentInterest)
   }
 
   return (
@@ -113,7 +122,7 @@ const WordCloud = (props) => {
             </Typography>
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem onClick={handleToggleEditInterest}>
             <ListItemIcon>
               <EditIcon fontSize="small"/>
             </ListItemIcon>
