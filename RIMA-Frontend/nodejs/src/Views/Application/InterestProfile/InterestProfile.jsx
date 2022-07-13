@@ -44,7 +44,7 @@ export default function InterestProfile() {
     <>
       <Grid container direction="row" spacing={2}>
         <Grid item xs={12}>
-          <InterestOverview classes={classes}/>
+          <InterestOverview/>
         </Grid>
 
         <Grid item xs={12}>

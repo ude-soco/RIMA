@@ -31,8 +31,8 @@ export default function MyInterests() {
     </Grid>
   </>
 
-  useEffect(async () => {
-    await fetchKeywords()
+  useEffect(() => {
+    fetchKeywords()
   }, []);
 
   const fetchKeywords = async () => {

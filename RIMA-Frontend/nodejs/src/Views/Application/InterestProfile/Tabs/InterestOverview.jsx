@@ -1,8 +1,6 @@
-import * as React from "react";
-import {useState} from "react";
+import React, {useState} from "react";
 import {Box, Divider, Paper, Tab, Tabs, Typography,} from "@material-ui/core";
 import MyInterests from "./MyInterests";
-
 import HowDoesItWork from "./HowDoesItWork";
 import Connect from "./Connect";
 import HorizontalFlow from "./Explore";
@@ -28,7 +26,7 @@ function TabPanel(props) {
   );
 }
 
-export default function InterestProfileTabs({classes}) {
+export default function InterestOverview() {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
