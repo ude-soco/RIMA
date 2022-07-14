@@ -425,9 +425,13 @@ def generate_short_term_model_dbpedia(user_id, source):
                     try:
                         original_keywords = json.loads(
                             keyword_instance.original_keywords)
+
+                        original_keywords_with_weights = json.loads(
+                            keyword_instance.original_keywords_with_weights)
                         # print("original keywords variable", original_keywords)
                     except:
                         original_keywords = []
+                        original_keywords_with_weights = []
                     original_keywords.append(original_keyword_name.lower())
                     keyword_instance.original_keywords = json.dumps(
                         list(set(original_keywords)))

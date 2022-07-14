@@ -91,7 +91,7 @@ from .utils import (
     get_heat_map_data, 
     get_venn_chart_data)
 from interests.tasks import import_user_data, import_user_paperdata
-from .publication_utils import get_recommended_publications, get_recommended_publications_doc_level
+from .publication_utils import API, get_recommended_publications, get_recommended_publications_doc_level
 
 class TriggerPaperUpdate(APIView):
     def post(self, request, *args, **kwargs):
@@ -152,6 +152,12 @@ def recommended_publications(request, *args, **kwargs):
     # papers = get_recommended_publications_doc_level(request.data)
     return Response({"message": "Hello, world!", "data": papers})
 
+class RecommendedPublications(APIView):
+    
+    def post(self, request, *args, **kwargs):
+        papers = get_recommended_publications(request.data)
+        # papers = get_recommended_publications_doc_level(request.data)
+        return Response({"message": "Hello, world!", "data": papers}) 
 
 class PaperView(ListCreateAPIView):
     serializer_class = PaperSerializer
