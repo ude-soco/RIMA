@@ -9,6 +9,9 @@ from .Algorithms.graph_based.textrank import TextRank
 from .Algorithms.statistics_based.rake import Rake
 from .Algorithms.statistics_based import yake
 
+
+from .Algorithms.embedding_based.data_model import SIF_RANK
+
 import string
 from nltk.corpus import stopwords
 
@@ -131,6 +134,22 @@ def getKeyword(text, model, num=10):
 
         return keyphrase
 
+    def keSifRank(num):
+    
+        keyphrases = SIF_RANK.extract_keyphrases(text, top_n=num)
+        # # method 1 : the weight is the frequency of word in text
+        # keyphrase = []
+        # for kp in keyphrases:
+        #     keyphrase.append(kp[0])
+
+        # return keyphrase
+
+        # method 2: the weight is the weight returned by the algorithm
+        
+        # convert the returned list of tuples to dictionary 
+        keyphrases_dict = dict(keyphrases)
+        return keyphrases_dict
+
     if model == "TopicRank":
         keywords = keTopicRank(num)
         key = {}
@@ -218,3 +237,23 @@ def getKeyword(text, model, num=10):
                 kw = kw.replace(" - ", "-")
             key[kw] = text.lower().count(kw.lower())
         return key
+
+    elif model == "SifRank":
+        keywords = keSifRank(num)
+
+        # method 1 : the weight is the frequency of word in text
+        # key = {}
+        # for kw in keywords:
+        #     if " ’ " in kw:
+        #         kw = kw.replace(" ’ ", "’ ")
+        #     if " - " in kw:
+        #         kw = kw.replace(" - ", "-")
+        #     key[kw] = text.lower().count(kw.lower())
+        # return key
+        # method 2: the weight is the weight returned by the algorithm
+        for keyphrase, weight in keywords.items():
+            if " ’ " in keyphrase:
+                keyphrase = keyphrase.replace(" ’ ", "’ ")
+            if " - " in keyphrase:
+                keyphrase = keyphrase.replace(" - ", "-")
+        return keywords

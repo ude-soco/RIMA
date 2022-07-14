@@ -1,17 +1,43 @@
+from stringprep import in_table_b1
+
+
 def normalize(dic):
     '''
     This function is used to map the weight of the interests to [1,5]
     '''
-    # dict = ([('Learning analytics', 9), ('Open assessment', 1), ('Learning environment', 5), ('Peer assessment', 9)])
+    # dict = {'analytics': 9, 'peer assessment': 5, 'personalization': 1, 'theory': 6, 'recommender system': 9}
+
     maxnum = sorted(dic.items(), key=lambda items: items[1], # key of sorting is the second element in dic which is the numbers(weights) of each keyword
                     reverse=True)[:1][0][1]
+    
     for k, v in dic.items():
-        f = v / maxnum * 5
+        f = v / maxnum * 5 
         dic[k] = round(f, 1)
         if dic[k] < 1:
             dic[k] = 1
+
     return dic
 
+# def general_normalize(dic, out_min =1, out_max=5):
+#     '''
+#     general normalization function that maps any range to any desired range
+#     '''
+#     #formula (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+#     #output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
+    
+#     # in_min = sorted(dic.items(), key=lambda items: items[1], # key of sorting is the second element in dic which is the numbers(weights) of each keyword
+#     #                 reverse=False)[:1][0][1]
+#     in_min =0
+#     # in_max = sorted(dic.items(), key=lambda items: items[1], # key of sorting is the second element in dic which is the numbers(weights) of each keyword
+#     #                 reverse=True)[:1][0][1] # all sorted list e.x: [('analytics', 5.0), ('recommender system', 5.0), ('theory', 3.6), ('peer assessment', 3.1), ('personalization', 1.0)]
+#     in_max = 1
+#     for key, value in dic.items():
+#         if (in_max - in_min) == 0:
+#             num = out_min # discuss with shoeb
+#         else:
+#             num = (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+#         dic[key] = round(num, 1)
+#     return dic
 
 def update_interest_models(x, y): # x -> short_term_data, y -> long_term_data
     '''

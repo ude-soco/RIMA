@@ -1,5 +1,7 @@
 import json
-
+import tensorflow as tf
+import math
+from collections import defaultdict
 from django.db.models import Q
 from interests.models import (
     Tweet,
@@ -15,35 +17,49 @@ from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 from interests.update_interests import update_interest_models, normalize
 
-from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_weighted_vectors_similarity
+from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import DBpediaSpotlight
+from interests.Semantic_Similarity.Word_Embedding.IMsim import  calculate_similarity
+from interests.Semantic_Similarity.Word_Embedding.Embedding_Methods import calculate_vector_embedding
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
+
+
 
 
 def generate_long_term_model(user_id):
     print("updating long term model for {}".format(user_id))
     short_term_model = ShortTermInterest.objects.filter(user_id=user_id,
                                                         used_in_calc=False)
+    
+    # getting short term model data and average the weight value when the keyword is repeated
+    # storing the short term data in a list first to keep the duplicated values
+    keywords_list =[]
+    for item in short_term_model:
+        keywords_list.append([item.keyword.name, item.weight])
+
+    short_term_data = _convert_short_term_model_to_dict(keywords_list)
+    
+    
     # Here the short term data is stored in a (key, value) pair but the dictionary does not support 
-    # duplicated keys so when we have repeated keyword only the last value will be saved #LK
-    short_term_data = {
-        item.keyword.name: item.weight
-        for item in short_term_model
-    }
-    print("short_term_data in generate_long_term_model",short_term_data) # LK
+    # duplicated keys so when we have repeated keyword only the last value will be saved #LK  (done)
+    # short_term_data = {
+    #     item.keyword.name: item.weight
+    #     for item in short_term_model
+    # }
+    # print("short_term_data in generate_long_term_model",short_term_data) # LK
     long_term_data = {
         item.keyword.name: item.weight
         for item in LongTermInterest.objects.filter(user_id=user_id)
     }
-    print("long_term_data in generate_long_term_model",long_term_data) # LK
+    # print("long_term_data in generate_long_term_model",long_term_data) # LK
     if not short_term_data:
         return
     new_data = update_interest_models(short_term_data, long_term_data)
-    print("new_data variable in generate_long_term_model", new_data) #LK
+    # print("new_data variable in generate_long_term_model", new_data) #LK
     LongTermInterest.objects.filter(user_id=user_id).delete()
     short_term_model.update(used_in_calc=True)
 
     for keyword, weight in new_data.items():
-        print("keyword and weight of new_data var in generate_long_term_model func",keyword, weight) #lamees
+        # print("keyword and weight of new_data var in generate_long_term_model func",keyword, weight) #lamees
         keyword_instance, created = Keyword.objects.get_or_create(
             name=keyword.lower())
         if created:
@@ -65,7 +81,7 @@ def generate_long_term_model(user_id):
         })
 
         originalinterests = json.loads(keyword_instance.original_keywords)
-        print("original interset variable ",originalinterests)# by lamees
+        # print("original interset variable ",originalinterests)# by lamees
         tweet_list = []
         paper_list = []
 
@@ -85,7 +101,7 @@ def generate_long_term_model(user_id):
             ]
             print(papers)
             paper_list += papers
-            print("paper_list ",paper_list[0]) #by lamees
+            # print("paper_list ",paper_list[0]) #by lamees
 
         # tweet_list = [
         #     tweet
@@ -191,17 +207,111 @@ def generate_short_term_model(user_id, source):
         paper_candidates = Paper.objects.filter(user_id=user_id,
                                                 used_in_calc=False)
         print("paper_candidates in generate_short_term_model in utils.py", paper_candidates) #by lamees
-        year_wise_text = {}
+        # papers_years =[]
+        year_wise_text ={}
+
         for paper in paper_candidates:
-            if paper.year not in year_wise_text:
-                year_wise_text[paper.year] = ""
-            year_wise_text[
-                paper.
-                    year] = f"{year_wise_text[paper.year]} {paper.title} {paper.abstract}"
+        #     papers_years.append(paper.year)
+
+        # papers_years = set(papers_years)
+        # for year in papers_years:
+            year_wise_text.update({paper.year : []})
+
         print("year_wise_text",year_wise_text)
-        for year, text in year_wise_text.items():
+        for paper in paper_candidates:
+            year_wise_text[paper.year].append((paper.title if paper.title else '') + ' ' + (paper.abstract if paper.abstract else '')) 
+
+        print("\nyear_wise_text",year_wise_text)
+        for year, papers in year_wise_text.items():
+            for text in papers:
+                try:
+                    keywords = getKeyword(text, model="SifRank", num=15)
+                except:
+                    # silencing errors like
+                    # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
+                    continue
+                print(f"got keywords {keywords}")
+                if not len(keywords.keys()):
+                    print("No keywords found")
+                    continue
+                wiki_keyword_redirect_mapping, keyword_weight_mapping = wikifilter(
+                    keywords)
+                # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
+                # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
+                if not len(keyword_weight_mapping.keys()):
+                    print("No keywords found in weight mapping")
+                    continue
+                keywords = normalize(keyword_weight_mapping) # normalize the weights to range of 5 to 1
+
+                # find the category for each keyword seperatly and store the keyword in database as a row
+                for keyword, weight in keywords.items():
+                    original_keyword_name = wiki_keyword_redirect_mapping.get(
+                        keyword, keyword)
+                    print("\noriginal_keyword_name ", original_keyword_name) # by lamees
+                    keyword = keyword.lower()
+                    if keyword in blacklisted_keywords:
+                        print("Skipping {} as its blacklisted".format(keyword))
+                        continue
+                    keyword_instance, created = Keyword.objects.get_or_create(
+                        name=keyword.lower())
+                    if created:
+                        print("getting wiki categories")
+                        categories = wikicategory(keyword) # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
+                        for category in categories:
+                            category_instance, _ = Category.objects.get_or_create(
+                                name=category)
+                            keyword_instance.categories.add(category_instance)
+                        keyword_instance.save()
+                    try:
+                        original_keywords = json.loads(
+                            keyword_instance.original_keywords)
+                        print("original keywords variable", original_keywords)
+                    except:
+                        original_keywords = []
+                    original_keywords.append(original_keyword_name.lower())
+                    keyword_instance.original_keywords = json.dumps(
+                        list(set(original_keywords)))
+
+                    keyword_instance.save()
+
+                    s_interest, _ = ShortTermInterest.objects.update_or_create(
+                        user_id=user_id,
+                        keyword=keyword_instance,
+                        model_month=1,
+                        model_year=year,
+                        defaults={
+                            "source": source,
+                            "weight": weight
+                        },
+                    )
+                    for p in paper_candidates.filter(
+                            Q(title__icontains=keyword)
+                            | Q(abstract__icontains=keyword)):
+                        s_interest.papers.add(p)
+        paper_candidates.update(used_in_calc=True)
+
+#LK
+def generate_short_term_model_dbpedia(user_id, source):
+    dbpedia = DBpediaSpotlight()
+    blacklisted_keywords = list(
+        BlacklistedKeyword.objects.filter(user_id=user_id).values_list(
+            "keyword__name", flat=True))
+
+    if source == ShortTermInterest.TWITTER:
+        tweet_candidates = Tweet.objects.filter(user_id=user_id,
+                                                used_in_calc=False)
+        month_wise_text = {}
+
+        for tweet in tweet_candidates:
+            key = f"{tweet.created_at.month}_{tweet.created_at.year}"
+            if key not in month_wise_text:
+                month_wise_text[key] = ""
+            month_wise_text[key] = f"{month_wise_text[key]} {tweet.full_text}"
+
+        for key, text in month_wise_text.items():
+            month, year = key.split("_")
             try:
-                keywords = getKeyword(text, model="SingleRank", num=20)
+                keywords = getKeyword(text or "", model="Yake", num=20)
             except:
                 # silencing errors like
                 # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
@@ -210,29 +320,24 @@ def generate_short_term_model(user_id, source):
             if not len(keywords.keys()):
                 print("No keywords found")
                 continue
-            wiki_keyword_redirect_mapping, keyword_weight_mapping = wikifilter(
-                keywords)
-            # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
-            # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
+            wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(keywords)
+            print(keyword_weight_mapping)
             if not len(keyword_weight_mapping.keys()):
                 print("No keywords found in weight mapping")
                 continue
-            keywords = normalize(keyword_weight_mapping) # normalize the weights to range of 5 to 1
-
-            # find the category for each keyword seperatly and store the keyword in database as a row
+            keywords = normalize(keyword_weight_mapping)
             for keyword, weight in keywords.items():
                 original_keyword_name = wiki_keyword_redirect_mapping.get(
                     keyword, keyword)
-                print("\noriginal_keyword_name ", original_keyword_name) # by lamees
                 keyword = keyword.lower()
                 if keyword in blacklisted_keywords:
                     print("Skipping {} as its blacklisted".format(keyword))
                     continue
-                keyword_instance, created = Keyword.objects.get_or_create(
+                keyword_instance, created = Keyword.objects.get_or_create(  #search for keyword in the keyword model based on the name column and wether it is existed or creatred newly
                     name=keyword.lower())
-                if created:
+                if created:     # check if the keyword exist or it is being created
                     print("getting wiki categories")
-                    categories = wikicategory(keyword) # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
+                    categories = wikicategory(keyword)
                     for category in categories:
                         category_instance, _ = Category.objects.get_or_create(
                             name=category)
@@ -241,54 +346,122 @@ def generate_short_term_model(user_id, source):
                 try:
                     original_keywords = json.loads(
                         keyword_instance.original_keywords)
-                    print("original keywords variable", original_keywords)
                 except:
                     original_keywords = []
                 original_keywords.append(original_keyword_name.lower())
                 keyword_instance.original_keywords = json.dumps(
                     list(set(original_keywords)))
-
                 keyword_instance.save()
 
                 s_interest, _ = ShortTermInterest.objects.update_or_create(
                     user_id=user_id,
                     keyword=keyword_instance,
-                    model_month=1,
+                    model_month=month,
                     model_year=year,
                     defaults={
                         "source": source,
                         "weight": weight
                     },
                 )
-                for p in paper_candidates.filter(
-                        Q(title__icontains=keyword)
-                        | Q(abstract__icontains=keyword)):
-                    s_interest.papers.add(p)
+                for t in tweet_candidates.filter(full_text__icontains=keyword):
+                    s_interest.tweets.add(t)
+        tweet_candidates.update(used_in_calc=True)
+
+    if source == ShortTermInterest.SCHOLAR:
+        paper_candidates = Paper.objects.filter(user_id=user_id,
+                                                used_in_calc=False)
+        # print("paper_candidates in generate_short_term_model in utils.py", paper_candidates) #by lamees
+        #TODO: only one paper per year is being stored possible solution:key year, value list of papers
+        
+        year_wise_text ={}
+
+        for paper in paper_candidates:
+            year_wise_text.update({paper.year : []})
+
+        print("year_wise_text",year_wise_text)
+        for paper in paper_candidates:
+            year_wise_text[paper.year].append((paper.title if paper.title else '') + ' ' + (paper.abstract if paper.abstract else '')) 
+
+        print("\nyear_wise_text",year_wise_text)
+        for year, papers in year_wise_text.items():
+            for text in papers:
+                try:
+                    keywords = getKeyword(text, model="SifRank", num=15)
+                except:
+                    # silencing errors like
+                    # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
+                    continue
+                print(f"got keywords {keywords}")
+                if not len(keywords.keys()):
+                    print("No keywords found")
+                    continue
+                wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(keywords)  
+                # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
+                # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
+                if not len(keyword_weight_mapping.keys()):
+                    print("No keywords found in weight mapping")
+                    continue
+                keywords = normalize(keyword_weight_mapping) # normalize the weights to range of 5 to 1
+
+                # find the category for each keyword seperatly and store the keyword in database as a row
+                for keyword, weight in keywords.items():
+                    original_keyword_name = wiki_keyword_redirect_mapping.get(
+                        keyword, keyword)
+                    # print("\noriginal_keyword_name ", original_keyword_name) # by lamees
+                    keyword = keyword.lower()
+                    if keyword in blacklisted_keywords:
+                        print("Skipping {} as its blacklisted".format(keyword))
+                        continue
+                    keyword_instance, created = Keyword.objects.get_or_create(
+                        name=keyword.lower())
+                    if created:
+                        print("getting wiki categories")
+                        categories = wikicategory(keyword) # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
+                        for category in categories:
+                            category_instance, _ = Category.objects.get_or_create(
+                                name=category)
+                            keyword_instance.categories.add(category_instance)
+                        keyword_instance.save()
+                    try:
+                        original_keywords = json.loads(
+                            keyword_instance.original_keywords)
+                        # print("original keywords variable", original_keywords)
+                    except:
+                        original_keywords = []
+                    original_keywords.append(original_keyword_name.lower())
+                    keyword_instance.original_keywords = json.dumps(
+                        list(set(original_keywords)))
+
+                    keyword_instance.save()
+                    # below a new row will be created if any of the values provided in (user_id, keyword, model_month and model_year) is different 
+                    # or the existing row is updated with new source and weight
+                    s_interest, _ = ShortTermInterest.objects.update_or_create(
+                        user_id=user_id,
+                        keyword=keyword_instance,
+                        model_month=1,
+                        model_year=year,
+                        defaults={
+                            "source": source,
+                            "weight": weight
+                        },
+                    )
+                    for p in paper_candidates.filter(
+                            Q(title__icontains=original_keyword_name)
+                            | Q(abstract__icontains=original_keyword_name)):
+                        s_interest.papers.add(p)
         paper_candidates.update(used_in_calc=True)
 
 
 def get_interest_similarity_score(keyword_list_1,
                                   keyword_list_2,
-                                  weights_1,
-                                  weights_2,
-                                  algorithm="WordEmbedding"): # note add the new embedding here #LK
+                                  algorithm="WordEmbedding"): 
     #print("keyword_list_1",keyword_list_1)#LK
     if algorithm == "WordEmbedding":
-        return calculate_weighted_vectors_similarity(keyword_list_1,
-                                    keyword_list_2,
-                                    weights_1,
-                                    weights_2,
-                                    embedding="Glove")
+        return calculate_similarity(keyword_list_1,
+                                                     keyword_list_2,
+                                                     embedding="Glove")
     else:
         return wikisim(keyword_list_1, keyword_list_2)
-
-
-def cosine_sim(vecA, vecB):
-    """Find the cosine similarity distance between two vectors."""
-    csim = np.dot(vecA, vecB) / (np.linalg.norm(vecA) * np.linalg.norm(vecB))
-    if np.isnan(np.sum(csim)):
-        return 0
-    return csim
 
 
 def get_heat_map_data(user_1_interests, user_2_interests):
@@ -488,3 +661,61 @@ def get_top_long_term_interest_by_weight(user_id, count=10):
                                                                 flat=True))))
 
     return date_filtered_qs.filter(id__in=final_model_ids)
+
+    
+
+# This part is done by LK
+
+def get_vector_representation(data_type, data, embedding):
+    '''function to get vector representation of title and abstrcat for the paper or representation of user model'''
+    return(calculate_vector_embedding(data_type, data, embedding))
+    
+def get_interest_paper_similarity_score(interest_vec, doc_vec, embedding):
+    ''' function to calculate cosine similarity between interest vector and doc vector'''
+    return(cosine_sim(interest_vec, doc_vec, embedding))
+    #return(ts_ss_similarity(interest_vec, doc_vec, method=3))
+
+
+def cosine_sim(vecA, vecB, embedding):
+    """Find the cosine similarity distance between two vectors."""
+    if embedding == 'USE':
+        cosine_similarities = tf.reduce_sum(tf.multiply(vecA, vecB), axis=1)
+        # calculate angular cos similarity (recommended in USE paper)
+        clip_cosine_similarities = tf.clip_by_value(cosine_similarities, -1.0, 1.0)
+        csim = 1.0 - tf.acos(clip_cosine_similarities) / math.pi
+        return csim.numpy()
+    else:
+        csim = np.dot(vecA, vecB) / (np.linalg.norm(vecA) * np.linalg.norm(vecB))
+        if np.isnan(np.sum(csim)):
+            return 0
+        return csim
+        
+def _convert_short_term_model_to_dict(keywords_list):
+    '''
+    This function reads the short term model and check if the interest is stored multiple times 
+    then the average of weights will be calculated
+    '''
+    # seperate the list of lists in two lists for keywords and weights
+    keywords = []
+    weights=[]
+    dup_index ={}
+    for key, value in keywords_list:
+        keywords.append(key)
+        weights.append(value)
+  
+    dup_index = defaultdict(list)
+    for i,item in enumerate(keywords):
+        dup_index[item].append(i)
+    # print("dup_index",dup_index)
+    short_term_data ={}
+    for k, v in dup_index.items():
+        accessed_mapping = map(weights.__getitem__, v)
+        accessed_list = list(accessed_mapping)
+        short_term_data[k]= round(sum(accessed_list)/float(len(accessed_list)),1)
+        # print(accessed_list)
+    return short_term_data
+# --------------------------------------------------------------------
+
+def normalize_data(data):
+    '''function to do  Normalization between 0 and 1'''
+    return (data - np.min(data)) / (np.max(data) - np.min(data))

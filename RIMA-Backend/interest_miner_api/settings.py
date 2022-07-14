@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
-#DEBUG = os.getenv('DJANGO_DEBUG', False) #LK
-DEBUG = os.getenv('DJANGO_DEBUG', True) #LK
+DEBUG = os.getenv('DJANGO_DEBUG', False) #LK
+# DEBUG = os.getenv('DJANGO_DEBUG', True) #LK
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -190,6 +190,34 @@ LDA_MODEL_FILE_PATH = os.environ.get(
     "LDA_MODEL_FILE_PATH",
     "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
 GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH")
+
+USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH")
+
+TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH")
+
+BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH")
+
+SPECTOR_MODEL_FILE_PATH = os.environ.get("SPECTOR_MODEL_FILE_PATH")
+
+SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH")
+
+# SIF Rank model variables
+STANFORDCORENLP = os.environ.get("STANFORDCORENLP")
+
+ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File")
+
+ELMO_WEIGHT_FILE = os.environ.get("Elmo_Weight_File")
+
+ENWIKI_FILE = os.environ.get("Enwiki_File")
+
+INSPEC = os.environ.get("Inspec")
+
+SEMEVALVOCAB2017 = os.environ.get("SemEval2017Vocab")
+
+DUC2001= os.environ.get("Duc2001")
+
+
+
 
 # Pre-load data models
 #if GLOVE_MODEL_FILE_PATH:
