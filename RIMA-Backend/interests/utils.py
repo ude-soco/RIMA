@@ -262,15 +262,24 @@ def generate_short_term_model(user_id, source):
                                 name=category)
                             keyword_instance.categories.add(category_instance)
                         keyword_instance.save()
+                        
                     try:
                         original_keywords = json.loads(
                             keyword_instance.original_keywords)
-                        print("original keywords variable", original_keywords)
+
+                        original_keywords_with_weights = json.loads(
+                            keyword_instance.original_keywords_with_weights)
+                        # print("original keywords variable", original_keywords)
                     except:
                         original_keywords = []
+                        original_keywords_with_weights = []
                     original_keywords.append(original_keyword_name.lower())
                     keyword_instance.original_keywords = json.dumps(
                         list(set(original_keywords)))
+
+                    # for original keyword with weights column 
+                    original_keywords_with_weights.append({original_keyword_name.lower() : weight})
+                    keyword_instance.original_keywords_with_weights = json.dumps(original_keywords_with_weights)
 
                     keyword_instance.save()
 
@@ -435,6 +444,10 @@ def generate_short_term_model_dbpedia(user_id, source):
                     original_keywords.append(original_keyword_name.lower())
                     keyword_instance.original_keywords = json.dumps(
                         list(set(original_keywords)))
+
+                    # for original keyword with weights column 
+                    original_keywords_with_weights.append({original_keyword_name.lower() : weight})
+                    keyword_instance.original_keywords_with_weights = json.dumps(original_keywords_with_weights)
 
                     keyword_instance.save()
                     # below a new row will be created if any of the values provided in (user_id, keyword, model_month and model_year) is different 
