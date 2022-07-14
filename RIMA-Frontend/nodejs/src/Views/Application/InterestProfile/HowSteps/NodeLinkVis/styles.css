@@ -1,0 +1,30 @@
+.popper-div p {
+    font-size: 13px !important;
+}
+.popper-div {
+    position: left;
+    display: inline;
+    border-bottom: 1px dotted #363636;
+    width: 400px;
+    height: auto;
+    background-color: #363636;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 8px 0px 8px;
+
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+}
+
+.popper-div::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}

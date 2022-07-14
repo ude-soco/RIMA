@@ -171,12 +171,12 @@ export default function TweetCard(props) {
   };
 
   const HideHandler = () => {
-    timer: setTimeout(() => {
+    /*timer: setTimeout(() => {
       props.deleteTweet(props.tweet);
       setState({ hide: false });
     }, 10000),
       setHide(true);
-    countDownFun();
+    countDownFun();*/
   };
   const saveHandler = (params) => {
     let data = {
