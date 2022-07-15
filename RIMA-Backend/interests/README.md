@@ -4,7 +4,7 @@ Download the models from the links below and follow the comments written in sett
     - [SciBERT](https://s3-us-west-2.amazonaws.com/ai2-s2-research/scibert/huggingface_pytorch/scibert_scivocab_uncased.tar)<br> 
     - [USE](https://tfhub.dev/google/universal-sentence-encoder/4)<br>
 
-2. Download MSmarco model from [MSmarco](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Unzip it save it in the following location "RIMA-Backend/transformers"
+2. Download MSmarco model from [MSmarco](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Create a folder named "transformers" in "RIMA-Backend" folder, unzip it and save it in the following location "RIMA-Backend/transformers"
 
 3. SIFRank model<br>
 Download:<br>
