@@ -643,7 +643,8 @@ def get_top_long_term_interest_by_weight(user_id, count=10):
 
     date_filtered_qs = (LongTermInterest.objects.filter(
         user_id=user_id).prefetch_related("tweets", "papers",
-                                          "keyword").order_by("-weight"))
+                                        "keyword").order_by("-weight"))
+
     tweet_model_ids = set(
         date_filtered_qs.filter(
             source__icontains=ShortTermInterest.TWITTER).values_list(
@@ -652,6 +653,7 @@ def get_top_long_term_interest_by_weight(user_id, count=10):
         date_filtered_qs.filter(
             source__icontains=ShortTermInterest.SCHOLAR).values_list(
             "id", flat=True))
+ 
     final_model_ids = set()
     final_model_ids = final_model_ids.union(
         set(list(paper_model_ids)[:paper_limit])).union(
@@ -676,6 +678,7 @@ def get_top_long_term_interest_by_weight(user_id, count=10):
                 date_filtered_qs.filter(
                     source=LongTermInterest.MANUAL).values_list("id",
                                                                 flat=True))))
+
 
     return date_filtered_qs.filter(id__in=final_model_ids)
 
