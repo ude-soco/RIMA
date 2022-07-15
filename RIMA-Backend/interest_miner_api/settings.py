@@ -206,10 +206,10 @@ BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
 # use bellow line for scibert after downloading it
 # BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","scibert_scivocab_uncased")
 
-# use bellow line if spector is not used
-SPECTOR_MODEL_FILE_PATH = os.environ.get("SPECTOR_MODEL_FILE_PATH","")
-# use bellow line for spector model 
-# SPECTOR_MODEL_FILE_PATH = os.environ.get("SPECTOR_MODEL_FILE_PATH","allenai/spector")
+# use bellow line if specter is not used
+SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","")
+# use bellow line for specter model 
+# SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","allenai/specter")
 
 # Sif_model is used for keyword extraction
 SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH", "squeezebert/squeezebert-mnli")

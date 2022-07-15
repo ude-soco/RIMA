@@ -10,8 +10,8 @@ from transformers import BertTokenizer, BertModel
 glove_model = None
 use_model = None
 transformer_model = None
-spector_tokenizer = None
-spector_model = None
+specter_tokenizer = None
+specter_model = None
 scibert_model = None
 scibert_tokenizer = None
 
@@ -28,13 +28,13 @@ if settings.TRANSFORMER_MODEL_FILE_PATH:
     transformer_model = SentenceTransformer(settings.TRANSFORMER_MODEL_FILE_PATH)
     # transformer_model.save('./transformers/all_distilroberta') #to store the transformer model locally
 
-if settings.SPECTOR_MODEL_FILE_PATH:
+if settings.SPECTER_MODEL_FILE_PATH:
     # load model and tokenizer
-    spector_tokenizer = AutoTokenizer.from_pretrained(settings.SPECTOR_MODEL_FILE_PATH)
-    spector_model = AutoModel.from_pretrained(settings.SPECTOR_MODEL_FILE_PATH)
-    # to store spector model locally uncomment the bellow 2 lines
-    # spector_tokenizer.save_pretrained('./spector/')
-    # spector_model.save_pretrained('./spector/')
+    specter_tokenizer = AutoTokenizer.from_pretrained(settings.SPECTER_MODEL_FILE_PATH)
+    specter_model = AutoModel.from_pretrained(settings.SPECTER_MODEL_FILE_PATH)
+    # to store specter model locally uncomment the bellow 2 lines
+    # specter_tokenizer.save_pretrained('./specter/')
+    # specter_model.save_pretrained('./specter/')
 
 if settings.BERT_MODEL_FILE_PATH:
     do_lower_case = True

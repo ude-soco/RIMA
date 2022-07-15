@@ -45,7 +45,7 @@ def get_recommended_publications_doc_level(interests):
     # iterating over papers to extract keywords from them and calculate similarity with user interst vector
     papers_with_scores = []
     count = 0 
-    # embedding = 'SPECTOR'
+    # embedding = 'SPECTER'
     data_type = 'paper_title_abstract'
     for paper in unique_papers:
        
