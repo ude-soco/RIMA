@@ -122,6 +122,7 @@ venv/*
 RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27
 RIMA-Backend/scibert_scivocab_uncased/
 RIMA-Backend/spector/
+
 RIMA-Backend/transformers/all_distilroberta
 RIMA-Backend/transformers/all_minilm
 RIMA-Backend/transformers/all_mpnet 
