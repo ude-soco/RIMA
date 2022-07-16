@@ -71,19 +71,21 @@
 
 11. Download and install [Java JDK](https://www.oracle.com/java/technologies/downloads/)
 
-12. In the command prompt to create the database
+12. Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the `RIMA-Backend`
+
+13. In the command prompt to create the database
 
     ```
     python manage.py migrate
     ```
 
-13. Run the django server and do not close it
+14. Run the django server and do not close it
 
     ```
     python manage.py runserver
     ```
 
-14. Open a new command prompt with admin rights or terminal
+15. Open a new command prompt with admin rights or terminal
 
     - Move to the `RIMA-Backend` in your command prompt
 
