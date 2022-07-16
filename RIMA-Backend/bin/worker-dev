@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Starting Celery job queue ..."
+# celery worker --app=interest_miner_api --concurrency=1 -l info
+celery worker --app=interest_miner_api --concurrency=1 -l info

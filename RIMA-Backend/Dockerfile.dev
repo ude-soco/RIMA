@@ -1,18 +1,45 @@
-FROM python:3.6.13-slim
+# FROM brunneis/python:3.8.3-ubuntu-20.04
+FROM python:3.7-slim
 
-EXPOSE 8080
+EXPOSE 8000
 
 WORKDIR /app
 
+RUN apt-get update -y
+RUN apt-get install -y python-dev python3-dev
+RUN apt-get -y install default-libmysqlclient-dev automake make gcc g++ curl
+
+### Install JAVA
+RUN set -eux; \
+     curl -Lso /tmp/openjdk.tar.gz https://github.com/AdoptOpenJDK/openjdk10-releases/releases/download/jdk-10.0.2%2B13/OpenJDK10_x64_Linux_jdk-10.0.2%2B13.tar.gz; \
+     mkdir -p /opt/java/openjdk; \
+     cd /opt/java/openjdk; \
+     tar -xf /tmp/openjdk.tar.gz; \
+     jdir=$(dirname $(dirname $(find /opt/java/openjdk -name javac))); \
+     mv ${jdir}/* /opt/java/openjdk; \
+     rm -rf ${jdir} /tmp/openjdk.tar.gz;
+
+ENV JAVA_HOME=/opt/java/openjdk \
+     PATH="/opt/java/openjdk/bin:$PATH"
+
+
+RUN useradd -m app
+USER app
+
 ENV  PYTHONUNBUFFERED 1
+ENV  PATH "$PATH:/app/.local/bin"
 
-COPY requirements.txt .
+COPY requirements-docker.txt .
 
-RUN  pip install --no-color --quiet --no-cache-dir --user -r requirements.txt
+RUN python3 -m pip install Cython
 
-RUN  python -m spacy download en &&\
-     python -c "import nltk;nltk.download('stopwords')" &&\
-     python -c "import nltk;nltk.download('punkt')" &&\
-     python -c "import nltk;nltk.download('sentiwordnet')"
+RUN python3 -m pip install --upgrade pip
+
+RUN pip3 install --no-cache-dir --user -r requirements-docker.txt
+
+RUN python3 -m spacy download en &&\
+     python3 -c "import nltk;nltk.download('stopwords')" &&\
+     python3 -c "import nltk;nltk.download('punkt')" &&\
+     python3 -c "import nltk;nltk.download('sentiwordnet')"
 
 COPY . .
