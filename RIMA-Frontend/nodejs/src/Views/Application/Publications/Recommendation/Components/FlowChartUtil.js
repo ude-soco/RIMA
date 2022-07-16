@@ -1,8 +1,11 @@
-// const textMetrics = require("text-metrics");
-// const el = document.querySelector("h5");
-// const metrics = textMetrics.init(el);
-
 const __measuretext_cache__ = {};
+
+/**
+ * Get maximum size of a node
+ * @param {object} node Node object of cytoscape
+ * @param {object} sizeOnCtx The size of the node's text in a temp canvas' context
+ * @returns Maximum node size
+ */
 function getMaxMeasure(node, sizeOnCtx) {
   const cy = node.cy();
   cy._private.MaxMeasure = cy._private.MaxMeasure || { width: 0, height: 0 };
@@ -16,6 +19,14 @@ function getMaxMeasure(node, sizeOnCtx) {
   );
   return cy._private.MaxMeasure;
 }
+
+/**
+ * Calculate the size of a node depends on the node's text
+ * @param {object} node Node object of the cytoscape
+ * @param {boolean} calcHeight If true calculate also node's height
+ * @param {boolean} justMax If true used the size of biggest node
+ * @returns
+ */
 export function getSize(node, calcHeight, justMax) {
   const label = node.data("label");
   const fStyle = node.pstyle("font-style").strValue;
@@ -49,11 +60,25 @@ export function getSize(node, calcHeight, justMax) {
   return !justMax ? sizeOnCtx : getMaxMeasure(node, sizeOnCtx);
 }
 
+/**
+ * Return the height of the nodes
+ * @param {number} padding It's used the padding in the height calculateion
+ * @param {number} ratio It's used the ratio in the height calculateion
+ * @param {boolean} justMax If true used the size of biggest node
+ * @returns
+ */
 export function getHeight(padding, ratio, justMax) {
   return (node) =>
     getSize(node, true, justMax).height * (ratio || 1) + (padding || 10);
 }
 
+/**
+ * Return the width of the nodes
+ * @param {number} padding It's used the padding in the width calculateion
+ * @param {number} ratio It's used the ratio in the width calculateion
+ * @param {boolean} justMax If true used the size of biggest node
+ * @returns
+ */
 export function getWidth(padding, ratio, justMax) {
   return (node) =>
     Math.round(
@@ -61,217 +86,42 @@ export function getWidth(padding, ratio, justMax) {
     );
 }
 
-export function getMaxWidthHeight(padding, ratio, justMax) {
-  return (node) => {
-    const size = getSize(node, true, justMax);
-    const radius =
-      Math.round(Math.max(size.width, size.height || 0) * (ratio || 1)) +
-      (padding || 10);
-    return radius;
-  };
-}
-// Hoda start
-export function wordElementProvider(
+/**
+ * Provide all nodes depend on the given words
+ * @param {Array<string>} words List of interest model or publication keywords
+ * @param {string} prefix It's used in the generated id
+ * @param {boolean} inclEmbedding If True, add Weighted average and Embedding nodes
+ * @param {string} modelLable The label of Embedding node. It is used when incEmbedding is True
+ * @returns List of nodes
+ */
+export function wordElementProviderWithCoordinate(
   words,
   prefix,
-  isSplit,
   inclEmbedding,
   modelLable
 ) {
-  let wordElements = [];
-  const modelId = prefix + "Model";
-  let wAvgId = null;
-  let wParentId = null;
-  if (inclEmbedding) {
-    wAvgId = prefix + "Avg";
-    const wordlable = `${modelLable}`;
-    wordElements.push({
-      // classes: "circlenode",
-      classes: "polygonnode",
-      data: {
-        id: modelId,
-        label: wordlable,
-        faveColor: "black",
-        faveColorLabel: "black",
-      },
-      style: {
-        "border-style": "dashed",
-        "font-weight": "bold",
-        "font-size": "17",
-      },
-    });
-    wParentId = prefix +  + "Parent";
-    if (!!wParentId) {
-      wordElements.push({
-        //classes: "circlenode",
-        data: {
-          id: wParentId,
-          label: "",
-          faveColor: "gray",
-          faveColorLabel: "black", //word.color,
-        },
-        style: {
-          "border-style": "solid",
-        },
-      });
-    }
-    const avglable = `WEIGHTED AVERAGE`;
-    wordElements.push(
-      {
-        classes: "recnode",
-        data: {
-          id: wAvgId,
-          label: avglable,
-          faveColor: "black",
-          faveColorLabel: "black",
-        },
-        style: {
-          "font-weight": "bold",
-          "font-size": "17",
-        },
-      },
-      // edges
-      {
-        data: {
-          source: wAvgId,
-          target: modelId,
-          label: "",
-          faveColor: "black",
-        },
-        style: {
-          "line-style": "dashed",
-        },
-      }
-    );
-  }
-  words.forEach((word, index) => {
-    const texts = word.text.split(" ");
-    const wordlable = `${word.text} (${word.weight})`;
-    const wordId = `${prefix}wordName${index}`;
-    let avgWordId = null;
-    if (isSplit && texts.length > 1) {
-      // console.log(texts);
-      if (!!inclEmbedding) {
-        avgWordId = `${prefix}AvgWordName${index}`;
-      }
-      texts.forEach((text, subIndex) => {
-        const subwordId = `${prefix}wordName${index}_${subIndex}`;
-
-        wordElements.push(
-          {
-            //classes: "circlenode",
-            classes: "polygonnode",
-            data: {
-              id: subwordId,
-              label: text,
-              faveColor: word.color,
-              faveColorLabel: "black",  
-            },
-            style: {
-              "border-style": "solid",
-            },
-          },
-          // edges
-          {
-            data: {
-              source: wordId,
-              target: subwordId,
-              label: "",
-              faveColor: word.color, 
-            },
-          }
-        );
-        if (!!avgWordId) {
-          wordElements.push(
-            // edges
-            {
-              data: {
-                source: subwordId,
-                target: avgWordId,
-                label: "",
-                faveColor: word.color,
-              },
-            }
-          );
-        }
-      });
-    }
-    // Keyphrase to Keyword link
-    wordElements.push({
-      //classes: "circlenode",
-      classes: "polygonnode",
-      data: {
-        id: wordId,
-        label: wordlable,
-        faveColor: word.color,
-        faveColorLabel: "black", //word.color,
-        ...(!!wParentId?{parent:wParentId}:{})
-      },
-      style: {
-        "border-style": "dashed",
-      },
-    });
-    // edges
-    if (!!wAvgId) {
-      if (!!avgWordId) {
-        wordElements.push({
-          //classes: "circlenode",
-          classes: "polygonnode",
-          data: {
-            id: avgWordId,
-            label: wordlable,
-            faveColor: word.color,
-            faveColorLabel: "black", //word.color,
-          },
-          style: {
-            "border-style": "dashed",
-          },
-        });
-      }
-      wordElements.push({
-        data: {
-          source: avgWordId || wordId,
-          target: wAvgId,
-          label: "",
-          faveColor: word.color,
-        },
-        style: {
-          "line-style": "dashed",
-        },
-      });
-    }
-  });
-  return wordElements;
-}
-// Hoda end
-// Hoda start- Visualization for 'GENERATE EMBEDDINGS' step
-export function wordElementProviderWithCoordinate(words, prefix, isSplit, inclEmbedding, modelLable) {
+  // Visualization for 'GENERATE EMBEDDINGS' step
   let wordElements = [];
   let modelObj = null;
   let wAvgObj = null;
   let wParentObj = null;
-  //Show more extracted keywords/interest
-  //words=words.concat(words);
-  wParentObj={
-    //classes: "circlenode",
+  wParentObj = {
     data: {
-      id: prefix +  "Parent",
+      id: prefix + "Parent",
       label: "",
-      faveColor: /*!!inclEmbedding?"#C4C4C4":*/"white",
-      faveColorLabel: "black", //word.color,
+      faveColor: "white",
+      faveColorLabel: "black",
     },
     style: {
       "border-style": "solid",
-      "opacity": "0.80",
+      opacity: "0.80",
     },
   };
 
-wordElements.push(wParentObj);
-if (inclEmbedding) {
-    
+  wordElements.push(wParentObj);
+  if (inclEmbedding) {
     const wordlable = `${modelLable}`;
-    modelObj={
-      // classes: "circlenode",
+    modelObj = {
       classes: "polygonnode",
       data: {
         id: prefix + "Model",
@@ -287,10 +137,10 @@ if (inclEmbedding) {
     };
 
     wordElements.push(modelObj);
-    
+
     const avglable = `WEIGHTED AVERAGE`;
 
-    wAvgObj={
+    wAvgObj = {
       classes: "recnode",
       data: {
         id: prefix + "Avg",
@@ -325,22 +175,22 @@ if (inclEmbedding) {
   words.forEach((word, index) => {
     let wordObj = null;
     const wordlable = `${word.text} (${word.weight})`;
-    wordObj={
-      //classes: "circlenode",
+    wordObj = {
       classes: "polygonnode",
       data: {
         id: `${prefix}wordName${index}`,
         label: wordlable,
         faveColor: word.color,
-        faveColorLabel: "black", //word.color,
-        parent:wParentObj.data.id
+        faveColorLabel: "black",
+        parent: wParentObj.data.id,
       },
-      position:{
-          x:200*(index%2),
-          y:100*Math.round(index/2-0.1)
+      // Put couple nodes per line
+      position: {
+        x: 200 * (index % 2),
+        y: 100 * Math.round(index / 2 - 0.1),
       },
       style: {
-        "border-style": inclEmbedding?"dashed":"solid",
+        "border-style": inclEmbedding ? "dashed" : "solid",
       },
     };
     wordElements.push(wordObj);
@@ -352,7 +202,7 @@ if (inclEmbedding) {
           target: wAvgObj.data.id,
           label: "",
           faveColor: word.color,
-          transparent:1,
+          transparent: 1,
         },
         style: {
           "line-style": "dashed",
@@ -361,18 +211,28 @@ if (inclEmbedding) {
     }
   });
   if (!!wAvgObj) {
-    wAvgObj.position={
-      x:100,
-      y:100*Math.round(words.length/2)+80
+    wAvgObj.position = {
+      x: 100,
+      y: 100 * Math.round(words.length / 2) + 80,
     };
-    modelObj.position={
-      x:wAvgObj.position.x,
-      y:wAvgObj.position.y+150
-    }
+    modelObj.position = {
+      x: wAvgObj.position.x,
+      y: wAvgObj.position.y + 150,
+    };
   }
   return wordElements;
 }
-// Hoda end
+
+/**
+ * Provide all nodes for final step of How explanation
+ * @param {string} prefixLeft It's Used in the generated id
+ * @param {string} titleLeft Titel of left node
+ * @param {string} prefixRight It's used in the generated id
+ * @param {string} titleRight Titel of right node
+ * @param {string} cosineSim Titel of middle node
+ * @param {number} score Similarity score was shown in the last button node
+ * @returns List of nodes
+ */
 export function getFinalElement(
   prefixLeft,
   titleLeft,
@@ -399,10 +259,9 @@ export function getFinalElement(
         y: 300,
       },
       style: {
-          "font-size" : "17",
-          "font-weight": "bold"
-
-        },
+        "font-size": "17",
+        "font-weight": "bold",
+      },
     },
     {
       classes: "recnode",
@@ -412,7 +271,7 @@ export function getFinalElement(
         faveColor: "black",
         faveColorLabel: "black",
         tooltip:
-        "<p>Similarity is calculated<br />using cosine similarity<br />between the embeddings</p>",
+          "<p>Similarity is calculated<br />using cosine similarity<br />between the embeddings</p>",
         lock: true,
       },
       position: {
@@ -420,15 +279,15 @@ export function getFinalElement(
         y: 180,
       },
       style: {
-          "font-weight": "bold",
-          "font-size" : "17",
-          "background-image": "https://i.ibb.co/Jkck6R5/info-2-48.png",
-          "background-fit": "cover",
-          "background-position": "left top",
-          "background-image-opacity": 0.7,
-          "height": 70,
-          "width": 150,
- },
+        "font-weight": "bold",
+        "font-size": "17",
+        "background-image": "https://i.ibb.co/Jkck6R5/info-2-48.png",
+        "background-fit": "cover",
+        "background-position": "left top",
+        "background-image-opacity": 0.7,
+        height: 70,
+        width: 150,
+      },
     },
     {
       //classes: "circlenode",
@@ -499,7 +358,12 @@ export function getFinalElement(
     },
   ];
 }
-//Hoda start calculate the maximum keyword similarity and score
+
+/**
+ * Calculate the maximum keyword similarity and score
+ * @param {object} paper Paper object
+ * @param {Array<string>} interests List of interests
+ */
 export function CalcMaxkeyword(paper, interests) {
   for (let p1 in paper.keywords_similarity) {
     let tInterests = paper.keywords_similarity[p1];
@@ -535,10 +399,15 @@ export function CalcMaxkeyword(paper, interests) {
   }
 }
 
+/**
+ * Set the maximum silimaliry of interest for each publication keywords as a keyword score and set It's color
+ * @param {object} keywords Publication keywords
+ * @returns List of colored keyword scores
+ */
 export function getKeywordScore(keywords) {
   let items = [];
   if (!keywords) return [{ keyword: "", score: 0, color: "" }];
-  let i = 0;
+  //Convert object to the list
   for (let p2 in keywords) {
     let value = keywords[p2];
     items.push({
@@ -553,4 +422,3 @@ export function getKeywordScore(keywords) {
     a.score < b.score ? 1 : a.score == b.score ? 0 : -1
   );
 }
-// Hoda end

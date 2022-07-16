@@ -136,7 +136,7 @@ export default function ExpansionPanel(props) {
               Why?
             </Typography>
           </ButtonMUI>
-          {/* <ButtonMUI
+           <ButtonMUI
             variant={whatIfExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhatIfExpandClick();
@@ -155,7 +155,7 @@ export default function ExpansionPanel(props) {
             >
               What-If?
             </Typography>
-          </ButtonMUI> */}
+          </ButtonMUI> 
         </ButtonGroup>
       </Grid>
 

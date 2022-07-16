@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
-import { Typography, Grid, Box, Chip, Switch, makeStyles } from "@material-ui/core";
-import { Popover, Menu, MenuItem } from "@material-ui/core";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-//Hoda Start
+import {
+  Typography,
+  Grid,
+  Chip,
+  makeStyles,
+} from "@material-ui/core";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 const useStyles = makeStyles((theme) => ({
   italicBody2: {
     fontStyle: "italic",
   },
 }));
-
+/**
+ * Generate highlighted keywprd by HTML
+ * @param {string} paperId Id of the paper
+ * @param {number} max_score Maximun similarity score to the interest
+ * @param {string} max_interest_color Color of relevant interest
+ * @param {string} originalText The original form of the keyword in the text
+ * @param {string} lookupkey The lookup keyword to find data chart
+ * @returns highlighted HTML keyword
+ */
 function highlighter(
   paperId,
-  keyword,
   max_score,
   max_interest_color,
   originalText,
@@ -25,9 +35,14 @@ function highlighter(
     Math.round(max_score * 100) / 100
   }" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
 }
+
+/**
+ * Convert keyword similarity object to a sorted array
+ * @param {object} keywords_similarity
+ * @returns a sorted keywords array
+ */
 function KeywordSimObjToArray(keywords_similarity) {
   let items = [];
-  let i = 0;
   for (let p2 in keywords_similarity) {
     let value = keywords_similarity[p2];
     items.push({
@@ -46,6 +61,14 @@ function KeywordSimObjToArray(keywords_similarity) {
       : -1
   );
 }
+
+/**
+ * Highlight the extracted keyword from the abstract with the relevant interest
+ * @param {string} paperId Id of a paper
+ * @param {object} keywords_similarity
+ * @param {string} text Abstract text of the paper
+ * @returns Highlighted extracted keyword from a paper
+ */
 function HighlightText(paperId, keywords_similarity, text) {
   keywords_similarity = KeywordSimObjToArray(keywords_similarity);
   let modified_text = text;
@@ -55,15 +78,11 @@ function HighlightText(paperId, keywords_similarity, text) {
     let regEx = new RegExp(value.keyword, "ig");
     let matches = regEx.exec(modified_text);
     if (matches === null) continue;
-    //deform originalText to prevent nested highlighting keyword/s
     let originalText = matches[0];
-    //.split(" ")
-    //.map((x) => "<x>" + x[0] + "</x>" + x.substring(1))
-    //.join("&nbsp;");
+    //Convert a keyword to the base 64 format. For sending keyword to the barchart in the tooltip
     let replaceKey = btoa(unescape(encodeURIComponent(value.keyword)));
     const replaceText = highlighter(
       paperId,
-      value.keyword,
       value.max_score,
       value.max_interest_color,
       originalText,
@@ -93,14 +112,18 @@ function executeOnClick(isExpanded) {
   console.log(isExpanded);
 }
 // End Tannaz
+/**
+ * Highlight extracted keyword from the titel of a paper
+ * @param {object} props Component props
+ * @param {object} props.paper Paper object
+ * @param {number} props.similarityScore Similarity score of paper
+ */
 function Title({ paper, similarityScore }) {
-  //highlight title
   let modified_title = HighlightText(
     paper.paperId,
     paper.keywords_similarity,
     paper.title
   );
-  // Hoda end
   return (
     <Grid container style={{ justifyContent: "space-between" }}>
       <Grid
@@ -111,8 +134,15 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-start"
         alignItems="flex-start"
       >
-        {/* Hoda start- External link on title */}
-        <Grid item xs container  direction="row"  style={{ justifyContent: "space-between" }} className="new-window">
+        {/* External link on the top-right of the title */}
+        <Grid
+          item
+          xs
+          container
+          direction="row"
+          style={{ justifyContent: "space-between" }}
+          className="new-window"
+        >
           <Grid item xs>
             <Typography
               noWrap
@@ -164,7 +194,11 @@ function Title({ paper, similarityScore }) {
     </Grid>
   );
 }
-
+/**
+ * List of authors
+ * @param {object} props Component props
+ * @param {Array} props.authorsList Array of authors
+ */
 function Authors({ authorsList }) {
   const res = [];
   authorsList.forEach((element) => {
@@ -177,6 +211,11 @@ function Authors({ authorsList }) {
   );
 }
 
+/**
+ * Highlight extracted keyword from the abstract of a paper
+ * @param {object} props Component props
+ * @param {object} props.paper Object of paper
+ */
 function PaperAbstract({ paper }) {
   let modified_text = HighlightText(
     paper.paperId,
@@ -222,13 +261,15 @@ function PaperAbstract({ paper }) {
     </>
   );
 }
-// Hoda start- Tooltip on extracted keywords
+/**
+ * Display the paper content in the paper card
+ * @param {object} props Component props
+ * @param {object} props.paper Object of paper
+ * @returns
+ */
 export default function PaperContent({ paper }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [popoverActive, setPopoverActive] = React.useState(false);
-  const [modalActive, setModalActive] = React.useState(true);
-  const [menu, setMenu] = useState(null);
   const handleClick = (event) => {
     let ele = anchorEl && anchorEl.element;
     if (event.currentTarget === ele) {
@@ -241,21 +282,7 @@ export default function PaperContent({ paper }) {
     let interests = paper.keywords_similarity[keyword];
     setAnchorEl({ element: event.currentTarget, interests: interests });
   };
-
-  const popoverActiveHandleChange = (event) => {
-    setPopoverActive(event.target.checked);
-  };
-
-  const modalActiveHandleChange = (event) => {
-    setModalActive(event.target.checked);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const open = Boolean(anchorEl);
-  const id = open ? paper.paperId : undefined;
-
   useEffect(() => {
     ReactTooltip.rebuild();
     document
@@ -270,39 +297,45 @@ export default function PaperContent({ paper }) {
 
   return (
     <>
-        <ReactTooltip
-          class="chart"
-          id={paper.paperId}
-          event={"click"}
-          globalEventOff={"click"}
-          border={true}
-          type={"light"}
-          place={"bottom"}
-          effect={"solid"}
-          clickable={true}
-          getContent={(dataTip) => {
-            if (!dataTip) return <>No Data!</>;
-            let keyword = decodeURIComponent(escape(atob(dataTip)));
-            let interests = paper.keywords_similarity[keyword];
-            return (
-              <TopSimilarityChart
-                onClick={(e) => e.stopPropagation()}
-                width={400}
-                interests={interests}
-                title={(<>
+      <ReactTooltip
+        class="chart"
+        id={paper.paperId}
+        event={"click"}
+        globalEventOff={"click"}
+        border={true}
+        type={"light"}
+        place={"bottom"}
+        effect={"solid"}
+        clickable={true}
+        getContent={(dataTip) => {
+          if (!dataTip) return <>No Data!</>;
+          // Convert keyword base 64 format to the normal text format
+          let keyword = decodeURIComponent(escape(atob(dataTip)));
+          let interests = paper.keywords_similarity[keyword];
+          return (
+            <TopSimilarityChart
+              onClick={(e) => e.stopPropagation()}
+              width={400}
+              interests={interests}
+              title={
+                <>
                   The top three similarity scores between
-                <Typography  className={classes.italicBody2} variant="Body2" component="span">
-                  Your Interests
-                </Typography>
+                  <Typography
+                    className={classes.italicBody2}
+                    variant="Body2"
+                    component="span"
+                  >
+                    Your Interests
+                  </Typography>
                   &nbsp;and {keyword}
-              </>)}
-              />
-            );
-          }}
-        />
+                </>
+              }
+            />
+          );
+        }}
+      />
       <Title paper={paper} similarityScore={paper.score} />
       <PaperAbstract paper={paper} />
     </>
   );
 }
-// Hoda end

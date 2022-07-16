@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, Divider, Paper, Hidden  } from "@material-ui/core";
+import { Typography, Grid, Paper,Table ,TableBody ,TableRow,TableCell} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -16,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
+/**
+ * Component Embedding legend
+ * @param {object} props Component props 
+ * @param {object} props.style style attributes for paper
+ */
 const EmbeddingLegends = ({style}) => {
   const classes = useStyles();
 
@@ -23,31 +28,43 @@ const EmbeddingLegends = ({style}) => {
     <>
       <Paper
         style={{...style,
-          padding: 16,
-          height:"auto"
+          padding: 10,
+          height:"auto",
+          width: "50%"
         }}
-      >            
-        <Grid container className="align-items-center">
+      >             
+        <Grid container >
           <Grid item xs={12} md={12}>
-            <Typography style={{ fontWeight: "bold",fontSize: "11pt" }}>
+            <Typography style={{ fontWeight: "bold",fontSize: "10pt" }}>
               Legend
             </Typography>
           </Grid>
-          <Grid item xs={6} md={2}>
-            <hr style={{ "border-top": "2px solid #363636" }} />
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Paper className={classes.paper} elevation={0} style={{ "color":  "#363636"}}> Keyword
-            </Paper>
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <hr style={{ "border-top": "2px dashed #363636" }} />
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Paper className={classes.paper} elevation={0} style={{ "color":  "#363636" }}>
-              Keyword Embedding
-            </Paper>
-          </Grid>
+          <Table style={{ maxWidth: 500 }} aria-label="simple table">
+            <TableBody>
+              <TableRow >
+                <TableCell  align="center" style={{  Width:"50px" }} >
+                  <hr style={{ "border-top": "2px solid #363636" ,  Width:"20px"}} />
+                </TableCell>
+                <TableCell align="center">Data</TableCell>
+                <TableCell align="center" style={{  Width:"50px" }}>
+                  <hr style={{ "border-top": "2px dashed #363636", Width:"20px" }} />
+                </TableCell>
+                <TableCell align="center">Embedding</TableCell>
+              </TableRow>
+              <TableRow >
+                <TableCell  align="center" style={{  Width:"50px" }} >
+                  <Grid class="rectangle">
+                  </Grid>
+                </TableCell>
+                <TableCell align="left">Process</TableCell>
+                <TableCell align="center" style={{  Width:"50px" }}>
+                  <Grid class="parallelogram">
+                  </Grid>
+                </TableCell>
+                <TableCell align="left">Data</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </Grid>
       </Paper>
     </>
