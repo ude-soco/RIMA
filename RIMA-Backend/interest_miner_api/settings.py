@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
-#DEBUG = os.getenv('DJANGO_DEBUG', False) #LK
-DEBUG = os.getenv('DJANGO_DEBUG', True) #LK
+DEBUG = os.getenv('DJANGO_DEBUG', False) #LK
+# DEBUG = os.getenv('DJANGO_DEBUG', True) #LK
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -190,6 +190,47 @@ LDA_MODEL_FILE_PATH = os.environ.get(
     "LDA_MODEL_FILE_PATH",
     "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
 GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH")
+
+# use bellow line if use_model is not used
+USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
+# use bellow line for USE_model after downloading it
+# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
+
+# use line bellow if msmarco model is stored in the project
+TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","transformers/msmarco/")
+# use line bellow if msmarco model is not stored in the project
+# TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","msmarco-distilbert-base-tas-b")
+
+# use bellow line if scibert is not used
+BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
+# use bellow line for scibert after downloading it
+# BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","scibert_scivocab_uncased")
+
+# use bellow line if specter is not used
+SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","")
+# use bellow line for specter model 
+# SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","allenai/specter")
+
+# Sif_model is used for keyword extraction
+SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH", "squeezebert/squeezebert-mnli")
+
+# SIF Rank model variables
+STANFORDCORENLP = os.environ.get("STANFORDCORENLP", "interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27")
+
+ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
+
+ELMO_WEIGHT_FILE = os.environ.get("Elmo_Weight_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5")
+
+ENWIKI_FILE = os.environ.get("Enwiki_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/enwiki_vocab_min200.txt")
+
+INSPEC = os.environ.get("Inspec", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/inspec_vocab.txt")
+
+SEMEVALVOCAB2017 = os.environ.get("SemEval2017Vocab", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/semeval_vocal.txt")
+
+DUC2001= os.environ.get("Duc2001", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/duc2001.txt")
+
+
+
 
 # Pre-load data models
 #if GLOVE_MODEL_FILE_PATH:

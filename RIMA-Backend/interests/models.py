@@ -50,6 +50,7 @@ class Tweet(models.Model):
 class Keyword(models.Model):
     name = models.CharField(max_length=1024)
     original_keyword_name = models.CharField(max_length=1024)
+    original_keywords_with_weights =  models.TextField()
     original_keywords = models.TextField()
     categories = models.ManyToManyField(Category, related_name="keywords")
 

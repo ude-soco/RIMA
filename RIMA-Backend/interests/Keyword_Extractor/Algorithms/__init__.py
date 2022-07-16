@@ -11,3 +11,5 @@ from interests.Keyword_Extractor.Algorithms.graph_based.textrank import TextRank
 
 from interests.Keyword_Extractor.Algorithms.statistics_based import rake
 from interests.Keyword_Extractor.Algorithms.statistics_based import yake
+
+from interests.Keyword_Extractor.Algorithms.embedding_based import sifrank

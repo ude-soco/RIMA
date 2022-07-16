@@ -46,6 +46,7 @@ class ShortTermInterestSerializer(serializers.ModelSerializer):
     keyword = serializers.SerializerMethodField()
     original_keyword = serializers.SerializerMethodField()
     original_keywords = serializers.SerializerMethodField()
+    original_keywords_with_weights = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
     paper_db_ids = serializers.SerializerMethodField()
     tweet_ids = serializers.SerializerMethodField()
@@ -74,6 +75,13 @@ class ShortTermInterestSerializer(serializers.ModelSerializer):
         except:
             original_keywords = []
         return original_keywords
+    
+    def get_original_keywords_with_weights(self, instance):
+        try:
+            original_keywords_with_weights = json.loads(instance.keyword.original_keywords_with_weights)
+        except:
+            original_keywords_with_weights = []
+        return original_keywords_with_weights
 
     class Meta:
         model = ShortTermInterest
@@ -84,6 +92,7 @@ class LongTermInterestSerializer(serializers.ModelSerializer):
     keyword = serializers.SerializerMethodField()
     original_keyword = serializers.SerializerMethodField()
     original_keywords = serializers.SerializerMethodField()
+    original_keywords_with_weights = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
     tweet_ids = serializers.SerializerMethodField()
     papers = PaperSerializer(many=True)
@@ -109,6 +118,12 @@ class LongTermInterestSerializer(serializers.ModelSerializer):
         except:
             original_keywords = []
         return original_keywords
+    def get_original_keywords_with_weights(self, instance):
+        try:
+            original_keywords_with_weights = json.loads(instance.keyword.original_keywords_with_weights)
+        except:
+            original_keywords_with_weights = []
+        return original_keywords_with_weights
 
     class Meta:
         model = LongTermInterest

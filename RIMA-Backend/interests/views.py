@@ -83,9 +83,15 @@ from .models import (
 )
 from accounts.models import User
 from .twitter_utils import get_recommended_tweets
-from .utils import get_interest_similarity_score, get_top_long_term_interest_by_weight, get_top_short_term_interest_by_weight, get_radar_similarity_data, get_heat_map_data, get_venn_chart_data
+from .utils import (
+    get_interest_similarity_score,
+    get_top_long_term_interest_by_weight,
+    get_top_short_term_interest_by_weight, 
+    get_radar_similarity_data, 
+    get_heat_map_data, 
+    get_venn_chart_data)
 from interests.tasks import import_user_data, import_user_paperdata
-from .paper_utils import get_recommended_papers
+from .publication_utils import API, get_recommended_publications, get_recommended_publications_doc_level
 
 class TriggerPaperUpdate(APIView):
     def post(self, request, *args, **kwargs):
@@ -140,14 +146,18 @@ class LongTermInterestItemView(RetrieveUpdateDestroyAPIView):
 
 
 @api_view(["post"])  #LK
-def recommended_papers(request, *args, **kwargs):
-    print("recommended_papers",request.data)
-    # [{'id': 'Thailand', 'text': 'Thailand'}, {'id': 'India', 'text': 'India'}]
-   
-    papers = get_recommended_papers(request.data)
-    
+def recommended_publications(request, *args, **kwargs):
+
+    papers = get_recommended_publications(request.data)
+    # papers = get_recommended_publications_doc_level(request.data)
     return Response({"message": "Hello, world!", "data": papers})
 
+class RecommendedPublications(APIView):
+    
+    def post(self, request, *args, **kwargs):
+        papers = get_recommended_publications(request.data)
+        # papers = get_recommended_publications_doc_level(request.data)
+        return Response({"message": "Hello, world!", "data": papers}) 
 
 class PaperView(ListCreateAPIView):
     serializer_class = PaperSerializer
@@ -245,6 +255,7 @@ class PublicInterestExtractionView(GenericAPIView):
         keyword_weight_mapping = getKeyword(payload["text"],
                                             model=payload["algorithm"],
                                             num=payload["num_of_keywords"])
+        print("\n\npayload in PublicInterestExtractionView:  ", payload)
         if payload["wiki_filter"]:
             wiki_keyword_redirect_mapping, keyword_weight_mapping = wikifilter(
                 keyword_weight_mapping)

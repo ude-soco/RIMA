@@ -6,7 +6,7 @@ from dateutil import parser
 from django.conf import settings
 from accounts.models import User
 from interests.models import Tweet, Paper, ShortTermInterest
-from .utils import generate_long_term_model, generate_short_term_model
+from .utils import generate_long_term_model, generate_short_term_model, generate_short_term_model_dbpedia
 
 from celery.decorators import task
 from common.config import BaseCeleryTask
@@ -113,7 +113,7 @@ def __import_papers_for_user(user_id):
     current_year = datetime.datetime.now().year
     api = SemanticScholarAPI()
 
-    papers = api.get_user_papers(user, current_year - 5, current_year)
+    papers = api.get_user_papers(user, current_year - 2, current_year)
 
     for item in papers:
         Paper.objects.update_or_create(
@@ -134,7 +134,7 @@ def __import_papers_for_user(user_id):
             },
         )
         # added to see the papers for user (Lamees)
-        print(" __import_papers_for_user function in tasks.py", item)    
+        # print(" __import_papers_for_user function in tasks.py", item)    
     print("Papers import completed for {}".format(user.username))
 
 
@@ -163,9 +163,11 @@ def import_papers_for_user(user_id):
 def update_short_term_interest_model():
     for user in User.objects.all():
         if user.twitter_account_id:
-            generate_short_term_model(user.id, ShortTermInterest.TWITTER)
+            # generate_short_term_model(user.id, ShortTermInterest.TWITTER)
+            generate_short_term_model_dbpedia(user.id, ShortTermInterest.TWITTER)
         if user.author_id:
-            generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
+            # generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
+            generate_short_term_model_dbpedia(user.id, ShortTermInterest.SCHOLAR)
 
 
 @task(
@@ -185,10 +187,11 @@ def update_long_term_interest_model():
 def __update_short_term_interest_model_for_user(user_id):
     user = User.objects.get(id=user_id)
     if user.twitter_account_id:
-        generate_short_term_model(user.id, ShortTermInterest.TWITTER)
+        # generate_short_term_model(user.id, ShortTermInterest.TWITTER)
+        generate_short_term_model_dbpedia(user.id, ShortTermInterest.TWITTER)
     if user.author_id:
-        generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
-
+        # generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
+        generate_short_term_model_dbpedia(user.id, ShortTermInterest.SCHOLAR)
 
 @task(
     name="update_short_term_interest_model_for_user",

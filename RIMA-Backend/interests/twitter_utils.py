@@ -176,12 +176,12 @@ def get_recommended_tweets(tags):
         text = result.get("full_text")
         algorithm = "Yake"
         extract_keywords_from_tweet = getKeyword(text, algorithm)
+
         # wiki_keyword_redirect_mapping, keywords_extracted = wikifilter(extract_keywords_from_tweet)
         # keywords_list = list(keywords_extracted.keys())
-        keywords_list = list(extract_keywords_from_tweet.keys())
         # # uncomment "score" before DOCKER deployment
         score = round((get_interest_similarity_score(
-            user_interest_model_list, keywords_list) or 0) * 100, 2)
+            user_interest_model_list, extract_keywords_from_tweet) or 0) * 100, 2)
 
         # # comment "score" before DOCKER deployment
         # score = round((random.random() or 0) * 100, 2)
