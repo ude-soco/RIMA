@@ -39,7 +39,8 @@
      - Install the required packages
 
        ```
-       pip install -r requirements-offline.txt
+       pip install -r requirements-docker.txt     # For Linux/MacOS
+       pip install -r requirements-windows.txt    # For Windows
        ```
 
 4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
@@ -60,25 +61,29 @@
       python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
      ```
 
-7. Download and install Redis for [Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi)
+7. Download and install [Redis for Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi)
 
 8. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
 
 9. Download [StanfordCoreNLP](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip) and extract the ZIP file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
 
-10. In the command prompt to create the database
+10. Download [MSmarco model](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in the location `RIMA-Backend/transformers`
+
+11. Download and install [Java JDK](https://www.oracle.com/java/technologies/downloads/)
+
+12. In the command prompt to create the database
 
     ```
     python manage.py migrate
     ```
 
-11. Run the django server and do not close it
+13. Run the django server and do not close it
 
     ```
     python manage.py runserver
     ```
 
-12. Open a new command prompt with admin rights or terminal
+14. Open a new command prompt with admin rights or terminal
 
     - Move to the `RIMA-Backend` in your command prompt
 
