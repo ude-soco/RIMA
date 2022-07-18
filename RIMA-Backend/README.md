@@ -36,18 +36,18 @@
        python -m pip install --upgrade pip
        ```
 
+     - Upgrade setuptools
+
+       ```
+       pip install setuptools --upgrade
+       ```
+
      - Install the required packages
 
        ```
        pip install -r requirements-docker.txt     # For Linux/MacOS
        pip install -r requirements-windows.txt    # For Windows
        ```
-
-4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
-
-5. Open the `.env` file and add additional environment variables (contact [Shoeb Joarder](mailto:shoeb.joarder@uni-due.de) for info)
-
-6. In the command prompt, type the following commands to install spacy and nltk packages. Do not close the command prompt after the last command
 
    - Download the spacy package
 
@@ -60,6 +60,12 @@
      ```
       python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
      ```
+
+4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
+
+5. Open the `.env` file and add additional environment variables (contact [Shoeb Joarder](mailto:shoeb.joarder@uni-due.de) for info)
+
+6. Install [Visual Studio Community 2017](https://visualstudio.microsoft.com/de/vs/community/). Make sure to install the package `Desktop development with C++`. Set `VCINSTALLER` system variable to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC` ([Read more](https://stackoverflow.com/questions/57541402/node-gyp-configure-got-gyp-err-find-vs/70799513#70799513)). For Linux users, check [GCC Installation guide for Linux](https://linuxize.com/post/how-to-install-gcc-compiler-on-ubuntu-18-04/)
 
 7. Download and install [Redis for Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi)
 
