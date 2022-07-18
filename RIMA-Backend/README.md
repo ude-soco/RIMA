@@ -4,7 +4,25 @@
 </a>
 </p>
 
-## Installation Guide for RIMA-Backend
+## Docker Installation Guide for RIMA
+
+1. Download and install [Docker](https://www.docker.com/products/docker-desktop)
+
+2. Download and install [Node.js v.8.9.0](https://nodejs.org/dist/v8.9.0/). Using a terminal/command prompt, move to the `RIMA-Frontend/nodejs` and type `npm install`
+
+3. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
+
+4. Download [StanfordCoreNLP](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip) and unzip the file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
+
+5. Download [MSmarco model](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in `RIMA-Backend/transformers`
+
+6. Run the following command in the root directory `RIMA`
+
+   ```
+   docker-compose -f docker-compose-dev-yml up --build
+   ```
+
+## Manual Installation Guide for RIMA-Backend
 
 1. Download Python (v3.7.1) from [the official website](https://www.python.org/downloads/release/python-371/)
 
@@ -52,13 +70,13 @@
    - Download the spacy package
 
      ```
-      python -m spacy download en
+       python -m spacy download en
      ```
 
    - Download the necessary nltk packages
 
      ```
-      python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
+       python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
      ```
 
 4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`

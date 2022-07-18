@@ -37,25 +37,16 @@ services:
     # command: bin/web
     command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     environment:
-      - TWITTER_API_KEY=VHR72dG8nWMZBHYFeyDOlYvV5
-      - TWITTER_API_SECRET=SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X
-      - TWITTER_ACCESS=864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG
-      - TWITTER_ACCESS_SECRET=MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf
-      - TWITTER_CONSUMER_KEY=q3tv2FEcuhreRWO4WYtSAyJAj
-      - TWITTER_CONSUMER_SECRET=vxrXdz8TpiQQhQv7GSHMBliGQoMzGPNMdUpcVercmCYb8UqvzF
-      - TWITTER_ACCESS_TOKEN=1106978050850328578-2HjYKtDlRU3J88emRjV4TmkUapeJWl
-      - TWITTER_ACCESS_TOKEN_SECRET="doG0kjyHoD4tGBUnKTneUDZjUD392dRR3z8PwTJ2Autwm
-      - TWITTER_FETCH_DAYS=180
       - REDIS_HOST=rima-redis
-      # - GLOVE_MODEL_FILE_PATH=datatest_word2vec.txt
       - POSTGRES_DB=interest_miner_db
       - POSTGRES_USER=interest_miner
       - POSTGRES_PASSWORD=interest_miner
-      - GLOVE_MODEL_FILE_PATH=""
+    env_file:
+      - configuration-dev.env
     ports:
       - "8000:8000"
     volumes:
-      - ./RIMA-Backend:/app:ro
+      - ./RIMA-Backend:/app
     depends_on:
       - rima-postgres
       - rima-redis
@@ -69,27 +60,17 @@ services:
       context: ./RIMA-Backend
       dockerfile: Dockerfile.dev
     restart: unless-stopped
-    command: bin/worker-dev
-    # command: sh -c "celery worker --app=interest_miner_api -l info -P eventlet"
+    # command: bin/worker-dev
+    command: sh -c 'python3 -m celery worker --app=interest_miner_api --concurrency=1 -l info'
     environment:
-      - TWITTER_API_KEY=VHR72dG8nWMZBHYFeyDOlYvV5
-      - TWITTER_API_SECRET=SFyixwvoEVUIcDUO45qhdpI5JEtOOlE2oSQOLNw1v8bsZ5Nh6X
-      - TWITTER_ACCESS=864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG
-      - TWITTER_ACCESS_SECRET=MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf
-      - TWITTER_CONSUMER_KEY=q3tv2FEcuhreRWO4WYtSAyJAj
-      - TWITTER_CONSUMER_SECRET=vxrXdz8TpiQQhQv7GSHMBliGQoMzGPNMdUpcVercmCYb8UqvzF
-      - TWITTER_ACCESS_TOKEN=1106978050850328578-2HjYKtDlRU3J88emRjV4TmkUapeJWl
-      - TWITTER_ACCESS_TOKEN_SECRET="doG0kjyHoD4tGBUnKTneUDZjUD392dRR3z8PwTJ2Autwm
-      - TWITTER_FETCH_DAYS=180
-      # - DJANGO_DEBUG="False"
       - REDIS_HOST=rima-redis
-      # - GLOVE_MODEL_FILE_PATH=datatest_word2vec.txt
       - POSTGRES_DB=interest_miner_db
       - POSTGRES_USER=interest_miner
       - POSTGRES_PASSWORD=interest_miner
-      - GLOVE_MODEL_FILE_PATH=""
+    env_file:
+      - configuration-dev.env
     volumes:
-      - ./RIMA-Backend:/app:ro
+      - ./RIMA-Backend:/app
     depends_on:
       - rima-backend
       - rima-postgres
