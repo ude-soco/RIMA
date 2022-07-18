@@ -40,13 +40,14 @@ services:
       - REDIS_HOST=rima-redis
       - POSTGRES_DB=interest_miner_db
       - POSTGRES_USER=interest_miner
+      - POSTGRES_HOST=rima-postgres
       - POSTGRES_PASSWORD=interest_miner
     env_file:
       - configuration-dev.env
     ports:
       - "8000:8000"
     volumes:
-      - ./RIMA-Backend:/app
+      - ./RIMA-Backend:/app:ro
     depends_on:
       - rima-postgres
       - rima-redis
@@ -61,16 +62,17 @@ services:
       dockerfile: Dockerfile.dev
     restart: unless-stopped
     # command: bin/worker-dev
-    command: sh -c 'python3 -m celery worker --app=interest_miner_api --concurrency=1 -l info'
+    command: sh -c 'python3 -m celery worker --app=interest_miner_api -l info -P eventlet'
     environment:
       - REDIS_HOST=rima-redis
       - POSTGRES_DB=interest_miner_db
       - POSTGRES_USER=interest_miner
+      - POSTGRES_HOST=rima-postgres
       - POSTGRES_PASSWORD=interest_miner
     env_file:
       - configuration-dev.env
     volumes:
-      - ./RIMA-Backend:/app
+      - ./RIMA-Backend:/app:ro
     depends_on:
       - rima-backend
       - rima-postgres
