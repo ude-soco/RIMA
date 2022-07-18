@@ -4,7 +4,7 @@
 </a>
 </p>
 
-## Docker Installation Guide for RIMA
+## 🐳 Docker Installation Guide
 
 1. Download and install [Docker](https://www.docker.com/products/docker-desktop)
 
@@ -19,7 +19,7 @@
 6. Run the following command in the root directory `RIMA`
 
    ```
-   docker-compose -f docker-compose-dev-yml up --build
+   docker-compose -f docker-compose-dev.yml up --build
    ```
 
 ## Manual Installation Guide for RIMA-Backend
