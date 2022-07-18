@@ -16,7 +16,7 @@ django-cors-headers==3.2.1
 django-timezone-field==4.0
 Django==2.2.3
 djangorestframework==3.11.0
-drf-yasg==1.17.1
+drf-yasg==1.21.3
 gensim==3.8.2
 gunicorn==20.0.4
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#en_core_web_sm
