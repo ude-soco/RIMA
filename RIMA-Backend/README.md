@@ -16,7 +16,7 @@
 
 5. Download [MSmarco model](https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in `RIMA-Backend/transformers`
 
-6. Download the [GloVe model](https://uni-duisburg-essen.sciebo.de/s/cKZLWBtulWHoCaT/download) and copy the model inside the `RIMA-Backend` 
+6. Download the [GloVe model](https://uni-duisburg-essen.sciebo.de/s/cKZLWBtulWHoCaT/download) and unzip the model inside the `RIMA-Backend` folder
 
 7. Run the following command in the root directory `RIMA`
 
