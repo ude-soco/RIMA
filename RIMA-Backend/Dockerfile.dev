@@ -30,8 +30,6 @@ ENV  PATH "$PATH:/app/.local/bin"
 
 COPY requirements-docker.txt .
 
-# RUN python3 -m pip install Cython
-
 RUN python3 -m pip install --upgrade pip
 
 RUN pip3 install --no-cache-dir --user -r requirements-docker.txt

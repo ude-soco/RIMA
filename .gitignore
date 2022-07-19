@@ -130,4 +130,5 @@ RIMA-Backend/transformers/all_minilm
 RIMA-Backend/transformers/all_mpnet 
 RIMA-Backend/transformers/msmarco
 RIMA-Backend/USE_model/
+RIMA-Backend/interests/Keyword_Extractor/Algorithms/stanford-corenlp-full-2018-02-27
 RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
