@@ -91,7 +91,7 @@ from .utils import (
     get_heat_map_data, 
     get_venn_chart_data)
 from interests.tasks import import_user_data, import_user_paperdata
-from .publication_utils import API, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
+from .publication_utils import API, get_recommended_publications, get_recommended_publications_doc_level
 
 class TriggerPaperUpdate(APIView):
     def post(self, request, *args, **kwargs):
@@ -145,20 +145,12 @@ class LongTermInterestItemView(RetrieveUpdateDestroyAPIView):
         return super().perform_destroy(instance)
 
 
+@api_view(["post"])  #LK
+def recommended_publications(request, *args, **kwargs):
 
-
-
-# jaleh
-    
-@api_view(["post"])
-def recommended_interests_similarities(request, *args, **kwargs):
-    result = get_interest_paper_similarity(request.data)
-    return Response({"message": "Successful", "data": result})
-
-@api_view(["post"])
-def recommended_keywords_similarities(request, *args, **kwargs):
-    res = get_keywords_similarities(request.data)
-    return Response({"message": "Successful", "data": res})
+    papers = get_recommended_publications(request.data)
+    # papers = get_recommended_publications_doc_level(request.data)
+    return Response({"message": "Hello, world!", "data": papers})
 
 class RecommendedPublications(APIView):
     
@@ -167,14 +159,6 @@ class RecommendedPublications(APIView):
         # papers = get_recommended_publications_doc_level(request.data)
         return Response({"message": "Hello, world!", "data": papers}) 
 
-
-@api_view(["post"])  #LK
-def recommended_publications(request, *args, **kwargs):
-
-    papers = get_recommended_publications(request.data)
-    # papers = get_recommended_publications_doc_level(request.data)
-    return Response({"message": "Hello, world!", "data": papers})
-    
 class PaperView(ListCreateAPIView):
     serializer_class = PaperSerializer
 
@@ -412,7 +396,6 @@ def recommended_tweets(request, *args, **kwargs):
     # [{'id': 'Thailand', 'text': 'Thailand'}, {'id': 'India', 'text': 'India'}]
     tweets = get_recommended_tweets(request.data)
     return Response({"message": "Hello, world!", "data": tweets})
-
 
 
 class TweetView(ListCreateAPIView):

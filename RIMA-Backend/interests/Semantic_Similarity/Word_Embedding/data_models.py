@@ -1,4 +1,3 @@
-from array import array
 from gensim.models.keyedvectors import KeyedVectors
 from django.conf import settings
 from sentence_transformers import SentenceTransformer, models

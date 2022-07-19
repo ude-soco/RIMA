@@ -29,6 +29,8 @@ class Tag extends Component {
   render() {
     const { props } = this;
     const label = props.tag[props.labelField];
+    this.handleTagSettingsChange =
+      this.props.handleTagSettingsChange.bind(this);
     const {
       connectDragSource,
       isDragging,
@@ -36,38 +38,19 @@ class Tag extends Component {
       readOnly,
       tag,
       classNames,
-      outline = false
     } = props;
+    // console.log({wwwwwwwwwwwwwwwwwww: this.props})
     const tagId = this.props.tag.id;
     const { className = "" } = tag;
-    const tagIcon = !readOnly ? <i className="fas fa-grip-vertical" style={{ color: "#FFF" }} /> : '';
-    const tagComponent = outline?
-    <span
-        className={ClassNames("tag-wrapper", classNames.tag, className)}
-        style={{
-          opacity: isDragging ? 0 : 1,
-          cursor: canDrag(props) ? "move" : "auto",
-          padding: "5px 10px",
-          backgroundColor: 'white',
-          borderRadius: "10px",
-          borderColor:tag.color,
-          color:tag.color
-        }}
-        onClick={props.onTagClicked}
-        onKeyDown={props.onTagClicked}
-        onTouchStart={props.onTagClicked}
-      >
-        {tagIcon} {label}
-
-      </span>
-    :
-    (
+    const tagComponent = (
       <span
         className={ClassNames("tag-wrapper", classNames.tag, className)}
         style={{
           opacity: isDragging ? 0 : 1,
           cursor: canDrag(props) ? "move" : "auto",
-          padding: "5px 10px",
+          padding: "5 10px",
+          paddingBottom: "5px",
+          paddingRight: "10px",
           backgroundColor: tag.color,
           borderRadius: "4px",
         }}
@@ -75,8 +58,78 @@ class Tag extends Component {
         onKeyDown={props.onTagClicked}
         onTouchStart={props.onTagClicked}
       >
-        {tagIcon} {label}
-
+        <i className="fas fa-grip-vertical" style={{ color: "#FFF" }} /> {label}
+        {/* <UncontrolledDropdown direction="down" setActiveFromChild>
+          <Toggle
+            tag="a"
+            className="nav-link text-primary"
+            caret
+            style={{
+              paddingBottom: "0px",
+              marginTop: "2px",
+              fontSize: "20px",
+            }}
+          >
+            <MdSettings style={{ cursor: "pointer" }}></MdSettings>
+          </Toggle>
+          <TestFilter
+            tagId={tagId}
+            mode="tags"
+            state={this.props.tag}
+            changeHandler={this.handleTagSettingsChange}
+            children={
+              <div className="px-4">
+                <div className="form-group row mb-1">
+                  <label className="col col-form-label" htmlFor="n_tweets">
+                    Number of tweets
+                  </label>
+                  <div className="col-4">
+                    <input
+                      type="number"
+                      className="form-control "
+                      onChange={(e) =>
+                        this.handleTagSettingsChange(
+                          tagId,
+                          e.target.name,
+                          e.target.value
+                        )
+                      }
+                      value={tag.n_tweets}
+                      name="n_tweets"
+                    />
+                  </div>
+                </div>
+                <div className="form-group row mb-1">
+                  <label className="col col-form-label" htmlFor="color">
+                    Color
+                  </label>
+                  <div className="col-4">
+                    <input
+                      type="color"
+                      className="form-control px-0 py-0 border-0 form-control-plaintext input-nTweets "
+                      onChange={(e) =>
+                        this.handleTagSettingsChange(
+                          tagId,
+                          e.target.name,
+                          e.target.value
+                        )
+                      }
+                      value={tag.color}
+                      name="color"
+                    />
+                  </div>
+                </div>
+              </div>
+            }
+          />
+        </UncontrolledDropdown>
+        <RemoveComponent
+          tag={props.tag}
+          className={classNames.remove}
+          removeComponent={props.removeComponent}
+          onClick={props.onDelete}
+          readOnly={readOnly}
+        />*/}
       </span>
     );
     return connectDragSource(connectDropTarget(tagComponent));

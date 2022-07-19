@@ -385,7 +385,6 @@ class ReactTags extends Component {
       removeComponent,
       readOnly,
       allowDragDrop,
-      outline=false
     } = this.props;
 
     const moveTag = allowDragDrop ? this.moveTag : null;
@@ -397,14 +396,13 @@ class ReactTags extends Component {
           tag={tag}
           labelField={labelField}
           onDelete={this.handleDelete.bind(this, index)}
-          handleTagSettingsChange={this.props.handleTagSettingsChange || ''}
+          handleTagSettingsChange={this.props.handleTagSettingsChange}
           moveTag={moveTag}
           removeComponent={removeComponent}
           onTagClicked={this.handleTagClick.bind(this, index)}
           readOnly={readOnly}
           classNames={{ ...DEFAULT_CLASSNAMES, ...classNames }}
           allowDragDrop={allowDragDrop}
-          outline={outline}
         />
       );
     });

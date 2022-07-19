@@ -25,7 +25,7 @@ export default function SimplePopover(props) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  // console.log(props, "dialog");
+  console.log(props, "dialog");
   const handleClose = () => {
     setAnchorEl(null);
   };

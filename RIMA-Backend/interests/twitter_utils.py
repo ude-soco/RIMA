@@ -19,11 +19,11 @@ TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 #TWITTER_ACCESS = "864566506558033922-4SLdxLmvX1hOmM3KM5MeGpY6WuTXMjG"
 #TWITTER_ACCESS_SECRET = "MzlrG0f1bMJ2VR1JLeoZgXaVeGp1cgtAON7o1d6ZdFhXf"
 
-AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
+#AUTH = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+#AUTH.set_access_token(TWITTER_ACCESS, TWITTER_ACCESS_SECRET)
 
-# AUTH = tweepy.OAuthHandler(os.environ.get("TWITTER_API_KEY"), os.environ.get("TWITTER_API_SECRET"))
-# AUTH.set_access_token(os.environ.get("TWITTER_ACCESS"), os.environ.get("TWITTER_ACCESS_SECRET"))
+AUTH = tweepy.OAuthHandler(os.environ.get("TWITTER_API_KEY"), os.environ.get("TWITTER_API_SECRET"))
+AUTH.set_access_token(os.environ.get("TWITTER_ACCESS"), os.environ.get("TWITTER_ACCESS_SECRET"))
 
 API = tweepy.API(AUTH, parser=JSONParser())
 
@@ -116,6 +116,7 @@ def extract_tweet_from_response(tweet, tag):
     result["color"] = tag["color"]
     result["tagId"] = tag["id"]
     result["text"] = tag["text"]
+    print(result)
     return result
 
 
@@ -131,10 +132,7 @@ def generate_geo_code(tag):
 
 
 def get_recommended_tweets(tags):
-    # print("tags", tags)
-    # First step
-    # tags: Array of objects (5 Elements) = interests
-    #  E.X : {'text': 'learning', 'weight': 5, 'id': 2, 'color': '#55e48c', 'n_tweets': '5', 'lng': 150.644, 'lat': -34.397, 'radius': 10, 'language': 'ANY', 'type': 'ALL', 'retweets': 0, 'favorites': 0, 'place': {'lat': -34.397, 'lng': 150.644, 'radius': 0}}
+    print("tags", tags)
     user_interest_model_list = []  # creates a list of user interest model
     full_result = []
     for tag in tags:
@@ -150,15 +148,14 @@ def get_recommended_tweets(tags):
             q=tag["text"],
             tweet_mode="extended",
             count=tag["n_tweets"],
-            # count=2,
+            # count=25,
             **extra_kwargs)
 
         results = [
             extract_tweet_from_response(x, tag) for x in response["statuses"]
         ]
         full_result.extend(results)
-        # full_result: Array of objects (85 Elements)
-        # E.X : {'id_str': '1474584593869131780', 'created_at': 'Sat Dec 25 03:35:38 +0000 2021', 'full_text': 'If you learn JavaScript, you can build this: 👇\n\n📈 You can build websites using React.js \n✡️ You can build mobile apps using React-native\n🤯 You can build desktops apps using electron.js\n😜 You can build Machin learning models using Tensorflow.js\n\n#javascript #100DaysOfCode', 'retweet_count': 4, 'favorite_count': 3, 'user': {'id_str': '1355130501124685824', 'name': 'Ashraf ⚡️💻', 'screen_name': 'Ashraf_365', 'description': 'Interested in  ||  Web Dev 💻 |  JavaScript  ❤️ | \nReact.js ✡️ | Firebase ⚡️ | Memes 😜 | \nMaking cool projects 👨\u200d🔧 | And learning new things 📘', 'url': None, 'followers_count': 43, 'friends_count': 179, 'statuses_count': 650, 'profile_image_url_https': 'https://pbs.twimg.com/profile_images/1470734637676711940/0I6iqHzB_normal.jpg', 'profile_background_color': 'F5F8FA'}, 'color': '#8388bd', 'tagId': 4, 'text': 'machin learning'}
+
     # TODO:
     #   1. Get five tweets for each user interest model and put it in an array
     #   2. Take the full_text of each tweet and perform the keywords extraction function
@@ -171,10 +168,9 @@ def get_recommended_tweets(tags):
     # Extract unique tweets according to their IDs
     unique_tweets = {each['id_str']: each for each in full_result}.values()
 
-    # print(len(full_result))
-    # print(len(unique_tweets))
-    # print('unique_tweets')
-    # print(unique_tweets)
+    print(len(full_result))
+    print(len(unique_tweets))
+
     tweets_with_scores = []
     for result in unique_tweets:
         text = result.get("full_text")
@@ -187,27 +183,13 @@ def get_recommended_tweets(tags):
         score = round((get_interest_similarity_score(
             user_interest_model_list, extract_keywords_from_tweet) or 0) * 100, 2)
 
-        # keywords_list = list(extract_keywords_from_tweet.keys())
-        # # print('keywords_list')
-        # # print(keywords_list)
-        # # keywords_list: Array of Strings
-        # # E.X : ['basics of recommender', 'recommender systems', 'datascience', 'richardeudes', 'bigdata', 'basics', 'systems', 'recommender']
-        
-        # # # uncomment "score" before DOCKER deployment
-        # score = round((get_interest_similarity_score(
-        #     user_interest_model_list, keywords_list) or 0) * 100, 2)
-        # print('score')
-        print(score)
         # # comment "score" before DOCKER deployment
         # score = round((random.random() or 0) * 100, 2)
         if score > 40:
             result["score"] = score
             tweets_with_scores.append(result)
-    # print('tweets_with_scores')
-    # print(tweets_with_scores)
+
     sorted_list = sorted(tweets_with_scores,
                          key=lambda k: k['score'],
                          reverse=True)
-    # print('sorted-list:')
-    # print(sorted_list)
     return sorted_list
