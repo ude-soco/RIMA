@@ -9,9 +9,11 @@ import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
 import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/RecentInterest";
 // import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
+import {PublicationRecommendation} from "../Views/Application/Publications/Recommendation/Publications";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
 import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
+// import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";
 import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
 import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
@@ -125,6 +127,14 @@ let routes = [
     name: "Tweets & People",
     icon: "fas fa-bars text-primary",
     component: TweetsAndPeople,
+    layout: "/recommendation",
+    // display: "none",
+  },
+  {
+    path: "/publication",
+    name: "Publications Recommenation",
+    icon: "fas fa-bars text-primary",
+    component: PublicationRecommendation,
     layout: "/recommendation",
     // display: "none",
   },

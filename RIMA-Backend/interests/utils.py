@@ -18,8 +18,8 @@ from interests.wikipedia_utils import wikicategory, wikifilter
 from interests.update_interests import update_interest_models, normalize
 
 from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import DBpediaSpotlight
-from interests.Semantic_Similarity.Word_Embedding.IMsim import  calculate_similarity
 from interests.Semantic_Similarity.Word_Embedding.Embedding_Methods import calculate_vector_embedding
+from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity, calculate_weighted_vectors_similarity,calculate_weighted_vectors_similarity_single_word
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 
 
@@ -334,10 +334,13 @@ def generate_short_term_model_dbpedia(user_id, source):
             if not len(keyword_weight_mapping.keys()):
                 print("No keywords found in weight mapping")
                 continue
-            keywords = normalize(keyword_weight_mapping)
+            keywords = normalize(keyword_weight_mapping) # normalize the weights to range of 5 to 1
+
+            # find the category for each keyword seperatly and store the keyword in database as a row
             for keyword, weight in keywords.items():
                 original_keyword_name = wiki_keyword_redirect_mapping.get(
                     keyword, keyword)
+                print("\noriginal_keyword_name ", original_keyword_name) # by lamees
                 keyword = keyword.lower()
                 if keyword in blacklisted_keywords:
                     print("Skipping {} as its blacklisted".format(keyword))
@@ -346,7 +349,7 @@ def generate_short_term_model_dbpedia(user_id, source):
                     name=keyword.lower())
                 if created:     # check if the keyword exist or it is being created
                     print("getting wiki categories")
-                    categories = wikicategory(keyword)
+                    categories = wikicategory(keyword) # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
                     for category in categories:
                         category_instance, _ = Category.objects.get_or_create(
                             name=category)
@@ -355,6 +358,7 @@ def generate_short_term_model_dbpedia(user_id, source):
                 try:
                     original_keywords = json.loads(
                         keyword_instance.original_keywords)
+                    print("original keywords variable", original_keywords)
                 except:
                     original_keywords = []
                 original_keywords.append(original_keyword_name.lower())
@@ -469,6 +473,21 @@ def generate_short_term_model_dbpedia(user_id, source):
         paper_candidates.update(used_in_calc=True)
 
 
+def get_weighted_interest_similarity_score(keyword_list_1,
+                                  keyword_list_2,
+                                  weights_1,
+                                  weights_2,
+                                  algorithm="WordEmbedding"): # note add the new embedding here #LK
+    #print("keyword_list_1",keyword_list_1)#LK
+    if algorithm == "WordEmbedding":
+        return calculate_weighted_vectors_similarity(keyword_list_1,
+                                    keyword_list_2,
+                                    weights_1,
+                                    weights_2,
+                                    embedding="Glove")
+    else:
+        return wikisim(keyword_list_1, keyword_list_2)
+
 def get_interest_similarity_score(keyword_list_1,
                                   keyword_list_2,
                                   algorithm="WordEmbedding"): 
@@ -479,6 +498,21 @@ def get_interest_similarity_score(keyword_list_1,
                                                      embedding="Glove")
     else:
         return wikisim(keyword_list_1, keyword_list_2)
+
+# Jaleh
+def get_single_interest_similarity_score(source_doc,
+                                  target_doc,
+                                  source_weight,
+                                  target_weights,
+                                  algorithm="WordEmbedding"): # note add the new embedding here #LK
+    if algorithm == "WordEmbedding":
+        return calculate_weighted_vectors_similarity_single_word(source_doc,
+                                    target_doc,
+                                    source_weight,
+                                    target_weights,
+                                    embedding="Glove")
+    else:
+        return wikisim(source_doc, target_doc)
 
 
 def get_heat_map_data(user_1_interests, user_2_interests):

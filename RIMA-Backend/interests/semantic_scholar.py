@@ -84,7 +84,6 @@ class SemanticScholarAPI:
         print("making request")
         r = requests.get(url)
         print("response received")
-
         if r.status_code == 200:
             data = r.json()
             if len(data) == 1 and 'error' in data:
