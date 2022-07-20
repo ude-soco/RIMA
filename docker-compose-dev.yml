@@ -47,7 +47,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./RIMA-Backend:/app:ro
+      - ./RIMA-Backend:/app
     depends_on:
       - rima-postgres
       - rima-redis
@@ -72,7 +72,7 @@ services:
     env_file:
       - configuration-dev.env
     volumes:
-      - ./RIMA-Backend:/app:ro
+      - ./RIMA-Backend:/app
     depends_on:
       - rima-backend
       - rima-postgres
@@ -95,8 +95,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./RIMA-Frontend/nodejs/src:/app/src:ro
-      - ./RIMA-Frontend/nodejs/public:/app/public:ro
+      - ./RIMA-Frontend/nodejs/src:/app/src
+      - ./RIMA-Frontend/nodejs/public:/app/public
     networks:
       - rima-webapp
 
