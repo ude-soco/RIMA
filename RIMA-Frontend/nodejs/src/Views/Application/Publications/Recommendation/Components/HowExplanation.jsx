@@ -134,7 +134,6 @@ export default function HowExplanation(props) {
           <HowStep
               interests={state.interests}
               keywords={state.paper.keyword}
-              isSplit={false}
               inclEmbedding={value===2}
             />
           <EmbeddingLegends />

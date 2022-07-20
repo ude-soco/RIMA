@@ -2,28 +2,28 @@ import React, { useEffect, useState } from "react";
 import cytoscape from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 import popper from "cytoscape-popper";
-import fcose from "cytoscape-fcose";
-import dagre from "cytoscape-dagre";
-//import breadthfirst from "cytoscape-breadthfirst";
-//import elk from "cytoscape-elk";
-
 import { getMaxWidthHeight, getHeight, getWidth } from "./FlowChartUtil";
 cytoscape.use(popper);
-cytoscape.use(fcose);
-cytoscape.use(dagre);
-//cytoscape.use(breadthfirst);
-//cytoscape.use(elk);
 
 const minZoom = 0.3;
 const maxZoom = 1e1;
 
 // Hoda start
+//
 let activeTimeout = {};
+/**
+ * Refresh layout after 300ms and ignore the previous call during this time
+ * @param {string} key a unique name of a flowchart componet
+ * @param {CytoscapeComponent} cy Flowchart component
+ * @param {object} layout  layout object
+ */
 function refreshLayout(key, cy, layout) {
   if (!!activeTimeout[key]) {
+    // Clear previous task, if it didn't run during 300ms
     clearTimeout(activeTimeout[key]);
     activeTimeout[key] = undefined;
   }
+  //Run the refresh layout after 300ms
   activeTimeout[key] = setTimeout(() => {
     cy.layout(layout).run();
   }, 300);
@@ -125,6 +125,7 @@ export default function Flowchart(props) {
           });
 
           cy.on("add remove", () => {
+            //Refresh layout, when a node was added or removed 
             refreshLayout(keyChart, cy, layout);
           });
         }}
@@ -166,37 +167,16 @@ export default function Flowchart(props) {
           },
           // Hoda start
           {
-            selector: "node.circlenode",
-            style: {
-              label: "data(label)",
-              color: "data(faveColorLabel)",
-              "background-color": "rgba(255, 255, 255, 0)",
-              "text-wrap": "wrap",
-              "text-max-width": getMaxWidthHeight(20),
-              width: getMaxWidthHeight(20),
-              height: getMaxWidthHeight(20),
-              shape: "ellipse",
-              "background-image": "data(backgroundImage)",
-              "background-fit": "data(backgroundSize)",
-              "text-background-opacity": 0,
-              "text-background-padding": "2px",
-              "border-color": "data(faveColor)",
-              "border-style": "solid",
-              "border-width": 2,
-              "border-opacity": 1,
-            },
-          },
-          {
             selector: "node.polygonnode",
             style: {
               label: "data(label)",
               color: "data(faveColorLabel)",
               "background-color": "rgba(255, 255, 255, 0)",
               "text-wrap": "wrap",
+              //Set the size the shapes based on the maximun node size
               "text-max-width": getWidth(10,1.5,true),
                width: getWidth(50,1.5,true),
                height: getHeight(5,1,true),
-               //height: n=> Math.max(getWidth(13,4/5,true)(n), getHeight(5,1,true)(n)),
               shape: "polygon",
               "background-image": "data(backgroundImage)",
               "background-fit": "data(backgroundSize)",

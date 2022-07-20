@@ -16,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
+/**
+ * Component Embedding legend
+ * @param {object} props Component props 
+ * @param {object} props.style style attributes for paper
+ */
 const EmbeddingLegends = ({style}) => {
   const classes = useStyles();
 

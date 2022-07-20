@@ -9,11 +9,16 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import Chart from "react-apexcharts";
-//import ReactTags from "../../../components/react-tags/ReactTags.js";
 
 //import "./assets/styles.css";
 import Keywords from "Views/Keywords.js";
 
+/**
+ * Convert an object of interests to a sorted list of interests
+ * @param {object} interests Object of interests
+ * @param {number} max Maximum interets can be returned
+ * @returns a sorted list of interests{interest,score,color}
+ */
 function getInterestScore(interests, max) {
   let items = [];
   if (!interests) return [{ interest: "", score: 0, color: "FFFFFF" }];
@@ -30,20 +35,27 @@ function getInterestScore(interests, max) {
     .filter((_, i) => i < max);
 }
 
-// Display a Barchart after clicking on a extracted keywords from abstract
+/**
+ * Display a Barchart to show the list of the user interets
+ * @param {object} props Component props
+ * @param {object} props.interests Interests object of keyword
+ * @param {number} props.height Height of the Bar chart
+ * @param {number} props.width Width of the Bar chart
+ * @param {number} props.maxItem Maximum bar can be shown in the Bar chart
+ * @param {string} props.title Titel of the Bar chart
+ * @param {boolean} props.onClick When the user click on the chart, this function will be called
+ */
 function TopSimilarityChart({
-  onClick,
   interests,
   height,
   width,
   maxItem,
   title,
+  onClick,
 }) {
-  // title=title||"The top three similarity scores between Your Interests and this keyword";
-  //title=title||;
   interests = getInterestScore(interests, maxItem || 3);
   let cats = interests.map((x) => x.interest);
-  let scores = interests.map((x) => x.score);
+  let scores = interests.map((x) => parseFloat(x.score).toFixed(2));
   let colors = interests.map((x) => x.color);
   let size = { width: width, height: height || 150 };
   let options = {
@@ -53,12 +65,6 @@ function TopSimilarityChart({
         type: "bar",
         height: "100%",
       },
-      // subtitle: {
-      //   text: 'The top three similarity score between your interests and selected keyword',
-      //   align: 'center',
-      //   marginBottom:100,
-      //   offsetY:0
-      // },
       plotOptions: {
         bar: {
           barHeight: "80%",
@@ -77,25 +83,22 @@ function TopSimilarityChart({
           colors: ["#000"],
         },
         formatter: function (val, opt) {
-          //if( val<30) return "";
           return parseFloat(val).toFixed(2) + "%";
         },
         offsetX: 0,
       },
       colors: colors,
-      /*xaxis: {title: {text: `Similarity to keyword "${keyword}"`}, categories: cats},*/
-      /*xaxis: {title: {text: `"${keyword}"`}, categories: cats},*/
       xaxis: { title: { text: `Similarity score` }, categories: cats },
       yaxis: { title: { text: "User interests" }, max: 100 },
       legend: { show: false },
       tooltip: {
         theme: "dark",
+        show: false,
         x: {
           show: false,
-          //fontSize: '10'
         },
         y: {
-          //fontSize: '10',
+          show: false,
           title: {
             formatter: function () {
               return "";
@@ -120,4 +123,3 @@ function TopSimilarityChart({
   );
 }
 export default TopSimilarityChart;
-// Hoda End
