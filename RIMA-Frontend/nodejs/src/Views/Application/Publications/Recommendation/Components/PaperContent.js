@@ -3,19 +3,11 @@ import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
-import { Popover, Menu, MenuItem } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import {
-  Typography,
-  Grid,
-  Box,
-  Chip,
-  Switch,
-  makeStyles,
-} from "@material-ui/core";
+import { Typography, Grid, Chip, makeStyles } from "@material-ui/core";
 
 //Hoda Start
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+
 const useStyles = makeStyles((theme) => ({
   italicBody2: {
     fontStyle: "italic",

@@ -155,7 +155,7 @@ const ExpansionPanel = (props) => {
               Why?
             </Typography>
           </Button>
-          {/* <Button
+          <Button
             variant={whatIfExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhatIfExpandClick();
@@ -174,7 +174,7 @@ const ExpansionPanel = (props) => {
             >
               What-If?
             </Typography>
-          </Button> */}
+          </Button>
         </ButtonGroup>
       </Grid>
 

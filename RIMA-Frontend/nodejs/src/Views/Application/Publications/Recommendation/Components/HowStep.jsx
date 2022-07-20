@@ -46,6 +46,7 @@ function WordList({
   tooltipContent,
 }) {
   const classes = useStyles();
+
   const wordElements = wordElementProviderWithCoordinate(
     words,
     prefix + (inclEmbedding ? "E" : "D"),

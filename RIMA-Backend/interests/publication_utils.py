@@ -76,6 +76,7 @@ def get_recommended_papers(interests):
                 if not keywords_similarity.__contains__(keyword):
                     keywords_similarity[keyword]={'data_weight':weight}    
                 keywords_similarity[keyword][interest['text']]={'score':keyword_score,'color':''}
+
         
         # if score > 40:
         paper["score"] = score
