@@ -1,93 +1,91 @@
 import React, {useEffect, useState} from "react";
-import {CircularProgress, Grid, Typography,} from "@material-ui/core";
+import {Card, CardActionArea, Grid, Typography,} from "@material-ui/core";
 import RestAPI from "../../../../Services/api";
 
 const HowStep1 = () => {
+  const [details, setDetails] = useState({
+    twitterAccountID: "",
+    authorID: "",
+  });
 
-    const [details, setDetails] = useState({
-        twitterAccountID: "",
-        authorID: "",
-    });
+  useEffect(() => {
+    RestAPI.getUserData()
+      .then((res) => {
+        setDetails({
+          ...details,
+          twitterAccountID: res.data.twitter_account_id,
+          authorID: res.data.author_id,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-    useEffect(() => {
-        RestAPI.getUserData()
-            .then((res) => {
-                setDetails({
-                    ...details,
-                    twitterAccountID: res.data.twitter_account_id,
-                    authorID: res.data.author_id,
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
+  return (
+    <>
+      <Grid container>
+        <Grid item xs={12} style={{paddingBottom: 16}}>
+          <Typography variant="h5">Provide sources of data</Typography>
+        </Grid>
 
-    return (<>{
-        ((details.twitterAccountID != "") | details.authorID != "") ? <DataSources details={details}/> : <Loading/>
-    }</>)
+        <Grid container>
+          {details.authorID ? (
+            <Grid item sm={8} md={4} style={{border: "1px solid #e4e4e4", borderRadius: 6, margin: 4}}>
+              <Card elevation={0}>
+                <CardActionArea
+                  onClick={() => window.open(`https://www.semanticscholar.org/author/${details.authorID}`, "_blank")}>
+                  <Grid container style={{padding: 24}}>
+                    <Grid item xs>
+                      <Typography align="center">
+                        Semantic Scholar
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} style={{height: "100px"}}>
+                      <Grid container justifyContent="center">
+                        <img src="/images/ss-logo.png" height="100" alt="Semantic Scholar Logo"/>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs>
+                      <Typography align="center">
+                        ID: <b>{details.authorID}</b>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ) : <></>}
+          {details.twitterAccountID ? (
+            <Grid item sm={8} md={4} style={{border: "1px solid #e4e4e4", borderRadius: 6, margin: 4}}>
+              <Card elevation={0}>
+                <CardActionArea
+                  onClick={() => window.open(`https://twitter.com/${details.twitterAccountID}`, "_blank")}>
+                  <Grid container style={{padding: 24}}>
+                    <Grid item xs>
+                      <Typography align="center">
+                        Twitter
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} style={{height: "100px"}}>
+                      <Grid container justifyContent="center" style={{paddingTop: 16}}>
+                        <img src="/images/twitter-logo.png" height="60" alt="Twitter Logo"/>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs>
+                      <Typography align="center">
+                        ID: <b>{details.twitterAccountID}</b>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ) : <></>}
+        </Grid>
+      </Grid>
+    </>
+  )
 }
 
-export default HowStep1
-
-export const Loading = () => {
-    return (
-        <>
-            <Grid item>
-                <CircularProgress/>
-            </Grid>
-            <Grid item>
-                <Typography variant="overline"> Loading data </Typography>
-            </Grid>
-        </>
-    )
-}
-
-export const DataSources = (props) => {
-    const {details} = props
-    return (
-        <>
-            <Grid container style={{width: "750px"}}>
-                <Grid item xs={12}>
-                    <Typography variant="h6" style={{fontWeight: "bold"}}>
-                        Step 1: Provide source of data
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} style={{padding: 8}}>
-                    <Typography variant="caption" display="block" gutterBottom>
-                        Semantic Scholar ID:
-                    </Typography>
-                </Grid>
-                <Grid item xs={1} justifyContent="flex-end">
-                    <img
-                        src={"/images/ss-logo.png"}
-                        height="25"
-                        alt="Semantic Scholar Logo"
-                    />
-                </Grid>
-                <Grid item xs={11}>
-                    <Typography display="block" gutterBottom>
-                        {details.authorID}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} style={{padding: 8}}>
-                    <Typography variant="caption" display="block" gutterBottom>
-                        Twitter ID:
-                    </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                    <img
-                        src={"/images/twitter-logo.png"}
-                        height="20"
-                        alt="Twitter Logo"
-                    />
-                </Grid>
-                <Grid item xs={11}/>
-                <Typography display="block" gutterBottom>
-                    {details.twitterAccountID}
-                </Typography>
-            </Grid>
-
-        </>
-    )
-}
+export default HowStep1;
