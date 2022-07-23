@@ -61,7 +61,7 @@ const WordCloud = (props) => {
 
   return (
     <>
-      <Grid container style={{width: "800px"}}>
+      <Grid container style={{width: window.innerWidth / 1.5}}>
         <ReactWordcloud
           words={keywords}
           options={{

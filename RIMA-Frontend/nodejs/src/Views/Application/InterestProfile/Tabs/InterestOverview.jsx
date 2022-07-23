@@ -27,7 +27,7 @@ function TabPanel(props) {
 }
 
 export default function InterestOverview() {
-  const [value, setValue] = useState(4);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

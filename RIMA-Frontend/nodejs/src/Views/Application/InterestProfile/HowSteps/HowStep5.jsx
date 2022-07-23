@@ -12,7 +12,7 @@ const HowStep5 = (props) => {
 
   return (
     <>
-      <Grid container style={{width: 800}}>
+      <Grid container style={{width: window.innerWidth / 2 + 50}}>
         <Grid item xs style={{paddingBottom: 16}}>
           <Typography variant="h5">
             Visualize interest profile

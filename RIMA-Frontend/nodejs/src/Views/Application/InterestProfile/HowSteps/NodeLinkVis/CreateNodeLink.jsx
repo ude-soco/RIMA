@@ -41,10 +41,8 @@ function getNodesReal(data, x, y, step4) {
   data.map((d) => {
 
     let label = d.text;
-    let tooltipSource =
-      "This keyword was extracted using the following papers: ";
-    let tooltipTarget =
-      "";
+    let tooltipSource = "This keyword was extracted using the following papers: ";
+    let tooltipTarget = "";
     label = label.concat(" (", d.value, ")");
     d.papers.map((p) => {
       tooltipSource = tooltipSource.concat(" </br> </br> ", p.title);
@@ -61,7 +59,11 @@ function getNodesReal(data, x, y, step4) {
         labelSource = labelSource.concat(" (", k[labelSource], ")");
 
         let source = {
-          data: {id: idSource, label: labelSource, tooltip: tooltipSource},
+          data: {
+            id: idSource,
+            label: labelSource,
+            tooltip: tooltipSource
+          },
           classes: ["multiline", "source"],
           position: {x: x, y: y}
         };
@@ -88,7 +90,6 @@ function getNodesReal(data, x, y, step4) {
       } else {
         tooltipFinalTarget =
           tooltipFinalTarget = tooltipFinalTarget.concat("This interest is created by keeping the original interest:", tooltipTarget)
-
       }
 
       let target = {
