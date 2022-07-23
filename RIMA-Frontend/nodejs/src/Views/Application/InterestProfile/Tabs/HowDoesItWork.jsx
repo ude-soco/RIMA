@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 
 
-import {Tab, Tabs, Typography, Box, Paper} from "@material-ui/core";
+import {Box, Tab, Tabs, Typography} from "@material-ui/core";
 import HowStep1 from "../HowSteps/HowStep1";
 import HowStep2 from "../HowSteps/HowStep2";
 import HowStep3 from "../HowSteps/HowStep3";
@@ -52,14 +52,16 @@ export default function HowDoesItWork() {
     const {data} = response;
     let dataArray = [];
     data.forEach((d) => {
+      const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
       let newData = {
-        id: d.id,
-        categories: d.categories,
-        originalKeywords: d.original_keywords,
-        source: d.source,
-        text: d.keyword,
-        value: d.weight,
-        papers: d.papers,
+        id: id,
+        categories: categories,
+        originalKeywords: original_keywords,
+        originalKeywordsWithWeights: original_keywords_with_weights,
+        source: source,
+        text: keyword,
+        value: weight,
+        papers: papers,
       };
       dataArray.push(newData);
     });
@@ -99,13 +101,13 @@ export default function HowDoesItWork() {
         <HowStep2/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <HowStep3/>
+        <HowStep3 keywords={keywords}/>
       </TabPanel>
       <TabPanel value={value} index={3}>
         <HowStep4 keywords={keywords}/>
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <HowStep5/>
+        <HowStep5 keywords={keywords}/>
       </TabPanel>
     </Box>
 

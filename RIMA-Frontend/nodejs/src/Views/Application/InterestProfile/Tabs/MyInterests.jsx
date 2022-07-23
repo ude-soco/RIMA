@@ -25,16 +25,19 @@ export default function MyInterests() {
     setKeywords([]);
     const response = await RestAPI.longTermInterest(currentUser);
     const {data} = response;
+    console.log(data)
     let dataArray = [];
     data.forEach((d) => {
+      const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
       let newData = {
-        id: d.id,
-        categories: d.categories,
-        originalKeywords: d.original_keywords,
-        source: d.source,
-        text: d.keyword,
-        value: d.weight,
-        papers: d.papers,
+        id: id,
+        categories: categories,
+        originalKeywords: original_keywords,
+        originalKeywordsWithWeights: original_keywords_with_weights,
+        source: source,
+        text: keyword,
+        value: weight,
+        papers: papers,
       };
       dataArray.push(newData);
     });

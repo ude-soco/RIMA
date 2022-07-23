@@ -1,7 +1,6 @@
 import React from "react";
 import {Grid, Typography,} from "@material-ui/core";
 import CreateNodeLink from "./NodeLinkVis/CreateNodeLink";
-import data from "./data"
 
 const HowStep4 = (props) => {
   const { keywords } = props;
@@ -19,7 +18,7 @@ const HowStep4 = (props) => {
           keywords. Only the data from your top 5 keywords is shown
         </Typography>
 
-        <CreateNodeLink data={data} step4={true}/>
+        <CreateNodeLink data={keywords} step4={true}/>
       </Grid>
     </>
   );

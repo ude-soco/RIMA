@@ -4,6 +4,7 @@ import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import popper from "cytoscape-popper";
 import "./styles.css";
+import {Box} from "@material-ui/core";
 
 
 function getNodesReal(data, x, y, step4) {
@@ -53,7 +54,7 @@ function getNodesReal(data, x, y, step4) {
       numKeywords = numKeywords + 1
       let numOriginalKeywords = 0;
 
-      d.originalKeywords.map((k) => {
+      d.originalKeywordsWithWeights.map((k) => {
         numOriginalKeywords = numOriginalKeywords + 1;
         let labelSource = Object.keys(k)[0];
         tooltipTarget = tooltipTarget.concat("</br>", labelSource);
@@ -116,10 +117,10 @@ const CreateNodeLink = (props) => {
   const elements = getNodesReal(data, 25, 75, step4);
 
   return (
-    <>
+    <Box>
       <CytoscapeComponent
         elements={elements}
-        style={{width: "100%", height: "55vh"}}
+        style={{width: "100%", height: "58vh"}}
         layout={{name: "preset"}}
         stylesheet={[
           {
@@ -130,7 +131,7 @@ const CreateNodeLink = (props) => {
               "background-color": "rgba(255, 255, 255, 0)",
               "border-color": "#a4a4a4",
               "border-width": 2,
-              width: "300px",
+              width: getWidth,
               height: "50px",
               "text-valign": "center",
               "text-halign": "center"
@@ -156,7 +157,7 @@ const CreateNodeLink = (props) => {
           }
         ]}
         cy={(cy) => {
-          cy.userZoomingEnabled(false);
+          // cy.userZoomingEnabled(false);
           cytoscape.use(popper);
           cy.fit();
           cy.elements().unbind("mouseover");
@@ -189,7 +190,7 @@ const CreateNodeLink = (props) => {
           });
         }}
       />
-    </>
+    </Box>
   );
 };
 
