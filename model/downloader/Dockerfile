@@ -8,7 +8,7 @@ WORKDIR /home/app
 ENV  PATH "$PATH:/home/app/.local/bin"
 RUN  pip install --no-color --quiet --no-cache-dir --user gdown
 
-COPY --link --chown=app:app . ./
+COPY --link --chown=101 . ./
 
 EXPOSE 8080
 CMD ["bin/download"]
