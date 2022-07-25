@@ -31,3 +31,6 @@ ENV GUNICORN_LOG_LEVEL info
 
 EXPOSE 8080
 CMD ["bin/api"]
+
+# :TODO: Use WSGI and stuff?
+# https://www.caktusgroup.com/blog/2017/03/14/production-ready-dockerfile-your-python-django-app/

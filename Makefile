@@ -12,9 +12,13 @@ all: clean build run
 run:
 	@docker compose up --force-recreate
 
-# Remove services, volumes, and images
+# Remove services, volumes, and locally built images
 clean:
 	@docker compose down --volumes --remove-orphans --rmi local
+
+# Remove services, volumes, and all images
+cleanall:
+	@docker compose down --volumes --remove-orphans --rmi all
 
 ##
 ## Build container images locally
@@ -40,4 +44,4 @@ dev:
 prod:
 	@kubectl apply -k .k8s/prod
 
-.PHONY: help all run clean build push dev prod
+.PHONY: help all run clean cleanall build push dev prod
