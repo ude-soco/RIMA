@@ -1,4 +1,5 @@
-FROM node:14.15.4 as build
+# syntax=docker/dockerfile:1.4
+FROM node:14.20.0 as build
 WORKDIR /app
 
 COPY ./nodejs/package*.json ./
@@ -11,7 +12,7 @@ RUN SKIP_PREFLIGHT_CHECK=true \
 
 
 
-FROM nginxinc/nginx-unprivileged:1.19
+FROM nginxinc/nginx-unprivileged:1.22
 USER root
 WORKDIR /usr/share/nginx/html
 RUN chown -R nginx:nginx .

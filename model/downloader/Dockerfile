@@ -1,4 +1,5 @@
-FROM python:3.6.13-slim
+# syntax=docker/dockerfile:1.4
+FROM python:3.6.15-slim
 
 RUN adduser --disabled-login -u 101 app
 USER 101
