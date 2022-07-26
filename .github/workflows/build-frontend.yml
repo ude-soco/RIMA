@@ -11,7 +11,7 @@ on:
     branches: ['master', 'dev-*', 'dev/*']
     paths:
     - '.github/workflows/build-frontend.yml'
-    - 'RIMA-Frontend'
+    - 'RIMA-Frontend/**'
   pull_request:
     branches: ['master']
 
