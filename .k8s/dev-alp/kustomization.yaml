@@ -4,12 +4,12 @@ kind: Kustomization
 bases:
 - ../base
 
-namespace:  sc-rima-dev
+namespace:  sc-rima-dev-alp
 namePrefix: soco-
 commonLabels:
   owner: sc
   stage: dev
-  app.kubernetes.io/instance: rima-sc-dev
+  app.kubernetes.io/instance: rima-sc-dev-alp
   app.kubernetes.io/version: master
 commonAnnotations:
   contact: "Ralf Berger <ralf.berger@uni-due.de>"
@@ -53,13 +53,13 @@ secretGenerator:
 images:
 - name: inko/soco-rima-frontend
   newName: socialcomputing/rima-frontend
-  newTag: master
+  newTag: dev-alp
 - name: inko/soco-rima-backend
   newName: socialcomputing/rima-backend
-  newTag: master
+  newTag: dev-alp
 - name: inko/soco-rima-model-downloader
   newName: socialcomputing/rima-model-downloader
-  newTag: master
+  newTag: dev-alp
 - name: inko/soco-rima-model-server
   newName: nginxinc/nginx-unprivileged
   newTag: "1.22"

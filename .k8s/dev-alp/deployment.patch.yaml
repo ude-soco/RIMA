@@ -1,0 +1,6 @@
+- op:    replace
+  path:  /spec/replicas
+  value: 1
+- op:    replace
+  path:  "/metadata/annotations/keel.sh~1policy"
+  value: force

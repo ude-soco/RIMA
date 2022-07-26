@@ -51,7 +51,7 @@ services:
     - backend-redis
 
   backend-db:
-    image: postgres
+    image: postgres:13.2
     restart: on-failure
     env_file:
     - configuration.env
@@ -59,7 +59,7 @@ services:
     - database-data:/var/lib/postgresql/data/
 
   backend-redis:
-    image: redis
+    image: redis:6.2
     restart: on-failure
 
   model-downloader:
@@ -74,7 +74,7 @@ services:
     - ./tmp/model:/home/app/.tmp
 
   model-server:
-    image: nginxinc/nginx-unprivileged:1.19
+    image: nginxinc/nginx-unprivileged:1.22
     restart: on-failure
     volumes:
     - ./tmp/model:/usr/share/nginx/html
