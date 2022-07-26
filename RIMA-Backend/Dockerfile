@@ -1,4 +1,5 @@
-FROM python:3.6.13-slim
+# syntax=docker/dockerfile:1.4
+FROM python:3.6.15-slim
 
 RUN apt-get update -qq &&\
     apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx curl &&\
@@ -31,3 +32,6 @@ ENV GUNICORN_LOG_LEVEL info
 
 EXPOSE 8080
 CMD ["bin/api"]
+
+# :TODO: Use WSGI and stuff?
+# https://www.caktusgroup.com/blog/2017/03/14/production-ready-dockerfile-your-python-django-app/

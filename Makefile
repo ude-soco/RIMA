@@ -10,11 +10,15 @@ all: clean build run
 
 # Start all containers
 run:
-	@docker-compose up --force-recreate
+	@docker compose up --force-recreate
 
-# Remove services, volumes, and images
+# Remove services, volumes, and locally built images
 clean:
-	@docker-compose down --volumes --remove-orphans --rmi local
+	@docker compose down --volumes --remove-orphans --rmi local
+
+# Remove services, volumes, and all images
+cleanall:
+	@docker compose down --volumes --remove-orphans --rmi all
 
 ##
 ## Build container images locally
@@ -22,11 +26,11 @@ clean:
 
 # Build all container images
 build:
-	@BUILDKIT_PROGRESS=plain docker-compose build --parallel
+	@docker buildx bake --progress=plain
 
 # Push container images to remote registry
 push:
-	@docker-compose push
+	@docker compose push
 
 ##
 ## Deploy the application to Kubernetes
@@ -40,4 +44,4 @@ dev:
 prod:
 	@kubectl apply -k .k8s/prod
 
-.PHONY: help all run clean build push dev prod
+.PHONY: help all run clean cleanall build push dev prod

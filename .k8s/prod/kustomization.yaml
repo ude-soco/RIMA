@@ -19,16 +19,19 @@ secretGenerator:
   env: configuration.env
 images:
 - name: inko/soco-rima-frontend
-  newTag: "0.0.10"
+  newName: socialcomputing/rima-frontend
+  newTag: "0.0.12"
 - name: inko/soco-rima-backend
-  newTag: "0.0.10"
+  newName: socialcomputing/rima-backend
+  newTag: "0.0.12"
 - name: inko/soco-rima-model-downloader
-  newTag: "0.0.10"
+  newName: socialcomputing/rima-model-downloader
+  newTag: "master"
 - name: inko/soco-rima-model-server
   newName: nginxinc/nginx-unprivileged
-  newTag: "1.19.7"
+  newTag: "1.20.2"
 - name: redis
-  newTag: "6.2.1-alpine"
+  newTag: "6.2.7-alpine"
 - name: postgres
   newName: bitnami/postgresql
-  newTag: "13.2.0"
+  newTag: "13.6.0"

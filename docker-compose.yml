@@ -6,7 +6,7 @@ volumes:
 services:
   frontend-web:
     build: RIMA-Frontend
-    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-frontend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-frontend:${IMAGE_TAG:-latest}
     environment:
     - BASE_URL=http://127.0.0.1:8000
     ports:
@@ -14,7 +14,7 @@ services:
 
   backend-api:
     build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-backend:${IMAGE_TAG:-latest}
     command: bin/api
     restart: always
     environment:
@@ -34,7 +34,7 @@ services:
 
   backend-worker:
     build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-backend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker
     restart: always
     environment:
@@ -64,7 +64,7 @@ services:
 
   model-downloader:
     build: model/downloader
-    image: ${IMAGE_NAME_PREFIX:-inko/soco-}rima-model-downloader:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-downloader:${IMAGE_TAG:-master}
     restart: on-failure
     environment:
     - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
