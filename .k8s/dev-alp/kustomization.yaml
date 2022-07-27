@@ -67,4 +67,4 @@ images:
   newTag: "6.2"
 - name: postgres
   newName: bitnami/postgresql
-  newTag: "13.2.0"
+  newTag: "13.6"
