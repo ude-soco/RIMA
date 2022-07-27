@@ -15,7 +15,7 @@ Developed by ... at ... for ... since ...
 * RIMA-Frontend
   * web: User-facing React (Node.js) UI, offering ...
 * model:
-  * downloader: Python, fetches GloVe model from Google Drive
+  * downloader: Bash, fetches GloVe model from Google Drive
   * server: nginx, serves GloVe model to RIMA-Backend via HTTP
 
 
@@ -29,13 +29,14 @@ Developed by ... at ... for ... since ...
 
 ### Live deployments
 
+* [Production](https://rima.sc.inko.cloud/) (tagged versions)
 * [Development](https://rima-dev.sc.inko.cloud/)
-* [Production](https://rima.sc.inko.cloud/)
+* [Branch dev-alp](https://rima-dev-alp.sc.inko.cloud/)
 
 
 ## Run on Docker Compose
 
-* docker-compose up
+* `docker-compose up` (see `Makefile`)
 
 
 ## Run on Kubernetes
