@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 export default function HowExplanation(props) {
 
 
-    // start Tannaz
+    {/*-----Tannaz-start---*/}
     const classes = useStyles();
 
     // states
@@ -94,13 +94,7 @@ export default function HowExplanation(props) {
         index: props.index,
     })
   
-    // console.log(state.paper);
-    // console.log(state.interests);
-    // console.log(state.index);
-  
-
-
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
   
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -146,7 +140,7 @@ export default function HowExplanation(props) {
       </>
     );
 
-            // end Tannaz
+        {/*-----Tannaz-end---*/}
 
     }
 

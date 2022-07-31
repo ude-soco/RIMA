@@ -3,7 +3,6 @@ import {
   Button as ButtonMUI,
   Paper,
   Grid,
-  Hidden,
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -38,8 +37,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-
+{/*-----Tannaz-start---*/}
+/**
+ * @function HowOverview
+ * Rendering the How Overview flowcharts
+ * @param {Object} paper
+ */
 export default function HowOverview({ paper }) {
   const classes = useStyles();
   const [moreDetail, setMoreDetail] = useState(false);
@@ -521,3 +524,4 @@ export default function HowOverview({ paper }) {
     </Paper>
   );
 }
+{/*-----Tannaz-end---*/}

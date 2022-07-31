@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import cytoscape from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 import popper from "cytoscape-popper";
@@ -29,9 +29,11 @@ function refreshLayout(key, cy, layout) {
   }, 300);
 }
 // Hoda end
-
+{
+  /*-----Tannaz-start---*/
+}
 export default function Flowchart(props) {
-  // start Tannaz
+  // defining the default layout
   const { keyChart, elements, height, xStartPoint, yStartPoint, style } = props;
   const layout = props.layout || {
     name: "preset",
@@ -76,12 +78,11 @@ export default function Flowchart(props) {
               if (event.target.popper) {
                 event.target.popperRefObj.state.elements.popper.remove();
                 event.target.popperRefObj.destroy();
-                // document.body.appendChild(content);
               }
             }
           });
-
           // Tooltip end
+          // Event handler for the mouse curser start
           cy.on("mouseover", function (evt) {
             let evtTarget = evt.target;
 
@@ -123,9 +124,10 @@ export default function Flowchart(props) {
               document.body.style.cursor = "default";
             }
           });
+          // Event handler for the mouse curser end
 
           cy.on("add remove", () => {
-            //Refresh layout, when a node was added or removed 
+            //Refresh layout, when a node was added or removed
             refreshLayout(keyChart, cy, layout);
           });
         }}
@@ -174,9 +176,9 @@ export default function Flowchart(props) {
               "background-color": "rgba(255, 255, 255, 0)",
               "text-wrap": "wrap",
               //Set the size the shapes based on the maximun node size
-              "text-max-width": getWidth(10,1.5,true),
-               width: getWidth(50,1.5,true),
-               height: getHeight(5,1,true),
+              "text-max-width": getWidth(10, 1.5, true),
+              width: getWidth(50, 1.5, true),
+              height: getHeight(5, 1, true),
               shape: "polygon",
               "background-image": "data(backgroundImage)",
               "background-fit": "data(backgroundSize)",
@@ -269,6 +271,6 @@ export default function Flowchart(props) {
         wheelSensitivity="0.05"
       />
     </div>
-    // end Tannaz
+    // /*-----Tannaz-end---*/
   );
 }
