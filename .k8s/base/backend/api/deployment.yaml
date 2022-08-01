@@ -29,6 +29,8 @@ spec:
           value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
         - name: GLOVE_MODEL_FILE_PATH
           value: /tmp/models/datatest_word2vec.txt
+        - name: DJANGO_LOGLEVEL
+          value: error
         volumeMounts:
         - mountPath: /tmp/models
           name: tmp

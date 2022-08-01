@@ -9,6 +9,7 @@ services:
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-frontend:${IMAGE_TAG:-latest}
     environment:
     - BASE_URL=http://127.0.0.1:8000
+    - NGINX_ENTRYPOINT_QUIET_LOGS=1
     ports:
     - 8080:8080
 
@@ -19,6 +20,7 @@ services:
     restart: always
     environment:
     - DJANGO_DEBUG="False"
+    - DJANGO_LOGLEVEL=error
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
@@ -39,6 +41,7 @@ services:
     restart: always
     environment:
     - DJANGO_DEBUG="False"
+    - DJANGO_LOGLEVEL=error
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
@@ -60,6 +63,7 @@ services:
 
   backend-redis:
     image: redis:6.2
+    command: redis-server --loglevel warning --save "" --appendonly no
     restart: on-failure
 
   model-downloader:
@@ -81,3 +85,5 @@ services:
     - ./tmp/model:/usr/share/nginx/html
     ports:
     - 8001:8080
+    environment:
+    - NGINX_ENTRYPOINT_QUIET_LOGS=1
