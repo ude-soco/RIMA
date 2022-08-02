@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Ensure model data is present ..."
-source "${BASH_SOURCE%/*}/download"
+echo "Ensuring model data is present ..."
+source "${BASH_SOURCE%/*}/model/download"
 
 echo "Migrating database ..."
 GLOVE_MODEL_FILE="" python manage.py migrate --verbosity 0
