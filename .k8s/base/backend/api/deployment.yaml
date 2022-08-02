@@ -25,12 +25,14 @@ spec:
         image: inko/soco-rima-backend
         command: ['bin/download']
         env:
-        - name: GLOVE_MODEL_URL
-          value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
-        - name: GLOVE_MODEL_FILE_PATH
-          value: /tmp/models/datatest_word2vec.txt
         - name: DJANGO_LOGLEVEL
           value: error
+        - name: MODEL_DIR
+          value: /tmp/models
+        - name: MODEL_SERVER
+          value: "http://$(MODEL_SERVER_SERVICE):8080"
+        - name: GLOVE_MODEL_FILE
+          value: glove/datatest_word2vec.txt
         volumeMounts:
         - mountPath: /tmp/models
           name: tmp

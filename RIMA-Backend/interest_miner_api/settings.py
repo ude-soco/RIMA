@@ -169,9 +169,7 @@ STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # No of days for which the tweets needs to be imported
-TWITTER_FETCH_DAYS = int(os.getenv(
-    "TWITTER_FETCH_DAYS",
-    180))
+TWITTER_FETCH_DAYS = int(os.getenv("TWITTER_FETCH_DAYS", 180))
 
 # Celery settings
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
@@ -187,13 +185,19 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
-TEMP_DIR = os.environ.get("TEMP_DIR", "../tmp")
+TEMP_DIR  = os.environ.get("TEMP_DIR",  "../tmp")
+MODEL_DIR = os.environ.get("MODEL_DIR", "../model")
 
-LDA_MODEL_FILE_PATH = os.environ.get(
-    "LDA_MODEL_FILE_PATH",
-    "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
-GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH")
+LDA_MODEL_FILE_PATH = os.path.join(
+    MODEL_DIR,
+    os.environ.get("LDA_MODEL_FILE_PATH", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
+)
 
-# Pre-load data models
-if GLOVE_MODEL_FILE_PATH:
+if os.environ.get("GLOVE_MODEL_FILE"):
+    GLOVE_MODEL_FILE_PATH = os.path.join(
+        MODEL_DIR,
+        os.environ.get("GLOVE_MODEL_FILE")
+    )
     from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
+else:
+    GLOVE_MODEL_FILE_PATH = None

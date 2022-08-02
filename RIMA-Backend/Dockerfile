@@ -2,7 +2,7 @@
 FROM python:3.6.15-slim
 
 RUN apt-get update -qq &&\
-    apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx curl &&\
+    apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx curl wget &&\
     rm -rf /var/lib/apt/lists/*
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log &&\

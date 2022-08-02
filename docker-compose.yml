@@ -24,8 +24,8 @@ services:
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
-    - GLOVE_MODEL_URL=http://model-server:8080/datatest_word2vec.txt
-    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    - MODEL_DIR=/home/app/.model
+    - MODEL_SERVER=http://model-server:8080/
     env_file:
     - configuration.env
     depends_on:
@@ -45,8 +45,8 @@ services:
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
-    - GLOVE_MODEL_URL=http://model-server:8080/datatest_word2vec.txt
-    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    - MODEL_DIR=/home/app/.model
+    - MODEL_SERVER=http://model-server:8080/
     env_file:
     - configuration.env
     depends_on:
@@ -71,17 +71,18 @@ services:
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-downloader:${IMAGE_TAG:-master}
     restart: on-failure
     environment:
-    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    - MODEL_DIR=/home/app/.model
     env_file:
     - configuration.env
     volumes:
-    - ./tmp/model:/home/app/.tmp
+    - ./tmp/model:/home/app/.model
 
   model-server:
     image: nginxinc/nginx-unprivileged:1.22
     restart: on-failure
     volumes:
-    - ./model/server/nginx/autoindex.sh:/docker-entrypoint.d/50-autoindex.sh
+    - ./model/server/entrypoint/autoindex.sh:/docker-entrypoint.d/50-autoindex.sh
+    - ./model/server/entrypoint/wait.sh:/docker-entrypoint.d/99-wait.sh
     - ./tmp/model:/usr/share/nginx/html
     ports:
     - 8001:8080
