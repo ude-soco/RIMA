@@ -35,7 +35,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@antv/g2": "^4.0.12",
+    "@antv/g2": "^4.2.5",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
