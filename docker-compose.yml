@@ -78,11 +78,10 @@ services:
     - ./tmp/model:/home/app/.model
 
   model-server:
-    image: nginxinc/nginx-unprivileged:1.22
+    build: model/server
+    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-server:${IMAGE_TAG:-master}
     restart: on-failure
     volumes:
-    - ./model/server/entrypoint/autoindex.sh:/docker-entrypoint.d/50-autoindex.sh
-    - ./model/server/entrypoint/wait.sh:/docker-entrypoint.d/99-wait.sh
     - ./tmp/model:/usr/share/nginx/html
     ports:
     - 8001:8080
