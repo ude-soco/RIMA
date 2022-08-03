@@ -1,4 +1,4 @@
-name: Build RIMA-Model-Downloader Image
+name: Build RIMA Model Downloader
 
 env:
   REGISTRY: socialcomputing

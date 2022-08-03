@@ -1,4 +1,4 @@
-name: Build RIMA-Model-Server Image
+name: Build RIMA Model Server
 
 env:
   REGISTRY: socialcomputing
