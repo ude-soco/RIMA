@@ -92,7 +92,7 @@
     "increase-memory-limit": "^1.0.3",
     "typescript": "3.7.7",
     "webpack-dev-server": "^3.10.3",
-    "webpack": "^4.42.0",
+    "webpack": "^4.46.0",
     "ws": "3.3.3"
   }
 }
