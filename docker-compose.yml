@@ -85,5 +85,3 @@ services:
     - ./tmp/model:/usr/share/nginx/html
     ports:
     - 8001:8080
-    environment:
-    - NGINX_ENTRYPOINT_QUIET_LOGS=1

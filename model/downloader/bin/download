@@ -5,6 +5,7 @@ rm -f "${MODEL_DIR}/.done"
 
 GLOVE_MODEL_FILE_PATH="${MODEL_DIR}/${GLOVE_MODEL_FILE}"
 
+# ENV GLOVE_MODEL_FILE=glove/datatest_word2vec.txt
 if [ -f "$GLOVE_MODEL_FILE_PATH" ]; then
   echo "GloVe model present: $GLOVE_MODEL_FILE_PATH"
 else
@@ -17,5 +18,8 @@ else
     exit 1
   fi
 fi
+
+# ENV LDA_MODEL_FILE=keyword_extractor/lda-1000-semeval2010.py3.pickle.gz
+# # no idea where this comes from
 
 touch "${MODEL_DIR}/.done"
