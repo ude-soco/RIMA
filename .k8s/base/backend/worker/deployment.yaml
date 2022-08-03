@@ -23,7 +23,7 @@ spec:
       initContainers:
       - name: setup
         image: inko/soco-rima-backend
-        command: ['bin/download']
+        command: ['bin/model/download']
         env:
         - name: MODEL_SERVER
           value: "http://$(MODEL_SERVER_SERVICE):8080"

@@ -23,7 +23,7 @@ spec:
       initContainers:
       - name: setup
         image: inko/soco-rima-backend
-        command: ['bin/download']
+        command: ['bin/model/download']
         env:
         - name: DJANGO_LOGLEVEL
           value: error
