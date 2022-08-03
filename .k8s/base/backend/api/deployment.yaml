@@ -71,8 +71,8 @@ spec:
           value: /tmp
         - name: MODEL_DIR
           value: /tmp/models
-        - name: GLOVE_MODEL_URL
-          value: "http://$(MODEL_SERVER_SERVICE):8080/datatest_word2vec.txt"
+        - name: MODEL_SERVER
+          value: "http://$(MODEL_SERVER_SERVICE):8080"
         - name: GLOVE_MODEL_FILE
           value: glove/datatest_word2vec.txt
         envFrom:
