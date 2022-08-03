@@ -8,7 +8,7 @@ RUN apt-get update -qq &&\
 RUN ln -sf /dev/stdout /var/log/nginx/access.log &&\
     ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN adduser --disabled-login -u 1000 app
+RUN adduser --disabled-login --gecos "" -u 1000 app
 USER 1000
 WORKDIR /home/app
 

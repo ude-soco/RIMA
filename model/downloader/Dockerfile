@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 FROM python:3.10.5-slim
 
-RUN adduser --disabled-login -u 101 app
+RUN adduser --disabled-login --gecos "" -u 101 app
 USER 101
 WORKDIR /home/app
 
