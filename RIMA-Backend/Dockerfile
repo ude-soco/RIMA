@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:1.4
 FROM python:3.6.15-slim
 
-RUN apt-get update -qq &&\
-    apt-get install -qq --no-install-recommends build-essential libpq-dev default-libmysqlclient-dev nginx curl wget &&\
-    rm -rf /var/lib/apt/lists/*
+RUN <<EOF
+apt-get update -qq
+apt-get install -qq --no-install-recommends \
+    build-essential libpq-dev default-libmysqlclient-dev nginx curl wget
+rm -rf /var/lib/apt/lists/*
+EOF
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log &&\
     ln -sf /dev/stderr /var/log/nginx/error.log
@@ -15,11 +18,13 @@ WORKDIR /home/app
 ENV  PYTHONUNBUFFERED 1
 ENV  PATH "$PATH:/home/app/.local/bin"
 COPY --chown=app:app requirements.txt requirements.txt
-RUN  pip install --no-color --quiet --no-cache-dir --user -r requirements.txt
-RUN  python -m spacy download en &&\
-     python -c "import nltk;nltk.download('stopwords')" &&\
-     python -c "import nltk;nltk.download('punkt')" &&\
-     python -c "import nltk;nltk.download('sentiwordnet')"
+RUN  <<EOF
+pip install --no-color --quiet --no-cache-dir --user -r requirements.txt
+python -m spacy download en
+python -c "import nltk;nltk.download('stopwords')"
+python -c "import nltk;nltk.download('punkt')"
+python -c "import nltk;nltk.download('sentiwordnet')"
+EOF
 
 COPY nginx.conf .
 RUN  nginx -t -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
