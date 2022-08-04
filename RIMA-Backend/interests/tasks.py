@@ -113,7 +113,7 @@ def __import_papers_for_user(user_id):
     current_year = datetime.datetime.now().year
     api = SemanticScholarAPI()
 
-    papers = api.get_user_papers(user, current_year - 2, current_year)
+    papers = api.get_user_papers(user, current_year - 3, current_year)
 
     for item in papers:
         Paper.objects.update_or_create(
