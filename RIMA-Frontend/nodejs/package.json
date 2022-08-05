@@ -50,7 +50,7 @@
     "d3": "^5.5.0",
     "konva": "^8.3.10",
     "moment": "2.29.4",
-    "node-sass": "4.13.1",
+    "node-sass": "4.14.1",
     "re-resizable": "^6.9.9",
     "react": "^17.0.1",
     "react-apexcharts": "^1.4.0",
