@@ -1,7 +1,6 @@
 import axios from "axios";
-import {BASE_URL} from "./constants";
-import {getItem} from "./utils/localStorage";
-
+import { BASE_URL } from "./constants";
+import { getItem } from "./utils/localStorage";
 
 class RestAPI {
   // SEARCH FOR USERS BY NAME TO COMPARE
@@ -15,7 +14,7 @@ class RestAPI {
         Accept: "application/json",
         Authorization: `Token ${user.token}`,
       },
-    }).then((res) => res)
+    }).then((res) => res);
   }
 
   // LONG TERM INTEREST
@@ -24,7 +23,9 @@ class RestAPI {
 
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/long-term/user/${!userData ? currentUser.id : userData.id}`,
+      url: `${BASE_URL}/api/interests/long-term/user/${
+        !userData ? currentUser.id : userData.id
+      }`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -38,7 +39,9 @@ class RestAPI {
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/short-term/user/${!userData ? currentUser.id : userData.id}`,
+      url: `${BASE_URL}/api/interests/short-term/user/${
+        !userData ? currentUser.id : userData.id
+      }`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -51,7 +54,9 @@ class RestAPI {
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/stream-graph/user/${!userData ? currentUser.id : userData.id}`,
+      url: `${BASE_URL}/api/interests/stream-graph/user/${
+        !userData ? currentUser.id : userData.id
+      }`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -64,15 +69,16 @@ class RestAPI {
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     return axios({
       method: "get",
-      url: `${BASE_URL}/api/interests/activity-stats/user/${!userData ? currentUser.id : userData.id}`,
+      url: `${BASE_URL}/api/interests/activity-stats/user/${
+        !userData ? currentUser.id : userData.id
+      }`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Token ${currentUser.token}`,
-      }
+      },
     }).then((res) => res);
   }
-
 
   // OLD APIS
 
@@ -488,14 +494,14 @@ class RestAPI {
     const TOKEN = getItem("accessToken");
 
     return axios({
-      method: 'DELETE',
+      method: "DELETE",
       url: `${BASE_URL}/api/interests/tweets/${id}`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Token ${TOKEN}`,
       },
-    })
+    });
   }
 
   //LAK Form
@@ -526,7 +532,7 @@ class RestAPI {
     }).then((res) => res);
   }
 
-//**added by mouadh */
+  //**added by mouadh */
   static getsimilartweets() {
     const TOKEN = getItem("accessToken");
     return axios({
@@ -539,7 +545,7 @@ class RestAPI {
       },
     }).then((res) => res);
   }
-  
+
   //Publication Recommendation
   //Jaleh
   static extractPapersFromTags(data) {
@@ -582,6 +588,5 @@ class RestAPI {
     }).then((res) => res);
   }
 }
-
 
 export default RestAPI;

@@ -18,13 +18,15 @@ import {
   Tab,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-// import SettingsIcon from "@material-ui/icons/Settings";
-// import HowExplanation from "./HowExplanation";
-// import Seperator from "./Seperator";
+import HowExplanation from "./HowExplanation";
+import Seperator from "./Seperator";
 import PropTypes from "prop-types";
 import { WhatIfInterests } from "./WhatIfInterests";
 import { WhatIfKeywords } from "./WhatIfKeywords";
-// import WhyExplanation from "./WhyExplanation";
+import WhyExplanation from "./WhyExplanation";
+import BarChartOutlinedIcon from "@material-ui/icons/BarChartOutlined";
+import TuneIcon from "@material-ui/icons/Tune";
+import AccountTreeIcon from "@material-ui/icons/AccountTree";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   center: {
     display: "flex",
     justifyContent: "center ",
+  },
+  italicSubtitle2: {
+    fontStyle: "italic",
   },
 }));
 
@@ -88,7 +93,10 @@ const ExpansionPanel = (props) => {
   const [whatIfExpanded, setWhatIfExpanded] = useState(false);
   const [howExpanded, setHowExpanded] = useState(false);
   // Jaleh
-  const { paper, interests, index, threshold } = props;
+  const paper = props.paper;
+  const interests = props.interests;
+  const index = props.index;
+  const threshold = props.threshold;
   const [value, setValue] = useState(0);
 
   const classes = useStyles();
@@ -119,30 +127,60 @@ const ExpansionPanel = (props) => {
     <>
       <CssBaseline />
 
-      <Grid container spacing={3} className={classes.collapseButton}>
+      <Grid container spacing={2} className={classes.collapseButton}>
         <ButtonGroup color="primary" size="small">
-          {/* <Button
-                        variant={whyExpanded ? "contained" : "outlined"}
-                        onClick={() => {
-                            handleWhyExpandClick();
-                        }}
-                    >
-                        Why?
-                    </Button> */}
+          <Button
+            variant={whyExpanded ? "contained" : "outlined"}
+            onClick={() => {
+              handleWhyExpandClick();
+            }}
+          >
+            {whyExpanded ? (
+              <BarChartOutlinedIcon
+                style={{ color: "white" }}
+                fontSize="small"
+              />
+            ) : (
+              <BarChartOutlinedIcon
+                style={{ color: "#333fa1" }}
+                fontSize="small"
+              />
+            )}
+            <Typography
+              align="center"
+              variant="subtitle2"
+              className="ml-1"
+              style={whyExpanded ? { color: "white" } : { color: "#333fa1" }}
+            >
+              Why?
+            </Typography>
+          </Button>
           <Button
             variant={whatIfExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhatIfExpandClick();
             }}
           >
-            What-If?
+            {whatIfExpanded ? (
+              <TuneIcon style={{ color: "white" }} fontSize="small" />
+            ) : (
+              <TuneIcon style={{ color: "#333fa1" }} fontSize="small" />
+            )}
+            <Typography
+              align="center"
+              variant="subtitle2"
+              className="ml-1"
+              style={whatIfExpanded ? { color: "white" } : { color: "#333fa1" }}
+            >
+              What-If?
+            </Typography>
           </Button>
         </ButtonGroup>
       </Grid>
 
       {/* Handling th Back button */}
 
-      {/* <Collapse in={whyExpanded} className={classes.collapse}>
+      <Collapse in={whyExpanded} className={classes.collapse}>
         {whyShow && (
           <Grid className="d-flex justify-content-start ">
             <Button
@@ -159,18 +197,24 @@ const ExpansionPanel = (props) => {
               </Typography>
             </Button>
           </Grid>
-        )} */}
+        )}
 
-      {/* Why visualizations */}
-      {/* <Grid container className={classes.root} spacing={0}>
+        {/* Why visualizations */}
+        <Grid container className={classes.root} spacing={0}>
           <Seperator Label="Why this publication?" Width="170" />
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
-              {" "}
-              &nbsp; This word cloud diagram shows the main extracted keywords
-              from this publication.
-              <br /> &nbsp; You can hover over each keyword to see how it
-              compares to the other interests.
+            <Typography align="left" variant="subtitle2" className="ml-4">
+              The Word cloud diagram shows the extracted keywords from this
+              publication.
+              <br />
+              Hover over each keyword to see its similarity to
+              <Typography
+                className={classes.italicSubtitle2}
+                variant="subtitle2"
+                component="span"
+              >
+                Your Interests
+              </Typography>
             </Typography>
           </Grid>
           <WhyExplanation index={index} paper={paper} interests={interests} />
@@ -185,23 +229,33 @@ const ExpansionPanel = (props) => {
               }}
             >
               {howExpanded ? (
-                <SettingsIcon style={{ color: "white" }} fontSize="small" />
+                <AccountTreeIcon style={{ color: "white" }} fontSize="small" />
               ) : (
-                <SettingsIcon style={{ color: "#333fa1" }} fontSize="small" />
+                <AccountTreeIcon
+                  style={{ color: "#333fa1" }}
+                  fontSize="small"
+                />
               )}
-              How?
+              <Typography
+                align="center"
+                variant="subtitle2"
+                className="ml-1"
+                style={howExpanded ? { color: "white" } : { color: "#333fa1" }}
+              >
+                How?
+              </Typography>
             </Button>{" "}
           </Grid>
-        </Grid> */}
+        </Grid>
 
-      {/* How Visualizations */}
-      {/* <Collapse in={howExpanded} className={classes.collapse}>
+        {/* How Visualizations */}
+        <Collapse in={howExpanded} className={classes.collapse}>
           <Grid container className={classes.root} spacing={0}>
             <Seperator Label="How the system works?" Width="200" />
             <HowExplanation index={index} paper={paper} interests={interests} />
           </Grid>
         </Collapse>
-      </Collapse> */}
+      </Collapse>
 
       <Collapse in={whatIfExpanded} className={classes.collapse}>
         {whatIfShow && (
@@ -247,7 +301,7 @@ const ExpansionPanel = (props) => {
                   },
                 }}
               >
-                <Tab label="What if 'Interests' changed?" className="tab" />
+                <Tab label="What if 'interests' changed?" className="tab" />
                 <Tab label="What if 'Keywords' changed?" className="tab" />
               </Tabs>
             </Grid>
