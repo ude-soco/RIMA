@@ -22,6 +22,7 @@ import {
   DialogContent,
   IconButton,
   CircularProgress,
+  Icon,
 } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
@@ -45,14 +46,12 @@ import {
   amber,
   brown,
 } from "@material-ui/core/colors";
-import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
-import CloudIcon from "@material-ui/icons/Cloud";
+// import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
+// import CloudQueueIcon from "@material-ui/icons/CloudQueue";
+
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { Collapse } from "react-bootstrap";
-import TuneIcon from "@material-ui/icons/Tune";
-
-// Hoda start- Sticky bar with collapse button
 
 /**
  * A box of user's interests with their colors. The box is sticky
@@ -97,7 +96,7 @@ export const PublicationRecommendation = () => {
     modal: false,
     threshold: 40,
     //New States added by Tannaz
-    whatModal: false,
+    // whatModal: false,
   });
 
   // Getting Interestrs for first call
@@ -162,22 +161,22 @@ export const PublicationRecommendation = () => {
   const closeWhatIfModal = (id) => {
     setState({
       ...state,
-      whatModal: false,
+      modal: false,
     });
   };
   //What modal - Tannaz:
-  const openWhatModal = () => {
-    setState({
-      ...state,
-      whatModal: true,
-    });
-  };
-  const closeWhatModal = (id) => {
-    setState({
-      ...state,
-      whatModal: false,
-    });
-  };
+  // const openWhatModal = () => {
+  //   setState({
+  //     ...state,
+  //     whatModal: true,
+  //   });
+  // };
+  // const closeWhatModal = (id) => {
+  //   setState({
+  //     ...state,
+  //     whatModal: false,
+  //   });
+  // };
 
   //Hoda
   /**
@@ -300,19 +299,18 @@ export const PublicationRecommendation = () => {
     p: 4,
   };
   //Tanaz
-  const whatStyle = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "70%",
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #ccc",
-    height: "70%",
-    display: "block",
-    p: 4,
-    zIndex: "999 !important",
-  };
+  // const whatStyle = {
+  //   position: "absolute",
+  //   top: "50%",
+  //   left: "50%",
+  //   transform: "translate(-50%, -50%)",
+  //   width: "70%",
+  //   backgroundColor: "#FFFFFF",
+  //   border: "1px solid #ccc",
+  //   height: "70%",
+  //   display: "block",
+  //   p: 4,
+  // };
   return (
     <>
       <Grid container>
@@ -335,25 +333,18 @@ export const PublicationRecommendation = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    Your Interests
+                    Your interests:
                   </legend>
+
+                  {/* Sticky interests tags */}
                   <StickyInterestTags tags={refineInterests(state.interests)} />
-                  <Grid item md={2} style={{ float: "right" }}>
+                  <Grid item md={1} style={{ float: "right" }}>
                     <Grid onClick={() => openWhatIfModal()}>
                       <Button variant="outlined" color="primary" size="small">
-                        <TuneIcon
-                          style={{ color: "#333fa1" }}
-                          fontSize="small"
-                        />
-                        <Typography
-                          align="center"
-                          variant="subtitle2"
-                          className="ml-2"
-                        >
-                          What-If?
-                        </Typography>
+                        What-if?
                       </Button>
                     </Grid>
+                    {/* General What-if Modal */}
                     <Modal
                       open={state.modal}
                       onClose={closeWhatIfModal}
@@ -398,66 +389,59 @@ export const PublicationRecommendation = () => {
             </Grid>
           </Grid>
           {/* Tanaz */}
-          <Grid className="d-flex align-items-center ml-3">
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => openWhatModal()}
-            >
-              <CloudIcon style={{ color: "#333fa1" }} fontSize="small" />
-              <Typography align="center" variant="subtitle2" className="ml-2">
-                Interests Sources
-              </Typography>
-            </Button>
-          </Grid>
+          {/* <Grid className="d-flex align-items-center ml-3">
+          <Button variant="outlined" onClick={() => openWhatModal()}>
+            <CloudQueueIcon color="action" fontSize="small" />
+            <Typography align="center" variant="subtitle2" className="ml-2">
+              Interests Sources
+            </Typography>
+          </Button>
+        </Grid> */}
           {/* What Modal */}
 
-          <Modal
-            open={state.whatModal}
-            onClose={closeWhatModal}
-            size="md"
-            className="publication-modal"
-          >
-            <Box style={whatStyle}>
-              <Grid item md={12} sm={12}>
-                <DialogTitle style={{ m: 0, p: 2 }}>
-                  <Seperator Label="What does the system know?" Width="250" />
-                  {state.whatModal ? (
-                    <IconButton
-                      aria-label="close"
-                      onClick={closeWhatModal}
-                      style={{
-                        position: "absolute",
-                        right: 8,
-                        top: 8,
-                      }}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  ) : null}
-                </DialogTitle>
-              </Grid>
-              <Grid item md={12} sm={12}>
-                <Typography align="left" variant="subtitle2" className="ml-4">
-                  <Box style={{ fontStyle: "italic", display: "contents" }}>
-                    Your Interests
-                  </Box>
-                  <Box style={{ fontStyle: "normal", display: "contents" }}>
-                    {" "}
-                    have been chosen from the word cloud
-                  </Box>
-                </Typography>
-              </Grid>
-              <Grid item md={12} sm={12}>
-                <DialogContent>
-                  <CloudChart />
-                </DialogContent>
-              </Grid>
-            </Box>
-          </Modal>
+          {/* <Modal
+          open={state.whatModal}
+          onClose={closeWhatModal}
+          size="md"
+          className="publication-modal"
+        >
+          <Box style={whatStyle}>
+            <Grid item md={12} sm={12}>
+              <DialogTitle style={{ m: 0, p: 2 }}>
+                <Seperator Label="What the system knows?" Width="200" />
+                {state.whatModal ? (
+                  <IconButton
+                    aria-label="close"
+                    onClick={closeWhatModal}
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                ) : null}
+              </DialogTitle>
+            </Grid>
+            <Grid item md={12} sm={12}>
+              <Typography align="left" variant="subtitle2" className="ml-3">
+                Your Top Interests have been chosen from this wordcloud:
+              </Typography>
+            </Grid>
+            <Grid item md={12} sm={12}>
+              <DialogContent>
+                <CloudChart />
+              </DialogContent>
+            </Grid>
+          </Box>
+        </Modal> */}
+
+          {/* Recommendation List */}
           <Seperator Label="Publications" Width="130" />
         </Grid>
         {/* end Tannaz */}
+
         <Grid container id="paper-card-container">
           {state.loading ? (
             <Grid

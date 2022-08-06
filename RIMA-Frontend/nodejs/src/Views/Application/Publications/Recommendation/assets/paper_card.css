@@ -5,8 +5,7 @@
 #paper-card-container .card .card-body .card-text a div .highlight-keyword {
   font-weight: bold;
 }
-/* Hoda start*/
-/* Apply shadow to the React tooltip*/
+
 .__react_component_tooltip.show {
   opacity: 1.0 !important;
   visibility: visible;
@@ -14,7 +13,6 @@
   box-shadow:  0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
 }
 
-/* Increase the size of the React tooltip when It contains the Bar chart*/
 .__react_component_tooltip.show.chart {
   opacity: 1.0 !important;
   visibility: visible;
@@ -23,20 +21,18 @@
   height: 220px;
   box-shadow:  0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
 }
-/* Remove the arrow of the React tooltip*/
 .__react_component_tooltip.chart::before, 
 .__react_component_tooltip.chart::after{
   display: none;
 }
 
+#paper-card-container .color-link {
+  color: #324cdd;
+}
+
 .highlight-keyword {
   font-weight: bold;
   cursor:pointer;
-}
-/* Hoda end*/
-
-#paper-card-container .color-link {
-  color: #324cdd;
 }
 
 #paper-card-container .card {

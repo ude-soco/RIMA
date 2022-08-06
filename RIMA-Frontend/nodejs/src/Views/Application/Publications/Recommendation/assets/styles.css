@@ -105,7 +105,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
 }
 
-.popper-div  p {
+/* .popper-div  p {
   font-size: 13px !important;
 
 }
@@ -136,7 +136,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent black transparent;
-}
+} */
 
 
 .paper-interests-box legend {
@@ -162,6 +162,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   width: 100%;
   padding: 0px 100px 35px 100px;
 }
+
 .sticky-topbar{
   top: 65px !important;
   z-index: 999 !important;
@@ -170,11 +171,8 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 .showMoreText{
   display: contents;
   color: #2d3985;
-  font-style: italic;
+
 }
-/*Hoda start*/
-/* Interest top-bar */
-/* Default style for interest yop-bar is collapse, when the sticky disable */
 
 .collapse-button{
   display: none;
@@ -182,22 +180,23 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 .none-sticky > div:not(.sticky-topbar) .collapse:not(.show){
   display: inherit !important;
 }
-/*When Sticky top-bar is active*/
-/*Make radius the corners of Top-bar and set them shadow */
 .sticky-topbar > div:first-child{
+  /* border:1px solid black */
+  /* background-color: rgb(245, 245, 245); */
   background-color: white;
   box-shadow: 0 3px 3px 3px #bdbdbd;
   border-bottom-left-radius: 10px;
 }
-/*Show collapse button*/
 .sticky-topbar .collapse-button{
   display: block !important;
   position: absolute;
   bottom:-14px;
   right:0;
+  /* background-color:rgb(245, 245, 245); */
   background-color: white;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  /* border:1px solid rgb(211, 211, 211); */
   border-top-width: 0;
   width: 40px;
   height: 15px;
@@ -206,41 +205,21 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   cursor: pointer;
   box-shadow: 3px 3px 3px #bdbdbd;
 }
-
 .sticky-topbar .collapse-button .MuiSvgIcon-root{
   font-size: 1rem;
   margin-top: -5px;
 }
-/* New window link */
+
 .new-window > div:last-child{
   display: none;
 }
 .new-window:hover{
   position: relative;
 }
-/* Display New window link icon in the end of paper's titel */
+
 .new-window:hover > div:last-child{
   display: inherit !important;
   position: absolute;
-  right: 0;
+  left: 0;
   top: -20px;
-}
-/*Hoda end*/
-
-.rectangle {
-  height: 20px;
-  width: 40px;
-  border : 1px solid black;
-
-}
-
-.parallelogram {
-	width: 40px;
-	height: 20px;
-	transform: skew(-20deg);
-  border : 1px solid black;
-}
-.MuiTableCell-root{
-  padding:2px !important;
-  border: none !important;
 }

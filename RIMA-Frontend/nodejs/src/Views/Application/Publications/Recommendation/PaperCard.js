@@ -6,9 +6,9 @@
  * 3. Colored band (left side)
  * 4. Expansion panel for what-if local explanations and why explanation
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import ExpansionPanel from "./components/ExpansionPanel";
 import PaperContent from "./components/PaperContent";
 
