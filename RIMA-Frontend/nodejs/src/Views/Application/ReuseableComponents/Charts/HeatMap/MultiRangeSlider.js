@@ -1,9 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
 import Slider from "@material-ui/core/Slider";
 import PropTypes from "prop-types";
+import { Tooltip } from "react-bootstrap";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: 250,

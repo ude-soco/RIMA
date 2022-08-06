@@ -21,7 +21,7 @@ utc = pytz.timezone('UTC')
 @task(
     name="import_tweets",
     base=BaseCeleryTask,
-    autoretry_for=(tweepy.RateLimitError, ),
+    # autoretry_for=(tweepy.RateLimitError, ),
     retry_kwargs={
         'max_retries': 5,
         'countdown': 30 * 60
@@ -96,7 +96,7 @@ def __import_tweets_for_user(user_id):
 @task(
     name="import_tweets_for_user",
     base=BaseCeleryTask,
-    autoretry_for=(tweepy.RateLimitError, ),
+    # autoretry_for=(tweepy.RateLimitError, ),
     retry_kwargs={
         'max_retries': 5,
         'countdown': 30 * 60
@@ -113,7 +113,7 @@ def __import_papers_for_user(user_id):
     current_year = datetime.datetime.now().year
     api = SemanticScholarAPI()
 
-    papers = api.get_user_papers(user, current_year - 2, current_year)
+    papers = api.get_user_papers(user, current_year - 3, current_year)
 
     for item in papers:
         Paper.objects.update_or_create(

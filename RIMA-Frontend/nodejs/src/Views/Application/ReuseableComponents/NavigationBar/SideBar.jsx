@@ -104,6 +104,9 @@ export default function SideBar({selection, setSelection}) {
       case "tweetsAndPeople":
         history.push("/recommendation/twitter-scanner/" + getItem("userId"))
         break;
+      case "publicationRecommendation":
+        history.push("/recommendation/publication/")
+        break;
       case "topicRecommendation":
         history.push("/app/topicsrecommend/" + getItem("userId"))
         break;
@@ -130,7 +133,7 @@ export default function SideBar({selection, setSelection}) {
 
   return (
     <>
-      <Grid container justifyContent="center" alignItems="center" className={classes.toolBar}>
+      <Grid container justify="center" alignItems="center" className={classes.toolBar}>
         <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
       </Grid>
       <Divider className={classes.divider}/>

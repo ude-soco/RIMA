@@ -3,22 +3,24 @@ import Login from "../Views/Website/Login/Login";
 import AddPaper from "../Views/Application/Publications/Paper/AddPaper.jsx";
 import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
 import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
+import Keyword from "../Views/Keywords";
 import BlacklistedKeywords from "../Views/BlacklistedKeywords";
 import Demo from "../Views/Website/Demo/Demo";
 import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
 import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/RecentInterest";
 // import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
+import { PublicationRecommendation } from "../Views/Application/Publications/Recommendation/Publications";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
 import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
+// import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";
 import TopicResearch from "Views/Application/Conferences/Topic/TopicResearch";
 import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
 import InterestProfile from "../Views/Application/InterestProfile/InterestProfile";
 import CompareAuthors from "../Views/Application/CompareAuthors/CompareAuthors";
-
 
 let routes = [
   {
@@ -68,6 +70,15 @@ let routes = [
     component: ViewPaper,
     layout: "/app",
     // display: "none"
+  },
+
+  {
+    path: "/keyword",
+    name: "Keyword",
+    icon: "ni ni-archive-2 text-yellow",
+    component: Keyword,
+    layout: "/app",
+    display: "none",
   },
   {
     path: "/blacklisted-keywords",
@@ -125,6 +136,14 @@ let routes = [
     name: "Tweets & People",
     icon: "fas fa-bars text-primary",
     component: TweetsAndPeople,
+    layout: "/recommendation",
+    // display: "none",
+  },
+  {
+    path: "/publication",
+    name: "Publications Recommenation",
+    icon: "fas fa-bars text-primary",
+    component: PublicationRecommendation,
     layout: "/recommendation",
     // display: "none",
   },
@@ -194,6 +213,5 @@ let routes = [
     layout: "/app",
     display: "none",
   },
-
 ];
 export default routes;
