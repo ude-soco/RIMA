@@ -5,8 +5,8 @@ from gensim.models.wrappers import FastText
 from nltk.corpus import stopwords
 from django.conf import settings
 from pandas import array
+from interests.glove_model_wrapper import GetGloveVector
 from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model, use_model, transformer_model
-#from interests.glove_model_wrapper import GetGloveVector
 #from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 
 def cosine_sim(vecA, vecB):

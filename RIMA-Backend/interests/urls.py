@@ -8,7 +8,7 @@ urlpatterns = [
     path('long-term/', views.LongTermInterestView.as_view()),
     path('long-term/<int:pk>/', views.LongTermInterestItemView.as_view()),
 #     path('recommended-publications', views.recommended_publications), #LK
-    path('recommended-publications', views.RecommendedPublications.as_view()),
+#     path('recommended-publications', views.RecommendedPublications.as_view()),
     path('papers/', views.PaperView.as_view()),
     path('papers/<int:pk>/', views.PaperItemView.as_view()),
     path('similarity/<int:pk>/', views.SimilarityView.as_view()),
@@ -84,7 +84,7 @@ urlpatterns = [
     #for demo
     #path('updateprinttext/',views.printHelloBackend.as_view())
      #Jaleh
-#     path('recommended-papers', views.recommended_papers),
+    path('recommended-publications', views.recommended_papers),
     path('recommended-interests-similarities', views.recommended_interests_similarities),
     path('recommended-keyword-similarities', views.recommended_keywords_similarities),
 ]

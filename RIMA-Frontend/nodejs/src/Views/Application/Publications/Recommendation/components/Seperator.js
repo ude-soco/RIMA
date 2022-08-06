@@ -1,12 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 
-/**
- *
- * @param {Object} props Label(String),Width(Number)
- * @returns The seperator component
- */
-const Seperator = (props) => {
+export default function Seperator(props) {
   const { Label, Width } = props;
 
   return (
@@ -27,5 +22,4 @@ const Seperator = (props) => {
       </Grid>
     </Grid>
   );
-};
-export default Seperator;
+}

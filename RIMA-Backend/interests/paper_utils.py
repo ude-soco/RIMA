@@ -13,7 +13,7 @@ utc = pytz.timezone('UTC')
 API = SemanticScholarAPI()
 
 
-def get_recommended_papers(interests):
+def get_recommended_publications(interests):
     user_interest_model_dict = {}  # creates a dictionary of user interest model
     paper_dict = {}
     
