@@ -2,9 +2,8 @@
 FROM python:3.6.15-slim
 
 RUN <<EOF
-apt-get update -qq
-apt-get install -qq --no-install-recommends \
-    build-essential libpq-dev default-libmysqlclient-dev nginx curl wget
+apt-get update && apt-get install -y -q --no-install-recommends \
+    build-essential libpq-dev default-libmysqlclient-dev nginx curl wget &&
 rm -rf /var/lib/apt/lists/*
 EOF
 
@@ -19,12 +18,15 @@ ENV  PYTHONUNBUFFERED 1
 ENV  PATH "$PATH:/home/app/.local/bin"
 COPY --chown=app:app requirements.txt requirements.txt
 RUN  <<EOF
-pip install --no-color --quiet --no-cache-dir --user -r requirements.txt
-python -m spacy download en
-python -c "import nltk;nltk.download('stopwords')"
-python -c "import nltk;nltk.download('punkt')"
-python -c "import nltk;nltk.download('sentiwordnet')"
+pip install --no-color --quiet --no-cache-dir --user -r requirements.txt &&
+python -m spacy download en &&
+python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
 EOF
+
+USER root
+RUN apt-get purge -y --auto-remove \
+    build-essential libpq-dev default-libmysqlclient-dev
+USER 1000
 
 COPY nginx.conf .
 RUN  nginx -t -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"
