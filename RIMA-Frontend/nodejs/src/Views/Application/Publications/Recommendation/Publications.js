@@ -17,8 +17,8 @@ import {
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import Seperator from "./Components/Seperator";
-import { WhatIfGeneral } from "./Components/WhatIfGeneral.jsx";
+import Seperator from "./components/Seperator";
+import { WhatIfGeneral } from "./components/WhatIfGeneral.jsx";
 import { handleServerErrors } from "Services/utils/errorHandler";
 import InterestsTags from "./TagSearch.js";
 import PaperCard from "./PaperCard.js";

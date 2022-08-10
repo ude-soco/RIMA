@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
 import { Button, CircularProgress, Grid } from "@material-ui/core";
-import ExpansionPanel from "./Components/ExpansionPanel";
-import PaperContent from "./Components/PaperContent";
-import { CalcMaxkeyword, getKeywordScore } from "./Components/FlowChartUtil";
+import ExpansionPanel from "./components/ExpansionPanel";
+import PaperContent from "./components/PaperContent";
+import { CalcMaxkeyword, getKeywordScore } from "./components/FlowChartUtil";
 
 function ColoredBand({ interests_similarity, tags }) {
   const totalValues = Math.round(
