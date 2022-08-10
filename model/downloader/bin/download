@@ -20,6 +20,8 @@ else
 fi
 
 # ENV LDA_MODEL_FILE=keyword_extractor/lda-1000-semeval2010.py3.pickle.gz
-# # no idea where this comes from
+# :TODO: Find out where this originally came from and download from there
+echo "Copying packaged data ..."
+cp -rf ./data/* ${MODEL_DIR}/
 
 touch "${MODEL_DIR}/.done"
