@@ -187,6 +187,7 @@ SWAGGER_SETTINGS = {
 
 TEMP_DIR  = os.environ.get("TEMP_DIR",  "../tmp")
 MODEL_DIR = os.environ.get("MODEL_DIR", "../model")
+PRELOAD_MODELS = os.environ.get("PRELOAD_MODELS", "false").lower() == "true"
 
 LDA_MODEL_FILE_PATH = os.path.join(
     MODEL_DIR,
@@ -198,6 +199,8 @@ if os.environ.get("GLOVE_MODEL_FILE"):
         MODEL_DIR,
         os.environ.get("GLOVE_MODEL_FILE")
     )
-    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
 else:
     GLOVE_MODEL_FILE_PATH = None
+
+if PRELOAD_MODELS:
+    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model

@@ -2,6 +2,7 @@
 FROM python:3.6.15-slim
 
 RUN <<EOF
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 apt-get update && apt-get install -y -q --no-install-recommends \
     build-essential libpq-dev default-libmysqlclient-dev nginx curl wget &&
 rm -rf /var/lib/apt/lists/*
@@ -25,7 +26,7 @@ EOF
 
 USER root
 RUN apt-get purge -y --auto-remove \
-    build-essential libpq-dev default-libmysqlclient-dev
+    build-essential
 USER 1000
 
 COPY nginx.conf .

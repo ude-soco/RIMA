@@ -1,4 +1,4 @@
-docker_compose("./docker-compose.yml")
+docker_compose(["./docker-compose.yml", "./docker-compose-dev.yml"])
 dc_resource("frontend-web", labels=["Frontend"])
 dc_resource("backend-db", labels=["Backend"])
 dc_resource("backend-redis", labels=["Backend"])

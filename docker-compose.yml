@@ -31,8 +31,6 @@ services:
     depends_on:
     - backend-db
     - backend-redis
-    ports:
-    - 8000:8080
 
   backend-worker:
     build: RIMA-Backend
@@ -47,6 +45,7 @@ services:
     - TEMP_DIR=/home/app/.tmp
     - MODEL_DIR=/home/app/.model
     - MODEL_SERVER=http://model-server:8080/
+    - PRELOAD_MODELS="true"
     env_file:
     - configuration.env
     depends_on:
@@ -56,6 +55,8 @@ services:
   backend-db:
     image: postgres:13.6
     restart: on-failure
+    environment:
+    - PRELOAD_MODELS="true"
     env_file:
     - configuration.env
     volumes:
@@ -83,5 +84,3 @@ services:
     restart: on-failure
     volumes:
     - ./tmp/model:/usr/share/nginx/html
-    ports:
-    - 8001:8080
