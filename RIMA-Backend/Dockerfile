@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.4
 FROM python:3.6.15-slim
 
+ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
-echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-apt-get update && apt-get install -y -q --no-install-recommends \
+apt-get update -q && apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 \
     build-essential libpq-dev default-libmysqlclient-dev nginx curl wget &&
 rm -rf /var/lib/apt/lists/*
 EOF
