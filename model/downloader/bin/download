@@ -1,15 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+rm -f "${MODEL_DIR}/.done"
+
+# ENV GLOVE_MODEL_FILE=glove/datatest_word2vec.txt
+GLOVE_MODEL_FILE_PATH="${MODEL_DIR}/${GLOVE_MODEL_FILE}"
 if [ -f "$GLOVE_MODEL_FILE_PATH" ]; then
-  echo "GloVe model present: $GLOVE_MODEL_FILE_PATH"
+  echo "$GLOVE_MODEL_FILE_PATH already present"
 else
-  echo "GloVe model missing; downloading now ..."
+  echo "$GLOVE_MODEL_FILE_PATH missing; downloading now ..."
   mkdir -p -- "${GLOVE_MODEL_FILE_PATH%/*}"
-  $HOME/.local/bin/gdown --id $GLOVE_MODEL_GDRIVE_ID -O $GLOVE_MODEL_FILE_PATH
+  $HOME/.local/bin/gdown $GLOVE_MODEL_GDRIVE_ID -O $GLOVE_MODEL_FILE_PATH
 
   if [ ! -f "$GLOVE_MODEL_FILE_PATH" ]; then
     >&2 echo "GloVe model not downloaded, aborting."
     exit 1
   fi
 fi
+
+# ENV LDA_MODEL_FILE=keyword_extractor/lda-1000-semeval2010.py3.pickle.gz
+# :TODO: Find out where this originally came from and download from there
+if [ -d "${MODEL_DIR}/keyword_extractor/" ]; then
+  echo "${MODEL_DIR}/keyword_extractor/ already present"
+else
+  echo "${MODEL_DIR}/keyword_extractor/ missing; copying now ..."
+  cp -rf ./data/* ${MODEL_DIR}/
+fi
+
+touch "${MODEL_DIR}/.done"

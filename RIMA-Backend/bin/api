@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Ensure model data is present ..."
-source "${BASH_SOURCE%/*}/download"
+echo "Ensuring model data is present ..."
+source "${BASH_SOURCE%/*}/model/download"
 
 echo "Starting Nginx ..."
 nginx -c $HOME/nginx.conf -g "pid $HOME/nginx.pid;"

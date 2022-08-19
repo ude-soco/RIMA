@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
-DEBUG = os.getenv('DJANGO_DEBUG', False) #LK
-# DEBUG = os.getenv('DJANGO_DEBUG', True) #LK
+DEBUG = os.getenv('DJANGO_DEBUG', 'false').lower() == 'true'
+
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -166,9 +166,7 @@ STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # No of days for which the tweets needs to be imported
-TWITTER_FETCH_DAYS = int(os.getenv(
-    "TWITTER_FETCH_DAYS",
-    180))
+TWITTER_FETCH_DAYS = int(os.getenv("TWITTER_FETCH_DAYS", 180))
 
 # Celery settings
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
@@ -184,12 +182,22 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
-TEMP_DIR = os.environ.get("TEMP_DIR", "../tmp")
+TEMP_DIR  = os.environ.get("TEMP_DIR",  "../tmp")
+MODEL_DIR = os.environ.get("MODEL_DIR", "../model")
+PRELOAD_MODELS = os.environ.get("PRELOAD_MODELS", "false").lower() == "true"
 
-LDA_MODEL_FILE_PATH = os.environ.get(
-    "LDA_MODEL_FILE_PATH",
-    "interests/Keyword_Extractor/models/lda-1000-semeval2010.py3.pickle.gz")
-GLOVE_MODEL_FILE_PATH = os.environ.get("GLOVE_MODEL_FILE_PATH")
+LDA_MODEL_FILE_PATH = os.path.join(
+    MODEL_DIR,
+    os.environ.get("LDA_MODEL_FILE", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
+)
+
+if os.environ.get("GLOVE_MODEL_FILE"):
+    GLOVE_MODEL_FILE_PATH = os.path.join(
+        MODEL_DIR,
+        os.environ.get("GLOVE_MODEL_FILE")
+    )
+else:
+    GLOVE_MODEL_FILE_PATH = None
 
 # use bellow line if use_model is not used
 USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
@@ -228,10 +236,3 @@ INSPEC = os.environ.get("Inspec", "./interests/Keyword_Extractor/Algorithms/embe
 SEMEVALVOCAB2017 = os.environ.get("SemEval2017Vocab", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/semeval_vocal.txt")
 
 DUC2001= os.environ.get("Duc2001", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/duc2001.txt")
-
-
-
-
-# Pre-load data models
-#if GLOVE_MODEL_FILE_PATH:
-    #from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model

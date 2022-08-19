@@ -9,6 +9,7 @@ services:
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-frontend:${IMAGE_TAG:-latest}
     environment:
     - BASE_URL=http://127.0.0.1:8000
+    - NGINX_ENTRYPOINT_QUIET_LOGS=1
     ports:
     - 8080:8080
 
@@ -19,18 +20,17 @@ services:
     restart: always
     environment:
     - DJANGO_DEBUG="False"
+    - DJANGO_LOGLEVEL=error
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
-    - GLOVE_MODEL_URL=http://model-server:8080/datatest_word2vec.txt
-    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    - MODEL_DIR=/home/app/.model
+    - MODEL_SERVER=http://model-server:8080/
     env_file:
     - configuration.env
     depends_on:
     - backend-db
     - backend-redis
-    ports:
-    - 8000:8080
 
   backend-worker:
     build: RIMA-Backend
@@ -39,11 +39,13 @@ services:
     restart: always
     environment:
     - DJANGO_DEBUG="False"
+    - DJANGO_LOGLEVEL=error
     - REDIS_HOST=backend-redis
     - POSTGRES_HOST=backend-db
     - TEMP_DIR=/home/app/.tmp
-    - GLOVE_MODEL_URL=http://model-server:8080/datatest_word2vec.txt
-    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    - MODEL_DIR=/home/app/.model
+    - MODEL_SERVER=http://model-server:8080/
+    - PRELOAD_MODELS="true"
     env_file:
     - configuration.env
     depends_on:
@@ -51,8 +53,10 @@ services:
     - backend-redis
 
   backend-db:
-    image: postgres:13.2
+    image: postgres:13.6
     restart: on-failure
+    environment:
+    - PRELOAD_MODELS="true"
     env_file:
     - configuration.env
     volumes:
@@ -60,6 +64,7 @@ services:
 
   backend-redis:
     image: redis:6.2
+    command: redis-server --loglevel warning --save "" --appendonly no
     restart: on-failure
 
   model-downloader:
@@ -67,16 +72,16 @@ services:
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-downloader:${IMAGE_TAG:-master}
     restart: on-failure
     environment:
-    - GLOVE_MODEL_FILE_PATH=/home/app/.tmp/datatest_word2vec.txt
+    - MODEL_DIR=/home/app/.model
+    - TEMP_DIR=/tmp
     env_file:
     - configuration.env
     volumes:
-    - ./tmp/model:/home/app/.tmp
+    - ./tmp/model:/home/app/.model
 
   model-server:
-    image: nginxinc/nginx-unprivileged:1.22
+    build: model/server
+    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-server:${IMAGE_TAG:-master}
     restart: on-failure
     volumes:
     - ./tmp/model:/usr/share/nginx/html
-    ports:
-    - 8001:8080

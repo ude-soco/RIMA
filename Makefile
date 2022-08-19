@@ -8,17 +8,31 @@ all: clean build run
 ## Run the application locally
 ##
 
+compose = docker compose -f docker-compose.yml -f docker-compose-dev.yml
+
 # Start all containers
-run:
-	@docker compose up --force-recreate
+run: stop
+	@$(compose) up --force-recreate
+
+start: run
+up: run
+
+stop:
+	@$(compose) down
+
+down: stop
 
 # Remove services, volumes, and locally built images
 clean:
-	@docker compose down --volumes --remove-orphans --rmi local
+	@$(compose) down --volumes --remove-orphans --rmi local
 
 # Remove services, volumes, and all images
 cleanall:
-	@docker compose down --volumes --remove-orphans --rmi all
+	@$(compose) down --volumes --remove-orphans --rmi all
+
+# Download all required data using Model Downloader
+model:
+	@$(compose) run model-downloader
 
 ##
 ## Build container images locally
@@ -37,11 +51,11 @@ push:
 ##
 
 # Deploy dev overlay
-dev:
-	@kubectl apply -k .k8s/dev
+k8s-dev:
+	@kubectl apply --wait -k .k8s/dev
 
 # Deploy prod overlay
-prod:
-	@kubectl apply -k .k8s/prod
+k8s-prod:
+	@kubectl apply --wait -k .k8s/prod
 
-.PHONY: help all run clean cleanall build push dev prod
+.PHONY: help all run start up stop down clean cleanall model build push k8s-dev k8s-prod

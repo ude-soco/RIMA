@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Ensure model data is present ..."
-source "${BASH_SOURCE%/*}/download"
+echo "Ensuring model data is present ..."
+source "${BASH_SOURCE%/*}/model/download"
 
 echo "Migrating database ..."
-GLOVE_MODEL_FILE_PATH="" python manage.py migrate
+GLOVE_MODEL_FILE="" python manage.py migrate --verbosity 0
 
 echo "Starting Celery job queue ..."
-celery worker --app=interest_miner_api --concurrency=1 -l info
+celery worker --app=interest_miner_api --concurrency=1 -l warning

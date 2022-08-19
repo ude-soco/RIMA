@@ -4,3 +4,6 @@
 - op:    replace
   path:  "/metadata/annotations/keel.sh~1policy"
   value: force
+- op:    add
+  path:  "/metadata/annotations/keel.sh~1match-tag"
+  value: true

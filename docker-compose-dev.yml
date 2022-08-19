@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  frontend-web:
+    volumes:
+    - ./RIMA-Frontend/nodejs/package-lock.json:/home/app/package-lock.json
+    restart: "no"
+
+  backend-api:
+    ports:
+    - 8000:8080
+    environment:
+    - PRELOAD_MODELS="false"
+    restart: "no"
+
+  backend-worker:
+    environment:
+    - PRELOAD_MODELS="false"
+    restart: "no"
+
+  model-downloader:
+    restart: "no"
+    volumes:
+    - ./tmp/download:/tmp
+
+  model-server:
+    ports:
+    - 8001:8080
+    restart: "no"

@@ -1,4 +1,4 @@
-name: Build RIMA-Frontend Image
+name: Build RIMA Frontend
 
 env:
   REGISTRY: socialcomputing

@@ -1,14 +1,23 @@
 version: 2
 updates:
+
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
     interval: "daily"
+
 - package-ecosystem: "npm"
   directory: "/RIMA-Frontend/nodejs"
   schedule:
     interval: "daily"
+  ignore:
+  - dependency-name: "*"
+    update-types: ["version-update:semver-major"]
+
 - package-ecosystem: "pip"
   directory: "/RIMA-Backend"
   schedule:
     interval: "daily"
+  ignore:
+  - dependency-name: "*"
+    update-types: ["version-update:semver-major"]

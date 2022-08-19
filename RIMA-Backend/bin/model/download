@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -n "${MODEL_SERVER:-}" ]; then
+  echo "Mirroring data from Model Server (${MODEL_SERVER}) to ${MODEL_DIR} ..."
+  mkdir -p $MODEL_DIR
+  wget --quiet -e robots=off \
+    --retry-connrefused --waitretry=3 --timeout=15 --tries=100 --continue \
+    --recursive --no-host-directories --no-parent --reject "*index.html*" \
+    --directory-prefix=${MODEL_DIR} $MODEL_SERVER
+else
+  echo "No Model Server configured; expecting model files present in: ${MODEL_DIR}"
+fi
+
+echo "Model files available:"
+find ${MODEL_DIR} -type f
