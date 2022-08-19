@@ -73,6 +73,7 @@ services:
     restart: on-failure
     environment:
     - MODEL_DIR=/home/app/.model
+    - TEMP_DIR=/tmp
     env_file:
     - configuration.env
     volumes:

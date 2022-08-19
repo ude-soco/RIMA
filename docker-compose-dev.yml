@@ -20,6 +20,8 @@ services:
 
   model-downloader:
     restart: "no"
+    volumes:
+    - ./tmp/download:/tmp
 
   model-server:
     ports:
