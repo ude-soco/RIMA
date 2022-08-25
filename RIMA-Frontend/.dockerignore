@@ -1,5 +1,6 @@
 .depcheckrc
 .dockerignore
+*.example
 CHANGELOG.md
 Dockerfile
 node_modules

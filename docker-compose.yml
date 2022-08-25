@@ -7,9 +7,9 @@ services:
   frontend-web:
     build: RIMA-Frontend
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-frontend:${IMAGE_TAG:-latest}
+    restart: always
     environment:
     - BASE_URL=http://127.0.0.1:8000
-    - NGINX_ENTRYPOINT_QUIET_LOGS=1
     ports:
     - 8080:8080
 
