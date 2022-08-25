@@ -18,3 +18,8 @@ npm start
 ## Production build
 
 See `Dockerfile` for build steps
+
+
+## Development build
+
+See `Dockerfile-dev` for a build running a Node.js dev server instead of nginx.

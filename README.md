@@ -34,9 +34,10 @@ Developed by ... at ... for ... since ...
 * [Branch dev-alp](https://rima-dev-alp.sc.inko.cloud/)
 
 
-## Run on Docker Compose
+## Run on Docker
 
-* `docker-compose up` (see `Makefile`)
+* Production: `docker-compose up -f docker-compose.yml` (see `Makefile`)
+* Development: `tilt up`
 
 
 ## Run on Kubernetes

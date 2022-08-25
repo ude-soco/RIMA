@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:1.4
+FROM node:14.20.0 as build
+WORKDIR /app
+
+COPY ./nodejs/package*.json ./
+RUN  npm install
+
+COPY ./nodejs ./
+
+CMD ["npm", "start"]
+EXPOSE 8080
