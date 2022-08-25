@@ -3,7 +3,7 @@ name: Build RIMA Model Downloader
 env:
   REGISTRY: socialcomputing
   IMAGE:    rima-model-downloader
-  CONTEXT:  ./model/downloader
+  CONTEXT:  ./model-downloader
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     branches: ['master', 'dev-*', 'dev/*']
     paths:
     - '.github/workflows/build-model-downloader.yml'
-    - 'model/downloader/**'
+    - 'model-downloader/**'
   pull_request:
     branches: ['master']
 
