@@ -31,6 +31,7 @@ services:
     depends_on:
     - backend-db
     - backend-redis
+    - model-server
 
   backend-worker:
     build: RIMA-Backend
@@ -51,6 +52,7 @@ services:
     depends_on:
     - backend-db
     - backend-redis
+    - model-server
 
   backend-db:
     image: postgres:13.6
@@ -85,3 +87,5 @@ services:
     restart: on-failure
     volumes:
     - ./tmp/model:/usr/share/nginx/html
+    depends_on:
+    - model-downloader
