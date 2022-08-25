@@ -70,7 +70,7 @@ services:
     restart: on-failure
 
   model-downloader:
-    build: model/downloader
+    build: model-downloader
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-downloader:${IMAGE_TAG:-master}
     restart: on-failure
     environment:
@@ -82,7 +82,7 @@ services:
     - ./tmp/model:/home/app/.model
 
   model-server:
-    build: model/server
+    build: model-server
     image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-server:${IMAGE_TAG:-master}
     restart: on-failure
     volumes:

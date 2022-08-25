@@ -3,7 +3,7 @@ name: Build RIMA Model Server
 env:
   REGISTRY: socialcomputing
   IMAGE:    rima-model-server
-  CONTEXT:  ./model/server
+  CONTEXT:  ./model-server
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     branches: ['master', 'dev-*', 'dev/*']
     paths:
     - '.github/workflows/build-model-server.yml'
-    - 'model/server/**'
+    - 'model-server/**'
   pull_request:
     branches: ['master']
 
