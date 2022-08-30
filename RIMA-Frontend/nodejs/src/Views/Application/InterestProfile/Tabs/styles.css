@@ -1,0 +1,47 @@
+.score {
+    color: orange;
+}
+
+.header {
+    font-weight: "bolder";
+}
+
+.label {
+    width: 2px;
+    overflow-wrap: "anywhere";
+}
+
+.sphere {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    position: absolute;
+    border: 2px rgb(115, 166, 183) solid;
+    border-radius: 50%;
+}
+
+.one {
+    left: 24px;
+    top: 75px;
+    background: orange;
+}
+.two {
+    left: 300px;
+    top: 75px;
+    background: skyblue;
+}
+
+.text {
+    position: relative;
+    top: 100px;
+    left: 75px;
+    background: transparent;
+}
+
+.circle {
+    opacity: 0.4;
+}
+
+tspan .text {
+    background-color: black;
+}

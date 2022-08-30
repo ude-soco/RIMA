@@ -87,4 +87,7 @@ urlpatterns = [
     path('recommended-publications', views.recommended_papers),
     path('recommended-interests-similarities', views.recommended_interests_similarities),
     path('recommended-keyword-similarities', views.recommended_keywords_similarities),
+    #Clara6
+    path('get-discover-data', views.get_data_discover),
+    path('get-explore-data', views.get_data_explore),
 ]

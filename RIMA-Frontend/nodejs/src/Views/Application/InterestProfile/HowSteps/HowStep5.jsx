@@ -20,7 +20,7 @@ const HowStep5 = (props) => {
         </Grid>
 
         <Grid item xs={12}>
-          <AwesomeSlider style={{height: "500px",}}>
+          <AwesomeSlider style={{height: "430px",}}>
             <Box style={{backgroundColor: "#fff"}}>
               {keywords.length !== 0 ?
                 <WordCloudHow keywords={keywords}/> :
