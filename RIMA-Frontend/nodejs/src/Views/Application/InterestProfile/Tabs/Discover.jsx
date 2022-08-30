@@ -1,6 +1,6 @@
 import {
   Button,
-  Checkbox,
+  Checkbox, CircularProgress,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -8,7 +8,7 @@ import {
   Menu,
   MenuItem,
   Radio,
-  RadioGroup
+  RadioGroup, Typography
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import React,{ useEffect, useState } from "react";
@@ -223,7 +223,7 @@ const DiscoverPage = () => {
                     data={state.currData}
                 />
             ) : (
-                <></>
+                <Loading/>
             )}
           </Grid>
         </Grid>
@@ -232,3 +232,23 @@ const DiscoverPage = () => {
 };
 
 export default DiscoverPage;
+
+export const Loading = () => {
+  return (
+      <>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+        >
+          <Grid item>
+            <CircularProgress/>
+          </Grid>
+          <Grid item>
+            <Typography variant="overline"> Loading data </Typography>
+          </Grid>
+        </Grid>
+      </>
+  )
+}
