@@ -19,11 +19,13 @@ import SearchIcon from "@material-ui/icons/Search";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
+import SimiliarInterests from "../SimiliarInterests";
 
 
 // changed the original Class component to a functional component - Clara
 const BarChart = (props) => {
   const {keywords, setWordCloudInterest, setOpen} = props;
+  const [openSimiliar, setOpenSimiliar]= useState(false)
 
   const [interests, setInterests] = useState([]);
   const [weights, setWeights] = useState([]);
@@ -51,6 +53,15 @@ const BarChart = (props) => {
       openMenu: null,
     });
     setOpen(prevState => !prevState);
+    setWordCloudInterest(state.currentInterest)
+  }
+
+  const handleToggleSimiliarInterest=()=>{
+    setState({
+      ...state,
+      openMenu: null,
+    });
+    setOpenSimiliar(!openSimiliar);
     setWordCloudInterest(state.currentInterest)
   }
 
@@ -117,7 +128,7 @@ const BarChart = (props) => {
       <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
             anchorOrigin={{vertical: 'center', horizontal: 'right'}}
             transformOrigin={{vertical: 'top', horizontal: 'center'}}>
-        <MenuItem>
+        <MenuItem onClick={handleToggleSimiliarInterest}>
           <ListItemIcon>
             <SearchIcon fontSize="small"/>
           </ListItemIcon>
@@ -168,6 +179,18 @@ const BarChart = (props) => {
           </Button>
         </DialogActions>
 
+      </Dialog>
+      <Dialog open={openSimiliar} fullWidth={true} maxWidth="lg" onClose={handleToggleSimiliarInterest}>
+        <DialogTitle>Similiar Interests to {state.currentInterest.text}</DialogTitle>
+        <DialogContent>
+          <SimiliarInterests interest={[state.currentInterest.text]}/>
+
+        </DialogContent>
+        <DialogActions style={{padding: 16}}>
+          <Button onClick={handleToggleSimiliarInterest} variant="contained" color="primary">
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

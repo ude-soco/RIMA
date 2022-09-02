@@ -149,6 +149,7 @@ def getCountLinks(links, text):
     return sorted_links_count
 
 def getDataNewInterestExplore(interest):
+    print(interest, "test test")
     links, text = getLinksTextInPage(interest.capitalize())
     top3Interests=getCountLinks(links, text)
 
@@ -183,4 +184,9 @@ def getDataExplore(interests):
         currData=getDataNewInterestExplore(i)
         data.append(currData)
     return data
+
+
+
+
+
 

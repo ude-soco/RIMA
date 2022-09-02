@@ -158,7 +158,7 @@ const NodeLink = (props) => {
         setElements([]);
         setElements(elementsCurr);
     }, [data]);
-    const theme = useTheme();
+
 
     //const elements = getElements(data);
 

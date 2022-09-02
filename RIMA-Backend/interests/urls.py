@@ -90,4 +90,5 @@ urlpatterns = [
     #Clara6
     path('get-discover-data', views.get_data_discover),
     path('get-explore-data', views.get_data_explore),
+    path('get-similiar-interest-data', views.get_data_similiar_interest),
 ]

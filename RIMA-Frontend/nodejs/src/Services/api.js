@@ -612,6 +612,20 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  static getSimiliarInterestData(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/get-similiar-interest-data`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+
 
 }
 

@@ -39,7 +39,7 @@ const ExplorePage = () => {
         })
         console.log(interests, "test fetch")
         setState({...state,userInterests: interests})
-        interests=interests.slice(0,3)
+        interests=interests.slice(0,1)
         return interests
 
     };

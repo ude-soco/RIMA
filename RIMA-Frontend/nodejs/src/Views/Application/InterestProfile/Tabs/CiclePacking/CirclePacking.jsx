@@ -18,10 +18,12 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
 import {ResponsiveCirclePacking} from "@nivo/circle-packing";
+import SimiliarInterests from "../SimiliarInterests";
 
 
 const CirclePacking = (props) => {
   const {keywords, setWordCloudInterest, setOpen} = props;
+  const [openSimiliar, setOpenSimiliar]= useState(false)
 
   const [interests, setInterests] = useState([]);
   const [state, setState] = useState({
@@ -75,6 +77,15 @@ const CirclePacking = (props) => {
     setWordCloudInterest(state.currentInterest);
   }
 
+  const handleToggleSimiliarInterest=()=>{
+    setState({
+      ...state,
+      openMenu: null,
+    });
+    setOpenSimiliar(!openSimiliar);
+    setWordCloudInterest(state.currentInterest)
+  }
+
 
   return (
     <>
@@ -117,7 +128,7 @@ const CirclePacking = (props) => {
       <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
             anchorOrigin={{vertical: 'center', horizontal: 'right'}}
             transformOrigin={{vertical: 'top', horizontal: 'center'}}>
-        <MenuItem>
+        <MenuItem onClick={handleToggleSimiliarInterest}>
           <ListItemIcon>
             <SearchIcon fontSize="small"/>
           </ListItemIcon>
@@ -169,6 +180,18 @@ const CirclePacking = (props) => {
           </Button>
         </DialogActions>
 
+      </Dialog>
+      <Dialog open={openSimiliar} fullWidth={true} maxWidth="lg" onClose={handleToggleSimiliarInterest}>
+        <DialogTitle>Similiar Interests to {state.currentInterest.text}</DialogTitle>
+        <DialogContent>
+          <SimiliarInterests interest={[state.currentInterest.text]}/>
+
+        </DialogContent>
+        <DialogActions style={{padding: 16}}>
+          <Button onClick={handleToggleSimiliarInterest} variant="contained" color="primary">
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

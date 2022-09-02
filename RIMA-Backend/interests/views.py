@@ -93,6 +93,7 @@ from .utils import (
 from interests.tasks import import_user_data, import_user_paperdata
 from .publication_utils import API, get_recommended_publications, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
 from .my_interests import getDataExplore, getDataDiscover
+from .my_interests import getDataNewInterestExplore
 
 class TriggerPaperUpdate(APIView):
     def post(self, request, *args, **kwargs):
@@ -177,6 +178,12 @@ def get_data_explore(request, *args, **kwargs):
 @api_view(["post"])
 def get_data_discover(request, *args, **kwargs):
     res =getDataDiscover(request.data)
+    #two list: random and all interests
+    return Response({"message": "Successful", "data": res})
+
+@api_view(["post"])
+def get_data_similiar_interest(request, *args, **kwargs):
+    res =getDataNewInterestExplore(request.data)
     #two list: random and all interests
     return Response({"message": "Successful", "data": res})
 

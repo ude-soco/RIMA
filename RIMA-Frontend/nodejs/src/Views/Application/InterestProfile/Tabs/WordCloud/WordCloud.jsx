@@ -20,9 +20,11 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
 
 import WhyInterest from "../../WhyInterest/WhyInterest";
+import SimiliarInterests from "../SimiliarInterests";
 
 const WordCloud = (props) => {
   const {keywords, setWordCloudInterest, setOpen} = props;
+  const [openSimiliar, setOpenSimiliar]= useState(false)
 
   const [state, setState] = useState({
     openMenu: null,
@@ -48,6 +50,7 @@ const WordCloud = (props) => {
       openMenu: null,
       openWhyInterest: !state.openWhyInterest
     });
+
   }
 
   const handleToggleEditInterest = () => {
@@ -56,6 +59,15 @@ const WordCloud = (props) => {
       openMenu: null,
     });
     setOpen(prevState => !prevState);
+    setWordCloudInterest(state.currentInterest)
+  }
+
+  const handleToggleSimiliarInterest=()=>{
+    setState({
+      ...state,
+      openMenu: null,
+    });
+    setOpenSimiliar(!openSimiliar);
     setWordCloudInterest(state.currentInterest)
   }
 
@@ -104,7 +116,7 @@ const WordCloud = (props) => {
         <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
               anchorOrigin={{vertical: 'center', horizontal: 'right'}}
               transformOrigin={{vertical: 'top', horizontal: 'center'}}>
-          <MenuItem>
+          <MenuItem onClick={handleToggleSimiliarInterest}>
             <ListItemIcon>
               <SearchIcon fontSize="small"/>
             </ListItemIcon>
@@ -157,9 +169,24 @@ const WordCloud = (props) => {
             </Button>
           </DialogActions>
         </Dialog>
+
+      <Dialog open={openSimiliar} fullWidth={true} maxWidth="lg" onClose={handleToggleSimiliarInterest}>
+        <DialogTitle>Similiar Interests to {state.currentInterest.text}</DialogTitle>
+        <DialogContent>
+          <SimiliarInterests interest={[state.currentInterest.text]}/>
+
+        </DialogContent>
+        <DialogActions style={{padding: 16}}>
+          <Button onClick={handleToggleSimiliarInterest} variant="contained" color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Grid>
     </>
   );
 };
 
 export default WordCloud;
+
+
