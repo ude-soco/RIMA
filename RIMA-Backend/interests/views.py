@@ -1,4 +1,5 @@
 import datetime
+from distutils.log import Log
 import monthdelta
 import json
 from rest_framework import permissions
@@ -118,11 +119,13 @@ class LongTermInterestView(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = ListDataSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
+        LongTermInterest.objects.filter(user=request.user).delete()
+        
         for keyword in serializer.validated_data["keywords"]:
             name, weight = keyword["name"], keyword["weight"]
             keyword_obj, created = Keyword.objects.get_or_create(
                 name=name.lower())
+            
             LongTermInterest.objects.update_or_create(
                 user=request.user,
                 keyword=keyword_obj,

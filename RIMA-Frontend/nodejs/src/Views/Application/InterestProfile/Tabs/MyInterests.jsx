@@ -47,7 +47,7 @@ export default function MyInterests() {
 
   return (
     <>
-      <Grid container justify="flex-end" style={{paddingTop: 32, height: "75vh"}}>
+      <Grid container justify="flex-end" style={{paddingTop: 24, height: "75vh"}}>
         <Grid item>
           {keywords.length !== 0 ? <>
             <Button color="primary" startIcon={<EditIcon/>} onClick={() => setOpen(!open)}>

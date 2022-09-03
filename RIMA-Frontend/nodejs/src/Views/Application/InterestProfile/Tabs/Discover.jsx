@@ -1,6 +1,7 @@
 import {
   Button,
-  Checkbox, CircularProgress,
+  Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -8,10 +9,11 @@ import {
   Menu,
   MenuItem,
   Radio,
-  RadioGroup, Typography
+  RadioGroup,
+  Typography
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import React,{ useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import GetNodeLink from "./GetNodeLinkDiscover";
 import RestAPI from "../../../../Services/api";
 
@@ -27,7 +29,7 @@ const DiscoverPage = () => {
     currInterest: false,
     currData: []
   });
-  const [data, setData]=useState()
+  const [data, setData] = useState()
 
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
@@ -36,8 +38,8 @@ const DiscoverPage = () => {
     const response = await RestAPI.longTermInterest(currentUser);
     const {data} = response;
 
-    let interests=[]
-    data.map((d)=>{
+    let interests = []
+    data.map((d) => {
       //console.log(d, "test")
       interests.push(d.keyword)
     })
@@ -47,28 +49,27 @@ const DiscoverPage = () => {
 
   };
 
-  const getData=async ()=>{
-    let interests=await fetchKeywords()
-    if (interests){
+  const getData = async () => {
+    let interests = await fetchKeywords()
+    if (interests) {
       console.log("started Data")
       const response = await RestAPI.getDiscoverData(interests)
-      const {data}=response
+      const {data} = response
       setData(data.data)
-      console.log("test data",data)
+      console.log("test data", data)
 
     }
 
 
-
   }
-  useEffect(()=>{
+  useEffect(() => {
     getData()
-  },[])
+  }, [])
 
 
   useEffect(() => {
-  console.log(data, "test data")
-    if(data){
+    console.log(data, "test data")
+    if (data) {
       let currLabels = [];
       let currValues = [];
 
@@ -119,26 +120,26 @@ const DiscoverPage = () => {
     if (state.currInterest) {
       let d = data[state.currInterest];
 
-      setState({ ...state, currData: d });
+      setState({...state, currData: d});
     }
   }, [state.currInterest]);
 
   const handleOpenInterest = (event) => {
-    setState({ ...state, openInterest: event.currentTarget });
+    setState({...state, openInterest: event.currentTarget});
   };
   const handleCloseInterest = () => {
-    setState({ ...state, openInterest: null });
+    setState({...state, openInterest: null});
   };
 
   const handleOpenCategory = (event) => {
-    setState({ ...state, openCategory: event.currentTarget });
+    setState({...state, openCategory: event.currentTarget});
   };
   const handleCloseCategory = () => {
-    setState({ ...state, openCategory: null });
+    setState({...state, openCategory: null});
   };
 
   const handleInterest = (event) => {
-    setState({ ...state, currInterest: event.target.value });
+    setState({...state, currInterest: event.target.value});
   };
 
   const handleCheck = (target) => {
@@ -147,87 +148,86 @@ const DiscoverPage = () => {
     let currValuesCategories = state.currCategoriesValue;
     currValuesCategories[currIndex] = !currValuesCategories[currIndex];
 
-    setState({ ...state, currCategoriesValue: currValuesCategories });
+    setState({...state, currCategoriesValue: currValuesCategories});
   };
 
   return (
-      <>
-        <Grid container>
-          <Grid item xs={8}></Grid>
-          <Grid item xs={2}>
-            <Button startIcon={<FilterListIcon />} onClick={handleOpenInterest}>
-              Choose interest
-            </Button>
-            <Menu
-                id="currInterestDiscover"
-                anchorEl={state.openInterest}
-                keepMounted
-                open={Boolean(state.openInterest)}
-                onClose={handleCloseInterest}
+    <>
+      <Grid container justify="flex-end" style={{paddingTop: 24, paddingBottom: 8}}>
+        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenInterest}>
+          Choose interest
+        </Button>
+        <Menu
+          id="currInterestDiscover"
+          anchorEl={state.openInterest}
+          keepMounted
+          open={Boolean(state.openInterest)}
+          onClose={handleCloseInterest}
+        >
+          <FormControl component="fieldset">
+            <FormLabel
+              component="legend"
+              style={{paddingLeft: "8px", paddingTop: "8px"}}
             >
-              <FormControl component="fieldset">
-                <FormLabel
-                    component="legend"
-                    style={{ paddingLeft: "8px", paddingTop: "8px" }}
-                >
-                  Interest
-                </FormLabel>
-                <RadioGroup
-                    aria-label="interest"
-                    name="interest"
-                    value={state.currInterest}
-                    onChange={handleInterest}
-                    style={{ padding: "8px" }}
-                >
-                  {interests.map((s) => {
-                    return (
-                        <FormControlLabel value={s} control={<Radio />} label={s} />
-                    );
-                  })}
-                </RadioGroup>
-              </FormControl>
-            </Menu>
-          </Grid>
-          <Grid item xs={2} justify="flex-end">
-            <Button startIcon={<FilterListIcon />} onClick={handleOpenCategory}>
-              Field of Study
-            </Button>
-            <Menu
-                id="filterInterestExplore"
-                anchorEl={state.openCategory}
-                keepMounted
-                open={Boolean(state.openCategory)}
-                onClose={handleCloseCategory}
+              Interest
+            </FormLabel>
+            <RadioGroup
+              aria-label="interest"
+              name="interest"
+              value={state.currInterest}
+              onChange={handleInterest}
+              style={{padding: "8px"}}
             >
-              {state.currCategoriesLabel.map((cat, index) => {
-                let label = cat;
-                let check = state.currCategoriesValue[index];
+              {interests.map((s) => {
                 return (
-                    <MenuItem>
-                      <Checkbox
-                          checked={check}
-                          keyCheck={index}
-                          onChange={() => handleCheck(label)}
-                      />
-                      {label}
-                    </MenuItem>
+                  <FormControlLabel value={s} control={<Radio/>} label={s}/>
                 );
               })}
-            </Menu>
-          </Grid>
-          <Grid item xs={12}>
-            {state.currCategoriesValue ? (
-                <GetNodeLink
-                    interest={state.currInterest}
-                    categoriesChecked={state.currCategoriesValue}
-                    data={state.currData}
+            </RadioGroup>
+          </FormControl>
+        </Menu>
+        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenCategory} style={{marginLeft: 8}}>
+          Field of Study
+        </Button>
+        <Menu
+          id="filterInterestExplore"
+          anchorEl={state.openCategory}
+          keepMounted
+          open={Boolean(state.openCategory)}
+          onClose={handleCloseCategory}
+        >
+          {state.currCategoriesLabel.map((cat, index) => {
+            let label = cat;
+            let check = state.currCategoriesValue[index];
+            return (
+              <MenuItem>
+                <Checkbox
+                  checked={check}
+                  keyCheck={index}
+                  onChange={() => handleCheck(label)}
                 />
-            ) : (
-                <Loading/>
-            )}
-          </Grid>
+                {label}
+              </MenuItem>
+            );
+          })}
+        </Menu>
+      </Grid>
+      <Grid container>
+        <Grid item xs={1}/>
+        <Grid item xs={10}>
+          {state.currCategoriesValue ? (
+            <GetNodeLink
+              interest={state.currInterest}
+              categoriesChecked={state.currCategoriesValue}
+              data={state.currData}
+            />
+          ) : (
+            <Loading/>
+          )}
         </Grid>
-      </>
+        <Grid item xs={1}/>
+      </Grid>
+    </>
   );
 };
 
@@ -235,20 +235,20 @@ export default DiscoverPage;
 
 export const Loading = () => {
   return (
-      <>
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-        >
-          <Grid item>
-            <CircularProgress/>
-          </Grid>
-          <Grid item>
-            <Typography variant="overline"> Loading data </Typography>
-          </Grid>
+    <>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid item>
+          <CircularProgress/>
         </Grid>
-      </>
+        <Grid item>
+          <Typography variant="overline"> Loading data </Typography>
+        </Grid>
+      </Grid>
+    </>
   )
 }
