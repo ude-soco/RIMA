@@ -127,45 +127,20 @@ function getElements(data) {
 }
 
 const NodeLink = (props) => {
-  const {data} = props;
+  const {data, keywords} = props;
   const [elements, setElements] = useState([]);
   const [openDialog, setOpenDialog] = useState({
     openLearn: null,
     openAdd: null
   });
-  const [keywords, setKeywords] = useState([]);
-  let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-
-  const fetchKeywords = async () => {
-    setKeywords([]);
-    const response = await RestAPI.longTermInterest(currentUser);
-    const {data} = response;
-    console.log(data)
-    let dataArray = [];
-    data.forEach((d) => {
-      const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
-      let newData = {
-        id: id,
-        categories: categories,
-        originalKeywords: original_keywords,
-        originalKeywordsWithWeights: original_keywords_with_weights,
-        source: source,
-        text: keyword,
-        value: weight,
-        papers: papers,
-      };
-      dataArray.push(newData);
-    });
-    setKeywords(dataArray);
-    return dataArray;
-  };
 
   const validateInterest = (interests, interest) => {
-    return interests.some((i) => i.text === interest);
+    return interests.some((i) => i.text === interest.toLowerCase());
   };
 
   const addNewInterest = async (currInterest) => {
     let alreadyExist = validateInterest(keywords, currInterest);
+
     if (!alreadyExist) {
       let newInterests = keywords;
       let newInterest = {
@@ -173,15 +148,12 @@ const NodeLink = (props) => {
         categories: [],
         originalKeywords: [],
         source: "Manual",
-        text: currInterest,
+        text: currInterest.toLowerCase(),
         value: 3,
       }
       newInterests.push(newInterest);
 
       newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
-      setTimeout(() => {
-        setKeywords(newInterests);
-      }, 500)
       let listOfInterests = [];
       newInterests.forEach(interest => {
         let item = {
@@ -191,13 +163,15 @@ const NodeLink = (props) => {
         }
         listOfInterests.push(item);
       });
+      console.log("Updated list", listOfInterests)
       try {
         await RestAPI.addKeyword(listOfInterests);
       } catch (err) {
         console.log(err);
       }
-      console.log(newInterests)
+      // console.log(newInterests)
     }
+    console.log("Interest already exists in my list!")
   }
 
   const handleOpenLearn = (ele) => {
@@ -215,8 +189,6 @@ const NodeLink = (props) => {
 
     setElements([]);
     setElements(elementsCurr);
-
-    fetchKeywords().then().catch(err => console.log(err))
   }, [data]);
 
 

@@ -100,48 +100,19 @@ function getNodeData(data, values, interest) {
 }
 
 const GetNodeLink = (props) => {
-  const {interest, categoriesChecked, data} = props;
+  const {interest, categoriesChecked, data, keywords} = props;
   const [openDialog, setOpenDialog] = useState({
     openLearn: null,
     nodeObj: null
   });
-  const [keywords, setKeywords] = useState([]);
-  let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-
-  useEffect(() => {
-    fetchKeywords().then().catch(err => console.log(err))
-  }, []);
-
-  const fetchKeywords = async () => {
-    setKeywords([]);
-    const response = await RestAPI.longTermInterest(currentUser);
-    const {data} = response;
-    console.log(data)
-    let dataArray = [];
-    data.forEach((d) => {
-      const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
-      let newData = {
-        id: id,
-        categories: categories,
-        originalKeywords: original_keywords,
-        originalKeywordsWithWeights: original_keywords_with_weights,
-        source: source,
-        text: keyword,
-        value: weight,
-        papers: papers,
-      };
-      dataArray.push(newData);
-    });
-    setKeywords(dataArray);
-    return dataArray;
-  };
 
   const validateInterest = (interests, interest) => {
-    return interests.some((i) => i.text === interest);
+    return interests.some((i) => i.text === interest.toLowerCase());
   };
 
   const addNewInterest = async (currInterest) => {
     let alreadyExist = validateInterest(keywords, currInterest);
+
     if (!alreadyExist) {
       let newInterests = keywords;
       let newInterest = {
@@ -149,15 +120,12 @@ const GetNodeLink = (props) => {
         categories: [],
         originalKeywords: [],
         source: "Manual",
-        text: currInterest,
+        text: currInterest.toLowerCase(),
         value: 3,
       }
       newInterests.push(newInterest);
 
       newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
-      setTimeout(() => {
-        setKeywords(newInterests);
-      }, 500)
       let listOfInterests = [];
       newInterests.forEach(interest => {
         let item = {
@@ -167,13 +135,15 @@ const GetNodeLink = (props) => {
         }
         listOfInterests.push(item);
       });
+      console.log("Updated list", listOfInterests)
       try {
         await RestAPI.addKeyword(listOfInterests);
       } catch (err) {
         console.log(err);
       }
-      console.log(newInterests)
+      // console.log(newInterests)
     }
+    console.log("Interest already exists in my list!")
   }
 
   const elements = getNodeData(data, categoriesChecked, interest);

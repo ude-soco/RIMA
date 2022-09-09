@@ -30,6 +30,7 @@ const DiscoverPage = () => {
     currData: []
   });
   const [data, setData] = useState()
+  const [keywords, setKeywords] = useState([]);
 
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
@@ -37,12 +38,25 @@ const DiscoverPage = () => {
     //setState({...state,userInterests: []})
     const response = await RestAPI.longTermInterest(currentUser);
     const {data} = response;
-
+    let dataArray = [];
     let interests = []
     data.map((d) => {
       //console.log(d, "test")
       interests.push(d.keyword)
+      const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
+      let newData = {
+        id: id,
+        categories: categories,
+        originalKeywords: original_keywords,
+        originalKeywordsWithWeights: original_keywords_with_weights,
+        source: source,
+        text: keyword,
+        value: weight,
+        papers: papers,
+      };
+      dataArray.push(newData);
     })
+    setKeywords(dataArray);
     console.log(interests, "test fetch")
     setInterests(interests)
     return interests
@@ -220,6 +234,7 @@ const DiscoverPage = () => {
               interest={state.currInterest}
               categoriesChecked={state.currCategoriesValue}
               data={state.currData}
+              keywords={keywords}
             />
           ) : (
             <Loading/>

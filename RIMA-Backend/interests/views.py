@@ -119,7 +119,6 @@ class LongTermInterestView(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = ListDataSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        LongTermInterest.objects.filter(user=request.user).delete()
         
         for keyword in serializer.validated_data["keywords"]:
             name, weight = keyword["name"], keyword["weight"]
