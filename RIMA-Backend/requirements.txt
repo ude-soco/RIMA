@@ -62,7 +62,7 @@ srsly==1.0.2
 thinc==7.4.1
 tqdm==4.45.0
 tweepy==3.8.0
-urllib3==1.25.8
+urllib3==1.26.5
 vine==1.3.0
 wasabi==0.6.0
 Wikipedia-API==0.5.4
