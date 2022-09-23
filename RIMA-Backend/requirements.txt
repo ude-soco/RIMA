@@ -15,7 +15,7 @@ django-celerybeat-status==0.0.10
 django-cors-headers==3.2.1
 django-timezone-field==4.0
 Django==2.2.28
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 drf-yasg==1.17.1
 gensim==3.8.3
 gunicorn==20.0.4
