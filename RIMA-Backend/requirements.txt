@@ -36,7 +36,7 @@ murmurhash==1.0.2
 networkx==2.4
 nltk==3.5
 numpy==1.18.2
-oauthlib==3.1.0
+oauthlib==3.1.1
 pandas
 pattern
 plac==1.1.3
