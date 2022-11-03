@@ -21,7 +21,7 @@
 7. Run the following command in the root directory `RIMA`
 
    ```
-   docker-compose -f docker-compose-dev.yml up --build
+   docker-compose -f docker-compose-dev-alp.yml up --build
    ```
 
 ## Manual Installation Guide for RIMA-Backend
