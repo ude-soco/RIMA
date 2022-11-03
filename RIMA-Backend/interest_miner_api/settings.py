@@ -169,7 +169,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 TWITTER_FETCH_DAYS = int(os.getenv("TWITTER_FETCH_DAYS", 180))
 
 # Celery settings
-REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
 CELERY_BROKER_URL = 'redis://{}:6379'.format(REDIS_HOST)
 CELERY_RESULT_BACKEND = 'redis://{}:6379'.format(REDIS_HOST)
 CELERY_ACCEPT_CONTENT = ['application/json']

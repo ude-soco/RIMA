@@ -57,7 +57,7 @@ services:
     image: rima-backend
     build:
       context: ./RIMA-Backend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.dev-alp
     restart: unless-stopped
     # command: bin/worker-dev
     command: sh -c 'python3 -m celery worker --app=interest_miner_api -l info -P eventlet'
