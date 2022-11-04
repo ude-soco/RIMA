@@ -119,3 +119,6 @@ venv/*
 /RIMA-Backend/datatest_word2vec.txt
 /RIMA-Backend/venv/
 /RIMA-Frontend/nodejs/.env
+/RIMA-Backend/transformers/
+/RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27/
+/RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
