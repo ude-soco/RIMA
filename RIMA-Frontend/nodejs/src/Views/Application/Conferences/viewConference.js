@@ -255,6 +255,8 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
 
   render() {
 
+    console.log(this.state.conferenceEvents)
+
     var {
       
       selectyear,
@@ -480,14 +482,14 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                           />
                         </td>
                       </tr>
-                    ) : this.state.conferenceEvents.length ? (
+                    ) : Boolean(this.state.conferenceEvents.length) ? (
                       this.state.conferenceEvents.map((value, index) => (
                         <tr>
                           <td>{value.conference_name_abbr}</td>
                           <td>{value.conference_event_name_abbr}</td>
                           <td><a href = {value.conference_event_url}>{value.conference_event_url}</a></td>
                           <td>{value.no_of_stored_papers}</td>  
-                          {this.state.is_staff == "true" ? (
+                          {/*{this.state.is_staff == "true" ? (*/}
                             <>
                           <td className="text-center" style={{ width: "5"}}>
                           <Button color="secondary" onClick={() => this.collectEventPapers(value.conference_name_abbr, value.conference_event_name_abbr)} width = "50px">
@@ -505,10 +507,10 @@ ExtractAuthorsTrends = (conference_event_name_abbr) => {
                           </Button>
                         </td>
                         </>
-                          ):(
-                            <>
-                            </>
-                          )}                       
+                          {/*):(*/}
+                          {/*  <>*/}
+                          {/*  </>*/}
+                          {/*)}                       */}
 
                         </tr>
                       ))
