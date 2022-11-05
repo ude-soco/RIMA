@@ -50,23 +50,17 @@
        .\venv\Scripts\activate
        ```
 
-     - Upgrade pip version
+     - Upgrade pip and setuptools version
 
        ```
-       python -m pip install --upgrade pip
-       ```
-
-     - Upgrade setuptools
-
-       ```
-       pip install setuptools --upgrade
+       python -m pip install --upgrade pip setuptools
        ```
 
      - Install the required packages
 
        ```
        pip install -r requirements-docker.txt     # For Linux/MacOS
-       pip install -r requirements-windows.txt    # For Windows
+       pip install -r requirements-windows-2.txt    # For Windows
        ```
 
    - Download the spacy package
