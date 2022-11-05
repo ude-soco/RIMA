@@ -458,7 +458,7 @@ class Sidebar extends React.Component {
                   Topic Cloud
                 </NavLink>
               </NavItem>
-            </Nav> */}
+            </Nav> 
             <Nav navbar>
               <NavItem>
                 <NavLink
@@ -472,9 +472,23 @@ class Sidebar extends React.Component {
                 </NavLink>
               </NavItem>
             </Nav>
-            
+            */}
           
           <Nav navbar>
+
+          <NavItem>
+                <NavLink
+                  to={"/app/topicbar/" + getItem("userId")}
+                  tag={NavLinkRRD}
+                  onClick={this.closeCollapse}
+                  activeClassName="active"
+                >
+                  <i className="fas fa-chart-line text-pink"></i>
+                  Topic Trends
+                </NavLink>
+              </NavItem>
+
+
           <NavItem>
             <NavLink href={"/app/topicsresearch/" + getItem("userId")}
                   

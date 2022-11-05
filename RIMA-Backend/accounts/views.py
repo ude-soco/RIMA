@@ -52,6 +52,8 @@ class LoginView(APIView):
                 response["token"] = token.key
                 response["data_being_loaded"] = import_in_process_for_user(
                     user.id)
+
+                print(response)
                 return Response(response)
         return Response({"detail": "Invalid credentials"},
                         status=status.HTTP_400_BAD_REQUEST)

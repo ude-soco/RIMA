@@ -1,6 +1,6 @@
 //Done by Swarna
 import React, {Component} from "react";
-import {BASE_URL_INTEREST} from "../../../Services/constants";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 import Select from "react-select";
 import "./styles.css";
 import ReactApexChart from "react-apexcharts";
@@ -44,15 +44,16 @@ class LAKStackedBarChart extends Component {
 
   componentDidMount() {
     var text = ["2011", "2012"];
-    fetch(BASE_URL_INTEREST + "getalltopiclist/" + "?" + text.join("&"))
+    fetch(BASE_URL_CONFERENCE + "getalltopiclist/topic/?lak2011&lak2012&lak2013&lak2014")
       .then((response) => response.json())
       .then((json) => {
         var series = [];
         console.log(json.Topiclist[0]);
         for (let i = 0; i < json.Topiclist[0].length; i++) {
           series = series.concat([
-            {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
+            {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
           ]);
+          //console.log("BAB"+ json.Topiclist[1][i] + json.Topiclist[0][i])
           //selectInputRef1.current.chart.publicMethods.updateOptions({})
         }
         this.setState({
@@ -87,7 +88,7 @@ class LAKStackedBarChart extends Component {
             },
 
             xaxis: {
-              categories: json.Topiclist[2],
+              categories: json.Topiclist[1],
             },
             yaxis: {
               title: {
@@ -108,7 +109,7 @@ class LAKStackedBarChart extends Component {
               offsetX: 40,
             },
           },
-          years: json.Topiclist[2],
+          years: json.Topiclist[1],
           isLoaded: true,
         });
       });
@@ -128,14 +129,14 @@ class LAKStackedBarChart extends Component {
     var key = this.state.key;
     if (key == "key") {
       var text = this.state.selectedValue;
-      fetch(BASE_URL_INTEREST + "getallkeylist/" + "?" + text.join("&"))
+      fetch(BASE_URL_CONFERENCE + "getallkeylist/keyword/" + "?" + text.join("&"))
         .then((response) => response.json())
         .then((json) => {
           var series = [];
           console.log(json.Topiclist[0]);
           for (let i = 0; i < json.Topiclist[0].length; i++) {
             series = series.concat([
-              {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
+              {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
@@ -172,7 +173,7 @@ class LAKStackedBarChart extends Component {
               },
 
               xaxis: {
-                categories: json.Topiclist[2],
+                categories: json.Topiclist[1],
               },
               yaxis: {
                 title: {
@@ -193,20 +194,21 @@ class LAKStackedBarChart extends Component {
                 offsetX: 40,
               },
             },
-            years: json.Topiclist[2],
+            years: json.Topiclist[1],
             isLoaded: true,
           });
         });
     } else {
       var text = this.state.selectedValue;
-      fetch(BASE_URL_INTEREST + "getalltopiclist/" + "?" + text.join("&"))
+
+      fetch(BASE_URL_CONFERENCE + "getalltopiclist/topic/" + "?" + text.join("&"))
         .then((response) => response.json())
         .then((json) => {
           var series = [];
-          console.log(json.Topiclist[0]);
+          
           for (let i = 0; i < json.Topiclist[0].length; i++) {
             series = series.concat([
-              {name: json.Topiclist[1][i], data: json.Topiclist[0][i]},
+              {name: json.Topiclist[0][i].word, data: json.Topiclist[0][i].weight},
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
@@ -243,7 +245,7 @@ class LAKStackedBarChart extends Component {
               },
 
               xaxis: {
-                categories: json.Topiclist[2],
+                categories: json.Topiclist[1],
               },
               yaxis: {
                 title: {
@@ -264,7 +266,7 @@ class LAKStackedBarChart extends Component {
                 offsetX: 40,
               },
             },
-            years: json.Topiclist[2],
+            years: json.Topiclist[1],
             isLoaded: true,
           });
         });
@@ -314,48 +316,9 @@ class LAKStackedBarChart extends Component {
       active4,
     } = this.state;
 
-    const yeardata = [
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+    const yeardata =  this.props.confEvents; // BAB 09.06.2021  years/data can be passed in props with the conference name. 
+
+  
 
     if (isLoaded) {
       return (

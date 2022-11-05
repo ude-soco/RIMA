@@ -1,9 +1,10 @@
+// Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
 import React, {Component} from "react";
 import Select from 'react-select';
 import Highlighter from "react-highlight-words";
 import "d3-transition";
 import {select} from "d3-selection";
-import {BASE_URL_INTEREST} from "../../../Services/constants";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 import {Label, Modal, ModalBody, ModalFooter} from "reactstrap";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
@@ -50,7 +51,7 @@ const options = {
 };
 
 
-class LAKForm extends Component {
+class WordCloud extends Component {
   constructor(props) {
     super(props);
     this.selectValue = this.selectValue.bind(this);
@@ -79,6 +80,7 @@ class LAKForm extends Component {
       active2: false,
       isActive: false,
       imageTooltipOpen: false,
+      
     }
   }
 
@@ -88,15 +90,23 @@ class LAKForm extends Component {
     console.log(this.state.imageTooltipOpen)
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.confEvent !== prevProps.confEvent) {
+      this.componentDidMount()   
+     }
+  }
+
   componentDidMount() {
-    //console.log("the json is ******************")   
-    fetch(`${BASE_URL_INTEREST}` + "laktopics/10/2011")
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/topic/10/"+this.props.confEvent)
       .then(response => response.json())
       .then(json => {
         this.setState({
           isLoaded: true,
-          items: json.topics,
-          selectValue: "2011",
+          items: json.words,
+          length: json.words.length,
+          active1: true,
+          active2: false,
+          selectValue: this.props.confEvent,
           count: "10"
         })
       });
@@ -122,48 +132,53 @@ class LAKForm extends Component {
     console.log(this.state.selectValue)
   }
 
+  // BAB 08.06.2021 
   selectValue(e) {
-
-    fetch(`${BASE_URL_INTEREST}` + "laktopics/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/topic/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
           isLoaded: true,
-          items: json.topics,
-          length: json.topics.length,
+          items: json.words,
+          length: json.words.length,
           active1: true,
           active2: false
         })
       });
+      console.log("BAB");
+      console.log(this.props.conferenceName);
+      console.log("BAB");
   }
+  // BAB 08.06.2021 
 
   selectKeyword(e) {
     console.log("count", this.state.count)
-    fetch(`${BASE_URL_INTEREST}` + "lakkeywords/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/keyword/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
           isLoaded: true,
-          items: json.keywords,
-          length: json.keywords.length,
+          items: json.words,
+          length: json.words.length,
           active1: false,
           active2: true
         })
       });
 
   }
+  // BAB 08.06.2021 
 
   displayAbstract(param) {
-    fetch(`${BASE_URL_INTEREST}` + "getabstractdetails/" + param + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "getabstractdetails/" + this.props.conferenceName + "/" +  param + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
           modal: true,
           scroll: true,
           highlightText: param,
-          modalTitle: json.abstractview[0],
-          modalBody: json.abstractview[1],
-          url: 'https://www.semanticscholar.org/search?year%5B0%5D=' + this.state.selectValue + '&year%5B1%5D=' + this.state.selectValue + '&venue%5B0%5D=LAK&q=' + param + '&sort=relevance'
+          modalTitle: json,
+          modalBody: json,
+          url: 'https://www.semanticscholar.org/search?year%5B0%5D=' + json[0].year + '&year%5B1%5D=' + json[0].year + '&venue%5B0%5D=' + json[0].venue + '&q=' + param + '&sort=relevance'
           // modalHeader:json.abstractview[2],
         })
       })
@@ -197,50 +212,11 @@ class LAKForm extends Component {
         `click to view details`,
       onWordClick: getCallback("onWordClick"),
     };
+    
 
-    const data = [
-      {
-        value: "2011",
-        label: "2011"
-      },
-      {
-        value: "2012",
-        label: "2012"
-      },
-      {
-        value: "2013",
-        label: "2013"
-      },
-      {
-        value: "2014",
-        label: "2014"
-      },
-      {
-        value: "2015",
-        label: "2015"
-      },
-      {
-        value: "2016",
-        label: "2016"
-      },
-      {
-        value: "2017",
-        label: "2017"
-      },
-      {
-        value: "2018",
-        label: "2018"
-      },
-      {
-        value: "2019",
-        label: "2019"
-      },
-      {
-        value: "2020",
-        label: "2020"
-      }
-    ];
+    const data = this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
 
+ 
     const numbers = [
       {
         value: "5",
@@ -259,18 +235,21 @@ class LAKForm extends Component {
     if (isLoaded) {
       return (
         <>
+        <br/>
           <div>
             <h2>Topic/Keyword cloud</h2>
             <br></br>
             <p>This visualization displays top 5/10 topics/keywords for
-              the selected year
+              the selected Event
             </p>
-            <Label>Select a year</Label>
+            <Label>Select an Event</Label>
             <div style={{width: '200px'}}>
               <Select
                 placeholder="Select Option"
-                options={data} value={data.find(obj => obj.value === selectValue)}
+                options={data} 
+                value={data.find(obj => obj.value === selectValue)}
                 onChange={this.getYearValue}
+                 
               />
             </div>
             <br/>
@@ -309,7 +288,7 @@ class LAKForm extends Component {
               )}
           </div>
 
-          <div>
+          <div style={{width: '800px'}}>
             <ReactWordcloud
               id="tpc_cloud"
               callbacks={callbacks}
@@ -337,24 +316,23 @@ class LAKForm extends Component {
                   </thead>
                   <tbody>
                   {console.log("the title is:", modalTitle)}
-                  {modalTitle.map((text, index) => {
-                    const image = modalBody[index];
-                    return <tr>
+                  {modalTitle.map((text, index) => (
+                     <tr>
                       <td>{index + 1}</td>
                       <td style={{'whiteSpace': 'unset'}}><p><Highlighter
                         highlightClassName="YourHighlightClass"
                         searchWords={[highlightText]}
                         autoEscape={true}
-                        textToHighlight={text}
+                        textToHighlight={text.title}
                       /></p></td>
                       <td style={{'whiteSpace': 'unset'}}><Highlighter
                         highlightClassName="YourHighlightClass"
                         searchWords={[highlightText]}
                         autoEscape={true}
-                        textToHighlight={image}
-                      /></td>
-                    </tr>;
-                  })}
+                        textToHighlight={text.abstarct}
+                        /></td>
+                      </tr>
+                  ))}
                   </tbody>
                 </Table>
 
@@ -398,4 +376,4 @@ class LAKForm extends Component {
   }
 }
 
-export default LAKForm;
+export default WordCloud;

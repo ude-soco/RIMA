@@ -1725,7 +1725,7 @@ def getFlowChartDataKeywords(year, searchword):
     return dict_nodes
 
 
-def getAbstractbasedonKeyword(year, keyword):
+def get_abstract_based_on_keyword(year, keyword):
     keyword = keyword.lower()
     query = "select abstract,title from LAKData where (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%') and year='" + year + "'"
     LakAbstract = getTopics("", query)

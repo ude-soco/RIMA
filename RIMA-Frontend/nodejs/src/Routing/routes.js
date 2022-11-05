@@ -14,7 +14,7 @@ import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import PublicationRecommendation from "../Views/Application/Publications/Recommendation/Publications";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
-import TopicBar from "../Views/Application/Conferences/Topic/TopicBar";
+import ConferenceBar from "../Views/Application/Conferences/Topic/ConferenceBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
 // import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";
@@ -23,6 +23,13 @@ import TopicAuthors from "Views/Application/Conferences/Topic/TopicAuthors";
 import Register from "../Views/Website/Register/Register";
 import InterestProfile from "../Views/Application/InterestProfile/InterestProfile";
 import CompareAuthors from "../Views/Application/CompareAuthors/CompareAuthors";
+
+import addConference from "../Views/Application/Conferences/addConference.jsx";
+import viewConference from "../Views/Application/Conferences/viewConference.js"; 
+import authorDashboard from "../Views/Application/Conferences/authorDashboard.js"; 
+import compareConferences from "Views/Application/Conferences/Topic/compareConferences";
+
+
 
 let routes = [
   {
@@ -54,6 +61,41 @@ let routes = [
     name: "Add Publication",
     icon: "ni ni-fat-add text-green",
     component: AddPaper,
+    layout: "/app",
+    // display: "none"
+  },
+  // BAB
+  {
+    path: "/add-conference",
+    name: "Add Conference",
+    icon: "ni ni-fat-add text-green",
+    component: addConference,
+    layout: "/app",
+    // display: "none"
+  },
+  // BAB
+  {
+    path: "/view-conference",
+    name: "My Conferences",
+    icon: "ni ni-fat-add text-green",
+    component: viewConference,
+    layout: "/app",
+    // display: "none"
+  },
+  // BAB
+  {
+    path: "/compareConferences",
+    name: "Conferences Compare",
+    icon: "ni ni-fat-add text-green",
+    component: compareConferences,
+    layout: "/app",
+    // display: "none"
+  },
+  {
+    path: "/view-author",
+    name: "Conferences Authors",
+    icon: "ni ni-fat-add text-green",
+    component: authorDashboard,
     layout: "/app",
     // display: "none"
   },
@@ -187,7 +229,7 @@ let routes = [
   },
   {
     path: "/topicbar",
-    component: TopicBar,
+    component: ConferenceBar,
     layout: "/app",
     display: "none",
   },

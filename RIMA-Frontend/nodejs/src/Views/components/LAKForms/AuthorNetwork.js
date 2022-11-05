@@ -1,6 +1,6 @@
 //Done by Swarna
 import React, {Component} from "react";
-import {BASE_URL_INTEREST} from "../../../Services/constants";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 import {Graph} from "react-d3-graph";
 import {
   Label,
@@ -103,7 +103,7 @@ class AuthorNetwork extends Component {
   onClickNode(nodeId) {
     // window.alert(`Clicked node ${nodeId}`);
     fetch(
-      BASE_URL_INTEREST +
+      BASE_URL_CONFERENCE +
       "getallauthorslist/" +
       nodeId +
       "/" +
@@ -158,14 +158,14 @@ class AuthorNetwork extends Component {
   }
 
   componentWillMount() {
-    fetch(BASE_URL_INTEREST + "getalltopics/2011")
+    fetch(BASE_URL_CONFERENCE + "getalltopics/topic/lak2011")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
           keywords: json.keywords.sort((a, b) => (a.label > b.label ? 1 : -1)),
         });
       });
-    fetch(BASE_URL_INTEREST + "getalltitles/Learning/2011")
+    fetch(BASE_URL_CONFERENCE + "getalltitles/Learning/2011")
       .then((response) => response.json())
       .then((json) => {
         this.state.graphData = [];
@@ -187,7 +187,7 @@ class AuthorNetwork extends Component {
   }
 
   selectTopic(e) {
-    fetch(BASE_URL_INTEREST + "getalltopics/" + this.state.selectYear)
+    fetch(BASE_URL_CONFERENCE + "getalltopics/topic/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -200,7 +200,7 @@ class AuthorNetwork extends Component {
   }
 
   selectKeyword(e) {
-    fetch(BASE_URL_INTEREST + "getallkeywords/" + this.state.selectYear)
+    fetch(BASE_URL_CONFERENCE + "getallkeywords/keyword/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -214,7 +214,7 @@ class AuthorNetwork extends Component {
 
   selectValue(e) {
     fetch(
-      BASE_URL_INTEREST +
+      BASE_URL_CONFERENCE +
       "getalltitles/" +
       e.value +
       "/" +
@@ -284,48 +284,7 @@ class AuthorNetwork extends Component {
         backgroundColor: "yellow",
       },
     };
-    const yeardata = [
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+    const yeardata = this.props.confEvents;
 
     if (isLoaded) {
       return (
@@ -341,7 +300,7 @@ class AuthorNetwork extends Component {
           }}
         >
           <div style={{marginLeft: "30px"}}>
-            <h3>Researcher collaboration network</h3>
+            <h3> Researcher collaboration network</h3>
             <br/>
             <p>
               This visualization displays the collaboration of researchers for

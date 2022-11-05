@@ -6,8 +6,10 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import {Button, Label, FormGroup, Form, Row, Col} from "reactstrap";
 import ReactApexChart from "react-apexcharts";
+import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 
-class LAKBar extends Component {
+
+class TopicBar extends Component {
   constructor(props) {
     super(props);
     this.selectValue = this.selectValue.bind(this);
@@ -48,7 +50,7 @@ class LAKBar extends Component {
   displayDocChart(topic, year) {
     var selectyear = "2011";
     fetch(
-      "http://127.0.0.1:8000/api/interests/topicdetails/" + topic + "/" + year
+      "http://127.0.0.1:8000/api/conferences/topicdetails/"  + topic + "/" + year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -74,7 +76,7 @@ class LAKBar extends Component {
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
                   fetch(
-                    "http://127.0.0.1:8000/api/interests/fetchpaper/?!" + title
+                    "http://127.0.0.1:8000/api/conferences/fetchpaper/"  +  title
                   )
                     .then((response) => response.json())
                     .then((json) => {
@@ -133,14 +135,21 @@ class LAKBar extends Component {
       });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.confEvent !== prevProps.confEvent) {
+      this.componentDidMount()   
+     }
+  }
+
   componentDidMount() {
     const display = this.displayDocChart;
-    fetch("http://127.0.0.1:8000/api/interests/toptopics/2011")
+    fetch("http://127.0.0.1:8000/api/conferences/toptopics/topic/" +this.props.confEvent)
       .then((response) => response.json())
       .then((json) => {
+        
         this.setState(
           {
-            selectyear: "2011",
+            selectyear: this.props.confEvent,
             series: [
               {
                 name: "Topics",
@@ -155,9 +164,9 @@ class LAKBar extends Component {
                   dataPointSelection: function (event, chartContext, config) {
                     var topic =
                       config.w.config.xaxis.categories[config.dataPointIndex];
-                    console.log(chartContext);
-                    console.log(config.w.globals.selectedDataPoints[0][0]);
-                    display(topic, "2011");
+                    console.log('chartContext '+chartContext);
+                    console.log('config.w.globals.selectedDataPoints[0][0]' + config.w.globals.selectedDataPoints[0][0]);
+                    display(topic, this.props.confEvent);
                   },
                 },
               },
@@ -205,7 +214,7 @@ class LAKBar extends Component {
             },
             isLoaded: true,
           },
-          display("Learning", "2011")
+          display("Learning", this.props.confEvent)
         );
       });
   }
@@ -220,7 +229,7 @@ class LAKBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/interests/topkeywords/" + this.state.selectyear
+      "http://127.0.0.1:8000/api/conferences/topkeywords/keyword/"+ this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -291,7 +300,7 @@ class LAKBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/interests/toptopics/" + this.state.selectyear
+      "http://127.0.0.1:8000/api/conferences/toptopics/topic/"+ this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -360,48 +369,8 @@ class LAKBar extends Component {
       imageTooltipOpen,
     } = this.state;
 
-    const yeardata = [
-      {
-        value: "2011",
-        label: "2011",
-      },
-      {
-        value: "2012",
-        label: "2012",
-      },
-      {
-        value: "2013",
-        label: "2013",
-      },
-      {
-        value: "2014",
-        label: "2014",
-      },
-      {
-        value: "2015",
-        label: "2015",
-      },
-      {
-        value: "2016",
-        label: "2016",
-      },
-      {
-        value: "2017",
-        label: "2017",
-      },
-      {
-        value: "2018",
-        label: "2018",
-      },
-      {
-        value: "2019",
-        label: "2019",
-      },
-      {
-        value: "2020",
-        label: "2020",
-      },
-    ];
+    const yeardata =  this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
+
     const topics = [
       {
         value: "topic",
@@ -421,10 +390,10 @@ class LAKBar extends Component {
               <h2> Top 10 topics/keywords </h2>
               <p>
                 The bar chart displays the top 10 topics/keywords for the
-                selected year and its corresponding publications
+                selected event and its corresponding publications
               </p>
 
-              <Label>Select a year</Label>
+              <Label>Select an Event</Label>
               <br></br>
               <div style={{width: "200px"}}>
                 <Select
@@ -435,6 +404,7 @@ class LAKBar extends Component {
                 />
               </div>
               <br></br>
+              <br/>
               <Button
                 outline
                 color="primary"
@@ -512,9 +482,10 @@ class LAKBar extends Component {
               <h2> Top 10 topics/keywords </h2>
               <p>
                 The bar chart displays the top 10 topics/keywords for the
-                selected year and its corresponding publications
+                selected event and its corresponding publications
               </p>
-              <Label> Select a year </Label>
+
+              <Label>Select an Event</Label>
               <br></br>
               <div style={{width: "200px"}}>
                 <Select
@@ -524,7 +495,8 @@ class LAKBar extends Component {
                   onChange={this.selectYear}
                 />
               </div>
-              {" "}
+              <br></br>
+              <br/>
               <Button
                 outline
                 color="primary"
@@ -563,6 +535,7 @@ class LAKBar extends Component {
                     The charts are displayed based on the frequency of
                     topic/keyword
                   </p>
+
                   {/* <p> Click on the bar to view publications related to topic/keyword</p>
                             <p>Click on the bar of publications visualization to view the publication in semantic scholar</p> */}
                 </div>
@@ -575,4 +548,4 @@ class LAKBar extends Component {
   }
 }
 
-export default LAKBar;
+export default TopicBar;

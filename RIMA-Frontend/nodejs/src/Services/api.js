@@ -135,6 +135,141 @@ class RestAPI {
     }).then((res) => res);
   }
 
+
+  //** ADD CONFERENCE API  BAB**//
+  static addConference(data) {
+    const TOKEN = getItem("accessToken");
+    console.log(data);
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/conferences/addConference/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+  //** GET LIST Conferences API  BAB**//
+  static getListConference() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/addConference/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  //** GET LIST Conferences API  BAB**//
+  static getConferencesNames() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/conferencesNames/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  //** GET LIST Conferences API  BAB**//
+  static getListConferenceAuthors(conference_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/conferenceAuthors/${conference_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  
+//** GET LIST PUBLICATIONS OF AN AUTHOR WITHIN A CONFERENCE  **//
+static getListPublications(conference_name_abbr,author_id) {
+  const TOKEN = getItem("accessToken");
+  return axios({
+    method: "get",
+    url: `${BASE_URL}/api/conferences/AuthorPublication/${conference_name_abbr}/${author_id}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Token ${TOKEN}`,
+    },
+  }).then((res) => res);
+}
+
+
+
+  //** GET LIST Conference Events API  BAB**//
+  static getListConfercneEvents(conference_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/ConferenceEvents/${conference_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+  
+//** COLLECT PAPERS FOR AN EVENT **//
+
+  static collectEventPapers(conference_name_abbr,conference_event_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/collectEventPapers/${conference_name_abbr}/${conference_event_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+
+ //** EXTRACT TRENDS OF AN EVENT **//
+  static ExtractEventTrends(conference_event_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/ExtractEventTrends/${conference_event_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+  
+
+  //** EXTRACT TRENDS OF THE AUTHORS OF AN EVENT **//
+  static ExtractAuthorsTrends(conference_event_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/ExtractAuthorsTrends/${conference_event_name_abbr}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
   //** GET LIST PAPER API **//
   static getListPaper() {
     const TOKEN = getItem("accessToken");
@@ -169,6 +304,22 @@ class RestAPI {
     return axios({
       method: "DELETE",
       url: `${BASE_URL}/api/interests/papers/${id}/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
+
+
+  //** DELETE A CONFERENCE API **//
+  static deleteConference(conference_name_abbr) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "DELETE",
+      url: `${BASE_URL}/api/conferences/conference/${conference_name_abbr}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

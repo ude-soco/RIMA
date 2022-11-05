@@ -20,6 +20,9 @@ import BookIcon from '@material-ui/icons/Book';
 import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import MeetingRoomOutlined from '@material-ui/icons/MeetingRoomOutlined';
+import CompareIcon from '@material-ui/icons/Compare';
+
 
 const drawerWidth = 240;
 
@@ -86,6 +89,19 @@ export default function SideBar({selection, setSelection}) {
       case "myPublications":
         history.push("/app/view-paper");
         break;
+      case "addConference":
+        history.push("/app/add-conference");
+        break;
+      case "viewConference":
+        history.push("/app/view-conference");
+        break;  
+      case "viewAuthor":
+        history.push({
+          pathname: '/app/view-author',
+          state: {
+            current_conference: "lak"
+        }})
+        break; 
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -113,14 +129,14 @@ export default function SideBar({selection, setSelection}) {
       case "topicTrends":
         history.push("/app/topicbar/" + getItem("userId"))
         break;
-      case "compareConferences":
-        history.push("/app/topicsresearch/" + getItem("userId"));
-        break;
       case "conferenceNetwork":
         history.push("/app/topicsauthors/" + getItem("userId"));
         break;
       case "myProfile":
         history.push('/app/user-profile');
+        break;
+      case "compareConferences":
+        history.push("/app/compareConferences");
         break;
     }
   }
@@ -242,7 +258,7 @@ export default function SideBar({selection, setSelection}) {
             </ListItemIcon>
             <ListItemText primary="Publications"/>
           </ListItem>
-        {/* TODO: Publications and Researchers (Jaleh's thesis) */}
+         {/* TODO: Publications and Researchers (Jaleh's thesis) */}
         </Collapse>
 
 
@@ -256,6 +272,27 @@ export default function SideBar({selection, setSelection}) {
         </ListItem>
 
         <Collapse in={openConference} unmountOnExit>
+       {/* 
+        <ListItem button id="addConference"
+                      selected={selectedList("addConference")}
+                      onClick={handleSelect}
+                      className={selectedList("addConference")}>
+              <ListItemIcon className={classes.listIconNested}>
+                <AddIcon className={selectedList("addConference")}/>
+              </ListItemIcon>
+              <ListItemText primary="Add Conference"/>
+            </ListItem>
+      */}
+        <ListItem button id="viewConference"
+                  selected={selectedList("viewConference")}
+                  onClick={handleSelect}
+                  className={selectedList("viewConference")}>
+          <ListItemIcon className={classes.listIconNested}>
+            <MeetingRoomOutlined className={selectedList("viewConference")}/>
+          </ListItemIcon>
+          <ListItemText primary="Stored Conferences"/>
+        </ListItem>
+
           <ListItem button id="topicTrends"
                     selected={selectedList("topicTrends")}
                     onClick={handleSelect}
@@ -264,6 +301,17 @@ export default function SideBar({selection, setSelection}) {
               <MultilineChartIcon className={selectedList("topicTrends")}/>
             </ListItemIcon>
             <ListItemText primary="Topics and Trends"/>
+          </ListItem>
+
+
+          <ListItem button id="viewAuthor"
+                    selected={selectedList("viewAuthor")}
+                    onClick={handleSelect}
+                    className={selectedList("viewAuthor")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <DashboardIcon className={selectedList("viewAuthor")}/>
+            </ListItemIcon>
+            <ListItemText primary="Author Dashboard"/>
           </ListItem>
 
           <ListItem button id="conferenceNetwork"
@@ -276,6 +324,16 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Author Networks"/>
           </ListItem>
 
+          <ListItem button id="compareConferences"
+                    selected={selectedList("compareConferences")}
+                    onClick={handleSelect}
+                    className={selectedList("compareConferences")}>
+            <ListItemIcon className={classes.listIconNested}>
+              <CompareIcon className={selectedList("compareConferences")}/>
+            </ListItemIcon>
+            <ListItemText primary="Compare Conferences"/>
+          </ListItem>
+
           <ListItem button id="topicRecommendation"
                     selected={selectedList("topicRecommendation")}
                     onClick={handleSelect}
@@ -286,19 +344,8 @@ export default function SideBar({selection, setSelection}) {
             <ListItemText primary="Topic Recommendation"/>
           </ListItem>
 
-          <ListItem button id="compareConferences"
-                    selected={selectedList("compareConferences")}
-                    onClick={handleSelect}
-                    className={selectedList("compareConferences")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <BusinessIcon className={selectedList("compareConferences")}/>
-            </ListItemIcon>
-            <ListItemText primary="Compare Conferences"/>
-          </ListItem>
-
-        </Collapse>
-
-
+          </Collapse>
+    
         {/* SETTINGS */}
         <ListItem button onClick={() => setOpenSettings(!openSettings)}>
           <ListItemIcon className={classes.listIcon}>
