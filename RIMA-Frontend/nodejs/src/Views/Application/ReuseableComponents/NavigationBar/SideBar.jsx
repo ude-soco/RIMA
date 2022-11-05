@@ -24,7 +24,7 @@ import MeetingRoomOutlined from '@material-ui/icons/MeetingRoomOutlined';
 import CompareIcon from '@material-ui/icons/Compare';
 
 
-const drawerWidth = 240;
+const drawerWidth = 320;
 
 const useStyles = makeStyles((theme) => ({
   toolBar: theme.mixins.toolbar,
@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
   listIconNested: {
     paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(3),
+  },
+  listIconNested2: {
+    paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(3),
   },
   selectedList: {
@@ -72,6 +76,7 @@ export default function SideBar({selection, setSelection}) {
   const [openSettings, setOpenSettings] = useState(true);
   const [openRecommendation, setOpenRecommendation] = useState(true);
   const [openConference, setOpenConference] = useState(true);
+  const [openCompareConference, setOpenCompareConference] = useState(true);
 
 
   const handleSelect = (e) => {
@@ -94,14 +99,15 @@ export default function SideBar({selection, setSelection}) {
         break;
       case "viewConference":
         history.push("/app/view-conference");
-        break;  
+        break;
       case "viewAuthor":
         history.push({
           pathname: '/app/view-author',
           state: {
             current_conference: "lak"
-        }})
-        break; 
+          }
+        })
+        break;
       // case "interestOverview":
       //   history.push("/app/cloud-chart/");
       //   break;
@@ -138,6 +144,12 @@ export default function SideBar({selection, setSelection}) {
       case "compareConferences":
         history.push("/app/compareConferences");
         break;
+      case "exploreAuthors":
+        history.push("/app/exploreAuthors");
+        break;
+      case "explorePublications":
+        history.push("/app/explorePublications");
+        break;
     }
   }
 
@@ -164,18 +176,18 @@ export default function SideBar({selection, setSelection}) {
           <ListItemIcon className={classes.listIcon}>
             <CloudIcon className={selectedList("interestOverview")}/>
           </ListItemIcon>
-          <ListItemText primary="Interest Profile"/>
+          <ListItemText primary="My Interest Profile"/>
         </ListItem>
 
-        <ListItem button id="compareAuthors"
-                  selected={selectedList("compareAuthors")}
-                  onClick={handleSelect}
-                  className={selectedList("compareAuthors")}>
-          <ListItemIcon className={classes.listIcon}>
-            <GroupIcon className={selectedList("compareAuthors")}/>
-          </ListItemIcon>
-          <ListItemText primary="Compare Authors"/>
-        </ListItem>
+        {/*<ListItem button id="compareAuthors"*/}
+        {/*          selected={selectedList("compareAuthors")}*/}
+        {/*          onClick={handleSelect}*/}
+        {/*          className={selectedList("compareAuthors")}>*/}
+        {/*  <ListItemIcon className={classes.listIcon}>*/}
+        {/*    <GroupIcon className={selectedList("compareAuthors")}/>*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText primary="Compare Authors"/>*/}
+        {/*</ListItem>*/}
 
         {/* TODO: To be removed */}
         {/*<ListItem button id="interestOverview"*/}
@@ -234,7 +246,7 @@ export default function SideBar({selection, setSelection}) {
           <ListItemIcon className={classes.listIcon}>
             <ThumbsUpDownIcon/>
           </ListItemIcon>
-          <ListItemText primary="Recommendation"/>
+          <ListItemText primary="My Recommendations"/>
           {openRecommendation ? <ExpandLess/> : <ExpandMore/>}
         </ListItem>
 
@@ -258,7 +270,7 @@ export default function SideBar({selection, setSelection}) {
             </ListItemIcon>
             <ListItemText primary="Publications"/>
           </ListItem>
-         {/* TODO: Publications and Researchers (Jaleh's thesis) */}
+          {/* TODO: Publications and Researchers (Jaleh's thesis) */}
         </Collapse>
 
 
@@ -272,80 +284,110 @@ export default function SideBar({selection, setSelection}) {
         </ListItem>
 
         <Collapse in={openConference} unmountOnExit>
-       {/* 
-        <ListItem button id="addConference"
-                      selected={selectedList("addConference")}
+          <ListItem button onClick={() => setOpenCompareConference(!openCompareConference)}>
+            <ListItemIcon className={classes.listIconNested}>
+              <BusinessIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Compare Conference"/>
+            {openCompareConference ? <ExpandLess/> : <ExpandMore/>}
+          </ListItem>
+          <Collapse in={openCompareConference} unmountOnExit>
+            <ListItem button id="viewConference"
+                      selected={selectedList("viewConference")}
                       onClick={handleSelect}
-                      className={selectedList("addConference")}>
-              <ListItemIcon className={classes.listIconNested}>
-                <AddIcon className={selectedList("addConference")}/>
+                      className={selectedList("viewConference")}>
+              <ListItemIcon className={classes.listIconNested2}>
+                <MeetingRoomOutlined className={selectedList("viewConference")}/>
               </ListItemIcon>
-              <ListItemText primary="Add Conference"/>
+              <ListItemText primary="Stored Conferences"/>
             </ListItem>
-      */}
-        <ListItem button id="viewConference"
-                  selected={selectedList("viewConference")}
-                  onClick={handleSelect}
-                  className={selectedList("viewConference")}>
-          <ListItemIcon className={classes.listIconNested}>
-            <MeetingRoomOutlined className={selectedList("viewConference")}/>
-          </ListItemIcon>
-          <ListItemText primary="Stored Conferences"/>
-        </ListItem>
 
-          <ListItem button id="topicTrends"
-                    selected={selectedList("topicTrends")}
+            <ListItem button id="topicTrends"
+                      selected={selectedList("topicTrends")}
+                      onClick={handleSelect}
+                      className={selectedList("topicTrends")}>
+              <ListItemIcon className={classes.listIconNested2}>
+                <MultilineChartIcon className={selectedList("topicTrends")}/>
+              </ListItemIcon>
+              <ListItemText primary="Topics and Trends"/>
+            </ListItem>
+
+
+            <ListItem button id="viewAuthor"
+                      selected={selectedList("viewAuthor")}
+                      onClick={handleSelect}
+                      className={selectedList("viewAuthor")}>
+              <ListItemIcon className={classes.listIconNested2}>
+                <DashboardIcon className={selectedList("viewAuthor")}/>
+              </ListItemIcon>
+              <ListItemText primary="Author Dashboard"/>
+            </ListItem>
+
+            <ListItem button id="conferenceNetwork"
+                      selected={selectedList("conferenceNetwork")}
+                      onClick={handleSelect}
+                      className={selectedList("conferenceNetwork")}>
+              <ListItemIcon className={classes.listIconNested2}>
+                <GroupIcon className={selectedList("conferenceNetwork")}/>
+              </ListItemIcon>
+              <ListItemText primary="Author Networks"/>
+            </ListItem>
+
+            <ListItem button id="compareConferences"
+                      selected={selectedList("compareConferences")}
+                      onClick={handleSelect}
+                      className={selectedList("compareConferences")}>
+              <ListItemIcon className={classes.listIconNested2}>
+                <CompareIcon className={selectedList("compareConferences")}/>
+              </ListItemIcon>
+              <ListItemText primary="Compare Conferences"/>
+            </ListItem>
+
+            <ListItem button id="topicRecommendation"
+                      selected={selectedList("topicRecommendation")}
+                      onClick={handleSelect}
+                      className={selectedList("topicRecommendation")}>
+              <ListItemIcon className={classes.listIconNested2}>
+                <BookIcon className={selectedList("topicRecommendation")}/>
+              </ListItemIcon>
+              <ListItemText primary="Topic Recommendation"/>
+            </ListItem>
+          </Collapse>
+
+          <ListItem button id="exploreAuthors"
+                    selected={selectedList("exploreAuthors")}
                     onClick={handleSelect}
-                    className={selectedList("topicTrends")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <MultilineChartIcon className={selectedList("topicTrends")}/>
-            </ListItemIcon>
-            <ListItemText primary="Topics and Trends"/>
-          </ListItem>
-
-
-          <ListItem button id="viewAuthor"
-                    selected={selectedList("viewAuthor")}
-                    onClick={handleSelect}
-                    className={selectedList("viewAuthor")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <DashboardIcon className={selectedList("viewAuthor")}/>
-            </ListItemIcon>
-            <ListItemText primary="Author Dashboard"/>
-          </ListItem>
-
-          <ListItem button id="conferenceNetwork"
-                    selected={selectedList("conferenceNetwork")}
-                    onClick={handleSelect}
-                    className={selectedList("conferenceNetwork")}>
+                    className={selectedList("exploreAuthors")}>
             <ListItemIcon className={classes.listIconNested}>
               <GroupIcon className={selectedList("conferenceNetwork")}/>
             </ListItemIcon>
-            <ListItemText primary="Author Networks"/>
+            <ListItemText primary="Explore Author Networks"/>
           </ListItem>
 
-          <ListItem button id="compareConferences"
-                    selected={selectedList("compareConferences")}
+          <ListItem button id="explorePublications"
+                    selected={selectedList("explorePublications")}
                     onClick={handleSelect}
-                    className={selectedList("compareConferences")}>
+                    className={selectedList("explorePublications")}>
             <ListItemIcon className={classes.listIconNested}>
-              <CompareIcon className={selectedList("compareConferences")}/>
+              <LocalLibraryIcon className={selectedList("publicationRecommendation")}/>
             </ListItemIcon>
-            <ListItemText primary="Compare Conferences"/>
+            <ListItemText primary="Explore Publications"/>
           </ListItem>
+          {/*
+            <ListItem button id="addConference"
+                          selected={selectedList("addConference")}
+                          onClick={handleSelect}
+                          className={selectedList("addConference")}>
+                  <ListItemIcon className={classes.listIconNested}>
+                    <AddIcon className={selectedList("addConference")}/>
+                  </ListItemIcon>
+                  <ListItemText primary="Add Conference"/>
+                </ListItem>
+          */}
 
-          <ListItem button id="topicRecommendation"
-                    selected={selectedList("topicRecommendation")}
-                    onClick={handleSelect}
-                    className={selectedList("topicRecommendation")}>
-            <ListItemIcon className={classes.listIconNested}>
-              <BookIcon className={selectedList("topicRecommendation")}/>
-            </ListItemIcon>
-            <ListItemText primary="Topic Recommendation"/>
-          </ListItem>
 
-          </Collapse>
-    
+        </Collapse>
+
         {/* SETTINGS */}
         <ListItem button onClick={() => setOpenSettings(!openSettings)}>
           <ListItemIcon className={classes.listIcon}>

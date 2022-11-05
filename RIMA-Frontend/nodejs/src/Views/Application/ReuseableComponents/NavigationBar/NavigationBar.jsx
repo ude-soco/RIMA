@@ -32,7 +32,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import {getRandomColor, toFirstLetter} from "../../../../Services/utils/functions";
 
 
-const drawerWidth = 300;
+const drawerWidth = 320;
 let avatarColor = getRandomColor();
 const useStyles = makeStyles((theme) => ({
   root: {
