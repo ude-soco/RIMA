@@ -28,6 +28,8 @@ import addConference from "../Views/Application/Conferences/addConference.jsx";
 import viewConference from "../Views/Application/Conferences/viewConference.js"; 
 import authorDashboard from "../Views/Application/Conferences/authorDashboard.js"; 
 import compareConferences from "Views/Application/Conferences/Topic/compareConferences";
+import ExplorePublications from "../Views/Application/ConferenceInsights/ExplorePublications/ExplorePublications";
+import ExploreAuthorsNetwork from "../Views/Application/ConferenceInsights/ExploreAuthorsNetwork/ExploreAuthorsNetwork";
 
 
 
@@ -88,6 +90,23 @@ let routes = [
     name: "Conferences Compare",
     icon: "ni ni-fat-add text-green",
     component: compareConferences,
+    layout: "/app",
+    // display: "none"
+  },
+  // Explore publications under Conference Insights
+  {
+    path: "/exploreAuthors",
+    name: "Explore Authors Network",
+    icon: "ni ni-fat-add text-green",
+    component: ExploreAuthorsNetwork,
+    layout: "/app",
+    // display: "none"
+  },
+  {
+    path: "/explorePublications",
+    name: "Explore Publications",
+    icon: "ni ni-fat-add text-green",
+    component: ExplorePublications,
     layout: "/app",
     // display: "none"
   },
