@@ -60,8 +60,14 @@
 
        ```
        pip install -r requirements-docker.txt     # For Linux/MacOS
-       pip install -r requirements-windows-2.txt    # For Windows
+       pip install -r requirements-windows.txt    # For Windows
        ```
+
+   - Install selenium
+
+     ```
+     pip install selenium
+     ```
 
    - Download the spacy package
 
@@ -72,7 +78,7 @@
    - Download the necessary nltk packages
 
      ```
-     python -c "import nltk;nltk.download('stopwords')" && python -c "import nltk;nltk.download('punkt')" && python -c "import nltk;nltk.download('sentiwordnet')"
+     python -c "import nltk;nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
      ```
 
 4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
