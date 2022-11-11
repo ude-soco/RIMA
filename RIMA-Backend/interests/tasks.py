@@ -228,7 +228,7 @@ def update_long_term_interest_model_for_user(user_id):
         'countdown': 30 * 60
     },
 )
-def import_user_data(user_id): # it is excuted in the sign up 
+def import_user_data(user_id): # it is executed in the sign-up
     print("importing tweets")
     __import_tweets_for_user(user_id)
 

@@ -336,7 +336,7 @@ def generate_short_term_model_dbpedia(user_id, source):
                 continue
             keywords = normalize(keyword_weight_mapping) # normalize the weights to range of 5 to 1
 
-            # find the category for each keyword seperatly and store the keyword in database as a row
+            # find the category for each keyword separately and store the keyword in database as a row
             for keyword, weight in keywords.items():
                 original_keyword_name = wiki_keyword_redirect_mapping.get(
                     keyword, keyword)
