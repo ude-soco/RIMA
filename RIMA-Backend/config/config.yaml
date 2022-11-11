@@ -1,2 +1,13 @@
 glove_model_file: datatest_word2vec.txt
 transformer_model_file: transformers/msmarco/
+stanfordcorenlp_file: interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27
+elmo_option_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json
+elmo_weight_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
+enwiki_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/enwiki_vocab_min200.txt
+inspec_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/inspec_vocab.txt
+semeval2017vocab_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/semeval_vocab.txt
+duc2001_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/duc2001.txt
+sif_model_file: squeezebert/squeezebert-mnli
+use_model_file: ""
+bert_model_file: ""
+specter_model_file: ""

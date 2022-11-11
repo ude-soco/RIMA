@@ -192,10 +192,33 @@ TEMP_DIR  = os.environ.get("TEMP_DIR",  "../tmp")
 MODEL_DIR = os.environ.get("MODEL_DIR", "../model")
 PRELOAD_MODELS = os.environ.get("PRELOAD_MODELS", "false").lower() == "true"
 
-LDA_MODEL_FILE_PATH = os.path.join(
-    MODEL_DIR,
-    os.environ.get("LDA_MODEL_FILE", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
-)
+
+
+GLOVE_MODEL_FILE = os.path.abspath(configuration["glove_model_file"])
+GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
+TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
+STANFORDCORENLP = os.path.abspath(configuration["stanfordcorenlp_file"])
+ELMO_OPTIONS_FILE = os.path.abspath(configuration["elmo_option_file"])
+ELMO_WEIGHT_FILE = os.path.abspath(configuration["elmo_weight_file"])
+ENWIKI_FILE = os.path.abspath(configuration["enwiki_file"])
+INSPEC = os.path.abspath(configuration["inspec_file"])
+SEMEVALVOCAB2017 = os.path.abspath(configuration["semeval2017vocab_file"])
+DUC2001 = os.path.abspath(configuration["duc2001_file"])
+SIF_MODEL_FILE_PATH = configuration["sif_model_file"]
+USE_MODEL_FILE_PATH = configuration["use_model_file"]
+BERT_MODEL_FILE_PATH = configuration["bert_model_file"]
+SPECTER_MODEL_FILE_PATH = configuration["specter_model_file"]
+
+# Sif_model is used for keyword extraction
+# SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH", "squeezebert/squeezebert-mnli")
+# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
+# BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
+# SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","")
+
+# LDA_MODEL_FILE_PATH = os.path.join(
+#     MODEL_DIR,
+#     os.environ.get("LDA_MODEL_FILE", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
+# )
 
 # if os.environ.get("GLOVE_MODEL_FILE"):
 #     GLOVE_MODEL_FILE_PATH = os.path.join(
@@ -205,44 +228,39 @@ LDA_MODEL_FILE_PATH = os.path.join(
 # else:
 #     GLOVE_MODEL_FILE_PATH = None
 
-GLOVE_MODEL_FILE = os.path.abspath(configuration["glove_model_file"])
-GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
-
 # use bellow line if use_model is not used
-USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
+# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
 # use bellow line for USE_model after downloading it
 # USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
 
 # use line bellow if msmarco model is stored in the project
-TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
+# TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
 # TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","transformers/msmarco/")
 # use line bellow if msmarco model is not stored in the project
 # TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","msmarco-distilbert-base-tas-b")
 
 # use bellow line if scibert is not used
-BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
+# BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
 # use bellow line for scibert after downloading it
 # BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","scibert_scivocab_uncased")
 
 # use bellow line if specter is not used
-SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","")
+# SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","")
 # use bellow line for specter model 
 # SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","allenai/specter")
 
-# Sif_model is used for keyword extraction
-SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH", "squeezebert/squeezebert-mnli")
 
 # SIF Rank model variables
-STANFORDCORENLP = os.environ.get("STANFORDCORENLP", "interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27")
+# STANFORDCORENLP = os.environ.get("STANFORDCORENLP", "interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27")
 
-ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
+# ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
 
-ELMO_WEIGHT_FILE = os.environ.get("Elmo_Weight_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5")
+# ELMO_WEIGHT_FILE = os.environ.get("Elmo_Weight_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5")
 
-ENWIKI_FILE = os.environ.get("Enwiki_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/enwiki_vocab_min200.txt")
+# ENWIKI_FILE = os.environ.get("Enwiki_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/enwiki_vocab_min200.txt")
 
-INSPEC = os.environ.get("Inspec", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/inspec_vocab.txt")
+# INSPEC = os.environ.get("Inspec", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/inspec_vocab.txt")
 
-SEMEVALVOCAB2017 = os.environ.get("SemEval2017Vocab", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/semeval_vocal.txt")
+# SEMEVALVOCAB2017 = os.environ.get("SemEval2017Vocab", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/semeval_vocal.txt")
 
-DUC2001= os.environ.get("Duc2001", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/duc2001.txt")
+# DUC2001= os.environ.get("Duc2001", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/duc2001.txt")
