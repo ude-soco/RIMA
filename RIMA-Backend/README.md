@@ -18,7 +18,11 @@
 
 6. Download the [GloVe model](https://uni-duisburg-essen.sciebo.de/s/cKZLWBtulWHoCaT/download) and unzip the model inside the `RIMA-Backend` folder
 
-7. Run the following command in the root directory `RIMA`
+7. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
+
+8. Using your file explorer, go inside the directory `RIMA-Frontend\nodejs`, rename the environment variable file from `.env.example` to `.env`
+
+9. Run the following command in the root directory `RIMA`
 
    ```
    docker-compose -f docker-compose-dev-alp.yml up --build
