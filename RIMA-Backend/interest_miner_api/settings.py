@@ -205,6 +205,7 @@ LDA_MODEL_FILE_PATH = os.path.join(
 # else:
 #     GLOVE_MODEL_FILE_PATH = None
 
+GLOVE_MODEL_FILE = os.path.abspath(configuration["glove_model_file"])
 GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
 
 # use bellow line if use_model is not used
