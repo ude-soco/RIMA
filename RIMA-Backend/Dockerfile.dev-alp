@@ -33,7 +33,7 @@ COPY requirements-docker.txt .
 RUN python3 -m pip install --upgrade pip
 
 RUN pip3 install --no-cache-dir --user -r requirements-docker.txt
-RUN pip3 install selenium
+RUN pip3 install selenium PyYAML
 
 RUN python3 -m spacy download en &&\
      python3 -c "import nltk;nltk.download('stopwords');nltk.download('punkt');nltk.download('sentiwordnet')"

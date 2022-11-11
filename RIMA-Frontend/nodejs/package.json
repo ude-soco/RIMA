@@ -13,6 +13,9 @@
   "bugs": {
     "url": ""
   },
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "start": "cross-env PORT=8080 SKIP_PREFLIGHT_CHECK=true react-scripts --max_old_space_size=4096 start",
     "dev": "cross-env SKIP_PREFLIGHT_CHECK=true react-scripts --max_old_space_size=4096 start",
@@ -65,7 +68,7 @@
     "highcharts-react-official": "^3.1.0",
     "konva": "^4.2.2",
     "material-ui-popup-state": "^1.9.3",
-    "moment": "2.24.0",
+    "moment": "^2.29.4",
     "node-sass": "4.13.1",
     "re-resizable": "^6.5.5",
     "react": "^17.0.1",

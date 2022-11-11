@@ -32,8 +32,8 @@ def glove_vectorize(doc, weights):
             word_vecs = []
             for word in word_list[i]:
                 try:
-                    #vec = glove_model[word]
-                    vec = GetGloveVector(word)
+                    vec = glove_model[word]
+                    # vec = GetGloveVector(word)
                     word_vecs.append(vec)
                 except KeyError:
                     pass
@@ -305,8 +305,8 @@ def calculate_weighted_vectors_similarity_single_word(source_doc,
         word_vecs = []
         # for word in word_list:
         try:
-            #word_vecs = glove_model[word_list]
-            word_vecs = GetGloveVector(word_list)
+            word_vecs = glove_model[word_list]
+            # word_vecs = GetGloveVector(word_list)
         except KeyError:
             pass
 

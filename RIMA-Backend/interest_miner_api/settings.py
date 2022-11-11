@@ -11,9 +11,14 @@ import os
 import json
 import logging.config
 from django.core.management.utils import get_random_secret_key
+import yaml
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+with open(os.path.join(BASE_DIR, "config", 'config.yaml'), 'r') as file:
+    configuration = file.read()
+configuration = yaml.safe_load(configuration)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -192,13 +197,15 @@ LDA_MODEL_FILE_PATH = os.path.join(
     os.environ.get("LDA_MODEL_FILE", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
 )
 
-if os.environ.get("GLOVE_MODEL_FILE"):
-    GLOVE_MODEL_FILE_PATH = os.path.join(
-        MODEL_DIR,
-        os.environ.get("GLOVE_MODEL_FILE")
-    )
-else:
-    GLOVE_MODEL_FILE_PATH = None
+# if os.environ.get("GLOVE_MODEL_FILE"):
+#     GLOVE_MODEL_FILE_PATH = os.path.join(
+#         MODEL_DIR,
+#         os.environ.get("GLOVE_MODEL_FILE")
+#     )
+# else:
+#     GLOVE_MODEL_FILE_PATH = None
+
+GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
 
 # use bellow line if use_model is not used
 USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
@@ -206,7 +213,8 @@ USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
 # USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
 
 # use line bellow if msmarco model is stored in the project
-TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","transformers/msmarco/")
+TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
+# TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","transformers/msmarco/")
 # use line bellow if msmarco model is not stored in the project
 # TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","msmarco-distilbert-base-tas-b")
 

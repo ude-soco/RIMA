@@ -63,10 +63,10 @@
        pip install -r requirements-windows.txt    # For Windows
        ```
 
-   - Install selenium
+   - Install selenium and YAML
 
      ```
-     pip install selenium
+     pip install selenium PyYAML
      ```
 
    - Download the spacy package
