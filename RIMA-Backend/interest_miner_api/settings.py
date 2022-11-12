@@ -20,6 +20,10 @@ with open(os.path.join(BASE_DIR, "config", 'config.yaml'), 'r') as file:
     configuration = file.read()
 configuration = yaml.safe_load(configuration)
 
+with open(os.path.join(BASE_DIR, "config", 'twitter_config.yaml'), 'r') as file:
+    twitter_configuration = file.read()
+twitter_configuration = yaml.safe_load(twitter_configuration)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -172,7 +176,31 @@ STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # No of days for which the tweets needs to be imported
-TWITTER_FETCH_DAYS = int(os.getenv("TWITTER_FETCH_DAYS", 180))
+if not twitter_configuration["twitter_fetch_days"]:
+    TWITTER_FETCH_DAYS = os.environ.get("TWITTER_FETCH_DAYS")
+else:
+    TWITTER_FETCH_DAYS = int(twitter_configuration["twitter_fetch_days"])
+
+if not twitter_configuration["twitter_api_key"]:
+    TWITTER_CONSUMER_KEY = os.environ.get("TWITTER_CONSUMER_KEY")
+else:
+    TWITTER_CONSUMER_KEY = twitter_configuration["twitter_api_key"]
+
+if not twitter_configuration["twitter_api_secret_key"]:
+    TWITTER_CONSUMER_SECRET = os.environ.get("TWITTER_CONSUMER_SECRET")
+else:
+    TWITTER_CONSUMER_SECRET = twitter_configuration["twitter_api_secret_key"]
+
+if not twitter_configuration["twitter_access_token"]:
+    TWITTER_ACCESS_TOKEN = os.environ.get("TWITTER_ACCESS_TOKEN")
+else:
+    TWITTER_ACCESS_TOKEN = twitter_configuration["twitter_access_token"]
+
+if not twitter_configuration["twitter_access_token_secret"]:
+    TWITTER_ACCESS_TOKEN_SECRET = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
+else:
+    TWITTER_ACCESS_TOKEN_SECRET = twitter_configuration["twitter_access_token_secret"]
+
 
 # Celery settings
 REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
@@ -194,20 +222,72 @@ PRELOAD_MODELS = os.environ.get("PRELOAD_MODELS", "false").lower() == "true"
 
 
 
-GLOVE_MODEL_FILE = os.path.abspath(configuration["glove_model_file"])
-GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
-TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
-STANFORDCORENLP = os.path.abspath(configuration["stanfordcorenlp_file"])
-ELMO_OPTIONS_FILE = os.path.abspath(configuration["elmo_option_file"])
-ELMO_WEIGHT_FILE = os.path.abspath(configuration["elmo_weight_file"])
-ENWIKI_FILE = os.path.abspath(configuration["enwiki_file"])
-INSPEC = os.path.abspath(configuration["inspec_file"])
-SEMEVALVOCAB2017 = os.path.abspath(configuration["semeval2017vocab_file"])
-DUC2001 = os.path.abspath(configuration["duc2001_file"])
-SIF_MODEL_FILE_PATH = configuration["sif_model_file"]
-USE_MODEL_FILE_PATH = configuration["use_model_file"]
-BERT_MODEL_FILE_PATH = configuration["bert_model_file"]
-SPECTER_MODEL_FILE_PATH = configuration["specter_model_file"]
+if not configuration["glove_model_file"]:
+    GLOVE_MODEL_FILE = None
+    GLOVE_MODEL_FILE_PATH = None
+else:
+    GLOVE_MODEL_FILE = os.path.join(MODEL_DIR, configuration["glove_model_file"])
+    GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
+
+if not configuration["glove_model_file"]:
+    TRANSFORMER_MODEL_FILE_PATH = None
+else:
+    TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
+
+if not configuration["stanfordcorenlp_file"]:
+    STANFORDCORENLP = None
+else:
+    STANFORDCORENLP = os.path.abspath(configuration["stanfordcorenlp_file"])
+
+if not configuration["elmo_option_file"]:
+    ELMO_OPTIONS_FILE = None
+else:
+    ELMO_OPTIONS_FILE = os.path.abspath(configuration["elmo_option_file"])
+
+if not configuration["elmo_weight_file"]:
+    ELMO_WEIGHT_FILE = None
+else:
+    ELMO_WEIGHT_FILE = os.path.abspath(configuration["elmo_weight_file"])
+
+if not configuration["enwiki_file"]:
+    ENWIKI_FILE = None
+else:
+    ENWIKI_FILE = os.path.abspath(configuration["enwiki_file"])
+
+if not configuration["inspec_file"]:
+    INSPEC = None
+else:
+    INSPEC = os.path.abspath(configuration["inspec_file"])
+
+if not configuration["semeval2017vocab_file"]:
+    SEMEVALVOCAB2017 = None
+else:
+    SEMEVALVOCAB2017 = os.path.abspath(configuration["semeval2017vocab_file"])
+
+if not configuration["duc2001_file"]:
+    DUC2001 = None
+else:
+    DUC2001 = os.path.abspath(configuration["duc2001_file"])
+
+if not configuration["sif_model_file"]:
+    SIF_MODEL_FILE_PATH = None
+else:
+    SIF_MODEL_FILE_PATH = configuration["sif_model_file"]
+
+if not configuration["use_model_file"]:
+    USE_MODEL_FILE_PATH = None
+else:
+    USE_MODEL_FILE_PATH = configuration["use_model_file"]
+
+if not configuration["bert_model_file"]:
+    BERT_MODEL_FILE_PATH = None
+else:
+    BERT_MODEL_FILE_PATH = configuration["bert_model_file"]
+
+if not configuration["specter_model_file"]:
+    SPECTER_MODEL_FILE_PATH = None
+else:
+    SPECTER_MODEL_FILE_PATH = configuration["specter_model_file"]
 
 # Sif_model is used for keyword extraction
 # SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH", "squeezebert/squeezebert-mnli")

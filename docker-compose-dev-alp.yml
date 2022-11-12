@@ -40,8 +40,10 @@ services:
       - POSTGRES_USER=interest_miner
       - POSTGRES_HOST=rima-postgres
       - POSTGRES_PASSWORD=interest_miner
-      - GLOVE_MODEL_FILE_PATH=datatest_word2vec.txt
-      - GLOVE_MODEL_FILE=datatest_word2vec.txt
+      - TWITTER_CONSUMER_KEY=
+      - TWITTER_CONSUMER_SECRET=
+      - TWITTER_ACCESS_TOKEN=
+      - TWITTER_ACCESS_TOKEN_SECRET=
     env_file:
       - configuration-dev-alp.env
     ports:
@@ -69,8 +71,10 @@ services:
       - POSTGRES_USER=interest_miner
       - POSTGRES_HOST=rima-postgres
       - POSTGRES_PASSWORD=interest_miner
-      - GLOVE_MODEL_FILE_PATH=datatest_word2vec.txt
-      - GLOVE_MODEL_FILE=datatest_word2vec.txt
+      - TWITTER_CONSUMER_KEY=
+      - TWITTER_CONSUMER_SECRET=
+      - TWITTER_ACCESS_TOKEN=
+      - TWITTER_ACCESS_TOKEN_SECRET=
     env_file:
       - configuration-dev-alp.env
     volumes:
