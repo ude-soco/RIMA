@@ -4,11 +4,11 @@ from celery import Celery
 from celery.schedules import crontab
 
 # set the default Django settings module for the 'celery' program.
-import dotenv
+# import dotenv
 from celery.schedules import crontab
 
 # set the default Django settings module for the 'celery' program.
-dotenv.read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+# dotenv.read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'interest_miner_api.settings')
 

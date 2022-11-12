@@ -33,7 +33,7 @@ COPY requirements-docker.txt .
 RUN python3 -m pip install --upgrade pip
 
 RUN pip3 install --no-cache-dir --user -r requirements-docker.txt
-RUN pip3 install selenium PyYAML
+RUN pip3 install selenium PyYAML tqdm
 
 RUN python3 -m spacy download en &&\
      python3 -c "import nltk;nltk.download('stopwords');nltk.download('punkt');nltk.download('sentiwordnet')"
@@ -41,9 +41,9 @@ RUN python3 -m spacy download en &&\
 COPY . .
 
 # Download stanfordcorenlp
-# RUN wget http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip -P /app/interests/Keyword_Extractor/Algorithms/embedding_based
-# RUN unzip /app/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-latest.zip
-# RUN rm /app/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-latest.zip
+# RUN curl https://uni-duisburg-essen.sciebo.de/s/jADBrM5PUgVqMIr/download --output stanford-corenlp-full-2018-02-27.zip
+# RUN unzip stanford-corenlp-full-2018-02-27.zip -d ./interests/Keyword_Extractor/Algorithms/embedding_based
+# RUN rm stanford-corenlp-full-2018-02-27.zip
 
 # Download msmarco
 # RUN mkdir transformers

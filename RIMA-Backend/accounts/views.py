@@ -20,7 +20,7 @@ class RegisterView(APIView):
     def post(self, request, *args, **kwargs):
         user_data = request.data
         #pchatti@test.de
-        print(request.data)
+        # print(request.data)
         user_data["username"] = user_data.get("email")
         serializer = accounts_serializers.UserRegistrationSerializer(
             data=user_data)
@@ -28,8 +28,8 @@ class RegisterView(APIView):
         user = serializer.create(serializer.validated_data)
         user.set_password(serializer.validated_data["password"])
         user.save()
+        print("User created, now generating interest profile")
         import_user_data.delay(user.id)
-        print(user)
         return Response(
             accounts_serializers.UserSerializer(instance=user).data)
 

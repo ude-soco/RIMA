@@ -8,7 +8,7 @@ from interests.wikipedia_utils import wikifilter
 from .utils import get_interest_similarity_score
 from django.conf import settings
 
-utc = pytz.timezone('UTC')
+utc = pytz.timezone("UTC")
 
 consumer_key = settings.TWITTER_CONSUMER_KEY
 consumer_secret = settings.TWITTER_CONSUMER_SECRET
@@ -31,29 +31,30 @@ class TwitterAPI:
     def get_fetch_tweet_limit(self):
         # Output format {'limit': 900, 'remaining': 900, 'reset': 1586700000}
         response = self.auth_api.rate_limit_status()
-        return response['resources']['statuses']['/statuses/user_timeline']
+        return response["resources"]["statuses"]["/statuses/user_timeline"]
 
     def fetch_tweets(self):
-        print("Current Rate: {} (starting)".format(self.get_fetch_tweet_limit()))
+        # print("Current Rate: {} (starting)".format(self.get_fetch_tweet_limit()))
         tweets = []
         tweet_count = 0
         for tweet in tweepy.Cursor(
-                self.auth_api.user_timeline,
-                id=self.target,
-                tweet_mode="extended",
-                wait_on_rate_limit=True,
-                wait_on_rate_limit_notify=True,
+            self.auth_api.user_timeline,
+            id=self.target,
+            tweet_mode="extended",
+            wait_on_rate_limit=True,
+            wait_on_rate_limit_notify=True,
         ).items():
             tweet_count += 1
             tweet_ct = utc.localize(tweet.created_at)
             if tweet_ct > self.end_date:
                 tweets.append(tweet._json)
-                print("Imported {} tweets for account {}".format(
-                    tweet_count, self.target))
+                print(
+                    "Imported {} tweets for account {}".format(tweet_count, self.target)
+                )
             else:
                 break
-        print(tweet_count)
-        print("Current Rate: {} (ending)".format(self.get_fetch_tweet_limit()))
+        print(f"Total tweets collected: {len(tweets)}")
+        # print("Current Rate: {} (ending)".format(self.get_fetch_tweet_limit()))
         return tweets
 
 
@@ -125,21 +126,22 @@ def get_recommended_tweets(tags):
         extra_kwargs = {}
         geo_code = generate_geo_code(tag)
         if geo_code is not None:
-            extra_kwargs['geocode'] = geo_code
+            extra_kwargs["geocode"] = geo_code
         language = tag.get("lang", None)
         if language is not None:
-            extra_kwargs['lang'] = language
-        user_interest_model_list.append(tag["text"]) # this code does not include weight only keywords # LK
+            extra_kwargs["lang"] = language
+        user_interest_model_list.append(
+            tag["text"]
+        )  # this code does not include weight only keywords # LK
         response = API.search(
             q=tag["text"],
             tweet_mode="extended",
             count=tag["n_tweets"],
             # count=2,
-            **extra_kwargs)
+            **extra_kwargs,
+        )
 
-        results = [
-            extract_tweet_from_response(x, tag) for x in response["statuses"]
-        ]
+        results = [extract_tweet_from_response(x, tag) for x in response["statuses"]]
         full_result.extend(results)
         # full_result: Array of objects (85 Elements)
         # E.X : {'id_str': '1474584593869131780', 'created_at': 'Sat Dec 25 03:35:38 +0000 2021', 'full_text': 'If you learn JavaScript, you can build this: 👇\n\n📈 You can build websites using React.js \n✡️ You can build mobile apps using React-native\n🤯 You can build desktops apps using electron.js\n😜 You can build Machin learning models using Tensorflow.js\n\n#javascript #100DaysOfCode', 'retweet_count': 4, 'favorite_count': 3, 'user': {'id_str': '1355130501124685824', 'name': 'Ashraf ⚡️💻', 'screen_name': 'Ashraf_365', 'description': 'Interested in  ||  Web Dev 💻 |  JavaScript  ❤️ | \nReact.js ✡️ | Firebase ⚡️ | Memes 😜 | \nMaking cool projects 👨\u200d🔧 | And learning new things 📘', 'url': None, 'followers_count': 43, 'friends_count': 179, 'statuses_count': 650, 'profile_image_url_https': 'https://pbs.twimg.com/profile_images/1470734637676711940/0I6iqHzB_normal.jpg', 'profile_background_color': 'F5F8FA'}, 'color': '#8388bd', 'tagId': 4, 'text': 'machin learning'}
@@ -153,7 +155,7 @@ def get_recommended_tweets(tags):
     #   4. Sort the list according to score
 
     # Extract unique tweets according to their IDs
-    unique_tweets = {each['id_str']: each for each in full_result}.values()
+    unique_tweets = {each["id_str"]: each for each in full_result}.values()
 
     # print(len(full_result))
     # print(len(unique_tweets))
@@ -168,15 +170,23 @@ def get_recommended_tweets(tags):
         # wiki_keyword_redirect_mapping, keywords_extracted = wikifilter(extract_keywords_from_tweet)
         # keywords_list = list(keywords_extracted.keys())
         # # uncomment "score" before DOCKER deployment
-        score = round((get_interest_similarity_score(
-            user_interest_model_list, extract_keywords_from_tweet) or 0) * 100, 2)
+        score = round(
+            (
+                get_interest_similarity_score(
+                    user_interest_model_list, extract_keywords_from_tweet
+                )
+                or 0
+            )
+            * 100,
+            2,
+        )
 
         # keywords_list = list(extract_keywords_from_tweet.keys())
         # # print('keywords_list')
         # # print(keywords_list)
         # # keywords_list: Array of Strings
         # # E.X : ['basics of recommender', 'recommender systems', 'datascience', 'richardeudes', 'bigdata', 'basics', 'systems', 'recommender']
-        
+
         # # # uncomment "score" before DOCKER deployment
         # score = round((get_interest_similarity_score(
         #     user_interest_model_list, keywords_list) or 0) * 100, 2)
@@ -189,9 +199,7 @@ def get_recommended_tweets(tags):
             tweets_with_scores.append(result)
     # print('tweets_with_scores')
     # print(tweets_with_scores)
-    sorted_list = sorted(tweets_with_scores,
-                         key=lambda k: k['score'],
-                         reverse=True)
+    sorted_list = sorted(tweets_with_scores, key=lambda k: k["score"], reverse=True)
     # print('sorted-list:')
     # print(sorted_list)
     return sorted_list

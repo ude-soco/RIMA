@@ -1,5 +1,5 @@
-glove_model_file: datatest_word2vec.txt
-# glove_model_file: ""
+# glove_model_file: datatest_word2vec.txt
+glove_model_file: ""
 transformer_model_file: transformers/msmarco/
 stanfordcorenlp_file: interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27
 elmo_option_file: interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json
