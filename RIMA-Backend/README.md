@@ -8,25 +8,27 @@
 
 1. Download and install [Docker](https://www.docker.com/products/docker-desktop)
 
-2. Download and install [Node.js v.8.9.0](https://nodejs.org/dist/v8.9.0/). Using a terminal/command prompt, move to the `RIMA-Frontend/nodejs` and type `npm install`
+2. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
 
-3. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
+3. Download [StanfordCoreNLP](https://uni-duisburg-essen.sciebo.de/s/jADBrM5PUgVqMIr/download) and unzip the file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
 
-4. Download [StanfordCoreNLP](https://uni-duisburg-essen.sciebo.de/s/jADBrM5PUgVqMIr/download) and unzip the file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
+4. Download [MSmarco model](https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in `RIMA-Backend/transformers`
 
-5. Download [MSmarco model](https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in `RIMA-Backend/transformers`
+5. Download the [GloVe model](https://uni-duisburg-essen.sciebo.de/s/cKZLWBtulWHoCaT/download) and unzip the model inside the `RIMA-Backend` folder
 
-6. Download the [GloVe model](https://uni-duisburg-essen.sciebo.de/s/cKZLWBtulWHoCaT/download) and unzip the model inside the `RIMA-Backend` folder
+6. Using your file explorer, go inside the directory `RIMA-Backend\config`, copy the twitter config file `rename_twitter_config.yaml` and paste it in the same folder. Rename the copied twitter config file to `twitter_config.yaml`
 
-7. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
+7. Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
 
-8. Using your file explorer, go inside the directory `RIMA-Frontend\nodejs`, rename the environment variable file from `.env.example` to `.env`
+8. Download and install [Node.js ver.12.13.0](https://nodejs.org/dist/v12.13.0). Using a terminal/command prompt, move to the `RIMA-Frontend/nodejs` and type `npm install`
 
-9. Run the following command in the root directory `RIMA`
+9. In the `RIMA-Frontend\nodejs` folder, rename the environment variable file from `.env.example` to `.env`
 
-   ```
-   docker-compose -f docker-compose-dev-alp.yml up --build
-   ```
+10. Run the following command in the root directory `RIMA`
+
+    ```
+    docker-compose -f docker-compose-dev-alp.yml up --build
+    ```
 
 ## Manual Installation Guide for RIMA-Backend
 
@@ -85,9 +87,9 @@
      python -c "import nltk;nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
      ```
 
-4. Using your file explorer, go inside the directory `RIMA-Backend`, rename the environment variable file from `.env.example` to `.env`
+6. Using your file explorer, go inside the directory `RIMA-Backend\config`, copy the twitter config file `rename_twitter_config.yaml` and paste it in the same folder. Rename the copied twitter config file to `twitter_config.yaml`
 
-5. Open the `.env` file and add additional environment variables (contact [Shoeb Joarder](mailto:shoeb.joarder@uni-due.de) for info)
+5. Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
 
 6. Install [Visual Studio Community 2017](https://visualstudio.microsoft.com/de/vs/community/). Make sure to install the package `Desktop development with C++`. Set `VCINSTALLER` system variable to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC` ([Read more](https://stackoverflow.com/questions/57541402/node-gyp-configure-got-gyp-err-find-vs/70799513#70799513)). For Linux users, check [GCC Installation guide for Linux](https://linuxize.com/post/how-to-install-gcc-compiler-on-ubuntu-18-04/)
 
