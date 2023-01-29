@@ -1,12 +1,12 @@
 //Done by Swarna
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Select from "react-select";
 import "d3-transition";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import {Button, Label, FormGroup, Form, Row, Col} from "reactstrap";
+import { Button, Label, FormGroup, Form, Row, Col } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 
 
 class TopicBar extends Component {
@@ -36,7 +36,7 @@ class TopicBar extends Component {
   }
 
   handleToogle = (status) => {
-    this.setState({imageTooltipOpen: status});
+    this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
   };
 
@@ -50,7 +50,7 @@ class TopicBar extends Component {
   displayDocChart(topic, year) {
     var selectyear = "2011";
     fetch(
-      "http://127.0.0.1:8000/api/conferences/topicdetails/"  + topic + "/" + year
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "topicdetails/" + topic + "/" + year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -59,7 +59,7 @@ class TopicBar extends Component {
           numdocs: json.docs[1],
           //bardata:json.docs[2],
           //doctitle:json.docs[3],
-          series1: [{name: "", data: json.docs[1]}],
+          series1: [{ name: "", data: json.docs[1] }],
           options1: {
             dataLabels: {
               enabled: true,
@@ -76,7 +76,7 @@ class TopicBar extends Component {
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
                   fetch(
-                    "http://127.0.0.1:8000/api/conferences/fetchpaper/"  +  title
+                    `${BASE_URL_CONFERENCE}/api/conferences/` + "fetchpaper/" + title
                   )
                     .then((response) => response.json())
                     .then((json) => {
@@ -96,7 +96,7 @@ class TopicBar extends Component {
               categories: json.docs[0],
             },
             tooltip: {
-              custom: function ({series, seriesIndex, dataPointIndex, w}) {
+              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                 return (
                   '<div class="arrow_box">' +
                   "<span>" +
@@ -137,16 +137,16 @@ class TopicBar extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.confEvent !== prevProps.confEvent) {
-      this.componentDidMount()   
-     }
+      this.componentDidMount()
+    }
   }
 
   componentDidMount() {
     const display = this.displayDocChart;
-    fetch("http://127.0.0.1:8000/api/conferences/toptopics/topic/" +this.props.confEvent)
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "toptopics/topic/" + this.props.confEvent)
       .then((response) => response.json())
       .then((json) => {
-        
+
         this.setState(
           {
             selectyear: this.props.confEvent,
@@ -164,7 +164,7 @@ class TopicBar extends Component {
                   dataPointSelection: function (event, chartContext, config) {
                     var topic =
                       config.w.config.xaxis.categories[config.dataPointIndex];
-                    console.log('chartContext '+chartContext);
+                    console.log('chartContext ' + chartContext);
                     console.log('config.w.globals.selectedDataPoints[0][0]' + config.w.globals.selectedDataPoints[0][0]);
                     display(topic, this.props.confEvent);
                   },
@@ -186,7 +186,7 @@ class TopicBar extends Component {
                 categories: json.keywords[0],
               },
               tooltip: {
-                custom: function ({series, seriesIndex, dataPointIndex, w}) {
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                   return (
                     '<div class="arrow_box">' +
                     "<span>" +
@@ -229,11 +229,11 @@ class TopicBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/conferences/topkeywords/keyword/"+ this.state.selectyear
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "topkeywords/keyword/" + this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
-        var {items, weights} = this.state;
+        var { items, weights } = this.state;
         console.log(items);
         console.log(weights);
         this.setState(
@@ -275,7 +275,7 @@ class TopicBar extends Component {
                 categories: json.keywords[0],
               },
               tooltip: {
-                custom: function ({series, seriesIndex, dataPointIndex, w}) {
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                   return (
                     '<div class="arrow_box">' +
                     "<span>" +
@@ -300,7 +300,7 @@ class TopicBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      "http://127.0.0.1:8000/api/conferences/toptopics/topic/"+ this.state.selectyear
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "toptopics/topic/" + this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -369,7 +369,7 @@ class TopicBar extends Component {
       imageTooltipOpen,
     } = this.state;
 
-    const yeardata =  this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
+    const yeardata = this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
 
     const topics = [
       {
@@ -395,7 +395,7 @@ class TopicBar extends Component {
 
               <Label>Select an Event</Label>
               <br></br>
-              <div style={{width: "200px"}}>
+              <div style={{ width: "200px" }}>
                 <Select
                   placeholder="Select Option"
                   options={yeardata}
@@ -404,7 +404,7 @@ class TopicBar extends Component {
                 />
               </div>
               <br></br>
-              <br/>
+              <br />
               <Button
                 outline
                 color="primary"
@@ -487,7 +487,7 @@ class TopicBar extends Component {
 
               <Label>Select an Event</Label>
               <br></br>
-              <div style={{width: "200px"}}>
+              <div style={{ width: "200px" }}>
                 <Select
                   placeholder="Select Option"
                   options={yeardata}
@@ -496,7 +496,7 @@ class TopicBar extends Component {
                 />
               </div>
               <br></br>
-              <br/>
+              <br />
               <Button
                 outline
                 color="primary"

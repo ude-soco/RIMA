@@ -1985,7 +1985,7 @@ def fetchTopicsuserID(ssuserid, year):
     #df_paperdata=df_paperdata.replace(df_paperdata.Nan,'')
     abs_vals = df_paperdata['title_abstract'].values
     keydata = ' '.join(str(v) for v in abs_vals)
-    keywords = getKeyword(keydata, "Yake", 10)
+    keywords = getKeyword(keydata, "SifRank", 10)
     keywords_noquotes = str(keywords).replace("'", "")
     keywords_noquotes = keywords_noquotes.replace("(", "")
     keywords_noquotes = keywords_noquotes.replace(")", "")
@@ -2217,7 +2217,7 @@ def compareAuthors(author1, author2, year, key):
         abstracts_a2 = list(lak_author2_data['titleAndAbs'].values)
         #keydata_a1 = ' '.join(str(v) for v in abstracts_a1)
         keydata_a2 = ' '.join(abstracts_a2)
-        keywords_a2 = getKeyword(keydata_a2, "Yake", 10)
+        keywords_a2 = getKeyword(keydata_a2, "SifRank", 10)
         keywords_noquotes = str(keywords_a2).replace("'", "")
         keywords_noquotes = keywords_noquotes.replace("(", "")
         keywords_noquotes = keywords_noquotes.replace(")", "")

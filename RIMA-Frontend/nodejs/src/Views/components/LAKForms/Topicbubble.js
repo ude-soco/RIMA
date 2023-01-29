@@ -1,6 +1,6 @@
 //Done by Swarna
-import React, {Component} from "react";
-import {Graph} from "react-d3-graph";
+import React, { Component } from "react";
+import { Graph } from "react-d3-graph";
 import {
   Label,
   Modal,
@@ -111,7 +111,7 @@ class Topicbubble extends Component {
   selectValue(e) {
     if (e.value === "topic") {
       fetch(
-        "http://127.0.0.1:8000/api/conferences/getoverviewtopicdetails/" +
+        `${BASE_URL_CONFERENCE}/api/conferences/` + "getoverviewtopicdetails/" +
         e.value +
         "/" +
         this.state.selectYear
@@ -209,9 +209,9 @@ class Topicbubble extends Component {
     console.log(keywords);
     if (isLoaded) {
       return (
-        <div className="App" style={{height: "1000px", width: "700px"}}>
+        <div className="App" style={{ height: "1000px", width: "700px" }}>
           <h2>Topic bubble</h2>
-          <br/>
+          <br />
           <Label>Select a particular year of LAK Conference</Label>
 
           <Select
@@ -220,17 +220,17 @@ class Topicbubble extends Component {
             value={yeardata.find((obj) => obj.value === selectYear)}
             onChange={this.selectyearValue}
           />
-          <br/>
+          <br />
           <Label>Select a Keyword</Label>
-          <br/>
+          <br />
           <Select
             placeholder="Select Option"
             options={keywords}
             value={keywords.find((obj) => obj.value === selectVal)}
             onChange={this.selectValue}
           />
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <Graph
             id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
@@ -259,40 +259,40 @@ class Topicbubble extends Component {
             <ModalBody>
               <Table hover size="20">
                 <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Abstract</th>
-                </tr>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Abstract</th>
+                  </tr>
                 </thead>
                 <tbody>
-                {console.log("the title is:", modalTitle)}
-                {modalTitle.map((text, index) => {
-                  const image = modalBody[index];
-                  return (
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td style={{whiteSpace: "unset"}}>
-                        <p>
+                  {console.log("the title is:", modalTitle)}
+                  {modalTitle.map((text, index) => {
+                    const image = modalBody[index];
+                    return (
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td style={{ whiteSpace: "unset" }}>
+                          <p>
+                            <Highlighter
+                              highlightClassName="YourHighlightClass"
+                              searchWords={[highlightText]}
+                              autoEscape={true}
+                              textToHighlight={text}
+                            />
+                          </p>
+                        </td>
+                        <td style={{ whiteSpace: "unset" }}>
                           <Highlighter
                             highlightClassName="YourHighlightClass"
                             searchWords={[highlightText]}
                             autoEscape={true}
-                            textToHighlight={text}
+                            textToHighlight={image}
                           />
-                        </p>
-                      </td>
-                      <td style={{whiteSpace: "unset"}}>
-                        <Highlighter
-                          highlightClassName="YourHighlightClass"
-                          searchWords={[highlightText]}
-                          autoEscape={true}
-                          textToHighlight={image}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </Table>
             </ModalBody>
@@ -310,18 +310,18 @@ class Topicbubble extends Component {
           <div>
             <h2>Topic bubble</h2>
 
-            <br/>
+            <br />
             <Label>Select a particular year of LAK Conference</Label>
-            <br/>
+            <br />
             <Select
               placeholder="Select Option"
               options={yeardata}
               value={yeardata.find((obj) => obj.value === selectYear)}
               onChange={this.selectyearValue}
             />
-            <br/>
+            <br />
             <Label>Select a Keyword</Label>
-            <br/>
+            <br />
             <Select
               placeholder="Select Option"
               options={keywords}

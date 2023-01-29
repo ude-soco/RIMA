@@ -19,7 +19,8 @@ AUTH = tweepy.OAuthHandler(consumer_key, consumer_secret)
 AUTH.set_access_token(access_token, access_token_secret)
 
 API = tweepy.API(AUTH, parser=JSONParser())
-API_2 = tweepy.API(AUTH, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+API_2 = tweepy.API(AUTH, wait_on_rate_limit=True,
+                   wait_on_rate_limit_notify=True)
 
 
 class TwitterAPI:
@@ -49,7 +50,8 @@ class TwitterAPI:
             if tweet_ct > self.end_date:
                 tweets.append(tweet._json)
                 print(
-                    "Imported {} tweets for account {}".format(tweet_count, self.target)
+                    "Imported {} tweets for account {}".format(
+                        tweet_count, self.target)
                 )
             else:
                 break
@@ -141,7 +143,8 @@ def get_recommended_tweets(tags):
             **extra_kwargs,
         )
 
-        results = [extract_tweet_from_response(x, tag) for x in response["statuses"]]
+        results = [extract_tweet_from_response(
+            x, tag) for x in response["statuses"]]
         full_result.extend(results)
         # full_result: Array of objects (85 Elements)
         # E.X : {'id_str': '1474584593869131780', 'created_at': 'Sat Dec 25 03:35:38 +0000 2021', 'full_text': 'If you learn JavaScript, you can build this: 👇\n\n📈 You can build websites using React.js \n✡️ You can build mobile apps using React-native\n🤯 You can build desktops apps using electron.js\n😜 You can build Machin learning models using Tensorflow.js\n\n#javascript #100DaysOfCode', 'retweet_count': 4, 'favorite_count': 3, 'user': {'id_str': '1355130501124685824', 'name': 'Ashraf ⚡️💻', 'screen_name': 'Ashraf_365', 'description': 'Interested in  ||  Web Dev 💻 |  JavaScript  ❤️ | \nReact.js ✡️ | Firebase ⚡️ | Memes 😜 | \nMaking cool projects 👨\u200d🔧 | And learning new things 📘', 'url': None, 'followers_count': 43, 'friends_count': 179, 'statuses_count': 650, 'profile_image_url_https': 'https://pbs.twimg.com/profile_images/1470734637676711940/0I6iqHzB_normal.jpg', 'profile_background_color': 'F5F8FA'}, 'color': '#8388bd', 'tagId': 4, 'text': 'machin learning'}
@@ -164,7 +167,7 @@ def get_recommended_tweets(tags):
     tweets_with_scores = []
     for result in unique_tweets:
         text = result.get("full_text")
-        algorithm = "Yake"
+        algorithm = "SifRank"
         extract_keywords_from_tweet = getKeyword(text, algorithm)
 
         # wiki_keyword_redirect_mapping, keywords_extracted = wikifilter(extract_keywords_from_tweet)
@@ -199,7 +202,8 @@ def get_recommended_tweets(tags):
             tweets_with_scores.append(result)
     # print('tweets_with_scores')
     # print(tweets_with_scores)
-    sorted_list = sorted(tweets_with_scores, key=lambda k: k["score"], reverse=True)
+    sorted_list = sorted(tweets_with_scores,
+                         key=lambda k: k["score"], reverse=True)
     # print('sorted-list:')
     # print(sorted_list)
     return sorted_list

@@ -1,10 +1,10 @@
 //Done by Swarna
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
-import {Button, Label, FormGroup, Form} from "reactstrap";
+import { Button, Label, FormGroup, Form } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -58,7 +58,7 @@ class LAKStackedAreaChart extends Component {
     this.onClear();
 
     console.log(e.target.value);
-    fetch(BASE_URL_CONFERENCE + "getallkeysresults/keyword/"  + this.props.conferenceName)
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getallkeysresults/keyword/" + this.props.conferenceName)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -67,14 +67,14 @@ class LAKStackedAreaChart extends Component {
           active2: true,
           soptions: json.topics.sort((a, b) => (a.label > b.label ? 1 : -1)),
           key: "key",
-          
+
         });
       });
   }
 
   selectTopic(e) {
     this.onClear();
-    fetch(BASE_URL_CONFERENCE + "getalltopicsresults/topic/" + this.props.conferenceName)
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getalltopicsresults/topic/" + this.props.conferenceName)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -117,7 +117,7 @@ class LAKStackedAreaChart extends Component {
   }
 
   handleToogle = (status) => {
-    this.setState({imageTooltipOpen: status});
+    this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
   };
 
@@ -158,20 +158,20 @@ class LAKStackedAreaChart extends Component {
 
       console.log("in click event", this.state.selectedValues);
       var selectedValues = this.state.selectedValues;
-      var {series} = this.state;
+      var { series } = this.state;
 
       fetch(
-        BASE_URL_CONFERENCE +
-        "getalltopicsevolution/topic/" + this.props.conferenceName +"/" +
+        `${BASE_URL_CONFERENCE}/api/conferences/` +
+        "getalltopicsevolution/topic/" + this.props.conferenceName + "/" +
         "?" +
-        selectedValues.join("&")  
+        selectedValues.join("&")
       )
         .then((response) => response.json())
         .then((json) => {
           series = [];
           for (let i = 0; i < json.weights.length; i++) {
             series = series.concat([
-              {name: selectedValues[i], data: json.weights[i]},
+              { name: selectedValues[i], data: json.weights[i] },
             ]);
             //selectInputRef1.current.chart.publicMethods.updateOptions({})
           }
@@ -218,11 +218,11 @@ class LAKStackedAreaChart extends Component {
 
       console.log("in click event", this.state.selectedValues);
       var selectedValues = this.state.selectedValues;
-      var {series} = this.state;
+      var { series } = this.state;
 
       fetch(
-        BASE_URL_CONFERENCE +
-        "getallkeysevolution/keyword/"  + this.props.conferenceName +"/" +
+        `${BASE_URL_CONFERENCE}/api/conferences/` +
+        "getallkeysevolution/keyword/" + this.props.conferenceName + "/" +
         "?" +
         selectedValues.join("&")
       )
@@ -234,7 +234,7 @@ class LAKStackedAreaChart extends Component {
             for (let i = 0; i < json.weights.length; i++) {
               console.log("selectedValues[i]", selectedValues[i]);
               series = series.concat([
-                {name: selectedValues[i], data: json.weights[i]},
+                { name: selectedValues[i], data: json.weights[i] },
               ]);
               //selectInputRef1.current.chart.publicMethods.updateOptions({})
             }
@@ -343,14 +343,14 @@ class LAKStackedAreaChart extends Component {
                 </div>
               )}
 
-              <br/>
-              <div style={{color: "green", display: display1}}>
+              <br />
+              <div style={{ color: "green", display: display1 }}>
                 <Label>{textinput}</Label>
               </div>
-              <br/>
+              <br />
               <Label>Select topics/keywords</Label>
 
-              <div style={{width: "600px"}}>
+              <div style={{ width: "600px" }}>
                 <Select
                   ref={this.selectInputRef}
                   name="selectOptions"
@@ -362,7 +362,7 @@ class LAKStackedAreaChart extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <br/>
+              <br />
               <Button
                 outline
                 color="primary"
@@ -387,7 +387,7 @@ class LAKStackedAreaChart extends Component {
                   position: "absolute",
                 }}
               >
-                <div style={{backgroundColor: "white", display: display}}>
+                <div style={{ backgroundColor: "white", display: display }}>
                   <Loader
                     type="Bars"
                     visible={loader}
@@ -399,7 +399,7 @@ class LAKStackedAreaChart extends Component {
               </div>
             </FormGroup>
           </Form>
-          <div style={{opacity: opacity}}>
+          <div style={{ opacity: opacity }}>
             <ReactApexChart
               ref={this.selectInputRef1}
               options={this.state.options}
@@ -416,13 +416,13 @@ class LAKStackedAreaChart extends Component {
           <Form role="form" method="POST">
             <FormGroup>
               <h2>Evolution of topics/keywords over time</h2>
-              <br/>
+              <br />
               <p>
                 This chart displays the evolution of topics/keywords over all
                 years of the selected conference
               </p>
-              <br/>
-              <br/>
+              <br />
+              <br />
               <Button
                 outline
                 color="primary"
@@ -466,13 +466,13 @@ class LAKStackedAreaChart extends Component {
                 </div>
               )}
 
-              <br/>
-              <br/>
+              <br />
+              <br />
               <Label>Select topics/keywords</Label>
 
-              <br/>
+              <br />
 
-              <div style={{width: "600px"}}>
+              <div style={{ width: "600px" }}>
                 <Select
                   ref={this.selectInputRef}
                   name="selectOptions"
@@ -485,7 +485,7 @@ class LAKStackedAreaChart extends Component {
                 />
               </div>
 
-              <br/>
+              <br />
               <Button
                 outline
                 active={active3}
@@ -509,7 +509,7 @@ class LAKStackedAreaChart extends Component {
                   position: "absolute",
                 }}
               >
-                <div style={{backgroundColor: "white", display: display}}>
+                <div style={{ backgroundColor: "white", display: display }}>
                   <Loader
                     type="Bars"
                     visible={loader}

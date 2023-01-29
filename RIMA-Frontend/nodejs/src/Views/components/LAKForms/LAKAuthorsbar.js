@@ -61,15 +61,14 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      BASE_URL_CONFERENCE +
-        "getauthortopicdetails/" + this.props.conferenceName +"/?" +
-        this.state.selectVal1 +
-        "&" +
-        this.state.selectVal2 +
-        "&" +
-        this.state.selectYear +
-        "&" +
-        e.target.value
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "getauthortopicdetails/" + this.props.conferenceName + "/?" +
+      this.state.selectVal1 +
+      "&" +
+      this.state.selectVal2 +
+      "&" +
+      this.state.selectYear +
+      "&" +
+      e.target.value
     )
       .then((response) => response.json())
       .then((json) => {
@@ -155,7 +154,12 @@ class LAKAuthorsbar extends Component {
       });
   }
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +"/lak2011")
+    {
+      //fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +"/lak2011")
+    }
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+      "getauthorsyearlist/" + this.props.conferenceName + "/lak2011")
+
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -172,8 +176,7 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      BASE_URL_CONFERENCE +
-        "getauthortopicdetails/" + this.props.conferenceName +"/?A. A. Economides&A. Ammari&all years&topic"
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "getauthortopicdetails/" + this.props.conferenceName + "/?A. A. Economides&A. Ammari&all years&topic"
     )
       .then((response) => response.json())
       .then((json) => {
@@ -280,15 +283,14 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      BASE_URL_CONFERENCE +
-        "getauthortopicdetails/" + this.props.conferenceName +"/?" +
-        this.state.selectVal1 +
-        "&" +
-        this.state.selectVal2 +
-        "&" +
-        this.state.selectYear +
-        "&" +
-        e.target.value
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "getauthortopicdetails/" + this.props.conferenceName + "/?" +
+      this.state.selectVal1 +
+      "&" +
+      this.state.selectVal2 +
+      "&" +
+      this.state.selectYear +
+      "&" +
+      e.target.value
     )
       .then((response) => response.json())
       .then((json) => {
@@ -299,7 +301,7 @@ class LAKAuthorsbar extends Component {
             { name: json.authortopics[0][i], data: json.authortopics[1][i] },
           ]);
 
-          
+
           //selectInputRef1.current.chart.publicMethods.updateOptions({})
         }
         console.log("series bab", series)
@@ -404,7 +406,7 @@ class LAKAuthorsbar extends Component {
   }
 
   selectyearValue(e) {
-    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +"/" + e.value)
+    fetch("http://127.0.0.1:8000/api/" + "getauthorsyearlist/" + this.props.conferenceName + "/" + e.value)
       .then((response) => response.json())
       .then((json) => {
         this.setState({

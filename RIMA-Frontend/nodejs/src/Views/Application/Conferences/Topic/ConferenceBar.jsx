@@ -1,7 +1,7 @@
 //Done by Swarna
 // Updated by Basem Abughallya 
-import React, {useState,useEffect } from "react";
-import {CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography} from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Chart from "chart.js";
@@ -17,7 +17,7 @@ import {
   Label,
   Button
 } from "reactstrap";
-import {chartOptions, parseOptions} from "Services/variables/charts.js";
+import { chartOptions, parseOptions } from "Services/variables/charts.js";
 import Header from "../../../components/Headers/Header.js";
 import "../../../../assets/scss/custom.css";
 import TopicBar from "../../../components/LAKForms/TopicBar";
@@ -25,8 +25,8 @@ import LAKPie from "../../../components/LAKForms/LAKPie";
 import LAKStackedAreaChart from "../../../components/LAKForms/LAKStackedAreaChart";
 import VennChart from "../../../components/LAKForms/VennChart";
 import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart";
-import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper"; 
-import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
+import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import ReactApexChart from "react-apexcharts";
 import { Link } from "react-router-dom";
 
@@ -72,15 +72,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ConferenceBar (props) {
+export default function ConferenceBar(props) {
   const [activeNav, setactiveNav] = useState(4);
   const [chartExample1Data, setchartExample1Data] = useState("data1");
   const [tooltipOpen, settooltipOpen] = useState(false);
   const [imageTooltipOpen, setimageTooltipOpen] = useState(false);
   const classes = useStyles();
   const [selectedOption, setselectedOption] = useState({ label: 'lak', value: 'lak' });
-  const [available, setavailable] = useState([{ label: 'ecctd', value: 'ecctd' },{ label: 'acisp', value: 'acisp' },{ label: 'aaecc', value: 'aaecc' },{ label: 'eann', value: 'eann' },{ label: 'lak', value: 'lak' },{ label: 'edm', value: 'edm' },{ label: 'aied', value: 'aied' },{ label: 'camsap', value: 'camsap' }]);
-  
+  const [available, setavailable] = useState([{ label: 'ecctd', value: 'ecctd' }, { label: 'acisp', value: 'acisp' }, { label: 'aaecc', value: 'aaecc' }, { label: 'eann', value: 'eann' }, { label: 'lak', value: 'lak' }, { label: 'edm', value: 'edm' }, { label: 'aied', value: 'aied' }, { label: 'camsap', value: 'camsap' }]);
+
   const [conference, setconference] = useState([]);
   const [confEvents, setconfEvents] = useState([
     {
@@ -128,7 +128,7 @@ export default function ConferenceBar (props) {
       label: "lak2021"
     }
   ],);
-    
+
   const [conferenceOtherData, setConferenceOtherData] = useState({});
   const [BarChartseries, setBarChartseries] = useState([]);
   const [BarConfEventsList, setBarConfEventsList] = useState([]);
@@ -163,15 +163,15 @@ export default function ConferenceBar (props) {
     fill: {
       opacity: 1
     },
-  
+
   },
-);
+  );
 
 
   const loading =
     <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
       <Grid item>
-        <CircularProgress/>
+        <CircularProgress />
       </Grid>
       <Grid item>
         <Typography variant="overline"> Loading data </Typography>
@@ -181,13 +181,13 @@ export default function ConferenceBar (props) {
   useEffect(() => {
     handleChange(selectedOption);
     getConferencesNames();
-    
+
   }, [])
 
-    if (window.Chart) {
-      parseOptions(Chart, chartOptions());
-    }
-  
+  if (window.Chart) {
+    parseOptions(Chart, chartOptions());
+  }
+
 
   const navigateTop = () => {
     window.scrollTo(0, 0)
@@ -196,7 +196,7 @@ export default function ConferenceBar (props) {
 
 
   //** GET ALL CONFERENCES **//
- const getConferencesNames = () => {
+  const getConferencesNames = () => {
     RestAPI.getConferencesNames()
       .then((response) => {
         setavailable(response.data);
@@ -204,66 +204,66 @@ export default function ConferenceBar (props) {
   };
 
 
-   // BAB:BEGIN 08/06/2021 :: cover other conferences.
+  // BAB:BEGIN 08/06/2021 :: cover other conferences.
   const handleChange = (selectedOption) => {
     //this.forceUpdate();
     setselectedOption(selectedOption);
     console.log("updated");
     console.log(`Option selected:`, selectedOption);
-    fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
-    .then(response => response.json())
-    .then(json => {
-      setconfEvents(json.events)
-    });
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/confEvents/${selectedOption.value}`)
+      .then(response => response.json())
+      .then(json => {
+        setconfEvents(json.events)
+      });
 
 
-    fetch(`${BASE_URL_CONFERENCE}conferenceData/${selectedOption.value}`)
-    .then(response => response.json())
-    .then(json => {
-      setConferenceOtherData(json.other_data)
-      setBarChartseries(json.series)
-      setBarConfEventsList(json.conference_events)
-      setBarOptions({
-        ...BarOptions,
-        xaxis: {
-          ...BarOptions.xaxis,
-          categories: json.conference_events
-        }
-      })
-    });
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/conferenceData/${selectedOption.value}`)
+      .then(response => response.json())
+      .then(json => {
+        setConferenceOtherData(json.other_data)
+        setBarChartseries(json.series)
+        setBarConfEventsList(json.conference_events)
+        setBarOptions({
+          ...BarOptions,
+          xaxis: {
+            ...BarOptions.xaxis,
+            categories: json.conference_events
+          }
+        })
+      });
   };
 
-  
+
   const handleSearchConferences = () => {
-    fetch(`${BASE_URL_CONFERENCE}searchConf/`)
-    .then(response => response.json())
-    .then(json => {
-      setconference(json)
-    });
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "searchConf/")
+      .then(response => response.json())
+      .then(json => {
+        setconference(json)
+      });
   };
 
- 
-    return (
-      <>
 
-            <Grid container component={Paper} className={classes.cardHeight}>     
-              <Grid item xs>
-                <Typography variant="h5" gutterBottom>
-                Topic Trends
-                </Typography>
-                <Typography className={classes.gutter}>
-                  Select a conference and let the following visualizations provide insights into
-                      trends of conference data
-                </Typography>
+  return (
+    <>
 
-                <Select
-                          placeholder="Select conference"
-                          options={available}
-                          value={selectedOption}
-                          onChange={handleChange}
-                        />
+      <Grid container component={Paper} className={classes.cardHeight}>
+        <Grid item xs>
+          <Typography variant="h5" gutterBottom>
+            Topic Trends
+          </Typography>
+          <Typography className={classes.gutter}>
+            Select a conference and let the following visualizations provide insights into
+            trends of conference data
+          </Typography>
 
-              {/** 
+          <Select
+            placeholder="Select conference"
+            options={available}
+            value={selectedOption}
+            onChange={handleChange}
+          />
+
+          {/** 
                 <Autocomplete
                   loading={loading}
                   options={conference}
@@ -280,184 +280,184 @@ export default function ConferenceBar (props) {
                     Show Trends
                 </Button> 
                 */}
-              </Grid>
-            </Grid>
+        </Grid>
+      </Grid>
 
 
-          <Grid container component={Paper} className={classes.cardHeight}>     
-              <Grid item xs>
-                <Typography variant="body2" gutterBottom>
-                  Conference Complete Name
-                </Typography>
-                <Typography variant="h5" className={classes.gutter}>
-                  {conferenceOtherData.conference_full_name}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                    dblp Conference Url
-                </Typography>
-                <Typography variant="h5" className={classes.gutter}>
-                {conferenceOtherData.conference_url}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Number of Events
-                </Typography>
-                <Typography variant="h5" className={classes.gutter}>
-                {conferenceOtherData.no_of_events}
-                </Typography> 
-                <Typography variant="body2" gutterBottom>
-                  Number of all Papers
-                </Typography>
-                <Typography variant="h5" className={classes.gutter}>
-                {conferenceOtherData.no_of_all_papers}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Number of all Authors
-                </Typography>
-                <Typography variant="h5" className={classes.gutter}>
-                {conferenceOtherData.no_of_all_authors}
-                </Typography>
+      <Grid container component={Paper} className={classes.cardHeight}>
+        <Grid item xs>
+          <Typography variant="body2" gutterBottom>
+            Conference Complete Name
+          </Typography>
+          <Typography variant="h5" className={classes.gutter}>
+            {conferenceOtherData.conference_full_name}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            dblp Conference Url
+          </Typography>
+          <Typography variant="h5" className={classes.gutter}>
+            {conferenceOtherData.conference_url}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Number of Events
+          </Typography>
+          <Typography variant="h5" className={classes.gutter}>
+            {conferenceOtherData.no_of_events}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Number of all Papers
+          </Typography>
+          <Typography variant="h5" className={classes.gutter}>
+            {conferenceOtherData.no_of_all_papers}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Number of all Authors
+          </Typography>
+          <Typography variant="h5" className={classes.gutter}>
+            {conferenceOtherData.no_of_all_authors}
+          </Typography>
 
-                <Link to={{
-                              pathname: "/app/view-author",
-                              state: {
-                                  current_conference: selectedOption.value
-                              }
-                          }}>
-                    <Button color="primary"  width = "50px">
-                    {selectedOption.value}'s Authors Dashboard
-                    </Button>
-                  </Link> 
-              </Grid>
+          <Link to={{
+            pathname: "/app/view-author",
+            state: {
+              current_conference: selectedOption.value
+            }
+          }}>
+            <Button color="primary" width="50px">
+              {selectedOption.value}'s Authors Dashboard
+            </Button>
+          </Link>
+        </Grid>
 
-              <Grid item xs>
-                <Typography variant="h5" gutterBottom>
-                  General Overview
-                </Typography>
-                <Typography className={classes.gutter}>
-                  Events General Overview of the {selectedOption.value} Conference
-                </Typography>
-                  <div id="chart">
-                    <ReactApexChart 
-                    options={BarOptions} 
-                    series={BarChartseries} type="bar" height={350} 
-                    />
-                  </div>
-                  
-              </Grid>
-            </Grid>
+        <Grid item xs>
+          <Typography variant="h5" gutterBottom>
+            General Overview
+          </Typography>
+          <Typography className={classes.gutter}>
+            Events General Overview of the {selectedOption.value} Conference
+          </Typography>
+          <div id="chart">
+            <ReactApexChart
+              options={BarOptions}
+              series={BarChartseries} type="bar" height={350}
+            />
+          </div>
 
-        {/* Page content */}
-        <Grid container component={Paper} className={classes.cardHeight}>
+        </Grid>
+      </Grid>
 
-          <Card className="bg-gradient-default1 shadow">
-            <CardHeader className="bg-transparent">
-              <Row>
-                <div className="main">
-                  <div
-                    className="row mt-4"
-                    style={{
-                      height: "800px",
-                      width: "830px",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "50px",
-                      borderRadius: "2px",
-                    }}
-                     >
-                    <Col>
-                      <WordCloud conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[0].value} />        {/*  BAB 08.06.2021 */ } 
-                     </Col>
-                     
-                  </div>
-                </div>
-                <div className="main">
+      {/* Page content */}
+      <Grid container component={Paper} className={classes.cardHeight}>
+
+        <Card className="bg-gradient-default1 shadow">
+          <CardHeader className="bg-transparent">
+            <Row>
+              <div className="main">
                 <div
-                    className="row mt-4"
-                    style={{
-                      height: "800px",
-                      width: "830px",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "50px",
-                      borderRadius: "2px",
-                    }}
-                     >
-                    <Col>
-                      <TopicBar conferenceName = {selectedOption.value} confEvents = {confEvents} confEvent = {confEvents[0].value}/>          {/*  BAB 08.06.2021 */ }
-                    </Col>
-                  </div>
-                </div>
-                <br></br>
-                <div className="main">
-                <div
-                    className="row mt-4"
-                    style={{
-                      height: "800px",
-                      width: "830px",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "50px",
-                      borderRadius: "2px",
-                    }}
-                     >
-                    <Col>
-                      <LAKPie conferenceName = {selectedOption.value}  confEvents = {confEvents}/>       {/*  BAB 08.06.2021 */ } 
-                    </Col>
-                  </div>
-                </div>
-                <br></br>
-                <div className="main">
-                <div
-                    className="row mt-4"
-                    style={{
-                      height: "800px",
-                      width: "830px",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "50px",
-                      borderRadius: "2px",
-                    }}
-                     >
-                    <Col>
-                      <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {confEvents}/>    {/*  BAB 08.06.2021 */ }
-                    </Col>
-                  </div>
-                </div>
-                <br></br>
-                <div
-                    className="row mt-4"
-                    style={{
-                      height: "800px",
-                      width: "830px",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "50px",
-                      borderRadius: "2px",
-                    }}
-                     >
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    width: "830px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
                   <Col>
-                    <LAKStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                    <WordCloud conferenceName={selectedOption.value} confEvents={confEvents} confEvent={confEvents[0].value} />        {/*  BAB 08.06.2021 */}
+                  </Col>
+
+                </div>
+              </div>
+              <div className="main">
+                <div
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    width: "830px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <TopicBar conferenceName={selectedOption.value} confEvents={confEvents} confEvent={confEvents[0].value} />          {/*  BAB 08.06.2021 */}
                   </Col>
                 </div>
-
+              </div>
+              <br></br>
+              <div className="main">
                 <div
-                    className="row mt-4"
-                    style={{
-                      height: "800px",
-                      width: "830px",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "50px",
-                      borderRadius: "2px",
-                    }}
-                     >
-                    <Col>
-                      <VennChart  conferenceName = {selectedOption.value} confEvents = {confEvents} page = 'topicbar' conferences = {conference}/>     {/*  BAB 08.06.2021 */ } 
-                    </Col>
-                  </div>
-                
-              </Row>
-            </CardHeader>
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    width: "830px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <LAKPie conferenceName={selectedOption.value} confEvents={confEvents} />       {/*  BAB 08.06.2021 */}
+                  </Col>
+                </div>
+              </div>
+              <br></br>
+              <div className="main">
+                <div
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    width: "830px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <LAKStackedBarChart conferenceName={selectedOption.value} confEvents={confEvents} />    {/*  BAB 08.06.2021 */}
+                  </Col>
+                </div>
+              </div>
+              <br></br>
+              <div
+                className="row mt-4"
+                style={{
+                  height: "800px",
+                  width: "830px",
+                  backgroundColor: "#F0F8FF",
+                  marginLeft: "50px",
+                  borderRadius: "2px",
+                }}
+              >
+                <Col>
+                  <LAKStackedAreaChart conferenceName={selectedOption.value} />   {/*  BAB 08.06.2021 */}
+                </Col>
+              </div>
 
-            <ScrollTopWrapper/>
-          </Card>
-        </Grid>
-      </>
-    );
-  }
+              <div
+                className="row mt-4"
+                style={{
+                  height: "800px",
+                  width: "830px",
+                  backgroundColor: "#F0F8FF",
+                  marginLeft: "50px",
+                  borderRadius: "2px",
+                }}
+              >
+                <Col>
+                  <VennChart conferenceName={selectedOption.value} confEvents={confEvents} page='topicbar' conferences={conference} />     {/*  BAB 08.06.2021 */}
+                </Col>
+              </div>
+
+            </Row>
+          </CardHeader>
+
+          <ScrollTopWrapper />
+        </Card>
+      </Grid>
+    </>
+  );
+}
 
 

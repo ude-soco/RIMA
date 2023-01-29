@@ -1,11 +1,11 @@
 // Start from choose conferences again!
 
 //Done by Swarna
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import "d3-transition";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -14,7 +14,7 @@ import "tippy.js/animations/scale.css";
 // Themes begin
 // Themes end
 
-import {Button, Row, Col, Label} from "reactstrap";
+import { Button, Row, Col, Label } from "reactstrap";
 
 window.$value = "";
 
@@ -41,18 +41,18 @@ class VennChart extends Component {
       selectVal: "",
       data: [],
       confEvents: [],
-      conferences:[],
+      conferences: [],
       selectValueConf1: "",
-      selectValueConf2:"",
+      selectValueConf2: "",
       items_confCompare: [],
       selectyear: "",
 
-    
+
     };
   }
 
   handleToogle = (status) => {
-    this.setState({imageTooltipOpen: status});
+    this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
   };
 
@@ -63,7 +63,7 @@ class VennChart extends Component {
       loader: true,
       display: "none",
     });
-    fetch(BASE_URL_CONFERENCE + "commontopics/topic/2011/2012")
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "commontopics/topic/lak2011/lak2012")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -78,7 +78,7 @@ class VennChart extends Component {
       });
 
 
-      fetch(`${BASE_URL_CONFERENCE}confEvents/lak`)
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "confEvents/lak")
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -86,30 +86,29 @@ class VennChart extends Component {
         })
       });
 
-    }
+  }
 
-//BAB:BEGIN::10.06.2021 
- 
+  //BAB:BEGIN::10.06.2021 
+
   selectYear = (e) => {
     this.setState({
       selectyear: e.value,
     });
   }
-    
+
 
   selectValueConf = (e, whichConf) => {
-    if(whichConf == "first"){
-    this.setState({
-      selectValueConf1: e.value,
-    });
-  }else if(whichConf == "second")
-  {
-    this.setState({
-    selectValueConf2: e.value,
-     });
-   }
+    if (whichConf == "first") {
+      this.setState({
+        selectValueConf1: e.value,
+      });
+    } else if (whichConf == "second") {
+      this.setState({
+        selectValueConf2: e.value,
+      });
+    }
   }
- //BAB:END::10.06.2021 
+  //BAB:END::10.06.2021 
 
   selectValueYear1(e) {
     this.setState({
@@ -126,8 +125,8 @@ class VennChart extends Component {
       display: "none",
     });
     fetch(
-      BASE_URL_CONFERENCE +
-      "commonkeys/keyword/"+
+      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      "commonkeys/keyword/" +
       this.state.selectVal +
       "/" +
       this.state.selectValue2
@@ -155,8 +154,8 @@ class VennChart extends Component {
       display: "none",
     });
     fetch(
-      BASE_URL_CONFERENCE +
-      "commontopics/topic/"+
+      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      "commontopics/topic/" +
       this.state.selectVal +
       "/" +
       this.state.selectValue2
@@ -199,23 +198,23 @@ class VennChart extends Component {
       selectyear,
     } = this.state;
 
-    const data =  this.props.confEvents; // BAB 09.06.2021  years/data can be passed in props with the conference name.
+    const data = this.props.confEvents; // BAB 09.06.2021  years/data can be passed in props with the conference name.
     const conferences = this.props.conferences;   // BAB 09.06.2021  years/data can be passed in props with the conference name.
     //var{items,arr_keys,arr_vals}=this.state;
     if (isLoaded && this.props.page == 'topicreasearch') {   // BAB 09.06.2021  years/data can be passed in props with the conference name.
       return (
         <>
-          <div/>
+          <div />
           {console.log(desc)}
-          <br/>
+          <br />
           <React.Fragment>
             <h2>Common topics/keywords</h2>
-            <br/>
+            <br />
             <p>
               This visualization provides common topics/keywords of two confernces for the
               selected year
             </p>
-            <br/>
+            <br />
             <Label>Select two conferences to compare</Label>
 
             <Row>
@@ -225,7 +224,7 @@ class VennChart extends Component {
                   options={conferences}
                   value={conferences.find((obj) => obj.value === selectValueConf1)}
                   //onChange={this.selectvalueConf(this,"first")}
-                  onchange = {(e) => this.selectvalueConf(e,"first")}
+                  onchange={(e) => this.selectvalueConf(e, "first")}
                 />
               </Col>
               <Col>
@@ -234,23 +233,23 @@ class VennChart extends Component {
                   options={conferences}
                   value={conferences.find((obj) => obj.value === selectValueConf2)}
                   //onChange={this.selectValueConf(this,"second")}
-                  onchange = {(e) => this.selectvalueConf(e,"second")}
+                  onchange={(e) => this.selectvalueConf(e, "second")}
 
                 />
               </Col>
             </Row>
-            <br/>
+            <br />
             <Label>Select a year</Label>
-            <div style={{width: "200px"}}>
-                <Select
-                  placeholder="Select Year"
-                  options={data}
-                  value={data.find((obj) => obj.value === selectyear)}
-                  onChange={this.selectYear}
-                />
-              </div>
+            <div style={{ width: "200px" }}>
+              <Select
+                placeholder="Select Year"
+                options={data}
+                value={data.find((obj) => obj.value === selectyear)}
+                onChange={this.selectYear}
+              />
+            </div>
 
-            <br/>
+            <br />
             <Button
               outline
               color="primary"
@@ -290,8 +289,8 @@ class VennChart extends Component {
                 <p>Info about common topics between two years of conference</p>
               </div>
             )}
-            <br/>
-            <br/>
+            <br />
+            <br />
 
             <Row>
               <div
@@ -313,10 +312,10 @@ class VennChart extends Component {
                 />
               </div>
 
-              <div style={{display: display}}>
+              <div style={{ display: display }}>
                 <img
                   src={`data:image/png;base64,${items_y1}`}
-                  style={{marginLeft: "50px"}}
+                  style={{ marginLeft: "50px" }}
                 />
               </div>
             </Row>
@@ -324,20 +323,20 @@ class VennChart extends Component {
         </>
       );
     }
-    else if (isLoaded && this.props.page == 'topicbar'){
+    else if (isLoaded && this.props.page == 'topicbar') {
 
-      return ( <>
-        <div/>
+      return (<>
+        <div />
         {console.log(desc)}
-        <br/>
+        <br />
         <React.Fragment>
           <h2>Common topics/keywords</h2>
-          <br/>
+          <br />
           <p>
             This visualization provides common topics/keywords for the
             selected year
           </p>
-          <br/>
+          <br />
           <Label>Select two years to compare</Label>
           <Row>
             <Col>
@@ -357,7 +356,7 @@ class VennChart extends Component {
               />
             </Col>
           </Row>
-          <br/>
+          <br />
           <Button
             outline
             color="primary"
@@ -397,8 +396,8 @@ class VennChart extends Component {
               <p>Info about common topics between two years of conference</p>
             </div>
           )}
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <Row>
             <div
@@ -420,23 +419,23 @@ class VennChart extends Component {
               />
             </div>
 
-            <div style={{display: display}}>
+            <div style={{ display: display }}>
               <img
                 src={`data:image/png;base64,${items_y1}`}
-                style={{marginLeft: "50px"}}
+                style={{ marginLeft: "50px" }}
               />
             </div>
           </Row>
         </React.Fragment>
       </>
       );
-      
-    } 
-    
+
+    }
+
     else {
-      return ( 
+      return (
         <>
-        {/*
+          {/*
           <h2>hi</h2>
           <br/>
           <p>
@@ -527,9 +526,9 @@ class VennChart extends Component {
           </div>
           */ }
         </>
-     );
-          
-         }
+      );
+
+    }
   }
 }
 

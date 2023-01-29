@@ -1,4 +1,4 @@
-#Done by Swarna
+# Done by Swarna
 import json
 import urllib.parse as up
 import psycopg2
@@ -33,12 +33,12 @@ def getData():
         lak_records = cursor.fetchall()
         #sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
         data_lak = pd.read_sql(postgreSQL_select_Query, conn)
-    #for val in mobile_records:
-    #print(val)
+    # for val in mobile_records:
+    # print(val)
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if (conn):
             cursor.close()
             conn.close()
@@ -52,7 +52,7 @@ def createConcatenatedColumn(year):
     lak_df = lak_df.query("year=='" + str(year).strip() + "'")
     lak_df['title_and_abstract'] = lak_df['title'] + " " + lak_df['abstract']
     abstract_list = lak_df['title_and_abstract'].tolist()
-    #abstract_list_year=lak_df.query()
+    # abstract_list_year=lak_df.query()
     return abstract_list
 
 
@@ -89,7 +89,7 @@ def fetchAllTopics(yearList, algorithm):
         except (Exception, psycopg2.Error) as error:
             print("Error while fetching data from PostgreSQL", error)
         finally:
-            #closing database connection.
+            # closing database connection.
             if (conn):
                 cursor.close()
                 conn.close()
@@ -135,7 +135,7 @@ def fetchTopics(algorithm):
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if (conn):
             cursor.close()
             conn.close()
@@ -187,7 +187,7 @@ def fetchAbstracts_author():
                                 port=url.port)
         cursor = conn.cursor()
         l_abstracts = []
-        #254
+        # 254
         i = 0
         for val in author_list:
             postgreSQL_select_Query = "select title,abstract,year from LAKData where authorids like '%" + val + "%'"
@@ -205,7 +205,7 @@ def fetchAbstracts_author():
                                                       index:]
             val_id_data = requests.get(
                 f"https://api.semanticscholar.org/v1/author/{val}").json()
-            #print(val_id_data)
+            # print(val_id_data)
             val_id = val_id_data['name']
             conference = "LAK"
             if "'" in val_id:
@@ -232,7 +232,7 @@ def fetchAbstracts_author():
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if (conn):
             cursor.close()
             conn.close()
@@ -241,7 +241,7 @@ def fetchAbstracts_author():
 
 
 def updateAllTopics():
-    algorithm = "Yake"
+    algorithm = "SifRank"
     fetchTopics(algorithm)
 
 

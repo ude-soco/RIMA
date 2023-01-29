@@ -1,7 +1,7 @@
 //Done by Swarna
-import React, {Component} from "react";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
-import {Graph} from "react-d3-graph";
+import React, { Component } from "react";
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { Graph } from "react-d3-graph";
 import {
   Label,
   Modal,
@@ -103,7 +103,7 @@ class AuthorNetwork extends Component {
   onClickNode(nodeId) {
     // window.alert(`Clicked node ${nodeId}`);
     fetch(
-      BASE_URL_CONFERENCE +
+      `${BASE_URL_CONFERENCE}/api/conferences/` +
       "getallauthorslist/" +
       nodeId +
       "/" +
@@ -158,14 +158,16 @@ class AuthorNetwork extends Component {
   }
 
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "getalltopics/topic/lak2011")
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+      "getalltopics/topic/lak2011")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
           keywords: json.keywords.sort((a, b) => (a.label > b.label ? 1 : -1)),
         });
       });
-    fetch(BASE_URL_CONFERENCE + "getalltitles/Learning/2011")
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+      "getalltitles/Learning/2011")
       .then((response) => response.json())
       .then((json) => {
         this.state.graphData = [];
@@ -187,7 +189,8 @@ class AuthorNetwork extends Component {
   }
 
   selectTopic(e) {
-    fetch(BASE_URL_CONFERENCE + "getalltopics/topic/" + this.state.selectYear)
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+      "getalltopics/topic/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -200,7 +203,8 @@ class AuthorNetwork extends Component {
   }
 
   selectKeyword(e) {
-    fetch(BASE_URL_CONFERENCE + "getallkeywords/keyword/" + this.state.selectYear)
+    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+      "getallkeywords/keyword/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -214,7 +218,7 @@ class AuthorNetwork extends Component {
 
   selectValue(e) {
     fetch(
-      BASE_URL_CONFERENCE +
+      `${BASE_URL_CONFERENCE}/api/conferences/` +
       "getalltitles/" +
       e.value +
       "/" +
@@ -248,13 +252,13 @@ class AuthorNetwork extends Component {
     swal(
       <div>
         <p>Click on researcher to view the details</p>
-        <br/>
+        <br />
         <p>Hover on the researcher to highlight the connections</p>
       </div>
     );
   };
   handleToogle = (status) => {
-    this.setState({imageTooltipOpen: status});
+    this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
   };
 
@@ -299,18 +303,18 @@ class AuthorNetwork extends Component {
             borderRadius: "2px",
           }}
         >
-          <div style={{marginLeft: "30px"}}>
+          <div style={{ marginLeft: "30px" }}>
             <h3> Researcher collaboration network</h3>
-            <br/>
+            <br />
             <p>
               This visualization displays the collaboration of researchers for
               the selected year related to a specific topic/keyword
             </p>
             <Form>
               <FormGroup>
-                <br/>
+                <br />
                 <Label>Select a year</Label>
-                <div style={{width: "200px"}}>
+                <div style={{ width: "200px" }}>
                   <Select
                     placeholder="Select Option"
                     options={yeardata}
@@ -318,7 +322,7 @@ class AuthorNetwork extends Component {
                     onChange={this.selectyearValue}
                   />
                 </div>
-                <br/>
+                <br />
                 <Button
                   outline
                   color="primary"
@@ -358,10 +362,10 @@ class AuthorNetwork extends Component {
                     <li> Click on researcher to view the details</li>
                   </div>
                 )}
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <Label>Select a topic/keyword</Label>
-                <div style={{width: "200px"}}>
+                <div style={{ width: "200px" }}>
                   <Select
                     placeholder="Select Option"
                     options={keywords}
@@ -369,27 +373,27 @@ class AuthorNetwork extends Component {
                     onChange={this.selectValue}
                   />
                 </div>
-                <br/>
+                <br />
               </FormGroup>
             </Form>
             <Row>
               <Col>
-                <div/>
+                <div />
                 <Button color="primary" onClick={this.setZoomIn}>
                   {" "}
-                  <i className="fas fa-search-plus text-white"/>
+                  <i className="fas fa-search-plus text-white" />
                 </Button>
                 <Button color="primary" onClick={this.setZoomOut}>
                   {" "}
-                  <i className="fas fa-search-minus text-white"/>
+                  <i className="fas fa-search-minus text-white" />
                 </Button>
                 <Button color="primary" onClick={this.cancelZoom}>
                   {" "}
-                  <i className="fas fa-home text-white"/>
+                  <i className="fas fa-home text-white" />
                 </Button>
               </Col>
               <Col>
-                <div style={{marginRight: "15px", display: "none"}}>
+                <div style={{ marginRight: "15px", display: "none" }}>
                   <InputGroup>
                     <Input
                       id="searchkey"
@@ -401,7 +405,7 @@ class AuthorNetwork extends Component {
                         onClick={this.findText}
                         onKeyDown={this.handleKeyDown}
                       >
-                        <i className="fas fa-search text-white"/>
+                        <i className="fas fa-search text-white" />
                       </Button>
                     </InputGroupAddon>
                   </InputGroup>
@@ -446,8 +450,8 @@ class AuthorNetwork extends Component {
                 <b>
                   {count} Publication(s) related to the topic '{nodeval}'
                 </b>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 {papers.map((item, index) => {
                   const author = authors[index];
                   const alist = author.split(",");
@@ -457,7 +461,7 @@ class AuthorNetwork extends Component {
                   const idlistlen = idlist.length;
                   const title = titles[index];
                   return (
-                    <li style={{whiteSpace: "unset"}}>
+                    <li style={{ whiteSpace: "unset" }}>
                       <a
                         href={item}
                         title="click to view paper in semantic scholar"
@@ -465,7 +469,7 @@ class AuthorNetwork extends Component {
                       >
                         {title}
                       </a>
-                      <br/>
+                      <br />
                       <p>
                         <b>Researchers:</b>
                         {alist.map((item, index) => {
@@ -492,14 +496,14 @@ class AuthorNetwork extends Component {
             <ModalFooter>
               <Col>
                 <Button color="info">
-                  <a href={url} target="_blank" style={{color: "white"}}>
+                  <a href={url} target="_blank" style={{ color: "white" }}>
                     Researcher Profile in semantic scholar
                   </a>
                 </Button>
               </Col>
-              <Col/>
-              <Col/>
-              <Col/>
+              <Col />
+              <Col />
+              <Col />
               <Col>
                 <Button onClick={this.toggle}>Close</Button>
               </Col>{" "}
@@ -519,9 +523,9 @@ class AuthorNetwork extends Component {
               borderRadius: "2px",
             }}
           >
-            <div style={{marginLeft: "30px"}}>
+            <div style={{ marginLeft: "30px" }}>
               <h3>Researcher collaboration network</h3>
-              <br/>
+              <br />
               <p>
                 This visualization displays the collaboration of researchers for
                 the selected year related to a specific topic/keyword
@@ -530,8 +534,8 @@ class AuthorNetwork extends Component {
               <Form>
                 <FormGroup>
                   <Label>Select a year</Label>
-                  <br/>
-                  <div style={{width: "200px"}}>
+                  <br />
+                  <div style={{ width: "200px" }}>
                     <Select
                       placeholder="Select Option"
                       options={yeardata}
@@ -540,7 +544,7 @@ class AuthorNetwork extends Component {
                     />
                   </div>
 
-                  <br/>
+                  <br />
                   <Button
                     outline
                     color="primary"
@@ -557,11 +561,11 @@ class AuthorNetwork extends Component {
                   >
                     Keyword
                   </Button>
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
                   <Label>Select a topic/keyword</Label>
-                  <br/>
-                  <div style={{width: "200px"}}>
+                  <br />
+                  <div style={{ width: "200px" }}>
                     <Select
                       placeholder="Select Option"
                       options={keywords}
