@@ -41,7 +41,7 @@ jobs:
           type=ref,event=branch
           type=ref,event=pr
     - name: Build and push container image
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v4
       with:
         context:    ${{ env.CONTEXT }}
         tags:       ${{ steps.meta.outputs.tags }}
