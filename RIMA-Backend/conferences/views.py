@@ -11,6 +11,7 @@ from .DataExtractor import ConferenceDataCollector as dataCollector
 from . import ConferenceUtils as confutils
 import datetime
 import json
+from . import tests
 from collections import OrderedDict
 from django.urls import conf, reverse
 from django.http.response import HttpResponse
@@ -66,7 +67,7 @@ from rest_framework.generics import (ListCreateAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .ConferenceUtilsCql import (DeleteConference, GetConferences, GetEventAuthors, GetEventData, GetConferenceEvents, GetEventPapers, UpdateConferenceEvent, CreateAuthor,
+from .ConferenceUtilsCql import (DeleteConference, GetAuthorsOfPaper, GetConferences, GetEventAuthors, GetEventData, GetConferenceEvents, GetEventPapers, UpdateConferenceEvent, CreateAuthor,
                                  CreateConference, CreateEvent, Create_has_event, CreateAuthor, CreatePaper, Author_has_paper, Conference_has_paper, Event_has_paper, Event_has_author)
 
 from .models import Platform, Conference, Conference_Event, PreloadedConferenceList, Conference_Event_Paper, Author, Author_has_Papers
@@ -77,6 +78,7 @@ from matplotlib import pyplot as plt
 import matplotlib
 from collections import defaultdict
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, RobustScaler
+import time
 matplotlib.use("SVG")
 
 
@@ -86,12 +88,23 @@ class conferenceGeneralDataView(APIView):
         conference_name_abbr = url_splits[-1]
         result_data = confutils.get_conference_general_data(
             conference_name_abbr)
-        print("conferenceGeneralDataView:", result_data)
+        # tests.TimeComplexity(conferenceGeneralDataView)
+        # print("conferenceGeneralDataView:", result_data)
         return Response(result_data)
+
+
+class testGeneralDataView(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        conference_name_abbr = url_splits[-1]
+        time = tests.TimeComplexity(
+            confutils.testconference)
+        return Response(time)
 
 
 class conferencesNamesView(APIView):
     def get(self, request, *args, **kwargs):
+
         models_data = []
         result_data = []
 
@@ -129,7 +142,6 @@ class conferencesSharedWordsView(ListCreateAPIView):
                 'value': word,
                 'label': word,
             })
-
         return Response({'words': result_data})
 
 
@@ -238,6 +250,22 @@ class conferenceDeleteView(APIView):
         # confutils.delete_conference_data(conference_name_abbr)
         session.execute_write(DeleteConference, conference_name_abbr)
         session.close()
+        return Response({})
+
+
+class conferenceDeleteView1(APIView):
+    serializer_class = ConferenceSerializer
+
+    def delete(self, request, pk):
+        # session = graphDB_Driver.session()
+
+        print(pk)
+        conference_name_abbr = pk
+        print(pk)
+        confutils.delete_conference_data(conference_name_abbr)
+        # session.execute_write(DeleteConference, conference_name_abbr)
+        # session.close()
+        tests.TimeComplexity()
         return Response({})
 
 
@@ -362,12 +390,12 @@ class ConferenceEventsView(ListCreateAPIView):
         #     conference_event_obj.no_of_stored_papers = conference_event_obj.conference_event_papers.all().count()
         conference_events_objs = session.execute_read(
             GetConferenceEvents, topics_split[-1])
-        print("****************", conference_events_objs)
+        # print("****************", conference_events_objs)
         for x in range(len(conference_events_objs)):
-            print("******", x)
+            # print("******", x)
             c = session.execute_read(
                 GetEventPapers, conference_events_objs[x].get('conference_event_name_abbr'))
-            print("@@@@@@", c)
+            # print("@@@@@@", c)
             session.execute_write(UpdateConferenceEvent, conference_events_objs[x].get('conference_event_name_abbr'),
                                   'no_of_stored_papers', len(c))
             info = {
@@ -379,11 +407,11 @@ class ConferenceEventsView(ListCreateAPIView):
             data.append(info)
 
         # print(type(conference_events_objs), "*************")
-        conference_events_objs = session.execute_read(
-            GetConferenceEvents, topics_split[-1])
+        # conference_events_objs = session.execute_read(
+        #     GetConferenceEvents, topics_split[-1])
         # conference_events_objs = json.dumps(
         #     GetConferenceEvents2('lak2012').data())
-        print(data, "********sdasdas*****")
+        # print(data, "********sdasdas*****")
         session.close()
         # print(type(conference_events_objs[0][0]), "********sdasdas*****")
 
@@ -667,11 +695,11 @@ class TopicPieView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         keyword_or_topic = url_splits[-3]
-        print('keyword_or_topic:', keyword_or_topic)
+        # print('keyword_or_topic:', keyword_or_topic)
         number = url_splits[-2]
-        print("number:", number)
+        # print("number:", number)
         conference_event_name_abbr = url_splits[-1]
-        print('conference_event_name_abbr', conference_event_name_abbr)
+        # print('conference_event_name_abbr', conference_event_name_abbr)
         list_words = []
         list_weights = []
 
@@ -692,13 +720,12 @@ class TopicPieView(APIView):
         elif number == '10':
             reduced_models_data = models_data[:10]
 
-        print("reduced_models_data:", reduced_models_data)
+        # print("reduced_models_data:", reduced_models_data)
 
         for model_data in reduced_models_data:
-            print(model_data[keyword_or_topic])
+            # print(model_data[keyword_or_topic])
             result_dict['words'].append(model_data.get(keyword_or_topic))
             result_dict['weights'].append(model_data.get('weight'))
-
         return Response(result_dict)
 
 
@@ -1291,7 +1318,7 @@ class SearchKeywordView(APIView):
         keyword_or_ropic = ""
         word = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
-
+        session = graphDB_Driver.session()
         models_data = confutils.get_abstract_based_on_keyword(
             conference_event_name_abbr, word)
         if not models_data:
@@ -1307,12 +1334,14 @@ class SearchKeywordView(APIView):
                 {"titles": result_data})
         else:
             for data in models_data:
-                authors_ids = Author_has_Papers.objects.filter(
-                    paper_id_id=data['paper_id'])
+                authors_ids = session.excute_read(
+                    GetAuthorsOfPaper, data['paper_id'])
+                # authors_ids = Author_has_Papers.objects.filter(
+                #     paper_id_id=data['paper_id'])
                 for author_id in authors_ids:
-                    author_obj = Author.objects.get(
-                        semantic_scolar_author_id=author_id.author_id_id)
-                    paper_authors.append(author_obj.author_name)
+                    # author_obj = Author.objects.get(
+                    #     semantic_scolar_author_id=author_id.author_id_id)
+                    paper_authors.append(author_id.get('author_name'))
 
                 if len(paper_authors) > 1:
                     authors_pairs_list = combinations(paper_authors, 2)
@@ -1620,3 +1649,7 @@ class AuthorConfComparisonData(APIView):
             "vals":
             compareLAKwithAuthortopics(topics_split[-2], topics_split[-1])
         })
+
+
+if __name__ == "__main__":
+    conferenceDeleteView()

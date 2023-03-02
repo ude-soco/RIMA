@@ -17,6 +17,7 @@ urlpatterns = [
     
 
     path('getSharedWordsBar/<pk1>/<pk2>/', views.conferencesSharedWordsBarView.as_view()),
+    path('conferencetest/<pk1>', views.testGeneralDataView.as_view()), 
 
     path('conferenceData/<pk1>', views.conferenceGeneralDataView.as_view()), 
     #TimeLine

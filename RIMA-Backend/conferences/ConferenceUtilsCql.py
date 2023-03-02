@@ -218,10 +218,8 @@ def GetEventTopicWeight(tx, conference_event_name_abbr, topic):
 
 
 def GetEventTopic(tx, conference_event_name_abbr):
-    print("eeeeeeeeeeeeee")
     result = tx.run("MATCH (e:Event{conference_event_name_abbr:$conference_event_name_abbr})-[r:has_topic]->(t:Topic) RETURN e.conference_event_name_abbr AS conference_event_name_abbr,t.topic AS topic,t.algorithm AS algorithm,r.weight AS weight",
                     conference_event_name_abbr=conference_event_name_abbr)
-    print("ccccccccccccc")
     values = [record for record in result]
 
     return values
@@ -246,6 +244,14 @@ def GetTopic(tx, topics):
 def GetAuthorPapers(tx, authorID):
     result = tx.run("MATCH (a:Author{semantic_scolar_author_id:$authorID})-[published]->(p:Publication) RETURN p.abstract AS abstract,p.citiations AS citiations,p.paper_doi AS paper_doi,p.paper_id AS paper_id,p.paper_venu AS paper_venu,p.title AS title,p.urls AS urls,p.years AS years",
                     authorID=authorID)
+    values = [record for record in result]
+
+    return values
+
+
+def GetAuthorsOfPaper(tx, paperID):
+    result = tx.run("MATCH (a:Author)-[published]->(p:Publication{paper_id:$paperID}) RETURN a.aliases AS aliases,a.all_papers AS all_papers,a.author_name AS author_name,a.author_url AS author_url,a.influentialCitationCount AS influentialCitationCount,a.semantic_scolar_author_id AS semantic_scolar_author_id,p.abstract AS abstract,p.citiations AS citiations,p.paper_doi AS paper_doi,p.paper_id AS paper_id,p.paper_venu AS paper_venu,p.title AS title,p.urls AS urls,p.years AS years",
+                    paperID=paperID)
     values = [record for record in result]
 
     return values
@@ -296,14 +302,7 @@ def CreatePublication_has_topic(tx, paper_id, topic, weight):
 
 
 def DeleteConference(tx, conference_name_abbr):
-    # tx.run(
-    #     "MATCH (c:Conference{conference_name_abbr:$conference_name_abbr})-[:has_event]->(e:Event)-[:has_author]->(a:Author)-[:published]->(p:Publication)-[:has_topic]->(t:Topic) RETURN c,e,t,a,p", conference_name_abbr=conference_name_abbr)
-    # tx.run("MATCH (c:Conference{conference_name_abbr:$conference_name_abbr})-[:has_event]->(e:Event)"
-    #        "OPTIONAL MATCH (e)-[:has_author]->(a:Author)"
-    #        "OPTIONAL MATCH (a)-[:published]->(p:Publication)"
-    #        "OPTIONAL MATCH (p)-[:has_topic]->(t:Topic)"
-    #        "OPTIONAL MATCH (p)-[:has_keyword]->(k:Keyword)"
-    #        "Detach Delete k,t,p,a,e,c", conference_name_abbr=conference_name_abbr)
+
     tx.run("MATCH (c:Conference{conference_name_abbr:$conference_name_abbr})-[:has_author]->(a:Author)"
            "Detach Delete a", conference_name_abbr=conference_name_abbr)
     tx.run("MATCH (c:Conference{conference_name_abbr:$conference_name_abbr})-[:has_publication]->(p:Publication)"
@@ -312,27 +311,4 @@ def DeleteConference(tx, conference_name_abbr):
            "Detach Delete e", conference_name_abbr=conference_name_abbr)
     tx.run("MATCH (c:Conference{conference_name_abbr:$conference_name_abbr})"
            "Detach Delete c", conference_name_abbr=conference_name_abbr)
-    # "OPTIONAL MATCH (p)-[:has_topic]->(t:Topic)"
-    #        "OPTIONAL MATCH (p)-[:has_keyword]->(k:Keyword)"
     tx.run("MATCH (n) WHERE NOT (n)--() delete (n)")  # double check
-
-# def node_to_json(neo4j_node):
-
-
-#     '''
-#     Convert a neo4j node object into json/dict
-#     :param neo4j_node:
-#     :return: node in json/dict format
-#     '''
-
-#     json_version = {}
-#     for items in neo4j_node.values():
-#         json_version[items[0]] = items[1]
-
-#     return json_version
-
-
-# def GetConferenceEvents2(conference_name_abbr):
-#     result = "MATCH (c:Conference)-[:has_event]->(e:Event) WHERE c.conference_name_abbr='lak' RETURN e "
-
-#     return session.run(result)
