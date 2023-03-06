@@ -39,7 +39,7 @@ class DBpediaSpotlight:
             for key, value in keyphrases.items():
                 params = {"text": key}
                 headers = {"Accept": "application/json"}
-                r = requests.get(self.url, headers=headers,
+                r = requests.get(self.url, headers=headers, verify=False,
                                  params=params).json()
 
                 if 'Resources' in r:
