@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.5
 FROM python:3.7-slim
 
 ENV DEBIAN_FRONTEND noninteractive
