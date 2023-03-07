@@ -3,8 +3,10 @@ FROM python:3.7-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
-apt-get update -q && apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 \
-    build-essential libpq-dev default-libmysqlclient-dev nginx curl wget &&
+apt-get update -q &&
+apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 \
+    build-essential libpq-dev default-libmysqlclient-dev nginx curl wget \
+    libblas3 liblapack3 liblapack-dev libblas-dev libatlas-base-dev &&
 rm -rf /var/lib/apt/lists/*
 EOF
 
