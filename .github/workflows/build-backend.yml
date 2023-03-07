@@ -8,7 +8,7 @@ env:
 on:
   push:
     tags: ['v*']
-    branches: ['master', 'dev-*', 'dev/*']
+    branches: ['master', 'dev-*', 'dev/*', 'development']
     paths:
     - '.github/workflows/build-backend.yml'
     - 'RIMA-Backend/**'
