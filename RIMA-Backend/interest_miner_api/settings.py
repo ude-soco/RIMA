@@ -191,10 +191,8 @@ else:
 
 if not twitter_configuration["twitter_api_key"]:
     TWITTER_CONSUMER_KEY = os.environ.get("TWITTER_CONSUMER_KEY")
-    print("taking from env", TWITTER_CONSUMER_KEY)
 else:
     TWITTER_CONSUMER_KEY = twitter_configuration["twitter_api_key"]
-    print("taking from config", TWITTER_CONSUMER_KEY)
 
 if not twitter_configuration["twitter_api_secret_key"]:
     TWITTER_CONSUMER_SECRET = os.environ.get("TWITTER_CONSUMER_SECRET")
