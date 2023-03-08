@@ -231,6 +231,7 @@ zipp = "==3.8.0"
 "zope.interface" = "==5.4.0"
 selenium = "*"
 neo4j = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

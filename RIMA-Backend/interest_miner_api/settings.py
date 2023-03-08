@@ -8,10 +8,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from os.path import exists
 import json
 import logging.config
 from django.core.management.utils import get_random_secret_key
 import yaml
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,9 +23,14 @@ with open(os.path.join(BASE_DIR, "config", 'config.yaml'), 'r') as file:
     configuration = file.read()
 configuration = yaml.safe_load(configuration)
 
-with open(os.path.join(BASE_DIR, "config", 'twitter_config.yaml'), 'r') as file:
-    twitter_configuration = file.read()
-twitter_configuration = yaml.safe_load(twitter_configuration)
+if exists(os.path.join(BASE_DIR, "config", 'twitter_config.yaml')):
+    with open(os.path.join(BASE_DIR, "config", 'twitter_config.yaml'), 'r') as file:
+        twitter_configuration = file.read()
+    twitter_configuration = yaml.safe_load(twitter_configuration)
+else:
+    with open(os.path.join(BASE_DIR, "config", 'rename_twitter_config.yaml'), 'r') as file:
+        twitter_configuration = file.read()
+    twitter_configuration = yaml.safe_load(twitter_configuration)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -183,8 +191,10 @@ else:
 
 if not twitter_configuration["twitter_api_key"]:
     TWITTER_CONSUMER_KEY = os.environ.get("TWITTER_CONSUMER_KEY")
+    print("taking from env", TWITTER_CONSUMER_KEY)
 else:
     TWITTER_CONSUMER_KEY = twitter_configuration["twitter_api_key"]
+    print("taking from config", TWITTER_CONSUMER_KEY)
 
 if not twitter_configuration["twitter_api_secret_key"]:
     TWITTER_CONSUMER_SECRET = os.environ.get("TWITTER_CONSUMER_SECRET")
