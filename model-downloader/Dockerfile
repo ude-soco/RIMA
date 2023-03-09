@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.5
 FROM python:3.10.6-slim
 
 RUN <<EOF
