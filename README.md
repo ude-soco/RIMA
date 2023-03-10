@@ -36,6 +36,12 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
        pipenv install
        ```
 
+      - Activate the virtual environment
+
+        ```
+        pipenv shell
+        ```
+
    - Download the spacy package
 
      ```
@@ -85,7 +91,7 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
     - Activate the virtual environment
 
       ```
-      .\venv\Scripts\activate
+      pipenv shell
       ```
 
     - Start the celery workers and do not close the command prompt
