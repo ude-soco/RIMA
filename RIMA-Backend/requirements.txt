@@ -59,7 +59,7 @@ sklearn==0.0
 spacy>=2.0.0,<3.0.0
 sqlparse==0.4.3
 srsly==1.0.6
-thinc==7.4.1
+thinc==7.4.6
 tqdm==4.45.0
 tweepy==3.10.0
 urllib3==1.25.8
