@@ -1,15 +1,21 @@
 help:
-	@cat $(MAKEFILE_LIST) | docker run --rm -i xanders/make-help
-
-# Clean, rebuild and run
-all: clean build run
+	@cat $(MAKEFILE_LIST) | docker run --rm -i --platform linux/amd64 xanders/make-help
 
 ##
-## Run the application locally
+## Run application processes locally
+##
+
+# :TODO:
+
+##
+## Run container images locally
 ##
 
 compose = docker compose -f docker-compose.yml
 compose-dev = docker compose -f docker-compose.yml -f docker-compose-dev.yml
+
+# Clean, rebuild and run
+all: clean build run
 
 # Start all services for development
 dev:
@@ -28,6 +34,10 @@ run: stop
 start: run
 up: run
 
+# Download all required data using Model Downloader
+model:
+	@$(compose) run model-downloader
+
 # Stop all services
 stop:
 	@$(compose) down
@@ -41,14 +51,6 @@ clean:
 # Remove services, volumes, and all images
 cleanall:
 	@$(compose) down --volumes --remove-orphans --rmi all
-
-# Download all required data using Model Downloader
-model:
-	@$(compose) run model-downloader
-
-##
-## Build container images locally
-##
 
 # Build all container images
 build:
@@ -70,4 +72,4 @@ k8s-dev:
 k8s-prod:
 	@kubectl apply --wait -k .k8s/prod
 
-.PHONY: help all dev tilt run start up stop down clean cleanall model build push k8s-dev k8s-prod
+.PHONY: help all dev tilt run start up model stop down clean cleanall build push k8s-dev k8s-prod
