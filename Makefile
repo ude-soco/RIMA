@@ -11,7 +11,7 @@ help:
 ## Run container images locally
 ##
 
-compose = docker compose -f docker-compose.yml
+compose     = docker compose -f docker-compose.yml
 compose-dev = docker compose -f docker-compose.yml -f docker-compose-dev.yml
 
 # Clean, rebuild and run
