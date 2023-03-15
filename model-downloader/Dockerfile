@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.5
-FROM python:3.10.6-slim
+FROM python:3.11-slim
 
 RUN <<EOF
 set -eux
