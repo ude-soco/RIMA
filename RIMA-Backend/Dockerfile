@@ -20,11 +20,7 @@ WORKDIR /home/app
 ENV  PYTHONUNBUFFERED 1
 ENV  PATH "$PATH:/home/app/.local/bin"
 COPY --chown=app:app requirements.txt requirements.txt
-RUN  <<EOF
-pip install --no-color --quiet --no-cache-dir --user -r requirements.txt &&
-python -m spacy download en &&
-python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
-EOF
+RUN --mount=type=cache,target=/home/app/.cache/pip,uid=1000 pip install --no-color --user -r requirements.txt
 
 USER root
 RUN apt-get purge -y --auto-remove \
