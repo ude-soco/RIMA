@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.5
-FROM python:3.7-slim
+FROM --platform=linux/amd64 python:3.7-slim AS python
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
