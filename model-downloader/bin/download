@@ -19,12 +19,12 @@ else
 fi
 
 # ENV LDA_MODEL_FILE=keyword_extractor/lda-1000-semeval2010.py3.pickle.gz
-# :TODO: Find out where this originally came from and download from there
-if [ -d "${MODEL_DIR}/keyword_extractor/" ]; then
-  echo "${MODEL_DIR}/keyword_extractor/ already present"
+if [ -f "${MODEL_DIR}/${LDA_MODEL_FILE}" ]; then
+  echo "${MODEL_DIR}/${LDA_MODEL_FILE} already present"
 else
-  echo "${MODEL_DIR}/keyword_extractor/ missing; copying now ..."
-  cp -rf ./data/* ${MODEL_DIR}/
+  echo "${MODEL_DIR}/${LDA_MODEL_FILE} missing; downloading now ..."
+  wget --continue -O "${TEMP_DIR}/lda.gz" ${LDA_MODEL_URL}
+  mkdir -p `dirname ${MODEL_DIR}/${LDA_MODEL_FILE}` && mv -f "${TEMP_DIR}/lda.gz" ${MODEL_DIR}/${LDA_MODEL_FILE}
 fi
 
 touch "${MODEL_DIR}/.done"
