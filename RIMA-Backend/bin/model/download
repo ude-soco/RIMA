@@ -15,5 +15,3 @@ fi
 echo "Model files available:"
 find ${MODEL_DIR} -type f
 
-echo "Download spaCy data ..."
-python -m spacy download en
