@@ -1,19 +1,21 @@
 # syntax=docker/dockerfile:1.5
 FROM python:3.11-slim
 
-RUN <<EOF
-set -eux
-apt-get update
-apt-get install -yq --no-install-recommends make wget unzip
-rm -rf /var/lib/apt/lists/*
-EOF
+ENV APT_PACKAGES "make wget unzip"
+RUN --mount=type=cache,target=/var/cache/apt,rw \
+    --mount=type=cache,target=/var/lib/apt,rw \
+    apt-get update -q && \
+    apt-get install -qq --no-install-recommends $APT_PACKAGES
 
 RUN adduser --disabled-login --gecos "" -u 101 app
 USER 101
 WORKDIR /home/app
 
+ENV  PYTHONUNBUFFERED 1
 ENV  PATH "$PATH:/home/app/.local/bin"
-RUN  pip install --no-color --quiet --no-cache-dir --user gdown
+COPY Pipfile* .
+RUN  pip install --no-color --quiet --no-cache-dir --user pipenv && \
+     pipenv install --system --deploy
 
 COPY --link --chown=101 . ./
 
