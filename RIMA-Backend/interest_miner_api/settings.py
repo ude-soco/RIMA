@@ -202,5 +202,12 @@ if os.environ.get("GLOVE_MODEL_FILE"):
 else:
     GLOVE_MODEL_FILE_PATH = None
 
+if not os.environ.get("NLTK_DATA"):
+    if os.environ.get("NLTK_MODEL_DIR"):
+        os.environ["NLTK_DATA"] = os.path.join(
+            MODEL_DIR,
+            os.environ.get("NLTK_MODEL_DIR")
+        )
+
 if PRELOAD_MODELS:
     from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model

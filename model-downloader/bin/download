@@ -27,4 +27,8 @@ else
   mkdir -p `dirname ${MODEL_DIR}/${LDA_MODEL_FILE}` && mv -f "${TEMP_DIR}/lda.gz" ${MODEL_DIR}/${LDA_MODEL_FILE}
 fi
 
+# ENV NLTK_MODEL_DIR=nltk
+echo "Downloading ${MODEL_DIR}/${NLTK_MODEL_DIR} now ..."
+python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
+
 touch "${MODEL_DIR}/.done"
