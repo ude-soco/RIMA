@@ -6,6 +6,7 @@
 A transparent Recommendation and Interest Modeling Application. Developed by Social Computer Group at the University of Duisburg-Essen
 
 ## Installation
+
 ### Manual Installation Guide
 
 #### Step 1: Installation Guide for RIMA-Backend
@@ -20,7 +21,7 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
    - Move to the directory `RIMA-Backend` in your command prompt
 
-   - Type the following commands and do not close the command prompt after executing the fourth command:
+   - Type the following commands to install and activate the virtual environment:
 
      - Install python virtual environment
 
@@ -36,11 +37,17 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
        pipenv install
        ```
 
-      - Activate the virtual environment
+     - Activate the virtual environment
 
-        ```
-        pipenv shell
-        ```
+       ```
+       pipenv shell
+       ```
+
+       (Optional) To check the location of your virtual environment, type the following command in your command prompt
+
+       ```
+       pipenv --venv
+       ```
 
    - Download the spacy package
 
@@ -56,7 +63,7 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 4. Using your file explorer, go inside the directory `RIMA-Backend\config`, copy the twitter config file `rename_twitter_config.yaml` and paste it in the same folder. Rename the copied twitter config file to `twitter_config.yaml`
 
-    - (Optional) Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
+   - (Optional) Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
 
 5. Install [Visual Studio Community 2017](https://visualstudio.microsoft.com/de/thank-you-downloading-visual-studio/?sku=Community&rel=15). Make sure to install the package `Desktop development with C++`. Set `VCINSTALLER` system variable to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC` ([Read more](https://stackoverflow.com/questions/57541402/node-gyp-configure-got-gyp-err-find-vs/70799513#70799513)). For Linux users, check [GCC Installation guide for Linux](https://linuxize.com/post/how-to-install-gcc-compiler-on-ubuntu-18-04/)
 
@@ -100,7 +107,33 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
       celery worker --app=interest_miner_api -l info -P eventlet
       ```
 
-### 🐳 Docker Installation Guide
+#### Step 2: Installation Guide for RIMA-Frontend
+
+1. Download Node.js (v12.13.0) from [the official website](https://nodejs.org/en/blog/release/v12.13.0)
+
+2. Using your file explorer, go inside the directory `RIMA-Frontend/nodejs`, copy the `example.env` file and paste it in the same folder. Rename the copied environment file to `.env`
+
+3. Open a command prompt/terminal in the `RIMA-Frontend/nodejs` directory
+
+4. Type the command in the command prompt/terminal to install node packages
+
+    ```bash
+    npm ci
+    ```
+
+    If you face issue with `npm ci` command, try `npm install` or `npm install --force` command. Caution: `npm install` and `npm install --force` will delete all the existing node packages, install the new ones and update the `package-lock.json` file. Please make sure you DO NOT push your changes to the `package-lock.json` file.
+
+5. After the packages are installed, type the following command to run the server
+
+    ```bash
+    npm start
+    ```
+
+    The server will run at [http://localhost:8080](http://localhost:8080)
+
+6. Stop the server by pressing `Cntl + c` inside the command prompt
+
+### 🐳 Docker Installation Guide (Outdated)
 
 1. Download and install [Docker](https://www.docker.com/products/docker-desktop)
 
@@ -148,17 +181,16 @@ A. Delete the python virtual environment, db.sqllite3 file inside RIMA-Backend f
 
 ## Components
 
-* RIMA-Backend
-  * api: Django (Python) HTTP api, serving ...
-  * worker: Celery (Python) job queue, doing ...
-  * db: PostgreSQL database, used for ...
-  * redis: Redis key-value cache, used for ...
-* RIMA-Frontend
-  * web: User-facing React (Node.js) UI, offering ...
-* model:
-  * downloader: Bash, fetches GloVe model from Google Drive
-  * server: nginx, serves GloVe model to RIMA-Backend via HTTP
-
+- RIMA-Backend
+  - api: Django (Python) HTTP api, serving ...
+  - worker: Celery (Python) job queue, doing ...
+  - db: PostgreSQL database, used for ...
+  - redis: Redis key-value cache, used for ...
+- RIMA-Frontend
+  - web: User-facing React (Node.js) UI, offering ...
+- model:
+  - downloader: Bash, fetches GloVe model from Google Drive
+  - server: nginx, serves GloVe model to RIMA-Backend via HTTP
 
 ## Official builds and deployments
 
@@ -170,30 +202,25 @@ A. Delete the python virtual environment, db.sqllite3 file inside RIMA-Backend f
 
 ### Live deployments
 
-* [Production](https://rima.sc.inko.cloud/) (tagged versions)
-* [Development](https://rima-dev.sc.inko.cloud/)
-* [Branch dev-alp](https://rima-dev-alp.sc.inko.cloud/)
-
+- [Production](https://rima.sc.inko.cloud/) (tagged versions)
+- [Development](https://rima-dev.sc.inko.cloud/)
+- [Branch dev-alp](https://rima-dev-alp.sc.inko.cloud/)
 
 ## Run on Docker
 
-* Production: `docker-compose up -f docker-compose.yml` (see `Makefile`)
-* Development: `tilt up`
-
+- Production: `docker-compose up -f docker-compose.yml` (see `Makefile`)
+- Development: `tilt up`
 
 ## Run on Kubernetes
 
 - see `./.k8s/README.md`
 
-
 ## Development setup
 
 - see `./RIMA-Backend/README.md` and `./RIMA-Frontend/README.md`
 
-
 ## Citations
 
 - (Bibtex)
-
 
 ## Contributing
