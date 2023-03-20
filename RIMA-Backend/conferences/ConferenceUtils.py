@@ -1020,6 +1020,11 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
 
     abstract_title_str = ""
     conference_event_papers_data = []
+    session = settings.NEO4J_SESSION.session()
+
+    conference_event_papers_data = get_event_papers_data(
+        conference_event_name_abbr)
+    print(conference_event_papers_data, "&&&&&&&asdasdasd&&&&&&&&&&&&")
     errornumber = 0
     passnumber = 0
     invalidList = []

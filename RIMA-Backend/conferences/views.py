@@ -15,6 +15,7 @@ from django.conf import settings
 from . import tests
 from collections import OrderedDict
 from django.urls import conf, reverse
+from django.conf import settings
 from django.http.response import HttpResponse
 from rest_framework.views import APIView
 from urllib.parse import unquote

@@ -449,7 +449,7 @@ class viewConference extends React.Component {
               </div>
 
               <div>
-                <Modal isOpen={this.state.eventsmodal} toggle={this.eventstoggle} size="lg">
+                <Modal isOpen={this.state.eventsmodal} toggle={this.eventstoggle} size="lg" style={{maxWidth: '1500px', width: '100%'}}>
                   <ModalHeader toggle={this.eventstoggle}>Conference Events</ModalHeader>
                   <ModalBody>
 
@@ -457,11 +457,14 @@ class viewConference extends React.Component {
                     <Table className="align-items-center table-flush" responsive>
                       <thead className="thead-light">
                         <tr>
-                          <th scope="col">Conference</th>
-                          <th scope="col">Conference Event</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Event</th>
                           {/*<th scope="col">URL</th>*/}
                           <th scope="col">Conference URL</th>
-                          <th scope="col">No. Stored Papers</th>
+                          <th scope="col">#Papers</th>
+                          <th scope="col">Collect Publications</th>
+                          <th scope="col">Extract publication keywords/topics</th>
+                          <th scope="col">Extract author's keywords/topics</th>
 
                           {this.state.is_staff == "true" ? (
                             <>
@@ -505,6 +508,7 @@ class viewConference extends React.Component {
                                   <Button color="secondary" onClick={() => this.collectEventPapers(value.conference_name_abbr, value.conference_event_name_abbr)} width="50px">
                                     Collect Publications
                                   </Button>
+
                                 </td >
                                 <td className="text-center" style={{ width: "5" }}>
                                   <Button color="secondary" onClick={() => this.ExtractEventTrends(value.conference_event_name_abbr)} width="50px">
