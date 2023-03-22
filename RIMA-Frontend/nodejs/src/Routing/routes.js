@@ -30,7 +30,6 @@ import authorDashboard from "../Views/Application/Conferences/authorDashboard.js
 import compareConferences from "Views/Application/Conferences/Topic/compareConferences";
 import ExplorePublications from "../Views/Application/ConferenceInsights/ExplorePublications/ExplorePublications";
 import ExploreAuthorsNetwork from "../Views/Application/ConferenceInsights/ExploreAuthorsNetwork/ExploreAuthorsNetwork";
-import PaperExplorerDashboard from "../Views/Application/PaperExplorer/PaperExplorerDashboard";
 
 
 
@@ -274,12 +273,6 @@ let routes = [
   {
     path: "/topicsauthors",
     component: TopicAuthors,
-    layout: "/app",
-    display: "none",
-  },
-  {
-    path: "/paper-explorer",
-    component: PaperExplorerDashboard,
     layout: "/app",
     display: "none",
   },
