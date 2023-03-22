@@ -178,11 +178,6 @@ def GetConferenceEvents(tx, conference_name_abbr):
     return values
 
 
-def UpdateConferenceEvent(tx, conference_event_name_abbr, nproperty, value):
-    result = tx.run("MATCH (e:Event{conference_event_name_abbr:$conference_event_name_abbr}) SET e."+nproperty+"=$value",
-                    conference_event_name_abbr=conference_event_name_abbr, value=value)  # change any prop of event
-
-
 def GetEventPapers(tx, conference_event_name_abbr):
     result = tx.run("MATCH (e:Event{conference_event_name_abbr:$conference_event_name_abbr})-[:has_publication]->(p:Publication) RETURN p.abstract AS abstract,p.citiations AS citiations,p.paper_doi AS paper_doi,p.paper_id AS paper_id,p.paper_venu AS paper_venu,p.title AS title,p.urls AS urls",
                     conference_event_name_abbr=conference_event_name_abbr)
@@ -401,8 +396,8 @@ def GetAuthorByName(tx, author_name):
 #----------------------------------# Update Functions #----------------------------------#
 
 def UpdateConferenceEvent(tx, conference_event_name_abbr, nproperty, value):
-    result = tx.run("MATCH (e:Event{conference_event_name_abbr:$conference_event_name_abbr}) SET e."+nproperty+"=$value",
-                    conference_event_name_abbr=conference_event_name_abbr, value=value)  # change any prop of event
+    tx.run("MATCH (e:Event{conference_event_name_abbr:$conference_event_name_abbr}) SET e."+nproperty+"=$value",
+           conference_event_name_abbr=conference_event_name_abbr, value=value)  # change any prop of event
 
 
 def UpdateEventKeywordRelation(tx, event, keyword, weight):
