@@ -351,13 +351,12 @@ export default function ConferenceBar(props) {
 
         <Card className="bg-gradient-default1 shadow">
           <CardHeader className="bg-transparent">
-            <Row>
-              <div className="main">
+            <Row >
+              <div className="main" style={{ width: '95%' }} >
                 <div
                   className="row mt-4"
                   style={{
                     height: "800px",
-                    width: "830px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
                     borderRadius: "2px",
@@ -369,12 +368,12 @@ export default function ConferenceBar(props) {
 
                 </div>
               </div>
-              <div className="main">
+              <div className="main" style={{ width: '95%' }}>
                 <div
                   className="row mt-4"
                   style={{
                     height: "800px",
-                    width: "830px",
+                    // width: "830px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
                     borderRadius: "2px",
@@ -386,12 +385,12 @@ export default function ConferenceBar(props) {
                 </div>
               </div>
               <br></br>
-              <div className="main">
+              <div className="main" style={{ width: '95%' }}>
                 <div
                   className="row mt-4"
                   style={{
                     height: "800px",
-                    width: "830px",
+                    // width: "830px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
                     borderRadius: "2px",
@@ -403,12 +402,12 @@ export default function ConferenceBar(props) {
                 </div>
               </div>
               <br></br>
-              <div className="main">
+              <div className="main" style={{ width: '95%' }}>
                 <div
                   className="row mt-4"
                   style={{
                     height: "800px",
-                    width: "830px",
+                    // width: "830px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
                     borderRadius: "2px",
@@ -424,7 +423,7 @@ export default function ConferenceBar(props) {
                 className="row mt-4"
                 style={{
                   height: "800px",
-                  width: "830px",
+                  width: "92%",
                   backgroundColor: "#F0F8FF",
                   marginLeft: "50px",
                   borderRadius: "2px",
@@ -439,14 +438,14 @@ export default function ConferenceBar(props) {
                 className="row mt-4"
                 style={{
                   height: "800px",
-                  width: "830px",
+                  width: "92%",
                   backgroundColor: "#F0F8FF",
                   marginLeft: "50px",
                   borderRadius: "2px",
                 }}
               >
                 <Col>
-                  <VennChart conferenceName={selectedOption.value} confEvents={confEvents} page='topicbar' conferences={conference} />     {/*  BAB 08.06.2021 */}
+                  <VennChart conferenceName={selectedOption.value} confEvents={confEvents} page='topicbar' conferences={conference} />      {/* BAB 08.06.2021 */}
                 </Col>
               </div>
 

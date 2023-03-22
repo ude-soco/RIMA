@@ -10,9 +10,9 @@ from matplotlib import pyplot as plt
 from django.conf import settings
 import re
 from neo4j import GraphDatabase
-from .ConferenceUtilsCql import (Conference_has_author, CreateAuthor_has_keyword, CreateAuthor_has_topic, CreatePublication_has_keyword, CreatePublication_has_topic, GetAuthor, CreateCoauthor, CreateKeyword, CreateTopic, CreateEvent_has_keyword, CreateEvent_has_topic, GetAuthorPapers, GetConferenceData, GetEventKeywordWeight, GetEventKeyword,  GetEventTopic, GetEventTopicWeight, GetKeyword, GetPublication, GetTopic, GetEventAuthors, GetConferenceAuthors, GetConferencePapers, GetConferences, GetEventData, GetConferenceEvents, GetEventPapers, UpdateConferenceEvent, CreateAuthor,
-                                 CreateConference, CreateEvent, Create_has_event, CreateAuthor, CreatePaper, Author_has_paper, Conference_has_paper, Event_has_paper, Event_has_author)
-from .Neo4jConfig import graphDB_Driver
+from .ConferenceUtilsCql import (CheckAuthorKeywordRelation, CheckAuthorTopicRelation, CheckEventKeywordRelation, CheckEventTopicRelation, Conference_has_author, CreateAuthor_has_keyword, CreateAuthor_has_topic, CreatePublication_has_keyword, CreatePublication_has_topic, GetAuthor, CreateCoauthor, CreateKeyword, CreateTopic, CreateEvent_has_keyword, CreateEvent_has_topic, GetAuthorKeyword, GetAuthorKeywordWeight, GetAuthorPapers, GetAuthorTopic, GetAuthorTopicWeight, GetConferenceData, GetEventKeywordWeight, GetEventKeyword,  GetEventTopic, GetEventTopicWeight, GetKeyword, GetPublication, GetPublicationFromKeyword, GetPublicationFromTopic, GetTopic, GetEventAuthors, GetConferenceAuthors, GetConferencePapers, GetConferences, GetEventData, GetConferenceEvents, GetEventPapers, UpdateAuthorKeywordRelation, UpdateAuthorTopicRelation, UpdateConferenceEvent, CreateAuthor,
+                                 CreateConference, CreateEvent, Create_has_event, CreateAuthor, CreatePaper, Author_has_paper, Conference_has_paper, Event_has_paper, Event_has_author, UpdateEventKeywordRelation, UpdateEventTopicRelation)
+from django.conf import settings
 
 from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import (
     DBpediaSpotlight,
@@ -20,7 +20,7 @@ from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpe
 from . import tests
 
 
-# session = graphDB_Driver.session()
+# session = settings.NEO4J_SESSION.session()
 
 
 def get_conference_general_data(conference_name_abbr):
@@ -32,7 +32,7 @@ def get_conference_general_data(conference_name_abbr):
     Returns:
         dict: dictionary of the general data
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     result_data = {'series': []}
     conference_events_result_data = []
@@ -120,7 +120,7 @@ def get_conferences_list():
         list: list of dictionaries of the conferences data
     """
     data = []
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     conferences = session.execute_read(GetConferences)
     for x in range(len(conferences)):
@@ -148,7 +148,7 @@ def get_authors_data(conference_name_abbr="", conference_event_name_abbr=""):
     Returns:
         list: list of data dictionaries for every author
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     data = []
 
@@ -162,11 +162,7 @@ def get_authors_data(conference_name_abbr="", conference_event_name_abbr=""):
         author_has_papers_objs = session.execute_read(
             GetEventAuthors, conference_event_name_abbr)
 
-    print(author_has_papers_objs, 'author_has_papers_objs')
-
     for author_obj in author_has_papers_objs:
-        # author_model_data = Author.objects.get(
-        #     semantic_scolar_author_id=author_obj)
 
         author_event_papers_objs = session.execute_read(
             GetAuthorPapers, author_obj.get('semantic_scolar_author_id'))
@@ -182,7 +178,7 @@ def get_authors_data(conference_name_abbr="", conference_event_name_abbr=""):
     return sorted_data
 
 
-def get_author_interests(publications_list, author_id, keyword_or_topic, num=30):
+def get_author_interests(publications_list, author_id, keyword_or_topic, num=10):
     """fetches authors keyword- and wiki-based interests from a papers list
 
     Args:
@@ -198,20 +194,22 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=30)
     abstract_title_str = ""
     keywords = {}
     topics = {}
-
-    for publication in publications_list:
-        if publication['title'] and publication['abstract']:
-            abstract_title_str += publication['title'] + \
-                " " + publication['abstract']
+    session = settings.NEO4J_SESSION.session()
+    # for publication in publications_list:
+    #     if publication['title'] and publication['abstract']:
+    #         abstract_title_str += publication['title'] + \
+    #             " " + publication['abstract']
 
     if keyword_or_topic == 'keyword':
-        keywords = getKeyword(abstract_title_str, 'SifRank', num)
+        keywords = session.execute_read(GetAuthorKeyword, author_id)
+        # keywords = getKeyword(abstract_title_str, 'SifRank', num)
         return keywords
 
     elif keyword_or_topic == 'topic':
+        topics = session.execute_read(GetAuthorTopic, author_id)
 
-        keywords = getKeyword(abstract_title_str, 'SifRank', num)
-        relation, topics = wikifilter(keywords)
+        # keywords = getKeyword(abstract_title_str, 'SifRank', num)
+        # relation, topics = wikifilter(keywords)
 
         return topics
 
@@ -229,7 +227,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
     Returns:
         list: sorted list of dictionaries. Conference event is the sort criterion
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     result_data = []
     if conference_event_name_abbr == "":
@@ -254,7 +252,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
             'title': author_has_papers_obj.get('title'),
             'abstract': author_has_papers_obj.get('abstract'),
             'semantic_scholar_url': author_has_papers_obj.get('urls'),
-            'conference_event': author_has_papers_obj.get('year'),
+            'conference_event': author_has_papers_obj.get('years'),
         })
 
     # sorted_data = sorted(
@@ -273,7 +271,7 @@ def get_event_papers_data(conference_event_name_abbr):
         list: list of papers objects
     """
     conference_event_papers_data = []
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     conference_event_obj = session.execute_read(
         GetEventPapers, conference_event_name_abbr)
@@ -294,7 +292,7 @@ def get_keywords_from_models(conference_event_name_abbr):
     Returns:
         list: sorted list of dictionaries of keywords and their weights and conference event
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     data = []
     event_has_keyword_objs = session.execute_read(
@@ -323,16 +321,18 @@ def get_topics_from_models(conference_event_name_abbr):
     Returns:
         list: sorted list of dictionaries of topics and their weights and conference event
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     data = []
     event_has_topic_objs = session.execute_read(
         GetEventTopic, conference_event_name_abbr)
 
-    session.close()
     for event_has_topic_obj in event_has_topic_objs:
         # conf_event_topic_obj = Conf_Event_Topic.objects.get(
         #     topic_id=event_has_topic_obj.topic_id_id)
+        # maxWeight = session.execute_read(
+        #     GetEventTopicWeight, conference_event_name_abbr, event_has_topic_obj.get('topic'))
+
         data.append({
             'topic': event_has_topic_obj.get('topic'),
             'weight': event_has_topic_obj.get('weight'),
@@ -341,12 +341,13 @@ def get_topics_from_models(conference_event_name_abbr):
         })
     # print("asdasdasdsss", data)
     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
+    session.close()
 
     #print(' **** READ TOPICS TEST **** ',sorted_data, ' **** READ TOPICS TEST **** ')
     return sorted_data
 
 
-def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
+def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOrTopic):
     """reteives paper data containing a specific word within an event
     Args:
         conference_event_name_abbr (str): the name of the conference event. For example, lak2020
@@ -355,24 +356,35 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
     Returns:
         list: list of dictionaries of the found papers 
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
-    conference_event_papers_data = session.execute_read(
-        GetEventPapers, conference_event_name_abbr)
+    # conference_event_papers_data = session.execute_read(
+    #     GetEventPapers, conference_event_name_abbr)
+    # print(conference_event_papers_data[0].get(
+    #     'abstract'), "conference_event_papers_data")
     titles_abstracts = []
-    for paper_data in conference_event_papers_data:
-        if paper_data.get('title') and paper_data.get('abstract'):
-            if keyword in paper_data.get('abstract'):
-                print(paper_data.get('title'), paper_data.get('abstract'))
-                titles_abstracts.append({
-                    'title': paper_data.get('title'),
-                    'abstarct': paper_data.get('abstract'),
-                    'year': paper_data.get('year'),
-                    'venue': paper_data.get('paper_venu'),
-                    'paper_id': paper_data.get('paper_id')
-                })
-                print(titles_abstracts)
+    if (KeywordOrTopic == "keyword"):
+        conference_event_papers_data1 = session.execute_read(
+            GetPublicationFromKeyword, conference_event_name_abbr, keyword)
+    elif (KeywordOrTopic == "topic"):
+        conference_event_papers_data1 = session.execute_read(
+            GetPublicationFromTopic, conference_event_name_abbr, keyword)
+
+    for paper_data in conference_event_papers_data1:
+        # if paper_data.get('title') and paper_data.get('abstract'):
+        #     if keyword in paper_data.get('abstract'):
+        #         print(paper_data.get('title'), paper_data.get('abstract'))
+        titles_abstracts.append({
+            'title': paper_data.get('title'),
+            'abstarct': paper_data.get('abstract'),
+            'year': paper_data.get('year'),
+            'venue': paper_data.get('paper_venu'),
+            'paper_id': paper_data.get('paper_id')
+        })
+        # print(titles_abstracts)
     session.close()
+    # print(titles_abstracts, "print(titles_abstracts)")
+    # print(keyword, "keyword")
     return titles_abstracts
 
 
@@ -401,10 +413,11 @@ def get_shared_words_between_events(conference_events_list, keyword_or_topic):
 
         for data in conference_event_data:
             all_words.append(data.get(keyword_or_topic))
-
+        # print(all_words)
     shared_words = list(set([word for word in all_words if all_words.count(
         word) == len(conference_events_list)]))
-    session = graphDB_Driver.session()
+    # print(shared_words)
+    session = settings.NEO4J_SESSION.session()
 
     for word in shared_words:
         words_weights = []
@@ -421,9 +434,9 @@ def get_shared_words_between_events(conference_events_list, keyword_or_topic):
     session.close()
     result_data = [shared_words_final_data, conference_events_list]
 
-    print('result_data stacked bar NEW')
-    print(result_data)
-    print('result_data stacked bar NEW')
+    # print('result_data stacked bar NEW')
+    # print(result_data)
+    # print('result_data stacked bar NEW')
 
     return result_data
 
@@ -444,7 +457,7 @@ def get_shared_words_between_conferences(conferences_list, keyword_or_topic):
     one_conference_words = []
     models_words = []
     shared_words = []
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     for conference in conferences_list:
         conference_event_objs = session.execute_read(
@@ -458,20 +471,20 @@ def get_shared_words_between_conferences(conferences_list, keyword_or_topic):
                 models_words = get_keywords_from_models(
                     conference_event.get('conference_event_name_abbr'))
 
-            for word in models_words[:10]:
+            for word in models_words:
                 one_conference_words.append(word[keyword_or_topic])
         conferences_words.append(one_conference_words)
         one_conference_words = []
 
-    print('conferences_words')
-    print(conferences_words)
-    print('conferences_words')
+    # print('conferences_words')
+    # print(conferences_words)
+    # print('conferences_words')
 
     shared_words = set.intersection(*map(set, conferences_words))
 
-    print('shared_words')
-    print(shared_words)
-    print('shared_words')
+    # print('shared_words')
+    # print(shared_words)
+    # print('shared_words')
     session.close()
     return shared_words
 
@@ -487,7 +500,7 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
     Returns:
         list: list of data dictionaries of the weight of a word in every given conference event 
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     result_data = []
 
@@ -498,9 +511,9 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
         word_object = session.execute_read(
             GetKeyword, word)
 
-    print('topic_object')
-    print(word_object[0].get('keyword'))
-    print('topic_object')
+    # print('topic_object')
+    # print(word_object)
+    # print('topic_object')
 
     for conference_event in conference_event_objs:
         if keyword_or_topic == 'topic':
@@ -525,8 +538,8 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
         elif keyword_or_topic == 'keyword':
             check_exist = session.execute_read(
                 GetEventKeywordWeight, conference_event.get('conference_event_name_abbr'), word_object[0].get('keyword'))
-            print(conference_event.get('conference_event_name_abbr'))
-            print(check_exist)
+            # print(conference_event.get('conference_event_name_abbr'))
+            # print(check_exist, "0000000")
             if check_exist:
                 weight = check_exist[0].get('weight')
                 # Event_has_keyword.objects.get(
@@ -566,7 +579,7 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     result_data = []
     years_filtering_list = []
     years_filtering_list = []
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     for conference in conferences_list:
         # conference_obj = Conference.objects.get(
@@ -595,9 +608,9 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     elif all_or_shared == 'all':
         result_data = sorted(list(set().union(*years)))
 
-    print('#################### result_data ######################')
-    print(result_data)
-    print('#################### result_data ######################')
+    # print('#################### result_data ######################')
+    # print(result_data)
+    # print('#################### result_data ######################')
     session.close()
     return result_data
 
@@ -607,6 +620,7 @@ def add_data_to_conf_event_model(conference_name_abbr):
 
     Args:
     conference_name_abbr (str): the name of the conference whose conference event should be stored
+    not used
     """
 
     conf_list = []
@@ -639,12 +653,11 @@ def add_data_to_conf_event_model2(conference_name_abbr):
 
     Args:
     conference_name_abbr (str): the name of the conference whose conference event should be stored
-    Done by fathy
     """
 
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
-    print("################")
+    # print("################")
     conf_list = []
     conf_url = ""
     conf_complete_name = ""
@@ -655,14 +668,14 @@ def add_data_to_conf_event_model2(conference_name_abbr):
     valid_events_urls_list.sort()
     cqlCount = f"MATCH (c:Conference) WHERE c.conference_name_abbr='{conference_name_abbr}' RETURN count(c)"
     stored_conferences = session.run(cqlCount)
-    print("****", stored_conferences.value()[0], "****")
+    # print("****", stored_conferences.value()[0], "****")
     index = 0
-    print("##########&&&&&&&&&")
+    # print("##########&&&&&&&&&")
 
     if stored_conferences:
         cqlNameQuery = f"MATCH (c:Conference) WHERE c.conference_name_abbr='{conference_name_abbr}' RETURN c.conference_name_abbr"
         conference_obj = session.run(cqlNameQuery).value()[0]
-        print("**************", conference_obj)
+        # print("**************", conference_obj)
         # conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)
         if len(conf_list) != 0 and len(valid_events_urls_list) != 0:
             for event in valid_events_urls_list:
@@ -673,7 +686,7 @@ def add_data_to_conf_event_model2(conference_name_abbr):
                 # session.run(cqlcreate)
                 try:
                     session.execute_write(
-                        CreateEvent, f'{conf_list[index]}', f'{event}', 0)
+                        CreateEvent, f'{conf_list[index]}', f'{event}')
                 except:
                     print(f"{conf_list[index]} already exist")
                 session.execute_write(
@@ -689,7 +702,7 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr, conf_event_na
     Args:
         conference_name_abbr (str): the name of the conference
         conf_event_name_abbr (str): the name of the conference event
-
+    not used
     """
 
     conference_obj = Conference.objects.get(
@@ -707,12 +720,12 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr, conf_event_na
         if Conference_Event_Paper.objects.filter(paper_id=paper_data['paperId']).exists():
             authors = paper_data['authors']
 
-            print(
-                '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            print(conference_event_url)
-            print(authors)
-            print(
-                '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            # print(
+            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            # print(conference_event_url)
+            # print(authors)
+            # print(
+            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
 
             pass
         else:
@@ -732,19 +745,19 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr, conf_event_na
             event_paper.save()
             authors = paper_data['authors']
 
-            print(
-                '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            print(conference_event_url)
-            print(authors)
-            print(
-                '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            # print(
+            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            # print(conference_event_url)
+            # print(authors)
+            # print(
+            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
 
             for author_data in authors:
-                print(author_data)
+                # print(author_data)
                 if author_data['authorId']:
                     add_data_to_author_models(
                         author_data, event_paper, conference_obj, conference_event_obj)
-                print(author_data)
+                # print(author_data)
 
 
 def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_name_abbr):
@@ -755,10 +768,10 @@ def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_n
         conf_event_name_abbr (str): the name of the conference event
     Done by fathy
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
     conference_event_obj = session.execute_read(
         GetEventData, f'{conf_event_name_abbr}')
-    print(conference_event_obj, "fatthyfathy")
+    # print(conference_event_obj, "fatthyfathy")
     conference_event_url = conference_event_obj[0].get(
         'conference_event_url')
 
@@ -769,11 +782,11 @@ def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_n
 
     for paper_data in data['paper_data']:
         if 'error' in paper_data:
-            print(f"{paper_data['error']} %%%%%%%%%%%")
+            # print(f"{paper_data['error']} %%%%%%%%%%%")
 
             pass
         else:
-            print("data:", paper_data)
+            # print("data:", paper_data)
             try:
                 session.execute_write(
                     CreatePaper, f"{paper_data['paperId']}", f"{paper_data['doi']}", f"{paper_data['title']}", f"{paper_data['url']}", f"{paper_data['year']}", f"{paper_data['abstract']}", f"{paper_data['citations']}", f"{paper_data['venue']}")
@@ -789,18 +802,18 @@ def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_n
 
             authors = paper_data['authors']
 
-            print(
-                '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            # print(conference_event_url)
-            print(authors)
-            print(
-                '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            # print(
+            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
+            # # print(conference_event_url)
+            # print(authors)
+            # print(
+            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
             c = 0
 
             # coauthor = authors[0]
 
             for author_data in authors:
-                print(author_data)
+                # print(author_data)
 
                 if author_data['authorId']:
                     try:
@@ -822,8 +835,8 @@ def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_n
                                     CreateCoauthor, f"{author_data['authorId']}", f"{authors[z]['authorId']}")
                                 z = z+1
                     c = c+1
-                    print("****  ", c)
-                print(author_data)
+                #     print("****  ", c)
+                # print(author_data)
     session.close()
 
 
@@ -838,7 +851,7 @@ def add_data_to_author_models2(author_data, paper_obj, conference_obj, conferenc
 
     not used
     """
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     session.execute_write(
         CreateAuthor, f"{author_data['authorId']}", f"{author_data['name']}", f"{author_data['url']}")
@@ -896,42 +909,32 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
     authors_publications_dicts_list = []
     abstract_title_str = ""
-    session = graphDB_Driver.session()
+    session = settings.NEO4J_SESSION.session()
 
     authors_publications_event_objs = session.execute_read(
         GetEventAuthors, conference_event_name_abbr)
     print(authors_publications_event_objs)
     publications_event_checker_objs = session.execute_read(
         GetEventPapers, conference_event_name_abbr)
-    print("SSSSSSSSS", publications_event_checker_objs)
     errornumber = 0
     passnumber = 0
     errlist = []
 
     dbpedia = DBpediaSpotlight()
-    # test = {'#lald2012': 0.6908706521646404}
-    # test1 = {'available educational datasets': 0.9259164955571639, 'educational datasets': 0.9188555331985839, 'learning analytics': 0.9168265909145703, 'educational data': 0.9151025720735353, 'present datasets': 0.8884299928598685, 'linked data': 0.8870974969331039, 'linked data sources': 0.8860584895346698, 'learning': 0.8654551432572632, 'datasets': 0.8644768610189182, 'related initiatives': 0.8500351948481473, 'young research fields': 0.8359105967132623, 'application': 0.8326173192935882, 'research': 0.8304421906886413, 'technology': 0.8180533896045263,
-    #          'research efforts': 0.8103039654535806, 'visionary ideas': 0.7982580724476136, '1st international workshop': 0.7982131830919079, 'international workshop': 0.7943844118346057, 'major challenges': 0.7793252370638921, 'foster synergies': 0.7739956083098233, 'main objective': 0.7496590319725072, 'workshop': 0.7489291355790767, 'share': 0.7322119342409141, 'tel': 0.7283965247166992, 'use': 0.7271216785730594, 'overview': 0.7269538602608613, 'participant': 0.7067121926065907, 'opportunity': 0.7047521985217813, 'respect': 0.6975014387923191, '#lald2012': 0.6908706521646404}
-    # wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(
-    #     test1
-    # )
-    # print("FFFFFF::", wiki_keyword_redirect_mapping,
-    #       "azsz:", keyword_weight_mapping)
+
     for author in authors_publications_event_objs:
         authors_publications_objs = session.execute_read(
             GetAuthorPapers, author.get('semantic_scolar_author_id'))
 
         for author_publications_obj in authors_publications_objs:
-            print("2222222222222222222222222")
+            # print("2222222222222222222222222")
             publication_obj = session.execute_read(
                 GetPublication, author_publications_obj.get('paper_id'))
             if publication_obj[0].get('title') and publication_obj[0].get('abstract'):
                 abstract_title_str += publication_obj[0].get(
                     'title') + " " + publication_obj[0].get('abstract')
 
-        print("SSSSSSSSS", abstract_title_str)
-        keywords = getKeyword(abstract_title_str, 'SifRank', 30)
-        print("SSSSSSSSS", keywords)
+        keywords = getKeyword(abstract_title_str, 'SifRank', 20)
         invalidList = []
 
         author_obj = session.execute_read(
@@ -939,23 +942,35 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
         for key, value in keywords.items():
 
             try:
-                if (bool(re.match('[@_!#$%^&*()<>?/\|}{~:]', key)) == False):
-                    print("valid")
-                    session.execute_write(CreateKeyword, key, 'SifRank')
-                else:
-                    invalidList.append(key)
-                    errlist.append(key)
-                    print("invalid")
-                    continue
+                # if (bool(re.match('[@_!#$%^&*()<>?/\|}{~:]', key)) == False):
+                #     print("valid")
+                #     session.execute_write(CreateKeyword, key, 'SifRank')
+                # else:
+                #     invalidList.append(key)
+                #     errlist.append(key)
+                #     print("invalid")
+                session.execute_write(CreateKeyword, key, 'SifRank')
+                # continue
             except:
                 print(f"{key} already exist")
+            check1 = session.execute_read(
+                CheckAuthorKeywordRelation, author.get('semantic_scolar_author_id'), key)
 
-            session.execute_write(CreateAuthor_has_keyword, author.get(
-                'semantic_scolar_author_id'), key, value)
+            if (check1[0].get('check') == False):
+                session.execute_write(CreateAuthor_has_keyword, author.get(
+                    'semantic_scolar_author_id'), key, value)
+            else:
+                compare1 = session.execute_read(
+                    GetAuthorKeywordWeight, author.get('semantic_scolar_author_id'), key)
+                print(compare1)
+                if (compare1[0].get('weight') < value):
+                    session.execute_write(
+                        UpdateAuthorKeywordRelation, author.get('semantic_scolar_author_id'), key, value)
+            # session.execute_write(CreateAuthor_has_keyword, author.get(
+            #     'semantic_scolar_author_id'), key, value)
         for k in invalidList:
             del keywords[k]
         try:
-            # relation, topics = wikifilter(keywords)
             wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(
                 keywords
             )
@@ -974,13 +989,23 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
                 session.execute_write(CreateTopic, key, 'SifRank')
             except:
                 print(f"{key} already exist")
+            check2 = session.execute_read(
+                CheckAuthorTopicRelation, author.get('semantic_scolar_author_id'), key)
 
-            session.execute_write(CreateAuthor_has_topic, author.get(
-                'semantic_scolar_author_id'), key, value)
+            if (check2[0].get('check') == False):
+                session.execute_write(CreateAuthor_has_topic, author.get(
+                    'semantic_scolar_author_id'), key, value)
+            else:
+                compare2 = session.execute_read(
+                    GetAuthorTopicWeight, author.get('semantic_scolar_author_id'), key)
+                print(compare2)
+                if (compare2[0].get('weight') < value):
+                    session.execute_write(
+                        UpdateAuthorTopicRelation, author.get('semantic_scolar_author_id'), key, value)
 
         abstract_title_str = ""
-    print("errornumber:", errornumber, "passnumber:",
-          passnumber, "errlist:", errlist)
+    # print("errornumber:", errornumber, "passnumber:",
+    #       passnumber, "errlist:", errlist)
     session.close()
     return ""
 
@@ -995,79 +1020,54 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
 
     abstract_title_str = ""
     conference_event_papers_data = []
-    session = graphDB_Driver.session()
-
-    conference_event_papers_data = get_event_papers_data(
-        conference_event_name_abbr)
-    print(conference_event_papers_data, "&&&&&&&asdasdasd&&&&&&&&&&&&")
     errornumber = 0
     passnumber = 0
-    dbpedia = DBpediaSpotlight()
     invalidList = []
+    session = settings.NEO4J_SESSION.session()
+    conference_event_papers_data = get_event_papers_data(
+        conference_event_name_abbr)
+    dbpedia = DBpediaSpotlight()
 
     if conference_event_papers_data:
         for paper_data in conference_event_papers_data:
             paperId = paper_data.get('paper_id')
-            print("FAAAsAAAAAAA", paper_data)
 
             if paper_data.get('title') and paper_data.get('abstract'):
-                print("FAAAAAAAAAAA", paperId)
                 abstract_title_str = paper_data.get(
-                    'title') + " " + paper_data.get('abstract')  # abstract_title_str += paper_data.get('title') + " " + paper_data.get('abstract')
-                print(abstract_title_str, "&&&&&&&&&&&&&&&&&&&")
-                keywords = getKeyword(abstract_title_str, 'SifRank', 30)
-                conference_event_obj = session.execute_read(
-                    GetEventData, conference_event_name_abbr)
-                for key, value in keywords.items():
-                    stored_keyword_check = session.execute_read(
-                        GetKeyword, key)
-                    if (bool(re.match('^[a-zA-Z0-9]*$', key)) == True):
-                        print("valid")
-                    else:
-                        print("invalid")
-                if not stored_keyword_check:
-                    try:
-                        if (bool(re.match('^[a-zA-Z0-9]*$', key)) == True):
-                            print("valid")
-                            session.execute_write(
-                                CreateKeyword, key, 'SifRank')
-                        else:
-                            invalidList.append(key)
-                            del keywords[key]
-                            print("invalid")
-                            continue
+                    'title') + " " + paper_data.get('abstract')
+                keywords = getKeyword(abstract_title_str, 'SifRank', 15)
 
+                for key, value in keywords.items():
+                    try:
+                        session.execute_write(
+                            CreateKeyword, key, 'SifRank')
                     except:
                         print(f"{key} already exist")
-                    try:
+                    check1 = session.execute_read(
+                        CheckEventKeywordRelation, f'{conference_event_name_abbr}', f'{key}')
+
+                    if (check1[0].get('check') == False):
                         session.execute_write(
                             CreateEvent_has_keyword, f'{conference_event_name_abbr}', f'{key}', value)
-                        # create papers has_keyword
+                    else:
+                        compare1 = session.execute_read(
+                            GetEventKeywordWeight, f'{conference_event_name_abbr}', f'{key}')
+                        print(compare1)
+                        if (compare1[0].get('weight') < value):
+                            session.execute_write(
+                                UpdateEventKeywordRelation, f'{conference_event_name_abbr}', f'{key}', value)
+                    try:
                         session.execute_write(
                             CreatePublication_has_keyword, f'{paperId}', f'{key}', value)
-
                     except:
                         print(f"already exist")
-                else:
-                    stored_keyword_obj = session.execute_read(GetKeyword, key)
-                    session.execute_write(
-                        CreateEvent_has_keyword, f'{conference_event_name_abbr}', f'{key}', value)
-                    session.execute_write(
-                        CreatePublication_has_keyword, f'{paperId}', f'{key}', value)
                 try:
-                    # relation, final = wikifilter(keywords)
                     wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(
-                        keywords
-                    )
+                        keywords)
                     passnumber += 1
-                    print("passnumber:", passnumber)
-
                 except:
                     errornumber += 1
-                    print("errornumber:", errornumber)
-                # relation, final = wikifilter(keywords)
                 for key, value in keyword_weight_mapping.items():
-                    print("@@@@", key)
                     stored_topic_check = session.execute_read(GetTopic, key)
                     if not stored_topic_check:
                         try:
@@ -1077,70 +1077,24 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
                             print(f"{key} already exist")
                         conf_event_topic_obj = session.execute_read(
                             GetTopic, key)
-                        print("$$$$$$$", conf_event_topic_obj)
-                        session.execute_write(
-                            CreateEvent_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
+                        # print("$$$$$$$", conf_event_topic_obj)
+                        check2 = session.execute_read(
+                            CheckEventTopicRelation, f'{conference_event_name_abbr}', f'{key}')
+                        if (check2[0].get('check') == False):
+                            session.execute_write(
+                                CreateEvent_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
+                        else:
+                            compare2 = session.execute_read(
+                                GetEventTopicWeight, f'{conference_event_name_abbr}', f'{key}')
+                            if (compare2[0].get('weight') < value):
+                                session.execute_write(
+                                    UpdateEventTopicRelation, f'{conference_event_name_abbr}', f'{key}', value)
                         session.execute_write(
                             CreatePublication_has_topic, f'{paperId}', f'{key}', value)
-                    else:
-                        stored_topic_check = session.execute_read(
-                            GetTopic, key)
-                        session.execute_write(
-                            CreateEvent_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
-                        session.execute_write(
-                            CreatePublication_has_topic, f'{paperId}', f'{key}', value)
-                print(' relation  WIKIS FIRST TEST',
-                      wiki_keyword_redirect_mapping)
-                print('final TOPICS WIKIS FIRST TEST', keyword_weight_mapping)
-                print(abstract_title_str, "&&&&&&&&&&&&&&&&&&&")
-    print("errornumber:", errornumber, "passnumber:",
-          passnumber, 'invalidList:', invalidList)
+
+    # print("errornumber:", errornumber, "passnumber:",
+    #       passnumber, 'invalidList:', invalidList)
     session.close()
-
-    # use sifrank and update the branch
-    # keywords = getKeyword(abstract_title_str, 'SifRank', 30)
-
-    # print('KEYWORDS FIRST TEST', keywords)
-    # conference_event_obj = session.execute_read(
-    #     GetEventData, conference_event_name_abbr)
-    # # start from here
-    # for key, value in keywords.items():
-    #     stored_keyword_check = session.execute_read(GetKeyword, key)
-    #     if not stored_keyword_check:
-    #         try:
-    #             session.execute_write(CreateKeyword, key, 'SifRank')
-    #         except:
-    #             print(f"{key} already exist")
-    #         conf_event_keyword_obj = session.execute_read(GetKeyword, key)
-    #         try:
-    #             session.execute_write(
-    #                 CreateEvent_has_keyword, f'{conference_event_name_abbr}', f'{key}', value)
-    #         except:
-    #             print(f"already exist")
-    #     else:
-    #         stored_keyword_obj = session.execute_read(GetKeyword, key)
-    #         session.execute_write(
-    #             CreateEvent_has_keyword, f'{conference_event_name_abbr}', f'{key}', value)
-
-    # relation, final = wikifilter(keywords)
-    # for key, value in final.items():
-    #     print("@@@@", key)
-    #     stored_topic_check = session.execute_read(GetTopic, key)
-    #     if not stored_topic_check:
-    #         try:
-    #             session.execute_write(CreateTopic, f'{key}', 'SifRank')
-    #         except:
-    #             print(f"{key} already exist")
-    #         conf_event_topic_obj = session.execute_read(GetTopic, key)
-    #         print("$$$$$$$", conf_event_topic_obj)
-    #         session.execute_write(
-    #             CreateEvent_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
-    #     else:
-    #         stored_topic_check = session.execute_read(GetTopic, key)
-    #         session.execute_write(
-    #             CreateEvent_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
-    # print(' relation  WIKIS FIRST TEST', relation)
-    # print('final TOPICS WIKIS FIRST TEST', final)
 
 
 def delete_conference_data(conference_name_abbr):
@@ -1240,14 +1194,14 @@ def generate_venn_photo(list_words_first_event, list_words_second_event, list_in
         str: venn image
     """
 
-    print('################### TEST VENN ###################')
-    print(list_words_first_event)
-    print('+++++++++')
-    print(list_words_second_event)
-    print('+++++++++')
-    print(list_intersect_first_and_second)
+    # print('################### TEST VENN ###################')
+    # print(list_words_first_event)
+    # print('+++++++++')
+    # print(list_words_second_event)
+    # print('+++++++++')
+    # print(list_intersect_first_and_second)
 
-    print('################### TEST VENN ###################')
+    # print('################### TEST VENN ###################')
     fig, ax = plt.subplots()
 
     ax.set_title('Common ' + keyword_or_topic + 's between ' +
@@ -1294,7 +1248,7 @@ def split_restapi_url(url_path, split_char):
         list: list of url splits
     """
 
-    print("the url path is:", url_path)
+    # print("the url path is:", url_path)
     url_path = url_path.replace("%20", " ")
     topics_split = url_path.split(split_char)
     return topics_split

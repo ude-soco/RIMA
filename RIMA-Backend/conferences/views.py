@@ -1,6 +1,5 @@
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK
 # test import BEGIN
-from .Neo4jConfig import graphDB_Driver
 from neo4j import GraphDatabase
 import re
 from itertools import combinations
@@ -11,6 +10,8 @@ from .DataExtractor import ConferenceDataCollector as dataCollector
 from . import ConferenceUtils as confutils
 import datetime
 import json
+from django.conf import settings
+
 from . import tests
 from collections import OrderedDict
 from django.urls import conf, reverse
@@ -67,7 +68,7 @@ from rest_framework.generics import (ListCreateAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .ConferenceUtilsCql import (DeleteConference, GetAuthorsOfPaper, GetConferences, GetEventAuthors, GetEventData, GetConferenceEvents, GetEventPapers, UpdateConferenceEvent, CreateAuthor,
+from .ConferenceUtilsCql import (CreateDatabaseLabels, DeleteConference, GetAuthorByName, GetAuthorKeyword, GetAuthorPapers, GetAuthorTopic, GetAuthorsOfPaper, GetConferenceAuthors, GetConferences, GetEventAuthors, GetEventData, GetConferenceEvents, GetEventPapers, UpdateConferenceEvent, CreateAuthor,
                                  CreateConference, CreateEvent, Create_has_event, CreateAuthor, CreatePaper, Author_has_paper, Conference_has_paper, Event_has_paper, Event_has_author)
 
 from .models import Platform, Conference, Conference_Event, PreloadedConferenceList, Conference_Event_Paper, Author, Author_has_Papers
@@ -91,6 +92,13 @@ class conferenceGeneralDataView(APIView):
         # tests.TimeComplexity(conferenceGeneralDataView)
         # print("conferenceGeneralDataView:", result_data)
         return Response(result_data)
+
+
+class constructDatabase(APIView):
+    def post(self, request, *args, **kwargs):
+        session = settings.NEO4J_SESSION.session()
+        session.execute_write(CreateDatabaseLabels)
+        return Response({})
 
 
 class testGeneralDataView(APIView):
@@ -129,10 +137,8 @@ class conferencesSharedWordsView(ListCreateAPIView):
             request.get_full_path(), r'?')
         conferences_list = confutils.split_restapi_url(
             url_splits_question_mark[1], r'&')
-        print(conferences_list)
         keyword_or_topic = confutils.split_restapi_url(
             url_splits_question_mark[0], r'/')[-2]
-        print(keyword_or_topic)
 
         models_data = confutils.get_shared_words_between_conferences(
             conferences_list, keyword_or_topic)
@@ -152,7 +158,7 @@ class SharedWordEvolutionView(APIView):
         weights = []
         years_range = []
         all_models_data = []
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
 
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'?')
@@ -183,27 +189,27 @@ class SharedWordEvolutionView(APIView):
                 ocurrence_list = list(
                     filter(lambda inner_data: inner_data['year'] == year, data))
                 if ocurrence_list:
-                    print('test_list')
+                    # print('test_list')
                     sum_weight = 0
                     for result in ocurrence_list:
                         sum_weight += result['weight']
                         print(result)
                     weights.append(sum_weight)
                     sum_weight = 0
-                    print('test_list')
+                    # print('test_list')
                 else:
                     weights.append(0)
 
             result_data.append(weights)
             weights = []
 
-        print('result_data')
-        print(all_models_data)
-        print('++++++++++++++++++')
-        print(result_data)
-        print('++++++++++++++++++')
-        print(years_range)
-        print('result_data')
+        # print('result_data')
+        # print(all_models_data)
+        # print('++++++++++++++++++')
+        # print(result_data)
+        # print('++++++++++++++++++')
+        # print(years_range)
+        # print('result_data')
 
         return Response({"weights": result_data,
                          "years": years_range
@@ -231,18 +237,18 @@ class conferencesYearsRangeView(APIView):
                 'label': word,
             })
 
-        print('result_dat')
-        print(result_data)
-        print('result_data')
+        # print('result_dat')
+        # print(result_data)
+        # print('result_data')
 
         return Response({'years': result_data})
 
 
 class conferenceDeleteView(APIView):
-    serializer_class = ConferenceSerializer
+    # serializer_class = ConferenceSerializer
 
     def delete(self, request, pk):
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
 
         print(pk)
         conference_name_abbr = pk
@@ -257,7 +263,7 @@ class conferenceDeleteView1(APIView):
     serializer_class = ConferenceSerializer
 
     def delete(self, request, pk):
-        # session = graphDB_Driver.session()
+        # session = settings.NEO4J_SESSION.session()
 
         print(pk)
         conference_name_abbr = pk
@@ -275,7 +281,7 @@ class conferencesSharedWordsBarView(APIView):
         conferences_events_list = []
         avaiable_events = []
         not_available_events = []
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'?')
         conferences_list = confutils.split_restapi_url(url_splits[-1], r'&')
         year = confutils.split_restapi_url(url_splits[-2], r'/')[-2]
@@ -300,21 +306,24 @@ class conferencesSharedWordsBarView(APIView):
             # else:
             #     not_available_events.append(conference_event)
 
-        print(conferences_list)
-        print(year)
-        print(keyword_or_topic)
-        print(conferences_events_list)
-        print('AVAILABLE', list(set(avaiable_events)))
-        print('NOT AVAILABLE', list(set(not_available_events)))
+        # print(conferences_list)
+        # print(year)
+        # print(keyword_or_topic)
+        # print(conferences_events_list)
+        # print('AVAILABLE', list(set(avaiable_events)))
+        # print('NOT AVAILABLE', list(set(not_available_events)))
 
         result_data = confutils.get_shared_words_between_events(
             avaiable_events, keyword_or_topic)
+        result_data[0] = sorted(
+            result_data[0], key=lambda k: k['weight'], reverse=True)
 
-        print('result_dat')
-        print(result_data)
-        print('result_data')
+        sorted_data = [result_data[0][:5], result_data[1]]
+        # print('result_dat')
+        # print(sorted_data)
+        # print('result_data')
 
-        return Response({'Topiclist': result_data})
+        return Response({'Topiclist': sorted_data})
 
 
 # under work timeline
@@ -323,7 +332,7 @@ class DataTimeLineChartView(APIView):
         result_data = []
         conference_all_models_words = []
         conferences_all_events = []
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
 
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'?')
         keyword_or_topic = url_splits[0].split('/')[-2]
@@ -350,7 +359,7 @@ class DataTimeLineChartView(APIView):
                         conference_event.get('conference_event_name_abbr'))
 
                 for data in models_data[:5]:
-                    print(data)
+                    # print(data)
                     year = re.sub(
                         "[^0-9]", "", conference_event.get('conference_event_name_abbr').split('-')[0])
                     conference_based_result_data['data'].append({
@@ -364,9 +373,9 @@ class DataTimeLineChartView(APIView):
 
             result_data.append(conference_based_result_data)
 
-        print('##############', ' result data ', '####################')
-        print(result_data)
-        print('##############', ' result data ', '####################')
+        # print('##############', ' result data ', '####################')
+        # print(result_data)
+        # print('##############', ' result data ', '####################')
         return Response({'data': result_data})
 
 
@@ -378,50 +387,28 @@ BAB Conference Events views
 class ConferenceEventsView(ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
 
         data = []
         url_path = self.request.get_full_path()
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        # conference_events_objs = Conference_Event.objects.filter(
-        #     conference_name_abbr=topics_split[-1])
-        # for conference_event_obj in conference_events_objs:
-        #     conference_event_obj.no_of_stored_papers = conference_event_obj.conference_event_papers.all().count()
+
         conference_events_objs = session.execute_read(
             GetConferenceEvents, topics_split[-1])
-        # print("****************", conference_events_objs)
         for x in range(len(conference_events_objs)):
-            # print("******", x)
             c = session.execute_read(
                 GetEventPapers, conference_events_objs[x].get('conference_event_name_abbr'))
-            # print("@@@@@@", c)
-            session.execute_write(UpdateConferenceEvent, conference_events_objs[x].get('conference_event_name_abbr'),
-                                  'no_of_stored_papers', len(c))
+
             info = {
                 "conference_event_name_abbr": conference_events_objs[x].get('conference_event_name_abbr'),
                 "conference_event_url": conference_events_objs[x].get('conference_event_url'),
-                "no_of_stored_papers": conference_events_objs[x].get('no_of_stored_papers'),
+                "no_of_stored_papers": len(c),
                 "conference_name_abbr": conference_events_objs[x].get('conference_name_abbr'),
             }
             data.append(info)
 
-        # print(type(conference_events_objs), "*************")
-        # conference_events_objs = session.execute_read(
-        #     GetConferenceEvents, topics_split[-1])
-        # conference_events_objs = json.dumps(
-        #     GetConferenceEvents2('lak2012').data())
-        # print(data, "********sdasdas*****")
         session.close()
-        # print(type(conference_events_objs[0][0]), "********sdasdas*****")
-
-        # conference_events_objs = node_to_json(conference_events_objs)
-        # return conference_events_objs[0]
-        # arr = conference_events_objs[0]
-
-        # for x in range(len(conference_events_objs)-1):
-        #     arr.append(conference_events_objs[x+1])
-        # print(arr, "********sdasdas*****")
 
         return Response(data)
 
@@ -438,7 +425,7 @@ class CollectEventPapersView(ListCreateAPIView):
         url_path = self.request.get_full_path()
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        print("asd", topics_split[-2], topics_split[-1])
+        # print("asd", topics_split[-2], topics_split[-1])
         confutils.add_data_to_conf_paper_and_author_models2(
             topics_split[-2], topics_split[-1])
         return Response(data)
@@ -467,8 +454,8 @@ class ExtractAuthorsTrendsView(ListCreateAPIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_event_name_abbr = url_splits[-1]
 
-        print(url_splits)
-        print(conference_event_name_abbr)
+        # print(url_splits)
+        # print(conference_event_name_abbr)
         confutils.add_data_to_author_keyword_and_topic_models(
             conference_event_name_abbr)
         return Response(data)
@@ -481,31 +468,23 @@ BAB Add Conference View
 
 
 class addConferenceView(APIView):
-    serializer_class = PlatformSerializer
-    conference_serializer_class = ConferenceSerializer
 
     def get(self, request, *args, **kwargs):
         data = []
         data = confutils.get_conferences_list()
-        print("SSSSSSSSS", data)
         return Response(data)
 
     def post(self, request, *args, **kwargs):
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         request_data = self.request.data
-
-        print("$$$$$$$$$$$$$$$$$$$:",
-              f"{request_data['platform_name']}", f"{request_data['platform_url']}")
-
+        session.execute_write(CreateDatabaseLabels)
         try:
             session.execute_write(
                 CreateConference, f"{request_data['conferences'][0]['conference_name_abbr']}", f"{request_data['conferences'][0]['conference_url']}", f"{request_data['platform_name']}", f"{request_data['platform_url']}")
         except:
             print(
-                f"{request_data['conferences'][0]['conference_name_abbr']}" " alreay exist")
+                f"{request_data['conferences'][0]['conference_name_abbr']}" " already exist")
 
-        print("$$$$$$$$$$$$$$$$$$$:",
-              f"{request_data['conferences'][0]['conference_name_abbr']}")
         confutils.add_data_to_conf_event_model2(
             request_data['conferences'][0]['conference_name_abbr'])
         session.close()
@@ -536,28 +515,28 @@ BAB get conf events/years
 
 class confEvents(APIView):
     def get(self, request, *args, **kwargs):
-        print("@@@@@@@@@@@@@@@@@@@")
+        # print("@@@@@@@@@@@@@@@@@@@")
         url_path = request.get_full_path()
-        print("the url path is:", url_path)
+        # print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        print("topics_split:", topics_split)
+        # print("topics_split:", topics_split)
         #print("The year is:",year)
         conferences_events_JSON = []
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         conference_events = session.execute_read(
             GetConferenceEvents, conference_name_abbr=topics_split[-1])
         # Conference_Event.objects.filter(conference_name_abbr=topics_split[-1]).values_list(
         #     'conference_event_name_abbr',
         #     flat=True)
-        print('33333333', conference_events)
+        # print('33333333', conference_events)
 
         for event in conference_events:
             conferences_events_JSON.append({
                 'value': event.get("conference_event_name_abbr"),
                 'label': event.get("conference_event_name_abbr"),
             })
-        print('2222222', conferences_events_JSON)
+        # print('2222222', conferences_events_JSON)
         session.close()
         return Response({
             "events":
@@ -599,20 +578,16 @@ View regarding topic wordcloud
 
 class WordCloudView(APIView):
     def get(self, request, *args, **kwargs):
-        print("???????????????????")
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         keyword_or_topic = url_splits[-3]
         number = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
         result_data = []
-        print("?????sssss?????????????")
 
         if keyword_or_topic == "topic":
-            print("?????aaaaa?????????????")
 
             models_data = confutils.get_topics_from_models(
                 conference_event_name_abbr)
-            print("?????aazzzzaa?????????????")
 
         elif keyword_or_topic == "keyword":
             models_data = confutils.get_keywords_from_models(
@@ -629,8 +604,6 @@ class WordCloudView(APIView):
                 "value": model_data.get('weight'),
 
             })
-        print(result_data)
-
         return Response({
             "words":
             result_data
@@ -653,28 +626,34 @@ class AuthorWordCloudView(APIView):
         # print(len(publications_list))
         # print('publications_list')
 
+        # if keyword_or_topic == "topic":
+        #     extracted_data = confutils.get_author_interests(
+        #         publications_list, author_id, keyword_or_topic)
+        # elif keyword_or_topic == "keyword":
+        #     extracted_data = confutils.get_author_interests(
+        #         publications_list, author_id, keyword_or_topic)
+        extracted_data = confutils.get_author_interests(
+            publications_list, author_id, keyword_or_topic)
         if keyword_or_topic == "topic":
-            extracted_data = confutils.get_author_interests(
-                publications_list, author_id, keyword_or_topic)
+            for data in extracted_data:
+                inter_data.append({
+                    "text": data.get('topic'),
+                    "value": data.get('weight'),
+                })
         elif keyword_or_topic == "keyword":
-            extracted_data = confutils.get_author_interests(
-                publications_list, author_id, keyword_or_topic)
-
-        for key, value in extracted_data.items():
-            inter_data.append({
-                "text": key,
-                "value": value,
-            })
-
-        print('######### ++++++++++++############## inter_data ############# +++++++++++++++ ############')
-        print(inter_data)
-        print('######### ++++++++++++############## inter_data ############# +++++++++++++++ ############')
+            for data in extracted_data:
+                inter_data.append({
+                    "text": data.get('keyword'),
+                    "value": data.get('weight'),
+                })
 
         sorted_data = sorted(
             inter_data, key=lambda k: k['value'], reverse=True)
-
+        print(sorted_data)
         if number == '5':
             sorted_data = sorted_data[:5]
+            print(sorted_data, "sorteeeed")
+
         elif number == '10':
             sorted_data = sorted_data[:10]
 
@@ -745,15 +724,18 @@ class FetchTopicView(APIView):
             request.get_full_path(), r'/')
 
         keyword_or_topic = url_splits_topic_keyword[-2]
-        print('CHECK URL', url_splits_topic_keyword[-2])
+        # print('CHECK URL', url_splits_topic_keyword[-2])
         topics_split_params = url_splits_question_mark[-1].split("&")
 
         print(topics_split_params)
         result_data = confutils.get_shared_words_between_events(
             topics_split_params, keyword_or_topic)
+        result_data[0] = sorted(
+            result_data[0], key=lambda k: k['weight'], reverse=True)
 
+        sorted_data = [result_data[0][:5], result_data[1]]
         return Response(
-            {"Topiclist": result_data})
+            {"Topiclist": sorted_data})
 
 
 '''
@@ -767,7 +749,7 @@ class FetchKeyView(APIView):
         print('CHECK URL', request.get_full_path())
         topics_split_params = url_splits[-1].split("&")
 
-        print(topics_split_params)
+        # print(topics_split_params)
         # getTopKeysForAllYear
         return Response(
             {"Topiclist": getTopKeysForAllYear("", topics_split_params)})
@@ -831,8 +813,8 @@ class TopicBarView(APIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_event_name_abbr = url_splits[-1]
         keyword_or_topic = url_splits[-2]
-        print('conference_event_name_abbr:', conference_event_name_abbr)
-        print('keyword_or_topic:', keyword_or_topic)
+        # print('conference_event_name_abbr:', conference_event_name_abbr)
+        # print('keyword_or_topic:', keyword_or_topic)
 
         if keyword_or_topic == 'keyword':
             models_data = confutils.get_keywords_from_models(
@@ -867,15 +849,18 @@ class getTopicBarValues(APIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_event_name_abbr = url_splits[-1]
         word = url_splits[-2]
-
+        KeywordOrTopic = url_splits[-3]
+        # print("::::::::::", KeywordOrTopic, word, conference_event_name_abbr)
         abstracts_titles = confutils.get_abstract_based_on_keyword(
-            conference_event_name_abbr, word)
+            conference_event_name_abbr, word, KeywordOrTopic)
 
         for abstract_title in abstracts_titles:
-            abstract_title_str = abstract_title.get('title') + \
-                abstract_title.get('abstarct')
-            # abstract_title_str = abstract_title.ge['title'] + \
-            #     abstract_title['abstarct']
+            if (abstract_title.get('abstract')):
+                abstract_title_str = abstract_title.get('title') + \
+                    abstract_title.get('abstract')
+            else:
+                abstract_title_str = abstract_title.get('title')
+
             helper_list.append({
                 'title': abstract_title.get('title'),
                 'term_frequency': abstract_title_str.lower().count(word.lower())
@@ -883,15 +868,14 @@ class getTopicBarValues(APIView):
 
         helper_list = sorted(
             helper_list, key=lambda k: k['term_frequency'], reverse=True)
-        # print('####****####***** ', helper_list[:10], ' ####****####*****')
         for item in helper_list[:10]:
             list_papers_titles.append(item['title'])
             list_freq.append(item['term_frequency'])
 
         result_dict['docs'].append(list_papers_titles)
         result_dict['docs'].append(list_freq)
-        print('#######################################',
-              result_dict['docs'][0], '############################')
+        # print('#######################################',
+        #       result_dict['docs'][0], '############################')
         # print('#######################################',result_dict['docs'][1],'############################')
         return Response(result_dict)
 
@@ -916,7 +900,7 @@ class getKeyBarValues(APIView):
     def get(self, request, *args, **kwargs):
         #serializer_class = JSONSerialize
         url_path = request.get_full_path()
-        print("the url path is:", url_path)
+        # print("the url path is:", url_path)
         topics_split = url_path.split(r"/")
         return Response(
             {"docs": getKeyDetails(topics_split[-2], topics_split[-1])})
@@ -931,7 +915,7 @@ class vennPlotView(APIView):
 
 class allWords(APIView):
     def get(self, request, *args, **kwargs):
-        print('####################################')
+        # print('####################################')
 
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_name_abbr = url_splits[-1]
@@ -940,7 +924,7 @@ class allWords(APIView):
         models_data = []
         result_data_with_duplicates = []
         result_data = []
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
 
         conference_events_objs = session.execute_read(
             GetConferenceEvents, conference_name_abbr)
@@ -958,9 +942,9 @@ class allWords(APIView):
                 result_data_with_duplicates.append(
                     model_data.get(keyword_or_topic))
 
-        print('####################################')
-        print(list(set(result_data_with_duplicates)))
-        print('####################################')
+        # print('####################################')
+        # print(list(set(result_data_with_duplicates)))
+        # print('####################################')
 
         result_data = [{
             "value": val,
@@ -1003,7 +987,7 @@ View to get topics for stacked area chart- topic evolution
 
 class MultipleTopicAreaView(APIView):
     def get(self, request, *args, **kwargs):
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         models_data = []
         result_data = []
         weights = []
@@ -1015,9 +999,9 @@ class MultipleTopicAreaView(APIView):
             request.get_full_path(), r'/')
 
         conference_name_abbr = url_splits_conference_name[-2]
-        print('CHECK URL', url_splits_conference_name[-2])
+        # print('CHECK URL', url_splits_conference_name[-2])
         words_split_params = url_splits_question_mark[-1].split("&")
-        print('CHECK URL', url_splits_question_mark[-1].split("&"))
+        # print('CHECK URL', url_splits_question_mark[-1].split("&"))
 
         keyword_or_topic = 'topic'
 
@@ -1037,11 +1021,11 @@ class MultipleTopicAreaView(APIView):
             result_data.append(weights)
             weights = []
 
-        print('result_data')
-        print(result_data)
-        # list(sorted(set(events), key=events.index))
-        print(list(sorted(set(events), key=events.index)))
-        print('result_data')
+        # print('result_data')
+        # print(result_data)
+        # # list(sorted(set(events), key=events.index))
+        # print(list(sorted(set(events), key=events.index)))
+        # print('result_data')
         # listoftopics=["Learning","Analytics"]
         # getKeyWeightsAllYears
         session.close()
@@ -1066,13 +1050,13 @@ class MultipleKeyAreaView(APIView):
         url_path = request.get_full_path()
 
         url_path = url_path.replace("%20", " ")
-        print("the url path is:", url_path)
+        # print("the url path is:", url_path)
         topics_split = url_path.split("?")
         print(topics_split[1])
         topics_split_params = topics_split[1].split("&")
         topics_split_conferenceName = topics_split_params[1].split("/")
 
-        print(topics_split_params, "*********************")
+        # print(topics_split_params, "*********************")
         # listoftopics=["Learning","Analytics"]
         # getKeyWeightsAllYears
         return Response({
@@ -1089,16 +1073,16 @@ class MultipleKeyAreaView(APIView):
 
 class FetchPaperView(APIView):
     def get(self, request, *args, **kwargs):
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         title = ""
         url_spilts = confutils.split_restapi_url(request.get_full_path(), r'/')
         title = url_spilts[-1]
-        print(url_spilts[-1], 'URL REQUEST TEST')
+        # print(url_spilts[-1], 'URL REQUEST TEST')
         conference_event_paper_obj = session.execute_read()
         Conference_Event_Paper.objects.get(
             Q(title__icontains=title))
         session.close()
-        print("URL TEST ", conference_event_paper_obj.url, "URL TEST")
+        # print("URL TEST ", conference_event_paper_obj.url, "URL TEST")
         return Response({'url': conference_event_paper_obj.url})
 
 
@@ -1135,8 +1119,8 @@ class VennOverview(APIView):
         first_event = url_splits[-2]
         second_event = url_splits[-1]
         keyword_or_topic = url_splits[-3]
-        print('VennOverviewfirst_event:', first_event)
-        print('VennOverviewsecond_event:', second_event)
+        # print('VennOverviewfirst_event:', first_event)
+        # print('VennOverviewsecond_event:', second_event)
         if keyword_or_topic == 'topic':
             models_data_first_event = confutils.get_topics_from_models(
                 first_event)
@@ -1184,7 +1168,7 @@ class AuthorConfComparisionView(APIView):
 
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
 
-        print(url_splits)
+        # print(url_splits)
 
         conference_name = url_splits[-4]
         keyword_or_topic = url_splits[-3]
@@ -1236,7 +1220,7 @@ View to obtain common keywords for conference venn diagram
 class VennOverviewKeys(APIView):
     def get(self, request, *args, **kwargs):
         url_path = request.get_full_path()
-        print("the url path is:", url_path)
+        # print("the url path is:", url_path)
         #url_path=url_path.replace("%20"," ")
         topics_split = url_path.split(r"/")
         print(topics_split)
@@ -1258,8 +1242,8 @@ class AllKeywordsView(APIView):
         print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        print(topics_split)
-        print(getAllKeywords('2011'))
+        # print(topics_split)
+        # print(getAllKeywords('2011'))
         return Response({"keywords": getAllKeywords('2011')})
 
 
@@ -1289,7 +1273,7 @@ class AllTopicsView(APIView):
             result_data_with_duplicates.append(
                 model_data.get(keyword_or_topic))
 
-        print(models_data)
+        # print(models_data)
 
         result_data = [{
             "value": val,
@@ -1318,7 +1302,7 @@ class SearchKeywordView(APIView):
         keyword_or_ropic = ""
         word = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         models_data = confutils.get_abstract_based_on_keyword(
             conference_event_name_abbr, word)
         if not models_data:
@@ -1359,13 +1343,13 @@ class SearchKeywordView(APIView):
                     })
                 authors_pairs_list = []
                 paper_authors = []
-            print('############################ +++++++++++++++++++      ############### all_pairs_dicts_list ############################ ++++++++++++++++++ ##############')
-            print(all_pairs_dicts_list)
-            print('############################ +++++++++++++++++++      ############### all_pairs_dicts_list ############################ ++++++++++++++++++ ##############')
+            # print('############################ +++++++++++++++++++      ############### all_pairs_dicts_list ############################ ++++++++++++++++++ ##############')
+            # print(all_pairs_dicts_list)
+            # print('############################ +++++++++++++++++++      ############### all_pairs_dicts_list ############################ ++++++++++++++++++ ##############')
 
-            print('############################ +++++++++++++++++++      ############### all_event_authors_list ############################ ++++++++++++++++++ ##############')
-            print(all_event_authors_list)
-            print('############################ +++++++++++++++++++      ############### all_event_authors_list ############################ ++++++++++++++++++ ##############')
+            # print('############################ +++++++++++++++++++      ############### all_event_authors_list ############################ ++++++++++++++++++ ##############')
+            # print(all_event_authors_list)
+            # print('############################ +++++++++++++++++++      ############### all_event_authors_list ############################ ++++++++++++++++++ ##############')
 
             nodes = []
             count = {}
@@ -1383,9 +1367,9 @@ class SearchKeywordView(APIView):
 
             result_data = {"nodes": nodes, "links": all_pairs_dicts_list}
 
-            print('############################ +++++++++++++++++++      ############### result_data ############################ ++++++++++++++++++ ##############')
-            print(result_data)
-            print('############################ +++++++++++++++++++      ############### result_data ############################ ++++++++++++++++++ ##############')
+            # print('############################ +++++++++++++++++++      ############### result_data ############################ ++++++++++++++++++ ##############')
+            # print(result_data)
+            # print('############################ +++++++++++++++++++      ############### result_data ############################ ++++++++++++++++++ ##############')
 
             return Response(
                 {"titles": result_data})
@@ -1399,10 +1383,10 @@ View to get topics for the author network
 class SearchTopicView(APIView):
     def get(self, request, *args, **kwargs):
         url_path = request.get_full_path()
-        print("the url path is:", url_path)
+        # print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        print(topics_split)
+        # print(topics_split)
         return Response(
             {"titles": searchForTopics(topics_split[-1], topics_split[-2])})
 
@@ -1419,7 +1403,7 @@ class FetchAuthorView(APIView):
         print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        print(topics_split)
+        # print(topics_split)
         return Response({
             "authors":
             getAuthorFromAuthorName(topics_split[-3], topics_split[-2],
@@ -1430,10 +1414,10 @@ class FetchAuthorView(APIView):
 class OverviewChartViewTopics(APIView):
     def get(self, request, *args, **kwargs):
         url_path = request.get_full_path()
-        print("the url path is:", url_path)
+        # print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
-        print(topics_split)
+        # print(topics_split)
         return Response({
             "topicoverview":
             getFlowChartDataTopics(topics_split[-1], topics_split[-2])
@@ -1479,31 +1463,43 @@ class AuthorFetchYearView(APIView):
         print("##############AuthorFetchYearView")
         result_data = []
         models_data = []
-        session = graphDB_Driver.session()
+        session = settings.NEO4J_SESSION.session()
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_event_name = url_splits[-1]
         conference_name = url_splits[-2]
 
-        print(url_splits)
+        # print(url_splits)
         if conference_event_name == "all years":
             # models_data = confutils.get_authors_data(conference_name, "")
-            models_data = session.execute_read(
-                GetEventAuthors, conference_event_name)
+            # models_data = session.execute_read(
+            #     GetEventAuthors, conference_event_name)
+            author_has_papers_objs = session.execute_read(
+                GetConferenceAuthors, conference_name)
         else:
             # models_data = confutils.get_authors_data("", conference_event_name)
-            models_data = session.execute_read(
+            author_has_papers_objs = session.execute_read(
                 GetEventAuthors, conference_event_name)
+        for author_obj in author_has_papers_objs:
 
-        for data in models_data:
-            print(data.get('conference_event_name_abbr'))
+            author_event_papers_objs = session.execute_read(
+                GetAuthorPapers, author_obj.get('semantic_scolar_author_id'))
             result_data.append({
-                #     "value": data['name'],
-                #     "label": data['name']
-                "value": data.get('conference_event_name_abbr'),
-                "label": data.get('conference_event_name_abbr')
+                'semantic_scholar_author_id': author_obj.get('semantic_scolar_author_id'),
+                'name': author_obj.get('author_name'),
+                'semantic_scholar_url': author_obj.get('author_url'),
+                'no_of_papers': len(author_event_papers_objs),
+                'conference_name': conference_name,
             })
+        # for data in models_data:
+        #     result_data.append({
+        #         #     "value": data['name'],
+        #         #     "label": data['name']
+        #         "value": data.get('conference_event_name_abbr'),
+        #         "label": data.get('conference_event_name_abbr')
+        #     })
         session.close()
-        # result_data = sorted(result_data, key=lambda k: k['value'])
+        result_data = sorted(
+            result_data, key=lambda k: k['no_of_papers'], reverse=True)
 
         return Response({"authors": result_data})
 
@@ -1528,58 +1524,66 @@ class AuthorTopicComparisonView(APIView):
         first_author_name = url_splits_and_symbol[-4]
         second_author_name = url_splits_and_symbol[-3]
         conference_name = url_splits_slash[-2]
+        session = settings.NEO4J_SESSION.session()
+        first_author_obj = session.execute_read(
+            GetAuthorByName, first_author_name)
+        second_author_obj = session.execute_read(
+            GetAuthorByName, second_author_name)
 
-        first_author_obj = Author.objects.get(Q(author_name=first_author_name))
-        second_author_obj = Author.objects.get(
-            Q(author_name=second_author_name))
+        if (keyword_or_topic == 'keyword'):
+            keywords = session.execute_read(
+                GetAuthorKeyword, first_author_obj.get('semantic_scolar_author_id'))
+            return keywords
+        elif keyword_or_topic == 'topic':
+            topics = session.execute_read(
+                GetAuthorTopic, first_author_obj.get('semantic_scolar_author_id'))
+        # first_author_publications = confutils.get_author_publications_in_conf(
+        #     first_author_obj.get('semantic_scolar_author_id'), conference_name, conference_event_name_abbr)
 
-        first_author_publications = confutils.get_author_publications_in_conf(
-            first_author_obj.semantic_scolar_author_id, conference_name, conference_event_name_abbr)
+        # second_author_publications = confutils.get_author_publications_in_conf(
+        #     second_author_obj.get('semantic_scolar_author_id'), conference_name, conference_event_name_abbr)
 
-        second_author_publications = confutils.get_author_publications_in_conf(
-            second_author_obj.semantic_scolar_author_id, conference_name, conference_event_name_abbr)
+        # first_author_interests = confutils.get_author_interests(
+        #     first_author_publications, "", keyword_or_topic)
+        # sorted_data_first_author = dict(
+        #     sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
+        # reduced_sorted_data_first_author = dict(
+        #     itertools.islice(sorted_data_first_author.items(), 10))
 
-        first_author_interests = confutils.get_author_interests(
-            first_author_publications, "", keyword_or_topic)
-        sorted_data_first_author = dict(
-            sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
-        reduced_sorted_data_first_author = dict(
-            itertools.islice(sorted_data_first_author.items(), 10))
+        # second_author_interests = confutils.get_author_interests(
+        #     second_author_publications, "", keyword_or_topic)
+        # sorted_data_second_author = dict(sorted(second_author_interests.items(
+        # ), key=lambda item: item[1], reverse=True))  # itertools.islice(d.items(), 2)
+        # reduced_sorted_data_second_author = dict(
+        #     itertools.islice(sorted_data_second_author.items(), 10))
 
-        second_author_interests = confutils.get_author_interests(
-            second_author_publications, "", keyword_or_topic)
-        sorted_data_second_author = dict(sorted(second_author_interests.items(
-        ), key=lambda item: item[1], reverse=True))  # itertools.islice(d.items(), 2)
-        reduced_sorted_data_second_author = dict(
-            itertools.islice(sorted_data_second_author.items(), 10))
+        # authors_dict = {
+        #     k: [reduced_sorted_data_first_author.get(k, 0),
+        #         reduced_sorted_data_second_author.get(k, 0)]
+        #     for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
+        # }
 
-        authors_dict = {
-            k: [reduced_sorted_data_first_author.get(k, 0),
-                reduced_sorted_data_second_author.get(k, 0)]
-            for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
-        }
+        # set_intersect_key = list(
+        #     set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
 
-        set_intersect_key = list(
-            set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
+        # words = authors_dict.keys()
+        # weights = authors_dict.values()
+        # authors_name = [first_author_name, second_author_name]
+        # print(set_intersect_key, '-----------', words, '+++++++++',
+        #       weights, '++++++++', authors_name, '------------')
 
-        words = authors_dict.keys()
-        weights = authors_dict.values()
-        authors_name = [first_author_name, second_author_name]
-        print(set_intersect_key, '-----------', words, '+++++++++',
-              weights, '++++++++', authors_name, '------------')
+        # result_data.append(words)
+        # result_data.append(weights)
+        # result_data.append(authors_name)
+        # result_data.append(set_intersect_key)
 
-        result_data.append(words)
-        result_data.append(weights)
-        result_data.append(authors_name)
-        result_data.append(set_intersect_key)
+        # print('######################## HERE #########################')
+        # print(authors_dict)
+        # print('######################## HERE #########################')
 
-        print('######################## HERE #########################')
-        print(authors_dict)
-        print('######################## HERE #########################')
-
-        print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
-        print('############')
-        print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
+        # print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
+        # print('############')
+        # print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
 
         return Response({
             "authortopics": result_data})

@@ -422,7 +422,7 @@ class VennChart extends Component {
             <div style={{ display: display }}>
               <img
                 src={`data:image/png;base64,${items_y1}`}
-                style={{ marginLeft: "50px" }}
+                style={{ marginLeft: "250px" }}
               />
             </div>
           </Row>

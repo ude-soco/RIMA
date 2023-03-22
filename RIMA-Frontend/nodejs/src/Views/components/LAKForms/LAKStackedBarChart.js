@@ -413,7 +413,8 @@ class LAKStackedBarChart extends Component {
               options={this.state.options}
               series={this.state.series}
               type="bar"
-              height={350}
+              height={450}
+              width={1000}
             />
           </div>
         </div>

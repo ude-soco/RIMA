@@ -1,9 +1,9 @@
 //Done by Swarna
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import "d3-transition";
-import {BASE_URL_INTEREST} from "../../../Services/constants";
+import { BASE_URL_INTEREST } from "../../../Services/constants";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -12,7 +12,7 @@ import "tippy.js/animations/scale.css";
 // Themes begin
 // Themes end
 
-import {Button, Row, Col, Label} from "reactstrap";
+import { Button, Row, Col, Label } from "reactstrap";
 
 window.$value = "";
 
@@ -43,7 +43,7 @@ class VennDiagram extends Component {
   }
 
   handleToogle = (status) => {
-    this.setState({imageTooltipOpen: status});
+    this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
   };
 
@@ -137,21 +137,21 @@ class VennDiagram extends Component {
     if (isLoaded) {
       return (
         <>
-          <div/>
+          <div />
           {console.log(desc)}
-          <br/>
+          <br />
           <React.Fragment>
             <h2>Common topics/keywords</h2>
-            <br/>
+            <br />
             <p>
               This visualization provides common topics/keywords for the
               selected year
             </p>
-            <br/>
+            <br />
             <Label>Select two years to compare</Label>
             <Row>
             </Row>
-            <br/>
+            <br />
 
 
             <Row>
@@ -174,10 +174,10 @@ class VennDiagram extends Component {
                 />
               </div>
 
-              <div style={{display: display}}>
+              <div style={{ display: display }}>
                 <img
                   src={`data:image/png;base64,${items_y1}`}
-                  style={{marginLeft: "50px"}}
+                  style={{ marginLeft: "50px" }}
                 />
               </div>
             </Row>

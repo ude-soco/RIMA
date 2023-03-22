@@ -12,7 +12,7 @@ import {
   Label,
   Button
 } from "reactstrap";
-import {chartOptions, parseOptions} from "Services/variables/charts.js";
+import { chartOptions, parseOptions } from "Services/variables/charts.js";
 import Header from "../../../components/Headers/Header.js";
 import "../../../../assets/scss/custom.css";
 import TopicBar from "../../../components/LAKForms/TopicBar";
@@ -23,7 +23,7 @@ import LAKStackedBarChart from "../../../components/LAKForms/LAKStackedBarChart"
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 
 // BAB:BEGIN 08/06/2021 :: cover other conferences.
-import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 
 // years and conferences' names should be fetched later from a customed endpoint
 
@@ -39,7 +39,7 @@ class TopicResearch extends React.Component {
       tooltipOpen: false,
       imageTooltipOpen: false,
       // BAB:BEGIN 08/06/2021 :: cover other conferences
-      selectedOption: { label: 'LAK', value: 'LAK' },  
+      selectedOption: { label: 'LAK', value: 'LAK' },
       confEvents: [
         {
           value: "2011",
@@ -82,12 +82,12 @@ class TopicResearch extends React.Component {
           label: "2020"
         }
       ],
-      conference : [
+      conference: [
         { value: 'LAK', label: 'LAK' },
         { value: 'edm', label: 'edm' },
-        { value: 'aied', label: 'aied'},
+        { value: 'aied', label: 'aied' },
       ],
-  
+
       // BAB:END 08/06/2021 :: cover other conferences.
     };
     if (window.Chart) {
@@ -99,19 +99,19 @@ class TopicResearch extends React.Component {
     window.scrollTo(0, 0)
   }
 
-   // BAB:BEGIN 08/06/2021 :: cover other conferences.
+  // BAB:BEGIN 08/06/2021 :: cover other conferences.
   handleChange = selectedOption => {
     this.forceUpdate();
     this.setState({ selectedOption });
     console.log("updated");
     console.log(`Option selected:`, selectedOption);
     fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
-    .then(response => response.json())
-    .then(json => {
-      this.setState({
-        confEvents: json.years,
-      })
-    });
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          confEvents: json.years,
+        })
+      });
   };
   // BAB:END 08/06/2021 :: cover other conferences.
 
@@ -120,7 +120,7 @@ class TopicResearch extends React.Component {
     return (
       <>
         {/* Page content */}
-        <Container className="mt--7" fluid style={{maxWidth: "1400px"}}>
+        <Container className="mt--7" fluid style={{ maxWidth: "1400px" }}>
           <Card className="bg-gradient-default1 shadow">
             <CardHeader className="bg-transparent">
               <Row className="align-items-center">
@@ -136,15 +136,15 @@ class TopicResearch extends React.Component {
                   <div>
                     <h2 className="text-white1 mb-0">Comparison of Conference(s)</h2>
                     <p>
-                    The following visualizations compare the topics of conference over multiple years
+                      The following visualizations compare the topics of conference over multiple years
 
                     </p>
-                    <div style={{marginLeft: "40px"}}>
+                    <div style={{ marginLeft: "40px" }}>
                       <Label>Select conference</Label>
                       <br></br>
-                      <div style={{width: "200px"}}>
+                      <div style={{ width: "200px" }}>
                         <Select
-                        // BAB:BEGIN 08/06/2021 :: cover other conferences.
+                          // BAB:BEGIN 08/06/2021 :: cover other conferences.
                           placeholder="Select conference"
                           options={this.state.conference}
                           value={selectedOption}
@@ -168,10 +168,10 @@ class TopicResearch extends React.Component {
                       borderRadius: "2px",
                     }}
                   >
-                                        
+
 
                     <Col>
-                      <TopicBar conferenceName = {selectedOption.value} confEvents = {this.state.confEvents} />          {/*  BAB 08.06.2021 */ }
+                      <TopicBar conferenceName={selectedOption.value} confEvents={this.state.confEvents} />          {/*  BAB 08.06.2021 */}
                     </Col>
                   </div>
                 </div>
@@ -188,7 +188,7 @@ class TopicResearch extends React.Component {
                     }}
                   >
                     <Col>
-                      <LAKPie conferenceName = {selectedOption.value}  confEvents = {this.state.confEvents}/>       {/*  BAB 08.06.2021 */ } 
+                      <LAKPie conferenceName={selectedOption.value} confEvents={this.state.confEvents} />       {/*  BAB 08.06.2021 */}
                     </Col>
                   </div>
                 </div>
@@ -205,7 +205,7 @@ class TopicResearch extends React.Component {
                     }}
                   >
                     <Col>
-                      <LAKStackedBarChart  conferenceName = {selectedOption.value} confEvents = {this.state.confEvents}/>    {/*  BAB 08.06.2021 */ }
+                      <LAKStackedBarChart conferenceName={selectedOption.value} confEvents={this.state.confEvents} />    {/*  BAB 08.06.2021 */}
                     </Col>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ class TopicResearch extends React.Component {
                   }}
                 >
                   <Col>
-                    <LAKStackedAreaChart  conferenceName = {selectedOption.value} />   {/*  BAB 08.06.2021 */ } 
+                    <LAKStackedAreaChart conferenceName={selectedOption.value} />   {/*  BAB 08.06.2021 */}
                   </Col>
                 </div>
 
@@ -237,7 +237,7 @@ class TopicResearch extends React.Component {
                     }}
                   >
                     <Col>
-                      <VennChart  conferenceName = {selectedOption.value} confEvents = {this.state.confEvents}  page = 'topicreasearch' conferences = {this.state.conference}/>     {/*  BAB 08.06.2021 */ } 
+                      <VennChart conferenceName={selectedOption.value} confEvents={this.state.confEvents} page='topicreasearch' conferences={this.state.conference} />     {/*  BAB 08.06.2021 */}
                     </Col>
                   </div>
                 </div>
@@ -258,7 +258,7 @@ class TopicResearch extends React.Component {
               {/*</Row>*/}
             </CardHeader>
 
-            <ScrollTopWrapper/>
+            <ScrollTopWrapper />
           </Card>
         </Container>
 

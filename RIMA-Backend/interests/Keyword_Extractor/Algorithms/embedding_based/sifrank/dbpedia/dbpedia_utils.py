@@ -4,13 +4,13 @@ from itertools import product
 import math
 import networkx as nx
 from wikipediaapi import Wikipedia
-from sentence_transformers import util, SentenceTransformer
+# from sentence_traansformers import util, SentenceTransformer
 from ..utils import get_POSTagger
 import numpy as np
 import re
 
-import logging 
-from ...log  import LOG
+import logging
+from ...log import LOG
 
 logger = LOG(name=__name__, level=logging.DEBUG)
 
@@ -25,8 +25,6 @@ class DBpediaSpotlight:
         #self.sparql = SPARQLWrapper("http://localhost:8890/sparql")
         self.sparql.setTimeout(60)
         self.wiki_api = Wikipedia('en')
-        
-
 
     def annotate(self, keyphrases):
         """
@@ -35,12 +33,12 @@ class DBpediaSpotlight:
         final_dict = {}
         relation_dict = {}
         try:
-      
+
             for key, value in keyphrases.items():
                 params = {"text": key}
                 headers = {"Accept": "application/json"}
-                r = requests.get(self.url, headers=headers, verify=False,
-                                 params=params).json()
+                r = requests.get(self.url, headers=headers,
+                                 params=params, verify=False).json()
 
                 if 'Resources' in r:
                     resources = r['Resources']
@@ -62,14 +60,15 @@ class DBpediaSpotlight:
                             annotations.append(annotation)
 
         except Exception as e:
-            logger.error("Failed to annotate %s - %s" % (keyphrases , e))
+            logger.error("Failed to annotate %s - %s" % (keyphrases, e))
 
         # convert annotations to dictionary of name: weight
         print('annotations: ', annotations)
         for concept in annotations:
             if "name" in concept.keys():
                 final_dict.update({concept['name']: concept['weight']})
-                relation_dict.update({concept['name']: concept['original_name']})
+                relation_dict.update(
+                    {concept['name']: concept['original_name']})
         print('\nfinal_dict: ', final_dict)
         print('\nrelation_dict: ', relation_dict)
         return relation_dict, final_dict
@@ -101,6 +100,3 @@ class DBpediaSpotlight:
 
     def _exists(self, node, nodes):
         return any(node['id'] == _node['id'] for _node in nodes)
-
-
-

@@ -51,7 +51,7 @@ class LAKPie extends Component {
 
   displayAbstract(param) {
     fetch(
-      `${BASE_URL_CONFERENCE}` +
+      `${BASE_URL_CONFERENCE}/api/conferences/` +
       "getabstractdetails/" + this.props.conferenceName + "/" +
       param +
       "/" +

@@ -1,6 +1,6 @@
 import axios from "axios";
-import {BASE_URL} from "./constants";
-import {getItem} from "./utils/localStorage";
+import { BASE_URL } from "./constants";
+import { getItem } from "./utils/localStorage";
 
 
 class RestAPI {
@@ -151,6 +151,18 @@ class RestAPI {
       data: data,
     }).then((res) => res);
   }
+  static constructdatabase() {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/conferences/constructDatabase/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
   //** GET LIST Conferences API  BAB**//
   static getListConference() {
     const TOKEN = getItem("accessToken");
@@ -193,20 +205,20 @@ class RestAPI {
     }).then((res) => res);
   }
 
-  
-//** GET LIST PUBLICATIONS OF AN AUTHOR WITHIN A CONFERENCE  **//
-static getListPublications(conference_name_abbr,author_id) {
-  const TOKEN = getItem("accessToken");
-  return axios({
-    method: "get",
-    url: `${BASE_URL}/api/conferences/AuthorPublication/${conference_name_abbr}/${author_id}`,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Token ${TOKEN}`,
-    },
-  }).then((res) => res);
-}
+
+  //** GET LIST PUBLICATIONS OF AN AUTHOR WITHIN A CONFERENCE  **//
+  static getListPublications(conference_name_abbr, author_id) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "get",
+      url: `${BASE_URL}/api/conferences/AuthorPublication/${conference_name_abbr}/${author_id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
 
 
 
@@ -224,10 +236,10 @@ static getListPublications(conference_name_abbr,author_id) {
     }).then((res) => res);
   }
 
-  
-//** COLLECT PAPERS FOR AN EVENT **//
 
-  static collectEventPapers(conference_name_abbr,conference_event_name_abbr) {
+  //** COLLECT PAPERS FOR AN EVENT **//
+
+  static collectEventPapers(conference_name_abbr, conference_event_name_abbr) {
     const TOKEN = getItem("accessToken");
     return axios({
       method: "get",
@@ -241,7 +253,7 @@ static getListPublications(conference_name_abbr,author_id) {
   }
 
 
- //** EXTRACT TRENDS OF AN EVENT **//
+  //** EXTRACT TRENDS OF AN EVENT **//
   static ExtractEventTrends(conference_event_name_abbr) {
     const TOKEN = getItem("accessToken");
     return axios({
@@ -254,7 +266,7 @@ static getListPublications(conference_name_abbr,author_id) {
       },
     }).then((res) => res);
   }
-  
+
 
   //** EXTRACT TRENDS OF THE AUTHORS OF AN EVENT **//
   static ExtractAuthorsTrends(conference_event_name_abbr) {
@@ -677,7 +689,7 @@ static getListPublications(conference_name_abbr,author_id) {
     }).then((res) => res);
   }
 
-//**added by mouadh */
+  //**added by mouadh */
   static getsimilartweets() {
     const TOKEN = getItem("accessToken");
     return axios({
@@ -690,7 +702,7 @@ static getListPublications(conference_name_abbr,author_id) {
       },
     }).then((res) => res);
   }
-  
+
   //Publication Recommendation
   //Jaleh
   static extractPapersFromTags(data) {

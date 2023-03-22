@@ -14,6 +14,8 @@ import logging.config
 from django.core.management.utils import get_random_secret_key
 import yaml
 from dotenv import load_dotenv
+from neo4j import GraphDatabase
+
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -65,8 +67,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    #This line needs to be commented only for conference Insights and doesn't work with docker at the moment
-    #'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    # This line needs to be commented only for conference Insights and doesn't work with docker at the moment
+    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
 }
 
 AUTH_USER_MODEL = "accounts.User"
@@ -120,7 +122,7 @@ logging.config.dictConfig({
     'loggers': {
         '': {
             'level': LOGLEVEL,
-            'handlers': ['console',],
+            'handlers': ['console', ],
         },
     },
 })
@@ -148,6 +150,13 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
+
+# Neo4j configuration
+NEO4J_HOST = os.environ.get("NEO4J_HOST")
+NEO4J_USER = os.environ.get("NEO4J_USER")
+NEO4J_PASS = os.environ.get("NEO4J_PASS")
+NEO4J_SESSION = GraphDatabase.driver(NEO4J_HOST, auth=(NEO4J_USER, NEO4J_PASS))
+NEO4J_SESSION.verify_connectivity()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -224,23 +233,24 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
-TEMP_DIR  = os.environ.get("TEMP_DIR",  "../tmp")
+TEMP_DIR = os.environ.get("TEMP_DIR",  "../tmp")
 MODEL_DIR = os.environ.get("MODEL_DIR", "../model")
 PRELOAD_MODELS = os.environ.get("PRELOAD_MODELS", "false").lower() == "true"
-
 
 
 if not configuration["glove_model_file"]:
     GLOVE_MODEL_FILE = None
     GLOVE_MODEL_FILE_PATH = None
 else:
-    GLOVE_MODEL_FILE = os.path.join(MODEL_DIR, configuration["glove_model_file"])
+    GLOVE_MODEL_FILE = os.path.join(
+        MODEL_DIR, configuration["glove_model_file"])
     GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
 
 if not configuration["glove_model_file"]:
     TRANSFORMER_MODEL_FILE_PATH = None
 else:
-    TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
+    TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(
+        configuration["transformer_model_file"])
 
 if not configuration["stanfordcorenlp_file"]:
     STANFORDCORENLP = None
@@ -334,7 +344,7 @@ else:
 
 # use bellow line if specter is not used
 # SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","")
-# use bellow line for specter model 
+# use bellow line for specter model
 # SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","allenai/specter")
 
 

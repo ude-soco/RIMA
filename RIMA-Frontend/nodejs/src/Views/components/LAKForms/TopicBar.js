@@ -19,6 +19,7 @@ class TopicBar extends Component {
     this.state = {
       selectValue: "",
       selectyear: "",
+      selecttype: "",
       items: [],
       weights: [],
       series1: [],
@@ -47,10 +48,11 @@ class TopicBar extends Component {
     });
   }
 
-  displayDocChart(topic, year) {
+  displayDocChart(type, topic, year) {
     var selectyear = "2011";
+    console.log("faasdasd", type)
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "topicdetails/" + topic + "/" + year
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "topicdetails/" + type + "/" + topic + "/" + year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -65,7 +67,7 @@ class TopicBar extends Component {
               enabled: true,
             },
             title: {
-              text: "Top 10 publications related to '" + topic + "'",
+              text: "          Publications related to '" + topic + "'",
             },
             chart: {
               type: "bar",
@@ -134,7 +136,94 @@ class TopicBar extends Component {
         });
       });
   }
+  /* new function */
+  displaytopicDocChart(topic, year) {
+    var selectyear = "2011";
+    fetch(
+      `${BASE_URL_CONFERENCE}/api/conferences/` + "topicdetails/topic/" + topic + "/" + year
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        this.setState({
+          items1: json.docs[0],
+          numdocs: json.docs[1],
+          //bardata:json.docs[2],
+          //doctitle:json.docs[3],
+          series1: [{ name: "", data: json.docs[1] }],
+          options1: {
+            dataLabels: {
+              enabled: true,
+            },
+            title: {
+              text: "publications related to '" + topic + "'",
+            },
+            chart: {
+              type: "bar",
+              height: 350,
+              events: {
+                dataPointSelection: function (event, chartContext, config) {
+                  var title =
+                    config.w.config.xaxis.categories[config.dataPointIndex];
+                  var url;
+                  fetch(
+                    `${BASE_URL_CONFERENCE}/api/conferences/` + "fetchpaper/" + title
+                  )
+                    .then((response) => response.json())
+                    .then((json) => {
+                      url = json.url;
+                      console.log(url);
+                      window.open(url);
+                    });
+                },
+              },
+            },
+            plotOptions: {
+              bar: {
+                horizontal: true,
+              },
+            },
+            xaxis: {
+              categories: json.docs[0],
+            },
+            tooltip: {
+              custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                return (
+                  '<div class="arrow_box">' +
+                  "<span>" +
+                  w.globals.labels[dataPointIndex] +
+                  "<br></br><b>" +
+                  "click on the bar to view more..</b>" +
+                  "</span>" +
+                  "</div>"
+                );
+              },
+            },
 
+            fill: {
+              colors: ["#eababa", "#006400", "#E91E63"],
+              strokeColors: "#fff",
+              hover: {
+                size: 20,
+              },
+            },
+
+            noData: {
+              text: "No data Found",
+              align: "center",
+              verticalAlign: "middle",
+              offsetX: 0,
+              offsetY: 0,
+              style: {
+                color: undefined,
+                fontSize: "25px",
+                fontFamily: undefined,
+              },
+            },
+          },
+          secondchart: true,
+        });
+      });
+  }
   componentDidUpdate(prevProps) {
     if (this.props.confEvent !== prevProps.confEvent) {
       this.componentDidMount()
@@ -166,7 +255,7 @@ class TopicBar extends Component {
                       config.w.config.xaxis.categories[config.dataPointIndex];
                     console.log('chartContext ' + chartContext);
                     console.log('config.w.globals.selectedDataPoints[0][0]' + config.w.globals.selectedDataPoints[0][0]);
-                    display(topic, this.props.confEvent);
+                    display("topic", topic, this.props.confEvent);
                   },
                 },
               },
@@ -214,7 +303,7 @@ class TopicBar extends Component {
             },
             isLoaded: true,
           },
-          display("Learning", this.props.confEvent)
+          display("topic", "Learning", this.props.confEvent)
         );
       });
   }
@@ -254,7 +343,7 @@ class TopicBar extends Component {
                     var topic =
                       config.w.config.xaxis.categories[config.dataPointIndex];
                     console.log(topic);
-                    display(topic, year);
+                    display("keyword", topic, year);
                   },
                 },
               },
@@ -291,7 +380,7 @@ class TopicBar extends Component {
             },
             isLoaded: true,
           },
-          display(json.keywords[0][0], year)
+          display("keyword", json.keywords[0][0], year)
         );
       });
   }
@@ -299,6 +388,7 @@ class TopicBar extends Component {
   selectValue(e) {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
+    var type = "topic";
     fetch(
       `${BASE_URL_CONFERENCE}/api/conferences/` + "toptopics/topic/" + this.state.selectyear
     )
@@ -322,7 +412,7 @@ class TopicBar extends Component {
                     var topic =
                       config.w.config.xaxis.categories[config.dataPointIndex];
                     console.log(topic);
-                    display(topic, year);
+                    display(type, topic, year);
                   },
                 },
               },
@@ -348,7 +438,7 @@ class TopicBar extends Component {
             },
             isLoaded: true,
           },
-          display(json.keywords[0][0], year)
+          display("topic", json.keywords[0][0], year)
         );
       });
   }
@@ -384,7 +474,7 @@ class TopicBar extends Component {
 
     if (isLoaded) {
       return (
-        <>
+        <div >
           <Form role="form">
             <FormGroup>
               <h2> Top 10 topics/keywords </h2>
@@ -456,23 +546,27 @@ class TopicBar extends Component {
                 options={options}
                 series={series}
                 type="bar"
-                height={250}
+                height={400}
               />
+              <div style={{ marginLeft: '140px', textAlign: 'center' }}>Weight</div>
             </Col>
             <Col>
               {secondchart ? (
-                <ReactApexChart
-                  options={options1}
-                  series={series1}
-                  type="bar"
-                  height={250}
-                />
+                <>
+                  <ReactApexChart
+                    options={options1}
+                    series={series1}
+                    type="bar"
+                    height={400}
+                  />
+                  <div style={{ marginLeft: '30px', textAlign: 'center' }}>Count</div>
+                </>
               ) : (
                 <div></div>
               )}
             </Col>
           </Row>
-        </>
+        </div >
       );
     } else {
       return (

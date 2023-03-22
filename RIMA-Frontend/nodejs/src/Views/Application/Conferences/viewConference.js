@@ -218,7 +218,14 @@ class viewConference extends React.Component {
       eventsmodal: !this.state.eventsmodal,
     });
   };
-
+  handleSubmitlabel() {
+    RestAPI.constructdatabase().then((response) => {
+      toast.success("Labels Added!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2000,
+      });
+    })
+  };
 
   handleChange = (e) => {
     this.setState({
@@ -269,10 +276,13 @@ class viewConference extends React.Component {
           <Row>
             <Col className="order-xl-1" xl="12">
               <Card className="bg-secondary shadow">
+
                 <CardHeader className="bg-white border-0">
-                  <Row className="align-items-center">
-                    <Col xs="8">
-                      <h3 className="mb-0">Add Conference</h3>
+                  <Row className="align-items-flex-end">
+                    <Col xs="6">
+                      <div>
+                        <h3 className="mb-0" style={{ marginTop: '10px' }}>Add Conference</h3>
+                      </div>
                     </Col>
                   </Row>
                 </CardHeader>
