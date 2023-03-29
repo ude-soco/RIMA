@@ -41,6 +41,8 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'false').lower() == 'true'
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
+NEOMODEL_NEO4J_BOLT_URL = os.environ.get("NEO4J_BOLT_URL")
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,6 +56,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_neomodel',
     'common',
     'accounts',
     'interests',
