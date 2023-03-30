@@ -1,17 +1,15 @@
 from .DataExtractor import ConferenceDataCollector as dataCollector
 from .models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
-                     Conf_Event_keyword, Event_has_keyword, Author_Event_keyword, Author_has_Keyword, Author_Event_Topic, Author_has_Topic, PreloadedConferenceList)
+                     Conf_Event_keyword, Event_has_keyword)
 from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikicategory, wikifilter
 from django.db.models import Q
 import base64
-from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
+from matplotlib_venn import venn2_unweighted
 from matplotlib import pyplot as plt
 from django.conf import settings
 import re
-from neo4j import GraphDatabase
-from .ConferenceUtilsCql import (CheckAuthorKeywordRelation, CheckAuthorTopicRelation, CheckEventKeywordRelation, CheckEventTopicRelation, Conference_has_author, CreateAuthor_has_keyword, CreateAuthor_has_topic, CreatePublication_has_keyword, CreatePublication_has_topic, GetAuthor, CreateCoauthor, CreateKeyword, CreateTopic, CreateEvent_has_keyword, CreateEvent_has_topic, GetAuthorKeyword, GetAuthorKeywordWeight, GetAuthorPapers, GetAuthorTopic, GetAuthorTopicWeight, GetConferenceData, GetEventKeywordWeight, GetEventKeyword,  GetEventTopic, GetEventTopicWeight, GetKeyword, GetPublication, GetPublicationFromKeyword, GetPublicationFromTopic, GetTopic, GetEventAuthors, GetConferenceAuthors, GetConferencePapers, GetConferences, GetEventData, GetConferenceEvents, GetEventPapers, UpdateAuthorKeywordRelation, UpdateAuthorTopicRelation, UpdateConferenceEvent, CreateAuthor,
-                                 CreateConference, CreateEvent, Create_has_event, CreateAuthor, CreatePaper, Author_has_paper, Conference_has_paper, Event_has_paper, Event_has_author, UpdateEventKeywordRelation, UpdateEventTopicRelation)
+from .ConferenceUtilsCql import (cql_check_author_keyword_relation, cql_check_author_topic_relation, cql_check_event_keyword_relation, cql_check_event_topic_relation, cql_conference_has_author, cql_create_author_has_keyword, cql_create_author_has_topic, cql_create_publication_has_keyword, cql_create_publication_has_topic, cql_get_author, cql_create_coauthor, cql_create_keyword, cql_create_topic, cql_create_event_has_keyword, cql_create_event_has_topic, cql_get_author_keyword, cql_get_author_keyword_weight, cql_get_author_papers, cql_get_author_topic, cql_get_author_topic_weight, cql_get_conference_data, cql_get_event_keyword_weight, cql_get_event_keyword,  cql_get_event_topic, cql_get_event_topic_weight, cql_get_keyword, cql_get_publication, cql_get_publication_from_keyword, cql_get_publication_from_topic, cql_get_topic, cql_get_event_authors, cql_get_conference_authors, cql_get_conference_papers, cql_get_conferences, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_author_keyword_relation, cql_update_author_topic_relation, cql_create_author,
+                                 cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author, cql_update_event_keyword_relation, cql_update_event_topic_relation)
 from django.conf import settings
 
 from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import (
@@ -37,25 +35,19 @@ def get_conference_general_data(conference_name_abbr):
     result_data = {'series': []}
     conference_events_result_data = []
     conference_events_years = []
-    # print("11111")
 
     conference_preloaded_model_data = session.execute_read(
-        GetConferenceData, conference_name_abbr)
-    # print("zzzzz", conference_preloaded_model_data)
+        cql_get_conference_data, conference_name_abbr)
     conference_events_model_objs = session.execute_read(
-        GetConferenceEvents, conference_name_abbr)
-    # print("22222", conference_events_model_objs)
+        cql_get_conference_events, conference_name_abbr)
 
     conference_papers_model_objs = session.execute_read(
-        GetConferencePapers, conference_name_abbr)
-    # print("3333", conference_papers_model_objs)
+        cql_get_conference_papers, conference_name_abbr)
 
     author_has_papers_objs = session.execute_read(
-        GetConferenceAuthors, conference_name_abbr)
-    # print("4444", author_has_papers_objs)
+        cql_get_conference_authors, conference_name_abbr)
     conference_full_name = conference_preloaded_model_data[0].get(
         'conference_name_abbr')
-    # print("55555", conference_full_name)
 
     conference_url = conference_preloaded_model_data[0].get('conference_url')
     no_of_events = len(conference_events_model_objs)
@@ -66,14 +58,12 @@ def get_conference_general_data(conference_name_abbr):
     event_based_papers_data['name'] = 'number of papers'
     event_based_authors_data = {'name': '', 'data': []}
     event_based_authors_data['name'] = 'number of authors'
-    # print("66666", event_based_papers_data)
-    # print("77777", event_based_authors_data)
 
     for conference_event in conference_events_model_objs:
         no_of_event_papers = len(session.execute_write(
-            GetEventPapers, conference_event.get('conference_event_name_abbr')))
+            cql_get_event_papers, conference_event.get('conference_event_name_abbr')))
         no_of_event_authors = len(session.execute_write(
-            GetEventAuthors, conference_event.get('conference_event_name_abbr')))
+            cql_get_event_authors, conference_event.get('conference_event_name_abbr')))
 
         event_based_papers_data['data'].append(no_of_event_papers)
         event_based_authors_data['data'].append(no_of_event_authors)
@@ -84,7 +74,6 @@ def get_conference_general_data(conference_name_abbr):
     result_data['series'].append(event_based_papers_data)
     result_data['series'] .append(event_based_authors_data)
 
-    #result_data['series'] = conference_events_result_data,
     result_data['conference_events'] = conference_events_years
     result_data['other_data'] = {
         'conference_full_name': conference_name_abbr,
@@ -94,17 +83,6 @@ def get_conference_general_data(conference_name_abbr):
         'no_of_all_authors': no_of_all_authors
 
     }
-
-    # print('!!!! Conference Data !!!!')
-    # print(conference_name_abbr)
-    # print(conference_full_name)
-    # print(conference_url)
-    # print(no_of_events)
-    # print(no_of_all_papers)
-    # print(no_of_all_authors)
-
-    # print(result_data)
-    # print('!!!! Conference Data !!!!')
     session.close()
     return result_data
 
@@ -122,11 +100,10 @@ def get_conferences_list():
     data = []
     session = settings.NEO4J_SESSION.session()
 
-    conferences = session.execute_read(GetConferences)
+    conferences = session.execute_read(cql_get_conferences)
     for x in range(len(conferences)):
-        # print(conferences[x])
         conference_events = session.execute_read(
-            GetConferenceEvents, conferences[x].get('conference_name_abbr'))
+            cql_get_conference_events, conferences[x].get('conference_name_abbr'))
         data.append({
             'platform_name': conferences[x].get('platform_name'),
             'platform_url': conferences[x].get('platform_url'),
@@ -154,18 +131,15 @@ def get_authors_data(conference_name_abbr="", conference_event_name_abbr=""):
 
     if conference_event_name_abbr == "":
         author_has_papers_objs = session.execute_read(
-            GetConferenceAuthors, conference_name_abbr)
-        # author_has_papers_objs = Author_has_Papers.objects.filter(conference_name_abbr_id=conference_name_abbr
-        #                                                           ).values_list('author_id', flat=True
-        #                                                                         ).order_by('author_id').distinct()
+            cql_get_conference_authors, conference_name_abbr)
     else:
         author_has_papers_objs = session.execute_read(
-            GetEventAuthors, conference_event_name_abbr)
+            cql_get_event_authors, conference_event_name_abbr)
 
     for author_obj in author_has_papers_objs:
 
         author_event_papers_objs = session.execute_read(
-            GetAuthorPapers, author_obj.get('semantic_scolar_author_id'))
+            cql_get_author_papers, author_obj.get('semantic_scolar_author_id'))
         data.append({
             'semantic_scholar_author_id': author_obj.get('semantic_scolar_author_id'),
             'name': author_obj.get('author_name'),
@@ -195,22 +169,13 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=10)
     keywords = {}
     topics = {}
     session = settings.NEO4J_SESSION.session()
-    # for publication in publications_list:
-    #     if publication['title'] and publication['abstract']:
-    #         abstract_title_str += publication['title'] + \
-    #             " " + publication['abstract']
 
     if keyword_or_topic == 'keyword':
-        keywords = session.execute_read(GetAuthorKeyword, author_id)
-        # keywords = getKeyword(abstract_title_str, 'SifRank', num)
+        keywords = session.execute_read(cql_get_author_keyword, author_id)
         return keywords
 
     elif keyword_or_topic == 'topic':
-        topics = session.execute_read(GetAuthorTopic, author_id)
-
-        # keywords = getKeyword(abstract_title_str, 'SifRank', num)
-        # relation, topics = wikifilter(keywords)
-
+        topics = session.execute_read(cql_get_author_topic, author_id)
         return topics
 
     return ""
@@ -232,20 +197,14 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
     result_data = []
     if conference_event_name_abbr == "":
         author_has_papers_objs = session.execute_read(
-            GetAuthorPapers, author_id)
-        # Author_has_Papers.objects.filter(
-        #     conference_name_abbr_id=conference_name_abbr, author_id_id=author_id)
+            cql_get_author_papers, author_id)
     else:
         print('here', conference_event_name_abbr)
         author_has_papers_objs = session.execute_read(
-            GetAuthorPapers, author_id)
-        # author_has_papers_objs = Author_has_Papers.objects.filter(
-        #     conference_event_name_abbr_id=conference_event_name_abbr, author_id_id=author_id)
+            cql_get_author_papers, author_id)
         print('here', author_has_papers_objs)
 
     for author_has_papers_obj in author_has_papers_objs:
-        # paper_data = Conference_Event_Paper.objects.get(
-        #     paper_id=author_has_papers_obj.paper_id_id)
         result_data.append({
             'semantic_scholar_paper_id': author_has_papers_obj.get('paper_id'),
             'paper_doi': author_has_papers_obj.get('paper_doi'),
@@ -255,9 +214,6 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
             'conference_event': author_has_papers_obj.get('years'),
         })
 
-    # sorted_data = sorted(
-    #     result_data, key=lambda k: k['conference_event'], reverse=True)
-    # return sorted_data
     return result_data
 
 
@@ -274,12 +230,8 @@ def get_event_papers_data(conference_event_name_abbr):
     session = settings.NEO4J_SESSION.session()
 
     conference_event_obj = session.execute_read(
-        GetEventPapers, conference_event_name_abbr)
+        cql_get_event_papers, conference_event_name_abbr)
     session.close()
-    # if conference_event_obj:
-    #     conference_event_papers_data = session.execute_read(
-    #         GetEventPapers, conference_event_name_abbr)
-    # print('PAPERS DATA',conference_event_papers_data)
     return conference_event_obj
 
 
@@ -296,18 +248,15 @@ def get_keywords_from_models(conference_event_name_abbr):
 
     data = []
     event_has_keyword_objs = session.execute_read(
-        GetEventKeyword, conference_event_name_abbr)
+        cql_get_event_keyword, conference_event_name_abbr)
     session.close()
     for event_has_keyword_obj in event_has_keyword_objs:
-        # conf_event_keyword_obj = Conf_Event_keyword.objects.get(
-        #     keyword_id=event_has_keyword_obj.keyword_id_id)
         data.append({
             'keyword': event_has_keyword_obj.get('keyword'),
             'weight': event_has_keyword_obj.get('weight'),
             'event': event_has_keyword_obj.get('conference_event_name_abbr'),
 
         })
-    # print("asdasdasdddd", data)
     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
     return sorted_data
 
@@ -325,25 +274,19 @@ def get_topics_from_models(conference_event_name_abbr):
 
     data = []
     event_has_topic_objs = session.execute_read(
-        GetEventTopic, conference_event_name_abbr)
+        cql_get_event_topic, conference_event_name_abbr)
 
     for event_has_topic_obj in event_has_topic_objs:
-        # conf_event_topic_obj = Conf_Event_Topic.objects.get(
-        #     topic_id=event_has_topic_obj.topic_id_id)
-        # maxWeight = session.execute_read(
-        #     GetEventTopicWeight, conference_event_name_abbr, event_has_topic_obj.get('topic'))
-
         data.append({
             'topic': event_has_topic_obj.get('topic'),
             'weight': event_has_topic_obj.get('weight'),
             'event': event_has_topic_obj.get('conference_event_name_abbr'),
 
         })
-    # print("asdasdasdsss", data)
+
     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
     session.close()
 
-    #print(' **** READ TOPICS TEST **** ',sorted_data, ' **** READ TOPICS TEST **** ')
     return sorted_data
 
 
@@ -358,22 +301,15 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOr
     """
     session = settings.NEO4J_SESSION.session()
 
-    # conference_event_papers_data = session.execute_read(
-    #     GetEventPapers, conference_event_name_abbr)
-    # print(conference_event_papers_data[0].get(
-    #     'abstract'), "conference_event_papers_data")
     titles_abstracts = []
     if (KeywordOrTopic == "keyword"):
         conference_event_papers_data1 = session.execute_read(
-            GetPublicationFromKeyword, conference_event_name_abbr, keyword)
+            cql_get_publication_from_keyword, conference_event_name_abbr, keyword)
     elif (KeywordOrTopic == "topic"):
         conference_event_papers_data1 = session.execute_read(
-            GetPublicationFromTopic, conference_event_name_abbr, keyword)
+            cql_get_publication_from_topic, conference_event_name_abbr, keyword)
 
     for paper_data in conference_event_papers_data1:
-        # if paper_data.get('title') and paper_data.get('abstract'):
-        #     if keyword in paper_data.get('abstract'):
-        #         print(paper_data.get('title'), paper_data.get('abstract'))
         titles_abstracts.append({
             'title': paper_data.get('title'),
             'abstarct': paper_data.get('abstract'),
@@ -381,10 +317,9 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOr
             'venue': paper_data.get('paper_venu'),
             'paper_id': paper_data.get('paper_id')
         })
-        # print(titles_abstracts)
+
     session.close()
-    # print(titles_abstracts, "print(titles_abstracts)")
-    # print(keyword, "keyword")
+
     return titles_abstracts
 
 
@@ -413,17 +348,17 @@ def get_shared_words_between_events(conference_events_list, keyword_or_topic):
 
         for data in conference_event_data:
             all_words.append(data.get(keyword_or_topic))
-        # print(all_words)
+
     shared_words = list(set([word for word in all_words if all_words.count(
         word) == len(conference_events_list)]))
-    # print(shared_words)
+
     session = settings.NEO4J_SESSION.session()
 
     for word in shared_words:
         words_weights = []
         for conference_event in conference_events_list:
             conference_event_obj = session.execute_read(
-                GetEventData, conference_event)
+                cql_get_event_data, conference_event)
             conf_event_word_data = get_word_weight_event_based(
                 conference_event_obj, word, keyword_or_topic)
             words_weights.append(conf_event_word_data[0]['weight'])
@@ -431,12 +366,9 @@ def get_shared_words_between_events(conference_events_list, keyword_or_topic):
             'word': word,
             'weight': words_weights
         })
+
     session.close()
     result_data = [shared_words_final_data, conference_events_list]
-
-    # print('result_data stacked bar NEW')
-    # print(result_data)
-    # print('result_data stacked bar NEW')
 
     return result_data
 
@@ -461,7 +393,7 @@ def get_shared_words_between_conferences(conferences_list, keyword_or_topic):
 
     for conference in conferences_list:
         conference_event_objs = session.execute_read(
-            GetConferenceEvents, conference)
+            cql_get_conference_events, conference)
 
         for conference_event in conference_event_objs:
             if keyword_or_topic == 'topic':
@@ -476,16 +408,9 @@ def get_shared_words_between_conferences(conferences_list, keyword_or_topic):
         conferences_words.append(one_conference_words)
         one_conference_words = []
 
-    # print('conferences_words')
-    # print(conferences_words)
-    # print('conferences_words')
-
     shared_words = set.intersection(*map(set, conferences_words))
-
-    # print('shared_words')
-    # print(shared_words)
-    # print('shared_words')
     session.close()
+
     return shared_words
 
 
@@ -506,19 +431,15 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
 
     if keyword_or_topic == 'topic':
         word_object = session.execute_read(
-            GetTopic, word)
+            cql_get_topic, word)
     elif keyword_or_topic == 'keyword':
         word_object = session.execute_read(
-            GetKeyword, word)
-
-    # print('topic_object')
-    # print(word_object)
-    # print('topic_object')
+            cql_get_keyword, word)
 
     for conference_event in conference_event_objs:
         if keyword_or_topic == 'topic':
             check_exist = session.execute_read(
-                GetEventTopicWeight, conference_event.get('conference_event_name_abbr'), word_object[0].get('topic'))
+                cql_get_event_topic_weight, conference_event.get('conference_event_name_abbr'), word_object[0].get('topic'))
             if check_exist:
                 weight = check_exist[0].get('weight')
                 result_data.append({
@@ -537,13 +458,9 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
 
         elif keyword_or_topic == 'keyword':
             check_exist = session.execute_read(
-                GetEventKeywordWeight, conference_event.get('conference_event_name_abbr'), word_object[0].get('keyword'))
-            # print(conference_event.get('conference_event_name_abbr'))
-            # print(check_exist, "0000000")
+                cql_get_event_keyword_weight, conference_event.get('conference_event_name_abbr'), word_object[0].get('keyword'))
             if check_exist:
                 weight = check_exist[0].get('weight')
-                # Event_has_keyword.objects.get(
-                #     conference_event_name_abbr=conference_event.conference_event_name_abbr, keyword_id=word_object.keyword_id).weight
                 result_data.append({
                     'word': word,
                     'conference_event_abbr': conference_event.get('conference_event_name_abbr'),
@@ -557,10 +474,9 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
                     'weight': 0,
                     'year': re.sub("[^0-9]", "", conference_event.get('conference_event_name_abbr').split('-')[0])
                 })
-    # print('############## Weights #################')
-    # print(result_data)
-    # print('############## Weights #################')
+
     session.close()
+
     return result_data
 
 
@@ -582,13 +498,8 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     session = settings.NEO4J_SESSION.session()
 
     for conference in conferences_list:
-        # conference_obj = Conference.objects.get(
-        #     conference_name_abbr=conference)
-
         conference_event_objs = session.execute_read(
-            GetConferenceEvents, conference)
-        # Conference_Event.objects.filter(
-        #     conference_name_abbr=conference_obj)
+            cql_get_conference_events, conference)
         intermediate_list = []
         for conference_event_obj in conference_event_objs:
             confernece_year = re.sub(
@@ -608,10 +519,8 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     elif all_or_shared == 'all':
         result_data = sorted(list(set().union(*years)))
 
-    # print('#################### result_data ######################')
-    # print(result_data)
-    # print('#################### result_data ######################')
     session.close()
+
     return result_data
 
 
@@ -657,7 +566,6 @@ def add_data_to_conf_event_model2(conference_name_abbr):
 
     session = settings.NEO4J_SESSION.session()
 
-    # print("################")
     conf_list = []
     conf_url = ""
     conf_complete_name = ""
@@ -668,29 +576,20 @@ def add_data_to_conf_event_model2(conference_name_abbr):
     valid_events_urls_list.sort()
     cqlCount = f"MATCH (c:Conference) WHERE c.conference_name_abbr='{conference_name_abbr}' RETURN count(c)"
     stored_conferences = session.run(cqlCount)
-    # print("****", stored_conferences.value()[0], "****")
     index = 0
-    # print("##########&&&&&&&&&")
 
     if stored_conferences:
         cqlNameQuery = f"MATCH (c:Conference) WHERE c.conference_name_abbr='{conference_name_abbr}' RETURN c.conference_name_abbr"
         conference_obj = session.run(cqlNameQuery).value()[0]
-        # print("**************", conference_obj)
-        # conference_obj = Conference.objects.get(conference_name_abbr=conference_name_abbr)
         if len(conf_list) != 0 and len(valid_events_urls_list) != 0:
             for event in valid_events_urls_list:
-                # cqlcreate = "CREATE (e:Event {conference_event_name_abbr :" + \
-                #     f"'{conf_list[index]}'"+",conference_event_url :" + f"'{event}'" + \
-                #     ",conference_name_abbr :" + \
-                #     f"'{conference_obj}'"+'})'
-                # session.run(cqlcreate)
                 try:
                     session.execute_write(
-                        CreateEvent, f'{conf_list[index]}', f'{event}')
+                        cql_create_event, f'{conf_list[index]}', f'{event}')
                 except:
                     print(f"{conf_list[index]} already exist")
                 session.execute_write(
-                    Create_has_event, f'{conference_obj}', f'{conf_list[index]}')
+                    cql_create_has_event, f'{conference_obj}', f'{conf_list[index]}')
 
                 index += 1
     session.close()
@@ -719,14 +618,6 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr, conf_event_na
     for paper_data in data['paper_data']:
         if Conference_Event_Paper.objects.filter(paper_id=paper_data['paperId']).exists():
             authors = paper_data['authors']
-
-            # print(
-            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            # print(conference_event_url)
-            # print(authors)
-            # print(
-            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-
             pass
         else:
             event_paper = Conference_Event_Paper.objects.create(
@@ -737,7 +628,6 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr, conf_event_na
                 url=paper_data['url'],
                 year=paper_data['year'],
                 abstract=paper_data['abstract'],
-                #no_of_cititations = paper_data['doi'],
                 citiations=len(paper_data['citations']),
                 paper_venu=paper_data['venue'],
                 conference_name_abbr=conference_name_abbr
@@ -745,19 +635,10 @@ def add_data_to_conf_paper_and_author_models(conference_name_abbr, conf_event_na
             event_paper.save()
             authors = paper_data['authors']
 
-            # print(
-            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            # print(conference_event_url)
-            # print(authors)
-            # print(
-            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-
             for author_data in authors:
-                # print(author_data)
                 if author_data['authorId']:
                     add_data_to_author_models(
                         author_data, event_paper, conference_obj, conference_event_obj)
-                # print(author_data)
 
 
 def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_name_abbr):
@@ -770,73 +651,55 @@ def add_data_to_conf_paper_and_author_models2(conference_name_abbr, conf_event_n
     """
     session = settings.NEO4J_SESSION.session()
     conference_event_obj = session.execute_read(
-        GetEventData, f'{conf_event_name_abbr}')
-    # print(conference_event_obj, "fatthyfathy")
+        cql_get_event_data, f'{conf_event_name_abbr}')
     conference_event_url = conference_event_obj[0].get(
         'conference_event_url')
 
     data = dataCollector.fetch_all_dois_ids(
         conference_name_abbr, conf_event_name_abbr, conference_event_url)
     data = dataCollector.extract_papers_data(data)
-    # print("data:", data)
 
     for paper_data in data['paper_data']:
         if 'error' in paper_data:
-            # print(f"{paper_data['error']} %%%%%%%%%%%")
-
             pass
         else:
-            # print("data:", paper_data)
             try:
                 session.execute_write(
-                    CreatePaper, f"{paper_data['paperId']}", f"{paper_data['doi']}", f"{paper_data['title']}", f"{paper_data['url']}", f"{paper_data['year']}", f"{paper_data['abstract']}", f"{paper_data['citations']}", f"{paper_data['venue']}")
+                    cql_create_paper, f"{paper_data['paperId']}", f"{paper_data['doi']}", f"{paper_data['title']}", f"{paper_data['url']}", f"{paper_data['year']}", f"{paper_data['abstract']}", f"{paper_data['citations']}", f"{paper_data['venue']}")
             except:
                 print(f"{paper_data['title']} already exist")
             try:
                 session.execute_write(
-                    Conference_has_paper, f'{conference_name_abbr}', f"{paper_data['paperId']}")
+                    cql_conference_has_paper, f'{conference_name_abbr}', f"{paper_data['paperId']}")
             except:
                 print(f"{paper_data['paperId']} already exist")
             session.execute_write(
-                Event_has_paper, f'{conf_event_name_abbr}', f"{paper_data['paperId']}")
+                cql_event_has_paper, f'{conf_event_name_abbr}', f"{paper_data['paperId']}")
 
             authors = paper_data['authors']
-
-            # print(
-            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
-            # # print(conference_event_url)
-            # print(authors)
-            # print(
-            #     '###########++++++++++######### AUTHOR TEST ##################++++++++++++++############')
             c = 0
-
-            # coauthor = authors[0]
-
             for author_data in authors:
-                # print(author_data)
-
                 if author_data['authorId']:
                     try:
                         session.execute_write(
-                            CreateAuthor, f"{author_data['authorId']}", f"{author_data['name']}", f"{author_data['url']}")
+                            cql_create_author, f"{author_data['authorId']}", f"{author_data['name']}", f"{author_data['url']}")
                     except:
                         print(f"{author_data['authorId']} already exist")
                     session.execute_write(
-                        Author_has_paper, f"{author_data['authorId']}", f"{paper_data['paperId']}")
+                        cql_author_has_paper, f"{author_data['authorId']}", f"{paper_data['paperId']}")
                     session.execute_write(
-                        Event_has_author, f'{conf_event_name_abbr}', f"{author_data['authorId']}")
+                        cql_event_has_author, f'{conf_event_name_abbr}', f"{author_data['authorId']}")
                     session.execute_write(
-                        Conference_has_author, f'{conference_name_abbr}', f"{author_data['authorId']}")
+                        cql_conference_has_author, f'{conference_name_abbr}', f"{author_data['authorId']}")
                     z = c
                     if c < len(authors):
                         for z in range(len(authors)):
                             if author_data['authorId'] != authors[z]['authorId']:
                                 session.execute_write(
-                                    CreateCoauthor, f"{author_data['authorId']}", f"{authors[z]['authorId']}")
+                                    cql_create_coauthor, f"{author_data['authorId']}", f"{authors[z]['authorId']}")
                                 z = z+1
                     c = c+1
-                #     print("****  ", c)
-                # print(author_data)
+
     session.close()
 
 
@@ -854,24 +717,10 @@ def add_data_to_author_models2(author_data, paper_obj, conference_obj, conferenc
     session = settings.NEO4J_SESSION.session()
 
     session.execute_write(
-        CreateAuthor, f"{author_data['authorId']}", f"{author_data['name']}", f"{author_data['url']}")
+        cql_create_author, f"{author_data['authorId']}", f"{author_data['name']}", f"{author_data['url']}")
     session.execute_write(
-        Author_has_paper, f"{author_data['authorId']}", f"{conference_obj}")
+        cql_author_has_paper, f"{author_data['authorId']}", f"{conference_obj}")
     session.close()
-    # stored_author_check = Author.objects.filter(
-    #     semantic_scolar_author_id=author_data['authorId']).exists()
-    # if not stored_author_check:
-    #     author_obj = Author.objects.create(
-    #         semantic_scolar_author_id=author_data['authorId'], author_name=author_data['name'], author_url=author_data['url'])
-    #     author_has_papers_obj = Author_has_Papers(
-    #         author_id=author_obj, paper_id=paper_obj, conference_name_abbr=conference_obj, conference_event_name_abbr=conference_event_obj)
-    # else:
-    #     author_obj = Author.objects.get(
-    #         semantic_scolar_author_id=author_data['authorId'])
-    #     author_has_papers_obj = Author_has_Papers(
-    #         author_id=author_obj, paper_id=paper_obj, conference_name_abbr=conference_obj, conference_event_name_abbr=conference_event_obj)
-
-    # author_has_papers_obj.save()
 
 
 def add_data_to_author_models(author_data, paper_obj, conference_obj, conference_event_obj):
@@ -912,10 +761,10 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
     session = settings.NEO4J_SESSION.session()
 
     authors_publications_event_objs = session.execute_read(
-        GetEventAuthors, conference_event_name_abbr)
+        cql_get_event_authors, conference_event_name_abbr)
     print(authors_publications_event_objs)
     publications_event_checker_objs = session.execute_read(
-        GetEventPapers, conference_event_name_abbr)
+        cql_get_event_papers, conference_event_name_abbr)
     errornumber = 0
     passnumber = 0
     errlist = []
@@ -924,12 +773,11 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
 
     for author in authors_publications_event_objs:
         authors_publications_objs = session.execute_read(
-            GetAuthorPapers, author.get('semantic_scolar_author_id'))
+            cql_get_author_papers, author.get('semantic_scolar_author_id'))
 
         for author_publications_obj in authors_publications_objs:
-            # print("2222222222222222222222222")
             publication_obj = session.execute_read(
-                GetPublication, author_publications_obj.get('paper_id'))
+                cql_get_publication, author_publications_obj.get('paper_id'))
             if publication_obj[0].get('title') and publication_obj[0].get('abstract'):
                 abstract_title_str += publication_obj[0].get(
                     'title') + " " + publication_obj[0].get('abstract')
@@ -938,38 +786,30 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
         invalidList = []
 
         author_obj = session.execute_read(
-            GetAuthor, author.get('semantic_scolar_author_id'))
-        for key, value in keywords.items():
+            cql_get_author, author.get('semantic_scolar_author_id'))
 
+        for key, value in keywords.items():
             try:
-                # if (bool(re.match('[@_!#$%^&*()<>?/\|}{~:]', key)) == False):
-                #     print("valid")
-                #     session.execute_write(CreateKeyword, key, 'SifRank')
-                # else:
-                #     invalidList.append(key)
-                #     errlist.append(key)
-                #     print("invalid")
-                session.execute_write(CreateKeyword, key, 'SifRank')
-                # continue
+                session.execute_write(cql_create_keyword, key, 'SifRank')
             except:
                 print(f"{key} already exist")
             check1 = session.execute_read(
-                CheckAuthorKeywordRelation, author.get('semantic_scolar_author_id'), key)
+                cql_check_author_keyword_relation, author.get('semantic_scolar_author_id'), key)
 
             if (check1[0].get('check') == False):
-                session.execute_write(CreateAuthor_has_keyword, author.get(
+                session.execute_write(cql_create_author_has_keyword, author.get(
                     'semantic_scolar_author_id'), key, value)
             else:
                 compare1 = session.execute_read(
-                    GetAuthorKeywordWeight, author.get('semantic_scolar_author_id'), key)
+                    cql_get_author_keyword_weight, author.get('semantic_scolar_author_id'), key)
                 print(compare1)
                 if (compare1[0].get('weight') < value):
                     session.execute_write(
-                        UpdateAuthorKeywordRelation, author.get('semantic_scolar_author_id'), key, value)
-            # session.execute_write(CreateAuthor_has_keyword, author.get(
-            #     'semantic_scolar_author_id'), key, value)
+                        cql_update_author_keyword_relation, author.get('semantic_scolar_author_id'), key, value)
+
         for k in invalidList:
             del keywords[k]
+
         try:
             wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(
                 keywords
@@ -981,31 +821,28 @@ def add_data_to_author_keyword_and_topic_models(conference_event_name_abbr):
             errlist.append(wiki_keyword_redirect_mapping)
             errornumber += 1
             print("errornumber:", errornumber)
-        # print('keyword_weight_mapping:',wiki_keyword_redirect_mapping)
-        # for key, value in wiki_keyword_redirect_mapping.items():
-        for key, value in keyword_weight_mapping.items():
 
+        for key, value in keyword_weight_mapping.items():
             try:
-                session.execute_write(CreateTopic, key, 'SifRank')
+                session.execute_write(cql_create_topic, key, 'SifRank')
             except:
                 print(f"{key} already exist")
             check2 = session.execute_read(
-                CheckAuthorTopicRelation, author.get('semantic_scolar_author_id'), key)
+                cql_check_author_topic_relation, author.get('semantic_scolar_author_id'), key)
 
             if (check2[0].get('check') == False):
-                session.execute_write(CreateAuthor_has_topic, author.get(
+                session.execute_write(cql_create_author_has_topic, author.get(
                     'semantic_scolar_author_id'), key, value)
             else:
                 compare2 = session.execute_read(
-                    GetAuthorTopicWeight, author.get('semantic_scolar_author_id'), key)
+                    cql_get_author_topic_weight, author.get('semantic_scolar_author_id'), key)
                 print(compare2)
                 if (compare2[0].get('weight') < value):
                     session.execute_write(
-                        UpdateAuthorTopicRelation, author.get('semantic_scolar_author_id'), key, value)
+                        cql_update_author_topic_relation, author.get('semantic_scolar_author_id'), key, value)
 
         abstract_title_str = ""
-    # print("errornumber:", errornumber, "passnumber:",
-    #       passnumber, "errlist:", errlist)
+
     session.close()
     return ""
 
@@ -1045,25 +882,25 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
                 for key, value in keywords.items():
                     try:
                         session.execute_write(
-                            CreateKeyword, key, 'SifRank')
+                            cql_create_keyword, key, 'SifRank')
                     except:
                         print(f"{key} already exist")
                     check1 = session.execute_read(
-                        CheckEventKeywordRelation, f'{conference_event_name_abbr}', f'{key}')
+                        cql_check_event_keyword_relation, f'{conference_event_name_abbr}', f'{key}')
 
                     if (check1[0].get('check') == False):
                         session.execute_write(
-                            CreateEvent_has_keyword, f'{conference_event_name_abbr}', f'{key}', value)
+                            cql_create_event_has_keyword, f'{conference_event_name_abbr}', f'{key}', value)
                     else:
                         compare1 = session.execute_read(
-                            GetEventKeywordWeight, f'{conference_event_name_abbr}', f'{key}')
+                            cql_get_event_keyword_weight, f'{conference_event_name_abbr}', f'{key}')
                         print(compare1)
                         if (compare1[0].get('weight') < value):
                             session.execute_write(
-                                UpdateEventKeywordRelation, f'{conference_event_name_abbr}', f'{key}', value)
+                                cql_update_event_keyword_relation, f'{conference_event_name_abbr}', f'{key}', value)
                     try:
                         session.execute_write(
-                            CreatePublication_has_keyword, f'{paperId}', f'{key}', value)
+                            cql_create_publication_has_keyword, f'{paperId}', f'{key}', value)
                     except:
                         print(f"already exist")
                 try:
@@ -1073,32 +910,30 @@ def add_data_to_conference_keyword_and_topic_models(conference_event_name_abbr):
                 except:
                     errornumber += 1
                 for key, value in keyword_weight_mapping.items():
-                    stored_topic_check = session.execute_read(GetTopic, key)
+                    stored_topic_check = session.execute_read(
+                        cql_get_topic, key)
                     if not stored_topic_check:
                         try:
                             session.execute_write(
-                                CreateTopic, f'{key}', 'SifRank')
+                                cql_create_topic, f'{key}', 'SifRank')
                         except:
                             print(f"{key} already exist")
                         conf_event_topic_obj = session.execute_read(
-                            GetTopic, key)
-                        # print("$$$$$$$", conf_event_topic_obj)
+                            cql_get_topic, key)
                         check2 = session.execute_read(
-                            CheckEventTopicRelation, f'{conference_event_name_abbr}', f'{key}')
+                            cql_check_event_topic_relation, f'{conference_event_name_abbr}', f'{key}')
                         if (check2[0].get('check') == False):
                             session.execute_write(
-                                CreateEvent_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
+                                cql_create_event_has_topic, f'{conference_event_name_abbr}', f'{key}', value)
                         else:
                             compare2 = session.execute_read(
-                                GetEventTopicWeight, f'{conference_event_name_abbr}', f'{key}')
+                                cql_get_event_topic_weight, f'{conference_event_name_abbr}', f'{key}')
                             if (compare2[0].get('weight') < value):
                                 session.execute_write(
-                                    UpdateEventTopicRelation, f'{conference_event_name_abbr}', f'{key}', value)
+                                    cql_update_event_topic_relation, f'{conference_event_name_abbr}', f'{key}', value)
                         session.execute_write(
-                            CreatePublication_has_topic, f'{paperId}', f'{key}', value)
+                            cql_create_publication_has_topic, f'{paperId}', f'{key}', value)
 
-    # print("errornumber:", errornumber, "passnumber:",
-    #       passnumber, 'invalidList:', invalidList)
     session.close()
 
 
@@ -1198,15 +1033,6 @@ def generate_venn_photo(list_words_first_event, list_words_second_event, list_in
     Returns:
         str: venn image
     """
-
-    # print('################### TEST VENN ###################')
-    # print(list_words_first_event)
-    # print('+++++++++')
-    # print(list_words_second_event)
-    # print('+++++++++')
-    # print(list_intersect_first_and_second)
-
-    # print('################### TEST VENN ###################')
     fig, ax = plt.subplots()
 
     ax.set_title('Common ' + keyword_or_topic + 's between ' +
@@ -1253,7 +1079,6 @@ def split_restapi_url(url_path, split_char):
         list: list of url splits
     """
 
-    # print("the url path is:", url_path)
     url_path = url_path.replace("%20", " ")
     topics_split = url_path.split(split_char)
     return topics_split

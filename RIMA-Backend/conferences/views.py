@@ -69,8 +69,8 @@ from rest_framework.generics import (ListCreateAPIView,
                                      DestroyAPIView, ListAPIView,
                                      RetrieveAPIView, CreateAPIView)
 
-from .ConferenceUtilsCql import (CreateDatabaseLabels, DeleteConference, GetAuthorByName, GetAuthorKeyword, GetAuthorPapers, GetAuthorTopic, GetAuthorsOfPaper, GetConferenceAuthors, GetConferences, GetEventAuthors, GetEventData, GetConferenceEvents, GetEventPapers, UpdateConferenceEvent, CreateAuthor,
-                                 CreateConference, CreateEvent, Create_has_event, CreateAuthor, CreatePaper, Author_has_paper, Conference_has_paper, Event_has_paper, Event_has_author)
+from .ConferenceUtilsCql import (cql_create_database_labels, cql_delete_conference, cql_get_author_by_name, cql_get_author_keyword, cql_get_author_papers, cql_get_author_topic, cql_get_authors_of_papers, cql_get_conference_authors, cql_get_conferences, cql_get_event_authors, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_conference_event, cql_create_author,
+                                 cql_create_conference, cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author)
 
 from .models import Platform, Conference, Conference_Event, PreloadedConferenceList, Conference_Event_Paper, Author, Author_has_Papers
 from django.db.models import Q
@@ -98,7 +98,7 @@ class conferenceGeneralDataView(APIView):
 class constructDatabase(APIView):
     def post(self, request, *args, **kwargs):
         session = settings.NEO4J_SESSION.session()
-        session.execute_write(CreateDatabaseLabels)
+        session.execute_write(cql_create_database_labels)
         return Response({})
 
 
@@ -174,7 +174,7 @@ class SharedWordEvolutionView(APIView):
             # conference_obj = Conference.objects.get(
             #     conference_name_abbr=conference)
             conference_event_objs = session.execute_read(
-                GetConferenceEvents, conference)
+                cql_get_conference_events, conference)
             # Conference_Event.objects.filter(
             #     conference_name_abbr=conference_obj)
             models_data = confutils.get_word_weight_event_based(
@@ -255,7 +255,7 @@ class conferenceDeleteView(APIView):
         conference_name_abbr = pk
         print(pk)
         # confutils.delete_conference_data(conference_name_abbr)
-        session.execute_write(DeleteConference, conference_name_abbr)
+        session.execute_write(cql_delete_conference, conference_name_abbr)
         session.close()
         return Response({})
 
@@ -348,7 +348,7 @@ class DataTimeLineChartView(APIView):
                 'data': []
             }
             conference_events = session.execute_read(
-                GetConferenceEvents, conference)
+                cql_get_conference_events, conference)
             # Conference_Event.objects.filter(
             #     conference_name_abbr=conference)
             for conference_event in conference_events:
@@ -396,10 +396,10 @@ class ConferenceEventsView(ListCreateAPIView):
         topics_split = url_path.split(r"/")
 
         conference_events_objs = session.execute_read(
-            GetConferenceEvents, topics_split[-1])
+            cql_get_conference_events, topics_split[-1])
         for x in range(len(conference_events_objs)):
             c = session.execute_read(
-                GetEventPapers, conference_events_objs[x].get('conference_event_name_abbr'))
+                cql_get_event_papers, conference_events_objs[x].get('conference_event_name_abbr'))
 
             info = {
                 "conference_event_name_abbr": conference_events_objs[x].get('conference_event_name_abbr'),
@@ -478,10 +478,10 @@ class addConferenceView(APIView):
     def post(self, request, *args, **kwargs):
         session = settings.NEO4J_SESSION.session()
         request_data = self.request.data
-        session.execute_write(CreateDatabaseLabels)
+        session.execute_write(cql_create_database_labels)
         try:
             session.execute_write(
-                CreateConference, f"{request_data['conferences'][0]['conference_name_abbr']}", f"{request_data['conferences'][0]['conference_url']}", f"{request_data['platform_name']}", f"{request_data['platform_url']}")
+                cql_create_conference, f"{request_data['conferences'][0]['conference_name_abbr']}", f"{request_data['conferences'][0]['conference_url']}", f"{request_data['platform_name']}", f"{request_data['platform_url']}")
         except:
             print(
                 f"{request_data['conferences'][0]['conference_name_abbr']}" " already exist")
@@ -526,7 +526,7 @@ class confEvents(APIView):
         conferences_events_JSON = []
         session = settings.NEO4J_SESSION.session()
         conference_events = session.execute_read(
-            GetConferenceEvents, conference_name_abbr=topics_split[-1])
+            cql_get_conference_events, conference_name_abbr=topics_split[-1])
         # Conference_Event.objects.filter(conference_name_abbr=topics_split[-1]).values_list(
         #     'conference_event_name_abbr',
         #     flat=True)
@@ -928,7 +928,7 @@ class allWords(APIView):
         session = settings.NEO4J_SESSION.session()
 
         conference_events_objs = session.execute_read(
-            GetConferenceEvents, conference_name_abbr)
+            cql_get_conference_events, conference_name_abbr)
         # Conference_Event.objects.filter(
         #     conference_name_abbr=conference_name_abbr)
         for conference_event_obj in conference_events_objs:
@@ -1009,7 +1009,7 @@ class MultipleTopicAreaView(APIView):
         # conference_obj = Conference.objects.get(
         #     conference_name_abbr=conference_name_abbr)
         conference_event_objs = session.execute_read(
-            GetConferenceEvents, conference_name_abbr)
+            cql_get_conference_events, conference_name_abbr)
         # Conference_Event.objects.filter(
         #     conference_name_abbr=conference_obj)
 
@@ -1320,7 +1320,7 @@ class SearchKeywordView(APIView):
         else:
             for data in models_data:
                 authors_ids = session.excute_read(
-                    GetAuthorsOfPaper, data['paper_id'])
+                    cql_get_authors_of_papers, data['paper_id'])
                 # authors_ids = Author_has_Papers.objects.filter(
                 #     paper_id_id=data['paper_id'])
                 for author_id in authors_ids:
@@ -1475,15 +1475,15 @@ class AuthorFetchYearView(APIView):
             # models_data = session.execute_read(
             #     GetEventAuthors, conference_event_name)
             author_has_papers_objs = session.execute_read(
-                GetConferenceAuthors, conference_name)
+                cql_get_conference_authors, conference_name)
         else:
             # models_data = confutils.get_authors_data("", conference_event_name)
             author_has_papers_objs = session.execute_read(
-                GetEventAuthors, conference_event_name)
+                cql_get_event_authors, conference_event_name)
         for author_obj in author_has_papers_objs:
 
             author_event_papers_objs = session.execute_read(
-                GetAuthorPapers, author_obj.get('semantic_scolar_author_id'))
+                cql_get_author_papers, author_obj.get('semantic_scolar_author_id'))
             result_data.append({
                 'semantic_scholar_author_id': author_obj.get('semantic_scolar_author_id'),
                 'name': author_obj.get('author_name'),
@@ -1527,17 +1527,17 @@ class AuthorTopicComparisonView(APIView):
         conference_name = url_splits_slash[-2]
         session = settings.NEO4J_SESSION.session()
         first_author_obj = session.execute_read(
-            GetAuthorByName, first_author_name)
+            cql_get_author_by_name, first_author_name)
         second_author_obj = session.execute_read(
-            GetAuthorByName, second_author_name)
+            cql_get_author_by_name, second_author_name)
 
         if (keyword_or_topic == 'keyword'):
             keywords = session.execute_read(
-                GetAuthorKeyword, first_author_obj.get('semantic_scolar_author_id'))
+                cql_get_author_keyword, first_author_obj.get('semantic_scolar_author_id'))
             return keywords
         elif keyword_or_topic == 'topic':
             topics = session.execute_read(
-                GetAuthorTopic, first_author_obj.get('semantic_scolar_author_id'))
+                cql_get_author_topic, first_author_obj.get('semantic_scolar_author_id'))
         # first_author_publications = confutils.get_author_publications_in_conf(
         #     first_author_obj.get('semantic_scolar_author_id'), conference_name, conference_event_name_abbr)
 
