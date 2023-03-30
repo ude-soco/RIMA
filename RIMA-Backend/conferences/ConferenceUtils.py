@@ -1,4 +1,4 @@
-from conferences.DataExtractor import ConferenceDataCollector as dataCollector
+from conferences.data_extractor import conference_data_collector as dataCollector
 from conferences.models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
                      Conf_Event_keyword, Event_has_keyword)
 from interests.Keyword_Extractor.extractor import getKeyword

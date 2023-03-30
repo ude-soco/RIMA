@@ -2,28 +2,17 @@
 # Elephant SQL Details - just in case,if there is any problem,user can check by logging into the particular url
 # DB URL - https://api.elephantsql.com/console/9d1e1117-ddbf-47b0-a1cc-9afd7507a175/browser
 # login credentials - email:sampletestte@gmail.com
-#password- P86PZSaec8Hua@Q
-
-# In[298]:
-
-#!django-admin --version
-
-# In[6]:
+# password- P86PZSaec8Hua@Q
 
 from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 import requests
-import re
 import pandas as pd
-import json
-import os
 import urllib.parse as up
 import psycopg2
-import pickle
-import numpy as np
 
-# In[222]:
 
+# TODO: This file may not be used anymore. Check and remove if not used.
 
 def make_conflist(start, end):
     list_years = []
@@ -34,15 +23,12 @@ def make_conflist(start, end):
     return pre_res
 
 
-# In[242]:
 '''
 Parsing the dblp index here to get only LAK Conference data
 '''
-
-
 def fetch_raw_data(year):
     raw_request = Request(f'https://dblp.org/db/conf/lak/{year}')
-    #raw_request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0')
+    # raw_request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0')
     raw_request.add_header(
         'Accept',
         'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
@@ -53,9 +39,6 @@ def fetch_raw_data(year):
     soup = BeautifulSoup(html, 'html.parser')
     soup.prettify()
     return soup
-
-
-# In[243]:
 
 
 def fetch_links(value):
@@ -75,9 +58,6 @@ def fetch_links(value):
     return doi_urls_list
 
 
-# In[250]:
-
-
 def extract_doi(value):
     doi_refined = []
     for val in fetch_links(value):
@@ -88,51 +68,35 @@ def extract_doi(value):
     return doi_refined
 
 
-# In[251]:
-
 fullist_dois = []
 for value in make_conflist(2011, 2020):
     fetch_raw_data(value)
     fetch_links(value)
     fullist_dois.append(extract_doi(value))
 
-# In[252]:
-
 flatList_dois = [item for elem in fullist_dois for item in elem]
 
-# In[253]:
-
 len(flatList_dois)
-
-# In[259]:
 
 for val in flatList_dois:
     if "twitter" in val or "reddit" in val or "linkedin" in val or "mendeley" in val or "https://twitter.com" in val or "https://www.mendeley.com" in val:
         flatList_dois.remove(val)
 
-# In[260]:
 
 for val in flatList_dois:
     print(val)
 
-# In[269]:
 
 extracted = [
     string.replace("https://doi.org/", "") for string in flatList_dois
 ]
-
-# In[270]:
 
 extracted_dois = [
     string.replace("http://dl.acm.org/citation.cfm?id=", "10.1145/3027385.")
     for string in extracted
 ]
 
-# In[273]:
-
 len(extracted_dois)
-
-# In[305]:
 
 # DOI-https://api.semanticscholar.org/v1/paper/10.1038/nrn3241
 # fetching papers from semantic scholar API
@@ -142,27 +106,19 @@ for val in extracted_dois[0:100]:
         f"https://api.semanticscholar.org/v1/paper/{val}").json()
     list_paperdata.append(paper_data)
 
-# In[435]:
-
 for val in extracted_dois[830:840]:
     paper_data = requests.get(
         f"https://api.semanticscholar.org/v1/paper/{val}").json()
     list_paperdata.append(paper_data)
 
-# In[442]:
-
 # list_paperdata[832]
-#del list_paperdata[803::]
+# del list_paperdata[803::]
 # extracted_dois[270]
 
-# In[518]:
-
-#dataset = ['hello','test']
+# dataset = ['hello','test']
 with open("semanticscholar.txt", "w", encoding="utf-8") as f:
     for listitem in list_paperdata:
         f.write(str(listitem))
-
-# In[461]:
 
 
 def convert_list_to_string(org_list, seperator=','):
@@ -171,7 +127,6 @@ def convert_list_to_string(org_list, seperator=','):
     return seperator.join(org_list)
 
 
-# In[525]:
 # Inserting data in the database
 
 i = 0
@@ -233,7 +188,7 @@ for val in list_paperdata[616:]:
                             authorIds) + "','" + str(doi) + "')"
             cursor.execute(postgreSQL_insert_Query)
             conn.commit()
-        #mobile_records = cursor.fetchall()
+        # mobile_records = cursor.fetchall()
         # for val in mobile_records:
         #   print(val)
         except (Exception, psycopg2.Error) as error:
@@ -246,8 +201,6 @@ for val in list_paperdata[616:]:
                 print("PostgreSQL connection is closed")
 
 # ## Creating a DB Connection
-
-# In[531]:
 
 try:
     up.uses_netloc.append("postgres")
@@ -263,7 +216,7 @@ try:
     postgreSQL_select_Query = "select * from LAKData"
     cursor.execute(postgreSQL_select_Query)
     mobile_records = cursor.fetchall()
-    #sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
+    # sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
     data_f1 = pd.read_sql(postgreSQL_select_Query, conn)
     # for val in mobile_records:
     # print(val)
@@ -276,16 +229,8 @@ finally:
         conn.close()
         print("PostgreSQL connection is closed")
 
-# In[532]:
-
 data_f1.to_csv(r"C:\Users\GOLLAKOTA\Thesis\apidata.csv")
-
-# In[533]:
 
 data_test = data_f1
 
-# In[535]:
-
 data_test
-
-# In[ ]:
