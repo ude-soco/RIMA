@@ -1,0 +1,1 @@
+from conferences.models.conferences import *

@@ -1,12 +1,4 @@
-from conferences.models import (
-    Platform,
-    Conference,
-    Conference_Event,
-    Conference_Event_Paper,
-    Author,
-    PreloadedConferenceList,
-)
-
+from conferences.models import *
 from rest_framework import serializers
 
 

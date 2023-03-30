@@ -1,21 +1,19 @@
-from conferences.data_extractor import conference_data_collector as dataCollector
-from conferences.models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
-                     Conf_Event_keyword, Event_has_keyword)
-from interests.Keyword_Extractor.extractor import getKeyword
+from django.conf import settings
 from django.db.models import Q
-import base64
+from django.conf import settings
 from matplotlib_venn import venn2_unweighted
 from matplotlib import pyplot as plt
-from django.conf import settings
+import base64
 import re
-from conferences.ConferenceUtilsCql import (cql_check_author_keyword_relation, cql_check_author_topic_relation, cql_check_event_keyword_relation, cql_check_event_topic_relation, cql_conference_has_author, cql_create_author_has_keyword, cql_create_author_has_topic, cql_create_publication_has_keyword, cql_create_publication_has_topic, cql_get_author, cql_create_coauthor, cql_create_keyword, cql_create_topic, cql_create_event_has_keyword, cql_create_event_has_topic, cql_get_author_keyword, cql_get_author_keyword_weight, cql_get_author_papers, cql_get_author_topic, cql_get_author_topic_weight, cql_get_conference_data, cql_get_event_keyword_weight, cql_get_event_keyword,  cql_get_event_topic, cql_get_event_topic_weight, cql_get_keyword, cql_get_publication, cql_get_publication_from_keyword, cql_get_publication_from_topic, cql_get_topic, cql_get_event_authors, cql_get_conference_authors, cql_get_conference_papers, cql_get_conferences, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_author_keyword_relation, cql_update_author_topic_relation, cql_create_author,
-                                 cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author, cql_update_event_keyword_relation, cql_update_event_topic_relation)
-from django.conf import settings
 
-from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import (
-    DBpediaSpotlight,
-)
 from conferences import tests
+from conferences.data_extractor import conference_data_collector as dataCollector
+from conferences.models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
+                                Conf_Event_keyword, Event_has_keyword)
+from conferences.ConferenceUtilsCql import (cql_check_author_keyword_relation, cql_check_author_topic_relation, cql_check_event_keyword_relation, cql_check_event_topic_relation, cql_conference_has_author, cql_create_author_has_keyword, cql_create_author_has_topic, cql_create_publication_has_keyword, cql_create_publication_has_topic, cql_get_author, cql_create_coauthor, cql_create_keyword, cql_create_topic, cql_create_event_has_keyword, cql_create_event_has_topic, cql_get_author_keyword, cql_get_author_keyword_weight, cql_get_author_papers, cql_get_author_topic, cql_get_author_topic_weight, cql_get_conference_data, cql_get_event_keyword_weight, cql_get_event_keyword,  cql_get_event_topic, cql_get_event_topic_weight, cql_get_keyword, cql_get_publication, cql_get_publication_from_keyword, cql_get_publication_from_topic, cql_get_topic, cql_get_event_authors, cql_get_conference_authors, cql_get_conference_papers, cql_get_conferences, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_author_keyword_relation, cql_update_author_topic_relation, cql_create_author,
+                                            cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author, cql_update_event_keyword_relation, cql_update_event_topic_relation)
+from interests.Keyword_Extractor.extractor import getKeyword
+from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import DBpediaSpotlight
 
 
 # session = settings.NEO4J_SESSION.session()

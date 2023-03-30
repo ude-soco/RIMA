@@ -1,23 +1,24 @@
-from conferences import ConferenceUtils as confutils
 from django.conf import settings
-from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
+from sklearn.preprocessing import MinMaxScaler
+from collections import defaultdict
+from itertools import combinations
+from matplotlib_venn import venn2_unweighted
+from matplotlib import pyplot as plt
+import matplotlib
 import urllib.parse as up
 import psycopg2
 import pandas as pd
 import numpy as np
 import requests
 import operator
+import base64
+
+from conferences import ConferenceUtils as confutils
+from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter
-from itertools import combinations
-import base64
-from matplotlib_venn import venn2_unweighted
-from matplotlib import pyplot as plt
-import matplotlib
-from collections import defaultdict
-from sklearn.preprocessing import MinMaxScaler
-matplotlib.use("SVG")
 
+matplotlib.use("SVG")
 
 '''
 BAB get conf events/years

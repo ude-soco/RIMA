@@ -6,7 +6,6 @@ import requests
 import time
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter
-
 from conferences.topicutils import listToString
 
 
