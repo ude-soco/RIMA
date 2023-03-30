@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import * 
+from conferences.models import *
 
 admin.site.register(Platform)
 admin.site.register(Conference)
@@ -15,4 +15,3 @@ admin.site.register(Author_Event_keyword)
 admin.site.register(Author_has_Keyword)
 admin.site.register(Author_Event_Topic)
 admin.site.register(Author_has_Topic)
-

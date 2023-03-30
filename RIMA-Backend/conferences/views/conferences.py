@@ -1,86 +1,51 @@
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK
 # test import BEGIN
-from neo4j import GraphDatabase
 import re
 from itertools import combinations
-import itertools
-from django.conf.urls import url
-from matplotlib.pyplot import uninstall_repl_displayhook
-from .DataExtractor import ConferenceDataCollector as dataCollector
-from . import ConferenceUtils as confutils
-import datetime
-import json
+from conferences import ConferenceUtils as confutils
 from django.conf import settings
 
-from . import tests
-from collections import OrderedDict
-from django.urls import conf, reverse
+from conferences import tests
 from django.conf import settings
-from django.http.response import HttpResponse
 from rest_framework.views import APIView
 from urllib.parse import unquote
-from django.http import JsonResponse
 from rest_framework.response import Response
-from .topicutils import (
+from conferences.topicutils import (
     getPaperswithTopics,
-    getTopicDetails,
     compareTopics,
-    getAllTopics,
     getTopicWeightsAllYears,
-    getDataForPieTopics,
     getDataForPieKeys,
-    getMultipleYearTopicJourney,
-    getPaperIDFromPaperTitle,
     getMultipleYearKeyJourney,
     getTopicEvoultion,
-    generateVennData,
     generateVennDataKeys,
     getAllAuthorsDict,
     getAllAuthors,
     getAllKeywords,
-    getAllTopicsAllYears,
     getTopKeysForAllYear,
     getAllKeywordsAllYears,
-    searchForKeyword,
     searchForTopics,
-    getTopTopicsForAllYears,
     getAuthorFromAuthorName,
     getFlowChartDataTopics,
     getFlowChartDataKeywords,
-    get_abstract_based_on_keyword,
-    getDataAuthorComparisonTopics,
-    getAuthorsForYear,
-    authorConfTopicComparison,
     getDataAuthorComparisonKeywords,
     fetchTopicsuserID,
-    getTopTopics,
-    compareAuthors,
     getKeyDetails,
     getPaperswithKeys,
     compareLAKwithAuthortopics,
     getAuthorComparisionData,
-    getAuthorsDict,  # printText
-    getConfEvents)  # BAB 08.06.2021::Extension for other conferences other than LAK
-from .TopicExtractor import (
+    getAuthorsDict)  # BAB 08.06.2021::Extension for other conferences other than LAK
+from conferences.TopicExtractor import (
     fetchAllTopics, fetchAbstracts_author, updateAllTopics)
-from .serializers import PreloadedConferenceListSerializer, ConferenceSerializer, PlatformSerializer, ConferenceEventSerializer
-from rest_framework.generics import (ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView,
-                                     DestroyAPIView, ListAPIView,
-                                     RetrieveAPIView, CreateAPIView)
+from conferences.serializers import PreloadedConferenceListSerializer, ConferenceSerializer
+from rest_framework.generics import (ListCreateAPIView)
 
-from .ConferenceUtilsCql import (cql_create_database_labels, cql_delete_conference, cql_get_author_by_name, cql_get_author_keyword, cql_get_author_papers, cql_get_author_topic, cql_get_authors_of_papers, cql_get_conference_authors, cql_get_conferences, cql_get_event_authors, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_conference_event, cql_create_author,
-                                 cql_create_conference, cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author)
+from conferences.ConferenceUtilsCql import (cql_create_database_labels, cql_delete_conference, cql_get_author_by_name, cql_get_author_keyword, cql_get_author_papers,
+                                            cql_get_author_topic, cql_get_authors_of_papers, cql_get_conference_authors, cql_get_event_authors, cql_get_conference_events, cql_get_event_papers, cql_create_conference)
 
-from .models import Platform, Conference, Conference_Event, PreloadedConferenceList, Conference_Event_Paper, Author, Author_has_Papers
+from conferences.models import PreloadedConferenceList, Conference_Event_Paper, Author
 from django.db.models import Q
 
-from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
-from matplotlib import pyplot as plt
 import matplotlib
-from collections import defaultdict
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, RobustScaler
-import time
 matplotlib.use("SVG")
 
 
@@ -93,6 +58,8 @@ class conferenceGeneralDataView(APIView):
         # tests.TimeComplexity(conferenceGeneralDataView)
         # print("conferenceGeneralDataView:", result_data)
         return Response(result_data)
+
+# FIXME: Redundant function: Everytime the RIMA-Frontend opens the conference page, it calls this function to get the conference data. This is redundant and should be called once the RIMA-Backend is initiated for the first time.
 
 
 class constructDatabase(APIView):
@@ -522,7 +489,7 @@ class confEvents(APIView):
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split(r"/")
         # print("topics_split:", topics_split)
-        #print("The year is:",year)
+        # print("The year is:",year)
         conferences_events_JSON = []
         session = settings.NEO4J_SESSION.session()
         conference_events = session.execute_read(
@@ -766,7 +733,7 @@ View to get keyword data for pie chart
 
 class KeyPieView(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
+        # serializer_class = TopicSerializer
         url_path = request.get_full_path()
         url_path = request.get_full_path()
 
@@ -883,7 +850,7 @@ class getTopicBarValues(APIView):
 
 class populateTopicView(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
+        # serializer_class = TopicSerializer
         url_path = request.get_full_path()
         year = url_path[-4:]
         return Response({"topicsdict": getPaperswithTopics(year)[1]})
@@ -891,7 +858,7 @@ class populateTopicView(APIView):
 
 class populateKeyView(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = TopicSerializer
+        # serializer_class = TopicSerializer
         url_path = request.get_full_path()
         year = url_path[-4:]
         return Response({"topicsdict": getPaperswithKeys(year)[1]})
@@ -899,7 +866,7 @@ class populateKeyView(APIView):
 
 class getKeyBarValues(APIView):
     def get(self, request, *args, **kwargs):
-        #serializer_class = JSONSerialize
+        # serializer_class = JSONSerialize
         url_path = request.get_full_path()
         # print("the url path is:", url_path)
         topics_split = url_path.split(r"/")
@@ -1222,7 +1189,7 @@ class VennOverviewKeys(APIView):
     def get(self, request, *args, **kwargs):
         url_path = request.get_full_path()
         # print("the url path is:", url_path)
-        #url_path=url_path.replace("%20"," ")
+        # url_path=url_path.replace("%20"," ")
         topics_split = url_path.split(r"/")
         print(topics_split)
         return Response({
@@ -1596,7 +1563,7 @@ class AuthorKeywordComparisonView(APIView):
     def get(self, request, *args, **kwargs):
         print(request)
         url_path = request.get_full_path()
-        #print("the url path is:",url_path)
+        # print("the url path is:",url_path)
         url_path = url_path.replace("%20", " ")
         topics_split = url_path.split("?")
         topics_split_params = topics_split[1].split("&")

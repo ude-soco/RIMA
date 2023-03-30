@@ -1,5 +1,5 @@
-from .DataExtractor import ConferenceDataCollector as dataCollector
-from .models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
+from conferences.DataExtractor import ConferenceDataCollector as dataCollector
+from conferences.models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
                      Conf_Event_keyword, Event_has_keyword)
 from interests.Keyword_Extractor.extractor import getKeyword
 from django.db.models import Q
@@ -8,14 +8,14 @@ from matplotlib_venn import venn2_unweighted
 from matplotlib import pyplot as plt
 from django.conf import settings
 import re
-from .ConferenceUtilsCql import (cql_check_author_keyword_relation, cql_check_author_topic_relation, cql_check_event_keyword_relation, cql_check_event_topic_relation, cql_conference_has_author, cql_create_author_has_keyword, cql_create_author_has_topic, cql_create_publication_has_keyword, cql_create_publication_has_topic, cql_get_author, cql_create_coauthor, cql_create_keyword, cql_create_topic, cql_create_event_has_keyword, cql_create_event_has_topic, cql_get_author_keyword, cql_get_author_keyword_weight, cql_get_author_papers, cql_get_author_topic, cql_get_author_topic_weight, cql_get_conference_data, cql_get_event_keyword_weight, cql_get_event_keyword,  cql_get_event_topic, cql_get_event_topic_weight, cql_get_keyword, cql_get_publication, cql_get_publication_from_keyword, cql_get_publication_from_topic, cql_get_topic, cql_get_event_authors, cql_get_conference_authors, cql_get_conference_papers, cql_get_conferences, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_author_keyword_relation, cql_update_author_topic_relation, cql_create_author,
+from conferences.ConferenceUtilsCql import (cql_check_author_keyword_relation, cql_check_author_topic_relation, cql_check_event_keyword_relation, cql_check_event_topic_relation, cql_conference_has_author, cql_create_author_has_keyword, cql_create_author_has_topic, cql_create_publication_has_keyword, cql_create_publication_has_topic, cql_get_author, cql_create_coauthor, cql_create_keyword, cql_create_topic, cql_create_event_has_keyword, cql_create_event_has_topic, cql_get_author_keyword, cql_get_author_keyword_weight, cql_get_author_papers, cql_get_author_topic, cql_get_author_topic_weight, cql_get_conference_data, cql_get_event_keyword_weight, cql_get_event_keyword,  cql_get_event_topic, cql_get_event_topic_weight, cql_get_keyword, cql_get_publication, cql_get_publication_from_keyword, cql_get_publication_from_topic, cql_get_topic, cql_get_event_authors, cql_get_conference_authors, cql_get_conference_papers, cql_get_conferences, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_author_keyword_relation, cql_update_author_topic_relation, cql_create_author,
                                  cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author, cql_update_event_keyword_relation, cql_update_event_topic_relation)
 from django.conf import settings
 
 from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import (
     DBpediaSpotlight,
 )
-from . import tests
+from conferences import tests
 
 
 # session = settings.NEO4J_SESSION.session()

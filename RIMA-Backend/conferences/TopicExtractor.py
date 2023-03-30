@@ -1,18 +1,13 @@
 # Done by Swarna
-import json
 import urllib.parse as up
 import psycopg2
 import pandas as pd
-import numpy as np
 import requests
 import time
 from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikicategory, wikifilter
-from interests.update_interests import update_interest_models, normalize
+from interests.wikipedia_utils import wikifilter
 
-from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
-from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
-from .topicutils import listToString
+from conferences.topicutils import listToString
 
 
 def getData():

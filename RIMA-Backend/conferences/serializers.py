@@ -1,5 +1,4 @@
-import json
-from .models import (
+from conferences.models import (
     Platform,
     Conference,
     Conference_Event,

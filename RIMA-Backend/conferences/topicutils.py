@@ -1,54 +1,41 @@
-#Done by Swarna
-# Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK 
-import json
+from conferences import ConferenceUtils as confutils
+from django.conf import settings
+from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
 import urllib.parse as up
 import psycopg2
 import pandas as pd
 import numpy as np
-import time
-import os
 import requests
 import operator
-from collections import Counter
 from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikicategory, wikifilter
-from interests.update_interests import update_interest_models, normalize
+from interests.wikipedia_utils import wikifilter
 from itertools import combinations
-import mpld3
 import base64
-#from plotly.offline import plot
-from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
+from matplotlib_venn import venn2_unweighted
 from matplotlib import pyplot as plt
 import matplotlib
 from collections import defaultdict
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, RobustScaler
+from sklearn.preprocessing import MinMaxScaler
 matplotlib.use("SVG")
-from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
-from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
-#import plotly.graph_objects as go
-#import plotly.express as px
-from pprint import pprint
-from django.conf import settings
-from . import ConferenceUtils as confutils
-
 
 
 '''
 BAB get conf events/years
 '''
-# BAB 08.06.2021:: Extension for other conferences other than LAK 
+# BAB 08.06.2021:: Extension for other conferences other than LAK
+
 
 def getConfEvents(conferenceName):
     print("start")
     query = "select distinct year from Topics"
-    #print(createConcatenatedColumn())
-    lak_data = getTopics(conferenceName,"", query)
+    # print(createConcatenatedColumn())
+    lak_data = getTopics(conferenceName, "", query)
     events_list = lak_data['year']
-    
+
     print(
         "******************************************************************************"
     )
-    
+
     print(events_list)
     list_confEvents = [{
         "value": a,
@@ -58,8 +45,10 @@ def getConfEvents(conferenceName):
     print('list_confEvents', list_confEvents)
     return list_confEvents
 
-#BAB 08.06.2021
-def getTopics(conferenceName,year, query):
+# BAB 08.06.2021
+
+
+def getTopics(conferenceName, year, query):
     try:
         up.uses_netloc.append("postgres")
         url = up.urlparse(
@@ -72,19 +61,19 @@ def getTopics(conferenceName,year, query):
                                 port=url.port)
         cursor = conn.cursor()
         postgreSQL_select_Query = query
-        #cursor.execute(postgreSQL_select_Query)
-        #lak_records = cursor.fetchall()
-        #sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
+        # cursor.execute(postgreSQL_select_Query)
+        # lak_records = cursor.fetchall()
+        # sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
         data_lak = pd.read_sql(postgreSQL_select_Query, conn)
         print('getTopics data_lak')
         print(data_lak)
         print(type(data_lak))
-    #for val in mobile_records:
-    #print(val)
+    # for val in mobile_records:
+    # print(val)
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if (conn):
             cursor.close()
             conn.close()
@@ -96,13 +85,15 @@ def getTopics(conferenceName,year, query):
 method to get top 5/10 keywords for topic cloud
 '''
 
-#BAB 08.06.2021
+# BAB 08.06.2021
 # to be removed  Wordcloud
-def applyTopicMiningKeyword(conferenceName,year, number):
+
+
+def applyTopicMiningKeyword(conferenceName, year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
-    #print(createConcatenatedColumn())
-    lak_data = getTopics(conferenceName,year, query)
+    # print(createConcatenatedColumn())
+    lak_data = getTopics(conferenceName, year, query)
     topics_list = lak_data['keywords'].values[0]
     topics_list = topics_list.replace("{", "")
     topics_list = topics_list.replace("}", "")
@@ -134,12 +125,11 @@ def applyTopicMiningKeyword(conferenceName,year, number):
         "value": val
     } for key, val in topics_list_ref.items()]
 
-
     if number == "5":
         return list_topics_y1[0:5]
     else:
         return list_topics_y1[0:10]
-    #keys = list(dict(wikis).keys())
+    # keys = list(dict(wikis).keys())
     return list_topics_y1[0:10]
 
 
@@ -147,13 +137,15 @@ def applyTopicMiningKeyword(conferenceName,year, number):
 method to fetch top 5/10 topics for the topiccloud
 '''
 
-#BAB 08.06.2021
+# BAB 08.06.2021
 # to be removed  Word cloud
-def applyTopicMiningTopic(conferenceName,year, number):
+
+
+def applyTopicMiningTopic(conferenceName, year, number):
     print("start")
     query = "select * from Topics where year='" + str(year) + "'"
-    #print(createConcatenatedColumn())
-    lak_data = getTopics(conferenceName,year, query)
+    # print(createConcatenatedColumn())
+    lak_data = getTopics(conferenceName, year, query)
     topics_list = lak_data['topics'].values[0]
     topics_list = topics_list.replace("{", "")
     topics_list = topics_list.replace("}", "")
@@ -189,7 +181,7 @@ def applyTopicMiningTopic(conferenceName,year, number):
         return list_topics_y1[0:5]
     else:
         return list_topics_y1[0:10]
-    #keys = list(dict(wikis).keys())
+    # keys = list(dict(wikis).keys())
     return list_topics_y1[0:10]
 
 
@@ -209,10 +201,12 @@ get top 10 keywords for the bar chart
 '''
 
 # to be removed wordcloud
+
+
 def getTopKeywords(conferenceName, year):
     query = "select t.keywords,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
         year) + "'"
-    lak_data = getTopics(conferenceName,year, query)
+    lak_data = getTopics(conferenceName, year, query)
     lak_data[
         "titleandabstract"] = lak_data["title"] + " " + lak_data["abstract"]
     topics_list = lak_data['keywords'].values[0]
@@ -244,7 +238,7 @@ def getTopKeywords(conferenceName, year):
         for abstract in list(lak_data['titleandabstract'].values):
             freq += abstract.lower().count(key.lower())
 
-            #print("the freq of ",key," is ",freq)
+            # print("the freq of ",key," is ",freq)
         print("freq", freq)
         sorted_topics_dict[key] = int(freq)
         print(sorted_topics_dict[key])
@@ -270,11 +264,13 @@ top 10 topics for bar chart and also the data as per the bar chart
 '''
 
 # to be removed LakBar
-def getTopTopics(conferenceName,year):
+
+
+def getTopTopics(conferenceName, year):
     print("Bar chart...")
     query = "select t.topics,t.year,l.abstract,l.title from Topics t join LAKData l on l.year=t.year where t.year='" + str(
         year) + "'"
-    lak_data = getTopics(conferenceName,year, query)
+    lak_data = getTopics(conferenceName, year, query)
     lak_data[
         "titleandabstract"] = lak_data["title"] + " " + lak_data["abstract"]
     topics_list = lak_data['topics'].values[0]
@@ -388,9 +384,12 @@ get the top 10 papers for the selected topic in LAK Bar Chart
 '''
 
 # to be removed Lak Bar
+
+
 def getTopicDetails(topic, year):
     lak_abstract = getText('2011')
-    print('lak_abstract ****************************************** ',lak_abstract,' ***************************** lak_abstract')
+    print('lak_abstract ****************************************** ',
+          lak_abstract, ' ***************************** lak_abstract')
     topic = topic.replace("%20", " ")
     lak_abstract["titleAndAbstract"] = lak_abstract[
         "title"] + " " + lak_abstract["abstract"]
@@ -420,6 +419,8 @@ def getTopicDetails(topic, year):
     return myDict.keys(), myDict.values()
 
 # to be removed  LAkbar
+
+
 def getTopicDetails1(topic, year):
     print("*************************")
     topic_list_search = getPaperswithTopics(year)[0]
@@ -437,7 +438,7 @@ def getTopicDetails1(topic, year):
     for key in list(lak_abstract['titleAndAbstract'].values):
 
         if topic.lower() in key.lower():
-            #print(val.lower(),":::::::::::::::::::::::::",key.lower())
+            # print(val.lower(),":::::::::::::::::::::::::",key.lower())
             list_tpcfreq.append(key.lower().count(topic.lower()))
             alldetails_df = lak_abstract[lak_abstract["titleAndAbstract"] ==
                                          key]
@@ -452,7 +453,7 @@ def getTopicDetails1(topic, year):
                 alldetails_df["title"].values[0]
             })
 
-    #dict_final={"label":list_details,"value":weights_list}
+    # dict_final={"label":list_details,"value":weights_list}
     sorted_dict = dict(
         sorted(dict_freqs.items(), reverse=True, key=operator.itemgetter(0)))
     sorted_dict = {k: sorted_dict[k] for k in list(sorted_dict)[:10]}
@@ -462,7 +463,7 @@ def getTopicDetails1(topic, year):
 
 # list_dict_freqs={"title":list_titles,"frequency":list_tpcfreq}
     list_final = []
-    #d={}
+    # d={}
     for val, weight in zip(list_details, weights_list):
         d = {}
         d['label'] = str(val).replace("{",
@@ -473,11 +474,15 @@ def getTopicDetails1(topic, year):
 
     return list_final, len(
         list_final), sorted_dict.keys(), sorted_dict.values()
+
+
 '''
 get the top 10 papers for the selected keyword in LAK Bar Chart
 '''
 
 # to be removed lakBAR
+
+
 def getKeyDetails(topic, year):
     lak_abstract = getText(year)
     topic = topic.replace("%20", " ")
@@ -507,6 +512,8 @@ def getKeyDetails(topic, year):
     return sorted_dict.keys(), sorted_dict.values()
 
 # to be removed LAKBAR
+
+
 def getKeyDetails1(keyword, year):
     print("*************************")
     print(keyword)
@@ -527,7 +534,7 @@ def getKeyDetails1(keyword, year):
     for key in list(lak_abstract['titleAndAbstract'].values):
 
         if key.lower().find(keyword.lower()) != -1:
-            #print(val.lower(),":::::::::::::::::::::::::",key.lower())
+            # print(val.lower(),":::::::::::::::::::::::::",key.lower())
             list_tpcfreq.append(key.lower().count(keyword.lower()))
 
             alldetails_df = lak_abstract[lak_abstract["titleAndAbstract"] ==
@@ -543,7 +550,7 @@ def getKeyDetails1(keyword, year):
                 alldetails_df["title"].values[0]
             })
 
-    #dict_final={"label":list_details,"value":weights_list}
+    # dict_final={"label":list_details,"value":weights_list}
     sorted_dict = dict(
         sorted(dict_freqs.items(), reverse=True, key=operator.itemgetter(0)))
     sorted_dict = {k: sorted_dict[k] for k in list(sorted_dict)[:10]}
@@ -553,7 +560,7 @@ def getKeyDetails1(keyword, year):
 
 # list_dict_freqs={"title":list_titles,"frequency":list_tpcfreq}
     list_final = []
-    #d={}
+    # d={}
     for val, weight in zip(list_details, weights_list):
         d = {}
         d['label'] = str(val).replace("{",
@@ -564,11 +571,15 @@ def getKeyDetails1(keyword, year):
 
     return list_final, len(
         list_final), sorted_dict.keys(), sorted_dict.values()
+
+
 '''
 get all the LAK Data from database specific to a particular year
 '''
 
 # to be removed LAK Bar
+
+
 def getText(year):
     try:
         up.uses_netloc.append("postgres")
@@ -584,14 +595,14 @@ def getText(year):
         postgreSQL_select_Query = "select * from LAKData where year='" + year + "'"
         cursor.execute(postgreSQL_select_Query)
         lak_records = cursor.fetchall()
-        #sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
+        # sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
         data_lak = pd.read_sql(postgreSQL_select_Query, conn)
-    #for val in mobile_records:
-    #print(val)
+    # for val in mobile_records:
+    # print(val)
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if (conn):
             cursor.close()
             conn.close()
@@ -633,9 +644,11 @@ def compareTopics(year1, year2):
     return "success"
 
 # to be removed Area chart
+
+
 def getAllKeywordsAllYears(conferenceName):
     query = "select keywords from Topics"
-    topics = getTopics(conferenceName,"", query)
+    topics = getTopics(conferenceName, "", query)
     list_topics = []
     list_topics_flat = []
     print(len(topics["keywords"].values))
@@ -659,9 +672,11 @@ def getAllKeywordsAllYears(conferenceName):
     return list_dict
 
 # to be removed Area chart
+
+
 def getAllTopicsAllYears(conferenceName):
     query = "select topics from Topics"
-    topics = getTopics(conferenceName,"", query)
+    topics = getTopics(conferenceName, "", query)
     list_topics = []
     list_topics_flat = []
     print(len(topics["topics"].values))
@@ -685,11 +700,11 @@ def getAllTopicsAllYears(conferenceName):
     return list_dict
 
 
-def getKeyWeightsAllYears(conferenceName,topic):
+def getKeyWeightsAllYears(conferenceName, topic):
     topic1 = topic
     topic = topic.lower()
     query = "select distinct(t.keywords),t.year from Topics t join LAKData l on t.year=l.year where lower(t.keywords) like '%" + topic + "%'"
-    topics_yearwise = getTopics(conferenceName,"", query)
+    topics_yearwise = getTopics(conferenceName, "", query)
     list_dicts = []
     for val in topics_yearwise["keywords"].values:
         topics_list_year1 = val.replace("{", "")
@@ -700,7 +715,7 @@ def getKeyWeightsAllYears(conferenceName,topic):
         }
         list_dicts.append(topics_list_ref_year1)
     topics_yearwise["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     print(topics_yearwise["newtopics"], topics_yearwise["year"])
     topics_yearwise.newtopics = topics_yearwise.newtopics.apply(
         lambda x: list(x.items()))
@@ -709,21 +724,23 @@ def getKeyWeightsAllYears(conferenceName,topic):
                      ]] = pd.DataFrame(topics_yearwise.newtopics.tolist(),
                                        index=topics_yearwise.index)
     topics_yearwise = topics_yearwise[['topic', 'weight', 'year']]
-    #topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
-    #topics_yearwise=topics_yearwise.drop_duplicates()
+    # topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
+    # topics_yearwise=topics_yearwise.drop_duplicates()
     topics_yearwise = topics_yearwise.sort_values(by='year')
     df_singletopic = topics_yearwise[topics_yearwise['topic'] == topic1]
     df_singletopic = df_singletopic.drop_duplicates()
     print(df_singletopic)
     return df_singletopic['weight'].values, df_singletopic['year'].values
 
-#BAB
-def getTopicWeightsAllYears(conferenceName,topic):
+# BAB
+
+
+def getTopicWeightsAllYears(conferenceName, topic):
 
     topic1 = topic
     topic = topic.lower()
     query = "select distinct(t.topics),t.year from Topics t join LAKData l on t.year=l.year where lower(t.topics) like '%" + topic + "%'"
-    topics_yearwise = getTopics(conferenceName,"", query)
+    topics_yearwise = getTopics(conferenceName, "", query)
     list_dicts = []
     for val in topics_yearwise["topics"].values:
         topics_list_year1 = val.replace("{", "")
@@ -734,7 +751,7 @@ def getTopicWeightsAllYears(conferenceName,topic):
         }
         list_dicts.append(topics_list_ref_year1)
     topics_yearwise["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     print(topics_yearwise["newtopics"], topics_yearwise["year"])
     topics_yearwise.newtopics = topics_yearwise.newtopics.apply(
         lambda x: list(x.items()))
@@ -743,8 +760,8 @@ def getTopicWeightsAllYears(conferenceName,topic):
                      ]] = pd.DataFrame(topics_yearwise.newtopics.tolist(),
                                        index=topics_yearwise.index)
     topics_yearwise = topics_yearwise[['topic', 'weight', 'year']]
-    #topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
-    #topics_yearwise=topics_yearwise.drop_duplicates()
+    # topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
+    # topics_yearwise=topics_yearwise.drop_duplicates()
     topics_yearwise = topics_yearwise.sort_values(by='year')
     df_singletopic = topics_yearwise[topics_yearwise['topic'] == topic1]
     df_singletopic = df_singletopic.drop_duplicates()
@@ -756,10 +773,12 @@ def getTopicWeightsAllYears(conferenceName,topic):
 method to get keyword data for pie chart
 '''
 
-#BAB
-def getDataForPieKeys(conferenceName,year, number):
+# BAB
+
+
+def getDataForPieKeys(conferenceName, year, number):
     query = "select distinct(t.keywords) from Topics t join LAKData l on t.year=l.year where t.year='" + year + "'"
-    topics_yearwise = getTopics(conferenceName,"", query)
+    topics_yearwise = getTopics(conferenceName, "", query)
     list_dicts = []
     for val in topics_yearwise["keywords"].values:
         topics_list_year1 = val.replace("{", "")
@@ -770,7 +789,7 @@ def getDataForPieKeys(conferenceName,year, number):
         }
         list_dicts.append(topics_list_ref_year1)
     topics_yearwise["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     print(topics_yearwise["newtopics"])
     topics_yearwise.newtopics = topics_yearwise.newtopics.apply(
         lambda x: list(x.items()))
@@ -779,8 +798,8 @@ def getDataForPieKeys(conferenceName,year, number):
                      ]] = pd.DataFrame(topics_yearwise.newtopics.tolist(),
                                        index=topics_yearwise.index)
     topics_yearwise = topics_yearwise[['topic', 'weight']]
-    #topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
-    #topics_yearwise=topics_yearwise.drop_duplicates()
+    # topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
+    # topics_yearwise=topics_yearwise.drop_duplicates()
     topics_yearwise['weight'] = topics_yearwise['weight'].astype(int)
     topics_yearwise = topics_yearwise.sort_values(by=['weight'],
                                                   ascending=False)
@@ -805,10 +824,10 @@ method to get data for pie chart - topics
 '''
 
 
-def getDataForPieTopics(conferenceName,year, number):
+def getDataForPieTopics(conferenceName, year, number):
     print(year, number)
     query = "select distinct(t.topics) from Topics t join LAKData l on t.year=l.year where t.year='" + year + "'"
-    topics_yearwise = getTopics(conferenceName,"", query)
+    topics_yearwise = getTopics(conferenceName, "", query)
     list_dicts = []
     for val in topics_yearwise["topics"].values:
         topics_list_year1 = val.replace("{", "")
@@ -819,7 +838,7 @@ def getDataForPieTopics(conferenceName,year, number):
         }
         list_dicts.append(topics_list_ref_year1)
     topics_yearwise["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     print(topics_yearwise["newtopics"])
     topics_yearwise.newtopics = topics_yearwise.newtopics.apply(
         lambda x: list(x.items()))
@@ -828,8 +847,8 @@ def getDataForPieTopics(conferenceName,year, number):
                      ]] = pd.DataFrame(topics_yearwise.newtopics.tolist(),
                                        index=topics_yearwise.index)
     topics_yearwise = topics_yearwise[['topic', 'weight']]
-    #topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
-    #topics_yearwise=topics_yearwise.drop_duplicates()
+    # topics_yearwise['year'] = '1/1/' +topics_yearwise['year'].astype(str)
+    # topics_yearwise=topics_yearwise.drop_duplicates()
     topics_yearwise['weight'] = topics_yearwise['weight'].astype(int)
     topics_yearwise = topics_yearwise.sort_values(by=['weight'],
                                                   ascending=False)
@@ -879,8 +898,10 @@ def getDataForPieTopics(conferenceName,year, number):
 method to get keyword weights over all years
 '''
 
-#BAB
-def getMultipleYearKeyJourney(conferenceName,listoftopics):
+# BAB
+
+
+def getMultipleYearKeyJourney(conferenceName, listoftopics):
     try:
         list_weights = []
         list_years = []
@@ -889,7 +910,7 @@ def getMultipleYearKeyJourney(conferenceName,listoftopics):
             '2019', '2020'
         ]
         for val in listoftopics:
-            weights, years = getKeyWeightsAllYears(conferenceName,val)
+            weights, years = getKeyWeightsAllYears(conferenceName, val)
             list_weights.append(list(weights))
             list_years.append(list(years))
 
@@ -910,8 +931,10 @@ def getMultipleYearKeyJourney(conferenceName,listoftopics):
 '''
 method to get topic weights over all years
 '''
-#BAB
-def getMultipleYearTopicJourney(conferenceName,listoftopics):
+# BAB
+
+
+def getMultipleYearTopicJourney(conferenceName, listoftopics):
 
     list_weights = []
     list_years = []
@@ -920,7 +943,7 @@ def getMultipleYearTopicJourney(conferenceName,listoftopics):
         '2020'
     ]
     for val in listoftopics:
-        weights, years = getTopicWeightsAllYears(conferenceName,val)
+        weights, years = getTopicWeightsAllYears(conferenceName, val)
         list_weights.append(list(weights))
         list_years.append(list(years))
     print(list_weights)
@@ -935,10 +958,12 @@ def getMultipleYearTopicJourney(conferenceName,listoftopics):
     return list1_modified, lak_years
 
 # lakbar to be removed
+
+
 def getPaperIDFromPaperTitle(title):
-    #title="Towards visual analytics for teachers dynamic diagnostic pedagogical decision-making"
+    # title="Towards visual analytics for teachers dynamic diagnostic pedagogical decision-making"
     query = "select id from LAKData where title like'" + title + "%'"
-    lak_id = getTopics("","", query)
+    lak_id = getTopics("", "", query)
     print(lak_id)
     val = lak_id['id'].values[0]
     paper_data = requests.get(
@@ -954,8 +979,9 @@ get author specific collaboration based on the selected author
 
 def getAuthorFromAuthorName(author, topic, year):
     topic = topic.lower()
-    query = "select authors,authorids from LAKData where authors like '%" + author + "%' and year='" + year + "'"
-    lak_id = getTopics("", year,query)
+    query = "select authors,authorids from LAKData where authors like '%" + \
+        author + "%' and year='" + year + "'"
+    lak_id = getTopics("", year, query)
 
     authors_mod = pd.DataFrame({
         'authors':
@@ -968,13 +994,14 @@ def getAuthorFromAuthorName(author, topic, year):
     print(authorid)
     authorprof = authorid['authorids'].values[0]
     print(authorprof)
-    #author_data=requests.get(f"https://api.semanticscholar.org/v1/author/{authorprof}").json()
+    # author_data=requests.get(f"https://api.semanticscholar.org/v1/author/{authorprof}").json()
     auth_url = f"https://www.semanticscholar.org/author/144973020/{authorprof}"
-    query1 = "select id,title,abstract,authors,authorids from LAKData where authors like '%" + author + "%' and year='" + year + "'"
-    lak_count = getTopics("",year, query1)
+    query1 = "select id,title,abstract,authors,authorids from LAKData where authors like '%" + \
+        author + "%' and year='" + year + "'"
+    lak_count = getTopics("", year, query1)
     lak_count[
         'titleAndAbstract'] = lak_count['title'] + " " + lak_count['abstract']
-    #count=len(lak_count['id'].values)
+    # count=len(lak_count['id'].values)
     print("the dataframe of paperids", lak_count)
     l_papers = []
     l_titles = []
@@ -998,17 +1025,17 @@ def getAuthorFromAuthorName(author, topic, year):
 
 def getAuthorsDict():
     query = "select authors from LAKData"
-    authors = getTopics("","", query)
+    authors = getTopics("", "", query)
     list_auth_sub = []
     list_auth_single = []
     list_authors = list(authors['authors'].values)
-    #list_authors=list_authors[0:5]
+    # list_authors=list_authors[0:5]
     for val in list_authors:
         print("original val:", val)
         if "," not in val:
             list_auth_single.append(val)
         if "," in val:
-            #print("value containing , is:",val)
+            # print("value containing , is:",val)
             list_temp = []
             list_temp = val.split(",")
             for value in list_temp:
@@ -1035,17 +1062,17 @@ def getAuthorsForYear(year):
         query = "select authors from LAKData"
     else:
         query = "select authors from LAKData where year='" + year + "'"
-    authors = getTopics("",year, query)
+    authors = getTopics("", year, query)
     list_auth_sub = []
     list_auth_single = []
     list_authors = list(authors['authors'].values)
-    #list_authors=list_authors[0:5]
+    # list_authors=list_authors[0:5]
     for val in list_authors:
 
         if "," not in val:
             list_auth_single.append(val)
         if "," in val:
-            #print("value containing , is:",val)
+            # print("value containing , is:",val)
             list_temp = []
             list_temp = val.split(",")
             for value in list_temp:
@@ -1061,20 +1088,22 @@ def getAuthorsForYear(year):
     return list_auths
 
 # to be removed
+
+
 def getAllAuthors():
     query = 'select authors from LAKData'
-    authors = getTopics("", "",query)
+    authors = getTopics("", "", query)
 
     list_auth_sub = []
     list_auth_single = []
     list_authors = list(authors['authors'].values)
-    #list_authors=list_authors[0:5]
+    # list_authors=list_authors[0:5]
     for val in list_authors:
         print("original val:", val)
         if "," not in val:
             list_auth_single.append(val)
         if "," in val:
-            #print("value containing , is:",val)
+            # print("value containing , is:",val)
             list_temp = []
             list_temp = val.split(",")
             for value in list_temp:
@@ -1100,7 +1129,7 @@ def getAllAuthorsDict():
 
 def getTopicEvoultion():
     query = "select topics,year from Topics"
-    topics_yearwise = getTopics("", "",query)
+    topics_yearwise = getTopics("", "", query)
     list_dicts = []
     for val in list(topics_yearwise["topics"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1111,7 +1140,7 @@ def getTopicEvoultion():
         }
         list_dicts.append(topics_list_ref_year1)
     topics_yearwise["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     print(topics_yearwise["newtopics"])
     topics_yearwise.newtopics = topics_yearwise.newtopics.apply(
         lambda x: list(x.items()))
@@ -1120,7 +1149,7 @@ def getTopicEvoultion():
                      ]] = pd.DataFrame(topics_yearwise.newtopics.tolist(),
                                        index=topics_yearwise.index)
     topics_yearwise = topics_yearwise[['topic', 'weight', 'year']]
-    #topics_yearwise[['weight']]=Normalizer().fit_transform(topics_yearwise[['weight']])
+    # topics_yearwise[['weight']]=Normalizer().fit_transform(topics_yearwise[['weight']])
     df_sankey_small = topics_yearwise.groupby('year').apply(
         lambda x: x.ffill().bfill()).drop_duplicates()
     df_sankey_small = df_sankey_small.pivot(index='topic',
@@ -1129,7 +1158,7 @@ def getTopicEvoultion():
     df_sankey_small = df_sankey_small.fillna('0')
     df_sankey_small = df_sankey_small.reset_index()
     print(df_sankey_small)
-    #df_sankey_small[["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"]]=StandardScaler().fit_transform(df_sankey_small[["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"]])
+    # df_sankey_small[["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"]]=StandardScaler().fit_transform(df_sankey_small[["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"]])
     list_subdicts = []
     list_dicts = []
     list_columns = list(df_sankey_small.columns)
@@ -1144,9 +1173,9 @@ obtain common keywords for conference venn diagram
 '''
 
 
-def generateVennDataKeys(conferenName,year1, year2):
+def generateVennDataKeys(conferenName, year1, year2):
     query_year1 = "select keywords from Topics where year='" + year1 + "'"
-    topics_yearwise1 = getTopics(conferenName,"", query_year1)
+    topics_yearwise1 = getTopics(conferenName, "", query_year1)
     list_dicts = []
     for val in list(topics_yearwise1["keywords"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1168,7 +1197,7 @@ def generateVennDataKeys(conferenName,year1, year2):
     list_topics_y1 = keys[0:10]
     print(list_topics_y1)
     query_year2 = "select keywords from Topics where year='" + year2 + "'"
-    topics_yearwise2 = getTopics(conferenName,"", query_year2)
+    topics_yearwise2 = getTopics(conferenName, "", query_year2)
     list_dicts = []
     for val in list(topics_yearwise2["keywords"].values):
         topics_list_year2 = val.replace("{", "")
@@ -1195,8 +1224,9 @@ def generateVennDataKeys(conferenName,year1, year2):
 
     fig, ax = plt.subplots()
 
-    ax.set_title('Common keywords for the years ' + str(year1) + ' and ' + str(year2),fontsize=12)
-    
+    ax.set_title('Common keywords for the years ' +
+                 str(year1) + ' and ' + str(year2), fontsize=12)
+
     v = venn2_unweighted(subsets=(40, 40, 25),
                          set_labels=[str(year1), str(year2)])
     v.get_patch_by_id('10').set_alpha(0.3)
@@ -1231,9 +1261,9 @@ Obtain common topics for conference venn data
 '''
 
 
-def generateVennData(conferenName,year1, year2):
+def generateVennData(conferenName, year1, year2):
     query_year1 = "select topics from Topics where year='" + year1 + "'"
-    topics_yearwise1 = getTopics(conferenName,"", query_year1)
+    topics_yearwise1 = getTopics(conferenName, "", query_year1)
     list_dicts = []
     for val in list(topics_yearwise1["topics"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1255,7 +1285,7 @@ def generateVennData(conferenName,year1, year2):
     list_topics_y1 = keys[0:10]
     print(list_topics_y1)
     query_year2 = "select topics from Topics where year='" + year2 + "'"
-    topics_yearwise2 = getTopics(conferenName,"", query_year2)
+    topics_yearwise2 = getTopics(conferenName, "", query_year2)
     list_dicts = []
     for val in list(topics_yearwise2["topics"].values):
         topics_list_year2 = val.replace("{", "")
@@ -1280,9 +1310,8 @@ def generateVennData(conferenName,year1, year2):
         set(list_topics_y1).intersection(set(list_topics_y2)))
     list(set(list_topics_y1) - set(list_topics_y2))
 
-    
-
-    ctx = confutils.generate_venn_photo(list_topics_y1,list_topics_y2,list_intersect_y1y2,year1,year2,'topic')
+    ctx = confutils.generate_venn_photo(
+        list_topics_y1, list_topics_y2, list_intersect_y1y2, year1, year2, 'topic')
 
     return ctx
 
@@ -1294,7 +1323,7 @@ get all topics for the author network
 
 def getAllTopics(year):
     query = "select distinct topics from Topics where year='" + year + "'"
-    lak_keywords = getTopics("",year, query)
+    lak_keywords = getTopics("", year, query)
     list_allkeys = []
     for val in list(lak_keywords['topics'].values):
         topics_list = val.replace("{", "")
@@ -1333,7 +1362,7 @@ get all keywords for author network
 
 def getAllKeywords(year):
     query = "select keywords from Topics where year='" + year + "'"
-    lak_keywords = getTopics("", "",query)
+    lak_keywords = getTopics("", "", query)
     list_allkeys = []
     for val in list(lak_keywords['keywords'].values):
         topics_list = val.replace("{", "")
@@ -1373,8 +1402,9 @@ get topics for the author network
 def searchForTopics(year, keyword):
     try:
         keyword = keyword.lower()
-        query = "select t.topics,l.title,l.abstract,l.authors from LAKData l join Topics t on l.year=t.year where t.year='" + year + "' and lower(t.topics) like '%" + keyword + "%'"
-        lak_data = getTopics("", "",query)
+        query = "select t.topics,l.title,l.abstract,l.authors from LAKData l join Topics t on l.year=t.year where t.year='" + \
+            year + "' and lower(t.topics) like '%" + keyword + "%'"
+        lak_data = getTopics("", "", query)
         lak_data["titleAndAbstract"] = lak_data["title"] + " " + lak_data[
             "abstract"]
         list_titles = []
@@ -1386,7 +1416,7 @@ def searchForTopics(year, keyword):
         list_titles = list(set(list_titles))
         query = "select authors from LAKData where title in" + str(
             tuple(list_titles)) + "and year='" + year + "'"
-        lak_authors = getTopics("", "",query)
+        lak_authors = getTopics("", "", query)
         split_authors = []
         list_pairs = []
         list_edges = []
@@ -1407,7 +1437,7 @@ def searchForTopics(year, keyword):
             'source': start,
             'target': end
         } for points in list_listedges
-                  for start, end in combinations(points, 2)]
+            for start, end in combinations(points, 2)]
         print(result)
 
         flatList = [item for elem in list_listedges for item in elem]
@@ -1420,10 +1450,12 @@ def searchForTopics(year, keyword):
             d.setdefault(frozenset(inner.values()), []).append(inner)
         l2 = [v[0] for _, v in d.items()]
         list_nodes = []
-        query = "select authors from LAKData where year='" + year + "' and (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%')"
-        lak = getTopics("", "",query)
+        query = "select authors from LAKData where year='" + year + \
+            "' and (lower(abstract) like '%" + keyword + \
+            "%' or lower(title) like '%" + keyword + "%')"
+        lak = getTopics("", "", query)
         for val in flatList_val:
-            #count=flatList.count(val)
+            # count=flatList.count(val)
             count = lak.authors.str.count(val).sum()
             list_nodes.append({"id": val, "size": count * 50})
 
@@ -1464,12 +1496,14 @@ def searchForTopics(year, keyword):
 method to get keyword data for stacked bar chart across years
 '''
 
-#to be removed
-def getTopKeysForAllYear(conferenceName,list_of_years):
+# to be removed
+
+
+def getTopKeysForAllYear(conferenceName, list_of_years):
     # BAB DISTINCT
     query = "select DISTINCT keywords,year from Topics where year in" + str(
         tuple(list_of_years))
-    lak_data = getTopics(conferenceName,"", query)
+    lak_data = getTopics(conferenceName, "", query)
     list_dicts = []
     for val in list(lak_data["keywords"].values):
         topics_list_year1 = val.replace("{", "")
@@ -1491,7 +1525,7 @@ def getTopKeysForAllYear(conferenceName,list_of_years):
         list_dicts.append(sorted_topics_dict)
 
     lak_data["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     lak_data.newtopics = lak_data.newtopics.apply(lambda x: list(x.items()))
     lak_data = lak_data.explode('newtopics')
     lak_data[['topic', 'weight']] = pd.DataFrame(lak_data.newtopics.tolist(),
@@ -1507,14 +1541,16 @@ def getTopKeysForAllYear(conferenceName,list_of_years):
 method to get topic data for stacked bar chart across years
 '''
 
-#BAB
-#to be removed
-def getTopTopicsForAllYears(conferenceName,list_of_years):
+# BAB
+# to be removed
+
+
+def getTopTopicsForAllYears(conferenceName, list_of_years):
     # BAB DISTINCT
     query = "select DISTINCT topics,year from Topics where year in" + str(
         tuple(list_of_years))
-    lak_data = getTopics(conferenceName,"", query)
-    print('tuple',str(tuple(list_of_years)))
+    lak_data = getTopics(conferenceName, "", query)
+    print('tuple', str(tuple(list_of_years)))
     print('BAB', lak_data)
     list_dicts = []
     for val in list(lak_data["topics"].values):
@@ -1537,7 +1573,7 @@ def getTopTopicsForAllYears(conferenceName,list_of_years):
         list_dicts.append(sorted_topics_dict)
 
     lak_data["newtopics"] = list_dicts
-    #topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
+    # topics_yearwise["topicswithyear"]=topics_yearwise["topics"]+","+topics_yearwise["year"]
     lak_data.newtopics = lak_data.newtopics.apply(lambda x: list(x.items()))
     lak_data = lak_data.explode('newtopics')
     lak_data[['topic', 'weight']] = pd.DataFrame(lak_data.newtopics.tolist(),
@@ -1563,8 +1599,9 @@ get keywords based on author for author network
 def searchForKeyword(year, keyword):
     try:
         keyword = keyword.lower()
-        query = "select t.keywords,l.title,l.abstract,l.authors from LAKData l join Topics t on l.year=t.year where t.year='" + year + "' and lower(t.keywords) like '%" + keyword + "%'"
-        lak_data = getTopics("","", query)
+        query = "select t.keywords,l.title,l.abstract,l.authors from LAKData l join Topics t on l.year=t.year where t.year='" + \
+            year + "' and lower(t.keywords) like '%" + keyword + "%'"
+        lak_data = getTopics("", "", query)
         lak_data["titleAndAbstract"] = lak_data["title"] + " " + lak_data[
             "abstract"]
         list_titles = []
@@ -1576,7 +1613,7 @@ def searchForKeyword(year, keyword):
         list_titles = list(set(list_titles))
         query = "select authors from LAKData where title in" + str(
             tuple(list_titles)) + "and year='" + year + "'"
-        lak_authors = getTopics("", "",query)
+        lak_authors = getTopics("", "", query)
         split_authors = []
         list_pairs = []
         list_edges = []
@@ -1586,7 +1623,7 @@ def searchForKeyword(year, keyword):
             elif "," in val:
                 list_edges.append(val)
 
-        #dict_xy={"nodes":list_pairs,"links":list_edges}
+        # dict_xy={"nodes":list_pairs,"links":list_edges}
 
         print('list_pairs')
         print(list_pairs)
@@ -1616,7 +1653,7 @@ def searchForKeyword(year, keyword):
             'source': start,
             'target': end
         } for points in list_listedges
-                  for start, end in combinations(points, 2)]
+            for start, end in combinations(points, 2)]
         print('result')
         print(len(result))
         print('result')
@@ -1635,15 +1672,17 @@ def searchForKeyword(year, keyword):
             d.setdefault(frozenset(inner.values()), []).append(inner)
         l2 = [v[0] for _, v in d.items()]
         list_nodes = []
-        query = "select authors from LAKData where year='" + year + "' and (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%')"
-        lak = getTopics("", "",query)
+        query = "select authors from LAKData where year='" + year + \
+            "' and (lower(abstract) like '%" + keyword + \
+            "%' or lower(title) like '%" + keyword + "%')"
+        lak = getTopics("", "", query)
 
         print('lak')
         print(lak)
         print('lak')
 
         for val in flatList_val:
-            #count=flatList.count(val)
+            # count=flatList.count(val)
             count = lak.authors.str.count(val).sum()
             print('+++++++++++++++++++++++++++++++++++++++++++')
             print('val')
@@ -1723,7 +1762,7 @@ def searchForKeyword(year, keyword):
 #     return [matrix.values.tolist()]+[matrix.index.tolist()]+[matrix.columns.levels[1].tolist()]
 def getFlowChartDataTopics(year, searchword):
     query = "select topics from Topics where year='" + year + "'"
-    lak_data = getTopics("", "",query)
+    lak_data = getTopics("", "", query)
     sorted_topics_dict = {}
     sorted_keys_dict = {}
 
@@ -1769,7 +1808,7 @@ def getFlowChartDataTopics(year, searchword):
 
 def getFlowChartDataKeywords(year, searchword):
     query = "select keywords from Topics where year='" + year + "'"
-    lak_data = getTopics("", "",query)
+    lak_data = getTopics("", "", query)
     sorted_topics_dict = {}
     sorted_keys_dict = {}
     keys_list = lak_data['keywords'].values[0]
@@ -1809,12 +1848,15 @@ def getFlowChartDataKeywords(year, searchword):
     dict_nodes = {"nodes": list_nodedata, "links": list_edges}
     return dict_nodes
 
-#BAB 08.06.2021
+# BAB 08.06.2021
 
-def get_abstract_based_on_keyword(conferenceName,year, keyword):
+
+def get_abstract_based_on_keyword(conferenceName, year, keyword):
     keyword = keyword.lower()
-    query = "select abstract,title from LAKData where (lower(abstract) like '%" + keyword + "%' or lower(title) like '%" + keyword + "%') and year='" + year + "'"
-    LakAbstract = getTopics(conferenceName,"", query)
+    query = "select abstract,title from LAKData where (lower(abstract) like '%" + \
+        keyword + "%' or lower(title) like '%" + keyword + \
+        "%') and year='" + year + "'"
+    LakAbstract = getTopics(conferenceName, "", query)
     LakAbstract["titleAndAbstract"] = LakAbstract[
         "title"] + "\n" + LakAbstract["abstract"]
     dict_lists = []
@@ -1838,12 +1880,13 @@ def get_abstract_based_on_keyword(conferenceName,year, keyword):
     for i in range(0, len(list_titles)):
         list_papernames.append("Paper" + str(i + 1))
 
-    return list_titles, list_abstracts #, list_papernames
+    return list_titles, list_abstracts  # , list_papernames
 
 
 def getDataAuthorComparisonKeywords(year, author1, author2):
-    query = "select t.keywords,t.year,l.abstract,l.authors,l.title from LAKData l join Topics t on l.year=t.year where (l.authors like '%" + author1 + "%' or l.authors like '%" + author2 + "%') and t.year='" + year + "'"
-    lak_topics = getTopics("", "",query)
+    query = "select t.keywords,t.year,l.abstract,l.authors,l.title from LAKData l join Topics t on l.year=t.year where (l.authors like '%" + \
+        author1 + "%' or l.authors like '%" + author2 + "%') and t.year='" + year + "'"
+    lak_topics = getTopics("", "", query)
     lak_topics['titleAndAbstract'] = lak_topics['title'] + " " + lak_topics[
         'abstract']
     list_dicts = []
@@ -1865,7 +1908,7 @@ def getDataAuthorComparisonKeywords(year, author1, author2):
                                    key=operator.itemgetter(1))
 
         list_dicts = [{a[0]: a[1]} for a in sorted_keys_tuple]
-        #list_dicts.append(topics_list_ref)
+        # list_dicts.append(topics_list_ref)
     fin_list = [dict(t) for t in {tuple(d.items()) for d in list_dicts}]
     list_keycollector = []
     for val in fin_list:
@@ -1923,14 +1966,15 @@ def getDataAuthorComparisonKeywords(year, author1, author2):
         else:
             pass
 
-    #[['T. McKay'], ['learning', 'student'], [[4], [16]]]
+    # [['T. McKay'], ['learning', 'student'], [[4], [16]]]
     print(lists, "after")
     return lists[0], lists[1], lists[2]
 
 
 def getDataAuthorComparisonTopics(year, author1, author2):
-    query = "select t.topics,t.year,l.abstract,l.authors,l.title from LAKData l join Topics t on l.year=t.year where (l.authors like '%" + author1 + "%' or l.authors like '%" + author2 + "%') and t.year='" + year + "'"
-    lak_topics = getTopics("", "",query)
+    query = "select t.topics,t.year,l.abstract,l.authors,l.title from LAKData l join Topics t on l.year=t.year where (l.authors like '%" + \
+        author1 + "%' or l.authors like '%" + author2 + "%') and t.year='" + year + "'"
+    lak_topics = getTopics("", "", query)
     lak_topics['titleAndAbstract'] = lak_topics['title'] + " " + lak_topics[
         'abstract']
     list_dicts = []
@@ -1952,7 +1996,7 @@ def getDataAuthorComparisonTopics(year, author1, author2):
                                    key=operator.itemgetter(1))
 
         list_dicts = [{a[0]: a[1]} for a in sorted_keys_tuple]
-        #list_dicts.append(topics_list_ref)
+        # list_dicts.append(topics_list_ref)
     fin_list = [dict(t) for t in {tuple(d.items()) for d in list_dicts}]
     list_keycollector = []
     for val in fin_list:
@@ -2000,7 +2044,7 @@ def getDataAuthorComparisonTopics(year, author1, author2):
             lists[2][0].append(0)
         if len(lists[2][1]) < 2:
             lists[2][1].append(0)
-    #[['T. McKay'], ['learning', 'student'], [[4], [16]]]
+    # [['T. McKay'], ['learning', 'student'], [[4], [16]]]
     print(lists, "after")
 
     return lists[0], lists[1], lists[2]
@@ -2047,7 +2091,7 @@ def pad(l, padlength):
 
 
 def fetchTopicsuserID(ssuserid, year):
-    #ssuserid=2399182
+    # ssuserid=2399182
     author_data = requests.get(
         f"https://api.semanticscholar.org/v1/author/{ssuserid}").json()
     print(author_data)
@@ -2069,7 +2113,7 @@ def fetchTopicsuserID(ssuserid, year):
                                 columns=['title', 'abstract'])
     df_paperdata['title_abstract'] = df_paperdata[
         'title'] + " " + df_paperdata['abstract']
-    #df_paperdata=df_paperdata.replace(df_paperdata.Nan,'')
+    # df_paperdata=df_paperdata.replace(df_paperdata.Nan,'')
     abs_vals = df_paperdata['title_abstract'].values
     keydata = ' '.join(str(v) for v in abs_vals)
     keywords = getKeyword(keydata, "SifRank", 10)
@@ -2082,7 +2126,7 @@ def fetchTopicsuserID(ssuserid, year):
     wikis_noquotes = wikis_noquotes.replace("(", "")
     wikis_noquotes = wikis_noquotes.replace(")", "")
     query = "select topics from Topics where year='" + year + "'"
-    lak_topics = getTopics("", "",query)
+    lak_topics = getTopics("", "", query)
     wikis_noquotes = wikis_noquotes.replace("{", "")
     wikis_noquotes = wikis_noquotes.replace("}", "")
     print(
@@ -2113,7 +2157,7 @@ def fetchTopicsuserID(ssuserid, year):
         topics_list_ref.pop("Result disambiguation")
 
 # list_todict = json.loads(topics_list)
-#topics_list_ref=dict(list(topics_list_ref.items())[0: 10])
+# topics_list_ref=dict(list(topics_list_ref.items())[0: 10])
     sorted_topics_tuple = sorted(topics_list_ref.items(),
                                  reverse=True,
                                  key=operator.itemgetter(1))
@@ -2184,14 +2228,14 @@ def insertData(query):
 
         cursor.execute(query)
         conn.commit()
-    #sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
+    # sql_command = "SELECT * FROM {}.{};".format(str(schema), str(table))
 
-    #for val in mobile_records:
-    #print(val)
+    # for val in mobile_records:
+    # print(val)
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if (conn):
             cursor.close()
             conn.close()
@@ -2201,7 +2245,7 @@ def insertData(query):
 
 def getAuthorIdfromAuthor(author):
     query = "select authors,authorids from LAKData where authors like '%" + author + "%'"
-    lak_authors = getTopics("","", query)
+    lak_authors = getTopics("", "", query)
     val = list(lak_authors.values)[0]
     val_authors = val[0].split(",")
     val_ids = val[1].split(",")
@@ -2231,13 +2275,15 @@ def compareAuthors(author1, author2, year, key):
         mainquery1 = "select keywords,topics,authorid from AuthorsTab where name='" + author1 + "'"
         mainquery2 = "select keywords,topics,authorid from AuthorsTab where name='" + author2 + "'"
     else:
-        mainquery1 = "select keywords,topics,authorid from AuthorsTab where name='" + author1 + "' and year='" + year + "'"
-        mainquery2 = "select keywords,topics,authorid from AuthorsTab where name='" + author2 + "' and year='" + year + "'"
+        mainquery1 = "select keywords,topics,authorid from AuthorsTab where name='" + \
+            author1 + "' and year='" + year + "'"
+        mainquery2 = "select keywords,topics,authorid from AuthorsTab where name='" + \
+            author2 + "' and year='" + year + "'"
 
-    lak_query1 = getTopics("", "",mainquery1)
-    lak_query2 = getTopics("", "",mainquery2)
+    lak_query1 = getTopics("", "", mainquery1)
+    lak_query2 = getTopics("", "", mainquery2)
     if len(list(lak_query1.values)) != 0:
-        #print("topics",convertStrtoDict(lak_query1['topics'].values[0]))
+        # print("topics",convertStrtoDict(lak_query1['topics'].values[0]))
         sorted_dict1 = dict(
             sorted(convertStrtoDict(lak_query1['topics'].values[0]),
                    reverse=True,
@@ -2253,25 +2299,26 @@ def compareAuthors(author1, author2, year, key):
         if year == 'all years':
             query1 = "select title,abstract from LAKData where authors like '%" + author1 + "%'"
         else:
-            query1 = "select title,abstract from LAKData where authors like '%" + author1 + "%' and year='" + year + "'"
-        lak_author1_data = getTopics("", "",query1)
+            query1 = "select title,abstract from LAKData where authors like '%" + \
+                author1 + "%' and year='" + year + "'"
+        lak_author1_data = getTopics("", "", query1)
         lak_author1_data['titleAndAbs'] = lak_author1_data[
             'title'] + " " + lak_author1_data['abstract']
         abstracts_a1 = list(lak_author1_data['titleAndAbs'].values)
-        #keydata_a1 = ' '.join(str(v) for v in abstracts_a1)
+        # keydata_a1 = ' '.join(str(v) for v in abstracts_a1)
         keydata_a1 = ' '.join(abstracts_a1)
         keywords_a1 = getKeyword(keydata_a1, "Yake", 10)
         keywords_noquotes = str(keywords_a1).replace("'", "")
         keywords_noquotes = keywords_noquotes.replace("(", "")
         keywords_noquotes = keywords_noquotes.replace(")", "")
-        #print("keys",keywords_a1)
+        # print("keys",keywords_a1)
         sorted_dict1 = dict(
             sorted(keywords_a1.items(),
                    reverse=True,
                    key=operator.itemgetter(1)))
         sorted_dict1 = {k: sorted_dict1[k] for k in list(sorted_dict1)[0:10]}
         wikis_a1 = wikifilter(keywords_a1)[1]
-        #print("wikis",wikis_a1)
+        # print("wikis",wikis_a1)
         wikis_noquotes = str(wikis_a1).replace("'", "")
         wikis_noquotes = wikis_noquotes.replace("(", "")
         wikis_noquotes = wikis_noquotes.replace(")", "")
@@ -2297,18 +2344,19 @@ def compareAuthors(author1, author2, year, key):
         if year == 'all years':
             query2 = "select title,abstract from LAKData where authors like '%" + author2 + "%'"
         else:
-            query2 = "select title,abstract from LAKData where authors like '%" + author2 + "%' and year='" + year + "'"
-        lak_author2_data = getTopics("", "",query2)
+            query2 = "select title,abstract from LAKData where authors like '%" + \
+                author2 + "%' and year='" + year + "'"
+        lak_author2_data = getTopics("", "", query2)
         lak_author2_data['titleAndAbs'] = lak_author2_data[
             'title'] + " " + lak_author2_data['abstract']
         abstracts_a2 = list(lak_author2_data['titleAndAbs'].values)
-        #keydata_a1 = ' '.join(str(v) for v in abstracts_a1)
+        # keydata_a1 = ' '.join(str(v) for v in abstracts_a1)
         keydata_a2 = ' '.join(abstracts_a2)
         keywords_a2 = getKeyword(keydata_a2, "SifRank", 10)
         keywords_noquotes = str(keywords_a2).replace("'", "")
         keywords_noquotes = keywords_noquotes.replace("(", "")
         keywords_noquotes = keywords_noquotes.replace(")", "")
-        #print("keys",keywords_a2)
+        # print("keys",keywords_a2)
         sorted_dict2 = dict(
             sorted(keywords_a2.items(),
                    reverse=True,
@@ -2318,7 +2366,7 @@ def compareAuthors(author1, author2, year, key):
         wikis_noquotes = str(wikis_a2).replace("'", "")
         wikis_noquotes = wikis_noquotes.replace("(", "")
         wikis_noquotes = wikis_noquotes.replace(")", "")
-        #print("wikis",wikis_a2)
+        # print("wikis",wikis_a2)
         insert_query = "INSERT INTO AuthorsTab (authorid, name,conference,year,keywords,topics) VALUES ('" + str(
             authorid2
         ) + "','" + author2 + "','" + "LAK" + "','" + year + "','" + str(
@@ -2339,8 +2387,8 @@ def compareAuthors(author1, author2, year, key):
         values = authors_dict.values()
         auths = [author1, author2]
 
-
-        print(set_intersect_key,'-----------' , keys , '+++++++++' , values, '++++++++', auths, '------------')
+        print(set_intersect_key, '-----------', keys, '+++++++++',
+              values, '++++++++', auths, '------------')
 
         return keys, values, auths, set_intersect_key
     elif key == 'topic':
@@ -2361,7 +2409,7 @@ method to fetch topics for author conference venn diagram
 
 def authorConfTopicComparison(key, author, year):
     query1 = "select l.title,l.abstract from LAKData l where l.authors like '%" + author + "%'"
-    lak_author1_topics = getTopics("", "",query1)
+    lak_author1_topics = getTopics("", "", query1)
     lak_author1_topics['titleandAbstract'] = lak_author1_topics[
         'title'] + " " + lak_author1_topics['abstract']
     lak_text = ' '.join(list(lak_author1_topics['titleandAbstract'].values))
@@ -2379,7 +2427,7 @@ def authorConfTopicComparison(key, author, year):
             query2 = "select topics from Topics"
         else:
             query2 = "select topics from Topics where year='" + year + "'"
-    lak_years = getTopics("", "",query2)
+    lak_years = getTopics("", "", query2)
     list_year = []
     if key == 'key':
         list_year = lak_years["keywords"].values[0]
@@ -2463,9 +2511,9 @@ def authorConfTopicComparison(key, author, year):
 
 def getAuthorComparisionData(author1, author2):
     query1 = "select topics from Authors where name='" + author1 + "'"
-    lak_author1_topics = getTopics("", "",query1)
+    lak_author1_topics = getTopics("", "", query1)
     query2 = "select topics from Authors where name='" + author2 + "'"
-    lak_author2_topics = getTopics("", "",query2)
+    lak_author2_topics = getTopics("", "", query2)
     list_author1 = lak_author1_topics["topics"].values[0]
     topics_list1 = list_author1.replace("{", "")
     topics_list1 = topics_list1.replace("}", "")
@@ -2515,7 +2563,7 @@ def getAuthorComparisionData(author1, author2):
 
 def compareLAKwithAuthortopics(author, year):
     query1 = "select topics from Topics where year='" + year + "'"
-    lak_conf = getTopics("", "",query1)
+    lak_conf = getTopics("", "", query1)
     list_topics_conf = lak_conf["topics"].values[0]
     topics_list1 = list_topics_conf.replace("{", "")
     topics_list1 = topics_list1.replace("}", "")
@@ -2535,7 +2583,7 @@ def compareLAKwithAuthortopics(author, year):
                key=operator.itemgetter(1)))
     sorted_dict1 = {k: sorted_dict1[k] for k in list(sorted_dict1)[0:10]}
     query2 = "select topics from Authors where author='" + author + "'"
-    lak_auth = getTopics("", "",query2)
+    lak_auth = getTopics("", "", query2)
     list_topics_auth = lak_auth["topics"].values[0]
     topics_list2 = list_topics_auth.replace("{", "")
     topics_list2 = topics_list2.replace("}", "")
@@ -2589,13 +2637,15 @@ def compareLAKwithAuthortopics(author, year):
     ctx = image_data
     return ctx
 
+    # For demo
 
-    #For demo
+
 def printText():
     return "Hello from Backend!"
 
+    # created by mouadh, sorting tweets based on similarity score
 
-    #created by mouadh, sorting tweets based on similarity score
+
 def getsimilarity():
     userinterest = [
         "Learning", "Massive open online course", "Learning analytics",

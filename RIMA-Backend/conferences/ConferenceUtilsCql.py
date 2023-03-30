@@ -1,15 +1,4 @@
-from .DataExtractor import ConferenceDataCollector as dataCollector
-from .models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
-                     Conf_Event_keyword, Event_has_keyword, Author_Event_keyword, Author_has_Keyword, Author_Event_Topic, Author_has_Topic, PreloadedConferenceList)
-from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikicategory, wikifilter
-from django.db.models import Q
 from django.conf import settings
-import base64
-from matplotlib_venn import venn2, venn2_circles, venn2_unweighted
-from matplotlib import pyplot as plt
-import re
-from neo4j import GraphDatabase
 from django.conf import settings
 
 session = settings.NEO4J_SESSION.session()
@@ -32,6 +21,7 @@ def cql_create_database_labels(tx):
             pass
 
 # ----------------------------------# Create Nodes Functions #----------------------------------#
+
 
 # session = graphDB_Driver.session()
 session = settings.NEO4J_SESSION.session()
