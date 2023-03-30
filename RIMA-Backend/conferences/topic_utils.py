@@ -13,7 +13,7 @@ import requests
 import operator
 import base64
 
-from conferences import ConferenceUtils as confutils
+from conferences import conference_utils as confutils
 from interests.Semantic_Similarity.Word_Embedding.IMsim import calculate_similarity
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter

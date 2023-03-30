@@ -6,7 +6,7 @@ import requests
 import time
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikifilter
-from conferences.topicutils import listToString
+from conferences.topic_utils import listToString
 
 
 def getData():

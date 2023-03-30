@@ -1,8 +1,6 @@
-# Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK
-# test import BEGIN
 import re
 from itertools import combinations
-from conferences import ConferenceUtils as confutils
+from conferences import conference_utils as confutils
 from django.conf import settings
 
 from conferences import tests
@@ -10,7 +8,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from urllib.parse import unquote
 from rest_framework.response import Response
-from conferences.topicutils import (
+from conferences.topic_utils import (
     getPaperswithTopics,
     compareTopics,
     getTopicWeightsAllYears,
@@ -34,13 +32,13 @@ from conferences.topicutils import (
     compareLAKwithAuthortopics,
     getAuthorComparisionData,
     getAuthorsDict)  # BAB 08.06.2021::Extension for other conferences other than LAK
-from conferences.TopicExtractor import (
+from conferences.topic_extractor import (
     fetchAllTopics, fetchAbstracts_author, updateAllTopics)
 from conferences.serializers import PreloadedConferenceListSerializer, ConferenceSerializer
 from rest_framework.generics import (ListCreateAPIView)
 
-from conferences.ConferenceUtilsCql import (cql_create_database_labels, cql_delete_conference, cql_get_author_by_name, cql_get_author_keyword, cql_get_author_papers,
-                                            cql_get_author_topic, cql_get_authors_of_papers, cql_get_conference_authors, cql_get_event_authors, cql_get_conference_events, cql_get_event_papers, cql_create_conference)
+from conferences.conference_utils_cql import (cql_create_database_labels, cql_delete_conference, cql_get_author_by_name, cql_get_author_keyword, cql_get_author_papers,
+                                              cql_get_author_topic, cql_get_authors_of_papers, cql_get_conference_authors, cql_get_event_authors, cql_get_conference_events, cql_get_event_papers, cql_create_conference)
 
 from conferences.models import PreloadedConferenceList, Conference_Event_Paper, Author
 from django.db.models import Q
