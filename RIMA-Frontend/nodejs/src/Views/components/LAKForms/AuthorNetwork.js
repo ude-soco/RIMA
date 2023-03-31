@@ -1,6 +1,8 @@
 //Done by Swarna
 import React, { Component } from "react";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL } from "../../../Services/constants";
+
 import { Graph } from "react-d3-graph";
 import {
   Label,
@@ -57,6 +59,7 @@ class AuthorNetwork extends Component {
       nodeval: "",
       active1: true,
       active2: false,
+      keywordOrTopic: "",
 
       myConfig: {
         nodeHighlightBehavior: true,
@@ -93,6 +96,7 @@ class AuthorNetwork extends Component {
     };
   }
 
+
   handleKeyDown(e) {
     if (e.key === "Enter") {
       var val = document.getElementById("searchkey").value;
@@ -103,7 +107,7 @@ class AuthorNetwork extends Component {
   onClickNode(nodeId) {
     // window.alert(`Clicked node ${nodeId}`);
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      `${BASE_URL}/api/conferences/` +
       "getallauthorslist/" +
       nodeId +
       "/" +
@@ -158,7 +162,7 @@ class AuthorNetwork extends Component {
   }
 
   componentWillMount() {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+    fetch(`${BASE_URL}/api/conferences/` +
       "getalltopics/topic/lak2011")
       .then((response) => response.json())
       .then((json) => {
@@ -166,7 +170,7 @@ class AuthorNetwork extends Component {
           keywords: json.keywords.sort((a, b) => (a.label > b.label ? 1 : -1)),
         });
       });
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+    fetch(`${BASE_URL}/api/conferences/` +
       "getalltitles/Learning/2011")
       .then((response) => response.json())
       .then((json) => {
@@ -183,16 +187,21 @@ class AuthorNetwork extends Component {
   }
 
   selectyearValue(e) {
+    console.log("year selected: ", e.value);
     this.setState({
       selectYear: e.value,
     });
   }
 
   selectTopic(e) {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+    this.keywordOrTopic ="topic"
+    console.log("key or topic : ",this.keywordOrTopic)
+    console.log("Topic clicked: ",BASE_URL)
+    fetch(`${BASE_URL}/api/conferences/` +
       "getalltopics/topic/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
+        console.log(json);
         this.setState({
           active1: true,
           active2: false,
@@ -203,7 +212,10 @@ class AuthorNetwork extends Component {
   }
 
   selectKeyword(e) {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
+    this.keywordOrTopic="keyword"
+    console.log("key or topic : ", this.keywordOrTopic)
+    
+    fetch(`${BASE_URL}/api/conferences/` +
       "getallkeywords/keyword/" + this.state.selectYear)
       .then((response) => response.json())
       .then((json) => {
@@ -217,13 +229,8 @@ class AuthorNetwork extends Component {
   }
 
   selectValue(e) {
-    fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
-      "getalltitles/" +
-      e.value +
-      "/" +
-      this.state.selectYear
-    )
+    let keyortopic = this.keywordOrTopic;   
+    fetch(`${BASE_URL}/api/conferences/getalltitles/${keyortopic}/${e.value}/${this.state.selectYear}`)
       .then((response) => response.json())
       .then((json) => {
         this.state.graphData = [];
@@ -337,6 +344,7 @@ class AuthorNetwork extends Component {
                   active={active2}
                   onClick={this.selectKeyword}
                 >
+
                   Keyword
                 </Button>
                 <i
@@ -543,7 +551,6 @@ class AuthorNetwork extends Component {
                       onChange={this.selectyearValue}
                     />
                   </div>
-
                   <br />
                   <Button
                     outline
@@ -559,6 +566,7 @@ class AuthorNetwork extends Component {
                     active={active2}
                     onClick={this.selectKeyword}
                   >
+
                     Keyword
                   </Button>
                   <br />

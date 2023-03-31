@@ -9,7 +9,7 @@ import Header from "../../../components/Headers/Header.js";
 import "../../../../assets/scss/custom.css";
 import LAKAuthorsbar from "../../../components/LAKForms/LAKAuthorsbar";
 import AuthorNetwork from "../../../components/LAKForms/AuthorNetwork";
-import {BASE_URL_CONFERENCE} from "../../../../Services/constants";
+import {BASE_URL_CONFERENCE,BASE_URL} from "../../../../Services/constants";
 
 
 export default function TopicAuthors (props) { 
@@ -72,7 +72,8 @@ export default function TopicAuthors (props) {
     setselectedOption(selectedOption);
     console.log("updated");
     console.log(`Option selected:`, selectedOption);
-    fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
+    
+    fetch(`${BASE_URL}/api/conferences/confEvents/${selectedOption.value}`)
     .then(response => response.json())
     .then(json => {
       setconfEvents(json.events)

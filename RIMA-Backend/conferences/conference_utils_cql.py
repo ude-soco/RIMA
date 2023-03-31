@@ -359,7 +359,7 @@ def cql_check_author_topic_relation(tx, authorID, topic):
 
 def cql_get_publication_from_keyword(tx, event, keyword):
     result = tx.run(
-        "MATCH(e:Event{conference_event_name_abbr:$event})-[:has_publication]->(p1:Publication) with collect(p1) as papers MATCH(p:Publication)-[:has_keyword]->(k:Keyword{keyword:$keyword}) where p in papers Return p.title AS title,p.abstract As abstract", event=event, keyword=keyword)
+        "MATCH(e:Event{conference_event_name_abbr:$event})-[:has_publication]->(p1:Publication) with collect(p1) as papers MATCH(p:Publication)-[:has_keyword]->(k:Keyword{keyword:$keyword}) where p in papers Return p.title AS title,p.abstract As abstract, p.years as year,p.paper_venu as paper_venu, p.paper_id as paper_id", event=event, keyword=keyword)
     values = [record for record in result]
 
     return values
@@ -367,7 +367,7 @@ def cql_get_publication_from_keyword(tx, event, keyword):
 
 def cql_get_publication_from_topic(tx, event, topic):
     result = tx.run(
-        "MATCH(e:Event{conference_event_name_abbr:$event})-[:has_publication]->(p1:Publication) with collect(p1) as papers MATCH(p:Publication)-[:has_topic]->(t:Topic{topic:$topic}) where p in papers Return p.title AS title,p.abstract As abstract ", event=event, topic=topic)
+        "MATCH(e:Event{conference_event_name_abbr:$event})-[:has_publication]->(p1:Publication) with collect(p1) as papers MATCH(p:Publication)-[:has_topic]->(t:Topic{topic:$topic}) where p in papers Return p.title AS title,p.abstract As abstract, p.years as year,p.paper_venu as paper_venu, p.paper_id as paper_id ", event=event, topic=topic)
     values = [record for record in result]
 
     return values

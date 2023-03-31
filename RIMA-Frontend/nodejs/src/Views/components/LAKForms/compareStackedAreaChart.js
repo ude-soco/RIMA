@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL } from "../../../Services/constants";
 import "d3-transition";
 import { Button, Label, FormGroup, Form } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
@@ -9,6 +9,7 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 
 
+const BASE_URL_CONFERENCE=`${BASE_URL}/api/conferences/`
 
 class CompareStackedAreaChart extends Component {
   constructor(props) {

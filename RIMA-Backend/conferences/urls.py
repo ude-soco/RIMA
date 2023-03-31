@@ -109,7 +109,9 @@ urlpatterns = [
     # under work
     path('getallkeywords/<pk1>/<pk2>', AllKeywordsView.as_view()),
     path('getalltopics/<pk1>/<pk2>', AllTopicsView.as_view()),
-    path('getalltitles/<pk1>/<pk2>', SearchKeywordView.as_view()),
+    #path('getalltitles/<pk1>/<pk2>', SearchKeywordView.as_view()),
+    path('getalltitles/keyword/<pk1>/<pk2>', SearchKeywordView.as_view()),
+    path('getalltitles/topic/<pk1>/<pk2>', SearchKeywordView.as_view()),
 
     path('searchtopic/<pk1>/<pk2>', SearchTopicView.as_view()),
 

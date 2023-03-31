@@ -1,6 +1,7 @@
 import re
 from itertools import combinations
-from conferences import conference_utils as confutils
+from .. import conference_utils as confutils
+
 from django.conf import settings
 
 from conferences import tests
@@ -1229,9 +1230,11 @@ class AllTopicsView(APIView):
         result_data = []
 
         if keyword_or_topic == 'topic':
+            print("collect topics")
             models_data = confutils.get_topics_from_models(
                 conference_event_name_abbr)
         elif keyword_or_topic == 'keyword':
+            print("collect keywords")
             models_data = confutils.get_keywords_from_models(
                 conference_event_name_abbr)
 
@@ -1245,7 +1248,7 @@ class AllTopicsView(APIView):
             "value": val,
             "label": val
         } for val in list(set(result_data_with_duplicates))]
-
+        print("result_data: ",result_data)
         return Response({"keywords": result_data})
 
 
@@ -1265,12 +1268,12 @@ class SearchKeywordView(APIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         print(url_splits)
 
-        keyword_or_ropic = ""
+        keyword_or_ropic = url_splits[-3]
         word = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
         session = settings.NEO4J_SESSION.session()
         models_data = confutils.get_abstract_based_on_keyword(
-            conference_event_name_abbr, word)
+            conference_event_name_abbr, word,keyword_or_ropic)
         if not models_data:
             result_data = {
                 "nodes": [{
@@ -1284,7 +1287,7 @@ class SearchKeywordView(APIView):
                 {"titles": result_data})
         else:
             for data in models_data:
-                authors_ids = session.excute_read(
+                authors_ids = session.execute_read(
                     cql_get_authors_of_papers, data['paper_id'])
                 # authors_ids = Author_has_Papers.objects.filter(
                 #     paper_id_id=data['paper_id'])
