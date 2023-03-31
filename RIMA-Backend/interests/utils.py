@@ -363,6 +363,7 @@ def generate_short_term_model_dbpedia(user_id, source):
             if not len(keywords.keys()):
                 # print("No keywords found")
                 continue
+
             wiki_keyword_redirect_mapping, keyword_weight_mapping = dbpedia.annotate(
                 keywords
             )
@@ -457,7 +458,8 @@ def generate_short_term_model_dbpedia(user_id, source):
                     wiki_keyword_redirect_mapping,
                     keyword_weight_mapping,
                 ) = dbpedia.annotate(keywords)
-                # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
+                # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment',
+                # 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
                 # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
                 if not len(keyword_weight_mapping.keys()):
                     # print("No keywords found in weight mapping")

@@ -9,6 +9,25 @@ import {Box} from "@material-ui/core";
 
 function getNodesReal(data, x, y, step4) {
   //data = data.slice(0,5)
+  let possColors=[
+    "#92B4A7",
+    "#8C8A93",
+    "#22577A",
+    "#7FD8BE",
+    "#875C74",
+    "#9E7682",
+    "#FCAB64",
+    "#EDCB96",
+    "#231942",
+    "#98B9F2",
+    "#397367",
+    "#160C28",
+    "#EFCB68",
+    "#C89FA3",
+    "#368F8B",
+    "#232E21",
+    "#B6CB9E",
+    "#8C2155",]
   let elements = [];
   let idSource = 1;
   let idTarget = -1;
@@ -37,9 +56,10 @@ function getNodesReal(data, x, y, step4) {
   idSource = idSource + 1;
   y = y + 75;
   let numKeywords = 0
-
+  let setExtractedKeywords=[]
   data.map((d) => {
-
+    yTarget=y
+    let color=possColors.pop()
     let label = d.text;
     let tooltipSource = "This keyword was extracted using the following papers: ";
     let tooltipTarget = "";
@@ -51,37 +71,50 @@ function getNodesReal(data, x, y, step4) {
     if (d.source !== "Manual" && numKeywords < 5) {
       numKeywords = numKeywords + 1
       let numOriginalKeywords = 0;
+      let listOriginalKeywords=[]
 
       d.originalKeywordsWithWeights.map((k) => {
-        numOriginalKeywords = numOriginalKeywords + 1;
+        console.log("data d", d)
+
         let labelSource = Object.keys(k)[0];
-        tooltipTarget = tooltipTarget.concat("</br>", labelSource);
-        labelSource = labelSource.concat(" (", k[labelSource], ")");
+        numOriginalKeywords = numOriginalKeywords + 1;
+        if (!listOriginalKeywords.includes(labelSource)){
+          listOriginalKeywords.push(labelSource)
 
-        let source = {
-          data: {
-            id: idSource,
-            label: labelSource,
-            tooltip: tooltipSource
-          },
-          classes: ["multiline", "source"],
-          position: {x: x, y: y}
-        };
-        let edge = {
-          data: {target: idTarget, source: idSource},
-          classes: ["edge"]
-        };
-        if (numOriginalKeywords > 1) {
-          yTarget = yTarget + 35;
+          tooltipTarget = tooltipTarget.concat("</br>", labelSource);
+          labelSource = labelSource.concat(" (", k[labelSource], ")");
+
+
+
+          let source = {
+            data: {
+              id: idSource,
+              label: labelSource,
+              tooltip: tooltipSource,
+              color:color
+            },
+            classes: ["multiline", "source"],
+            position: {x: x, y: y}
+          };
+          let edge = {
+            data: {target: idTarget, source: idSource, color:color},
+            classes: ["edge"]
+          };
+          if (numOriginalKeywords > 1) {
+            yTarget = (yTarget +  numOriginalKeywords*75)/2;
+            console.log(yTarget, "data y target")
+          }
+
+          y = y + 75;
+
+          if (step4) {
+            elements.push(edge);
+          }
+          elements.push(source);
+
+          idSource = idSource + 1;
         }
 
-        y = y + 75;
-        if (step4) {
-          elements.push(edge);
-        }
-        elements.push(source);
-
-        idSource = idSource + 1;
       });
       let tooltipFinalTarget = ""
       if (numOriginalKeywords > 1) {
@@ -93,23 +126,25 @@ function getNodesReal(data, x, y, step4) {
       }
 
       let target = {
-        data: {id: idTarget, label: label, tooltip: tooltipFinalTarget},
+        data: {id: idTarget, label: label, tooltip: tooltipFinalTarget, color:color},
         classes: ["multiline", "target"],
-        position: {x: xTarget, y: yTarget}
+        position: {x: xTarget, y: yTarget},
+
       };
       if (step4) {
         elements.push(target);
       }
-      if (numOriginalKeywords > 1) {
-        yTarget = yTarget + 40;
-      }
-      yTarget = yTarget + 75;
+      /*if (numOriginalKeywords > 1) {
+        yTarget = (yTarget +  numOriginalKeywords*50)/2;
+      }*/
+      //yTarget = yTarget + 75;
       idTarget = idTarget - 1;
 
     }
 
 
   });
+  console.log("data set extracted",[...new Set(setExtractedKeywords)])
   return elements;
 }
 
@@ -129,20 +164,23 @@ const CreateNodeLink = (props) => {
             style: {
               label: "data(label)",
               shape: "round-rectangle",
-              "background-color": "rgba(255, 255, 255, 0)",
-              "border-color": "#a4a4a4",
+              //"background-color": "rgba(255, 255, 255, 0)",
+              "border-color": "data(color)",
               "border-width": 2,
               width: getWidth,
               height: "50px",
               "text-valign": "center",
-              "text-halign": "center"
+              "text-halign": "center",
+              "background-color": "data(color)",
+              color: "white"
             }
           },
           {
             selector: ".header",
             style: {
               "border-width": 0,
-              "font-weight": "bold"
+              "font-weight": "bold",
+              "text-outline-color":"black"
             }
           },
           {
@@ -150,8 +188,9 @@ const CreateNodeLink = (props) => {
             style: {
               width: 3,
               // label: "data(label)",
-              "line-color": "#ccc",
-              "target-arrow-color": "#ccc",
+              //"line-color": "#ccc",
+              "line-color":"data(color)",
+              "target-arrow-color": "data(color)",
               "target-arrow-shape": "triangle",
               "curve-style": "bezier"
             }

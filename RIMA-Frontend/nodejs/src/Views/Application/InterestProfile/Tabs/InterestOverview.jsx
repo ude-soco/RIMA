@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Box, Divider, Paper, Tab, Tabs, Typography,} from "@material-ui/core";
-import MyInterests from "./MyInterests";
-import HowDoesItWork from "./HowDoesItWork";
-import Connect from "./Connect";
-import HorizontalFlow from "./Explore";
-import Discover from "./Discover";
+import MyInterests from "./MyInterests/MyInterests";
+import HowDoesItWork from "./HowDoesItWork/HowDoesItWork";
+import Connect from "./Connect/Connect";
+import Explore from "./Explore/Explore"
+import Discover from "./Discover/Discover";
+import RestAPI from "../../../../Services/api";
 
 function TabPanel(props) {
   const {children, value, index, ...other} = props;
@@ -28,6 +29,72 @@ function TabPanel(props) {
 
 export default function InterestOverview() {
   const [value, setValue] = useState(0);
+    const [dataExplore, setDataExplore] = useState(false);
+    const [dataDiscover, setDataDiscover] = useState(false);
+    const [dataConnect, setDataConnect] = useState(false);
+    const [interests, setInterests] =useState(false)
+  let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+
+  console.log(currentUser, "data cur user")
+    useEffect(() => {
+        fetchData().then().catch(err => console.log(err))
+    }, []);
+
+    const fetchData = async () => {
+        console.log("start collect data")
+        setDataConnect([]);
+
+
+        RestAPI.longTermInterest(currentUser).then(res=>{
+            const {data} = res;
+            let dataArray = [];
+            let curInterests = []
+            data.map((d) => {
+                //console.log(d, "test")
+                curInterests.push(d.keyword)
+                const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
+                let newData = {
+                    id: id,
+                    categories: categories,
+                    originalKeywords: original_keywords,
+                    originalKeywordsWithWeights: original_keywords_with_weights,
+                    source: source,
+                    text: keyword,
+                    value: weight,
+                    papers: papers,
+                };
+                dataArray.push(newData);
+            })
+            //setKeywords(dataArray);
+            console.log(interests, "test fetch")
+            //curInterests=curInterests.slice(0,2)
+            setInterests(curInterests)
+
+           RestAPI.getExploreData(curInterests).then(res=>{
+                const {data}=res
+                setDataExplore(data.data)
+                console.log("done data Explore")
+            }).catch(res=>{
+                setDataExplore(["Sorry, we are experiencing an error"])
+            })
+
+           RestAPI.getDiscoverData(curInterests).then(res=>{
+                const {data}=res
+                setDataDiscover(data.data)
+                console.log("done data Discover")
+            }).catch(res=>{
+                setDataDiscover(["Sorry, we are experiencing an error"])
+            })
+
+        RestAPI.getConnectData({data:currentUser.author_id}).then(res=>{
+            const {data}=res
+            setDataConnect(data.data)
+        })
+
+
+    })};
+
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -47,13 +114,15 @@ export default function InterestOverview() {
         <MyInterests/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <HorizontalFlow/>
+        <Explore data={dataExplore} interests={interests}
+                 setInterests = {setInterests} setData={setDataExplore}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Discover/>
+        <Discover data={dataDiscover} interests={interests}
+                  setInterests = {setInterests} setData={setDataDiscover}/>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <Connect/>
+        <Connect data={dataConnect} />
       </TabPanel>
       <TabPanel value={value} index={4}>
         <HowDoesItWork/>

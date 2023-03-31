@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button, CircularProgress, Dialog, DialogTitle, Grid, Typography,} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import ManageInterests from "./ManageInterests";
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../Services/api";
 import WordCloud from "./WordCloud/WordCloud";
 import BarChart from "./BarChart/BarChart";
 import CirclePacking from "./CiclePacking/CirclePacking";

@@ -763,6 +763,33 @@ static getListPublications(conference_name_abbr,author_id) {
     }).then((res) => res);
   }
 
+  static getConnectData(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/get-connect-data`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+
+  static getWikiInfo(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/get-wiki-info`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
   static getSimiliarInterestData(data) {
     const TOKEN = getItem("accessToken");
     return axios({

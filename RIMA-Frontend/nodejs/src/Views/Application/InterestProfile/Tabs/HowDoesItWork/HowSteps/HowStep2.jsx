@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Grid, Typography,} from "@material-ui/core";
 import Chart from "react-apexcharts";
-import {getColorArray} from "../../../../Services/utils/functions";
-import RestAPI from "../../../../Services/api";
-import {handleServerErrors} from "../../../../Services/utils/errorHandler";
+import {getColorArray} from "../../../../../../Services/utils/functions";
+import RestAPI from "../../../../../../Services/api";
+import {handleServerErrors} from "../../../../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
-import {Loading} from "../Tabs/MyInterests";
+import {Loading} from "../../MyInterests/MyInterests";
 
 const HowStep2 = () => {
   const [publications, setPublications] = useState({

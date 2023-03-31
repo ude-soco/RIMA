@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {
     Dialog,
     DialogActions,
@@ -12,9 +12,11 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WikiDesc from "./WikiDesc";
+import RestAPI from "../../../../../Services/api";
+import {Loading} from "../Loading";
 
 const SVGVenn = (props) => {
-    const { userInterest, authorInterest, authorName, userName } = props;
+    const { authorInterest, authorName, userName } = props;
     let bothInterest = [];
     let posUser = 174;
     let posAuthor = 374;
@@ -25,18 +27,137 @@ const SVGVenn = (props) => {
         event: null,
         currTarg: null,
         openLearn: false,
-        eventOnlyLearn: null
+        eventOnlyLearn: null,
+        currPageData:false,
+        pageData:false
     });
+    const [currPageData, setCurrPageData]=useState(false)
+    const [userInterest, setUserInterest]=useState([])
+    const [keywords, setKeywords]=useState([])
     //userInterest = ["interest 1", "interest 2", "interest 3", "interest 4"];
     //authorInterest = ["interest 1", "interest 2", "interest ", "interest "];
+
+    let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+
+    const fetchKeywords = async () => {
+        //setState({...state,userInterests: []})
+
+        const response = await RestAPI.longTermInterest(currentUser);
+        const {data} = response;
+        let dataArray = [];
+        let interests = []
+        data.map((d) => {
+            //console.log(d, "test")
+            interests.push(d.keyword)
+            const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
+            let newData = {
+                id: id,
+                categories: categories,
+                originalKeywords: original_keywords,
+                originalKeywordsWithWeights: original_keywords_with_weights,
+                source: source,
+                text: keyword,
+                value: weight,
+                papers: papers,
+            };
+            dataArray.push(newData);
+
+        })
+        setKeywords(dataArray)
+
+        return interests
+
+    };
+
+    const getData = async () => {
+        let interests=await fetchKeywords()
+        console.log(interests, "test explore.py get data")
+        if (interests) {
+            setUserInterest(interests)
+            let allInterests=interests.concat(authorInterest)
+            /*let pageData=await RestAPI.getWikiInfo({interests:allInterests})
+            setState({...state, pageData: pageData})
+            console.log(allInterests, pageData, "wiki test allinterestest")*/
+        }
+    }
+
+    const validateInterest = (interests, interest) => {
+        console.log("test add new interest validatat", interest)
+        return interests.some((i) => i.text === interest.toLowerCase());
+    };
+
+    const addNewInterest = async (currInterest) => {
+        console.log("test add discover", keywords)
+        let alreadyExist = validateInterest(keywords, currInterest);
+
+        if (!alreadyExist) {
+            console.log("test done it")
+            let newInterests = keywords;
+            let newInterest = {
+                id: Date.now(),
+                categories: [],
+                originalKeywords: [],
+                source: "Manual",
+                text: currInterest.toLowerCase(),
+                value: 3,
+            }
+            newInterests.push(newInterest);
+
+            newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
+            let listOfInterests = [];
+            newInterests.forEach(interest => {
+                let item = {
+                    name: interest.text,
+                    weight: interest.value,
+                    id: interest.id
+                }
+                listOfInterests.push(item);
+            });
+            console.log("Updated list", listOfInterests)
+            try {
+                await RestAPI.addKeyword(listOfInterests);
+            } catch (err) {
+                console.log(err);
+            }
+            // console.log(newInterests)
+        }
+        console.log("Interest already exists in my list!")
+    }
+
+    useEffect(()=>{
+        getData()
+    },[])
+
     const handleClick = (event) => {
         let currTarg = event.currentTarget.innerHTML;
+        getPageDataCurr(currTarg)
+
+
 
         setState({ ...state, event: event.currentTarget, currTarg: currTarg });
     };
 
+    const getPageDataCurr = async (target)=>{
+
+        const dataPage={"interest":target}
+        const response = await RestAPI.getWikiInfo(dataPage)
+
+        const {data} = response
+
+        const pageData={
+            pageData:data.data.summary,
+            url:data.data.url
+        }
+
+        setCurrPageData(pageData)
+
+
+    }
+
     const handleClickOnlyLearn = (event) => {
+
         let currTarg = event.currentTarget.innerHTML;
+        getPageDataCurr(currTarg)
 
         setState({
             ...state,
@@ -46,7 +167,8 @@ const SVGVenn = (props) => {
     };
 
     const handleClose = () => {
-        setState({ ...state, event: null, openLearn: false, eventOnlyLearn: null });
+        setState({ ...state, event: null, openLearn: false, eventOnlyLearn: null});
+        setCurrPageData(false)
     };
 
     const handleLearnMore = () => {
@@ -56,10 +178,11 @@ const SVGVenn = (props) => {
     };
 
     const handleAdd = () => {
-        let msg = "The interest " + state.currTarg + " has been saved";
+        let msg = "The interest " + state.currTarg + " has been added to your interest profile";
         toast.success(msg, {
             toastId: "removedLevel2"
         });
+        addNewInterest(state.currTarg)
         handleClose();
     };
 
@@ -96,7 +219,7 @@ const SVGVenn = (props) => {
 
     return (
         <>
-            <svg height="500" width="600">
+            {userInterest.length !== 0?<svg height="500" width="600">
                 <circle
                     cx={posUser}
                     cy="130"
@@ -168,7 +291,7 @@ const SVGVenn = (props) => {
                         {authorName}
                     </tspan>
                 </text>
-            </svg>
+            </svg>:<Loading/>}
             <Menu
                 id="simple-menu"
                 anchorEl={state.event}
@@ -198,13 +321,14 @@ const SVGVenn = (props) => {
                 )}
                 <DialogContent>
                     {" "}
-                    <WikiDesc data={state.currTarg} />
+                    {currPageData?<WikiDesc data={currPageData}/>:<Loading/>}
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
-            <ToastContainer />
+
         </>
     );
 };
