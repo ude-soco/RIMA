@@ -50,7 +50,7 @@ from .utils import (
     get_radar_similarity_data, 
     get_heat_map_data, 
     get_venn_chart_data)
-from interests.tasks import import_user_data, import_user_paperdata
+from interests.tasks import import_user_data, import_user_paperdata,  storeConnectionsToAuthors, import_authors_papers, fetchAuthorsPapersKeywords, generateAuthorsInterests
 from .publication_utils import API, get_recommended_publications, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
 from .my_interests import getDataNewInterestExplore
 
@@ -64,6 +64,15 @@ class TriggerPaperUpdate(APIView):
         import_user_paperdata.delay(request.user.id)
         return Response({})
 
+
+#Osama
+class Citations(APIView):
+     def post(self, request, *args, **kwargs):      
+            storeConnectionsToAuthors(request.user) #done    
+            import_authors_papers() #done
+            fetchAuthorsPapersKeywords()
+            generateAuthorsInterests()
+            return Response({})
 
 class TriggerDataUpdate(APIView):
     def post(self, request, *args, **kwargs):
