@@ -67,11 +67,8 @@ class TriggerPaperUpdate(APIView):
 
 #Osama
 class Citations(APIView):
-     def post(self, request, *args, **kwargs):      
-            storeConnectionsToAuthors(request.user) #done    
-            import_authors_papers() #done
-            fetchAuthorsPapersKeywords()
-            generateAuthorsInterests()
+     def post(self, request, *args, **kwargs): 
+            import_user_citation_data.delay(request.user.id)     
             return Response({})
 
 class TriggerDataUpdate(APIView):
