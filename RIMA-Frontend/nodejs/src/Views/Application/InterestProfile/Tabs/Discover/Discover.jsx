@@ -301,7 +301,7 @@ const DiscoverPage = (props) => {
           </FormControl>
         </Menu>
         <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenCategory} style={{marginLeft: 8}}>
-          Field of Study
+          Categories
         </Button>
         {state.currCategoriesLabel?<Menu
             id="filterInterestExplore"
