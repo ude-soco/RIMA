@@ -8,6 +8,11 @@ urlpatterns = [
     path("author-insights/", author_insights_url),
 
     # TODO: All the author insights urls should be called in this block - END
+    ############################################################# Abdallah Visulizations updated########################################################################
+    path('getTotalSharedAuthorsEvolution/',
+         TotalSharedAuthorsEvolutionView.as_view()),
+
+    ############################################################# Abdallah Visulizations updated########################################################################
 
     # BAB Vis Compare Stackes Area
     path('constructDatabase/', constructDatabase.as_view()),
@@ -109,7 +114,7 @@ urlpatterns = [
     # under work
     path('getallkeywords/<pk1>/<pk2>', AllKeywordsView.as_view()),
     path('getalltopics/<pk1>/<pk2>', AllTopicsView.as_view()),
-    #path('getalltitles/<pk1>/<pk2>', SearchKeywordView.as_view()),
+    # path('getalltitles/<pk1>/<pk2>', SearchKeywordView.as_view()),
     path('getalltitles/keyword/<pk1>/<pk2>', SearchKeywordView.as_view()),
     path('getalltitles/topic/<pk1>/<pk2>', SearchKeywordView.as_view()),
 
