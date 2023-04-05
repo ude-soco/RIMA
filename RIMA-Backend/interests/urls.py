@@ -47,5 +47,5 @@ urlpatterns = [
     path('get-wiki-info', views.get_wiki_data)
 
     #Osama
-    path('citations/', views.Citations.as_view()),
+    #path('citations/', views.Citations.as_view()),
 ]

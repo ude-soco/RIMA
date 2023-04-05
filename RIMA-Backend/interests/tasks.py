@@ -227,16 +227,19 @@ def update_long_term_interest_model_for_user(user_id):
 )
 def import_user_data(user_id):  # it is executed in the sign-up
     print("importing tweets")
-    __import_tweets_for_user(user_id)
+    #__import_tweets_for_user(user_id)
 
     print("importing papers")
-    __import_publications_for_user(user_id)
+    #__import_publications_for_user(user_id)
 
     print("compute short term model")
-    __update_short_term_interest_model_for_user(user_id)
+    #__update_short_term_interest_model_for_user(user_id)
 
     print("compute long term model")
-    generate_long_term_model(user_id)
+    #generate_long_term_model(user_id)
+
+    print("get citations and references")
+    import_user_citation_data(user_id)
 
 
 @task(
@@ -326,7 +329,7 @@ def getConnectedAuthorsData(user_author_id, number_of_top_connected_authors):
 
 
 def  storeConnectionsToAuthors(user_id):
-    user= User.objects.filter(user_id= user_id)
+    user= User.objects.get(id= user_id)
     # This function stores the connection of the connected authors to a particulare user in the database
     connected_authors = getConnectedAuthorsData(user.author_id, 3)
     cited_by_authors= connected_authors["cited_by"]
