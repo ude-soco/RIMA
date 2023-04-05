@@ -3,7 +3,9 @@ from itertools import combinations
 from .. import conference_utils as confutils
 
 from django.conf import settings
-
+from django.http import JsonResponse
+from conferences.models.conference import Conference
+from conferences.models.event import Event
 from conferences import tests
 from django.conf import settings
 from rest_framework.views import APIView
@@ -1248,7 +1250,7 @@ class AllTopicsView(APIView):
             "value": val,
             "label": val
         } for val in list(set(result_data_with_duplicates))]
-        print("result_data: ",result_data)
+        print("result_data: ", result_data)
         return Response({"keywords": result_data})
 
 
@@ -1273,7 +1275,7 @@ class SearchKeywordView(APIView):
         conference_event_name_abbr = url_splits[-1]
         session = settings.NEO4J_SESSION.session()
         models_data = confutils.get_abstract_based_on_keyword(
-            conference_event_name_abbr, word,keyword_or_ropic)
+            conference_event_name_abbr, word, keyword_or_ropic)
         if not models_data:
             result_data = {
                 "nodes": [{
@@ -1622,6 +1624,31 @@ class AuthorConfComparisonData(APIView):
             "vals":
             compareLAKwithAuthortopics(topics_split[-2], topics_split[-1])
         })
+
+
+class TotalSharedAuthorsEvolutionView(APIView):
+    def get(self, request, *args, **kwargs):
+        models_data = []
+        result_data = []
+        no_AuthorPaper = []
+        no_SharedAuthor = []
+        years_range = []
+        all_models_data = []
+
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        print(url_splits_question_mark, "BAB TEST AND")
+        conferences_list = confutils.split_restapi_url(
+            url_splits_question_mark[1], r'&')
+
+        for conference in conferences_list:
+            conference_obj = Conference.nodes.get_or_none(
+                conference_name_abbr=conference)
+            conference_event_objs = Event.nodes.filter(
+                conference_event_name_abbr__startswith=conference)
+            print("events length", len(conference_event_objs))
+            for event in conference_event_objs:
+                print("event", event)
 
 
 if __name__ == "__main__":
