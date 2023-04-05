@@ -15,6 +15,11 @@ from django.core.management.utils import get_random_secret_key
 import yaml
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
+from neomodel import config
+from neomodel import db
+config.DATABASE_URL = 'bolt://neo4j:1234qweR@localhost:7687'
+db.set_connection('bolt://neo4j:1234qweR@localhost:7687')
+
 
 load_dotenv()
 
@@ -61,6 +66,7 @@ INSTALLED_APPS = [
     'interests',
     'drf_yasg',
     'conferences',
+    'django_neomodel'
 ]
 
 REST_FRAMEWORK = {
