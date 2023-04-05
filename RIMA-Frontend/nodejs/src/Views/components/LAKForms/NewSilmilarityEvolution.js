@@ -134,12 +134,11 @@ class NewSilmilarityEvolution extends Component {
         BASE_URL_CONFERENCE +
         "getTotalSharedAuthorsEvolution/"  +
         "?" +
-        this.state.selectedConferences.join("&")  
+        this.state.selectedConferences.join("&")   
       )
         .then((response) => response.json())
         .then((json) => {
           console.log(json);
-          console.log("I am here 2 ")
           series = [];
           weights = [];
           var totalNumberOfAuthors = [];
@@ -241,7 +240,7 @@ class NewSilmilarityEvolution extends Component {
             BASE_URL_CONFERENCE +
             "getSharedWordsNumber/"  +
             "?" +
-            this.state.selectedConferences.join("&")  
+            this.state.selectedConferences.join("&")+"/"  
           )
             .then((response) => response.json())
             .then((json) => {
