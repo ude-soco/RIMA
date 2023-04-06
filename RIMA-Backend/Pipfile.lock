@@ -500,11 +500,11 @@
         },
         "django-neomodel": {
             "hashes": [
-                "sha256:3007811435ae5f5ac4562603f1b5bb3d0519941bb302c8072429da36d592eb7d",
-                "sha256:91b6514aec6bbe9a6cdab8666ec190ebc66bebb9e4a0ab27cc9e6c40c203c9d5"
+                "sha256:0ad45f9d345b5fa957a187edc091921362e789113a163a4b04901a31f167a952",
+                "sha256:fa51f610b5378501819ccb3b3fc8fa1f63bb86b2b78c6a720cbadbe99f6d6dd9"
             ],
             "index": "pypi",
-            "version": "==0.0.7"
+            "version": "==0.1.0"
         },
         "django-timezone-field": {
             "hashes": [
@@ -1542,11 +1542,11 @@
         },
         "neomodel": {
             "hashes": [
-                "sha256:70ffddd58a393e87d18ab3ebbb4d677fa2d739de4411d5040208eb7e129d601e",
-                "sha256:ca8ee1e14d00d9ad7519744bd8b26d2d4f1770e0c51038c3fe83ea799dcfec50"
+                "sha256:c9681f999bcfd00a39419def103c58db48ac3ebf289e00230b669d0de97f627b",
+                "sha256:f9c58254399b73fd51e91fe4398ab7554cd7de8cf1f6e2df680153a0bc88d71c"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==4.0.10"
+            "version": "==5.0.0"
         },
         "networkx": {
             "hashes": [
