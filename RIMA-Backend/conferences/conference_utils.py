@@ -5,13 +5,15 @@ from matplotlib_venn import venn2_unweighted
 from matplotlib import pyplot as plt
 import base64
 import re
-
+from conferences.models.event import Event
+from conferences.models.author import Author
+from conferences.models.conference import Conference as graphConference
 from conferences import tests
 from conferences.data_extractor import conference_data_collector as dataCollector
 from conferences.models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
                                 Conf_Event_keyword, Event_has_keyword)
 from conferences.conference_utils_cql import (cql_check_author_keyword_relation, cql_check_author_topic_relation, cql_check_event_keyword_relation, cql_check_event_topic_relation, cql_conference_has_author, cql_create_author_has_keyword, cql_create_author_has_topic, cql_create_publication_has_keyword, cql_create_publication_has_topic, cql_get_author, cql_create_coauthor, cql_create_keyword, cql_create_topic, cql_create_event_has_keyword, cql_create_event_has_topic, cql_get_author_keyword, cql_get_author_keyword_weight, cql_get_author_papers, cql_get_author_topic, cql_get_author_topic_weight, cql_get_conference_data, cql_get_event_keyword_weight, cql_get_event_keyword,  cql_get_event_topic, cql_get_event_topic_weight, cql_get_keyword, cql_get_publication, cql_get_publication_from_keyword, cql_get_publication_from_topic, cql_get_topic, cql_get_event_authors, cql_get_conference_authors, cql_get_conference_papers, cql_get_conferences, cql_get_event_data, cql_get_conference_events, cql_get_event_papers, cql_update_author_keyword_relation, cql_update_author_topic_relation, cql_create_author,
-                                            cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author, cql_update_event_keyword_relation, cql_update_event_topic_relation)
+                                              cql_create_event, cql_create_has_event, cql_create_author, cql_create_paper, cql_author_has_paper, cql_conference_has_paper, cql_event_has_paper, cql_event_has_author, cql_update_event_keyword_relation, cql_update_event_topic_relation)
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import DBpediaSpotlight
 
@@ -1080,3 +1082,80 @@ def split_restapi_url(url_path, split_char):
     url_path = url_path.replace("%20", " ")
     topics_split = url_path.split(split_char)
     return topics_split
+
+
+def get_TotalSharedAuthors_between_conferences(conference_event_objs):
+    result_data = []
+    for conference_event in conference_event_objs:
+        check_exist = Event.nodes.filter(
+            conference_event_name_abbr=conference_event.conference_event_name_abbr).first()
+        one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
+            conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
+        no_of_event_authors = len(one_event_authors)
+        if check_exist:
+            result_data.append({
+                'no_AuthorPaper': no_of_event_authors,
+                'conference_event_abbr': conference_event.conference_event_name_abbr,
+                'event_Authors': one_event_authors,
+                'year': re.sub("[^0-9]", "",
+                               conference_event.conference_event_name_abbr.split('-')[0])
+            })
+        else:
+            result_data.append({
+                'no_AuthorPaper': no_of_event_authors,
+                'conference_event_abbr': conference_event.conference_event_name_abbr,
+                'event_Authors': one_event_authors,
+                'year': re.sub("[^0-9]",
+                               "", conference_event.conference_event_name_abbr.split('-')[0])
+            })
+
+    return result_data
+
+
+def get_years_range_of_conferences(conferences_list, all_or_shared):
+    """determines the year range of a given list of conferences, either all the years or only the shared years
+
+    Args:
+        conferences_list (list): list of conference names
+        all_or_shared (str): "all" or "shared"
+
+    Returns:
+        list: list of the years range of the given conferences
+    """
+
+    years = []
+    result_data = []
+    years_filtering_list = []
+    years_filtering_list = []
+
+    for conference in conferences_list:
+        conference_obj = graphConference.nodes.get_or_none(
+            conference_name_abbr=conference)
+        conference_event_objs = Event.nodes.filter(
+            conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
+        for obj in conference_event_objs:
+            print("conference_event_obj", obj)
+        intermediate_list = []
+        for conference_event_obj in conference_event_objs:
+            confernece_year = re.sub("[^0-9]", "",
+                                     conference_event_obj.conference_event_name_abbr.split('-')[0])
+            if re.match("^\d{2}$", confernece_year):
+                confernece_year = '19' + confernece_year
+            intermediate_list.append(confernece_year)
+        years.append(intermediate_list)
+
+    if all_or_shared == 'shared':
+        for years_list in years:
+            years_list = list(set(years_list))
+            years_filtering_list.append(years_list)
+        years_filtering_list = [y for x in years_filtering_list for y in x]
+        result_data = list(set([year for year in years_filtering_list
+                                if years_filtering_list.count(year) == len(conferences_list)]))
+    elif all_or_shared == 'all':
+        result_data = sorted(list(set().union(*years)))
+
+    print('#################### result_data ######################')
+    print(result_data)
+    print('#################### result_data ######################')
+
+    return result_data
