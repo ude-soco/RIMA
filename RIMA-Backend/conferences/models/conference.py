@@ -3,7 +3,6 @@ from neomodel import (config, StructuredNode, StringProperty, IntegerProperty,
 
 
 class Conference(StructuredNode):
-    uid = UniqueIdProperty()
     conference_name_abbr = StringProperty()
     platform_name = StringProperty()
     platform_url = StringProperty()
