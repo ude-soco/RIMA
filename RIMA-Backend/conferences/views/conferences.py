@@ -4,8 +4,7 @@ from .. import conference_utils as confutils
 
 from django.conf import settings
 from django.http import JsonResponse
-from conferences.models.conference import Conference
-from conferences.models.event import Event
+
 from conferences import tests
 from django.conf import settings
 from rest_framework.views import APIView
@@ -1626,74 +1625,6 @@ class AuthorConfComparisonData(APIView):
         })
 
 
-class TotalSharedAuthorsEvolutionView(APIView):
-    def get(self, request, *args, **kwargs):
-        models_data = []
-        result_data = []
-        no_AuthorPaper = []
-        no_SharedAuthor = []
-        years_range = []
-        all_models_data = []
-
-        url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
-        print(url_splits_question_mark, "BAB TEST AND")
-        conferences_list = confutils.split_restapi_url(
-            url_splits_question_mark[1], r'&')
-
-        for conference in conferences_list:
-            conference_obj = Conference.nodes.get_or_none(
-                conference_name_abbr=conference)
-            conference_events_objs = Event.nodes.filter(
-                conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
-            models_data = confutils.get_TotalSharedAuthors_between_conferences(
-                conference_events_objs)
-            for model_data in models_data:
-                years_range.append(model_data['year'])
-                all_models_data.append(models_data)
-
-        years_range = sorted(list(set(years_range)))
-        shared_years = confutils.get_years_range_of_conferences(
-            conferences_list, 'shared')
-        shared_years = sorted(list(set(shared_years)))
-        print("shared_years: ", shared_years)
-        for year in shared_years:
-            for data in all_models_data:
-                ocurrence_list = list(
-                    filter(lambda inner_data: inner_data['year'] == year, data))
-                if ocurrence_list:
-                    sum_weight = 0
-                    sum_sharedAuthors = []
-                    for result in ocurrence_list:
-                        sum_weight += result['no_AuthorPaper']
-                        sum_sharedAuthors += result['event_Authors']
-                    no_AuthorPaper.append(sum_weight)
-                    no_SharedAuthor.append(sum_sharedAuthors)
-                    sum_weight = 0
-                    sum_sharedAuthors = []
-                else:
-                    sum_sharedAuthors = []
-                    no_AuthorPaper.append(0)
-                    no_SharedAuthor.append(sum_sharedAuthors)
-            no_SharedAuthor = set.intersection(*map(set, no_SharedAuthor))
-            finalist = []
-            finalist.append(sum(no_AuthorPaper))
-            finalist.append(len(no_SharedAuthor))
-            result_data.append(finalist)
-            no_AuthorPaper = []
-            no_SharedAuthor = []
-
-        print('result_data')
-        print(all_models_data)
-        print('++++++++++++++++++')
-        print(result_data)
-        print('++++++++++++++++++')
-        print(years_range)
-        print('result_data')
-
-        return Response({"weights": result_data,
-                         "years": shared_years
-                         })
 
 
 if __name__ == "__main__":
