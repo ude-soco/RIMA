@@ -234,7 +234,7 @@ def get_event_papers_data(conference_event_name_abbr):
     session.close()
     return conference_event_obj
 
-
+#to be updated using OGM instead of ORM
 def get_keywords_from_models(conference_event_name_abbr):
     """retrieves keywords events based and weights from keywords tables 
 
@@ -260,7 +260,7 @@ def get_keywords_from_models(conference_event_name_abbr):
     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
     return sorted_data
 
-
+#to be updated use OGM instead of ORM
 def get_topics_from_models(conference_event_name_abbr):
     """retrieves topics events based  and weights from topics tables 
 
@@ -271,8 +271,9 @@ def get_topics_from_models(conference_event_name_abbr):
         list: sorted list of dictionaries of topics and their weights and conference event
     """
     session = settings.NEO4J_SESSION.session()
-
     data = []
+    print(type.__class__(session).__dict__)
+
     event_has_topic_objs = session.execute_read(
         cql_get_event_topic, conference_event_name_abbr)
 
@@ -1084,34 +1085,8 @@ def split_restapi_url(url_path, split_char):
     return topics_split
 
 
-def get_TotalSharedAuthors_between_conferences(conference_event_objs):
-    result_data = []
-    for conference_event in conference_event_objs:
-        check_exist = Event.nodes.filter(
-            conference_event_name_abbr=conference_event.conference_event_name_abbr).first()
-        one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
-            conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
-        no_of_event_authors = len(one_event_authors)
-        if check_exist:
-            result_data.append({
-                'no_AuthorPaper': no_of_event_authors,
-                'conference_event_abbr': conference_event.conference_event_name_abbr,
-                'event_Authors': one_event_authors,
-                'year': re.sub("[^0-9]", "",
-                               conference_event.conference_event_name_abbr.split('-')[0])
-            })
-        else:
-            result_data.append({
-                'no_AuthorPaper': no_of_event_authors,
-                'conference_event_abbr': conference_event.conference_event_name_abbr,
-                'event_Authors': one_event_authors,
-                'year': re.sub("[^0-9]",
-                               "", conference_event.conference_event_name_abbr.split('-')[0])
-            })
 
-    return result_data
-
-
+# to be deleted I put it in compare_comferences_utils.py
 def get_years_range_of_conferences(conferences_list, all_or_shared):
     """determines the year range of a given list of conferences, either all the years or only the shared years
 
@@ -1159,3 +1134,5 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     print('#################### result_data ######################')
 
     return result_data
+
+
