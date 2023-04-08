@@ -12,6 +12,9 @@ urlpatterns = [
     path('getTotalSharedAuthorsEvolution/',
          TotalSharedAuthorsEvolutionView.as_view()),
 
+     path('getSharedWordsNumber/',
+         TotalSharedWordsNumberView.as_view()),
+
     ############################################################# Abdallah Visulizations updated########################################################################
 
     # BAB Vis Compare Stackes Area
