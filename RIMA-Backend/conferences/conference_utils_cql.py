@@ -64,7 +64,7 @@ def cql_create_paper(tx, paper_id, paper_doi, title, urls, years, abstract, citi
     #     session.run(cqlNodeQuery)
     # except:
     #     print("**** it has already unique constrain ****")
-
+    #there is an exception if the file is already exists it throw an exception and abort the whole process
     tx.run("CREATE (p:Publication {paper_id : $paper_id,paper_doi : $paper_doi,title:$title,urls:$urls,years:$years,abstract:$abstract,citiations:$citiations,paper_venu:$paper_venu})",
            paper_id=paper_id, paper_doi=paper_doi, title=title, urls=urls, years=years, abstract=abstract, citiations=citiations, paper_venu=paper_venu)
 
