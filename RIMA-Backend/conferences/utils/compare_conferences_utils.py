@@ -127,3 +127,52 @@ def get_shared_words_numbers(conference_events_list, keyword_or_topic):
     print(noOfSharedword)
 
     return noOfSharedword
+
+
+def get_top_words_in_years(list_of_events, keyword_or_topic):
+    """extracts keywords and topics over a long period of years
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference
+
+    """
+    list_of_final_words = {}
+    models_data_total = []
+    print("here are the coming list")
+    print(list_of_events)
+    print("here are the coming list")
+
+    if keyword_or_topic == "keyword":
+        for conference_event_name_abbr in list_of_events:
+            models_data = confutils.get_keywords_from_models(
+                conference_event_name_abbr)
+            models_data_total.append(models_data)
+    if keyword_or_topic == "topic":
+        for conference_event_name_abbr in list_of_events:
+            models_data = confutils.get_topics_from_models(
+                conference_event_name_abbr)
+            models_data_total.append(models_data)
+
+    count = 0
+    for event in list_of_events:
+        print("here are some important test")
+        print(event)
+        for model in models_data_total[count]:
+            print("here are some important test 22")
+            print(count)
+            print(model)
+            print("here are some important test 222")
+            if model[keyword_or_topic] in list_of_final_words.keys():
+                list_of_final_words[model[keyword_or_topic]] += model['weight']
+            else:
+                list_of_final_words[model[keyword_or_topic]] = model['weight']
+        count += 1
+
+    print("here are the modeldataaa from db")
+    print(list_of_final_words)
+    sorted_list_of_final_words = {k: v for k, v in sorted(
+        list_of_final_words.items(), key=lambda item: item[1])}
+    print(sorted_list_of_final_words)
+    print("here are the modeldataaa from db")
+
+    return sorted_list_of_final_words

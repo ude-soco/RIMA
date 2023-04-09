@@ -11,9 +11,8 @@ urlpatterns = [
     ############################################################# Abdallah Visulizations updated########################################################################
     path('getTotalSharedAuthorsEvolution/',
          TotalSharedAuthorsEvolutionView.as_view()),
-
-     path('getSharedWordsNumber/',
-         TotalSharedWordsNumberView.as_view()),
+     path('getSharedWordsNumber/',TotalSharedWordsNumberView.as_view()),
+     path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
 
     ############################################################# Abdallah Visulizations updated########################################################################
 
@@ -87,9 +86,12 @@ urlpatterns = [
     # BAB 08.06.2021 Extension for other conferences other than LAK
     path('getallkeysresults/keyword/<pk1>', allWords.as_view()),
     # BAB 08.06.2021 Extension for other conferences other than LAK
+    
+    #reused by Abdallah
     path('getalltopicsevolution/topic/<pk>/',
          MultipleTopicAreaView.as_view()),
     # BAB 08.06.2021 Extension for other conferences other than LAK
+    #reused by Abdallah
     path('getallkeysevolution/keyword/<pk>/',
          MultipleTopicAreaView.as_view()),
 

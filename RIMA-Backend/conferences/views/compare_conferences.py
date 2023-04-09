@@ -155,3 +155,43 @@ class TotalSharedWordsNumberView(APIView):
                          "years": models_data,
                          "allYears": models_data2
                          })
+
+
+class topWordsOverYears(APIView):
+
+    def get(self, request, *args, **kwargs):
+        top_words_over_years = []
+        result_words = []
+        list_all_events_of_conf = []
+        resulte_weight = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        conference = url_splits[-2]
+        keyword_or_topic = url_splits[-1]
+        print("selected conference")
+        print(conference)
+        print("selected conference")
+        # orm query
+        conference_obj = Conference.nodes.get_or_none(
+            conference_name_abbr=conference)
+        conference_event_objs = Event.nodes.filter(
+            conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
+        for event in conference_event_objs:
+            eventstr = ""
+            eventstr = event.conference_event_name_abbr
+            list_all_events_of_conf.append(eventstr)
+        last_five_events = list_all_events_of_conf[-5:]
+
+        top_words_over_years = compConfUtils.get_top_words_in_years(
+            last_five_events, keyword_or_topic)
+
+        print('Modelsssssssssss data yearssssssss')
+        print(top_words_over_years)
+
+        for key, value in top_words_over_years.items():
+            result_words.append(key)
+            resulte_weight.append(value)
+        return Response({
+            'WordsList': result_words[-10:],
+            "values": resulte_weight[-10:]
+        })
