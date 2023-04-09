@@ -1,6 +1,8 @@
 from conferences import conference_utils as confutils
 from conferences.models.conference import Conference as graphConference
+from conferences.models.author import Author
 from conferences.models.event import Event
+from neomodel import match, Traversal
 import re
 
 
@@ -21,9 +23,10 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     years_filtering_list = []
 
     for conference in conferences_list:
+        # neomodel query review and works
         conference_obj = graphConference.nodes.get_or_none(
             conference_name_abbr=conference)
-
+        # neomodel query review and works
         conference_event_objs = Event.nodes.filter(
             conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
 
@@ -58,14 +61,17 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
 def get_TotalSharedAuthors_between_conferences(conference_event_objs):
     result_data = []
     for conference_event in conference_event_objs:
-        check_exist = Event.nodes.filter(
-            conference_event_name_abbr=conference_event.conference_event_name_abbr).first()
-        # try to use explict traversal searching Algorithm
-        # try to use has a relationship
-        one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
-            conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
-        no_of_event_authors = len(one_event_authors)
-        if check_exist:
+        one_event_authors = []
+        no_of_event_authors = 0
+        # neomodel query
+        # reviewed and works
+        check_exist = Event.nodes.get_or_none(
+            conference_event_name_abbr=conference_event
+            .conference_event_name_abbr)
+        if check_exist and check_exist.authors is not None and len(check_exist.authors) is not 0:
+            one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
+                conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
+            no_of_event_authors = len(one_event_authors)
             result_data.append({
                 'no_AuthorPaper': no_of_event_authors,
                 'conference_event_abbr': conference_event.conference_event_name_abbr,
@@ -81,6 +87,9 @@ def get_TotalSharedAuthors_between_conferences(conference_event_objs):
                 'year': re.sub("[^0-9]",
                                "", conference_event.conference_event_name_abbr.split('-')[0])
             })
+    print('############## Weights #################')
+    print(result_data)
+    print('############## Weights #################')
 
     return result_data
 

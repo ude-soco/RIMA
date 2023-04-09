@@ -8,7 +8,6 @@ from conferences.models.conference import Conference
 from conferences.models.event import Event
 
 
-
 class TotalSharedAuthorsEvolutionView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -25,28 +24,37 @@ class TotalSharedAuthorsEvolutionView(APIView):
             url_splits_question_mark[1], r'&')
 
         for conference in conferences_list:
-            # neomodel query
-            conference_obj = Conference.nodes.get_or_none(
+
+            #conference_obj = Conference.objects.get(conference_name_abbr=conference)
+            # neomodel query 
+            conference_obj = Conference.nodes.get(
                 conference_name_abbr=conference)
-            # neomodel query
+
+            #conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
+            # neomodel query , review and the results are correct
             conference_events_objs = Event.nodes.filter(
                 conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
-            #call utils function  from compare_conferences.utils.py
+            # call utils function  from compare_conferences.utils.py # reviewed and works
             models_data = compConfUtils.get_TotalSharedAuthors_between_conferences(
                 conference_events_objs)
+            print('***'*50)
+            print(models_data)
+            # print(models_data['no_AuthorPaper'])
+            print('***'*50)
             for model_data in models_data:
                 years_range.append(model_data['year'])
-                all_models_data.append(models_data)
+            all_models_data.append(models_data)
 
         years_range = sorted(list(set(years_range)))
+        # has neomodel query reviewed and works
         shared_years = compConfUtils.get_years_range_of_conferences(
             conferences_list, 'shared')
         shared_years = sorted(list(set(shared_years)))
         print("shared_years: ", shared_years)
+       
         for year in shared_years:
             for data in all_models_data:
-                ocurrence_list = list(
-                    filter(lambda inner_data: inner_data['year'] == year, data))
+                ocurrence_list = list(filter(lambda inner_data: inner_data['year'] == year, data))
                 if ocurrence_list:
                     sum_weight = 0
                     sum_sharedAuthors = []
@@ -61,7 +69,7 @@ class TotalSharedAuthorsEvolutionView(APIView):
                     sum_sharedAuthors = []
                     no_AuthorPaper.append(0)
                     no_SharedAuthor.append(sum_sharedAuthors)
-            no_SharedAuthor = set.intersection(*map(set, no_SharedAuthor))
+            no_SharedAuthor = set.intersection(*map(set,no_SharedAuthor)) 
             finalist = []
             finalist.append(sum(no_AuthorPaper))
             finalist.append(len(no_SharedAuthor))
@@ -76,11 +84,11 @@ class TotalSharedAuthorsEvolutionView(APIView):
         print('++++++++++++++++++')
         print(years_range)
         print('result_data')
+       # result_data = [y for x in result_data for y in x]
 
-        return Response({"weights": result_data,
+        return Response({"weights": result_data ,
                          "years": shared_years
                          })
-
 
 class TotalSharedWordsNumberView(APIView):
     def get(self, request, *args, **kwargs):
