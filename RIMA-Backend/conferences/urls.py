@@ -13,6 +13,7 @@ urlpatterns = [
          TotalSharedAuthorsEvolutionView.as_view()),
      path('getSharedWordsNumber/',TotalSharedWordsNumberView.as_view()),
      path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
+    path('commonAuthors/<pk1>/<pk2>', CommonAuthorsview.as_view()),
 
     ############################################################# Abdallah Visulizations updated########################################################################
 

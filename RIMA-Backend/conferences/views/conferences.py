@@ -480,7 +480,7 @@ BAB get conf events/years
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK
 # modified 04.07.2021
 
-
+#reused by abdalla, build by fathi
 class confEvents(APIView):
     def get(self, request, *args, **kwargs):
         # print("@@@@@@@@@@@@@@@@@@@")

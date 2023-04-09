@@ -6,6 +6,7 @@ from conferences.utils import compare_conferences_utils as compConfUtils
 from .. import conference_utils as confutils
 from conferences.models.conference import Conference
 from conferences.models.event import Event
+from conferences.models.author import Author
 
 
 class TotalSharedAuthorsEvolutionView(APIView):
@@ -90,6 +91,7 @@ class TotalSharedAuthorsEvolutionView(APIView):
         return Response({"weights": result_data,
                          "years": shared_years
                          })
+
 
 class TotalSharedWordsNumberView(APIView):
     def get(self, request, *args, **kwargs):
@@ -194,4 +196,115 @@ class topWordsOverYears(APIView):
         return Response({
             'WordsList': result_words[-10:],
             "values": resulte_weight[-10:]
+        })
+
+
+class CommonAuthorsview(APIView):
+    def get(self, request, *args, **kwargs):
+        first_event_Authors = []
+        second_event_Author = []
+        Authors_intersect_second_event = []
+        firstAuthorsFinal = []
+        keyword_or_topic = "Author"
+        secondAuthorsFinal = []
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        sharedAuthorsFinal = []
+
+        first_event = url_splits[-2]
+        second_event = url_splits[-1]
+        print("here are the two events")
+        print(first_event)
+        print(second_event)
+        # ORM query to update
+        conference_event_obj_one = Event.nodes.filter(
+            conference_event_name_abbr=first_event)
+        models_data_one = compConfUtils.get_TotalSharedAuthors_between_conferences(
+            conference_event_obj_one)
+        print("here are the returned data")
+        print(models_data_one)
+        first_event_Authors = models_data_one[0]["event_Authors"]
+        print("here are the first Authors")
+        print(first_event_Authors)
+        # ORM query to update
+        conference_event_obj_two = Event.nodes.filter(
+            conference_event_name_abbr=second_event)
+        models_data_two = compConfUtils.get_TotalSharedAuthors_between_conferences(
+            conference_event_obj_two)
+        second_event_Author = models_data_two[0]["event_Authors"]
+        Authors_intersect_second_event = [
+            value for value in first_event_Authors if value in second_event_Author]
+        for AuthorIDs in Authors_intersect_second_event:
+            # print("Author ID issss ")
+            # print(AuthorIDs)
+            idString = ""
+            idString = AuthorIDs[0]
+            # print("Author ID string ")
+            print("string: ", idString)
+            # ORM query to update
+            one_event_authors_name = list(set(
+                [author.author_name for author in Author.nodes.filter(semantic_scolar_author_id=AuthorIDs)]))
+            # print("Author Name issss ")
+            print("one_event_authors_name: ", one_event_authors_name)
+            sharedAuthorsFinal.append(one_event_authors_name[0])
+
+        for firstAuthors in first_event_Authors:
+            # print("Author ID issss ")
+            # print(firstAuthors)
+            idString = ""
+            idString = firstAuthors[0]
+            # print("Author ID string ")
+            # print(idString)
+            # ORM query to update
+            one_event_authors_name = list(set(
+                [author.author_name for author in Author.nodes.filter(semantic_scolar_author_id=firstAuthors)]))
+            # print("Author Name issss ")
+            # print(one_event_authors_name)
+            firstAuthorsFinal.append(one_event_authors_name[0])
+
+        for secondAuthors in second_event_Author:
+            # print("Author ID issss ")
+            # print(secondAuthors)
+            idString = ""
+            idString = secondAuthors[0]
+            # print("Author ID string ")
+            # print(idString)
+            # ORM query to update
+            one_event_authors_name = list(set(
+                [author.author_name for author in Author.nodes.filter(semantic_scolar_author_id=secondAuthors)]))
+            print("Author Name issss ")
+            secondAuthorsFinal.append(one_event_authors_name[0])
+
+        print("Author final issss ")
+        print(sharedAuthorsFinal)
+        print("firstAuthorsFinal issss ")
+        print(firstAuthorsFinal)
+        print("secondAuthorsFinal issss ")
+        print(secondAuthorsFinal)
+
+        print("Shaaaareeeed Authors")
+        print(Authors_intersect_second_event)
+
+        # for model_data in models_data:
+        #     events_name_list.append(model_data['conference_event_abbr'])
+
+        # for event in events_name_list:
+        #     for data in models_data:
+        #         ocurrence_list = list(filter(lambda inner_data: inner_data['conference_event_abbr'] == event, data))
+        #         if ocurrence_list:
+        #             sum_sharedAuthors = []
+        #             sum_sharedAuthors += result['event_Authors']
+        #             for result in ocurrence_list:
+        #                 sum_sharedAuthors += result['event_Authors']
+        #             no_SharedAuthor.append(sum_sharedAuthors)
+        #             sum_sharedAuthors = []
+        #         else:
+        #             sum_sharedAuthors = []
+        #             no_SharedAuthor.append(sum_sharedAuthors)
+        #     no_SharedAuthor = set.intersection(*map(set,no_SharedAuthor))
+
+        ctx = confutils.generate_venn_photo(
+            firstAuthorsFinal[0:10], secondAuthorsFinal[0:10], sharedAuthorsFinal[0:10], first_event, second_event, keyword_or_topic)
+
+        return Response({
+            "commontopics": ctx
         })
