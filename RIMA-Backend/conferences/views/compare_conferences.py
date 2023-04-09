@@ -25,12 +25,12 @@ class TotalSharedAuthorsEvolutionView(APIView):
 
         for conference in conferences_list:
 
-            #conference_obj = Conference.objects.get(conference_name_abbr=conference)
-            # neomodel query 
+            # conference_obj = Conference.objects.get(conference_name_abbr=conference)
+            # neomodel query
             conference_obj = Conference.nodes.get(
                 conference_name_abbr=conference)
 
-            #conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
+            # conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
             # neomodel query , review and the results are correct
             conference_events_objs = Event.nodes.filter(
                 conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
@@ -51,10 +51,11 @@ class TotalSharedAuthorsEvolutionView(APIView):
             conferences_list, 'shared')
         shared_years = sorted(list(set(shared_years)))
         print("shared_years: ", shared_years)
-       
+
         for year in shared_years:
             for data in all_models_data:
-                ocurrence_list = list(filter(lambda inner_data: inner_data['year'] == year, data))
+                ocurrence_list = list(
+                    filter(lambda inner_data: inner_data['year'] == year, data))
                 if ocurrence_list:
                     sum_weight = 0
                     sum_sharedAuthors = []
@@ -69,7 +70,7 @@ class TotalSharedAuthorsEvolutionView(APIView):
                     sum_sharedAuthors = []
                     no_AuthorPaper.append(0)
                     no_SharedAuthor.append(sum_sharedAuthors)
-            no_SharedAuthor = set.intersection(*map(set,no_SharedAuthor)) 
+            no_SharedAuthor = set.intersection(*map(set, no_SharedAuthor))
             finalist = []
             finalist.append(sum(no_AuthorPaper))
             finalist.append(len(no_SharedAuthor))
@@ -86,7 +87,7 @@ class TotalSharedAuthorsEvolutionView(APIView):
         print('result_data')
        # result_data = [y for x in result_data for y in x]
 
-        return Response({"weights": result_data ,
+        return Response({"weights": result_data,
                          "years": shared_years
                          })
 
@@ -104,7 +105,7 @@ class TotalSharedWordsNumberView(APIView):
             request.get_full_path(), r'?')
         conferences_list = confutils.split_restapi_url(
             url_splits_question_mark[1], r'&')
-
+        # has neomodel quries , reviewed and works
         models_data = compConfUtils.get_years_range_of_conferences(
             conferences_list, 'shared')
         models_data2 = compConfUtils.get_years_range_of_conferences(
@@ -124,9 +125,9 @@ class TotalSharedWordsNumberView(APIView):
             print(conferences_events_list)
 
             for conference_event in conferences_events_list:
-                event_is_available = Event.nodes.filter(
-                    conference_event_name_abbr__icontains=conference_event).first()
-                if event_is_available:
+                event_is_available = Event.nodes.get_or_none(
+                    conference_event_name_abbr=conference_event)
+                if event_is_available and event_is_available is not None:
                     model_events = Event.nodes.filter(
                         conference_event_name_abbr__icontains=conference_event)
                     for model_event in model_events:
