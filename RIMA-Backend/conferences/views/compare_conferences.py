@@ -573,3 +573,60 @@ class ComparePapersView(APIView):
             "paperInterests": result_data,
             "Topiclist": shared_words_final_data
         })
+
+
+class getPapersOfWords(APIView):
+    def get(self, request, *args, **kwargs):
+        abstract_title_str = ""
+        abstracts_titles = []
+        second_event_values = []
+        first_event_values = []
+        list_of_shared_words = []
+        events_list = []
+        result_dict = {}
+        result_dict['docs'] = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        keyword_or_topic = url_splits[-1]
+        second_event_name_abbr = url_splits[-2]
+        first_event_name_abbr = url_splits[-3]
+        events_list.append(first_event_name_abbr)
+        events_list.append(second_event_name_abbr)
+        print("eventssss listtt")
+        print(events_list)
+        # to be updated resued y abdalla
+        returned_list = confutils.get_shared_words_between_events(
+            events_list, keyword_or_topic)
+        print("shared words")
+        print(len(returned_list[0]))
+        sharedWords = sorted(
+            returned_list[0], key=lambda k: k['weight'], reverse=True)
+        print(returned_list[0])
+        print("shared wordsssss ")
+        print(sharedWords)
+        for words in sharedWords:
+            list_of_shared_words.append(words["word"])
+        print(list_of_shared_words)
+        # to be updated resued by abdalla
+        for word in list_of_shared_words:
+            abstracts_titles = confutils.get_abstract_based_on_keyword(
+                first_event_name_abbr, word, keyword_or_topic)
+            first_event_values.append(len(abstracts_titles))
+            print("list progresssss")
+            print(first_event_values)
+        for word in list_of_shared_words:
+            abstracts_titles = confutils.get_abstract_based_on_keyword(
+                second_event_name_abbr, word, keyword_or_topic)
+            print("here are the selected word")
+            print(word)
+            print(len(abstracts_titles))
+            print("here are the selected word")
+            second_event_values.append(len(abstracts_titles))
+            print("second list progresssss")
+            print(second_event_values)
+        # negative_second_event_values = [ -x for x in second_event_values]
+        return Response({
+            "sharedWords": list_of_shared_words,
+            "FirstEventValues": first_event_values,
+            "SecondEventValues": second_event_values
+        })
