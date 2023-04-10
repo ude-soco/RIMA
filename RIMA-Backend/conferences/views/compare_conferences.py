@@ -1,4 +1,5 @@
 
+import itertools
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -7,6 +8,7 @@ from .. import conference_utils as confutils
 from conferences.models.conference import Conference
 from conferences.models.event import Event
 from conferences.models.author import Author
+from neomodel import *
 
 
 class TotalSharedAuthorsEvolutionView(APIView):
@@ -308,3 +310,121 @@ class CommonAuthorsview(APIView):
         return Response({
             "commontopics": ctx
         })
+
+
+class AuthorEvents(APIView):
+    def get(self, request, *args, **kwargs):
+        first_event_Authors = []
+        firstAuthorsFinal = []
+        EventAuthorsFinal = []
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        first_event = url_splits[-1]
+        print("here are the two events")
+        print(first_event)
+        conference_event_obj_one = Event.nodes.filter(
+            conference_event_name_abbr=first_event)
+        models_data_one = compConfUtils.get_TotalSharedAuthors_between_conferences(
+            conference_event_obj_one)
+        first_event_Authors = models_data_one[0]["event_Authors"]
+        print("here are the first Authors")
+        print(first_event_Authors)
+
+        for firstAuthors in first_event_Authors:
+
+            print(firstAuthors)
+            idString = ""
+            idString = firstAuthors[0]
+            one_event_authors_name = list(set(
+                [author.author_name for author in Author.nodes.filter(
+                    semantic_scolar_author_id=firstAuthors)]))
+            print(one_event_authors_name)
+            firstAuthorsFinal.append(one_event_authors_name[0])
+
+        for Authors in firstAuthorsFinal:
+            EventAuthorsFinal.append({
+                'value': Authors,
+                'label': Authors,
+            })
+        return Response({
+            "EventAuthors": EventAuthorsFinal
+        })
+
+
+class AuthorInterestsBar(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        second_author = url_splits[-1]
+        first_author = url_splits[-2]
+        keyword_or_topic = url_splits[-3]
+        second_event = url_splits[-4]
+        first_event = url_splits[-5]
+
+        first_author_obj = Author.nodes.get(author_name=first_author)
+        second_author_obj = Author.nodes.get(author_name=second_author)
+
+        # get_author_publications_in_conf fathy's code
+        first_author_publications = confutils.get_author_publications_in_conf(
+            first_author_obj.semantic_scolar_author_id, "", first_event)
+
+        second_author_publications = confutils.get_author_publications_in_conf(
+            second_author_obj.semantic_scolar_author_id, "", second_event)
+        
+        # there are two function with the same name get_author_interests 
+        # fathy's code  and old one which I use now
+        #  I got it from Abdalla's code bacause the one that fathy implemented doesn't work
+        first_author_interests = compConfUtils.get_author_interests(
+            first_author_publications, "", keyword_or_topic)
+        
+        sorted_data_first_author = dict(
+            sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
+        print("Author interestsssssssss")
+        print(first_author_interests)
+        
+        reduced_sorted_data_first_author = dict(
+            itertools.islice(sorted_data_first_author.items(), 10))
+        print("first Author interestsssssssss")
+        print(reduced_sorted_data_first_author)
+
+        # get_author_interests fathy's code
+        second_author_interests = compConfUtils.get_author_interests(
+            second_author_publications, "", keyword_or_topic)
+        sorted_data_second_author = dict(
+            sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
+        reduced_sorted_data_second_author = dict(
+            itertools.islice(sorted_data_second_author.items(), 10))
+        print("second Author interestsssssssss")
+        print(reduced_sorted_data_second_author)
+
+        authors_dict = {
+            k: [reduced_sorted_data_first_author.get(k, 0),
+                reduced_sorted_data_second_author.get(k, 0)]
+            for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
+        }
+        print("Author dictttttttttttttt")
+        print(authors_dict)
+
+        set_intersect_key = list(
+            set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
+
+        words = authors_dict.keys()
+        weights = authors_dict.values()
+        authors_name = [first_author, second_author]
+        print(set_intersect_key, '-----------', words, '+++++++++',
+              weights, '++++++++', authors_name, '------------')
+
+        result_data.append(words)
+        result_data.append(weights)
+        result_data.append(authors_name)
+        result_data.append(set_intersect_key)
+
+        print('######################## HERE #########################')
+        print(authors_dict)
+        print('######################## HERE #########################')
+
+        print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
+        print('############')
+        print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
+
+        return Response({
+            "authorInterests": result_data})

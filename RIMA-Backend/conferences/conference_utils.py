@@ -180,7 +180,7 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=10)
 
     return ""
 
-
+#reused by Abdalla 
 def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr=""):
     """retrieves all the pulication on an author from stored conferences
 

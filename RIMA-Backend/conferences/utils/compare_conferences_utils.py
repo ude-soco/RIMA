@@ -4,6 +4,8 @@ from conferences.models.author import Author
 from conferences.models.event import Event
 from neomodel import match, Traversal
 import re
+from interests.Keyword_Extractor.extractor import getKeyword
+from interests.wikipedia_utils import wikicategory, wikifilter
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
@@ -176,3 +178,39 @@ def get_top_words_in_years(list_of_events, keyword_or_topic):
     print("here are the modeldataaa from db")
 
     return sorted_list_of_final_words
+
+
+def get_author_interests(publications_list, author_id, keyword_or_topic, num=30):
+    """fetches authors keyword- and wiki-based interests from a papers list
+
+    Args:
+        publications_list (list): list of publication objects
+        author_id (str): author semantic scholar ID
+        keyword_or_topic (str): either keyword- or wiki-based interest
+        num (int, optional): number of the words to be extracted. Defaults to 30.
+
+    Returns:
+        dict: dictionary of the extracted topics or keywords with their weights
+    """
+
+    abstract_title_str = ""
+    keywords = {}
+    topics = {}
+
+    for publication in publications_list:
+        if publication['title'] and publication['abstract']:
+            abstract_title_str += publication['title'] + \
+                " " + publication['abstract']
+
+    if keyword_or_topic == 'keyword':
+        keywords = getKeyword(abstract_title_str, 'Yake', num)
+        return keywords
+
+    elif keyword_or_topic == 'topic':
+
+        keywords = getKeyword(abstract_title_str, 'Yake', num)
+        relation, topics = wikifilter(keywords)
+
+        return topics
+
+    return ""
