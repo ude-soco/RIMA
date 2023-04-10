@@ -20,6 +20,12 @@ urlpatterns = [
     path('EventPapers/<pk1>', ConfEventPapers.as_view()),
     path('comparePapers/<pk1>/<pk2>/<pk3>/<pk4>', ComparePapersView.as_view()),
     path('compareWordsInPapers/<pk1>/<pk2>/<pk3>', getPapersOfWords.as_view()),
+    path('getSharedWordsBar/<pk1>/<pk2>/<pk3>/<pk4>',
+         NewconferencesSharedWordsBarView.as_view()),
+    path('getSharedWordsBar/<pk1>/<pk2>/<pk3>',
+         NewconferencesSharedWordsBarView.as_view()),
+    path('AuthorsPapersEvolutio/<pk1>/',
+         AuthorsPapersEvolutionView.as_view()),
 
     ############################################################# Abdallah Visulizations updated########################################################################
 

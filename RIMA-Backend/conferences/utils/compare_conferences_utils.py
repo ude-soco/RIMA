@@ -214,3 +214,71 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=30)
         return topics
 
     return ""
+
+
+def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
+    """retrieves weights of a specific word in a list on conference events. If the word does not exist in an event, its weight is zero
+
+    Args:
+        conference_event_objs (list): list of conference event objects
+        word (str): any topic or keyword
+        keyword_or_topic (str): decides the type of the word --> "topic" or "keyword"
+
+    Returns:
+        list: list of data dictionaries of the weight of a word in every given conference event 
+    """
+
+    result_data = []
+
+    # check if conferecne event is lak not lak2011
+    for conference_event in conference_event_objs:
+        if keyword_or_topic == 'topic':
+            no_of_event_authors = 0
+            one_event_authors = []
+            check_exist = Event.nodes.get_or_none(
+                conference_event_name_abbr=conference_event
+                .conference_event_name_abbr)
+            if check_exist and check_exist.authors is not None and len(check_exist.authors) is not 0:
+                one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
+                    conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
+                no_of_event_authors = len(one_event_authors)
+                result_data.append({
+                    'no_AuthorPaper': no_of_event_authors,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'event_Authors': one_event_authors,
+                    'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                })
+            else:
+                result_data.append({
+                    'no_AuthorPaper': no_of_event_authors,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'event_Authors': one_event_authors,
+                    'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                })
+
+        elif keyword_or_topic == 'keyword':
+            check_exist = Event.nodes.get_or_none(
+                conference_event_name_abbr=conference_event.conference_event_name_abbr)
+            if check_exist:
+                no_of_event_papers = len(Event.nodes.filter(
+                    conference_event_name_abbr=conference_event.conference_event_name_abbr).publications.all())
+                one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
+                    conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
+                result_data.append({
+                    'no_AuthorPaper': no_of_event_papers,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'event_Authors': one_event_authors,
+                    'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                })
+            else:
+                result_data.append({
+                    'no_AuthorPaper': no_of_event_papers,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'event_Authors': one_event_authors,
+                    'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                })
+    print('############## Weights #################')
+    print(result_data)
+    print('############## Weights #################')
+
+    return result_data

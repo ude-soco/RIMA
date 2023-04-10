@@ -11,6 +11,10 @@ from conferences.models.author import Author
 from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
 
+# Event.nodes.filter to be review and edit : any fun that uses Event.nodes.filter 
+# should be review and edit please check if you need to 
+# use icontain= or only= this is based on conference name or event name
+
 
 class TotalSharedAuthorsEvolutionView(APIView):
     def get(self, request, *args, **kwargs):
@@ -322,6 +326,7 @@ class AuthorEvents(APIView):
         first_event = url_splits[-1]
         print("here are the two events")
         print(first_event)
+        # to be reviewed there is smth wrong  conference_event_name_abbr=first_event it should contain not = if and only if first event is lak not lak2011
         conference_event_obj_one = Event.nodes.filter(
             conference_event_name_abbr=first_event)
         models_data_one = compConfUtils.get_TotalSharedAuthors_between_conferences(
@@ -630,3 +635,117 @@ class getPapersOfWords(APIView):
             "FirstEventValues": first_event_values,
             "SecondEventValues": second_event_values
         })
+
+
+class NewconferencesSharedWordsBarView(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = [[], []]
+        avaiable_events = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        print('url_splits')
+        print(url_splits)
+
+        if len(url_splits) == 8:
+            keyword_or_topic = url_splits[-4]
+            first_event = url_splits[-3]
+            second_event = url_splits[-2]
+            third_event = url_splits[-1]
+            print("I am here here here")
+            print(keyword_or_topic)
+            print(first_event)
+            print(second_event)
+            print(third_event)
+            avaiable_events.append(first_event)
+            avaiable_events.append(second_event)
+            avaiable_events.append(third_event)
+            print("Here is the available eventsssssssss ")
+            print(avaiable_events)
+        else:
+            keyword_or_topic = url_splits[-3]
+            first_event = url_splits[-2]
+            second_event = url_splits[-1]
+            print("here are the two eventsssssss")
+            print(keyword_or_topic)
+            print(first_event)
+            print(second_event)
+            avaiable_events.append(first_event)
+            avaiable_events.append(second_event)
+            print("Here is the available eventsssssssss ")
+            print(avaiable_events)
+
+        result_data = confutils.get_shared_words_between_events(
+            avaiable_events, keyword_or_topic)
+
+        print('result_dat')
+        print(result_data)
+        print('result_data')
+
+        return Response({'Topiclist': result_data})
+
+
+class AuthorsPapersEvolutionView(APIView):
+    def get(self, request, *args, **kwargs):
+        models_data = []
+        result_data = []
+        no_AuthorPaper = []
+        no_SharedAuthor = []
+        years_range = []
+        all_models_data = []
+
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        conferences_list = confutils.split_restapi_url(
+            url_splits_question_mark[1], r'&')
+        keyword_or_topic = confutils.split_restapi_url(
+            url_splits_question_mark[0], r'/')[-2]
+        print(conferences_list)
+        print(keyword_or_topic)
+
+        for conference in conferences_list:
+            conference_obj = Conference.nodes.get(
+                conference_name_abbr=conference)
+            conference_event_objs = Event.nodes.filter(
+                conference_event_name_abbr__icontains=conference_obj.conference_name_abbr)
+
+            print("conference_event_objs", conference_event_objs)
+
+            models_data = compConfUtils.get_AuthorPaper_weight_event_based(
+                conference_event_objs, keyword_or_topic)
+            # print(models_data['no_AuthorPaper'])
+            print('***'*50)
+            for model_data in models_data:
+                years_range.append(model_data['year'])
+            all_models_data.append(models_data)
+
+        years_range = sorted(list(set(years_range)))
+
+        for year in years_range:
+            for data in all_models_data:
+                ocurrence_list = list(
+                    filter(lambda inner_data: inner_data['year'] == year, data))
+                if ocurrence_list:
+                    sum_weight = 0
+                    sum_sharedAuthors = []
+                    for result in ocurrence_list:
+                        sum_weight += result['no_AuthorPaper']
+                        sum_sharedAuthors += result['event_Authors']
+                    no_AuthorPaper.append(sum_weight)
+                    no_SharedAuthor.append(sum_sharedAuthors)
+                    sum_weight = 0
+                    sum_sharedAuthors = []
+                else:
+                    sum_sharedAuthors = []
+                    no_AuthorPaper.append(0)
+                    no_SharedAuthor.append(sum_sharedAuthors)
+            no_SharedAuthor = set.intersection(*map(set, no_SharedAuthor))
+            finalist = []
+            finalist.append(sum(no_AuthorPaper))
+            finalist.append(len(no_SharedAuthor))
+            result_data.append(no_AuthorPaper)
+            no_AuthorPaper = []
+            no_SharedAuthor = []
+
+        return Response({"weights": result_data,
+                         "years": years_range
+                         })
