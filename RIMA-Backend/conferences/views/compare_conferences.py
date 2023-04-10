@@ -9,6 +9,7 @@ from conferences.models.conference import Conference
 from conferences.models.event import Event
 from conferences.models.author import Author
 from neomodel import *
+from interests.Keyword_Extractor.extractor import getKeyword
 
 
 class TotalSharedAuthorsEvolutionView(APIView):
@@ -369,18 +370,18 @@ class AuthorInterestsBar(APIView):
 
         second_author_publications = confutils.get_author_publications_in_conf(
             second_author_obj.semantic_scolar_author_id, "", second_event)
-        
-        # there are two function with the same name get_author_interests 
+
+        # there are two function with the same name get_author_interests
         # fathy's code  and old one which I use now
         #  I got it from Abdalla's code bacause the one that fathy implemented doesn't work
         first_author_interests = compConfUtils.get_author_interests(
             first_author_publications, "", keyword_or_topic)
-        
+
         sorted_data_first_author = dict(
             sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
         print("Author interestsssssssss")
         print(first_author_interests)
-        
+
         reduced_sorted_data_first_author = dict(
             itertools.islice(sorted_data_first_author.items(), 10))
         print("first Author interestsssssssss")
@@ -428,3 +429,147 @@ class AuthorInterestsBar(APIView):
 
         return Response({
             "authorInterests": result_data})
+
+
+class ConfEventPapers(APIView):
+    def get(self, request, *args, **kwargs):
+
+        Event_papers_JSON = []
+        Event_papersWithAbstract_JSON = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        conference_event_name_abbr = url_splits[-1]
+        print("conference_event_name_abbrrrrrrrrrrrrrrr")
+        print(conference_event_name_abbr)
+        conference_event_papers_data = confutils.get_event_papers_data(
+            conference_event_name_abbr)
+        print("paper numbeeeeeeerssssss   abstract")
+        print(len(conference_event_papers_data))
+        conference_event_papers_data_list = list(conference_event_papers_data)
+        print((conference_event_papers_data_list[0]))
+        for paper in conference_event_papers_data_list:
+            Event_papers_JSON.append({
+                'value': paper['title'],
+                'label': paper['title'],
+            })
+            Event_papersWithAbstract_JSON.append({
+                'value': paper['title'],
+                'label': paper['title'],
+                'abstract': paper['abstract']
+            })
+
+        return Response({
+            "papers":
+            Event_papers_JSON,
+            "paperWithAbstract":
+            Event_papersWithAbstract_JSON
+        })
+
+
+class ComparePapersView(APIView):
+    def get(self, request, *args, **kwargs):
+
+        abstract_title_str = ""
+        abstract_title_strr = ""
+        words_author = []
+        words_authorTwo = []
+        all_words = []
+        shared_words_final_data = []
+        result_data = []
+
+        url_path = request.get_full_path()
+        url_path = url_path.replace("%20", " ")
+        print("tHE PAAAAAAAAAAAATH")
+        print(url_path)
+        url_splits = confutils.split_restapi_url(url_path, r'/')
+        print("tHE PAAAAAAAAAAAATH 2222222")
+        print(url_splits)
+        secondEvent = url_splits[-1]
+        secondPaperTitle = url_splits[-2]
+        firstEvent = url_splits[-3]
+        firstPaperTitle = url_splits[-4]
+        Event_papers_JSON = []
+        print("eventsssss")
+        print(firstEvent)
+        print(secondEvent)
+        # to be updated reused by abdalla
+        first_event_papers_data = confutils.get_event_papers_data(firstEvent)
+        second_event_papers_data = confutils.get_event_papers_data(secondEvent)
+
+        for paper in first_event_papers_data:
+            if paper['title'] == firstPaperTitle:
+                firstPaperAbstract = paper['abstract']
+                print("Here is you lasssst test isa")
+                print(paper['title'])
+                print(paper['abstract'])
+
+        if firstPaperTitle or firstPaperAbstract:
+            abstract_title_str += firstPaperTitle + " " + firstPaperAbstract
+
+        firstKeywords = getKeyword(abstract_title_str, 'Yake', 600)
+
+        for paper in second_event_papers_data:
+            if paper['title'] == secondPaperTitle:
+                secondPaperAbstract = paper['abstract']
+
+        if secondPaperTitle or secondPaperAbstract:
+            abstract_title_strr += secondPaperTitle + " " + secondPaperAbstract
+
+        secondKeywords = getKeyword(abstract_title_strr, 'Yake', 600)
+
+        for key, value in firstKeywords.items():
+            words_author.append(key)
+
+        for key, value in secondKeywords.items():
+            words_authorTwo.append(key)
+
+        first_event_papers_data1 = dict(
+            sorted(firstKeywords.items(), key=lambda item: item[1], reverse=True))
+        first_event_papers_data_final = dict(
+            itertools.islice(first_event_papers_data1.items(), 10))
+        second_event_papers_data1 = dict(
+            sorted(secondKeywords.items(), key=lambda item: item[1], reverse=True))
+        second_event_papers_data_final = dict(
+            itertools.islice(second_event_papers_data1.items(), 10))
+
+        all_words.append(words_author)
+        all_words.append(words_authorTwo)
+        print("all keywordssss keeeyssss")
+        print(words_author)
+
+        shared_words = [
+            value for value in words_author if value in words_authorTwo]
+        shared_words1 = set.intersection(*map(set, all_words))
+
+        for word in shared_words:
+            words_weights = []
+            wieghtOne = firstKeywords[word]
+            words_weights.append(wieghtOne)
+            wieghtTwo = secondKeywords[word]
+            words_weights.append(wieghtTwo)
+            shared_words_final_data.append(word)
+
+        print("Shaaaareeeed Wooooords")
+        print(shared_words)
+        print("firstKeywords Wooooords")
+        print(firstKeywords)
+        print("Shaaaareeeed Wooooords")
+        print(shared_words_final_data)
+        papers_dict = {
+            k: [first_event_papers_data_final.get(k, 0),
+                second_event_papers_data_final.get(k, 0)]
+            for k in first_event_papers_data_final.keys() | second_event_papers_data_final.keys()
+        }
+
+        words = papers_dict.keys()
+        weights = papers_dict.values()
+        result_data.append(words)
+        result_data.append(weights)
+
+        return Response({
+            "firstPaper": firstPaperTitle,
+            "firstKeywords": first_event_papers_data_final,
+            "secondKeywords": second_event_papers_data_final,
+            "paperInterests": result_data,
+            "Topiclist": shared_words_final_data
+        })

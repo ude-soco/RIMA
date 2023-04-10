@@ -216,7 +216,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
     return result_data
 
-
+#reused by abdalla
 def get_event_papers_data(conference_event_name_abbr):
     """retrieves paper objects of a conference event
 

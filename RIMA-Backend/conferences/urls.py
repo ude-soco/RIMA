@@ -11,11 +11,15 @@ urlpatterns = [
     ############################################################# Abdallah Visulizations updated########################################################################
     path('getTotalSharedAuthorsEvolution/',
          TotalSharedAuthorsEvolutionView.as_view()),
-    path('getSharedWordsNumber/',TotalSharedWordsNumberView.as_view()),
-    path('topTopicsInYears/<pk1>/<pk2>',topWordsOverYears.as_view()),
+    path('getSharedWordsNumber/', TotalSharedWordsNumberView.as_view()),
+    path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
     path('commonAuthors/<pk1>/<pk2>', CommonAuthorsview.as_view()),
     path('eventAuthors/<pk1>', AuthorEvents.as_view()),
-    path('AuthorInterestsNew/<pk1>/<pk2>/<pk3>/<pk4>/<pk5>', AuthorInterestsBar.as_view()),
+    path('AuthorInterestsNew/<pk1>/<pk2>/<pk3>/<pk4>/<pk5>',
+         AuthorInterestsBar.as_view()),
+    path('EventPapers/<pk1>', ConfEventPapers.as_view()),
+    path('comparePapers/<pk1>/<pk2>/<pk3>/<pk4>', ComparePapersView.as_view()),
+    path('compareWordsInPapers/<pk1>/<pk2>/<pk3>', getPapersOfWords.as_view()),
 
     ############################################################# Abdallah Visulizations updated########################################################################
 
@@ -61,6 +65,7 @@ urlpatterns = [
 
 
     # BAB 08.06.2021 Extension for other conferences other than LAK
+    # resued by abdalla
     path('confEvents/<pk1>', confEvents.as_view()),
 
     path('alltopics/', AllTopicsViewDB.as_view()),
@@ -89,12 +94,12 @@ urlpatterns = [
     # BAB 08.06.2021 Extension for other conferences other than LAK
     path('getallkeysresults/keyword/<pk1>', allWords.as_view()),
     # BAB 08.06.2021 Extension for other conferences other than LAK
-    
-    #reused by Abdallah
+
+    # reused by Abdallah
     path('getalltopicsevolution/topic/<pk>/',
          MultipleTopicAreaView.as_view()),
     # BAB 08.06.2021 Extension for other conferences other than LAK
-    #reused by Abdallah
+    # reused by Abdallah
     path('getallkeysevolution/keyword/<pk>/',
          MultipleTopicAreaView.as_view()),
 
