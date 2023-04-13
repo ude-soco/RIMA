@@ -5,9 +5,10 @@ from matplotlib_venn import venn2_unweighted
 from matplotlib import pyplot as plt
 import base64
 import re
-from conferences.models.event import Event
-from conferences.models.author import Author
-from conferences.models.conference import Conference as graphConference
+from conferences.models.graph_db_entities import *
+from conferences.models.graph_db_entities import Conference as graphConference
+
+
 from conferences import tests
 from conferences.data_extractor import conference_data_collector as dataCollector
 from conferences.models import (Author, Author_has_Papers, Event_has_Topic, Conf_Event_Topic, Conference_Event, Conference, Conference_Event_Paper,
@@ -180,7 +181,9 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=10)
 
     return ""
 
-#reused by Abdalla 
+# reused by Abdalla
+
+
 def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr=""):
     """retrieves all the pulication on an author from stored conferences
 
@@ -216,7 +219,9 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
     return result_data
 
-#reused by abdalla
+# reused by abdalla
+
+
 def get_event_papers_data(conference_event_name_abbr):
     """retrieves paper objects of a conference event
 
@@ -234,7 +239,9 @@ def get_event_papers_data(conference_event_name_abbr):
     session.close()
     return conference_event_obj
 
-#to be updated using OGM instead of ORM
+# to be updated using OGM instead of ORM
+
+
 def get_keywords_from_models(conference_event_name_abbr):
     """retrieves keywords events based and weights from keywords tables 
 
@@ -260,7 +267,9 @@ def get_keywords_from_models(conference_event_name_abbr):
     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
     return sorted_data
 
-#to be updated use OGM instead of ORM
+# to be updated use OGM instead of ORM
+
+
 def get_topics_from_models(conference_event_name_abbr):
     """retrieves topics events based  and weights from topics tables 
 
@@ -290,7 +299,9 @@ def get_topics_from_models(conference_event_name_abbr):
 
     return sorted_data
 
-#to be updated reused by abdalla
+# to be updated reused by abdalla
+
+
 def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOrTopic):
     """reteives paper data containing a specific word within an event
     Args:
@@ -323,7 +334,9 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOr
 
     return titles_abstracts
 
-#to be updated reused by abdalla
+# to be updated reused by abdalla
+
+
 def get_shared_words_between_events(conference_events_list, keyword_or_topic):
     """retieves shared words among given list of conference events
 
@@ -1085,7 +1098,6 @@ def split_restapi_url(url_path, split_char):
     return topics_split
 
 
-
 # to be deleted I put it in compare_comferences_utils.py
 def get_years_range_of_conferences(conferences_list, all_or_shared):
     """determines the year range of a given list of conferences, either all the years or only the shared years
@@ -1134,5 +1146,3 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     print('#################### result_data ######################')
 
     return result_data
-
-
