@@ -1,11 +1,11 @@
 from conferences import conference_utils as confutils
-from conferences.models.conference import Conference as graphConference
-from conferences.models.author import Author
-from conferences.models.event import Event
+from conferences.models.graph_db_entities import Conference as graphConference
+from conferences.models.graph_db_entities import *
 from neomodel import match, Traversal
 import re
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
+from neomodel import *
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
@@ -66,13 +66,13 @@ def get_TotalSharedAuthors_between_conferences(conference_event_objs):
         one_event_authors = []
         no_of_event_authors = 0
         # neomodel query
-        # reviewed and works
-        check_exist = Event.nodes.get_or_none(
+        # reviewed and works , change name to get event
+        event_obj = Event.nodes.get_or_none(
             conference_event_name_abbr=conference_event
             .conference_event_name_abbr)
-        if check_exist and check_exist.authors is not None and len(check_exist.authors) is not 0:
-            one_event_authors = list(set([author.semantic_scolar_author_id for author in Event.nodes.filter(
-                conference_event_name_abbr=conference_event.conference_event_name_abbr).authors.all()]))
+        if event_obj and event_obj.authors is not None and len(event_obj.authors) is not 0:
+            one_event_authors = list(
+                set([author.semantic_scolar_author_id for author in event_obj.authors.all()]))
             no_of_event_authors = len(one_event_authors)
             result_data.append({
                 'no_AuthorPaper': no_of_event_authors,
@@ -121,7 +121,7 @@ def get_shared_words_numbers(conference_events_list, keyword_or_topic):
         for data in conference_event_data:
             # {'topic': 'Learners', 'weight': 9, 'event': 'aied2017'}
             all_words.append(data[keyword_or_topic])
-
+    print("all_words:", all_words)
     shared_words = list(set([word for word in all_words if all_words.count(
         word) == len(conference_events_list)]))
     print("here is the newwwww corona testtttt")
@@ -129,6 +129,62 @@ def get_shared_words_numbers(conference_events_list, keyword_or_topic):
     print(noOfSharedword)
 
     return noOfSharedword
+
+
+def get_topics_from_models(conference_event_name_abbr):
+    """retrieves topics events based  and weights from topics tables 
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    Returns:
+        list: sorted list of dictionaries of topics and their weights and conference event
+    """
+
+    data = []
+    event_obj = Event.nodes.get(
+        conference_event_name_abbr=conference_event_name_abbr)
+    event_has_topic_objs = event_obj.topics.all()
+    for event_has_topic_obj in event_has_topic_objs:
+        has_topic_relationship = event_obj.topics.relationship(
+            event_has_topic_obj)
+        weight = has_topic_relationship.weight
+        data.append({
+            'topic': event_has_topic_obj.topic,
+            'weight': weight,
+            'event': event_obj.conference_event_name_abbr,
+        })
+    sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
+    return sorted_data
+
+
+def get_keywords_from_models(conference_event_name_abbr):
+    """retrieves keywords events based and weights from keywords tables 
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    Returns:
+        list: sorted list of dictionaries of keywords and their weights and conference event
+    """
+
+    data = []
+    event_obj = Event.nodes.get(
+        conference_event_name_abbr=conference_event_name_abbr)
+
+    event_has_keyword_objs = event_obj.keywords.all()
+    for event_has_keyword_obj in event_has_keyword_objs:
+        has_keyword_relationship = event_obj.keywords.relationship(
+            event_has_keyword_obj)
+        weight = has_keyword_relationship.weight
+        data.append({
+            'keyword': event_has_keyword_obj.keyword,
+            'weight': weight,
+            'event': event_obj.conference_event_name_abbr,
+        })
+
+    sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
+    return sorted_data
 
 
 def get_top_words_in_years(list_of_events, keyword_or_topic):
