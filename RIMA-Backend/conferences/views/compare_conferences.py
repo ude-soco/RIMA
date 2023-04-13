@@ -5,15 +5,15 @@ from rest_framework.response import Response
 
 from conferences.utils import compare_conferences_utils as compConfUtils
 from .. import conference_utils as confutils
-from conferences.models.conference import Conference
-from conferences.models.event import Event
-from conferences.models.author import Author
+from conferences.models.graph_db_entities import *
 from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
 
-# Event.nodes.filter to be review and edit : any fun that uses Event.nodes.filter 
-# should be review and edit please check if you need to 
+# Event.nodes.filter to be review and edit : any fun that uses Event.nodes.filter
+# should be review and edit please check if you need to
 # use icontain= or only= this is based on conference name or event name
+
+# reviewed 12.04
 
 
 class TotalSharedAuthorsEvolutionView(APIView):
@@ -28,20 +28,29 @@ class TotalSharedAuthorsEvolutionView(APIView):
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'?')
         print(url_splits_question_mark, "BAB TEST AND")
-        conferences_list = confutils.split_restapi_url(
-            url_splits_question_mark[1], r'&')
+        try:
+            conferences_list = confutils.split_restapi_url(
+                url_splits_question_mark[1], r'&')
+        except Exception as e:
+            return Response({"weights": result_data,
+                             "years": []
+                             })
 
         for conference in conferences_list:
-
             # conference_obj = Conference.objects.get(conference_name_abbr=conference)
             # neomodel query
-            conference_obj = Conference.nodes.get(
+            conference_obj = Conference.nodes.get_or_none(
                 conference_name_abbr=conference)
+
+            if (conference_obj is None):
+                return
 
             # conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
             # neomodel query , review and the results are correct
             conference_events_objs = Event.nodes.filter(
                 conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
+            for onbj in conference_events_objs:
+                print("onbj:: ", onbj)
             # call utils function  from compare_conferences.utils.py # reviewed and works
             models_data = compConfUtils.get_TotalSharedAuthors_between_conferences(
                 conference_events_objs)
@@ -110,10 +119,17 @@ class TotalSharedWordsNumberView(APIView):
         models_data = []
         conferences_list = []
         keyword_or_topic = "topic"
-        url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
-        conferences_list = confutils.split_restapi_url(
-            url_splits_question_mark[1], r'&')
+        try:
+            url_splits_question_mark = confutils.split_restapi_url(
+                request.get_full_path(), r'?')
+            conferences_list = confutils.split_restapi_url(
+                url_splits_question_mark[1], r'&')
+        except Exception as e:
+            return Response({"weights": result_data,
+                             "years": models_data,
+                             "allYears": []
+                             })
+
         # has neomodel quries , reviewed and works
         models_data = compConfUtils.get_years_range_of_conferences(
             conferences_list, 'shared')
