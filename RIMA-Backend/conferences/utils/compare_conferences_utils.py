@@ -59,6 +59,8 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
 
     return result_data
 
+# done
+
 
 def get_TotalSharedAuthors_between_conferences(conference_event_objs):
     result_data = []
@@ -132,7 +134,7 @@ def get_shared_words_numbers(conference_events_list, keyword_or_topic):
 
 
 def get_topics_from_models(conference_event_name_abbr):
-    """retrieves topics events based  and weights from topics tables 
+    """retrieves topics events based  and weights from topics tables
 
     Args:
         conference_event_name_abbr (str): the name of the conference event
@@ -159,7 +161,7 @@ def get_topics_from_models(conference_event_name_abbr):
 
 
 def get_keywords_from_models(conference_event_name_abbr):
-    """retrieves keywords events based and weights from keywords tables 
+    """retrieves keywords events based and weights from keywords tables
 
     Args:
         conference_event_name_abbr (str): the name of the conference event
@@ -281,7 +283,7 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
         keyword_or_topic (str): decides the type of the word --> "topic" or "keyword"
 
     Returns:
-        list: list of data dictionaries of the weight of a word in every given conference event 
+        list: list of data dictionaries of the weight of a word in every given conference event
     """
 
     result_data = []
@@ -336,5 +338,86 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
     print('############## Weights #################')
     print(result_data)
     print('############## Weights #################')
+
+    return result_data
+
+
+def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
+    """retrieves weights of a specific word in a list on conference events. If the word does not exist in an event, its weight is zero
+
+    Args:
+        conference_event_objs (list): list of conference event objects
+        word (str): any topic or keyword
+        keyword_or_topic (str): decides the type of the word --> "topic" or "keyword"
+
+    Returns:
+        list: list of data dictionaries of the weight of a word in every given conference event
+    """
+
+    result_data = []
+
+    if keyword_or_topic == 'topic':
+        word_object = Topic.nodes.filter(topic=word)
+    elif keyword_or_topic == 'keyword':
+        word_object = Keyword.nodes.filter(keyword=word)
+    for conference_event in conference_event_objs:
+        if keyword_or_topic == 'topic':
+            event_obj = Event.nodes.get_or_none(
+                conference_event_name_abbr=conference_event.conference_event_name_abbr)
+            if (len(word_object) is not 0):
+                has_topic_relationship = event_obj.topics.relationship(
+                    word_object[0])
+                if has_topic_relationship:
+                    weight = has_topic_relationship.weight
+                    result_data.append({
+                        'word': word,
+                        'conference_event_abbr': conference_event.conference_event_name_abbr,
+                        'weight': weight,
+                        'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                    })
+                else:
+                    result_data.append({
+                        'word': word,
+                        'conference_event_abbr': conference_event.conference_event_name_abbr,
+                        'weight': 0,
+                        'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                    })
+            else:
+                result_data.append({
+                    'word': word,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'weight': 0,
+                    'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                })
+
+        elif keyword_or_topic == 'keyword':
+            event_obj = Event.nodes.get_or_none(
+                conference_event_name_abbr=conference_event.conference_event_name_abbr)
+            if (len(word_object) is not 0):
+                has_topic_relationship = event_obj.keywords.relationship(
+                    word_object[0])
+                if has_topic_relationship:
+                    weight = has_topic_relationship.weight
+                    result_data.append({
+                        'word': word,
+                        'conference_event_abbr': conference_event.conference_event_name_abbr,
+                        'weight': weight,
+                        'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                    })
+                else:
+                    result_data.append({
+                        'word': word,
+                        'conference_event_abbr': conference_event.conference_event_name_abbr,
+                        'weight': 0,
+                        'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                    })
+
+            else:
+                result_data.append({
+                    'word': word,
+                    'conference_event_abbr': conference_event.conference_event_name_abbr,
+                    'weight': 0,
+                    'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
+                })
 
     return result_data
