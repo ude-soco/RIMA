@@ -481,35 +481,6 @@ BAB get conf events/years
 # modified 04.07.2021
 
 #reused by abdalla, build by fathi
-class confEvents(APIView):
-    def get(self, request, *args, **kwargs):
-        # print("@@@@@@@@@@@@@@@@@@@")
-        url_path = request.get_full_path()
-        # print("the url path is:", url_path)
-        url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        # print("topics_split:", topics_split)
-        # print("The year is:",year)
-        conferences_events_JSON = []
-        session = settings.NEO4J_SESSION.session()
-        conference_events = session.execute_read(
-            cql_get_conference_events, conference_name_abbr=topics_split[-1])
-        # Conference_Event.objects.filter(conference_name_abbr=topics_split[-1]).values_list(
-        #     'conference_event_name_abbr',
-        #     flat=True)
-        # print('33333333', conference_events)
-
-        for event in conference_events:
-            conferences_events_JSON.append({
-                'value': event.get("conference_event_name_abbr"),
-                'label': event.get("conference_event_name_abbr"),
-            })
-        # print('2222222', conferences_events_JSON)
-        session.close()
-        return Response({
-            "events":
-            conferences_events_JSON
-        })
 
 
 class conferenceAuthors(APIView):
@@ -953,56 +924,7 @@ View to get topics for stacked area chart- topic evolution
 # BAB
 
 
-class MultipleTopicAreaView(APIView):
-    def get(self, request, *args, **kwargs):
-        session = settings.NEO4J_SESSION.session()
-        models_data = []
-        result_data = []
-        weights = []
-        events = []
 
-        url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
-        url_splits_conference_name = confutils.split_restapi_url(
-            request.get_full_path(), r'/')
-
-        conference_name_abbr = url_splits_conference_name[-2]
-        # print('CHECK URL', url_splits_conference_name[-2])
-        words_split_params = url_splits_question_mark[-1].split("&")
-        # print('CHECK URL', url_splits_question_mark[-1].split("&"))
-
-        keyword_or_topic = 'topic'
-
-        # conference_obj = Conference.objects.get(
-        #     conference_name_abbr=conference_name_abbr)
-        conference_event_objs = session.execute_read(
-            cql_get_conference_events, conference_name_abbr)
-        # Conference_Event.objects.filter(
-        #     conference_name_abbr=conference_obj)
-
-        for word in words_split_params:
-            models_data = confutils.get_word_weight_event_based(
-                conference_event_objs, word, url_splits_conference_name[-3])
-            for model_data in models_data:
-                weights.append(model_data['weight'])
-                events.append(model_data['conference_event_abbr'])
-            result_data.append(weights)
-            weights = []
-
-        # print('result_data')
-        # print(result_data)
-        # # list(sorted(set(events), key=events.index))
-        # print(list(sorted(set(events), key=events.index)))
-        # print('result_data')
-        # listoftopics=["Learning","Analytics"]
-        # getKeyWeightsAllYears
-        session.close()
-        return Response({
-            # getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[0]
-            "weights": result_data,
-            "years": list(sorted(set(events), key=events.index))
-            # getMultipleYearTopicJourney(topics_split_conferenceName[1],[topics_split_params[0],topics_split_conferenceName[0]])[1]
-        })
 
 
 '''

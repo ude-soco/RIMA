@@ -2,20 +2,21 @@
 import itertools
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.conf import settings
 
 from conferences.utils import compare_conferences_utils as compConfUtils
 from .. import conference_utils as confutils
 from conferences.models.graph_db_entities import *
 from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
-
+from conferences.conference_utils_cql import cql_get_conference_events
 # Event.nodes.filter to be review and edit : any fun that uses Event.nodes.filter
 # should be review and edit please check if you need to
 # use icontain= or only= this is based on conference name or event name
 
 # reviewed 12.04
 
-
+# done
 class TotalSharedAuthorsEvolutionView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -108,7 +109,7 @@ class TotalSharedAuthorsEvolutionView(APIView):
                          "years": shared_years
                          })
 
-
+# done
 class TotalSharedWordsNumberView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -181,9 +182,8 @@ class TotalSharedWordsNumberView(APIView):
                          "allYears": models_data2
                          })
 
-
+# done
 class topWordsOverYears(APIView):
-
     def get(self, request, *args, **kwargs):
         top_words_over_years = []
         result_words = []
@@ -197,8 +197,10 @@ class topWordsOverYears(APIView):
         print(conference)
         print("selected conference")
         # orm query
+        # get conference obj e.g: lak
         conference_obj = Conference.nodes.get_or_none(
             conference_name_abbr=conference)
+        # get conference events objs e.g: lak2011,lak2012,...
         conference_event_objs = Event.nodes.filter(
             conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
         for event in conference_event_objs:
@@ -765,3 +767,66 @@ class AuthorsPapersEvolutionView(APIView):
         return Response({"weights": result_data,
                          "years": years_range
                          })
+
+# to be updated reused by abdalla
+# done
+class MultipleTopicAreaView(APIView):
+    def get(self, request, *args, **kwargs):
+        session = settings.NEO4J_SESSION.session()
+        models_data = []
+        result_data = []
+        weights = []
+        events = []
+
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        url_splits_conference_name = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+
+        conference_name_abbr = url_splits_conference_name[-2]
+        words_split_params = url_splits_question_mark[-1].split("&")
+
+        conference_event_objs = session.execute_read(
+            cql_get_conference_events, conference_name_abbr)
+
+        for word in words_split_params:
+            models_data = confutils.get_word_weight_event_based(
+                conference_event_objs, word, url_splits_conference_name[-3])
+            for model_data in models_data:
+                weights.append(model_data['weight'])
+                events.append(model_data['conference_event_abbr'])
+            result_data.append(weights)
+            weights = []
+
+        session.close()
+        return Response({
+            "weights": result_data,
+            "years": list(sorted(set(events), key=events.index))
+        })
+
+#done
+class confEvents(APIView):
+    def get(self, request, *args, **kwargs):
+
+        url_path = request.get_full_path()
+        print("the url path is:", url_path)
+        url_path = url_path.replace("%20", " ")
+        topics_split = url_path.split(r"/")
+        print(topics_split)
+        conferences_events_JSON = []
+
+        conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
+            conference_event_name_abbr__startswith=topics_split[-1])]
+        print("conference_events new: ", conference_events)
+        for event in conference_events:
+            conferences_events_JSON.append({
+
+                'value': event,
+                'label': event,
+            })
+
+        return Response({
+            "events":
+                conferences_events_JSON
+
+        })
