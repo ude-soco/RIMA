@@ -297,7 +297,6 @@ def get_topics_from_models(conference_event_name_abbr):
 
     return sorted_data
 
-# to be updated reused by abdalla
 
 
 def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOrTopic):
@@ -332,7 +331,6 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOr
 
     return titles_abstracts
 
-# to be updated reused by abdalla
 
 
 def get_shared_words_between_events(conference_events_list, keyword_or_topic):

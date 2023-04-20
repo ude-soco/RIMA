@@ -539,7 +539,7 @@ class ConfEventPapers(APIView):
         conference_event_name_abbr = url_splits[-1]
         print("conference_event_name_abbrrrrrrrrrrrrrrr")
         print(conference_event_name_abbr)
-        conference_event_papers_data = confutils.get_event_papers_data(
+        conference_event_papers_data = compConfUtils.get_event_papers_data(
             conference_event_name_abbr)
         print("paper numbeeeeeeerssssss   abstract")
         print(len(conference_event_papers_data))
@@ -547,13 +547,13 @@ class ConfEventPapers(APIView):
         print((conference_event_papers_data_list[0]))
         for paper in conference_event_papers_data_list:
             Event_papers_JSON.append({
-                'value': paper['title'],
-                'label': paper['title'],
+                'value': paper.title,
+                'label': paper.title,
             })
             Event_papersWithAbstract_JSON.append({
-                'value': paper['title'],
-                'label': paper['title'],
-                'abstract': paper['abstract']
+                'value': paper.title,
+                'label': paper.title,
+                'abstract': paper.abstract
             })
 
         return Response({
@@ -562,6 +562,8 @@ class ConfEventPapers(APIView):
             "paperWithAbstract":
             Event_papersWithAbstract_JSON
         })
+
+# done
 
 
 class ComparePapersView(APIView):
@@ -591,15 +593,17 @@ class ComparePapersView(APIView):
         print(firstEvent)
         print(secondEvent)
         # to be updated reused by abdalla
-        first_event_papers_data = confutils.get_event_papers_data(firstEvent)
-        second_event_papers_data = confutils.get_event_papers_data(secondEvent)
+        first_event_papers_data = compConfUtils.get_event_papers_data(
+            firstEvent)
+        second_event_papers_data = compConfUtils.get_event_papers_data(
+            secondEvent)
 
         for paper in first_event_papers_data:
-            if paper['title'] == firstPaperTitle:
-                firstPaperAbstract = paper['abstract']
+            if paper.title == firstPaperTitle:
+                firstPaperAbstract = paper.abstract
                 print("Here is you lasssst test isa")
-                print(paper['title'])
-                print(paper['abstract'])
+                print(paper.title)
+                print(paper.abstract)
 
         if firstPaperTitle or firstPaperAbstract:
             abstract_title_str += firstPaperTitle + " " + firstPaperAbstract
@@ -607,8 +611,8 @@ class ComparePapersView(APIView):
         firstKeywords = getKeyword(abstract_title_str, 'Yake', 600)
 
         for paper in second_event_papers_data:
-            if paper['title'] == secondPaperTitle:
-                secondPaperAbstract = paper['abstract']
+            if paper.title == secondPaperTitle:
+                secondPaperAbstract = paper.abstract
 
         if secondPaperTitle or secondPaperAbstract:
             abstract_title_strr += secondPaperTitle + " " + secondPaperAbstract
@@ -693,7 +697,7 @@ class getPapersOfWords(APIView):
         print("eventssss listtt")
         print(events_list)
         # to be updated resued y abdalla
-        returned_list = confutils.get_shared_words_between_events(
+        returned_list = compConfUtils.get_shared_words_between_events(
             events_list, keyword_or_topic)
         print("shared words")
         print(len(returned_list[0]))
@@ -707,14 +711,14 @@ class getPapersOfWords(APIView):
         print(list_of_shared_words)
         # to be updated resued by abdalla
         for word in list_of_shared_words:
-            abstracts_titles = confutils.get_abstract_based_on_keyword(
-                first_event_name_abbr, word, keyword_or_topic)
+            abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
+                first_event_name_abbr, word)
             first_event_values.append(len(abstracts_titles))
             print("list progresssss")
             print(first_event_values)
         for word in list_of_shared_words:
-            abstracts_titles = confutils.get_abstract_based_on_keyword(
-                second_event_name_abbr, word, keyword_or_topic)
+            abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
+                second_event_name_abbr, word)
             print("here are the selected word")
             print(word)
             print(len(abstracts_titles))

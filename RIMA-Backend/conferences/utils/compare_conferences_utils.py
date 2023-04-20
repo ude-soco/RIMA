@@ -303,7 +303,7 @@ def get_author_interests2(author_obj, event, keyword_or_topic):
 
         for keyword in author_event_keywords:
             weight = (author_obj.keywords.relationship(keyword)).weight
-            keywords[keyword.keyword] =  weight
+            keywords[keyword.keyword] = weight
 
         return keywords
 
@@ -519,3 +519,105 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
         })
 
     return result_data
+
+
+def get_event_papers_data(conference_event_name_abbr):
+    """retrieves paper objects of a conference event
+
+    Args:
+        conference_event_name_abbr (str): the name of the conference event
+
+    Returns:
+        list: list of papers objects
+    """
+    conference_event_papers_data = []
+
+    conference_event_obj = Event.nodes.get_or_none(
+        conference_event_name_abbr=conference_event_name_abbr)
+    if conference_event_obj is not None:
+        conference_event_papers_data = conference_event_obj.publications.all()
+
+    return conference_event_papers_data
+
+
+
+def get_shared_words_between_events(conference_events_list, keyword_or_topic):
+    """retieves shared words among given list of conference events
+
+    Args:
+        conference_events_list (list): list of conference event names
+        keyword_or_topic (str): "topic" or "keyword"
+
+    Returns:
+        list: with two sub lists; shared words data and conference event names
+    """
+
+    shared_words = []
+    shared_words_final_data = []
+    result_data = []
+    conference_event_data = []
+    all_words = []
+
+    for conference_event in conference_events_list:
+        if keyword_or_topic == 'topic':
+            conference_event_data = get_topics_from_models(conference_event)
+        elif keyword_or_topic == 'keyword':
+            conference_event_data = get_keywords_from_models(conference_event)
+
+        for data in conference_event_data:
+            all_words.append(data.get(keyword_or_topic))
+
+    shared_words = list(set([word for word in all_words if all_words.count(
+        word) == len(conference_events_list)]))
+
+    for word in shared_words:
+        words_weights = []
+        for conference_event in conference_events_list:
+            conference_event_obj = Event.nodes.get_or_none(
+                conference_event_name_abbr=conference_event)
+            conf_event_word_data = get_word_weight_event_based(
+                [conference_event_obj], word, keyword_or_topic)
+            words_weights.append(conf_event_word_data[0]['weight'])
+        shared_words_final_data.append({
+            'word': word,
+            'weight': words_weights
+        })
+
+    result_data = [shared_words_final_data, conference_events_list]
+
+    return result_data
+
+
+def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
+    """reteives paper data containing a specific word within an event
+    Args:
+        conference_event_name_abbr (str): the name of the conference event. For example, lak2020
+        keyword (str): search word (topic or keyword) 
+
+    Returns:
+        list: list of dictionaries of the found papers 
+    """
+
+    conference_event_papers_data =  get_event_papers_data(conference_event_name_abbr)
+    filtered_conference_event_papers_data = Publication.nodes.filter(Q(abstract__icontains=keyword)
+                                                                                | Q(title__icontains=keyword)).filter(paper_id__in=[p.paper_id for p in conference_event_papers_data])
+
+    print('KEYWORD DATA *********************** ' , filtered_conference_event_papers_data)
+
+    titles_abstracts = []
+    if filtered_conference_event_papers_data:
+        for paper_data in filtered_conference_event_papers_data:
+            if paper_data.title and paper_data.abstract:
+                titles_abstracts.append({
+                    'title': paper_data.title,
+                    'abstarct': paper_data.abstract,
+                    'year': paper_data.years,
+                    'venue': paper_data.paper_venu,
+                    'paper_id': paper_data.paper_id
+                })
+
+    # print("number of paper keeeeyword teeeest")
+    # print(titles_abstracts)
+    print("number of paper keeeeyword teeeest 2222")
+    print(len(titles_abstracts))
+    return titles_abstracts
