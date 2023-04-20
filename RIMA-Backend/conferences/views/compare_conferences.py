@@ -736,10 +736,11 @@ class getPapersOfWords(APIView):
 
 class NewconferencesSharedWordsBarView(APIView):
     def get(self, request, *args, **kwargs):
-        result_data = [[], []]
-        avaiable_events = []
+        result_data = [[],[]]
+        avaiable_events  = []
 
-        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
         print('url_splits')
         print(url_splits)
 
@@ -757,7 +758,7 @@ class NewconferencesSharedWordsBarView(APIView):
             avaiable_events.append(second_event)
             avaiable_events.append(third_event)
             print("Here is the available eventsssssssss ")
-            print(avaiable_events)
+            print(avaiable_events) 
         else:
             keyword_or_topic = url_splits[-3]
             first_event = url_splits[-2]
@@ -769,16 +770,15 @@ class NewconferencesSharedWordsBarView(APIView):
             avaiable_events.append(first_event)
             avaiable_events.append(second_event)
             print("Here is the available eventsssssssss ")
-            print(avaiable_events)
+            print(avaiable_events) 
 
-        result_data = confutils.get_shared_words_between_events(
-            avaiable_events, keyword_or_topic)
+        result_data = compConfUtils.get_shared_words_between_events(avaiable_events,keyword_or_topic)
 
         print('result_dat')
         print(result_data)
         print('result_data')
 
-        return Response({'Topiclist': result_data})
+        return Response({'Topiclist': result_data})  
 
 
 class AuthorsPapersEvolutionView(APIView):
@@ -917,4 +917,51 @@ class confEvents(APIView):
             "events":
                 conferences_events_JSON
 
+        })
+
+class VennOverview(APIView):
+    def get(self, request, *args, **kwargs):
+        words_first_event = []
+        words_second_event = []
+        words_intersect_second_event = []
+        models_data_first_event = []
+        models_data_second_event = []
+
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+
+        first_event = url_splits[-2]
+        second_event = url_splits[-1]
+        keyword_or_topic = url_splits[-3]
+        # print('VennOverviewfirst_event:', first_event)
+        # print('VennOverviewsecond_event:', second_event)
+        if keyword_or_topic == 'topic':
+            models_data_first_event = compConfUtils.get_topics_from_models(
+                first_event)
+            models_data_second_event = compConfUtils.get_topics_from_models(
+                second_event)
+
+        elif keyword_or_topic == 'keyword':
+            models_data_first_event = compConfUtils.get_keywords_from_models(
+                first_event)
+            models_data_second_event = compConfUtils.get_keywords_from_models(
+                second_event)
+
+        for data in models_data_first_event:
+            words_first_event.append(data.get(keyword_or_topic))
+
+        for data in models_data_second_event:
+            words_second_event.append(data.get(keyword_or_topic))
+
+        models_data_intersect_first_and_second = compConfUtils.get_shared_words_between_events(
+            [first_event, second_event], keyword_or_topic)
+
+        if len(models_data_intersect_first_and_second) > 0:
+            for data in models_data_intersect_first_and_second[0]:
+                words_intersect_second_event.append(data['word'])
+
+        ctx = confutils.generate_venn_photo(
+            words_first_event[0:10], words_second_event[0:10], words_intersect_second_event[0:10], first_event, second_event, keyword_or_topic)
+
+        return Response({
+            "commontopics": ctx
         })
