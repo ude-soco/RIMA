@@ -274,6 +274,59 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=30)
     return ""
 
 
+def get_author_interests2(author_obj, event, keyword_or_topic):
+    """fetches authors keyword- and wiki-based interests from a papers list
+
+    Args:
+        publications_list (list): list of publication objects
+        author_id (str): author semantic scholar ID
+        keyword_or_topic (str): either keyword- or wiki-based interest
+        num (int, optional): number of the words to be extracted. Defaults to 30.
+
+    Returns:
+        dict: dictionary of the extracted topics or keywords with their weights
+    """
+    abstract_title_str = ""
+    keywords = {}
+    topics = {}
+
+    if keyword_or_topic == 'keyword':
+        author_event_keywords = []
+        author_obj = Author.nodes.get(
+            semantic_scolar_author_id=author_obj.semantic_scolar_author_id)
+        author_keywords = author_obj.keywords.all()
+        event_obj = Event.nodes.get(conference_event_name_abbr=event)
+        event_keyword = event_obj.keywords.all()
+        for author_keyword in author_keywords:
+            if (author_keyword in event_keyword):
+                author_event_keywords.append(author_keyword)
+
+        for keyword in author_event_keywords:
+            weight = (author_obj.keywords.relationship(keyword)).weight
+            keywords[keyword.keyword] =  weight
+
+        return keywords
+
+    elif keyword_or_topic == 'topic':
+        author_event_topics = []
+        author_obj = Author.nodes.get(
+            semantic_scolar_author_id=author_obj.semantic_scolar_author_id)
+        author_topics = author_obj.topics.all()
+        event_obj = Event.nodes.get(conference_event_name_abbr=event)
+        event_topics = event_obj.topics.all()
+        for author_topic in author_topics:
+            if (author_topic in event_topics):
+                author_event_topics.append(author_topic)
+
+        for topic in author_event_topics:
+            weight = (author_obj.topics.relationship(topic)).weight
+            topics[topic.topic] = weight
+
+        return topics
+
+    return ""
+
+
 def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
     """retrieves weights of a specific word in a list on conference events. If the word does not exist in an event, its weight is zero
 
@@ -419,5 +472,50 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
                     'weight': 0,
                     'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
+
+    return result_data
+
+
+def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr=""):
+    """retrieves all the pulication on an author from stored conferences
+
+    Args:
+        author_id (str): an author ID from table author
+        conference_name_abbr (str): the name of the conference
+        conference_event_name_abbr (str, optional): the name of the conference event. Defaults to "".
+
+    Returns:
+        list: sorted list of dictionaries. Conference event is the sort criterion
+    """
+
+    result_data = []
+    author_has_papers_objs = []
+    if conference_event_name_abbr == "":
+        event_obj_publications = Event.nodes.filter(
+            conference_event_name_abbr__startswith=conference_name_abbr)[0].publications.all()
+        author_obj_published = Author.nodes.filter(
+            semantic_scolar_author_id=author_id).published.all()
+        for publication in author_obj_published:
+            if (publication in event_obj_publications):
+                author_has_papers_objs.append(publication)
+
+    else:
+        event_obj_publications = Event.nodes.filter(
+            conference_event_name_abbr=conference_event_name_abbr).publications.all()
+        author_obj_published = Author.nodes.filter(
+            semantic_scolar_author_id=author_id).published.all()
+        for publication in author_obj_published:
+            if (publication in event_obj_publications):
+                author_has_papers_objs.append(publication)
+
+    for author_has_papers_obj in author_has_papers_objs:
+        result_data.append({
+            'semantic_scholar_paper_id': author_has_papers_obj.paper_id,
+            'paper_doi': author_has_papers_obj.paper_doi,
+            'title': author_has_papers_obj.title,
+            'abstract': author_has_papers_obj.abstract,
+            'semantic_scholar_url': author_has_papers_obj.urls,
+            'conference_event': author_has_papers_obj.years,
+        })
 
     return result_data

@@ -181,8 +181,6 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=10)
 
     return ""
 
-# reused by Abdalla
-
 
 def get_author_publications_in_conf(author_id, conference_name_abbr, conference_event_name_abbr=""):
     """retrieves all the pulication on an author from stored conferences
@@ -219,7 +217,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
 
     return result_data
 
-# reused by abdalla
+# to be updated reused by abdalla
 
 
 def get_event_papers_data(conference_event_name_abbr):
@@ -267,7 +265,7 @@ def get_keywords_from_models(conference_event_name_abbr):
     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
     return sorted_data
 
-# to be updated use OGM instead of ORM
+# to be updated reused by Abdalla
 
 
 def get_topics_from_models(conference_event_name_abbr):
@@ -426,6 +424,9 @@ def get_shared_words_between_conferences(conferences_list, keyword_or_topic):
     session.close()
 
     return shared_words
+
+# to be updated reused by abdalla
+# updated to neomodel in Compare_conference_utils
 
 
 def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):

@@ -5,6 +5,12 @@ import json
 
 class Has_Topic(StructuredRel):
     weight = FloatProperty()
+    # try to use get to retrieve weight.
+    # def get(cls, start_node, end_node):
+    # rel = cls.match(start_node, end_node).first()
+    #    if rel:
+    #        return rel.weight
+    #    return None
 
 
 class Has_keyword(StructuredRel):
@@ -16,12 +22,14 @@ class Topic(StructuredNode):
     topic = StringProperty()
 
     event = RelationshipFrom('Event', 'has_topic', model=Has_Topic)
+    authors = RelationshipFrom('Author', 'has_topic', model=Has_Topic)
 
 
 class Keyword(StructuredNode):
     algorithm = StringProperty()
     keyword = StringProperty()
     event = RelationshipFrom('Event', 'has_keyword', model=Has_keyword)
+    author = RelationshipFrom('Author', 'has_keyword', model=Has_keyword)
 
 
 class Publication(StructuredNode):
@@ -33,6 +41,8 @@ class Publication(StructuredNode):
     title = StringProperty()
     urls = StringProperty()
     years = StringProperty()
+
+    published_in = RelationshipFrom("Event", "has_publication")
 
 
 class Author(StructuredNode):
@@ -54,6 +64,10 @@ class Author(StructuredNode):
 
     def get_all_papers(self):
         return json.loads(self.all_papers)
+
+    published = RelationshipTo(Publication, "published")
+    topics = RelationshipTo(Topic, 'has_topic', model=Has_Topic)
+    keywords = RelationshipTo(Keyword, 'has_keyword', model=Has_keyword)
 
 
 class Event(StructuredNode):

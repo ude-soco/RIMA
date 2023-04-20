@@ -3,7 +3,6 @@ import itertools
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
-
 from conferences.utils import compare_conferences_utils as compConfUtils
 from .. import conference_utils as confutils
 from conferences.models.graph_db_entities import *
@@ -17,6 +16,8 @@ from conferences.conference_utils_cql import cql_get_conference_events
 # reviewed 12.04
 
 # done
+
+
 class TotalSharedAuthorsEvolutionView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -110,6 +111,8 @@ class TotalSharedAuthorsEvolutionView(APIView):
                          })
 
 # done
+
+
 class TotalSharedWordsNumberView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -183,6 +186,8 @@ class TotalSharedWordsNumberView(APIView):
                          })
 
 # done
+
+
 class topWordsOverYears(APIView):
     def get(self, request, *args, **kwargs):
         top_words_over_years = []
@@ -344,7 +349,7 @@ class AuthorEvents(APIView):
         first_event = url_splits[-1]
         print("here are the two events")
         print(first_event)
-        # to be reviewed there is smth wrong  conference_event_name_abbr=first_event it should contain not = if and only if first event is lak not lak2011
+        # reviewed and works
         conference_event_obj_one = Event.nodes.filter(
             conference_event_name_abbr=first_event)
         models_data_one = compConfUtils.get_TotalSharedAuthors_between_conferences(
@@ -386,12 +391,12 @@ class AuthorInterestsBar(APIView):
 
         first_author_obj = Author.nodes.get(author_name=first_author)
         second_author_obj = Author.nodes.get(author_name=second_author)
-
+        print("first_author_obj: ", first_author_obj.semantic_scolar_author_id)
         # get_author_publications_in_conf fathy's code
-        first_author_publications = confutils.get_author_publications_in_conf(
+        first_author_publications = compConfUtils.get_author_publications_in_conf(
             first_author_obj.semantic_scolar_author_id, "", first_event)
 
-        second_author_publications = confutils.get_author_publications_in_conf(
+        second_author_publications = compConfUtils.get_author_publications_in_conf(
             second_author_obj.semantic_scolar_author_id, "", second_event)
 
         # there are two function with the same name get_author_interests
@@ -413,6 +418,76 @@ class AuthorInterestsBar(APIView):
         # get_author_interests fathy's code
         second_author_interests = compConfUtils.get_author_interests(
             second_author_publications, "", keyword_or_topic)
+        sorted_data_second_author = dict(
+            sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
+        reduced_sorted_data_second_author = dict(
+            itertools.islice(sorted_data_second_author.items(), 10))
+        print("second Author interestsssssssss")
+        print(reduced_sorted_data_second_author)
+
+        authors_dict = {
+            k: [reduced_sorted_data_first_author.get(k, 0),
+                reduced_sorted_data_second_author.get(k, 0)]
+            for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
+        }
+        print("Author dictttttttttttttt")
+        print(authors_dict)
+
+        set_intersect_key = list(
+            set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
+
+        words = authors_dict.keys()
+        weights = authors_dict.values()
+        authors_name = [first_author, second_author]
+        print(set_intersect_key, '-----------', words, '+++++++++',
+              weights, '++++++++', authors_name, '------------')
+
+        result_data.append(words)
+        result_data.append(weights)
+        result_data.append(authors_name)
+        result_data.append(set_intersect_key)
+
+        print('######################## HERE #########################')
+        print(authors_dict)
+        print('######################## HERE #########################')
+
+        print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
+        print('############')
+        print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
+
+        return Response({
+            "authorInterests": result_data})
+
+
+class AuthorInterestsBar2(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        second_author = url_splits[-1]
+        first_author = url_splits[-2]
+        keyword_or_topic = url_splits[-3]
+        second_event = url_splits[-4]
+        first_event = url_splits[-5]
+
+        first_author_obj = Author.nodes.get(author_name=first_author)
+        second_author_obj = Author.nodes.get(author_name=second_author)
+
+        first_author_interests = compConfUtils.get_author_interests2(
+            first_author_obj, first_event, keyword_or_topic)
+
+        sorted_data_first_author = dict(
+            sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
+
+        print("Author interestsssssssss")
+        print(first_author_interests)
+
+        reduced_sorted_data_first_author = dict(
+            itertools.islice(sorted_data_first_author.items(), 10))
+        print("first Author interestsssssssss")
+        print(reduced_sorted_data_first_author)
+
+        second_author_interests = compConfUtils.get_author_interests2(
+            second_author_obj, second_event, keyword_or_topic)
         sorted_data_second_author = dict(
             sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
         reduced_sorted_data_second_author = dict(
@@ -770,6 +845,8 @@ class AuthorsPapersEvolutionView(APIView):
 
 # to be updated reused by abdalla
 # done
+
+
 class MultipleTopicAreaView(APIView):
     def get(self, request, *args, **kwargs):
         session = settings.NEO4J_SESSION.session()
@@ -786,11 +863,16 @@ class MultipleTopicAreaView(APIView):
         conference_name_abbr = url_splits_conference_name[-2]
         words_split_params = url_splits_question_mark[-1].split("&")
 
-        conference_event_objs = session.execute_read(
-            cql_get_conference_events, conference_name_abbr)
+        conference_obj = Conference.nodes.get(
+            conference_name_abbr=conference_name_abbr)
+        conference_event_objs = Event.nodes.filter(
+            conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
+
+        # conference_event_objs = session.execute_read(
+        #    cql_get_conference_events, conference_name_abbr)
 
         for word in words_split_params:
-            models_data = confutils.get_word_weight_event_based(
+            models_data = compConfUtils.get_word_weight_event_based(
                 conference_event_objs, word, url_splits_conference_name[-3])
             for model_data in models_data:
                 weights.append(model_data['weight'])
@@ -804,7 +886,9 @@ class MultipleTopicAreaView(APIView):
             "years": list(sorted(set(events), key=events.index))
         })
 
-#done
+# done
+
+
 class confEvents(APIView):
     def get(self, request, *args, **kwargs):
 
