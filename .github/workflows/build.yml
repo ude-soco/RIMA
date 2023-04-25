@@ -75,7 +75,7 @@ jobs:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
-          type=ref,event=branch,enable=${{ github.ref_name != 'main' }}
+          type=ref,event=branch,enable=${{ github.ref_name != 'master' }}
           type=ref,event=pr
 
     - name: Build and push container image
