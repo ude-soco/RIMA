@@ -1,0 +1,103 @@
+name: Container images
+
+on:
+  workflow_call:
+    inputs:
+      base_image_name:
+        type: string
+        required: true
+      services:
+        type: string
+        required: true
+      platforms:
+        type: string
+        default: "linux/amd64"
+        required: false
+      push:
+        type: boolean
+        default: false
+        required: false
+      timeout:
+        type: number
+        default: 10
+        required: false
+    secrets:
+      registry_user:
+        required: false
+      registry_token:
+        required: false
+
+jobs:
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        service: ${{ fromJson(inputs.services) }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        platforms:  ${{ inputs.platforms }}
+
+    - name: Login to container registry
+      if:   ${{ inputs.push }}
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.registry_user }}
+        password: ${{ secrets.registry_token }}
+
+    - name: Determine latest semver tag
+      id:   latest
+      run: |
+        echo "version=$(git tag | sort -V | tail -n 1)" >> "$GITHUB_OUTPUT"
+
+    - name: Get tagging metadata
+      id:   meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ inputs.base_image_name }}${{ matrix.service }}
+        flavor:
+          latest=false
+        tags: |
+          type=edge
+          type=raw,value=latest,enable=${{ github.ref_type == 'tag' && github.ref_name == steps.latest.outputs.version }}
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
+          type=ref,event=branch,enable=${{ github.ref_name != 'main' }}
+          type=ref,event=pr
+
+    - name: Build and push container image
+      uses: docker/build-push-action@v4
+      with:
+        platforms:  ${{ inputs.platforms }}
+        context:    ${{ matrix.service }}
+        tags:       ${{ steps.meta.outputs.tags }}
+        labels:     ${{ steps.meta.outputs.labels }}
+        push:       ${{ inputs.push }}
+        cache-from: type=gha
+        cache-to:   type=gha,mode=max
+
+    - name: Update registry description
+      if:   ${{ github.ref_type == 'tag' && github.ref_name == steps.latest.outputs.version }}
+      uses: christian-korneck/update-container-description-action@v1
+      env:
+        DOCKER_USER: ${{ secrets.registry_user }}
+        DOCKER_PASS: ${{ secrets.registry_token }}
+      with:
+        destination_container_repo: ${{ inputs.base_image_name }}${{ matrix.service }}
+        provider: dockerhub
+        short_description: CourseMapper-webserver, ${{ matrix.service }} service
+        readme_file: 'README.md'
+      continue-on-error: true
