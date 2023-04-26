@@ -1,4 +1,4 @@
-name: Container images
+name: Container Images
 
 on:
   workflow_call:
