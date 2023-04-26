@@ -25,10 +25,10 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
     years_filtering_list = []
 
     for conference in conferences_list:
-        # neomodel query review and works
+        # neomodel query review and works islam updated
         conference_obj = graphConference.nodes.get_or_none(
             conference_name_abbr=conference)
-        # neomodel query review and works
+        # neomodel query review and works  islam updated
         conference_event_objs = Event.nodes.filter(
             conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
 
@@ -67,11 +67,12 @@ def get_TotalSharedAuthors_between_conferences(conference_event_objs):
     for conference_event in conference_event_objs:
         one_event_authors = []
         no_of_event_authors = 0
-        # neomodel query
-        # reviewed and works , change name to get event
+        # neomodel query  islam updated
+        # reviewed and works
         event_obj = Event.nodes.get_or_none(
             conference_event_name_abbr=conference_event
             .conference_event_name_abbr)
+        # islam updated
         if event_obj and event_obj.authors is not None and len(event_obj.authors) is not 0:
             one_event_authors = list(
                 set([author.semantic_scolar_author_id for author in event_obj.authors.all()]))
@@ -114,10 +115,12 @@ def get_shared_words_numbers(conference_events_list, keyword_or_topic):
     all_words = []
     for conference_event in conference_events_list:
         if keyword_or_topic == 'topic':
-            conference_event_data = confutils.get_topics_from_models(
+            # islam updated
+            conference_event_data = get_topics_from_models(
                 conference_event)
         elif keyword_or_topic == 'keyword':
-            conference_event_data = confutils.get_keywords_from_models(
+            # islam updated
+            conference_event_data = get_keywords_from_models(
                 conference_event)
 
         for data in conference_event_data:
@@ -144,6 +147,7 @@ def get_topics_from_models(conference_event_name_abbr):
     """
 
     data = []
+    # islam updated
     event_obj = Event.nodes.get(
         conference_event_name_abbr=conference_event_name_abbr)
     event_has_topic_objs = event_obj.topics.all()
@@ -171,11 +175,13 @@ def get_keywords_from_models(conference_event_name_abbr):
     """
 
     data = []
+    # islam updated
     event_obj = Event.nodes.get(
         conference_event_name_abbr=conference_event_name_abbr)
-
+    # islam updated
     event_has_keyword_objs = event_obj.keywords.all()
     for event_has_keyword_obj in event_has_keyword_objs:
+        # islam updated
         has_keyword_relationship = event_obj.keywords.relationship(
             event_has_keyword_obj)
         weight = has_keyword_relationship.weight
@@ -203,13 +209,15 @@ def get_top_words_in_years(list_of_events, keyword_or_topic):
     print("here are the coming list")
 
     if keyword_or_topic == "keyword":
+        # islam updated
         for conference_event_name_abbr in list_of_events:
-            models_data = confutils.get_keywords_from_models(
+            models_data = get_keywords_from_models(
                 conference_event_name_abbr)
             models_data_total.append(models_data)
     if keyword_or_topic == "topic":
+        # islam updated
         for conference_event_name_abbr in list_of_events:
-            models_data = confutils.get_topics_from_models(
+            models_data = get_topics_from_models(
                 conference_event_name_abbr)
             models_data_total.append(models_data)
 
@@ -236,6 +244,8 @@ def get_top_words_in_years(list_of_events, keyword_or_topic):
     print("here are the modeldataaa from db")
 
     return sorted_list_of_final_words
+
+# need to be updated and change getkey
 
 
 def get_author_interests(publications_list, author_id, keyword_or_topic, num=30):
@@ -273,6 +283,8 @@ def get_author_interests(publications_list, author_id, keyword_or_topic, num=30)
 
     return ""
 
+# Created by Islam , this fun is the updated of get_author_interests == extractor.getKey
+
 
 def get_author_interests2(author_obj, event, keyword_or_topic):
     """fetches authors keyword- and wiki-based interests from a papers list
@@ -292,6 +304,7 @@ def get_author_interests2(author_obj, event, keyword_or_topic):
 
     if keyword_or_topic == 'keyword':
         author_event_keywords = []
+        # islam Updated
         author_obj = Author.nodes.get(
             semantic_scolar_author_id=author_obj.semantic_scolar_author_id)
         author_keywords = author_obj.keywords.all()
@@ -309,6 +322,7 @@ def get_author_interests2(author_obj, event, keyword_or_topic):
 
     elif keyword_or_topic == 'topic':
         author_event_topics = []
+        # islam Updated
         author_obj = Author.nodes.get(
             semantic_scolar_author_id=author_obj.semantic_scolar_author_id)
         author_topics = author_obj.topics.all()
@@ -341,11 +355,12 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
 
     result_data = []
 
-    # check if conferecne event is lak not lak2011
+    # islam Updated
     for conference_event in conference_event_objs:
         if keyword_or_topic == 'topic':
             no_of_event_authors = 0
             one_event_authors = []
+            # islam Updated
             check_exist = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event
                 .conference_event_name_abbr)
@@ -368,6 +383,7 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
                 })
 
         elif keyword_or_topic == 'keyword':
+            # islam Updated
             check_exist = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event.conference_event_name_abbr)
             if check_exist:
@@ -410,6 +426,7 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
     result_data = []
 
     if keyword_or_topic == 'topic':
+        # islam Updated
         word_object = Topic.nodes.filter(topic=word)
     elif keyword_or_topic == 'keyword':
         word_object = Keyword.nodes.filter(keyword=word)
@@ -444,6 +461,7 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
                 })
 
         elif keyword_or_topic == 'keyword':
+            # islam Updated
             event_obj = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event.conference_event_name_abbr)
             if (len(word_object) is not 0):
@@ -491,6 +509,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
     result_data = []
     author_has_papers_objs = []
     if conference_event_name_abbr == "":
+        # islam Updated
         event_obj_publications = Event.nodes.filter(
             conference_event_name_abbr__startswith=conference_name_abbr)[0].publications.all()
         author_obj_published = Author.nodes.filter(
@@ -500,6 +519,7 @@ def get_author_publications_in_conf(author_id, conference_name_abbr, conference_
                 author_has_papers_objs.append(publication)
 
     else:
+        # islam Updated
         event_obj_publications = Event.nodes.filter(
             conference_event_name_abbr=conference_event_name_abbr).publications.all()
         author_obj_published = Author.nodes.filter(
@@ -531,14 +551,13 @@ def get_event_papers_data(conference_event_name_abbr):
         list: list of papers objects
     """
     conference_event_papers_data = []
-
+    # islam Updated
     conference_event_obj = Event.nodes.get_or_none(
         conference_event_name_abbr=conference_event_name_abbr)
     if conference_event_obj is not None:
         conference_event_papers_data = conference_event_obj.publications.all()
 
     return conference_event_papers_data
-
 
 
 def get_shared_words_between_events(conference_events_list, keyword_or_topic):
@@ -560,6 +579,7 @@ def get_shared_words_between_events(conference_events_list, keyword_or_topic):
 
     for conference_event in conference_events_list:
         if keyword_or_topic == 'topic':
+            # islam Updated
             conference_event_data = get_topics_from_models(conference_event)
         elif keyword_or_topic == 'keyword':
             conference_event_data = get_keywords_from_models(conference_event)
@@ -573,6 +593,7 @@ def get_shared_words_between_events(conference_events_list, keyword_or_topic):
     for word in shared_words:
         words_weights = []
         for conference_event in conference_events_list:
+            # islam Updated
             conference_event_obj = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event)
             conf_event_word_data = get_word_weight_event_based(
@@ -597,12 +618,15 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
     Returns:
         list: list of dictionaries of the found papers 
     """
+    # islam Updated
+    conference_event_papers_data = get_event_papers_data(
+        conference_event_name_abbr)
+    filtered_conference_event_papers_data = Publication.nodes.filter(
+        Q(abstract__icontains=keyword)
+        | Q(title__icontains=keyword)).filter(paper_id__in=[p.paper_id for p in conference_event_papers_data])
 
-    conference_event_papers_data =  get_event_papers_data(conference_event_name_abbr)
-    filtered_conference_event_papers_data = Publication.nodes.filter(Q(abstract__icontains=keyword)
-                                                                                | Q(title__icontains=keyword)).filter(paper_id__in=[p.paper_id for p in conference_event_papers_data])
-
-    print('KEYWORD DATA *********************** ' , filtered_conference_event_papers_data)
+    print('KEYWORD DATA *********************** ',
+          filtered_conference_event_papers_data)
 
     titles_abstracts = []
     if filtered_conference_event_papers_data:
