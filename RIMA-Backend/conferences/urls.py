@@ -8,7 +8,7 @@ urlpatterns = [
     path("author-insights/", author_insights_url),
 
     # TODO: All the author insights urls should be called in this block - END
-    ############################################################# Abdallah Visulizations updated########################################################################
+    ############################################################# islam compare conf. Visulizations updated########################################################################
     path('getTotalSharedAuthorsEvolution/',
          TotalSharedAuthorsEvolutionView.as_view()),
     path('getSharedWordsNumber/', TotalSharedWordsNumberView.as_view()),
@@ -16,7 +16,7 @@ urlpatterns = [
     path('commonAuthors/<pk1>/<pk2>', CommonAuthorsview.as_view()),
     path('eventAuthors/<pk1>', AuthorEvents.as_view()),
     path('AuthorInterestsNew/<pk1>/<pk2>/<pk3>/<pk4>/<pk5>',
-         AuthorInterestsBar.as_view()),
+         AuthorInterestsBar2.as_view()),
     path('EventPapers/<pk1>', ConfEventPapers.as_view()),
     path('comparePapers/<pk1>/<pk2>/<pk3>/<pk4>', ComparePapersView.as_view()),
     path('compareWordsInPapers/<pk1>/<pk2>/<pk3>', getPapersOfWords.as_view()),
@@ -27,7 +27,7 @@ urlpatterns = [
     path('AuthorsPapersEvolutio/<pk1>/',
          AuthorsPapersEvolutionView.as_view()),
 
-    ############################################################# Abdallah Visulizations updated########################################################################
+    ############################################################# islam compare conf. Visulizations updated########################################################################
 
     # BAB Vis Compare Stackes Area
     path('constructDatabase/', constructDatabase.as_view()),
