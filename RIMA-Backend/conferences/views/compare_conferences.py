@@ -9,9 +9,7 @@ from conferences.models.graph_db_entities import *
 from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
 from conferences.conference_utils_cql import cql_get_conference_events
-# Event.nodes.filter to be review and edit : any fun that uses Event.nodes.filter
-# should be review and edit please check if you need to
-# use icontain= or only= this is based on conference name or event name
+
 
 # reviewed 12.04
 
@@ -39,33 +37,30 @@ class TotalSharedAuthorsEvolutionView(APIView):
                              })
 
         for conference in conferences_list:
-            # conference_obj = Conference.objects.get(conference_name_abbr=conference)
-            # neomodel query
+            # neomodel query Islam updated
             conference_obj = Conference.nodes.get_or_none(
                 conference_name_abbr=conference)
 
             if (conference_obj is None):
                 return
 
-            # conference_event_objs = Conference_Event.objects.filter(conference_name_abbr = conference_obj)
-            # neomodel query , review and the results are correct
+            # neomodel query , review and the results are correct Islam updated
             conference_events_objs = Event.nodes.filter(
                 conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
             for onbj in conference_events_objs:
                 print("onbj:: ", onbj)
-            # call utils function  from compare_conferences.utils.py # reviewed and works
+            # call utils function  from compare_conferences.utils.py # reviewed and works Islam updated
             models_data = compConfUtils.get_TotalSharedAuthors_between_conferences(
                 conference_events_objs)
             print('***'*50)
             print(models_data)
-            # print(models_data['no_AuthorPaper'])
             print('***'*50)
             for model_data in models_data:
                 years_range.append(model_data['year'])
             all_models_data.append(models_data)
 
         years_range = sorted(list(set(years_range)))
-        # has neomodel query reviewed and works
+        # has neomodel query reviewed and works updated Islam updated
         shared_years = compConfUtils.get_years_range_of_conferences(
             conferences_list, 'shared')
         shared_years = sorted(list(set(shared_years)))
@@ -104,7 +99,6 @@ class TotalSharedAuthorsEvolutionView(APIView):
         print('++++++++++++++++++')
         print(years_range)
         print('result_data')
-       # result_data = [y for x in result_data for y in x]
 
         return Response({"weights": result_data,
                          "years": shared_years
@@ -134,7 +128,7 @@ class TotalSharedWordsNumberView(APIView):
                              "allYears": []
                              })
 
-        # has neomodel quries , reviewed and works
+        # has neomodel quries , reviewed and works  Islam updated
         models_data = compConfUtils.get_years_range_of_conferences(
             conferences_list, 'shared')
         models_data2 = compConfUtils.get_years_range_of_conferences(
@@ -152,7 +146,7 @@ class TotalSharedWordsNumberView(APIView):
 
             print("conferences_events_list heeereeeee")
             print(conferences_events_list)
-
+            # has neomodel quries , reviewed and works  Islam updated
             for conference_event in conferences_events_list:
                 event_is_available = Event.nodes.get_or_none(
                     conference_event_name_abbr=conference_event)
@@ -201,11 +195,9 @@ class topWordsOverYears(APIView):
         print("selected conference")
         print(conference)
         print("selected conference")
-        # orm query
-        # get conference obj e.g: lak
+        # orm query  Islam updated
         conference_obj = Conference.nodes.get_or_none(
             conference_name_abbr=conference)
-        # get conference events objs e.g: lak2011,lak2012,...
         conference_event_objs = Event.nodes.filter(
             conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
         for event in conference_event_objs:
@@ -245,7 +237,7 @@ class CommonAuthorsview(APIView):
         print("here are the two events")
         print(first_event)
         print(second_event)
-        # ORM query to update
+        # ORM query  Islam updated
         conference_event_obj_one = Event.nodes.filter(
             conference_event_name_abbr=first_event)
         models_data_one = compConfUtils.get_TotalSharedAuthors_between_conferences(
@@ -255,7 +247,7 @@ class CommonAuthorsview(APIView):
         first_event_Authors = models_data_one[0]["event_Authors"]
         print("here are the first Authors")
         print(first_event_Authors)
-        # ORM query to update
+        # ORM query  Islam updated
         conference_event_obj_two = Event.nodes.filter(
             conference_event_name_abbr=second_event)
         models_data_two = compConfUtils.get_TotalSharedAuthors_between_conferences(
@@ -264,41 +256,29 @@ class CommonAuthorsview(APIView):
         Authors_intersect_second_event = [
             value for value in first_event_Authors if value in second_event_Author]
         for AuthorIDs in Authors_intersect_second_event:
-            # print("Author ID issss ")
-            # print(AuthorIDs)
             idString = ""
             idString = AuthorIDs[0]
-            # print("Author ID string ")
+           
             print("string: ", idString)
-            # ORM query to update
+            # ORM query update Islam Updated
             one_event_authors_name = list(set(
                 [author.author_name for author in Author.nodes.filter(semantic_scolar_author_id=AuthorIDs)]))
-            # print("Author Name issss ")
             print("one_event_authors_name: ", one_event_authors_name)
             sharedAuthorsFinal.append(one_event_authors_name[0])
 
         for firstAuthors in first_event_Authors:
-            # print("Author ID issss ")
-            # print(firstAuthors)
             idString = ""
             idString = firstAuthors[0]
-            # print("Author ID string ")
-            # print(idString)
-            # ORM query to update
+            # ORM query Islam update
             one_event_authors_name = list(set(
                 [author.author_name for author in Author.nodes.filter(semantic_scolar_author_id=firstAuthors)]))
-            # print("Author Name issss ")
-            # print(one_event_authors_name)
+
             firstAuthorsFinal.append(one_event_authors_name[0])
 
         for secondAuthors in second_event_Author:
-            # print("Author ID issss ")
-            # print(secondAuthors)
             idString = ""
             idString = secondAuthors[0]
-            # print("Author ID string ")
-            # print(idString)
-            # ORM query to update
+            # ORM query Islam update
             one_event_authors_name = list(set(
                 [author.author_name for author in Author.nodes.filter(semantic_scolar_author_id=secondAuthors)]))
             print("Author Name issss ")
@@ -313,24 +293,6 @@ class CommonAuthorsview(APIView):
 
         print("Shaaaareeeed Authors")
         print(Authors_intersect_second_event)
-
-        # for model_data in models_data:
-        #     events_name_list.append(model_data['conference_event_abbr'])
-
-        # for event in events_name_list:
-        #     for data in models_data:
-        #         ocurrence_list = list(filter(lambda inner_data: inner_data['conference_event_abbr'] == event, data))
-        #         if ocurrence_list:
-        #             sum_sharedAuthors = []
-        #             sum_sharedAuthors += result['event_Authors']
-        #             for result in ocurrence_list:
-        #                 sum_sharedAuthors += result['event_Authors']
-        #             no_SharedAuthor.append(sum_sharedAuthors)
-        #             sum_sharedAuthors = []
-        #         else:
-        #             sum_sharedAuthors = []
-        #             no_SharedAuthor.append(sum_sharedAuthors)
-        #     no_SharedAuthor = set.intersection(*map(set,no_SharedAuthor))
 
         ctx = confutils.generate_venn_photo(
             firstAuthorsFinal[0:10], secondAuthorsFinal[0:10], sharedAuthorsFinal[0:10], first_event, second_event, keyword_or_topic)
@@ -349,7 +311,7 @@ class AuthorEvents(APIView):
         first_event = url_splits[-1]
         print("here are the two events")
         print(first_event)
-        # reviewed and works
+        # reviewed and works Islam updated
         conference_event_obj_one = Event.nodes.filter(
             conference_event_name_abbr=first_event)
         models_data_one = compConfUtils.get_TotalSharedAuthors_between_conferences(
@@ -363,6 +325,7 @@ class AuthorEvents(APIView):
             print(firstAuthors)
             idString = ""
             idString = firstAuthors[0]
+            # reviewed and works Islam updated
             one_event_authors_name = list(set(
                 [author.author_name for author in Author.nodes.filter(
                     semantic_scolar_author_id=firstAuthors)]))
@@ -379,85 +342,6 @@ class AuthorEvents(APIView):
         })
 
 
-class AuthorInterestsBar(APIView):
-    def get(self, request, *args, **kwargs):
-        result_data = []
-        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
-        second_author = url_splits[-1]
-        first_author = url_splits[-2]
-        keyword_or_topic = url_splits[-3]
-        second_event = url_splits[-4]
-        first_event = url_splits[-5]
-
-        first_author_obj = Author.nodes.get(author_name=first_author)
-        second_author_obj = Author.nodes.get(author_name=second_author)
-        print("first_author_obj: ", first_author_obj.semantic_scolar_author_id)
-        # get_author_publications_in_conf fathy's code
-        first_author_publications = compConfUtils.get_author_publications_in_conf(
-            first_author_obj.semantic_scolar_author_id, "", first_event)
-
-        second_author_publications = compConfUtils.get_author_publications_in_conf(
-            second_author_obj.semantic_scolar_author_id, "", second_event)
-
-        # there are two function with the same name get_author_interests
-        # fathy's code  and old one which I use now
-        #  I got it from Abdalla's code bacause the one that fathy implemented doesn't work
-        first_author_interests = compConfUtils.get_author_interests(
-            first_author_publications, "", keyword_or_topic)
-
-        sorted_data_first_author = dict(
-            sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
-        print("Author interestsssssssss")
-        print(first_author_interests)
-
-        reduced_sorted_data_first_author = dict(
-            itertools.islice(sorted_data_first_author.items(), 10))
-        print("first Author interestsssssssss")
-        print(reduced_sorted_data_first_author)
-
-        # get_author_interests fathy's code
-        second_author_interests = compConfUtils.get_author_interests(
-            second_author_publications, "", keyword_or_topic)
-        sorted_data_second_author = dict(
-            sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
-        reduced_sorted_data_second_author = dict(
-            itertools.islice(sorted_data_second_author.items(), 10))
-        print("second Author interestsssssssss")
-        print(reduced_sorted_data_second_author)
-
-        authors_dict = {
-            k: [reduced_sorted_data_first_author.get(k, 0),
-                reduced_sorted_data_second_author.get(k, 0)]
-            for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
-        }
-        print("Author dictttttttttttttt")
-        print(authors_dict)
-
-        set_intersect_key = list(
-            set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
-
-        words = authors_dict.keys()
-        weights = authors_dict.values()
-        authors_name = [first_author, second_author]
-        print(set_intersect_key, '-----------', words, '+++++++++',
-              weights, '++++++++', authors_name, '------------')
-
-        result_data.append(words)
-        result_data.append(weights)
-        result_data.append(authors_name)
-        result_data.append(set_intersect_key)
-
-        print('######################## HERE #########################')
-        print(authors_dict)
-        print('######################## HERE #########################')
-
-        print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
-        print('############')
-        print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
-
-        return Response({
-            "authorInterests": result_data})
-
 
 class AuthorInterestsBar2(APIView):
     def get(self, request, *args, **kwargs):
@@ -468,10 +352,10 @@ class AuthorInterestsBar2(APIView):
         keyword_or_topic = url_splits[-3]
         second_event = url_splits[-4]
         first_event = url_splits[-5]
-
+        #Islam Updated 
         first_author_obj = Author.nodes.get(author_name=first_author)
         second_author_obj = Author.nodes.get(author_name=second_author)
-
+        #Islam Updated 
         first_author_interests = compConfUtils.get_author_interests2(
             first_author_obj, first_event, keyword_or_topic)
 
@@ -485,7 +369,7 @@ class AuthorInterestsBar2(APIView):
             itertools.islice(sorted_data_first_author.items(), 10))
         print("first Author interestsssssssss")
         print(reduced_sorted_data_first_author)
-
+        #Islam Updated 
         second_author_interests = compConfUtils.get_author_interests2(
             second_author_obj, second_event, keyword_or_topic)
         sorted_data_second_author = dict(
@@ -539,6 +423,7 @@ class ConfEventPapers(APIView):
         conference_event_name_abbr = url_splits[-1]
         print("conference_event_name_abbrrrrrrrrrrrrrrr")
         print(conference_event_name_abbr)
+        #Islam Updated
         conference_event_papers_data = compConfUtils.get_event_papers_data(
             conference_event_name_abbr)
         print("paper numbeeeeeeerssssss   abstract")
@@ -592,7 +477,7 @@ class ComparePapersView(APIView):
         print("eventsssss")
         print(firstEvent)
         print(secondEvent)
-        # to be updated reused by abdalla
+        # Islam Updated
         first_event_papers_data = compConfUtils.get_event_papers_data(
             firstEvent)
         second_event_papers_data = compConfUtils.get_event_papers_data(
@@ -696,7 +581,7 @@ class getPapersOfWords(APIView):
         events_list.append(second_event_name_abbr)
         print("eventssss listtt")
         print(events_list)
-        # to be updated resued y abdalla
+        # islam Updated
         returned_list = compConfUtils.get_shared_words_between_events(
             events_list, keyword_or_topic)
         print("shared words")
@@ -709,14 +594,16 @@ class getPapersOfWords(APIView):
         for words in sharedWords:
             list_of_shared_words.append(words["word"])
         print(list_of_shared_words)
-        # to be updated resued by abdalla
+        # islam Updated
         for word in list_of_shared_words:
+            # islam Updated
             abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
                 first_event_name_abbr, word)
             first_event_values.append(len(abstracts_titles))
             print("list progresssss")
             print(first_event_values)
         for word in list_of_shared_words:
+             # islam Updated
             abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
                 second_event_name_abbr, word)
             print("here are the selected word")
@@ -726,7 +613,6 @@ class getPapersOfWords(APIView):
             second_event_values.append(len(abstracts_titles))
             print("second list progresssss")
             print(second_event_values)
-        # negative_second_event_values = [ -x for x in second_event_values]
         return Response({
             "sharedWords": list_of_shared_words,
             "FirstEventValues": first_event_values,
@@ -771,7 +657,7 @@ class NewconferencesSharedWordsBarView(APIView):
             avaiable_events.append(second_event)
             print("Here is the available eventsssssssss ")
             print(avaiable_events) 
-
+        #islam Updated
         result_data = compConfUtils.get_shared_words_between_events(avaiable_events,keyword_or_topic)
 
         print('result_dat')
@@ -798,18 +684,18 @@ class AuthorsPapersEvolutionView(APIView):
             url_splits_question_mark[0], r'/')[-2]
         print(conferences_list)
         print(keyword_or_topic)
-
+       
         for conference in conferences_list:
+            #islam Updated
             conference_obj = Conference.nodes.get(
                 conference_name_abbr=conference)
             conference_event_objs = Event.nodes.filter(
                 conference_event_name_abbr__icontains=conference_obj.conference_name_abbr)
 
             print("conference_event_objs", conference_event_objs)
-
+             #islam Updated
             models_data = compConfUtils.get_AuthorPaper_weight_event_based(
                 conference_event_objs, keyword_or_topic)
-            # print(models_data['no_AuthorPaper'])
             print('***'*50)
             for model_data in models_data:
                 years_range.append(model_data['year'])
@@ -847,7 +733,7 @@ class AuthorsPapersEvolutionView(APIView):
                          "years": years_range
                          })
 
-# to be updated reused by abdalla
+
 # done
 
 
@@ -866,14 +752,11 @@ class MultipleTopicAreaView(APIView):
 
         conference_name_abbr = url_splits_conference_name[-2]
         words_split_params = url_splits_question_mark[-1].split("&")
-
+        #islam Updated
         conference_obj = Conference.nodes.get(
             conference_name_abbr=conference_name_abbr)
         conference_event_objs = Event.nodes.filter(
             conference_event_name_abbr__startswith=conference_obj.conference_name_abbr)
-
-        # conference_event_objs = session.execute_read(
-        #    cql_get_conference_events, conference_name_abbr)
 
         for word in words_split_params:
             models_data = compConfUtils.get_word_weight_event_based(
@@ -902,7 +785,7 @@ class confEvents(APIView):
         topics_split = url_path.split(r"/")
         print(topics_split)
         conferences_events_JSON = []
-
+        #Islam Updated
         conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
             conference_event_name_abbr__startswith=topics_split[-1])]
         print("conference_events new: ", conference_events)
@@ -932,15 +815,16 @@ class VennOverview(APIView):
         first_event = url_splits[-2]
         second_event = url_splits[-1]
         keyword_or_topic = url_splits[-3]
-        # print('VennOverviewfirst_event:', first_event)
-        # print('VennOverviewsecond_event:', second_event)
+
         if keyword_or_topic == 'topic':
+            #Islam Updated
             models_data_first_event = compConfUtils.get_topics_from_models(
                 first_event)
             models_data_second_event = compConfUtils.get_topics_from_models(
                 second_event)
 
         elif keyword_or_topic == 'keyword':
+            #Islam Updated
             models_data_first_event = compConfUtils.get_keywords_from_models(
                 first_event)
             models_data_second_event = compConfUtils.get_keywords_from_models(
@@ -951,7 +835,7 @@ class VennOverview(APIView):
 
         for data in models_data_second_event:
             words_second_event.append(data.get(keyword_or_topic))
-
+        #Islam Updated
         models_data_intersect_first_and_second = compConfUtils.get_shared_words_between_events(
             [first_event, second_event], keyword_or_topic)
 
