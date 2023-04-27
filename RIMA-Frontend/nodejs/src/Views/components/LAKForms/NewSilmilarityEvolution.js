@@ -263,7 +263,14 @@ class NewSilmilarityEvolution extends Component {
                 
             }
             for (let i = 0; i < json.weights.length; i++) {
-                finalSimilarityIndex[i] = similarityOfWordsIndex[i] +  val[i];
+              let finalSimilrity_Index = similarityOfWordsIndex[i] + val[i];
+              if (!finalSimilrity_Index) {
+                finalSimilarityIndex[i] = 0;
+              } else {
+                
+                finalSimilarityIndex[i]= finalSimilrity_Index
+                console.log("finalSimilarityIndex",i,":",finalSimilrity_Index)
+              }
             }
             var series = series.concat([
                 {name: 'Similarity Index', data: finalSimilarityIndex }]);
