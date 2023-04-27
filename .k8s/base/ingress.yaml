@@ -16,7 +16,7 @@ spec:
         path: /
         backend:
           service:
-            name: api
+            name: web
             port:
               number: 8080
       - pathType: Prefix
