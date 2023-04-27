@@ -12,34 +12,53 @@ spec:
   - host: rima.sc.inko.cloud
     http:
       paths:
-      - path: /
+      - pathType: Prefix
+        path: /
         backend:
           serviceName: web
           servicePort: 8080
-      - path: /api
+      - pathType: Prefix
+        path: /api
         backend:
-          serviceName: api
-          servicePort: 8080
-      - path: /docs
+          service:
+            name: api
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /docs
         backend:
-          serviceName: api
-          servicePort: 8080
-      - path: /swagger
+          service:
+            name: api
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /swagger
         backend:
-          serviceName: api
-          servicePort: 8080
-      - path: /assets
+          service:
+            name: api
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /assets
         backend:
-          serviceName: api
-          servicePort: 8080
-      - path: /admin
+          service:
+            name: api
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /admin
         backend:
-          serviceName: api
-          servicePort: 8080
-      - path: /reset-app-data
+          service:
+            name: api
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /reset-app-data
         backend:
-          serviceName: api
-          servicePort: 8080
+          service:
+            name: api
+            port:
+              number: 8080
   tls:
   - hosts:
     - rima.sc.inko.cloud
