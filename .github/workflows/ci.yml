@@ -17,3 +17,8 @@ jobs:
     secrets:
       registry_user:   ${{ secrets.DOCKERHUB_USERNAME }}
       registry_token:  ${{ secrets.DOCKERHUB_TOKEN }}
+
+  release:
+    needs: [ images ]
+    if:    github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    uses:  ./.github/workflows/release.yml
