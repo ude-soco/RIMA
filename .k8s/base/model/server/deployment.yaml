@@ -14,7 +14,7 @@ spec:
         fsGroup: 101
       initContainers:
       - name: downloader
-        image: inko/soco-rima-model-downloader
+        image: socialcomputing/rima-model-downloader
         env:
         - name: MODEL_DIR
           value: /storage
@@ -34,7 +34,7 @@ spec:
           mountPath: /htdocs
       containers:
       - name: server
-        image: inko/soco-rima-model-server
+        image: socialcomputing/rima-model-server
         ports:
         - containerPort: 8080
         readinessProbe:

@@ -51,16 +51,16 @@ secretGenerator:
   env: configuration.env
 
 images:
-- name: inko/soco-rima-frontend
+- name: socialcomputing/rima-rima-frontend
   newName: socialcomputing/rima-frontend
   newTag: dev-alp
-- name: inko/soco-rima-backend
+- name: socialcomputing/rima-rima-backend
   newName: socialcomputing/rima-backend
   newTag: dev-alp
-- name: inko/soco-rima-model-downloader
+- name: socialcomputing/rima-model-downloader
   newName: socialcomputing/rima-model-downloader
   newTag: dev-alp
-- name: inko/soco-rima-model-server
+- name: socialcomputing/rima-model-server
   newName: socialcomputing/rima-model-server
   newTag: dev-alp
 - name: redis

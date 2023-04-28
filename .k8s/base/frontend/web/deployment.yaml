@@ -23,7 +23,7 @@ spec:
         runAsUser: 101
       containers:
       - name: web
-        image: inko/soco-rima-frontend
+        image: socialcomputing/rima-rima-frontend
         ports:
         - containerPort: 8080
         readinessProbe:

@@ -22,7 +22,7 @@ spec:
         runAsNonRoot: true
       initContainers:
       - name: setup
-        image: inko/soco-rima-backend
+        image: socialcomputing/rima-rima-backend
         command: ['bin/model/download']
         env:
         - name: DJANGO_LOGLEVEL
@@ -38,7 +38,7 @@ spec:
           name: tmp
       containers:
       - name: web
-        image: inko/soco-rima-backend
+        image: socialcomputing/rima-rima-backend
         command: ['bin/api']
         ports:
         - containerPort: 8080

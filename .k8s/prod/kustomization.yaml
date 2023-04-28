@@ -18,16 +18,16 @@ secretGenerator:
 - name: configuration
   env: configuration.env
 images:
-- name: inko/soco-rima-frontend
+- name: socialcomputing/rima-rima-frontend
   newName: socialcomputing/rima-frontend
   newTag: "0.0.12"
-- name: inko/soco-rima-backend
+- name: socialcomputing/rima-rima-backend
   newName: socialcomputing/rima-backend
   newTag: "0.0.12"
-- name: inko/soco-rima-model-downloader
+- name: socialcomputing/rima-model-downloader
   newName: socialcomputing/rima-model-downloader
   newTag: "0.0.12"
-- name: inko/soco-rima-model-server
+- name: socialcomputing/rima-model-server
   newName: socialcomputing/rima-model-server
   newTag: "0.0.12"
 - name: redis
