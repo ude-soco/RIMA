@@ -16,6 +16,8 @@ spec:
       - name: downloader
         image: socialcomputing/rima-model-downloader
         env:
+        - name: TEMP_DIR
+          value: /tmp
         - name: MODEL_DIR
           value: /storage
         - name: GLOVE_MODEL_FILE
