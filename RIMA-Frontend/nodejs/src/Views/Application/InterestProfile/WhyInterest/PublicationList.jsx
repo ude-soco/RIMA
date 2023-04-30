@@ -53,7 +53,7 @@ const PublicationList = (props) => {
 
   return (
     // <Box style={{}} className={classes.card}>
-    <Paper className={classes.card} style={{padding: 16, marginBottom: 8}}>
+    <Paper className={classes.card} style={{padding: 16, marginBottom: 8, width: "100%", boxShadow: publication.used_in_calc ? "" : "0 2px 4px rgba(0, 191, 255, 0.6)"}}>
       <Grid container spacing={2} onClick={handleOpen} style={{cursor: "pointer"}}>
         <Grid item xs={1}>
           <Typography variant="body2" color="textSecondary">
@@ -72,7 +72,7 @@ const PublicationList = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent="flex-end" style={{ display: "flex", justifyContent: "flex-end" }}>
             <Grid item>
               <IconButton disabled style={{transform: open ? "rotate(180deg)" : "", color: "inherit"}}>
                 <ExpandMoreIcon/>

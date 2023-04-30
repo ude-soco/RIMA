@@ -107,7 +107,7 @@ const WordCloud = (props) => {
                   : word.source === "Twitter"
                     ? "Extracted from tweets"
                     : word.source === "Manual"
-                      ? "Manually added"
+                      ? "Manually added/Edited"
                       : "Extracted from publications & tweets"
               }`,
           }}

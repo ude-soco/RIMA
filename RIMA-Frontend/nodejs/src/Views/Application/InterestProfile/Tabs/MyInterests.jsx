@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Box, Button, CircularProgress, Dialog, DialogTitle, Grid, Typography,} from "@material-ui/core";
+import {Box, Button, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Typography, IconButton} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import CloseIcon from '@material-ui/icons/Close';
 import ManageInterests from "./ManageInterests";
 import RestAPI from "../../../../Services/api";
 import WordCloud from "./WordCloud/WordCloud";
@@ -11,7 +12,8 @@ import "react-awesome-slider/dist/styles.css";
 
 
 export default function MyInterests() {
-  const [open, setOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [confirmCloseDialogOpen, setConfirmCloseDialogOpen] = useState(false);
   const [keywords, setKeywords] = useState([]);
   const [wordCloudInterest, setWordCloudInterest] = useState({});
 
@@ -44,55 +46,90 @@ export default function MyInterests() {
     setKeywords(dataArray);
     return dataArray;
   };
+  const handleClose = () => {
+    setConfirmCloseDialogOpen(true);
+  };
 
   return (
     <>
       <Grid container justify="flex-end" style={{paddingTop: 24, height: "75vh"}}>
         <Grid item>
           {keywords.length !== 0 ? <>
-            <Button color="primary" startIcon={<EditIcon/>} onClick={() => setOpen(!open)}>
+            <Button color="primary" startIcon={<EditIcon/>} onClick={() => setEditDialogOpen(!editDialogOpen)}>
               Manage Interests
             </Button>
           </> : <> </>}
         </Grid>
         <Grid item xs={12}>
-
           <AwesomeSlider style={{height: "60vh"}}>
             <Box style={{backgroundColor: "#fff"}}>
               {keywords.length !== 0 ?
-                <WordCloud keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> :
+                <WordCloud keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setEditDialogOpen}/> :
                 <Loading/>}
             </Box>
             <Box style={{backgroundColor: "#fff"}}>
               {keywords.length !== 0 ?
-                <BarChart keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> :
+                <BarChart keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setEditDialogOpen}/> :
                 <Loading/>}
             </Box>
             <Box style={{backgroundColor: "#fff"}}>
               {keywords.length !== 0 ?
-                <CirclePacking keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setOpen}/> :
+                <CirclePacking keywords={keywords} setWordCloudInterest={setWordCloudInterest} setOpen={setEditDialogOpen}/> :
                 <Loading/>}
             </Box>
           </AwesomeSlider>
         </Grid>
       </Grid>
-      <Dialog open={open} maxWidth="xs" fullWidth style={{zIndex: 11}}>
+      <Dialog open={editDialogOpen} maxWidth="xs" fullWidth style={{zIndex: 11}}>
         <DialogTitle>
           <Grid container justifyContent="space-between" alignItems="center">
-            <Typography variant="h5">
-              Manage Interests
-            </Typography>
+            <Grid item xs={11}>
+              <Typography variant="h5">Manage Interests</Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton aria-label="close" onClick={handleClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
           </Grid>
         </DialogTitle>
 
         <ManageInterests
           keywords={keywords} setKeywords={setKeywords}
-          open={open} setOpen={setOpen}
+          open={editDialogOpen} setOpen={setEditDialogOpen}
           wordCloudInterest={wordCloudInterest}
           setWordCloudInterest={setWordCloudInterest}
           fetchKeywords={fetchKeywords}/>
       </Dialog>
-    </>);
+      <Dialog open={confirmCloseDialogOpen} maxWidth="xs" fullWidth style={{ zIndex: 11 }}>
+        <DialogTitle>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Typography variant="h5">Are you sure you want to close?</Typography>
+          </Grid>
+        </DialogTitle>
+        <DialogContent style={{ padding: "16px" }}>
+          <Typography>If you close without saving, you will lose your changes.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setConfirmCloseDialogOpen(false);
+            }}
+          >
+            Back
+          </Button>
+          <Button
+            onClick={() => {
+              setConfirmCloseDialogOpen(false);
+              setEditDialogOpen(false);
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }
 
 
