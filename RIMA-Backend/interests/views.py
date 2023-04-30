@@ -50,7 +50,7 @@ from .utils import (
     get_radar_similarity_data, 
     get_heat_map_data, 
     get_venn_chart_data)
-from interests.tasks import import_user_data, import_user_paperdata,  storeConnectionsToAuthors, import_authors_papers, fetchAuthorsPapersKeywords, generateAuthorsInterests
+from interests.tasks import import_user_data, import_user_paperdata, regenerate_interest_profile, import_user_citation_data, remove_papers_for_user, import_user_papers
 from .publication_utils import API, get_recommended_publications, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
 from .my_interests import getDataExplore, getDataDiscover
 from .my_interests import getDataNewInterestExplore
@@ -61,17 +61,54 @@ class TriggerPaperUpdate(APIView):
         return Response({})
 
 
-#Osama
-class Citations(APIView):
-     def post(self, request, *args, **kwargs): 
-            import_user_citation_data.delay(request.user.id)     
-            return Response({})
+class ResetData(APIView):
+    def post(self, request, *args, **kwargs):
+        all_user_papers = request.user.papers.all()
+        remove_papers_for_user(request.user.id, all_user_papers)
+        request.user.blacklisted_papers.all().delete() #clean the blacklisted papers list for that user
+        LongTermInterest.objects.filter(user_id=request.user.id).delete()
+        ShortTermInterest.objects.filter(user_id=request.user.id).delete()
+        Tweet.objects.filter(user_id=request.user.id).delete()
+        import_user_data(request.user.id)
+        return Response({})
+    
+class EditPaper(APIView):
+    def post(self, request, pk):
+        edited_paper = request.user.papers.filter(id=pk)
+        paper= Paper.objects.create(
+                title= request.data['title'],
+                url= request.data['url'],
+                year= request.data['year'],
+                abstract= request.data['abstract'],
+                authors= request.data['authors'],
+                )
+        paper.user.add(request.user)
+        remove_papers_for_user(request.user.id, edited_paper)
+        return Response({})
+
+
+
+class RemovePaperForUser(APIView):
+    def post(self, request, pk):
+        removed_paper = request.user.papers.filter(id=pk)
+        remove_papers_for_user(request.user.id, removed_paper)
+        return Response({})     
+
+class FetchUserPapers(APIView):
+    def post(self, request):
+        user = request.user
+        import_user_papers.delay(user.id)
+        return Response({})
 
 class TriggerDataUpdate(APIView):
     def post(self, request, *args, **kwargs):
         import_user_data.delay(request.user.id)
         return Response({})
 
+class regenerateInterestProfile(APIView):
+    def post(self, request, *args, **kwargs):
+        regenerate_interest_profile.delay(request.user.id)
+        return Response({})
 
 class LongTermInterestView(ListCreateAPIView):
     serializer_class = LongTermInterestSerializer
@@ -86,14 +123,14 @@ class LongTermInterestView(ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         
         for keyword in serializer.validated_data["keywords"]:
-            name, weight = keyword["name"], keyword["weight"]
+            name, weight, source = keyword["name"], keyword["weight"], keyword["source"]
             keyword_obj, created = Keyword.objects.get_or_create(
                 name=name.lower())
             
             LongTermInterest.objects.update_or_create(
                 user=request.user,
                 keyword=keyword_obj,
-                defaults={"weight": weight})
+                defaults={"weight": weight, "source": source})
             # Clear this keyword from blacklist
             BlacklistedKeyword.objects.filter(user=request.user,
                                               keyword=keyword_obj).delete()
@@ -178,12 +215,16 @@ class PaperView(ListCreateAPIView):
         return self.request.user.papers.all().order_by("-year")
 
     def post(self, request, *args, **kwargs):
-        request_data = self.request.data
-        request_data["user"] = request.user.id
-        serializer = self.serializer_class(data=request_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        paper= Paper.objects.create(
+                title= request.data['title'],
+                url= request.data['url'],
+                year= request.data['year'],
+                abstract= request.data['abstract'],
+                authors= request.data['authors'],
+                )
+        paper.user.add(request.user)
+        FetchUserPapers
+        return Response({})
 
 
 class PaperItemView(RetrieveUpdateDestroyAPIView):
@@ -366,7 +407,13 @@ class UserLongTermInterestView(ListAPIView):
 
     def get_queryset(self):
         user = get_object_or_404(User, pk=self.kwargs["pk"])
-        return get_top_long_term_interest_by_weight(user.id, 15)
+        top_interests = get_top_long_term_interest_by_weight(user.id, 15)
+        top_interests = sorted(
+                    top_interests,
+                    key=lambda interest: interest.weight,
+                    reverse=True
+                )
+        return top_interests
 
 
 class UserShortTermInterestViewDummy(ListAPIView):
