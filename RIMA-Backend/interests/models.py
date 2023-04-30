@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import User
+import uuid
 
 
 class Category(models.Model):
@@ -12,24 +13,31 @@ class Category(models.Model):
         return self.name
 
 
+class Author(models.Model):
+    author_id = models.CharField(max_length=1024, unique=True)
+    name = models.CharField(max_length=1024, null=False, blank=False)
+    interests_generated = models.BooleanField(default=False)
+
 class Paper(models.Model):
-    user = models.ForeignKey(User,
-                             related_name="papers",
-                             on_delete=models.CASCADE)
-    paper_id = models.CharField(max_length=255,
-                                null=True,
-                                blank=True,
-                                default="manual")
+    user = models.ManyToManyField(User, related_name= "papers")
+    author = models.ManyToManyField(Author, related_name= "authors_papers")
+    paper_id = models.CharField(max_length=255, unique=True, null=False, default=uuid.uuid4)
+
     title = models.CharField(max_length=2048, null=True, blank=True)
     authors = models.CharField(max_length=2048, null=True, blank=True)
     url = models.CharField(max_length=1024, null=True, blank=True)
     year = models.IntegerField()
     abstract = models.TextField(null=True, blank=True, default='')
-
     used_in_calc = models.BooleanField(default=False)
-    updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
-
+    
+class user_blacklisted_paper (models.Model):
+    user = models.ForeignKey(User,
+                             related_name="blacklisted_papers",
+                             on_delete=models.CASCADE)
+    paper_id = models.CharField(max_length=255, null=False)
+    class Meta:
+        unique_together = ('user', 'paper_id')
 
 class Tweet(models.Model):
     user = models.ForeignKey(User,
@@ -64,6 +72,14 @@ class Keyword(models.Model):
         self.name = self.name.lower()
         return super().save(*args, **kwargs)
 
+class Keyword_Paper(models.Model):
+    paper = models.ForeignKey(Paper,
+                             related_name="paper_keywords",
+                             on_delete=models.CASCADE)
+    keyword = models.ForeignKey(Keyword,
+                             related_name="keyword_papers",
+                             on_delete=models.CASCADE)
+    weight = models.FloatField(default=1)
 
 class ShortTermInterest(models.Model):
     TWITTER = "Twitter"
@@ -128,18 +144,14 @@ class BlacklistedKeyword(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
-class Author(models.Model):
-    author_id = models.CharField(max_length=1024, primary_key=True)
-    name = models.CharField(max_length=1024, null=False, blank=False)
-    papers_fetched = models.BooleanField(default=False)
-    interests_generated = models.BooleanField(default=False)
+
 
 class Citation(models.Model):
     CITED_BY = "CITED_BY" # user is cited by the author
     REFERENCES = "REFERENCES" # user references the author
 
     user = models.ForeignKey(User,
-                             related_name="user_citations",
+                             related_name="citations",
                              on_delete=models.CASCADE)
     author = models.ForeignKey(Author,
                              related_name="author_citations",
@@ -150,24 +162,8 @@ class Citation(models.Model):
     )
     value = models.IntegerField()
 
-class AuthorsPaper(models.Model):
-    paper_id = models.CharField(max_length=255, primary_key=True)
-    title = models.CharField(max_length=2048, null=True, blank=True)
-    authors = models.CharField(max_length=2048, null=True, blank=True)
-    url = models.CharField(max_length=1024, null=True, blank=True)
-    year = models.IntegerField()
-    abstract = models.TextField(null=True, blank=True, default='')
-    used_in_calc = models.BooleanField(default=False)
-    author = models.ManyToManyField(Author, related_name= "authors_paper")
     
-class Keyword_AuthorsPapers(models.Model):
-    paper = models.ForeignKey(AuthorsPaper,
-                             related_name="Keyword_AuthorsPapers",
-                             on_delete=models.CASCADE)
-    keyword = models.ForeignKey(Keyword,
-                             related_name="Keyword_AuthorsPapers_objects",
-                             on_delete=models.CASCADE)
-    weight = models.IntegerField()
+
 
 class AuthorsInterests(models.Model):
     Keyword = models.ForeignKey(Keyword,
@@ -176,6 +172,6 @@ class AuthorsInterests(models.Model):
     author = models.ForeignKey(Author,
                              related_name="authors_interests",
                              on_delete=models.CASCADE)
-    weight = models.IntegerField()
-    paper = models.ManyToManyField(AuthorsPaper, related_name= "authors_paper_objects")
+    weight = models.FloatField(default=1)
+    paper = models.ManyToManyField(Paper, related_name= "authors_paper_interests")
 
