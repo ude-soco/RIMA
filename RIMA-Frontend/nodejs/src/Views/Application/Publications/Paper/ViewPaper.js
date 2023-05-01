@@ -87,6 +87,10 @@ class ViewPaper extends React.Component {
     });
     RestAPI.fetchNewPapers()
   }
+  
+  addPaper = () => {
+    this.props.history.push('/app/add-paper');
+  }
 
   // Toggles generate modal
 toggleGenerateModal = () => {
@@ -96,7 +100,7 @@ toggleGenerateModal = () => {
 }
 //** DELETE A PAPER **//
   generateInterestProfile = () => {
-    toast.info("Generating interest profile", {
+    toast.success("Generating interest profile", {
       position: toast.POSITION.TOP_RIGHT,
       autoClose: 2000,
     });
@@ -362,10 +366,13 @@ toggleGenerateModal = () => {
                   <div style={{ margin: "32px 0px 0px 0px" }}>
                     <div align="right">
                       <Button color="primary" onClick={this.toggleGenerateModal}>
-                        Generate interest profile
+                        Generate Interest Profile
                       </Button>
                       <Button color="primary" onClick={this.fetchNewPapers}>
-                        Fetch new papers
+                        Fetch New Papers
+                      </Button>
+                      <Button color="primary" onClick={this.addPaper}>
+                        Add Paper
                       </Button>
                       {/* 
                       <Link to={"/app/cloud-chart/" + getItem("userId")}>
