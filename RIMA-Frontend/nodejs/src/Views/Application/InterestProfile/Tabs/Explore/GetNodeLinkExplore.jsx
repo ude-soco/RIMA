@@ -5,10 +5,10 @@ import React, {useEffect, useState} from "react"
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 //import data from "./data";
 import cxtmenu from "cytoscape-cxtmenu";
-import WikiDesc from "./WikiDesc";
+import WikiDesc from "../Connect/WikiDesc";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../Services/api";
 
 cytoscape.use(cxtmenu);
 
@@ -52,76 +52,85 @@ function getElements(data) {
     {data: {id: -1, label: "My Interests", level: 0, color: "black"}}
   ];
   let currColors = [];
-  data.map((d) => {
-    let colors = getColor(currColors);
-    currColors = colors[1];
-    let label = d.title;
-    let explore = d.relatedTopics;
-    let idLevel1 = ids.pop();
-    let color = colors[0];
-    let element = {
-      data: {
-        id: idLevel1,
-        label: label,
-        level: 1,
-        color: color,
-        pageData: d.summary,
-        url: d.url
-      },
-      classes: ["level1"]
-    };
-    let edge = {
-      data: {source: -1, target: idLevel1, color: color},
-      classes: ["level1"]
-    };
-    elements.push(element, edge);
-
-    explore.map((e) => {
-      label = e.title;
-      //idLevel2=idTarget+1
-      let idLevel2 = ids.pop();
-      element = {
+  try{
+    data.map((d) => {
+      let colors = getColor(currColors);
+      currColors = colors[1];
+      let label = d.title;
+      let explore = d.relatedTopics;
+      let idLevel1 = ids.pop();
+      let color = colors[0];
+      let element = {
         data: {
-          id: idLevel2,
+          id: idLevel1,
           label: label,
-          level: 2,
+          level: 1,
           color: color,
-          pageData: e.summary,
-          url: e.wikiURL
+          pageData: d.summary,
+          url: d.url
         },
-        classes: ["level2"]
+        classes: ["level1"]
       };
-      edge = {
-        data: {target: idLevel2, source: idLevel1, color: color},
-        classes: ["level2"]
+      let edge = {
+        data: {source: -1, target: idLevel1, color: color},
+        classes: ["level1"]
       };
-
       elements.push(element, edge);
 
-      let relatedTopics = e.relatedTopics;
-
-      relatedTopics.map((r) => {
-        let idLevel3 = ids.pop();
-        label = r.title;
+      explore.map((e) => {
+        label = e.title;
+        //idLevel2=idTarget+1
+        let idLevel2 = ids.pop();
         element = {
           data: {
-            id: idLevel3,
+            id: idLevel2,
             label: label,
-            level: 3,
+            level: 2,
             color: color,
-            pageData: r.summary,
-            url: r.wikiURL
+            pageData: e.summary,
+            url: e.wikiURL
           },
-          classes: ["collapsed", "level3"]
+          classes: ["level2"]
         };
         edge = {
-          data: {target: idLevel3, source: idLevel2, color: color},
-          classes: ["collapsed", "level3"]
+          data: {target: idLevel2, source: idLevel1, color: color},
+          classes: ["level2"]
         };
+
         elements.push(element, edge);
+
+        let relatedTopics = e.relatedTopics;
+
+        relatedTopics.map((r) => {
+          let idLevel3 = ids.pop();
+          label = r.title;
+          element = {
+            data: {
+              id: idLevel3,
+              label: label,
+              level: 3,
+              color: color,
+              pageData: r.summary,
+              url: r.wikiURL
+            },
+            classes: ["collapsed", "level3"]
+          };
+          edge = {
+            data: {target: idLevel3, source: idLevel2, color: color},
+            classes: ["collapsed", "level3"]
+          };
+          elements.push(element, edge);
+        });
       });
-    });
-  });
+    })
+
+  } catch{
+    elements = [
+      {data: {id: -1, label: "Sorry, an error occurred.", level: 0, color: "red"}}
+    ];
+  }
+
+  ;
 
   return elements;
 }
@@ -134,45 +143,7 @@ const NodeLink = (props) => {
     openAdd: null
   });
 
-  const validateInterest = (interests, interest) => {
-    return interests.some((i) => i.text === interest.toLowerCase());
-  };
 
-  const addNewInterest = async (currInterest) => {
-    let alreadyExist = validateInterest(keywords, currInterest);
-
-    if (!alreadyExist) {
-      let newInterests = keywords;
-      let newInterest = {
-        id: Date.now(),
-        categories: [],
-        originalKeywords: [],
-        source: "Manual",
-        text: currInterest.toLowerCase(),
-        value: 3,
-      }
-      newInterests.push(newInterest);
-
-      newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
-      let listOfInterests = [];
-      newInterests.forEach(interest => {
-        let item = {
-          name: interest.text,
-          weight: interest.value,
-          id: interest.id
-        }
-        listOfInterests.push(item);
-      });
-      console.log("Updated list", listOfInterests)
-      try {
-        await RestAPI.addKeyword(listOfInterests);
-      } catch (err) {
-        console.log(err);
-      }
-      // console.log(newInterests)
-    }
-    console.log("Interest already exists in my list!")
-  }
 
   const handleOpenLearn = (ele) => {
     const data = ele.data();
@@ -181,6 +152,46 @@ const NodeLink = (props) => {
   const handleCloseLearn = () => {
     setOpenDialog({...openDialog, openLearn: false});
   };
+
+  const validateInterest = (interests, interest) => {
+    return interests.some((i) => i.text === interest.toLowerCase());
+  };
+
+  const addNewInterest = async (currInterest) => {
+    let alreadyExist = validateInterest(keywords, currInterest);
+
+     if (!alreadyExist) {
+         let newInterests = keywords;
+         let newInterest = {
+             id: Date.now(),
+             categories: [],
+             originalKeywords: [],
+             source: "Manual",
+             text: currInterest.toLowerCase(),
+             value: 3,
+         }
+         newInterests.push(newInterest);
+
+         newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
+         let listOfInterests = [];
+         newInterests.forEach(interest => {
+             let item = {
+                 name: interest.text,
+                 weight: interest.value,
+                 id: interest.id
+             }
+             listOfInterests.push(item);
+         });
+         console.log("Updated list", listOfInterests)
+         try {
+             await RestAPI.addKeyword(listOfInterests);
+         } catch (err) {
+             console.log(err);
+         }
+         // console.log(newInterests)
+     }
+     console.log("Interest already exists in my list!")
+  }
 
   //const [state, setState]=useState(getElements(data))
 
@@ -457,17 +468,18 @@ const NodeLink = (props) => {
                 // whether the command is selectable
               },
               {
-                // example command
-                // optional: custom background color for item
                 content: "Add to my interests", // html/text content to be displayed in the menu
                 contentStyle: {}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
                   // a function to execute when the command is selected
                   let currInterest = ele.data()["label"];
-                  // addNewInterest(currInterest);
-                  let msg = "The interest " + currInterest + " has been saved";
+                  addNewInterest(currInterest);
+                  let msg =
+                      "The interest " +
+                      currInterest +
+                      " has added to your interests";
                   toast.success(msg, {
-                    toastId: "addLevel3"
+                    toastId: "addLevel2"
                   }); // `ele` holds the reference to the active element
                 },
                 enabled: true // whether the command is selectable

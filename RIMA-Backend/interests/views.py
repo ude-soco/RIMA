@@ -52,8 +52,12 @@ from .utils import (
     get_venn_chart_data)
 from interests.tasks import import_user_data, import_user_paperdata, regenerate_interest_profile, import_user_citation_data, remove_papers_for_user, import_user_papers
 from .publication_utils import API, get_recommended_publications, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
-from .my_interests import getDataExplore, getDataDiscover
 from .my_interests import getDataNewInterestExplore
+
+from .view.discover import getDataDiscover
+from .view.explore import getDataExplore
+from .view.connect import getConnectData
+from .view.connect import getWikiInfo
 
 class TriggerPaperUpdate(APIView):
     def post(self, request, *args, **kwargs):
@@ -137,6 +141,62 @@ class LongTermInterestView(ListCreateAPIView):
         return Response({})
 
 
+class LongTermInterestView(ListCreateAPIView):
+    serializer_class = LongTermInterestSerializer
+
+    def get_queryset(self):
+        order_key = ("created_on"
+                     if self.request.GET.get("order") == "date" else "-weight")
+        return self.request.user.long_term_interests.all().order_by(order_key)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ListDataSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        found_interests = LongTermInterest.objects.filter(user=request.user)
+
+        #temp_found_interests=found_interests.values()
+        ids_found=[]
+        ids_not_found=[]
+        try:
+            for keyword in serializer.validated_data["keywords"]:
+                name=keyword["name"]
+                keyword_obj= Keyword.objects.filter(name=name.lower()).values()
+
+                for f in found_interests.values():
+                    user_keyword= Keyword.objects.filter(id=f["keyword_id"]).values()
+                    try:
+                        if user_keyword[0]["name"]==keyword_obj[0]["name"]:
+                            ids_found.append(f["keyword_id"])
+                        else:
+                            ids_not_found.append(f["keyword_id"])
+                    except:
+                        continue
+        except:
+            print("error in LongTermInterestView")
+
+        ids_deleted_interests=list(set(ids_not_found)-set(ids_found))
+        for keyword in ids_deleted_interests:
+            LongTermInterest.objects.filter(keyword_id=keyword).delete()
+
+
+
+        for keyword in serializer.validated_data["keywords"]:
+            name, weight = keyword["name"], keyword["weight"]
+            keyword_obj, created = Keyword.objects.get_or_create(
+                name=name.lower())
+            #breakpoint()
+            LongTermInterest.objects.update_or_create(
+                user=request.user,
+                keyword=keyword_obj,
+                defaults={"weight": weight})
+            # Clear this keyword from blacklist
+            BlacklistedKeyword.objects.filter(user=request.user,
+                                              keyword=keyword_obj).delete()
+        return Response({})
+
+
+
 class LongTermInterestItemView(RetrieveUpdateDestroyAPIView):
     serializer_class = LongTermInterestSerializer
 
@@ -149,8 +209,6 @@ class LongTermInterestItemView(RetrieveUpdateDestroyAPIView):
         ShortTermInterest.objects.filter(keyword=instance.keyword,
                                          user=self.request.user).delete()
         return super().perform_destroy(instance)
-
-
 
 
 
@@ -188,6 +246,18 @@ def get_data_discover(request, *args, **kwargs):
 @api_view(["post"])
 def get_data_similiar_interest(request, *args, **kwargs):
     res =getDataNewInterestExplore(request.data)
+    #two list: random and all interests
+    return Response({"message": "Successful", "data": res})
+
+@api_view(["post"])
+def get_data_connect(request, *args, **kwargs):
+    res =getConnectData(request.data)
+    #two list: random and all interests
+    return Response({"message": "Successful", "data": res})
+
+@api_view(["post"])
+def get_wiki_data(request, *args, **kwargs):
+    res =getWikiInfo(request.data)
     #two list: random and all interests
     return Response({"message": "Successful", "data": res})
 

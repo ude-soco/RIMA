@@ -8,18 +8,19 @@ import {
     DialogTitle,
     DialogActions,
     Button,
-    DialogContent, Grid
+    DialogContent, Grid, CircularProgress
 } from "@material-ui/core";
 
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import nodeHtmlLabel from "cytoscape-node-html-label";
 import cxtmenu from "cytoscape-cxtmenu";
-import data from "./dataConnect";
+//import data from "./dataConnect";
 import { useEffect, useState } from "react";
 
 import SVGVenn from "./SVGVenn";
 import WhyInterest from "../WhyInterest/WhyInterest"
+import RestAPI from "../../../../../Services/api";
 
 cytoscape.use(nodeHtmlLabel);
 cytoscape.use(cxtmenu);
@@ -27,6 +28,11 @@ cytoscape.use(cxtmenu);
 function getGraphData(data) {
     let ids = [...Array(20).keys()];
 
+    console.log(data, "data getGraph")
+    let citations = data.citations
+    let references = data.references
+
+    console.log(citations, references, "data get Graph cit, ref")
     let y1 = 100;
     let y2 = 100;
     const label1 = "Authors who cited you the most";
@@ -35,20 +41,20 @@ function getGraphData(data) {
         {
             data: { id: -1, label: "You" },
             classes: ["user", "multiline"],
-            position: { x: 300, y: 250 }
+            position: { x: 300, y: 175 }
         },
         {
-            data: { id: -2, label: label1 },
+            data: { id: -2, label: label2 },
             classes: ["multiline", "header"],
             position: { x: 100, y: 50 }
         },
         {
-            data: { id: -3, label: label2 },
+            data: { id: -3, label: label1 },
             classes: ["multiline", "header"],
             position: { x: 500, y: 50 }
         }
     ];
-    data.authorsInfluence.map((a) => {
+    citations.map((a) => {
         let id = ids.pop();
         console.log(a.paper);
         let element = {
@@ -58,20 +64,20 @@ function getGraphData(data) {
                 score: a.score,
                 interests: a.interests,
                 paper: a.paper,
-                level:1
+                level:2
             },
             classes: ["multiline", "author", "citeMe"],
-            position: { x: 50, y: y1 }
+            position: { x: 550, y: y1 }
         };
         let edge = {
-            data: { target: -1, source: id },
+            data: { target: id, source: -1 },
             classes: ["edge"]
         };
         elements.push(element, edge);
         y1 = y1 + 75;
     });
 
-    data.authorsInfluencedByMe.map((b) => {
+    references.map((b) => {
         let id = ids.pop();
         let element = {
             data: {
@@ -80,13 +86,13 @@ function getGraphData(data) {
                 score: b.score,
                 interests: b.interests,
                 paper: b.paper,
-                level:2
+                level:1
             },
             classes: ["multiline", "author", "citedByMe"],
-            position: { x: 550, y: y2 }
+            position: { x: 50, y: y2 }
         };
         let edge = {
-            data: { target: id, source: -1 },
+            data: { target: -1, source: id },
             classes: ["edge"]
         };
         elements.push(element, edge);
@@ -97,25 +103,43 @@ function getGraphData(data) {
     return elements;
 }
 
-const ConnectedGraph = () => {
+
+
+const ConnectedGraph = (props) => {
+    const {data, myInterests}=props
+
+
+
     const [dialog, setDialog] = useState({
         openCompareInterest: false,
         openIamCited: false,
         openIhaveCited: false,
         currNode: { name: "" },
-        myInterests: data.myInterests,
+        myInterests:myInterests,
         compareInterests: null,
         userName: "You"
     });
     const [elements, setElements] = useState([]);
     const [paper, setPaper] = useState([]);
 
-    useEffect(() => {
-        setElements([]);
+
+
+
+
+
+    const getData = async ()=>{
+
         const currElements = getGraphData(data);
         setElements(currElements);
-        setDialog({ ...dialog, myInterests: data.myInterests });
-    }, []);
+
+    }
+    useEffect(() => {
+        const currElements = getGraphData(data);
+        setElements(currElements);
+        setDialog({...dialog, myInterests: myInterests})
+
+
+    }, [myInterests]);
 
     const handleOpenCompareInterests = (ele) => {
         setDialog({
@@ -363,7 +387,7 @@ const ConnectedGraph = () => {
                     <Grid container>
                         <Grid item = {"xs"}>
                             <SVGVenn
-                                userInterest={dialog.myInterests}
+
                                 authorInterest={dialog.compareInterests}
                                 authorName={dialog.currNode.name}
                                 userName={dialog.userName}
@@ -422,8 +446,28 @@ const ConnectedGraph = () => {
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
+
         </>
     );
 };
 
 export default ConnectedGraph;
+export const Loading = () => {
+    return (
+        <>
+            <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Grid item>
+                    <CircularProgress/>
+                </Grid>
+                <Grid item>
+                    <Typography variant="overline"> Loading data </Typography>
+                </Grid>
+            </Grid>
+        </>
+    )
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardActionArea, Grid, Typography } from "@material-ui/core";
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../../Services/api";
 
 const HowStep1 = () => {
   const [details, setDetails] = useState({

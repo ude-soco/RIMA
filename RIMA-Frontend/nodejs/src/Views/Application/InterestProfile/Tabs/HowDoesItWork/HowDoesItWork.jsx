@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 
 
 import {Box, Tab, Tabs, Typography} from "@material-ui/core";
-import HowStep1 from "../HowSteps/HowStep1";
-import HowStep2 from "../HowSteps/HowStep2";
-import HowStep3 from "../HowSteps/HowStep3";
-import HowStep4 from "../HowSteps/HowStep4";
-import HowStep5 from "../HowSteps/HowStep5";
-import RestAPI from "../../../../Services/api";
+import HowStep1 from "./HowSteps/HowStep1";
+import HowStep2 from "./HowSteps/HowStep2";
+import HowStep3 from "./HowSteps/HowStep3";
+import HowStep4 from "./HowSteps/HowStep4";
+import HowStep5 from "./HowSteps/HowStep5";
+import RestAPI from "../../../../../Services/api";
 
 
 function TabPanel(props) {

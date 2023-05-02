@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, Grid, Typography,} from "@material-ui/core";
 import AwesomeSlider from "react-awesome-slider";
-import {Loading} from "../Tabs/MyInterests";
+import {Loading} from "../../MyInterests/MyInterests";
 import WordCloudHow from "./InterestProfileVis/WordCloudHow";
 import BarChartHow from "./InterestProfileVis/BarChartHow";
 import CirclePackingHow from "./InterestProfileVis/CirclePackingHow";

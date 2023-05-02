@@ -16,7 +16,7 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import EditIcon from "@material-ui/icons/Edit";
-import WhyInterest from "../../WhyInterest/WhyInterest";
+import WhyInterest from "../../../WhyInterest/WhyInterest";
 import {ResponsiveCirclePacking} from "@nivo/circle-packing";
 
 

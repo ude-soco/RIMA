@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../Services/api";
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import cxtmenu from "cytoscape-cxtmenu";
 import {toast, ToastContainer} from "react-toastify";
-import WikiDesc from "./WikiDesc";
+import WikiDesc from "../Connect/WikiDesc";
 import "react-toastify/dist/ReactToastify.css";
 
 cytoscape.use(cxtmenu);
@@ -146,6 +146,46 @@ const SimiliarInterests = (props)=>{
         openLearn: null,
         openAdd: null
     });
+
+    const validateInterest = (interests, interest) => {
+        return interests.some((i) => i.text === interest.toLowerCase());
+    };
+
+    const addNewInterest = async (currInterest) => {
+       /* let alreadyExist = validateInterest(keywords, currInterest);
+
+        if (!alreadyExist) {
+            let newInterests = keywords;
+            let newInterest = {
+                id: Date.now(),
+                categories: [],
+                originalKeywords: [],
+                source: "Manual",
+                text: currInterest.toLowerCase(),
+                value: 3,
+            }
+            newInterests.push(newInterest);
+
+            newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
+            let listOfInterests = [];
+            newInterests.forEach(interest => {
+                let item = {
+                    name: interest.text,
+                    weight: interest.value,
+                    id: interest.id
+                }
+                listOfInterests.push(item);
+            });
+            console.log("Updated list", listOfInterests)
+            try {
+                await RestAPI.addKeyword(listOfInterests);
+            } catch (err) {
+                console.log(err);
+            }
+            // console.log(newInterests)
+        }
+        console.log("Interest already exists in my list!")*/
+    }
 
     const handleOpenLearn = (ele) => {
         const data = ele.data();
@@ -306,6 +346,7 @@ const SimiliarInterests = (props)=>{
                             select: function (ele) {
                                 // a function to execute when the command is selected
                                 let currInterest = ele.data()["label"];
+                                addNewInterest(currInterest)
 
                                 let msg =
                                     "The interest " +

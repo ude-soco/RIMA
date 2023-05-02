@@ -22,12 +22,13 @@ import Slider from "@material-ui/core/Slider";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
 import AddIcon from "@material-ui/icons/Add";
 import Fade from '@material-ui/core/Fade';
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../Services/api";
 
 
 const ManageInterests = (props) => {
-  const {keywords, setKeywords, open, setOpen, wordCloudInterest, setWordCloudInterest, fetchKeywords} = props;
 
+  const {keywords, setKeywords, open, setOpen, wordCloudInterest, setWordCloudInterest, fetchKeywords} = props;
+  console.log("data keywords", keywords)
   const [interests, setInterests] = useState([])
   const [editInterest, setEditInterest] = useState(false);
   const [updateInterestText, setUpdateInterestText] = useState("");
@@ -118,6 +119,7 @@ const ManageInterests = (props) => {
       listOfInterests.push(item);
     });
     try {
+      console.log(listOfInterests, "data list of interests")
       await RestAPI.addKeyword(listOfInterests);
     } catch (err) {
       console.log(err);

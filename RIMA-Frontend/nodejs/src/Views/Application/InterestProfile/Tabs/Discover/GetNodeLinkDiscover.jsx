@@ -2,11 +2,11 @@ import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import React, {useEffect, useState} from "react";
 import cxtmenu from "cytoscape-cxtmenu";
-import WikiDesc from "./WikiDesc";
+import WikiDesc from "../Connect/WikiDesc";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../Services/api";
 
 cytoscape.use(cxtmenu);
 
@@ -46,12 +46,11 @@ function getColor(currColors) {
 
 function getNodeData(data, values, interest) {
   let ids = [...Array(200).keys()];
-  const elements = [
+  let elements = [
     {data: {id: -1, label: interest, level: 0, color: "black"}}
   ];
   let currColors = [];
-
-  data.map((d, index) => {
+  try{data.map((d, index) => {
     if (values[index]) {
       let colors = getColor(currColors);
 
@@ -95,7 +94,14 @@ function getNodeData(data, values, interest) {
         elements.push(element, edge);
       });
     }
-  });
+  });}
+  catch{
+    elements = [
+      {data: {id: -1, label: "Sorry an error occurred.", level: 0, color: "red"}}
+    ];
+  }
+
+
   return elements;
 }
 

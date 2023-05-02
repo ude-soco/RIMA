@@ -3,7 +3,7 @@ import {Box, Button, CircularProgress, Dialog, DialogTitle, DialogContent, Dialo
 import EditIcon from "@material-ui/icons/Edit";
 import CloseIcon from '@material-ui/icons/Close';
 import ManageInterests from "./ManageInterests";
-import RestAPI from "../../../../Services/api";
+import RestAPI from "../../../../../Services/api";
 import WordCloud from "./WordCloud/WordCloud";
 import BarChart from "./BarChart/BarChart";
 import CirclePacking from "./CiclePacking/CirclePacking";
