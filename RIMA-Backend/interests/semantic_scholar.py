@@ -124,13 +124,12 @@ class SemanticScholarAPI:
                 paper_api_response = self.paper(paper["paperId"])
                 abstract = paper_api_response.get("abstract", "")
                 paper["authors"] = paper_api_response.get("authors", [])
-
                 try:
                     lan = detect(abstract)
                     if lan == "en":
                         paper["abstract"] = abstract
                         collectedpapers.append(paper)
-                except:
+                except TypeError:
                     collectedpapers.append(paper)
         # print(
         #     "return result from get_user_papers function", collectedpapers
