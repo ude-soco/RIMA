@@ -7,7 +7,7 @@ import Loader from "react-loader-spinner";
 import { handleServerErrors } from "Services/utils/errorHandler";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { getItem } from "../../../../Services/utils/localStorage";
-import PublicationList from "../../InterestProfile/WhyInterest/PublicationList";
+import PublicationList from "../../InterestProfile/Tabs/WhyInterest/PublicationList";
 import { Box, Grid, Paper, Typography } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -85,74 +85,80 @@ class ViewPaper extends React.Component {
       position: toast.POSITION.TOP_RIGHT,
       autoClose: 2000,
     });
-    RestAPI.fetchNewPapers()
-  }
-  
+    RestAPI.fetchNewPapers();
+  };
+
   addPaper = () => {
-    this.props.history.push('/app/add-paper');
-  }
+    this.props.history.push("/app/add-paper");
+  };
 
   // Toggles generate modal
-toggleGenerateModal = () => {
-  this.setState({
-    generateModal: !this.state.generateModal
-  })
-}
-//** DELETE A PAPER **//
+  toggleGenerateModal = () => {
+    this.setState({
+      generateModal: !this.state.generateModal,
+    });
+  };
+  //** DELETE A PAPER **//
   generateInterestProfile = () => {
     toast.success("Generating interest profile", {
       position: toast.POSITION.TOP_RIGHT,
       autoClose: 2000,
     });
-    this.setState({
-      isLoding: true,
-      generateModal: !this.state.generateModal,
-    }, () => {
-      RestAPI.regenerateInterestProfile()
-        .then((response) => {
-          this.setState({
-            isLoding: false,
+    this.setState(
+      {
+        isLoding: true,
+        generateModal: !this.state.generateModal,
+      },
+      () => {
+        RestAPI.regenerateInterestProfile()
+          .then((response) => {
+            this.setState({
+              isLoding: false,
+            });
+          })
+          .catch((error) => {
+            this.setState({ isLoding: false });
+            handleServerErrors(error, toast.error);
+            return;
           });
-        })
-        .catch((error) => {
-          this.setState({ isLoding: false });
-          handleServerErrors(error, toast.error);
-          return;
-        });
-    });
+      }
+    );
   };
   // Toggles the delete paper modal
   toggleDeletePaper = (id) => {
     this.setState({
       deleteModal: !this.state.deleteModal,
       deletePaperId: id,
-    })
-  }
+    });
+  };
 
   //** DELETE A PAPER **//
   deleteEnquiry = (id) => {
-    this.setState({
-      isLoding: true,
-      deleteModal: !this.state.deleteModal,
-    }, () => {
-      RestAPI.removePaperForUser(id)
-        .then((response) => {
-          const newvalue = this.state.data.filter((v, i) => v.id !== id);
-          this.setState({
-            isLoding: false,
-            data: [...newvalue],
-          });
+    this.setState(
+      {
+        isLoding: true,
+        deleteModal: !this.state.deleteModal,
+      },
+      () => {
+        RestAPI.removePaperForUser(id)
+          .then((response) => {
+            const newvalue = this.state.data.filter((v, i) => v.id !== id);
+            this.setState({
+              isLoding: false,
+              data: [...newvalue],
+            });
 
-          toast.success("Paper deleted!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 2000,
+            toast.success("Paper deleted!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 2000,
+            });
+          })
+          .catch((error) => {
+            this.setState({ isLoding: false });
+            handleServerErrors(error, toast.error);
           });
-        })
-        .catch((error) => {
-          this.setState({ isLoding: false });
-          handleServerErrors(error, toast.error);
-        });
-    });
+      }
+    );
   };
 
   //** SHOW A PAPERS **//
@@ -257,18 +263,15 @@ toggleGenerateModal = () => {
   render() {
     return (
       <>
-
         {/* Page content */}
-        <Container  fluid>
+        <Container fluid>
           <Row>
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
                   <Row style={{ alignItems: "center" }}>
                     <Col>
-                      <h2 className="mb-0">
-                        My Publications
-                      </h2>
+                      <h2 className="mb-0">My Publications</h2>
                     </Col>
                     {/* <Col md="auto">
                       <OverlayTrigger
@@ -296,8 +299,11 @@ toggleGenerateModal = () => {
                         <Typography
                           variant="body2"
                           color="textSecondary"
-                          style={{ fontWeight: "bold", textTransform: "uppercase" }}
-                              >
+                          style={{
+                            fontWeight: "bold",
+                            textTransform: "uppercase",
+                          }}
+                        >
                           Year
                         </Typography>
                       </Grid>
@@ -305,8 +311,11 @@ toggleGenerateModal = () => {
                         <Typography
                           variant="body2"
                           color="textSecondary"
-                          style={{ fontWeight: "bold", textTransform: "uppercase" }}
-                              >
+                          style={{
+                            fontWeight: "bold",
+                            textTransform: "uppercase",
+                          }}
+                        >
                           Title
                         </Typography>
                       </Grid>
@@ -314,8 +323,11 @@ toggleGenerateModal = () => {
                         <Typography
                           variant="body2"
                           color="textSecondary"
-                          style={{ fontWeight: "bold", textTransform: "uppercase" }}
-                                >
+                          style={{
+                            fontWeight: "bold",
+                            textTransform: "uppercase",
+                          }}
+                        >
                           Author
                         </Typography>
                       </Grid>
@@ -329,7 +341,10 @@ toggleGenerateModal = () => {
                   return (
                     <Grid container>
                       <Grid container xs={11}>
-                        <PublicationList publication={paper} originalKeywords={""} />
+                        <PublicationList
+                          publication={paper}
+                          originalKeywords={""}
+                        />
                       </Grid>
                       <Grid container xs={1} style={{ display: "flex" }}>
                         <Paper
@@ -338,21 +353,32 @@ toggleGenerateModal = () => {
                             marginBottom: 8,
                             width: "50%",
                             cursor: "pointer",
-                            boxShadow: paper.used_in_calc ? "" : "0 2px 4px rgba(0, 191, 255, 0.6)"
-
+                            boxShadow: paper.used_in_calc
+                              ? ""
+                              : "0 2px 4px rgba(0, 191, 255, 0.6)",
                           }}
-                          onClick={() => (window.location.href = `/app/edit-paper/${paper.id}`)}
-                                  >
+                          onClick={() =>
+                            (window.location.href = `/app/edit-paper/${paper.id}`)
+                          }
+                        >
                           <Grid item xs={6}>
                             <EditIcon />
                           </Grid>
                         </Paper>
 
                         <Paper
-                          style={{ padding: 16, marginBottom: 8, width: "50%", cursor: "pointer", boxShadow: paper.used_in_calc ? "" : "0 2px 4px rgba(0, 191, 255, 0.6)" }}
+                          style={{
+                            padding: 16,
+                            marginBottom: 8,
+                            width: "50%",
+                            cursor: "pointer",
+                            boxShadow: paper.used_in_calc
+                              ? ""
+                              : "0 2px 4px rgba(0, 191, 255, 0.6)",
+                          }}
                           item
                           onClick={() => this.toggleDeletePaper(paper.id)}
-                                >
+                        >
                           <Grid item xs={6}>
                             <DeleteIcon />
                           </Grid>
@@ -362,10 +388,19 @@ toggleGenerateModal = () => {
                   );
                 })}
 
-                <div style={{ display: "flex", margin: " 0 53px 25px 25px", justifyContent: "space-between" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    margin: " 0 53px 25px 25px",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <div style={{ margin: "32px 0px 0px 0px" }}>
                     <div align="right">
-                      <Button color="primary" onClick={this.toggleGenerateModal}>
+                      <Button
+                        color="primary"
+                        onClick={this.toggleGenerateModal}
+                      >
                         Generate Interest Profile
                       </Button>
                       <Button color="primary" onClick={this.fetchNewPapers}>
@@ -384,23 +419,35 @@ toggleGenerateModal = () => {
                 </div>
               </Card>
 
-
               {/* //  Start Modal */}
               <div>
-                <Modal isOpen={this.state.deleteModal} toggle={() => this.toggleDeletePaper("")} size="lg">
+                <Modal
+                  isOpen={this.state.deleteModal}
+                  toggle={() => this.toggleDeletePaper("")}
+                  size="lg"
+                >
                   <ModalHeader toggle={() => this.toggleDeletePaper("")}>
-                    <h2>
-                      Remove paper?
-                    </h2>
+                    <h2>Remove paper?</h2>
                   </ModalHeader>
                   <ModalBody>
-                    <h4>You are about to delete the publication from the list! Are you sure?</h4>
+                    <h4>
+                      You are about to delete the publication from the list! Are
+                      you sure?
+                    </h4>
                   </ModalBody>
                   <ModalFooter>
-                    <Button varian="link" onClick={() => this.toggleDeletePaper("")}>
+                    <Button
+                      varian="link"
+                      onClick={() => this.toggleDeletePaper("")}
+                    >
                       Cancel
                     </Button>
-                    <Button color="danger" onClick={() => this.deleteEnquiry(this.state.deletePaperId)}>
+                    <Button
+                      color="danger"
+                      onClick={() =>
+                        this.deleteEnquiry(this.state.deletePaperId)
+                      }
+                    >
                       Delete
                     </Button>
                   </ModalFooter>
@@ -408,20 +455,30 @@ toggleGenerateModal = () => {
               </div>
               {/* //  Start Generate Modal */}
               <div>
-                <Modal isOpen={this.state.generateModal} toggle={() => this.toggleGenerateModal("")} size="lg">
+                <Modal
+                  isOpen={this.state.generateModal}
+                  toggle={() => this.toggleGenerateModal("")}
+                  size="lg"
+                >
                   <ModalHeader toggle={() => this.toggleGenerateModal("")}>
-                    <h2>
-                      Generate interest profile?
-                    </h2>
+                    <h2>Generate interest profile?</h2>
                   </ModalHeader>
                   <ModalBody>
-                    <h4>This will affect your interest profile! Are you sure?</h4>
+                    <h4>
+                      This will affect your interest profile! Are you sure?
+                    </h4>
                   </ModalBody>
                   <ModalFooter>
-                    <Button varian="link" onClick={() => this.toggleGenerateModal("")}>
+                    <Button
+                      varian="link"
+                      onClick={() => this.toggleGenerateModal("")}
+                    >
                       Cancel
                     </Button>
-                    <Button color="primary" onClick={() => this.generateInterestProfile()}>
+                    <Button
+                      color="primary"
+                      onClick={() => this.generateInterestProfile()}
+                    >
                       Generate
                     </Button>
                   </ModalFooter>
@@ -463,7 +520,7 @@ toggleGenerateModal = () => {
               {/* //  End Modal   */}
 
               {/* // Edit Start Modal */}
-{/*               <div>
+              {/*               <div>
                 <Modal isOpen={this.state.editmodal} toggle={this.edittoggle}>
                   <ModalHeader toggle={this.edittoggle}>
                     <strong>Edit Paper information</strong>
