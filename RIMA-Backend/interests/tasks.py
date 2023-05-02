@@ -187,17 +187,6 @@ def __update_short_term_interest_model_for_user(user_id):
         # generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
         generate_short_term_model_dbpedia(user.id, ShortTermInterest.SCHOLAR)
 
-@task(
-    name="import_user_citation_data",
-    base=BaseCeleryTask,
-    autoretry_for=(Exception,),
-    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
-def import_user_citation_data(user_id):
-            storeConnectionsToAuthors(user_id) #done    
-            import_authors_papers() #done
-            fetchAuthorsPapersKeywords()
-            generateAuthorsInterests()
 
 @task(
     name="update_short_term_interest_model_for_user",
@@ -324,9 +313,13 @@ def getConnectedAuthorsData(user_author_id, number_of_top_connected_authors):
     data={"cited_by":top_cited_by_with_names, "references":top_referenced_with_names}
     return data
 
-
-def  storeConnectionsToAuthors(user_id):
-    user= User.objects.filter(user_id= user_id)
+@task(
+    name="storeConnectionsToAuthors",
+    base=BaseCeleryTask,
+    autoretry_for=(Exception,),
+    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
+)
+def  storeConnectionsToAuthors(user):
     # This function stores the connection of the connected authors to a particulare user in the database
     connected_authors = getConnectedAuthorsData(user.author_id, 3)
     cited_by_authors= connected_authors["cited_by"]
@@ -356,7 +349,12 @@ def  storeConnectionsToAuthors(user_id):
             citation.value = value
             citation.save()
     return
-
+@task(
+    name="import_authors_papers",
+    base=BaseCeleryTask,
+    autoretry_for=(Exception,),
+    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
+)
 def import_authors_papers():
     # This functions gets the data for all the authors that have their papers_fetched value as false
     authors = Author.objects.filter(papers_fetched = False)
@@ -385,13 +383,23 @@ def import_authors_papers():
         author.save()
     return
 
-
+@task(
+    name="fetchAuthorsPapersKeywords",
+    base=BaseCeleryTask,
+    autoretry_for=(Exception,),
+    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
+)
 def fetchAuthorsPapersKeywords():
     paper_candidates = AuthorsPaper.objects.filter(used_in_calc=False)
     fetch_papers_keywords(paper_candidates);
 
     return
-
+@task(
+    name="generateAuthorsInterests",
+    base=BaseCeleryTask,
+    autoretry_for=(Exception,),
+    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
+)
 def generateAuthorsInterests():
     authors_candidates = Author.objects.filter(interests_generated = False)
     generate_authors_interests(authors_candidates)
