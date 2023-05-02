@@ -123,12 +123,12 @@ def getMostCitedReferenced(authorId, method, n=3):
     return allAuthors
 
 def getInterests(authorId):
-    interests=["user modeling", "educational technology","lifelong learning", "artificial intelligence",
-               "learning technologies", "gamification", "higher education", "open educational resources", "anti-phishing",
-               "serious games", "cybersecurity", "xAPI"]
+    interests=["user modeling", "educational technology","lifelong learning","human-centered design",
+               "keyword extraction", "test","self-actualization",
+               "technology acceptance model","massive open online course" ]
+    k=random.choice(range(8,15))
 
-
-    return interests
+    return random.choices(interests, k=k)
 
 def getConnectData(id):
     authorId=id["data"]
