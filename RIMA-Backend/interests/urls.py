@@ -45,7 +45,4 @@ urlpatterns = [
     path('get-similiar-interest-data', views.get_data_similiar_interest),
     path('get-connect-data', views.get_data_connect),
     path('get-wiki-info', views.get_wiki_data)
-
-    #Osama
-    path('citations/', views.Citations.as_view()),
 ]

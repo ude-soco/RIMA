@@ -11,7 +11,6 @@ from interests.models import (
     LongTermInterest,
     Category,
     BlacklistedKeyword,
-    AuthorsPaper, Keyword_AuthorsPapers, AuthorsInterests
 )
 import numpy as np
 from interests.Keyword_Extractor.extractor import getKeyword
@@ -332,118 +331,6 @@ def generate_short_term_model(user_id, source):
                         s_interest.papers.add(p)
         paper_candidates.update(used_in_calc=True)
 
-#Osama
-def fetch_papers_keywords(paper_candidates):
-    #modified the function from lames. This function is going with the approach that the paper is uniqe and can be stored once
-    # The same paper always have the same keywords and weights
-    # The paper is linked to a user in a many to many relationship. it doesn't have one author id, but many authors can have the same paper
-    # This function is storing no interests. It just fetches the keywords from the papers and stores a relationship between the paper and the keyword
-    # The relationship specifies the weight of the keyword in that paper as well
-    dbpedia = DBpediaSpotlight()
-
-    for paper in paper_candidates:
-        text = (paper.title if paper.title else "") + " " + (paper.abstract if paper.abstract else "")
-        try:
-            keywords = getKeyword(text, model="SifRank", num=15)
-        except:
-            continue
-        if not len(keywords.keys()):
-            # print("No keywords found")
-            continue
-        (
-            wiki_keyword_redirect_mapping,
-            keyword_weight_mapping,
-        ) = dbpedia.annotate(keywords)     
-        if not len(keyword_weight_mapping.keys()):
-            
-            continue
-        keywords = normalize(
-            keyword_weight_mapping
-        )  # normalize the weights to range of 5 to 1
-
-        # find the category for each keyword seperatly and store the keyword in database as a row
-        for keyword, weight in keywords.items():
-            original_keyword_name = wiki_keyword_redirect_mapping.get(
-                keyword, keyword
-            )
-            keyword = keyword.lower()
-            keyword_instance, created = Keyword.objects.get_or_create(
-                name=keyword.lower()
-            )
-            if created:
-                
-                categories = wikicategory(
-                    keyword
-                )  
-                for category in categories:
-                    category_instance, _ = Category.objects.get_or_create(
-                        name=category
-                    )
-                    keyword_instance.categories.add(category_instance)
-                keyword_instance.save()
-            try:
-                original_keywords = json.loads(
-                    keyword_instance.original_keywords
-                )
-
-                original_keywords_with_weights = json.loads(
-                    keyword_instance.original_keywords_with_weights
-                )
-            except:
-                original_keywords = []
-                original_keywords_with_weights = []
-            original_keywords.append(original_keyword_name.lower())
-            keyword_instance.original_keywords = json.dumps(
-                list(set(original_keywords))
-            )
-
-            # for original keyword with weights column
-            original_keywords_with_weights.append(
-                {original_keyword_name.lower(): weight}
-            )
-            keyword_instance.original_keywords_with_weights = json.dumps(
-                original_keywords_with_weights
-            )
-
-            keyword_instance.save()
-            # store a relationship between the paper and the keyword
-            Keyword_AuthorsPapers.objects.create(
-                paper = paper,
-                keyword = keyword_instance,
-                weight = weight
-            )
-        paper.used_in_calc=True
-        paper.save()
-
-#Osama
-def generate_authors_interests(author_candidates):
-    # This function is going with the approach that the same paper is existing once for all users
-    # The keywords inside each paper are saved separatly, and also a relationship between the paper and the keyword is stored to specify the weight of the keyword in that paper
-    # The interest is a relationship between the keyword and the author. It specifies how much the author is interested in that keyword.
-    # This can be different from the weight of the keyword in the paper since the user can have many papers that have that keyword.
-    # In that casa, the weight of the interest is the weight of the keyword in the newest related paper
-    for author in author_candidates:
-        # Get all AuthorsPaper linked to the author sorted by year (old to new)
-        authors_papers = AuthorsPaper.objects.filter(
-        author=author).order_by('year')
-        for paper in authors_papers:
-            # get the keywords and weights for every paper
-            paper_keywords_with_weight = paper.Keyword_AuthorsPapers.all()
-            for keyword_with_weight in paper_keywords_with_weight:
-                #create/ update an interest for every keyword
-                author_interest, created = AuthorsInterests.objects.get_or_create(
-                    Keyword=keyword_with_weight.keyword,
-                    author=author, 
-                    defaults={'weight': keyword_with_weight.weight})
-                if not created:
-                    #if the interest was there already (from an older paper), change its weight
-                    author_interest.weight = keyword_with_weight.weight
-                    author_interest.save()
-                #link the interest to the paper
-                author_interest.paper.add(paper)
-        author.interests_generated= True
-        author.save() 
-    return
 
 # LK
 def generate_short_term_model_dbpedia(user_id, source):
