@@ -9,7 +9,6 @@ urlpatterns = [
     path('long-term/<int:pk>/', views.LongTermInterestItemView.as_view()),
 #     path('recommended-publications', views.recommended_publications), #LK
 #     path('recommended-publications', views.RecommendedPublications.as_view()),
-    path('papers/', views.PaperView.as_view()),
     path('papers/<int:pk>/', views.PaperItemView.as_view()),
     path('similarity/<int:pk>/', views.SimilarityView.as_view()),
     path(
@@ -43,4 +42,13 @@ urlpatterns = [
     path('get-discover-data', views.get_data_discover),
     path('get-explore-data', views.get_data_explore),
     path('get-similiar-interest-data', views.get_data_similiar_interest),
+
+    #Osama
+    path('papers/', views.PaperView.as_view()), #adding new paper
+    path('reset-data/', views.ResetData.as_view()),
+    path('edit-paper/<int:pk>/', views.EditPaper.as_view()),
+    path('remove-paper-for-user/<int:pk>/', views.RemovePaperForUser.as_view()),
+    path('fetch-papers/', views.FetchUserPapers.as_view()),
+    path('regenerate-interest-profile/', views.regenerateInterestProfile.as_view()),
+    
 ]

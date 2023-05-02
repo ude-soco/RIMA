@@ -4,6 +4,7 @@ import {handleServerErrors} from "../../../../Services/utils/errorHandler";
 import {toast} from "react-toastify";
 import {Button, Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Input, Row} from "reactstrap";
 import Loader from "react-loader-spinner";
+import {Dialog, DialogTitle, DialogContent, DialogActions, Grid, Typography, IconButton} from "@material-ui/core";
 
 export default function Profile() {
   const [details, setDetails] = useState({
@@ -19,7 +20,7 @@ export default function Profile() {
     keywordCount: "",
   })
   const [isLoading, setIsLoading] = useState(false);
-
+  const [confirmResetDialogOpen, setConfirmResetDialogOpen] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -52,10 +53,9 @@ export default function Profile() {
     }))
   };
 
-
-  const refreshData = () => {
+  const resetData = () => {
     setIsLoading(true);
-    RestAPI.refreshData().then(() => {
+    RestAPI.resetData().then(() => {
       toast.success("New data will be available in a few minutes!", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
@@ -147,8 +147,8 @@ export default function Profile() {
 
                   <hr className="my-4" />
                   <div>
-                    <Button color="info" onClick={refreshData}>
-                      Refresh Account Data
+                    <Button color="danger"onClick={() => {setConfirmResetDialogOpen(true);}}>
+                      Reset Account
                     </Button>
                   </div>
                 </div>
@@ -304,6 +304,34 @@ export default function Profile() {
           </Col>
         </Row>
       </Container>
+      <Dialog open={confirmResetDialogOpen} maxWidth="xs" fullWidth style={{ zIndex: 11 }}>
+        <DialogTitle>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Typography variant="h5">Are you sure you want to Reset your account?</Typography>
+          </Grid>
+        </DialogTitle>
+        <DialogContent style={{ padding: "16px" }}>
+          <Typography>This will delete all of your data and import it again. You will loose all changes you have done. It will also take time to load</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setConfirmResetDialogOpen(false);
+            }}
+          >
+            Back
+          </Button>
+          <Button
+            color="danger"
+            onClick={() => {
+              setConfirmResetDialogOpen(false);
+              resetData();
+            }}
+          >
+            Reset
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -66,13 +66,12 @@ export default function Activities({classes, loading, user, elevation, showTitle
     <>
       <Card className={classes.cardHeight} elevation={elevation ? 1 : 0}>
         <CardContent>
-          {showTitle ? <Typography variant="h5" gutterBottom> Activities: Publications and Tweets </Typography> : <></>}
           <Grid container direction={vertical ? "column" : "row"} spacing={2}>
             <Grid item xs={12} lg={vertical ? 12 : 6}>
               <Typography gutterBottom> The number of publications published in the last 5 years </Typography>
               {publications.series.length ?
                 <Grid item xs={12}>
-                  <Chart options={publications.options} series={publications.series} type="bar" height={height}/>
+                  <Chart options={publications.options} series={publications.series} type="line" height={height}/>
                 </Grid> :
                 <> {loading} </>
               }
@@ -82,7 +81,7 @@ export default function Activities({classes, loading, user, elevation, showTitle
               <Typography gutterBottom> The number of tweets in the last 6 months.</Typography>
               {tweets.series.length ?
                 <Grid item>
-                  <Chart options={tweets.options} series={tweets.series} type="bar" height={height}/>
+                  <Chart options={tweets.options} series={tweets.series} type="line" height={height}/>
                 </Grid> :
                 <> {loading} </>
                 }

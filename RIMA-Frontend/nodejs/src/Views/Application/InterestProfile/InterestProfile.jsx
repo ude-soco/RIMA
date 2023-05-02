@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, CardContent, CircularProgress, Grid, makeStyles, Typography,} from "@material-ui/core";
+import {Card, CardContent, CircularProgress, Grid, makeStyles, Typography, paper} from "@material-ui/core";
 import RecentInterest from "./RecentInterest/RecentInterest";
 import Activities from "./Activities/Activities";
 import PotentialInterests from "./PotentialInterests/PotentialInterests";
@@ -18,6 +18,13 @@ const useStyles = makeStyles((theme) => ({
   padding: {
     margin: theme.spacing(15, 0, 15, 0),
   },
+  paperContainer: {
+    width: "100%",
+    backgroundColor: "#f2f2f2",
+    padding: theme.spacing(2),
+    borderRadius: theme.spacing(2),
+    margin: theme.spacing(2)
+  }
 }));
 
 export default function InterestProfile() {
@@ -41,12 +48,29 @@ export default function InterestProfile() {
   );
 
   return (
-    <>
-      <Grid container direction="row" spacing={2}>
+  <>
+    <Grid container direction="row" spacing={2}>
+      <paper className={classes.paperContainer}>
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom>
+                      Open interest profile:
+          </Typography>
+          <Typography gutterBottom>
+              This represents the interests extracted from your papers and can be changed by you.
+          </Typography>
+        </Grid>
         <Grid item xs={12}>
           <InterestOverview/>
         </Grid>
+      </paper>
 
+      <paper className={classes.paperContainer}>
+        <Typography variant="h5" gutterBottom>
+            Generated interest profile:
+        </Typography>
+        <Typography gutterBottom>
+            This represents the interests extracted from your papers without any changes.
+        </Typography>
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={12} lg={4}>
@@ -65,11 +89,18 @@ export default function InterestProfile() {
             </Grid>
 
             <Grid item xs={12} lg={8}>
-              <Activities
-                classes={classes}
-                loading={loading}
-                showTitle={true}
-              />
+              <Card className={classes.cardHeight}>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                      Activities: Publications and Tweets 
+                  </Typography>
+                    <Activities
+                      classes={classes}
+                      loading={loading}
+                      showTitle={true}
+                    />
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
         </Grid>
@@ -80,11 +111,13 @@ export default function InterestProfile() {
             <InterestTrends classes={classes} show={true} elevation={true}/>
           </Grid>
         </Grid>
-
+      </paper>
+        {/*
         <Grid item xs={12}>
-          <PotentialInterests classes={classes}/>
+          <PotentialInterests classes={classes} />
         </Grid>
-      </Grid>
-    </>
+        */}
+    </Grid>
+  </>
   );
 }

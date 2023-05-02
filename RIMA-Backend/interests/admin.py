@@ -17,8 +17,13 @@ class BlacklistedKeywordAdmin(admin.ModelAdmin):
 
 
 class PageAdmin(admin.ModelAdmin):
-    list_display = ("title", "year", "user", "used_in_calc")
+    list_display = ("title", "year", "users_list", "used_in_calc")
     list_filter = ("user", )
+
+    def users_list(self, obj):
+        return ", ".join([user.username for user in obj.user.all()])
+
+    users_list.short_description = "Users"
 
     class Meta:
         model = Paper

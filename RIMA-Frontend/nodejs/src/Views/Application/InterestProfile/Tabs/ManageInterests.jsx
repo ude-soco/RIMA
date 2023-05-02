@@ -17,6 +17,7 @@ import {
 import React, {useEffect, useState} from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from '@material-ui/icons/Delete';
+import UndoIcon from '@mui/icons-material/Undo';
 import Slider from "@material-ui/core/Slider";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
 import AddIcon from "@material-ui/icons/Add";
@@ -36,6 +37,8 @@ const ManageInterests = (props) => {
   const [deleteAnchorEl, setDeleteAnchorEl] = useState(null);
   const [interestToDelete, setInterestToDelete] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [dataChanged, setDataChanged] = useState([]);
+  const [deletedInterests, setDeletedInterests] = useState([]);
 
   useEffect(() => {
     if (wordCloudInterest) {
@@ -51,6 +54,7 @@ const ManageInterests = (props) => {
     if (index !== -1) {
       newInterests[index].value = value
       newInterests[index].text = updateInterestText;
+      newInterests[index].source= "Manual"
     }
     setInterests(newInterests);
     if (deleteAnchorEl) {
@@ -88,6 +92,9 @@ const ManageInterests = (props) => {
       }
       setInterests(newInterests);
       setEditInterest(false);
+      let idOfChangedData = dataChanged;
+      idOfChangedData.push(interest.id);
+      setDataChanged(idOfChangedData);
     } else {
       setExistInterest(true);
     }
@@ -105,7 +112,8 @@ const ManageInterests = (props) => {
       let item = {
         name: interest.text,
         weight: interest.value,
-        id: interest.id
+        id: interest.id,
+        source: interest.source
       }
       listOfInterests.push(item);
     });
@@ -134,6 +142,9 @@ const ManageInterests = (props) => {
       newInterests.push(newInterest);
       setInterests(newInterests);
       setEnterNewInterest(false);
+      let idOfChangedData = dataChanged;
+      idOfChangedData.push(newInterest.id);
+      setDataChanged(idOfChangedData);
     } else {
       setExistInterest(true);
     }
@@ -156,16 +167,34 @@ const ManageInterests = (props) => {
 
   const handleDeleteInterest = () => {
     let newInterests = interests.filter(i => i.id !== interestToDelete.id)
+    let deletedInterestsIdsArray= deletedInterests;
+    deletedInterestsIdsArray.push(interestToDelete.id);
+    setDeletedInterests(deletedInterestsIdsArray);
     setInterests([]);
     setInterests(newInterests);
     setConfirmDelete(true);
     setEditInterest(false);
+    let idOfChangedData = dataChanged;
+    idOfChangedData.push(interestToDelete.id);
+    setDataChanged(idOfChangedData);
     setDeleteAnchorEl(null);
   }
 
-  const resetInterest = async () => {
+  const resetInterests = async () => {
     const data = await fetchKeywords();
-    setInterests(data)
+    setInterests(data);
+    setDataChanged([]);
+  }
+  const handleUndoInterestChanges =async (interest) => {
+    const defaultValues = await fetchKeywords();
+    let editedInterestDefaultValue = defaultValues.find(i => i.id == interest.id);
+    let newInterests = interests.filter(i => i.id !== interest.id);
+    newInterests.push(editedInterestDefaultValue);
+    newInterests.sort((a, b) => (a.value < b.value) ? 1 : ((b.value < a.value) ? -1 : 0));
+    setInterests([]);
+    setInterests(newInterests);
+    let newDataChanged = dataChanged.filter(i => i !== interest.id);
+    setDataChanged(newDataChanged);
   }
   return (
     <>
@@ -192,7 +221,7 @@ const ManageInterests = (props) => {
                     paddingRight: Boolean(interest.id === editInterest) ? 24 : 16,
                     paddingBottom: Boolean(interest.id === editInterest) ? 16 : "",
                     paddingTop: Boolean(interest.id === editInterest) ? 16 : "",
-                    backgroundColor: Boolean(interest.id === editInterest) ? "#E6E6E6" : ""
+                    backgroundColor: Boolean(interest.id === editInterest || dataChanged.includes(interest.id)) ? "#E6E6E6" : ""
                   }}>
                   <Grid container alignItems="center">
                     <Grid item xs>
@@ -238,11 +267,18 @@ const ManageInterests = (props) => {
                       </Grid>
                     </Grid>
                     <Grid container justify="space-between">
-                      <Tooltip title="Delete interest" arrow>
-                        <IconButton color="secondary" onClick={(event) => handleOpenDeleteModal(event, interest)}>
-                          <DeleteIcon/>
-                        </IconButton>
-                      </Tooltip>
+                      <Grid item>
+                        <Tooltip title="Delete interest" arrow>
+                          <IconButton color="secondary" onClick={(event) => handleOpenDeleteModal(event, interest)}>
+                            <DeleteIcon/>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Undo changes" arrow>
+                          <IconButton color="secondary" onClick={() => handleUndoInterestChanges(interest)}>
+                            <UndoIcon/>
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
                       <Popper open={Boolean(deleteAnchorEl)} anchorEl={deleteAnchorEl}
                               style={{zIndex: 11}}
                               transition placement="bottom">
@@ -339,8 +375,8 @@ const ManageInterests = (props) => {
         <Grid container justify="space-between">
           <Grid item xs>
             <Button startIcon={<SettingsBackupRestoreIcon/>} color="secondary"
-                    onClick={resetInterest}>
-              Reset
+                    onClick={resetInterests} disabled={dataChanged.length==0}>
+              Cancel
             </Button>
           </Grid>
           <Grid item>

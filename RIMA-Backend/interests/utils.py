@@ -2,7 +2,8 @@ import json
 import tensorflow as tf
 import math
 from collections import defaultdict
-from django.db.models import Q
+from django.db.models import (Q, Count)
+from accounts.models import User
 from interests.models import (
     Tweet,
     Paper,
@@ -11,6 +12,9 @@ from interests.models import (
     LongTermInterest,
     Category,
     BlacklistedKeyword,
+    Keyword_Paper,
+    Author,
+    AuthorsInterests,
 )
 import numpy as np
 from interests.Keyword_Extractor.extractor import getKeyword
@@ -32,6 +36,7 @@ from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 
 
 def generate_long_term_model(user_id):
+    user = User.objects.get(id=user_id)
     print("updating long term model for {}".format(user_id))
     short_term_model = ShortTermInterest.objects.filter(
         user_id=user_id, used_in_calc=False
@@ -97,16 +102,11 @@ def generate_long_term_model(user_id):
             ]
             tweet_list += tweets
 
-            papers = [
-                paper
-                for paper in Paper.objects.filter(
-                    Q(user_id=user_id)
-                    & (
-                        Q(abstract__icontains=interest.lower())
-                        | Q(title__icontains=interest.lower())
-                    )
-                )
-            ]
+            papers = user.papers.filter(
+                Q(abstract__icontains=interest.lower())
+                | Q(title__icontains=interest.lower())
+            )
+
             print(papers)
             paper_list += papers
             # print("paper_list ",paper_list[0]) #by lamees
@@ -216,121 +216,317 @@ def generate_short_term_model(user_id, source):
         tweet_candidates.update(used_in_calc=True)
 
     if source == ShortTermInterest.SCHOLAR:
-        paper_candidates = Paper.objects.filter(user_id=user_id, used_in_calc=False)
-        print(
-            "paper_candidates in generate_short_term_model in utils.py",
-            paper_candidates,
-        )  # by lamees
-        # papers_years =[]
-        year_wise_text = {}
+        generate_user_short_term_interests(user_id)
 
-        for paper in paper_candidates:
-            #     papers_years.append(paper.year)
+#Osama
+def regenerate_long_term_model(user_id):
+    #    
+    #   regenerates the long term interest model after a user orders to regenerate
+    #   @param user id (The primary key of the user object)
+    #   @pre-request: none
+    #   Discription: 
+    #  The function gets all the NOT MANUALLY ADDED interests in the long-term model, deletes any of them that doesn't have a paper 
+    #  (or have all its papers blacklisted for the user), and updates the weights of the rest of the automatic generated interests 
+    #  to match the ones in the short term interests model
+    #   
+    #   @author Osama Elsafty
+    #
+    user = User.objects.get(id=user_id)
+    long_term_interests= LongTermInterest.objects.filter(user_id= user_id, source__in=[LongTermInterest.SCHOLAR, LongTermInterest.TWITTER])
+    short_term_interests = ShortTermInterest.objects.filter(user_id = user_id)
+    blacklisted_keywords = list(
+    BlacklistedKeyword.objects.filter(user_id=user_id).values_list(
+        "keyword__name", flat=True
+    ))
+    long_term_interests.filter(user_id=user_id).exclude(papers__in=user.papers.all()).delete()
+    for interest in short_term_interests:
+        if interest.keyword.name in blacklisted_keywords:
+            continue
+        if LongTermInterest.objects.filter(user_id=user_id, keyword=interest.keyword, source=LongTermInterest.MANUAL).exists():
+            #If a manual interest was found for the same keyword, don't update it and don't create a new one.
+            continue
+        long_term_interest,_= LongTermInterest.objects.update_or_create(
+            user_id= user_id,
+            keyword = interest.keyword,
+            defaults= {
+            "weight": interest.weight,
+            "updated_on": interest.updated_on,
+            "source": interest.source
+            }
+        )
+        long_term_interest.papers.set(interest.papers.all())
+    return
 
-            # papers_years = set(papers_years)
-            # for year in papers_years:
-            year_wise_text.update({paper.year: []})
+def fetch_papers_keywords(papers):
+    #modified the function from lames. This function is going with the approach that the paper is uniqe and can be stored once
+    # The same paper always have the same keywords and weights
+    # The paper is linked to a user in a many to many relationship. it doesn't have one author id, but many authors can have the same paper
+    # This function is storing no interests. It just fetches the keywords from the papers and stores a relationship between the paper and the keyword
+    # The relationship specifies the weight of the keyword in that paper as well
+    dbpedia = DBpediaSpotlight()
+    paper_candidates = papers.filter(used_in_calc= False)
+    for paper in paper_candidates:
+        text = (paper.title if paper.title else "") + " " + (paper.abstract if paper.abstract else "")
+        try:
+            keywords = getKeyword(text, model="SifRank", num=15)
+        except:
+            continue
+        if not len(keywords.keys()):
+            # print("No keywords found")
+            paper.used_in_calc=True
+            paper.save()
+            continue
+        (
+            wiki_keyword_redirect_mapping,
+            keyword_weight_mapping,
+        ) = dbpedia.annotate(keywords)     
+        if not len(keyword_weight_mapping.keys()):
+            paper.used_in_calc=True
+            paper.save()
+            continue
+        keywords = normalize(
+            keyword_weight_mapping
+        )  # normalize the weights to range of 5 to 1
 
-        print("year_wise_text", year_wise_text)
-        for paper in paper_candidates:
-            year_wise_text[paper.year].append(
-                (paper.title if paper.title else "")
-                + " "
-                + (paper.abstract if paper.abstract else "")
+        # find the category for each keyword seperatly and store the keyword in database as a row
+        for keyword, weight in keywords.items():
+            original_keyword_name = wiki_keyword_redirect_mapping.get(
+                keyword, keyword
+            )
+            keyword = keyword.lower()
+            keyword_instance, created = Keyword.objects.get_or_create(
+                name=keyword.lower()
+            )
+            if created:
+                
+                categories = wikicategory(
+                    keyword
+                )  
+                for category in categories:
+                    category_instance, _ = Category.objects.get_or_create(
+                        name=category
+                    )
+                    keyword_instance.categories.add(category_instance)
+                keyword_instance.save()
+            try:
+                original_keywords = json.loads(
+                    keyword_instance.original_keywords
+                )
+
+                original_keywords_with_weights = json.loads(
+                    keyword_instance.original_keywords_with_weights
+                )
+            except:
+                original_keywords = []
+                original_keywords_with_weights = []
+            original_keywords.append(original_keyword_name.lower())
+            keyword_instance.original_keywords = json.dumps(
+                list(set(original_keywords))
             )
 
-        print("\nyear_wise_text", year_wise_text)
-        for year, papers in year_wise_text.items():
-            for text in papers:
-                try:
-                    keywords = getKeyword(text, model="SifRank", num=15)
-                except:
-                    # silencing errors like
-                    # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
-                    continue
-                print(f"got keywords {keywords}")
-                if not len(keywords.keys()):
-                    print("No keywords found")
-                    continue
-                wiki_keyword_redirect_mapping, keyword_weight_mapping = wikifilter(
-                    keywords
-                )
-                # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
-                # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
-                if not len(keyword_weight_mapping.keys()):
-                    print("No keywords found in weight mapping")
-                    continue
-                keywords = normalize(
-                    keyword_weight_mapping
-                )  # normalize the weights to range of 5 to 1
+            # for original keyword with weights column
+            original_keywords_with_weights.append(
+                {original_keyword_name.lower(): weight}
+            )
+            keyword_instance.original_keywords_with_weights = json.dumps(
+                original_keywords_with_weights
+            )
 
-                # find the category for each keyword seperatly and store the keyword in database as a row
-                for keyword, weight in keywords.items():
-                    original_keyword_name = wiki_keyword_redirect_mapping.get(
-                        keyword, keyword
-                    )
-                    print(
-                        "\noriginal_keyword_name ", original_keyword_name
-                    )  # by lamees
-                    keyword = keyword.lower()
-                    if keyword in blacklisted_keywords:
-                        print("Skipping {} as its blacklisted".format(keyword))
-                        continue
-                    keyword_instance, created = Keyword.objects.get_or_create(
-                        name=keyword.lower()
-                    )
+            keyword_instance.save()
+            # store a relationship between the paper and the keyword
+            Keyword_Paper.objects.create(
+                paper = paper,
+                keyword = keyword_instance,
+                weight = weight
+            )
+            paper.used_in_calc=True
+            paper.save()
+        
+#Osama
+def generate_authors_interests(user_id):
+#    
+#   Genrates the interests of an author connected to a certain user
+#   @param user id (The primary key of the user object)
+#   @pre-request: The papers of the authors have their keywords already fetched (used_in_calc = true)
+#   Discription: 
+#   - All the authors that are connected to the user and have not have their interests generated yet are fetched. 
+#   - The interests of authors are generated where the weight of the interest equals the average weight of its keyword in the autho connected papers
+#   - More details about the weight calculations and the normalization process are written in the discription of the function generate_user_short_term_interests
+#   - This function is follwoing the exact same approach but only for the authors connected to the user object instead of the user object itself
+#   
+#   @author Osama Elsafty
+#
+    user = User.objects.get(id=user_id)
+    userConnectedAuthors = Author.objects.filter(
+    author_citations__user=user,
+    interests_generated = False
+)
+    for author in userConnectedAuthors:
+        # Get all AuthorsPaper linked to the author sorted by year (old to new)
+        authors_papers = Paper.objects.filter(
+        author=author).order_by('year')
+        for paper in authors_papers:
+            for paper in authors_papers:
+                # get the keywords and weights for every paper
+                paper_keywords_with_weight = paper.paper_keywords.all()
+                for keyword_with_weight in paper_keywords_with_weight:
+                    #create/ update an interest for every keyword
+                    average_weight = round(keyword_with_weight.weight/authors_papers.count(),1)
+                    author_interest, created = AuthorsInterests.objects.get_or_create(
+                    Keyword=keyword_with_weight.keyword,
+                    author=author, 
+                    defaults={'weight': keyword_with_weight.weight})
                     if created:
-                        print("getting wiki categories")
-                        categories = wikicategory(
-                            keyword
-                        )  # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
-                        for category in categories:
-                            category_instance, _ = Category.objects.get_or_create(
-                                name=category
-                            )
-                            keyword_instance.categories.add(category_instance)
-                        keyword_instance.save()
+                        author_interest.weight = average_weight
+                    else:
+                        #if the interest was there already (from an older paper), add the weight to what was existing
+                        author_interest.weight += average_weight
+                    author_interest.save()
+                    #link the interest to the paper
+                    author_interest.papers.add(paper) 
+        # end of papers for loop
+        #normalize weights
+        AuthorInterests = author.authors_interests.all().order_by("-weight")
+        dataSet = list(AuthorInterests.values_list('weight', flat=True))
+        std_dev = np.std(dataSet)
+        mean_value = np.mean(dataSet)
+        highestWeightLimit = mean_value + std_dev * 3
+        lowestWeightLimit = mean_value - std_dev * 3
+        for AuthorInterest in AuthorInterests:
+            if(AuthorInterest.weight > highestWeightLimit) :
+                AuthorInterest.weight = 5
+            elif(AuthorInterest.weight < lowestWeightLimit):
+                AuthorInterest.weight = 1
+            else:
+                AuthorInterest.weight = round(((AuthorInterest.weight - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
+            # AuthorInterest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
+            AuthorInterest.save()
+        # now we need to scale up so that the highest is always 5
+        AuthorInterests = author.authors_interests.all().order_by("-weight")
+        if AuthorInterests.first().weight < 5:
+            scale = 5 / AuthorInterests.first().weight
+            for AuthorInterest in AuthorInterests:
+                AuthorInterest.weight *= scale
+                AuthorInterest.weight = round(AuthorInterest.weight,1)
+                # AuthorInterest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
+                AuthorInterest.save()
+        author.interests_generated= True
+        author.save() 
+    return
 
-                    try:
-                        original_keywords = json.loads(
-                            keyword_instance.original_keywords
-                        )
+#Osama
+# def generate_user_short_term_interests_newest_weights(user_id):
+# #    
+# #   Genrates the short term interest model (only papers are considered and not tweets). The newest weight of the keyword is considered as the weight of the interest
+# #   @param user id (The primary key of the user object)
+# #   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
+# #   Discription: 
+# #   - The users are interested in all the keywords that are fetched from all papers in their profile
+# #   - We loop through all the papers of the user (old to new), find the keywords of the paper, and create an interest for each keyword (or get it if already exists) 
+# #   - The weight of the interest = the newest weight of the keyword
+# #   - If another newer paper comes later that has the same keyword, it will override the value of the weight of the interest so that the interest has the newest weight
+# #   
+# #   @author Osama Elsafty
+# #   The function is commented since we are using the average weight instead of the newest weight.
+# #   In Case of returning back to the newest weight approach, this is function is compatible with the new database design 
 
-                        original_keywords_with_weights = json.loads(
-                            keyword_instance.original_keywords_with_weights
-                        )
-                        # print("original keywords variable", original_keywords)
-                    except:
-                        original_keywords = []
-                        original_keywords_with_weights = []
-                    original_keywords.append(original_keyword_name.lower())
-                    keyword_instance.original_keywords = json.dumps(
-                        list(set(original_keywords))
-                    )
+#     user = User.objects.get(id=user_id)
+#     paper_candidates = user.papers.all().order_by('year')
+#     for paper in paper_candidates:
+#         # get the keywords and weights for every paper
+#         paper_keywords_with_weight = paper.paper_keywords.all()
+#         for keyword_with_weight in paper_keywords_with_weight:
+#             #create/ update an interest for every keyword
+#             interest, created = ShortTermInterest.objects.get_or_create(
+#                 user_id=user_id,
+#                 keyword=keyword_with_weight.keyword,
+#                 model_month=1,
+#                 model_year=paper.year,
+#                 defaults={"source": ShortTermInterest.SCHOLAR, "weight": keyword_with_weight.weight}, 
+#                 )
+#             if not created:
+#                 #if the interest was there already (from an older paper), change its weight
+#                 interest.weight = keyword_with_weight.weight
+#                 interest.save()
+#             #link the interest to the paper
+#             interest.papers.add(paper) 
+#     return
 
-                    # for original keyword with weights column
-                    original_keywords_with_weights.append(
-                        {original_keyword_name.lower(): weight}
-                    )
-                    keyword_instance.original_keywords_with_weights = json.dumps(
-                        original_keywords_with_weights
-                    )
-
-                    keyword_instance.save()
-
-                    s_interest, _ = ShortTermInterest.objects.update_or_create(
-                        user_id=user_id,
-                        keyword=keyword_instance,
-                        model_month=1,
-                        model_year=year,
-                        defaults={"source": source, "weight": weight},
-                    )
-                    for p in paper_candidates.filter(
-                        Q(title__icontains=keyword) | Q(abstract__icontains=keyword)
-                    ):
-                        s_interest.papers.add(p)
-        paper_candidates.update(used_in_calc=True)
-
+#Osama
+def generate_user_short_term_interests(user_id):
+#    
+#   Genrates the short term interest model (only papers are considered and not tweets). The average weight of the keyword is considered as the weight of the interest
+#   @param user id (The primary key of the user object)
+#   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
+#   Discription: 
+#   - We start by cleaning all the interests of the user that are not linked to any of his papers (manually added interests stay, and twitter interests are not considered here)
+#   - The users are interested in all the keywords that are fetched from all papers in their profile
+#   - We loop through all the papers of the user and find the keywords of the paper, and create an interest for each keyword (or get it if already exists) 
+#   - The weight of a created interest = the weight of the keyword in the paper / numper of papers (w/sum)
+#   - The weight of an updated interest = (w1 + w2 + ....)/ sum = w1/sum + w2/sum +.... = w1/sum + existing weight
+#   - The interest is then linked to the paper and saved and next step is to normalize the weights to be on a scale of 1 to 5
+#   - dataSet is a list of all interests weights. The mean value and the standard diveation are calculated
+#   - The outliers are calculated according to the empirical rule. The high and low limits are set to exclude the outlirs from the scale
+#   - The outliers are getting a value of 1 (for the too low outliers) or 5 (for the too high outliers) without the normalization equation
+#   - The other numbers are getting normalized 
+#   - In some cases, there are no outliers and all the numbers are arround the mean value. That will cause us not to have any 5 weighted interests
+#   - since the weighting is rational and the 5 weighted interests are only the ones that are the user is mostly interested in regardeless of how much they were mentioned,
+#      we scale up all the interests by multiplying all the weights by the number that makes the highest weight = 5 (only if we didn't have any 5 wighted ones)
+#   
+#   @author Osama Elsafty
+#  
+    user = User.objects.get(id=user_id)
+    user.short_term_interests.filter(user_id=user_id).exclude(papers__in=user.papers.all()).delete()
+    paper_candidates = user.papers.all().order_by('year')
+    
+    for paper in paper_candidates:
+        # get the keywords and weights for every paper
+        paper_keywords_with_weight = paper.paper_keywords.all()
+        for keyword_with_weight in paper_keywords_with_weight:
+            #create/ update an interest for every keyword
+            average_weight = keyword_with_weight.weight/paper_candidates.count()
+            interest, created = ShortTermInterest.objects.update_or_create(
+                user_id=user_id,
+                keyword=keyword_with_weight.keyword,
+                defaults={"source": ShortTermInterest.SCHOLAR, "model_year": paper.year, "model_month": 1}, 
+                )
+            if created:
+                interest.weight = average_weight
+            else:
+                #if the interest was there already (from an older paper), add the weight to what was existing
+                interest.weight += average_weight
+            interest.save()
+            #link the interest to the paper
+            interest.papers.add(paper) 
+    #normalize weights
+    interests = user.short_term_interests.all().order_by("-weight")
+    dataSet = list(interests.values_list('weight', flat=True))
+    std_dev = np.std(dataSet)
+    mean_value = np.mean(dataSet)
+    highestWeightLimit = mean_value + std_dev * 3
+    lowestWeightLimit = mean_value - std_dev * 3
+    if(std_dev != 0):
+        #if standard deviation is 0, it means all the interests have the same weight and no need for normalization and only scaling up might be needed
+        #Normalizing with this method while havein the std_dev = 0 leads to a division by zero error
+        for interest in interests:
+            if(interest.weight > highestWeightLimit) :
+                interest.weight = 5
+            elif(interest.weight < lowestWeightLimit):
+                interest.weight = 1
+            else:
+                interest.weight = round(((interest.weight - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
+            # interest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
+            interest.save()
+    # now we need to scale up so that the highest is always 5
+    interests = user.short_term_interests.all().order_by("-weight")
+    if interests.exists() and 0 < interests.first().weight < 5:
+        scale = 5 / interests.first().weight
+        for interest in interests:
+            interest.weight *= scale
+            interest.weight = round(interest.weight,1)
+            # interest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
+            interest.save()
+    return
 
 # LK
 def generate_short_term_model_dbpedia(user_id, source):
@@ -423,114 +619,115 @@ def generate_short_term_model_dbpedia(user_id, source):
         tweet_candidates.update(used_in_calc=True)
 
     if source == ShortTermInterest.SCHOLAR:
-        paper_candidates = Paper.objects.filter(user_id=user_id, used_in_calc=False)
-        # print("paper_candidates in generate_short_term_model in utils.py", paper_candidates) #by lamees
-        # TODO: only one paper per year is being stored possible solution:key year, value list of papers
+        generate_user_short_term_interests(user_id)
+        # paper_candidates = Paper.objects.filter(user_id=user_id, used_in_calc=False)
+        # # print("paper_candidates in generate_short_term_model in utils.py", paper_candidates) #by lamees
+        # # TODO: only one paper per year is being stored possible solution:key year, value list of papers
 
-        year_wise_text = {}
+        # year_wise_text = {}
 
-        for paper in paper_candidates:
-            year_wise_text.update({paper.year: []})
+        # for paper in paper_candidates:
+        #     year_wise_text.update({paper.year: []})
 
-        # print("year_wise_text", year_wise_text)
-        for paper in paper_candidates:
-            year_wise_text[paper.year].append(
-                (paper.title if paper.title else "")
-                + " "
-                + (paper.abstract if paper.abstract else "")
-            )
+        # # print("year_wise_text", year_wise_text)
+        # for paper in paper_candidates:
+        #     year_wise_text[paper.year].append(
+        #         (paper.title if paper.title else "")
+        #         + " "
+        #         + (paper.abstract if paper.abstract else "")
+        #     )
 
-        # print("\nyear_wise_text", year_wise_text)
-        for year, papers in year_wise_text.items():
-            for text in papers:
-                try:
-                    keywords = getKeyword(text, model="SifRank", num=15)
-                except:
-                    # silencing errors like
-                    # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
-                    continue
-                # print(f"got keywords {keywords}")
-                if not len(keywords.keys()):
-                    # print("No keywords found")
-                    continue
-                (
-                    wiki_keyword_redirect_mapping,
-                    keyword_weight_mapping,
-                ) = dbpedia.annotate(keywords)
-                # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
-                # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
-                if not len(keyword_weight_mapping.keys()):
-                    # print("No keywords found in weight mapping")
-                    continue
-                keywords = normalize(
-                    keyword_weight_mapping
-                )  # normalize the weights to range of 5 to 1
+        # # print("\nyear_wise_text", year_wise_text)
+        # for year, papers in year_wise_text.items():
+        #     for text in papers:
+        #         try:
+        #             keywords = getKeyword(text, model="SifRank", num=15)
+        #         except:
+        #             # silencing errors like
+        #             # interests/Keyword_Extractor/utils/datarepresentation.py:106: RuntimeWarning: Mean of empty slice
+        #             continue
+        #         # print(f"got keywords {keywords}")
+        #         if not len(keywords.keys()):
+        #             # print("No keywords found")
+        #             continue
+        #         (
+        #             wiki_keyword_redirect_mapping,
+        #             keyword_weight_mapping,
+        #         ) = dbpedia.annotate(keywords)
+        #         # wiki_keyword_redirect_mapping = {'Learning analytics': 'learning analytics', 'Open assessment': 'open assessment', 'Learning environment': 'learning environment', 'Peer assessment': 'peer assessment'}
+        #         # keyword_weight_mapping = {'Learning analytics': 9, 'Open assessment': 1, 'Learning environment': 5, 'Peer assessment': 9}
+        #         if not len(keyword_weight_mapping.keys()):
+        #             # print("No keywords found in weight mapping")
+        #             continue
+        #         keywords = normalize(
+        #             keyword_weight_mapping
+        #         )  # normalize the weights to range of 5 to 1
 
-                # find the category for each keyword seperatly and store the keyword in database as a row
-                for keyword, weight in keywords.items():
-                    original_keyword_name = wiki_keyword_redirect_mapping.get(
-                        keyword, keyword
-                    )
-                    # print("\noriginal_keyword_name ", original_keyword_name) # by lamees
-                    keyword = keyword.lower()
-                    if keyword in blacklisted_keywords:
-                        # print("Skipping {} as its blacklisted".format(keyword))
-                        continue
-                    keyword_instance, created = Keyword.objects.get_or_create(
-                        name=keyword.lower()
-                    )
-                    if created:
-                        # print("getting wiki categories")
-                        categories = wikicategory(
-                            keyword
-                        )  # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
-                        for category in categories:
-                            category_instance, _ = Category.objects.get_or_create(
-                                name=category
-                            )
-                            keyword_instance.categories.add(category_instance)
-                        keyword_instance.save()
-                    try:
-                        original_keywords = json.loads(
-                            keyword_instance.original_keywords
-                        )
+        #         # find the category for each keyword seperatly and store the keyword in database as a row
+        #         for keyword, weight in keywords.items():
+        #             original_keyword_name = wiki_keyword_redirect_mapping.get(
+        #                 keyword, keyword
+        #             )
+        #             # print("\noriginal_keyword_name ", original_keyword_name) # by lamees
+        #             keyword = keyword.lower()
+        #             if keyword in blacklisted_keywords:
+        #                 # print("Skipping {} as its blacklisted".format(keyword))
+        #                 continue
+        #             keyword_instance, created = Keyword.objects.get_or_create(
+        #                 name=keyword.lower()
+        #             )
+        #             if created:
+        #                 # print("getting wiki categories")
+        #                 categories = wikicategory(
+        #                     keyword
+        #                 )  # ['Academic transfer', 'Education reform', 'Educational evaluation methods', 'Peer learning', 'Student assessment and evaluation']
+        #                 for category in categories:
+        #                     category_instance, _ = Category.objects.get_or_create(
+        #                         name=category
+        #                     )
+        #                     keyword_instance.categories.add(category_instance)
+        #                 keyword_instance.save()
+        #             try:
+        #                 original_keywords = json.loads(
+        #                     keyword_instance.original_keywords
+        #                 )
 
-                        original_keywords_with_weights = json.loads(
-                            keyword_instance.original_keywords_with_weights
-                        )
-                        # print("original keywords variable", original_keywords)
-                    except:
-                        original_keywords = []
-                        original_keywords_with_weights = []
-                    original_keywords.append(original_keyword_name.lower())
-                    keyword_instance.original_keywords = json.dumps(
-                        list(set(original_keywords))
-                    )
+        #                 original_keywords_with_weights = json.loads(
+        #                     keyword_instance.original_keywords_with_weights
+        #                 )
+        #                 # print("original keywords variable", original_keywords)
+        #             except:
+        #                 original_keywords = []
+        #                 original_keywords_with_weights = []
+        #             original_keywords.append(original_keyword_name.lower())
+        #             keyword_instance.original_keywords = json.dumps(
+        #                 list(set(original_keywords))
+        #             )
 
-                    # for original keyword with weights column
-                    original_keywords_with_weights.append(
-                        {original_keyword_name.lower(): weight}
-                    )
-                    keyword_instance.original_keywords_with_weights = json.dumps(
-                        original_keywords_with_weights
-                    )
+        #             # for original keyword with weights column
+        #             original_keywords_with_weights.append(
+        #                 {original_keyword_name.lower(): weight}
+        #             )
+        #             keyword_instance.original_keywords_with_weights = json.dumps(
+        #                 original_keywords_with_weights
+        #             )
 
-                    keyword_instance.save()
-                    # below a new row will be created if any of the values provided in (user_id, keyword, model_month and model_year) is different
-                    # or the existing row is updated with new source and weight
-                    s_interest, _ = ShortTermInterest.objects.update_or_create(
-                        user_id=user_id,
-                        keyword=keyword_instance,
-                        model_month=1,
-                        model_year=year,
-                        defaults={"source": source, "weight": weight},
-                    )
-                    for p in paper_candidates.filter(
-                        Q(title__icontains=original_keyword_name)
-                        | Q(abstract__icontains=original_keyword_name)
-                    ):
-                        s_interest.papers.add(p)
-        paper_candidates.update(used_in_calc=True)
+        #             keyword_instance.save()
+        #             # below a new row will be created if any of the values provided in (user_id, keyword, model_month and model_year) is different
+        #             # or the existing row is updated with new source and weight
+        #             s_interest, _ = ShortTermInterest.objects.update_or_create(
+        #                 user_id=user_id,
+        #                 keyword=keyword_instance,
+        #                 model_month=1,
+        #                 model_year=year,
+        #                 defaults={"source": source, "weight": weight},
+        #             )
+        #             for p in paper_candidates.filter(
+        #                 Q(title__icontains=original_keyword_name)
+        #                 | Q(abstract__icontains=original_keyword_name)
+        #             ):
+        #                 s_interest.papers.add(p)
+        # paper_candidates.update(used_in_calc=True)
 
 
 def get_weighted_interest_similarity_score(
@@ -687,7 +884,8 @@ def get_top_short_term_interest_by_weight(user_id, count=10):
     date_filtered_qs = (
         ShortTermInterest.objects.filter(user_id=user_id)
         .prefetch_related("tweets", "papers", "keyword")
-        .order_by("-model_year", "-model_month", "-weight")
+        .annotate(papers_count=Count("papers"))
+        .order_by("-weight", "-papers_count", "-model_year", "-model_month")
     )
 
     keyword_id_map = {}
