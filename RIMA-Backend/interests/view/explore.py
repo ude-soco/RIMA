@@ -1,6 +1,35 @@
 import wikipediaapi
+import random
 import time
 
+def getPagesInCategory(cat):
+    wiki= wikipediaapi.Wikipedia("en")
+    allPagesCat=wiki.page("Category:"+cat)
+    allPagesCat=allPagesCat.categorymembers
+    allPages=[]
+    subCat=[]
+    for i in allPagesCat:
+        catOrPage=i.split(":")
+        if len(catOrPage) !=1:
+            subCat.append(catOrPage)
+        else:
+            allPages.append(catOrPage[0])
+    return(allPages)
+
+
+def getRandPages(pages, n):
+    pages=list(set(pages))
+    currPages=[]
+    try:
+        for i in range(0,n):
+            page=random.choice(pages)
+            currPages.append(page)
+            pages.pop(pages.index(page))
+    except:
+
+        print("no categories\n\n\n")
+
+    return currPages
 
 def getPageData(interest):
     wiki = wikipediaapi.Wikipedia('en')
@@ -29,7 +58,7 @@ def getPageData(interest):
 
 
 
-
+#start functions for explore.py
 def getLinksTextInPage(interest):
     wiki=wikipediaapi.Wikipedia('en')
     page=wiki.page(interest)
