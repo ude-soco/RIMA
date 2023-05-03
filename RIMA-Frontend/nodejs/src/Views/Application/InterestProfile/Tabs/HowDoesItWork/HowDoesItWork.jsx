@@ -88,11 +88,11 @@ export default function HowDoesItWork() {
           justifyContent: "space-evenly !important"
         }}
       >
-        <Tab label="Step 1"/>
-        <Tab label="Step 2"/>
-        <Tab label="Step 3"/>
-        <Tab label="Step 4"/>
-        <Tab label="Step 5"/>
+        <Tab label="Step 1: Provide Source of Data"/>
+        <Tab label="Step 2: Collect Publications"/>
+        <Tab label="Step 3: Extract Keywords"/>
+        <Tab label="Step 4: Generate Keywords"/>
+        <Tab label="Step 5: Visualize Interest Profile"/>
       </Tabs>
       <TabPanel value={value} index={0}>
         <HowStep1/>

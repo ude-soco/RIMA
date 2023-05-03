@@ -117,9 +117,11 @@ const GetNodeLink = (props) => {
   };
 
   const addNewInterest = async (currInterest) => {
+    console.log("xx Discover get node link", currInterest)
     let alreadyExist = validateInterest(keywords, currInterest);
-
+    console.log("xx Discover get node link", alreadyExist)
     if (!alreadyExist) {
+      console.log("xx Discover get node link already")
       let newInterests = keywords;
       let newInterest = {
         id: Date.now(),
@@ -137,15 +139,16 @@ const GetNodeLink = (props) => {
         let item = {
           name: interest.text,
           weight: interest.value,
-          id: interest.id
+          id: interest.id,
+          source: interest.source
         }
         listOfInterests.push(item);
       });
-      console.log("Updated list", listOfInterests)
+      console.log("xx Updated list Discover get node link", listOfInterests)
       try {
         await RestAPI.addKeyword(listOfInterests);
       } catch (err) {
-        console.log(err);
+        console.log("xx",err);
       }
       // console.log(newInterests)
     }
@@ -291,6 +294,7 @@ const GetNodeLink = (props) => {
                 select: function (ele) {
                   // a function to execute when the command is selected
                   let currInterest = ele.data()["label"];
+                  console.log("xx currInterest")
                   addNewInterest(currInterest);
                   let msg = "The interest " + currInterest + " has been saved";
                   toast.success(msg, {

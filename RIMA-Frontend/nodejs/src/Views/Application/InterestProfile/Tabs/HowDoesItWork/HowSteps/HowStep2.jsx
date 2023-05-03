@@ -64,12 +64,12 @@ const HowStep2 = () => {
     <Grid container>
       <Grid item xs={12} style={{paddingBottom: 16}}>
         <Typography variant="h5">
-          Collect publications and tweets
+          Collect publications
         </Typography>
       </Grid>
 
       <Grid container>
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={10}>
           <Typography gutterBottom> Your publications from the last 5 years </Typography>
           {publications.series.length ?
             <Grid item xs={12}>
@@ -79,15 +79,6 @@ const HowStep2 = () => {
           }
         </Grid>
 
-        <Grid item xs={12} lg={6}>
-          <Typography gutterBottom> Your tweets from the last 5 months</Typography>
-          {tweets.series.length ?
-            <Grid item>
-              <Chart options={tweets.options} series={tweets.series} type="bar" height={400}/>
-            </Grid> :
-            <Loading/>
-          }
-        </Grid>
       </Grid>
     </Grid>
   );

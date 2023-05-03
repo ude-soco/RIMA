@@ -109,7 +109,8 @@ const SVGVenn = (props) => {
                 let item = {
                     name: interest.text,
                     weight: interest.value,
-                    id: interest.id
+                    id: interest.id,
+                    source:interest.source
                 }
                 listOfInterests.push(item);
             });
