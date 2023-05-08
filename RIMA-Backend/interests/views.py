@@ -1,5 +1,6 @@
 import datetime
 from distutils.log import Log
+import numpy as np
 import monthdelta
 import json
 from rest_framework import permissions
@@ -367,11 +368,11 @@ class UserStreamGraphView(APIView):
                 "-weight").values_list("keyword__name", flat=True))
         top_twitter_keywords = list(set(top_twitter_keywords))[:10]
 
-        top_paper_keywords = list(
-            ShortTermInterest.objects.filter(
-                user=user, source=ShortTermInterest.SCHOLAR).order_by(
-                "-weight").values_list("keyword__name", flat=True))
-        top_paper_keywords = list(set(top_paper_keywords))[:10]
+        top_short_term_interests = ShortTermInterest.objects.filter(
+            user=user, source=ShortTermInterest.SCHOLAR
+        ).order_by("-weight")[:10]
+        top_paper_keywords = [interest.keyword.name for interest in top_short_term_interests]
+
 
         for index in range(5, -1, -1):
             # data for last 6 months
@@ -388,13 +389,45 @@ class UserStreamGraphView(APIView):
         for index in range(4, -1, -1):
             # data for last 5 years
             year = today.year - index
-            scholar_data[str(year)] = list(
-                ShortTermInterest.objects.filter(
-                    model_year=year,
-                    user=user,
-                    source=ShortTermInterest.SCHOLAR,
-                    keyword__name__in=top_paper_keywords,
-                ).values("keyword__name", "weight"))
+            paper_candidates = user.papers.filter(year = year)
+            scholar_data[str(year)] = []
+            for paper in paper_candidates:
+                paper_keywords_with_weight = list(
+                    paper.paper_keywords.filter(keyword__name__in=top_paper_keywords).values("keyword__name", "weight")
+                )
+                for item in paper_keywords_with_weight:
+                    keyword = item["keyword__name"]
+                    weight = item["weight"] / paper_candidates.count()
+                    if keyword in [data_item["keyword__name"] for data_item in scholar_data[str(year)]]:
+                        for data_item in scholar_data[str(year)]:
+                            if data_item["keyword__name"] == keyword:
+                                data_item["weight"] += weight
+                                break
+                    else:
+                        scholar_data[str(year)].append({"keyword__name": keyword, "weight": weight})
+            # weight normalization
+            weights_list = [] # needed to know the standard deviation and the mean value of the weights
+            for item in scholar_data[str(year)]:
+                weights_list.append(item["weight"])
+            std_dev = np.std(weights_list)
+            mean_value = np.mean(weights_list)
+            highestWeightLimit = mean_value + std_dev * 3
+            lowestWeightLimit = mean_value - std_dev * 3
+            if(std_dev != 0):
+                for item in scholar_data[str(year)]:
+                    if(item["weight"] > highestWeightLimit) :
+                        item["weight"] = 5
+                    elif(item["weight"] < lowestWeightLimit):
+                        item["weight"] = 1
+                    else:
+                        item["weight"] = round(((item["weight"] - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
+                    weights_list.append(item["weight"])
+            # scale up the interests to make the top interest in the year show with the weight of 5
+            if weights_list:
+                if 0 < max(weights_list) < 5:
+                    scale = 5 / max(weights_list)
+                    for item in scholar_data[str(year)]:
+                        item["weight"] = round(item["weight"]*scale,1)
         response_data = {
             "twitter_data": twitter_data,
             "paper_data": scholar_data
