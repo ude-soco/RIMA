@@ -392,18 +392,19 @@ def generate_authors_interests(user_id):
         mean_value = np.mean(dataSet)
         highestWeightLimit = mean_value + std_dev * 3
         lowestWeightLimit = mean_value - std_dev * 3
-        for AuthorInterest in AuthorInterests:
-            if(AuthorInterest.weight > highestWeightLimit) :
-                AuthorInterest.weight = 5
-            elif(AuthorInterest.weight < lowestWeightLimit):
-                AuthorInterest.weight = 1
-            else:
-                AuthorInterest.weight = round(((AuthorInterest.weight - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
-            # AuthorInterest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
-            AuthorInterest.save()
-        # now we need to scale up so that the highest is always 5
+        if(std_dev != 0):
+            for AuthorInterest in AuthorInterests:
+                if(AuthorInterest.weight > highestWeightLimit) :
+                    AuthorInterest.weight = 5
+                elif(AuthorInterest.weight < lowestWeightLimit):
+                    AuthorInterest.weight = 1
+                else:
+                    AuthorInterest.weight = round(((AuthorInterest.weight - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
+                # AuthorInterest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
+                AuthorInterest.save()
+            # now we need to scale up so that the highest is always 5
         AuthorInterests = author.authors_interests.all().order_by("-weight")
-        if AuthorInterests.first().weight < 5:
+        if AuthorInterests.exists() and 0 < AuthorInterests.first().weight < 5:
             scale = 5 / AuthorInterests.first().weight
             for AuthorInterest in AuthorInterests:
                 AuthorInterest.weight *= scale
