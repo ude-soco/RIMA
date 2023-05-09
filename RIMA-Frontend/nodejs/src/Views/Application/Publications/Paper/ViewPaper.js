@@ -369,10 +369,10 @@ toggleGenerateModal = () => {
                         Generate Interest Profile
                       </Button>
                       <Button color="primary" onClick={this.fetchNewPapers}>
-                        Fetch New Papers
+                        Fetch New Publications
                       </Button>
                       <Button color="primary" onClick={this.addPaper}>
-                        Add Paper
+                        Add Publication
                       </Button>
                       {/* 
                       <Link to={"/app/cloud-chart/" + getItem("userId")}>
