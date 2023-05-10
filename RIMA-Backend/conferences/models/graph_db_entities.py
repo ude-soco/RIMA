@@ -1,5 +1,6 @@
 from neomodel import (StructuredNode, StringProperty, FloatProperty,
-                      StructuredRel, RelationshipTo, RelationshipFrom)
+                      StructuredRel, RelationshipTo, RelationshipFrom,
+                      Relationship)
 import json
 
 
@@ -68,6 +69,7 @@ class Author(StructuredNode):
     published = RelationshipTo(Publication, "published")
     topics = RelationshipTo(Topic, 'has_topic', model=Has_Topic)
     keywords = RelationshipTo(Keyword, 'has_keyword', model=Has_keyword)
+    co_authors = Relationship("Author", 'co_author')
 
 
 class Event(StructuredNode):

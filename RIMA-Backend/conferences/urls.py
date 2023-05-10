@@ -6,8 +6,10 @@ urlpatterns = [
 
     # TODO: All the author insights urls should be called in this block - START
     path("author-insights/", author_insights_url),
+    path('getNetwokGraph/<pk1>/', getNetworkData.as_view()),
 
     # TODO: All the author insights urls should be called in this block - END
+
     ############################################################# islam compare conf. Visulizations updated########################################################################
     path('getTotalSharedAuthorsEvolution/',
          TotalSharedAuthorsEvolutionView.as_view()),
