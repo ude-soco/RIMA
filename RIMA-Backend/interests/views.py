@@ -70,7 +70,7 @@ class ResetData(APIView):
         LongTermInterest.objects.filter(user_id=request.user.id).delete()
         ShortTermInterest.objects.filter(user_id=request.user.id).delete()
         Tweet.objects.filter(user_id=request.user.id).delete()
-        import_user_data(request.user.id)
+        import_user_data.delay(request.user.id)
         return Response({})
     
 class EditPaper(APIView):
