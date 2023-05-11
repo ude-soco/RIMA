@@ -1,4 +1,5 @@
 from conferences.models.graph_db_entities import *
+from collections import defaultdict
 
 
 def get_event_coauthor_data(event_name):
@@ -77,24 +78,6 @@ def create_author_publication_links(author_node):
     return author_publication_links
 
 
-def get_publication_detailed_info(publication_id):
-
-    pubication = Publication.nodes.get_or_none(paper_id=publication_id)
-    publication_citation_links = generate_publication_citation_links(
-        pubication)
-    publication_info = {
-        "title": pubication.title,
-        "paper id": pubication.paper_id,
-        "abstract": pubication.abstract,
-        "citation network": publication_citation_links,
-        "paper_venu": pubication.paper_venu,
-        "urls": pubication.urls,
-        "year": pubication.years,
-        "paper doi": pubication.paper_doi
-    }
-    return publication_info
-
-
 def generate_publication_citation_links(publication_node):
     """
     Generates a list of dictionaries containing information about the publications that cite a given publication.
@@ -117,6 +100,24 @@ def generate_publication_citation_links(publication_node):
             }
         )
     return pub_titles_list
+
+
+def get_publication_detailed_info(publication_id):
+
+    pubication = Publication.nodes.get_or_none(paper_id=publication_id)
+    publication_citation_links = generate_publication_citation_links(
+        pubication)
+    publication_info = {
+        "title": pubication.title,
+        "paper id": pubication.paper_id,
+        "abstract": pubication.abstract,
+        "citation network": publication_citation_links,
+        "paper_venu": pubication.paper_venu,
+        "urls": pubication.urls,
+        "year": pubication.years,
+        "paper doi": pubication.paper_doi
+    }
+    return publication_info
 
 
 def generate_pub_citations_info(publication_node):
@@ -148,3 +149,75 @@ def generate_pub_citations_info(publication_node):
             }
         )
     return publication_citations_detailed_info
+
+
+def find_similar_authors_by_shared_keywords(author_id):
+    """
+    Finds authors who have a significant number of shared keywords with the target author.
+
+    Args:
+        author_id (str): The ID of the target author.
+
+    Returns:
+        list: A list of tuples, where each tuple contains an author's ID and the count of shared keywords with the target author.
+    """
+    target_author = Author.nodes.get_or_none(
+        semantic_scolar_author_id=author_id)
+    if (target_author is not None):
+        target_keywords = set(
+            [k.keyword for k in target_author.keywords.all()])
+        shared_keyword_counts = defaultdict(int)
+        all_other_author = Author.nodes.all()
+        for other_author in all_other_author:
+            if other_author.semantic_scolar_author_id == target_author.semantic_scolar_author_id:
+                continue
+
+            other_author_keywords = set(
+                [k.keyword for k in other_author.keywords.all()])
+
+            shared_keywords = target_keywords & other_author_keywords
+
+            if (len(shared_keywords) > 2):
+                shared_keyword_counts[other_author.semantic_scolar_author_id] = len(
+                    shared_keywords)
+
+        similar_authors = sorted(
+            shared_keyword_counts.items(), key=lambda x: x[1])
+
+        return similar_authors
+
+
+def find_similar_authors_by_shared_topics(author_id):
+    """
+    Finds authors who have a significant number of shared topics with the target author.
+
+    Args:
+        author_id (str): The ID of the target author.
+
+    Returns:
+        list: A list of tuples, where each tuple contains an author's ID and the count of shared topics with the target author.
+    """
+    target_author = Author.nodes.get_or_none(
+        semantic_scolar_author_id=author_id)
+    if (target_author is not None):
+        target_topics = set(
+            [k.topic for k in target_author.topics.all()])
+        shared_topic_counts = defaultdict(int)
+        all_other_author = Author.nodes.all()
+        for other_author in all_other_author:
+            if other_author.semantic_scolar_author_id == target_author.semantic_scolar_author_id:
+                continue
+
+            other_author_topics = set(
+                [k.topic for k in other_author.topics.all()])
+
+            shared_topics = target_topics & other_author_topics
+
+            if (len(shared_topics) > 1):
+                shared_topic_counts[other_author.semantic_scolar_author_id] = len(
+                    shared_topics)
+
+        similar_authors = sorted(
+            shared_topic_counts.items(), key=lambda x: x[1])
+
+        return similar_authors

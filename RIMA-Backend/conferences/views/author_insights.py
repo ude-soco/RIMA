@@ -20,5 +20,5 @@ class getNetworkData(APIView):
         # conference_events= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
 
         # for event in conference_events:
-        get_publication_detailed_info(
-            "33b94cd960a8ac384579ed45c3e15d236bc170f6")
+        find_similar_authors_by_shared_topics(
+            "2223728")
