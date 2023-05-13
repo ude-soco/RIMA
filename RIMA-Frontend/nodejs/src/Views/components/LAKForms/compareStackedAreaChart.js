@@ -89,7 +89,7 @@ class CompareStackedAreaChart extends Component {
 
 
   selectSharedTopics = (e) => {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getSharedWords/topic/?" + this.state.selectedConferences.join("&"))
+    fetch(`${BASE_URL_CONFERENCE}` + "getSharedWords/topic/?" + this.state.selectedConferences.join("&"))
       .then((response) => response.json())
       .then((json) => {
         if (json.words.length == 0) {
@@ -117,7 +117,7 @@ class CompareStackedAreaChart extends Component {
 
 
   selectSharedKeywords = (e) => {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getSharedWords/keyword/?" + this.state.selectedConferences.join("&"))
+    fetch(`${BASE_URL_CONFERENCE}` + "getSharedWords/keyword/?" + this.state.selectedConferences.join("&"))
       .then((response) => response.json())
       .then((json) => {
         if (json.words.length == 0) {
@@ -169,7 +169,7 @@ class CompareStackedAreaChart extends Component {
       var { series } = this.state;
       var { weights } = this.state;
       fetch(
-        `${BASE_URL_CONFERENCE}/api/conferences/` +
+        `${BASE_URL_CONFERENCE}` +
         "getSharedWordEvolution/topic/" + this.state.selectValue.value + "/" +
         "?" +
         this.state.selectedConferences.join("&")
@@ -216,7 +216,7 @@ class CompareStackedAreaChart extends Component {
       var { series } = this.state;
 
       fetch(
-        `${BASE_URL_CONFERENCE}/api/conferences/` +
+        `${BASE_URL_CONFERENCE}` +
         "getSharedWordEvolution/keyword/" + this.state.selectValue.value + "/" +
         "?" +
         this.state.selectedConferences.join("&")
@@ -267,6 +267,7 @@ class CompareStackedAreaChart extends Component {
       <div id="chart" className="box">
         <Form role="form" method="POST">
           <FormGroup>
+            <br />
             <h2>Evolution of a shared topic/keyword in Conferences over time</h2>
             <br />
             <p>
