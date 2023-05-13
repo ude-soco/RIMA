@@ -1,7 +1,7 @@
 //Done by Swarna
 // Updated by Basem Abughallya 
 import React, { useState, useEffect } from "react";
-import { CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography } from "@material-ui/core";
+import { CircularProgress, Grid, makeStyles, Paper, Tab, Tabs, TextField,Fade, Typography } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Chart from "chart.js";
@@ -31,7 +31,8 @@ import ReactApexChart from "react-apexcharts";
 import { Link } from "react-router-dom";
 
 import RestAPI from "../../../../Services/api";
-
+import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
+import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 
 
 // BAB:END 08/06/2021 :: cover other conferences.
@@ -166,8 +167,26 @@ export default function ConferenceBar(props) {
 
   },
   );
+  const [openDrawerYears, setOpenDrawerYears] = useState(true);
+  const [availableConferences, setavailableConferences] = useState([]);
+  const [openDrawerh2, setOpenDrawerh2] = useState(true);
+  const [openDrawerh, setOpenDrawerh] = useState(false);
+    //** GET ALL CONFERENCES **//
+    const getConferencesName = () => {
+      RestAPI.getConferencesNames()
+        .then((response) => {
+          setavailableConferences(response.data);
+        })
+  };
+  function handleClickh(e) {
+    setOpenDrawerh(!openDrawerh);
+    setOpenDrawerh2(!openDrawerh2);
 
+  }
+  function handleClickh2(e) {
+    setOpenDrawerh2(!openDrawerh2);
 
+  }
   const loading =
     <Grid container direction="column" justify="center" alignItems="center" className={classes.padding}>
       <Grid item>
@@ -181,7 +200,7 @@ export default function ConferenceBar(props) {
   useEffect(() => {
     handleChange(selectedOption);
     getConferencesNames();
-
+    getConferencesName();
   }, [])
 
   if (window.Chart) {
@@ -241,8 +260,42 @@ export default function ConferenceBar(props) {
         setconference(json)
       });
   };
-
-
+  function changeBackgroundYears(e) {
+    e.target.style.background = '#B0D4FF';
+  }
+    function changeBackgroundYears2(e) {
+      e.target.style.background = "#F5F5F2";
+      // if(openDrawerYears === false){
+      //   e.target.style.background = '#B0D4FF';
+      // }
+      // else {
+      //   e.target.style.background = '#F5F5F2';
+      // }
+    }
+    function handleClickYears(e) {
+      setOpenDrawerYears(!openDrawerYears);
+    }
+    function changeBackgroundh(e) {
+      e.target.style.background = '#B0D4FF';
+    }
+    function changeBackgroundh2(e) {
+      e.target.style.background = "white";
+      // if(openDrawerh === true){
+      //   e.target.style.background = '#B0D4FF';
+      // }
+      // else {
+      //   e.target.style.background = 'white';
+      // }
+  }
+    function changeBackgroundhh2(e) {
+      e.target.style.background = "white";
+      // if(openDrawerh2 === true){
+      //   e.target.style.background = '#B0D4FF';
+      // }
+      // else {
+      //   e.target.style.background = 'white';
+      // }
+  }
   return (
     <>
 
@@ -262,28 +315,10 @@ export default function ConferenceBar(props) {
             value={selectedOption}
             onChange={handleChange}
           />
-
-          {/** 
-                <Autocomplete
-                  loading={loading}
-                  options={conference}
-                  onInputChange={handleSearchConferences}
-                  getOptionLabel={(option) => option.conference_full_name}
-                  onChange={(event, values) => console.log("Searched Value !!"+ values)}
-                  renderInput={(params) => <TextField {...params} label="Type an conference name" variant="outlined"/>}
-                  className={classes.gutter}
-                />
-                
-
-                <br/>
-                <Button color="primary" onClick= "" width = "50px">
-                    Show Trends
-                </Button> 
-                */}
         </Grid>
       </Grid>
 
-
+ 
       <Grid container component={Paper} className={classes.cardHeight}>
         <Grid item xs>
           <Typography variant="body2" gutterBottom>
@@ -348,7 +383,6 @@ export default function ConferenceBar(props) {
 
       {/* Page content */}
       <Grid container component={Paper} className={classes.cardHeight}>
-
         <Card className="bg-gradient-default1 shadow">
           <CardHeader className="bg-transparent">
             <Row >
@@ -452,9 +486,51 @@ export default function ConferenceBar(props) {
             </Row>
           </CardHeader>
 
-          <ScrollTopWrapper />
         </Card>
+      </Grid>        
+        <Grid className="bg-gradient-default1 shadow" >        
+            <Card className="bg-gradient-default1 shadow" lg={openDrawerYears ? 4 : ""} style={{display: openDrawerYears ? "block" : "none", hight: "20%", width: "100%"}} >
+            <Fade unmountOnExit in={openDrawerYears}> 
+                <CardHeader className="bg-transparent">
+                <Row>
+                <div
+                  className="row mt-4"
+                  style={{
+                    display: "flex",
+                    height: "55%",
+                    width: "48%",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "1%",
+                    marginRight: "1%",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <NewTopWordsInYears conferencesNames = {availableConferences}/>    
+                  </Col>
+                </div>
+                <div
+                  className="row mt-4"
+                  style={{
+                    display: "flex",
+                    height: "55%",
+                    width: "48%",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "1%",
+                    marginRight: "1%",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <NewEvolutionTopTopics conferencesNames = {availableConferences}/>    
+                  </Col>
+                </div>
+                </Row>
+              </CardHeader>
+              </Fade>
+             </Card>
       </Grid>
+      <ScrollTopWrapper />
     </>
   );
 }
