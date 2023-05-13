@@ -21,6 +21,8 @@ import {useHistory} from "react-router-dom";
 // import AccordionDetails from '@mui/material/AccordionDetails';
 // // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart";
+
 import RestAPI from "../../../../Services/api";
 
 import {
@@ -278,42 +280,14 @@ export default function EducationalConferences (props) {
         <>
         <Grid container component={Paper} className={classes.cardHeight}>
                  <h2> Get insights about Educational Data Science Conferences from different perspectives. </h2>
-                 {/* <Select
-                ref={selectInputRef}
-                name="selectOptions"
-                isClearable
-                isMulti
-                placeholder="Select conf Option"
-                options={["Similarity", "Paper"]}
-                onChange={conferenceshandleChange}
-                style={{width: "100%",
-                      height:"100%"}}
-
-            /> */}
-                {/* <Accordion container component={Paper} className={classes.cardHeight3}>
-        <AccordionSummary
-        >
-          <Typography>Accordion 1</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion> */}
        <Grid container component={Paper} className={classes.cardHeight3}>
 
          <h1 style={{width: "100%"}} checked={openDrawer} onMouseEnter={changeBackground} onMouseLeave={changeBackground2} onClick={handleClick}>Similarity</h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawer ? 4 : ""} style={{display: openDrawer ? "block" : "none", hight: "20%"}}>
+            <Card className="bg-gradient-default1 shadow" lg={openDrawer ? 4 : ""} style={{display: openDrawer ? "block" : "none", hight: "20%",                    borderRadius: "40px",
+                    borderRadius: "40px",
+                  }}>
             <Fade unmountOnExit in={openDrawer}> 
               <CardHeader className="bg-transparent">
-                {/* <Row >                   
-                    <h2>                    
-                      The following visualizations show the similarity of selected conferences over years with different levels of detail.
-                    </h2>
-
-                </Row> */}
                   <Row>
                 <div className="main">
                 </div>
@@ -326,7 +300,8 @@ export default function EducationalConferences (props) {
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
+
                   }}
                 >
                   <Col>
@@ -342,7 +317,7 @@ export default function EducationalConferences (props) {
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
@@ -358,7 +333,7 @@ export default function EducationalConferences (props) {
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
@@ -372,111 +347,37 @@ export default function EducationalConferences (props) {
             </Grid>
             <Grid container component={Paper} className={classes.cardHeight3} >        
             <h1 style={{width: "100%"}} checked={openDrawerYears} onMouseEnter={changeBackgroundYears} onMouseLeave={changeBackgroundYears2} onClick={handleClickYears}> Trends </h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawerYears ? 4 : ""} style={{display: openDrawerYears ? "block" : "none", hight: "20%", width: "100%"}} >
+            <Card className="bg-gradient-default1 shadow" lg={openDrawerYears ? 4 : ""} style={{display: openDrawerYears ? "block" : "none", hight: "20%", width: "100%",  borderRadius: "40px",}} >
             <Fade unmountOnExit in={openDrawerYears}> 
-                <CardHeader className="bg-transparent">
-                {/* <Row>                
-                    <h2 className={classes.headers}> The following visualizations show insights about the top topics/keywords in the last Five years</h2>
-                </Row> */}
-                <Row>
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "55%",
-                    width: "48%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "2px",
-                  }}
-                >
-                  <Col>
-                    <NewTopWordsInYears conferencesNames = {availableConferences}/>    
-                  </Col>
+                <CardHeader className="bg-transparent">  
+                <div className="main">
                 </div>
                 <div
                   className="row mt-4"
                   style={{
                     display: "flex",
                     height: "55%",
-                    width: "48%",
+                    width: "98%",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
-                    <NewEvolutionTopTopics conferencesNames = {availableConferences}/>    
+                    <CompareStackedAreaChart conferencesNames = {availableConferences}/>    
                   </Col>
-                </div>
-                </Row>
-                <div checked={openDrawerh2}>
-                <Fade unmountOnExit in={openDrawerh2}>
-                <h3 style={{width: "100%"}} checked={openDrawerh} onMouseEnter={changeBackgroundh} onMouseLeave={changeBackgroundh2} onClick={handleClickh}>  + click here to use these visualizations to compare between conferences </h3>
-                    {/* <Button  
-                    outline
-                   active={openDrawerh}
-                    color="primary"
-                     onClick={handleClickh}>
-                    + click here to use these visualizations to compare between conferences
-                     </Button> */}
-                </Fade>
-                    </div>
-                <Fade unmountOnExit in={openDrawerh}> 
-                    <div className="bg-gradient-default1 shadow" lg={openDrawerh ? 4 : ""} style={{display: openDrawerh ? "block" : "none"}}>
-                <Row>
-
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "50%",
-                    width: "48%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "2px",
-                  }}
-                >
-                  <Col>
-                    <NewTopWordsInYears conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "50%",
-                    width: "48%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "2px",
-                  }}
-                >
-                  <Col>
-                    <NewEvolutionTopTopics conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                </Row>
-                <Button                
-                outline
-                active={openDrawerh2}
-                color="primary" 
-                onClick={handleClickh}>
-                  - click here to shrink comparison
-                </Button>
-                </div>
-                </Fade>
+                </div>                         
               </CardHeader>
               </Fade>
              </Card>
-            </Grid>
+          </Grid>
+    
+
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerAuthor} onMouseEnter={changeBackgroundAuthor} onMouseLeave={changeBackgroundAuthor2} onClick={handleClickAuthor}> Authors </h1>
-                <Card className="bg-gradient-default1 shadow" lg={openDrawerAuthor ? 4 : ""} style={{display: openDrawerAuthor ? "block" : "none", width: "100%"}}>
+                <Card className="bg-gradient-default1 shadow" lg={openDrawerAuthor ? 4 : ""} style={{display: openDrawerAuthor ? "block" : "none", width: "100%",                    borderRadius: "40px",
+}}>
                   <Fade unmountOnExit in={openDrawerAuthor}> 
                 <CardHeader className="bg-transparent">
                 {/* <Row>                
@@ -495,7 +396,7 @@ export default function EducationalConferences (props) {
                     marginRight: "10%",
                     marginBottom: "2%",
                     marginTop: "3%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
@@ -513,7 +414,7 @@ export default function EducationalConferences (props) {
                     marginLeft: "10%",
                     marginRight: "10%",
                     marginBottom: "2%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
@@ -527,7 +428,8 @@ export default function EducationalConferences (props) {
             </Grid>
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerPaper} onMouseEnter={changeBackgroundPaper} onMouseLeave={changeBackgroundPaper2} onClick={handleClickPaper}> Publications </h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawerPaper ? 4 : ""} style={{display: openDrawerPaper ? "block" : "none", width: "100%"}}>
+            <Card className="bg-gradient-default1 shadow" lg={openDrawerPaper ? 4 : ""} style={{display: openDrawerPaper ? "block" : "none", width: "100%",                    borderRadius: "40px",
+}}>
             <Fade unmountOnExit in={openDrawerPaper}> 
                 <CardHeader className="bg-transparent">
                 {/* <Row>
@@ -542,7 +444,7 @@ export default function EducationalConferences (props) {
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
@@ -557,7 +459,7 @@ export default function EducationalConferences (props) {
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
@@ -571,60 +473,34 @@ export default function EducationalConferences (props) {
             </Grid>
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerWords} onMouseEnter={changeBackgroundWords} onMouseLeave={changeBackgroundWords2} onClick={handleClickWords}> Events </h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawerWords ? 4 : ""} style={{display: openDrawerWords ? "block" : "none", width: "100%"}}>
-            <Fade unmountOnExit in={openDrawerWords}> 
-                <CardHeader className="bg-transparent">
-                {/* <Row>                
-                    <h2 className="text-white1 mb-0">Comparison between conferences from topics and keywrods perspective </h2>
-
-                </Row> */}
-                <Row>
-                <div
-                  style={{
-                    display: "flex",
-                    height: "720px",
-                    width: "80%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "10%",
-                    marginRight: "10%",
-                    marginBottom: "2%",
-                    marginTop: "3%",
-                    borderRadius: "2px",
-                  }}
-                >
-                  <Col>
-                    <NewSharedWords conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "50%",
-                    width: "80%",
-                    backgroundColor: "#F0F8FF",
-                    marginTop: "2%",
-                    marginLeft: "10%",
-                    marginRight: "10%",
-                    marginBottom: "2%",
-                    borderRadius: "2px",
-                  }}
-                >
-                  <Col>
-                    <NewCompareStackedBarChart conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                </Row>
+            <Card className="bg-gradient-default1 shadow" lg={openDrawerWords ? 4 : ""} style={{display: openDrawerWords ? "block" : "none", width: "100%",  borderRadius: "40px",
+            }}>
+              <Fade unmountOnExit in={openDrawerYears}> 
+                <CardHeader className="bg-transparent">         
+                      <div
+                          className="row mt-4"
+                          style={{
+                            height: "900px",
+                            width: "100%",
+                            backgroundColor: "#F0F8FF",
+                            marginLeft: "5px",
+                            borderRadius: "40px",
+                          }}
+                        >
+                          <Col>
+                           <NewCompareStackedBarChart conferencesNames = {availableConferences}/>    
+                          </Col>
+                        </div>                          
               </CardHeader>
               </Fade>
              </Card>
             </Grid>
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerActivity} onMouseEnter={changeBackgroundActivity} onMouseLeave={changeBackgroundActivity2} onClick={handleClickActivity}> Activity</h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawerActivity ? 4 : ""} style={{display: openDrawerActivity ? "block" : "none", width: "100%"}}>
+            <Card className="bg-gradient-default1 shadow" lg={openDrawerActivity ? 4 : ""} style={{display: openDrawerActivity ? "block" : "none", width: "100%",                    borderRadius: "40px",
+}}>
             <Fade unmountOnExit in={openDrawerActivity}> 
                 <CardHeader className="bg-transparent">
-
                 <Row>
                 <div
                   style={{
@@ -636,7 +512,7 @@ export default function EducationalConferences (props) {
                     marginLeft: "5%",
                     marginRight: "5%",
                     marginBottom: "2%",
-                    borderRadius: "2px",
+                    borderRadius: "40px",
                   }}
                 >
                   <Col>
