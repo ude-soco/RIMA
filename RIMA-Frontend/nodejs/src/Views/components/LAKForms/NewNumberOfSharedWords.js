@@ -92,7 +92,7 @@ class NewNumberOfSharedWords extends Component {
                 }
               },
               title: {
-                text: "number of authors",
+                text: "",
                 style: {
                   color: '#008FFB',
                 }
@@ -117,7 +117,7 @@ class NewNumberOfSharedWords extends Component {
                 }
               },
               title: {
-                text: "Number of shared Keywords",
+                text: "",
                 style: {
                   color: '#00E396',
                 }
