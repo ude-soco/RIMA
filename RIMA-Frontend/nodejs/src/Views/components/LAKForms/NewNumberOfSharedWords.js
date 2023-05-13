@@ -277,6 +277,7 @@ class NewNumberOfSharedWords extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Shared topics and keywords evolution</h2>
 
               <p>

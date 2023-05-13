@@ -238,6 +238,7 @@ class NewCompareTopicsInPapers  extends Component {
         <div id="chart" className="box">
            <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Popularity of topics and keywords in conferences publications</h2>
               <p>
               Number of publications mentioning shared topics and keywords between conference events

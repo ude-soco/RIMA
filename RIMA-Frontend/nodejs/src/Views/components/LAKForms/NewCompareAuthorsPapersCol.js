@@ -274,6 +274,7 @@ class NewCompareAuthorsPapersCol extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Number of authors and publications evolution</h2>
               <p>
               The evolution of the number of authors and publications between conferences

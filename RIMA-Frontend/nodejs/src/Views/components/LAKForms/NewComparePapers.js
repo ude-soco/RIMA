@@ -250,6 +250,7 @@ class NewComparePapers  extends Component {
         <div id="chart" className="box">
            <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Most popular keywords in publications</h2>
               <p>
              Most popular, and shared keywords between publications.

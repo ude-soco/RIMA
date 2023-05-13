@@ -481,6 +481,7 @@ class NewCompareStackedBarChart extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Popularity of shared topics and keywords</h2>
               <p>
               Popularity percentages of the shared topics and keywords between conference events.

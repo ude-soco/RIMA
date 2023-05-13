@@ -305,6 +305,7 @@ class NewAuthorBar  extends Component {
         <div id="chart" className="box">
            <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Most popular topics and keywords between authors</h2>
               <p>
               Most popular topics and keywords, and shared topics and keywords between authors.

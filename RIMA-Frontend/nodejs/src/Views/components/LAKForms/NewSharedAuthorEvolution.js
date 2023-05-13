@@ -189,6 +189,7 @@ class NewSharedAuthorEvolution extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Shared authors evolution</h2>
               <p>
 

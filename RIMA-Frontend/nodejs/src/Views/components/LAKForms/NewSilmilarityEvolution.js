@@ -308,6 +308,7 @@ class NewSilmilarityEvolution extends Component {
         <div id="chart" className="box">
           <Form role="form" method="POST">
             <FormGroup>
+              <br></br>
             <h2>Similarity between conferences </h2>
             <Row style={{marginLeft: "1%"}}>
               <p>
