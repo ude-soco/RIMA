@@ -4,7 +4,7 @@ import random
 import wikipediaapi
 
 #test2 lukas bre embolo
-#test3
+#test4
 
 def getPageData(interest):
     wiki = wikipediaapi.Wikipedia('en')
