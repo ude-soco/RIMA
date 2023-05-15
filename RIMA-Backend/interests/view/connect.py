@@ -3,7 +3,7 @@ from collections import Counter
 import random
 import wikipediaapi
 
-#test2 lukas
+#test2 lukas bre embolo
 
 def getPageData(interest):
     wiki = wikipediaapi.Wikipedia('en')
