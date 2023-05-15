@@ -3,6 +3,8 @@ from collections import Counter
 import random
 import wikipediaapi
 
+#test
+
 def getPageData(interest):
     wiki = wikipediaapi.Wikipedia('en')
     page=wiki.page(interest)
