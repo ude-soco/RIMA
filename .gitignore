@@ -134,3 +134,4 @@ RIMA-Backend/interests/Keyword_Extractor/Algorithms/stanford-corenlp-full-2018-0
 RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
 RIMA-Backend/config/twitter_config.yaml
 *.iml
+RIMA-Backend/transfomers/msmarco/pytorch_model.bin
