@@ -137,8 +137,6 @@ def getConnectData(id):
     authorId=id["data"]
     print("get most authors who cited me the most")
     authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations")
-    with open("data.txt", "a") as myfile:
-            myfile.write("final_data")
     print("get authors Who I cited the most")
     authorsReferences=getMostCitedReferenced(authorId=authorId, method="references")
     data={"citations":authorsCitedMe, "references":authorsReferences}

@@ -323,7 +323,7 @@ const SVGVenn = (props) => {
                 <DialogContent>
                     {" "}
                     {currPageData?<WikiDesc data={currPageData}/>:<Loading/>}
-                    
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
