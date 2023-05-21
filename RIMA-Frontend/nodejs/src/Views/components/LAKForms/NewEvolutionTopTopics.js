@@ -140,11 +140,11 @@ class NewEvolutionTopTopics extends Component {
       console.log("here chooseeen")
       console.log("here chooseeen", e)
 
-      console.log("choosen conf ", this.state.selectedConferences)
+      console.log("choosen conf ", this.props.selectedConferences)
     }
     
     topKeywordsInInYears = () => {
-      fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.state.selectedConferences + "/"+ "keyword")
+      fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.props.selectedConferences + "/"+ "keyword")
       .then((response) => response.json())
       .then((json) => {
         var topWords = json.WordsList.slice(5,10);
@@ -164,7 +164,7 @@ class NewEvolutionTopTopics extends Component {
         console.log("the coming data", selectedValues)
         fetch(
           BASE_URL_CONFERENCE +
-          "getallkeysevolution/keyword/" + this.state.selectedConferences +"/" +
+          "getallkeysevolution/keyword/" + this.props.selectedConferences +"/" +
           "?" +
           selectedValues.join("&")  
         )
@@ -188,7 +188,7 @@ class NewEvolutionTopTopics extends Component {
           });
       } 
       topTopicsInYears = () => {
-        fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.state.selectedConferences + "/"+ "topic")
+        fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.props.selectedConferences + "/"+ "topic")
         .then((response) => response.json())
         .then((json) => {
           var topWords = json.WordsList.slice(5,10);
@@ -208,7 +208,7 @@ class NewEvolutionTopTopics extends Component {
           console.log("the coming data", selectedValues)
           fetch(
             BASE_URL_CONFERENCE +
-            "getalltopicsevolution/topic/" + this.state.selectedConferences +"/" +
+            "getalltopicsevolution/topic/" + this.props.selectedConferences +"/" +
             "?" +
             selectedValues.join("&")  
           )
@@ -232,6 +232,15 @@ class NewEvolutionTopTopics extends Component {
             });
         } 
 
+        componentDidUpdate(prevProps) {
+          if (this.props.confEvent !== prevProps.confEvent) {
+            this.componentDidMount()
+            
+          }
+  }
+  componentDidMount() { 
+    this.topTopicsInYears();
+  }
       render() {
         return (
           <div id="chart" className="box">
@@ -242,16 +251,7 @@ class NewEvolutionTopTopics extends Component {
                 <p>
                 The evolution of the most popular five topics and keywords of a conference.
                 </p>
-
-            <Row>
-              <Col>
-              <Select
-                  placeholder="Select a conference"
-                  options={this.props.conferencesNames}
-                  value={this.props.conferencesNames.find((obj) => obj.value === this.state.selectConference)}
-                  onChange ={this.conferenceshandleChange}
-                />
-                  </Col>
+                <br></br>
               <Button
                   outline
                   color="primary"
@@ -294,7 +294,6 @@ class NewEvolutionTopTopics extends Component {
                   </p>
                 </div>
               )}
-                </Row>
               </FormGroup>
             </Form> 
           <div style={{opacity: this.state.opacity}}>

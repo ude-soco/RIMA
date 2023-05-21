@@ -390,7 +390,7 @@ export default function ConferenceBar(props) {
                 <div
                   className="row mt-4"
                   style={{
-                    height: "800px",
+                    height: "600px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
                     borderRadius: "2px",
@@ -406,14 +406,14 @@ export default function ConferenceBar(props) {
                 <div
                   className="row mt-4"
                   style={{
-                    height: "800px",
+                    height: "600px",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "50px",
                     borderRadius: "2px",
                   }}
                 >
                   <Col>
-                    <NewEvolutionTopTopics conferencesNames = {availableConferences}/>       
+                    <NewEvolutionTopTopics selectedConferences = {selectedOption.value}/>       
                   </Col>
 
                 </div>
