@@ -123,13 +123,11 @@ class NewTopWordsInYears  extends Component {
           isLoading: true,
         });
         console.log("here chooseeen")
-
-        console.log("choosen conf ", this.state.selectedConferences)
       }
         
 
       topKeywordsInInYears = () => {
-        fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.state.selectedConferences + "/"+ "keyword")
+        fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.props.selectedConferences + "/"+ "keyword")
         .then((response) => response.json())
         .then((json) => {
           var series = [];
@@ -149,7 +147,7 @@ class NewTopWordsInYears  extends Component {
 
 
         topTopicsInYears = () => {
-          fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.state.selectedConferences +"/"+ "topic")
+          fetch(BASE_URL_CONFERENCE + "topTopicsInYears/" + this.props.selectedConferences +"/"+ "topic")
           .then((response) => response.json())
           .then((json) => {
             var series = [];
@@ -177,15 +175,8 @@ class NewTopWordsInYears  extends Component {
               <p>
               The top ten topics and keywords in the last five years of a conference.
               </p>
-          <Row>
-            <Col>
-              <Select
-                  placeholder="Select a conference"
-                  options={this.props.conferencesNames}
-                  value={this.props.conferencesNames.find((obj) => obj.value === this.state.selectConference)}
-                  onChange ={this.conferenceshandleChange}
-                />
-                </Col>
+              <br></br>
+              <br />
             <Button
                 outline
                 color="primary"
@@ -205,7 +196,7 @@ class NewTopWordsInYears  extends Component {
               >
                 Keywords
               </Button>
-              </Row>
+            
             </FormGroup>
           </Form> 
           <div style={{opacity: this.state.opacity}}>

@@ -385,7 +385,39 @@ export default function ConferenceBar(props) {
       <Grid container component={Paper} className={classes.cardHeight}>
         <Card className="bg-gradient-default1 shadow">
           <CardHeader className="bg-transparent">
-            <Row >
+            <Row>
+            <div className="main" style={{ width: '95%' }} >
+                <div
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <NewTopWordsInYears selectedConferences = {selectedOption.value}/>    
+                  </Col>
+
+                </div>
+              </div>
+              <div className="main" style={{ width: '95%' }} >
+                <div
+                  className="row mt-4"
+                  style={{
+                    height: "800px",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "50px",
+                    borderRadius: "2px",
+                  }}
+                >
+                  <Col>
+                    <NewEvolutionTopTopics conferencesNames = {availableConferences}/>       
+                  </Col>
+
+                </div>
+              </div>              
               <div className="main" style={{ width: '95%' }} >
                 <div
                   className="row mt-4"
@@ -488,7 +520,7 @@ export default function ConferenceBar(props) {
 
         </Card>
       </Grid>        
-        <Grid className="bg-gradient-default1 shadow" >        
+        {/* <Grid className="bg-gradient-default1 shadow" >        
             <Card className="bg-gradient-default1 shadow" lg={openDrawerYears ? 4 : ""} style={{display: openDrawerYears ? "block" : "none", hight: "20%", width: "100%"}} >
             <Fade unmountOnExit in={openDrawerYears}> 
                 <CardHeader className="bg-transparent">
@@ -529,7 +561,7 @@ export default function ConferenceBar(props) {
               </CardHeader>
               </Fade>
              </Card>
-      </Grid>
+      </Grid> */}
       <ScrollTopWrapper />
     </>
   );
