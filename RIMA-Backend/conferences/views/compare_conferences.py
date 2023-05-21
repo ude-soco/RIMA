@@ -773,28 +773,40 @@ class MultipleTopicAreaView(APIView):
             "years": list(sorted(set(events), key=events.index))
         })
 
-# done
-
-
+# done 
 class confEvents(APIView):
     def get(self, request, *args, **kwargs):
 
         url_path = request.get_full_path()
         print("the url path is:", url_path)
         url_path = url_path.replace("%20", " ")
-        topics_split = url_path.split(r"/")
-        print(topics_split)
+        confs_split = url_path.split(r"/")
         conferences_events_JSON = []
-        #Islam Updated
-        conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
-            conference_event_name_abbr__startswith=topics_split[-1])]
-        print("conference_events new: ", conference_events)
-        for event in conference_events:
-            conferences_events_JSON.append({
+        if("&" in confs_split[-1]):
+            confs_split=confs_split[-1].split(r'&')
+            print("confs_split: ",confs_split)
+            for conf in confs_split:
+                        #Islam Updated
+                conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
+                    conference_event_name_abbr__startswith=conf)]
+                print("conference_events new: ", conference_events)
+                for event in conference_events:
+                    conferences_events_JSON.append({
 
-                'value': event,
-                'label': event,
-            })
+                        'value': event,
+                        'label': event,
+                    })
+        else :
+            conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
+            conference_event_name_abbr__startswith=confs_split[-1])]
+            print("conference_events new: ", conference_events)
+            for event in conference_events:
+                conferences_events_JSON.append({
+
+                    'value': event,
+                    'label': event,
+                })           
+
 
         return Response({
             "events":
