@@ -58,7 +58,7 @@ class LAKStackedAreaChart extends Component {
     this.onClear();
 
     console.log(e.target.value);
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getallkeysresults/keyword/" + this.props.conferenceName)
+    fetch(`${BASE_URL_CONFERENCE}` + "getallkeysresults/keyword/" + this.props.conferenceName)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -74,7 +74,7 @@ class LAKStackedAreaChart extends Component {
 
   selectTopic(e) {
     this.onClear();
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getalltopicsresults/topic/" + this.props.conferenceName)
+    fetch(`${BASE_URL_CONFERENCE}` + "getalltopicsresults/topic/" + this.props.conferenceName)
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -161,7 +161,7 @@ class LAKStackedAreaChart extends Component {
       var { series } = this.state;
 
       fetch(
-        `${BASE_URL_CONFERENCE}/api/conferences/` +
+        `${BASE_URL_CONFERENCE}` +
         "getalltopicsevolution/topic/" + this.props.conferenceName + "/" +
         "?" +
         selectedValues.join("&")
@@ -221,7 +221,7 @@ class LAKStackedAreaChart extends Component {
       var { series } = this.state;
 
       fetch(
-        `${BASE_URL_CONFERENCE}/api/conferences/` +
+        `${BASE_URL_CONFERENCE}` +
         "getallkeysevolution/keyword/" + this.props.conferenceName + "/" +
         "?" +
         selectedValues.join("&")

@@ -170,8 +170,8 @@ class NewTopWordsInYears  extends Component {
         <div id="chart" className="box">
            <Form role="form" method="POST">
             <FormGroup>
-            <h2>Most popular topics and keywords</h2>
-
+              <h2>Most popular topics and keywords</h2>
+            
               <p>
               The top ten topics and keywords in the last five years of a conference.
               </p>

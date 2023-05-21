@@ -63,7 +63,7 @@ class VennChart extends Component {
       loader: true,
       display: "none",
     });
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "commontopics/topic/lak2011/lak2012")
+    fetch(`${BASE_URL_CONFERENCE}` + "commontopics/topic/lak2011/lak2012")
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -78,7 +78,7 @@ class VennChart extends Component {
       });
 
 
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "confEvents/lak")
+    fetch(`${BASE_URL_CONFERENCE}` + "confEvents/lak")
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -125,7 +125,7 @@ class VennChart extends Component {
       display: "none",
     });
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      `${BASE_URL_CONFERENCE}` +
       "commonkeys/keyword/" +
       this.state.selectVal +
       "/" +
@@ -154,7 +154,7 @@ class VennChart extends Component {
       display: "none",
     });
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      `${BASE_URL_CONFERENCE}` +
       "commontopics/topic/" +
       this.state.selectVal +
       "/" +

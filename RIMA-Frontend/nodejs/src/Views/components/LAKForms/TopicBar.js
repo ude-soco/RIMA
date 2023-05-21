@@ -52,7 +52,7 @@ class TopicBar extends Component {
     var selectyear = "2011";
     console.log("faasdasd", type)
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "topicdetails/" + type + "/" + topic + "/" + year
+      `${BASE_URL_CONFERENCE}` + "topicdetails/" + type + "/" + topic + "/" + year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -78,7 +78,7 @@ class TopicBar extends Component {
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
                   fetch(
-                    `${BASE_URL_CONFERENCE}/api/conferences/` + "fetchpaper/" + title
+                    `${BASE_URL_CONFERENCE}` + "fetchpaper/" + title
                   )
                     .then((response) => response.json())
                     .then((json) => {
@@ -140,7 +140,7 @@ class TopicBar extends Component {
   displaytopicDocChart(topic, year) {
     var selectyear = "2011";
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "topicdetails/topic/" + topic + "/" + year
+      `${BASE_URL_CONFERENCE}` + "topicdetails/topic/" + topic + "/" + year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -166,7 +166,7 @@ class TopicBar extends Component {
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
                   fetch(
-                    `${BASE_URL_CONFERENCE}/api/conferences/` + "fetchpaper/" + title
+                    `${BASE_URL_CONFERENCE}` + "fetchpaper/" + title
                   )
                     .then((response) => response.json())
                     .then((json) => {
@@ -232,7 +232,7 @@ class TopicBar extends Component {
 
   componentDidMount() {
     const display = this.displayDocChart;
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "toptopics/topic/" + this.props.confEvent)
+    fetch(`${BASE_URL_CONFERENCE}` + "toptopics/topic/" + this.props.confEvent)
       .then((response) => response.json())
       .then((json) => {
 
@@ -318,7 +318,7 @@ class TopicBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "topkeywords/keyword/" + this.state.selectyear
+      `${BASE_URL_CONFERENCE}` + "topkeywords/keyword/" + this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -390,7 +390,7 @@ class TopicBar extends Component {
     var year = this.state.selectyear;
     var type = "topic";
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "toptopics/topic/" + this.state.selectyear
+      `${BASE_URL_CONFERENCE}` + "toptopics/topic/" + this.state.selectyear
     )
       .then((response) => response.json())
       .then((json) => {
@@ -482,7 +482,6 @@ class TopicBar extends Component {
                 The bar chart displays the top 10 topics/keywords for the
                 selected event and its corresponding publications
               </p>
-
               <Label>Select an Event</Label>
               <br></br>
               <div style={{ width: "200px" }}>
