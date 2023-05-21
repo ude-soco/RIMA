@@ -229,14 +229,14 @@ export default function ConferenceBar(props) {
     setselectedOption(selectedOption);
     console.log("updated");
     console.log(`Option selected:`, selectedOption);
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/confEvents/${selectedOption.value}`)
+    fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
       .then(response => response.json())
       .then(json => {
         setconfEvents(json.events)
       });
 
 
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/conferenceData/${selectedOption.value}`)
+    fetch(`${BASE_URL_CONFERENCE}conferenceData/${selectedOption.value}`)
       .then(response => response.json())
       .then(json => {
         setConferenceOtherData(json.other_data)
@@ -254,7 +254,7 @@ export default function ConferenceBar(props) {
 
 
   const handleSearchConferences = () => {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "searchConf/")
+    fetch(`${BASE_URL_CONFERENCE}` + "searchConf/")
       .then(response => response.json())
       .then(json => {
         setconference(json)

@@ -97,7 +97,7 @@ class WordCloud extends Component {
   }
 
   componentDidMount() {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "wordcloud/topic/10/" + this.props.confEvent)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/topic/10/" + this.props.confEvent)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -134,7 +134,7 @@ class WordCloud extends Component {
 
   // BAB 08.06.2021 
   selectValue(e) {
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "wordcloud/topic/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/topic/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -153,7 +153,7 @@ class WordCloud extends Component {
 
   selectKeyword(e) {
     console.log("count", this.state.count)
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "wordcloud/keyword/" + this.state.count + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordcloud/keyword/" + this.state.count + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -169,7 +169,7 @@ class WordCloud extends Component {
   // BAB 08.06.2021 
 
   displayAbstract(param) {
-    fetch(`${BASE_URL_CONFERENCE}/api/` + "getabstractdetails/" + this.props.conferenceName + "/" + param + "/" + this.state.selectValue)
+    fetch(`${BASE_URL_CONFERENCE}` + "getabstractdetails/" + this.props.conferenceName + "/" + param + "/" + this.state.selectValue)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -239,7 +239,7 @@ class WordCloud extends Component {
           <div>
             <h2>Topic/Keyword cloud</h2>
             <br></br>
-            <p>s/keywords for
+            <p>keywords for
               the selected Event
             </p>
             <Label>Select an Event</Label>

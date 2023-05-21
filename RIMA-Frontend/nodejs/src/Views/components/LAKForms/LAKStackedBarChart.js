@@ -44,7 +44,7 @@ class LAKStackedBarChart extends Component {
 
   componentDidMount() {
     var text = ["2011", "2012"];
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getalltopiclist/topic/?lak2011&lak2012&lak2013&lak2014")
+    fetch(`${BASE_URL_CONFERENCE}` + "getalltopiclist/topic/?lak2011&lak2012&lak2013&lak2014")
       .then((response) => response.json())
       .then((json) => {
         var series = [];
@@ -129,7 +129,7 @@ class LAKStackedBarChart extends Component {
     var key = this.state.key;
     if (key == "key") {
       var text = this.state.selectedValue;
-      fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getallkeylist/keyword/" + "?" + text.join("&"))
+      fetch(`${BASE_URL_CONFERENCE}` + "getallkeylist/keyword/" + "?" + text.join("&"))
         .then((response) => response.json())
         .then((json) => {
           var series = [];
@@ -201,7 +201,7 @@ class LAKStackedBarChart extends Component {
     } else {
       var text = this.state.selectedValue;
 
-      fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "getalltopiclist/topic/" + "?" + text.join("&"))
+      fetch(`${BASE_URL_CONFERENCE}` + "getalltopiclist/topic/" + "?" + text.join("&"))
         .then((response) => response.json())
         .then((json) => {
           var series = [];

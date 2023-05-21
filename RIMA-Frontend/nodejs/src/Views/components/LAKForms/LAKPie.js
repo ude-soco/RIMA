@@ -51,7 +51,7 @@ class LAKPie extends Component {
 
   displayAbstract(param) {
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      `${BASE_URL_CONFERENCE}` +
       "getabstractdetails/" + this.props.conferenceName + "/" +
       param +
       "/" +
@@ -93,7 +93,7 @@ class LAKPie extends Component {
   componentDidMount() {
     //console.log("the json is ******************")
     const displayabstract = this.displayAbstract;
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "gettopicsforpie/topic/10/lak2011")
+    fetch(`${BASE_URL_CONFERENCE}` + "gettopicsforpie/topic/10/lak2011")
       .then((response) => response.json())
 
       .then((json) => {
@@ -158,7 +158,7 @@ class LAKPie extends Component {
     const displayabstract = this.displayAbstract;
 
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      `${BASE_URL_CONFERENCE}` +
       "gettopicsforpie/topic/" +
       this.state.selectnum +
       "/" +
@@ -219,7 +219,7 @@ class LAKPie extends Component {
   selectKey(e) {
     const displayabstract = this.displayAbstract;
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` +
+      `${BASE_URL_CONFERENCE}` +
       "getkeysforpie/keyword/" +
       this.state.selectnum +
       "/" +
@@ -325,8 +325,7 @@ class LAKPie extends Component {
               <h2>Topic distribution</h2>
               <br />
               <p>
-                The pie chart displays the distribution of top 5/10
-                topics/keywords for the selected conference
+                The pie chart displays the distribution of top 5/10 topics/keywords for the selected conference
               </p>
               <Label>Select a year</Label>
               <div style={{ width: "200px" }}>
