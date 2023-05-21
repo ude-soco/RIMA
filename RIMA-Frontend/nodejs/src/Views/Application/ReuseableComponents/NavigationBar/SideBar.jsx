@@ -156,6 +156,9 @@ export default function SideBar({ selection, setSelection }) {
       case "explorePublications":
         history.push("/app/explorePublications");
         break;
+      case "authorInsights":
+        history.push('/app/authorInsights')
+        break;
     }
   };
 
@@ -357,7 +360,19 @@ export default function SideBar({ selection, setSelection }) {
             </ListItemIcon>
             <ListItemText primary="Compare Conferences" />
           </ListItem>
-
+          {/* implemented by islam */}
+          <ListItem
+            button
+            id="authorInsights"
+            selected={selectedList('authorInsights')}
+            onClick={handleSelect}
+            className={selectedList('authorInsights')}
+          >
+            <ListItemIcon className="classes.listIconNested">
+             
+              <ListItemText primary='Author insights'/>
+            </ListItemIcon>
+          </ListItem>
           <ListItem
             button
             id="topicTrends"

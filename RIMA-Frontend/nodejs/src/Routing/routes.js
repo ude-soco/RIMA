@@ -30,10 +30,18 @@ import authorDashboard from "../Views/Application/Conferences/authorDashboard.js
 import compareConferences from "Views/Application/Conferences/Topic/compareConferences";
 import ExplorePublications from "../Views/Application/ConferenceInsights/ExplorePublications/ExplorePublications";
 import ExploreAuthorsNetwork from "../Views/Application/ConferenceInsights/ExploreAuthorsNetwork/ExploreAuthorsNetwork";
-
+import AuthorInsights from "Views/Application/AuthorInsights/AuthorInsights";
 
 
 let routes = [
+  {
+    path: '/authorInsights',
+    name: 'Author Insights',
+    icon: "ni ni-tv-2 text-primary",
+    component: AuthorInsights,
+    layout: "/app",
+    display: "none"
+  },
   {
     path: "/interest-profile",
     name: "InterestProfile",
