@@ -43,59 +43,13 @@ class NewCompareAuthorsPapersCol extends Component {
             data :[ 226, 180, 165, 236, 377, 418, 221, 218, 287, 250]
           }],
           options: {
-            Abdo: "Abdo",
-            chart: {
-              type: 'bar',
-              height: 350,
-              events: {
-                dataPointSelection: (event, chartContext, config) => {
-                  //console.log("mark is clickable", config.w.config.series[config.dataPointIndex]);
-                 // console.log(chartContext, config);
-                }
-              },  
-            },
-            events: {
-              markerClick: function(event, chartContext, opts) {
-                //  console.log("mark is clickable 222", config.w.config.yaxis.categories[config.dataPointIndex]);
-               // console.log("Marker of value is cliked", event, chartContext)
-              }
-            },
-            markers: {
-              onClick: function() {
-                console.log("Marker of value is cliked 111")
-            //    console.log("Marker of value is cliked", e)
-              }
-            }, 
-            plotOptions: {
-              bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
-              },
-            },
-            dataLabels: {
-              enabled: false
-            },
             stroke: {
-              show: true,
-              width: 2,
-              colors: ['transparent']
+              curve: "smooth",
             },
             xaxis: {
-              categories: ["2012","2022","2014","2015","2016","2017","2018","2019","2020","2021"],
-            },   
-            tooltip: {
-              y: {
-                shared: false,
-                intersect: true,
-                formatter: function (Abdo) {
-                  return  Abdo 
-                }
-              }
-            }
-
+              categories: ["1993", "2005", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"],
+            },
           },
-
         
         };
 
@@ -399,7 +353,7 @@ class NewCompareAuthorsPapersCol extends Component {
             <ReactApexChart
               options={this.state.options}
               series={this.state.series}
-              type="bar"
+              type="area"
               height={350}
             />
           </div>
