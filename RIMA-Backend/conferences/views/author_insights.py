@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from conferences.models.graph_db_entities import *
 from conferences.utils.author_insights_utils import *
 from conferences import conference_utils as confutils
+from rest_framework.response import Response
+from itertools import chain
 
 
 def author_insights_url():
@@ -14,11 +16,16 @@ class getNetworkData(APIView):
     def get(self, request, *args, **kwargs):
         print("getNetworkData called")
 
-        # url_splits_question_mark = confutils.split_restapi_url(request.get_full_path(), r'?')
-        # url_splits_slash = confutils.split_restapi_url(request.get_full_path(), r'/')
-        # word = url_splits_slash[-2]
-        # conference_events= confutils.split_restapi_url(url_splits_question_mark[1],r'&')
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        Events = url_splits_slash[-1].split('&')
 
-        # for event in conference_events:
-        find_similar_authors_by_shared_topics(
-            "2223728")
+        graphData = []
+        for event in Events:
+            eventgraphData = get_event_coauthor_data(event)
+            graphData.append(eventgraphData)
+
+        allGraphData = list(chain(*graphData))
+        return Response({
+            "data": allGraphData
+        })
