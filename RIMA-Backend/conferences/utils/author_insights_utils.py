@@ -9,19 +9,24 @@ def get_event_coauthor_data(event_name):
     author_nodes = event_node.authors.all()
     for author_node in author_nodes:
         event_authors_list.append({
-            "id": author_node.semantic_scolar_author_id,
-            "label": author_node.author_name
-        })
-        author_couthors_list = create_coauthor_links(
-            author_node)
+            'data':
+            {
+                "id": author_node.semantic_scolar_author_id,
+                "label": author_node.author_name
+            }
 
+        })
+
+    all_author_couthors_list = generate_coauthor_links_within_list(author_nodes)
+    
+    return  event_authors_list + all_author_couthors_list
 
 def get_author_detailed_info(author_id):
     author_data = []
     author_node = Author.nodes.filter(semantic_scolar_author_id=author_id)
     author_keywords = author_node.keywords.all()
     author_interests = author_node.topics.all()
-    author_coauthor_network = create_coauthor_links(author_node)
+    #author_coauthor_network = create_coauthor_links(author_node)
     author_publication_links = create_author_publication_links(author_node)
     author_data.append({
         "author name": author_node.author_name,
@@ -31,31 +36,33 @@ def get_author_detailed_info(author_id):
         "author url": author_node.author_url,
         "author keywords": author_keywords,
         "author interests": author_interests,
-        "coauthor network": author_coauthor_network
+        #"coauthor network": author_coauthor_network
     })
 
-
-def create_coauthor_links(author_node):
+def generate_coauthor_links_within_list(author_nodes):
     """
-    Generates a list of dictionaries containing information about an author's co-authors.
+    Generates a list of dictionaries representing co-author links between authors within the input list.
 
     Args:
-        author_node (object): An author node object.
+        author_nodes (list): A list of author nodes.
 
     Returns:
-        list: A list of dictionaries, where each dictionary contains two key-value pairs: "source_id" (with the value set
-                to the author node's semantic_scolar_author_id property) and "target_id" (with the value set to a co-author's
-                semantic_scolar_author_id property).
+        list: A list of dictionaries representing co-author links. Each dictionary contains information about the co-author
+              link, including the source author ID, target author ID, and a unique ID for the link.
     """
-    co_author_nodes = author_node.co_authors.all()
     all_author_couthors_list = []
-    for co_author in co_author_nodes:
-        all_author_couthors_list.append({
-            "source_id": author_node.semantic_scolar_author_id,
-            "target_id": co_author.semantic_scolar_author_id
-        })
+    for author_node in author_nodes:
+        co_author_nodes = author_node.co_authors.all()
+        for co_author in co_author_nodes:
+            if co_author in author_nodes:
+                all_author_couthors_list.append({
+                    'data': {
+                        "id": author_node.semantic_scolar_author_id + co_author.semantic_scolar_author_id,
+                        "source": author_node.semantic_scolar_author_id,
+                        "target": co_author.semantic_scolar_author_id
+                    }
+                })
     return all_author_couthors_list
-
 
 def create_author_publication_links(author_node):
     """
