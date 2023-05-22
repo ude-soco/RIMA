@@ -6,39 +6,52 @@ import CytoscapeComponent from "react-cytoscapejs";
 import { Autocomplete } from "@mui/material";
 
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
-import { json } from "d3";
-import { ResponsiveEmbed } from "react-bootstrap";
-import avsdf from 'cytoscape-avsdf'
-cytoscape.use(cxtmenu)
-cytoscape.use(avsdf)
-const AuthorInsights = () => {
-    const [selectedConference,setSelectedConference]=useState(null)
-    const [selectedConferences, setSelectedConferences] = useState([])
 
+cytoscape.use(cxtmenu)
+
+const AuthorInsights = () => {
+
+    const [selectedConferences, setSelectedConferences] = useState([])
     const [cy, setCy] = useState(null);
     const [hoveredNode, setHoveredNode] = useState(null);
     const [authorProfileToShow, setAuthorProfileToShow] = useState(null)
-    const [compareAuthorslist,setCompareAuthorlist]=useState([])
-    const removeHighlight = () => {
-        cy.elements().removeClass('faded').removeClass('highlighted');
-    }
-    const highlightNode = nodeId => {
-        let node = cy.$(`#${nodeId}`);
-            let directlyConnectedNodes = node.connectedNodes();
-            let connectedEdges = node.connectedEdges();
-            let indirectlyConnectedNodes = connectedEdges.connectedNodes();
-            let connectedElements = directlyConnectedNodes
-            .union(connectedEdges)
-            .union(indirectlyConnectedNodes);
-        if (node.connectedEdges().length === 0) {
-            cy.elements().difference(node).removeClass('highlighted').addClass('faded');
-                node.addClass('highlighted');
-        } else {
-            cy.elements().difference(connectedElements).removeClass('highlighted').addClass('faded');
-            connectedElements.removeClass('faded').addClass('highlighted')
+    const [compareAuthorslist, setCompareAuthorlist] = useState([])
+    const [availableConferences, setAvailableConferences] = useState([])
+    const [availableEvents, setAvailableEvents] = useState([])
+    let [networkData, setNetworkData] = useState([])
+    let [selectedEvents, setSelectedEvents] = useState([])
+   
+    useEffect(() => {
+        const getConfs = async () => {
+            try {
+                const response = await fetch(BASE_URL_CONFERENCE  + "conferencesNames");
+                const result = await response.json()
+                setAvailableConferences(result)
+                console.log("availableConferences: ",availableConferences)
+            } catch (error) {
+                console.log("Error fetching conferences:",error)
+            }
         }
-    }
+        getConfs();
+    },[])
 
+    useEffect(() => {
+        if (selectedConferences.length >=1 ) {
+            const getEvents = async () => {
+                try {
+                    const confs = selectedConferences.join('&');
+                    const response = await fetch(BASE_URL_CONFERENCE + "confEvents/" +confs);
+                    const result = await response.json()
+                    setAvailableEvents(result.events)
+                    
+                } catch (error) {
+                    console.log("Error fetching events:",error)
+                }
+            }
+            getEvents();
+        }
+    },[selectedConferences])
+    
     useEffect(() => {
         if (cy) {
             const handleMouseoverNode = event => {
@@ -75,6 +88,28 @@ const AuthorInsights = () => {
         }
     }, [cy, hoveredNode])
     
+
+    const removeHighlight = () => {
+        cy.elements().removeClass('faded').removeClass('highlighted');
+    }
+
+    const highlightNode = nodeId => {
+        let node = cy.$(`#${nodeId}`);
+            let directlyConnectedNodes = node.connectedNodes();
+            let connectedEdges = node.connectedEdges();
+            let indirectlyConnectedNodes = connectedEdges.connectedNodes();
+            let connectedElements = directlyConnectedNodes
+            .union(connectedEdges)
+            .union(indirectlyConnectedNodes);
+        if (node.connectedEdges().length === 0) {
+            cy.elements().difference(node).removeClass('highlighted').addClass('faded');
+                node.addClass('highlighted');
+        } else {
+            cy.elements().difference(connectedElements).removeClass('highlighted').addClass('faded');
+            connectedElements.removeClass('faded').addClass('highlighted')
+        }
+    }
+
     const cytoStyle = [
         {
             selector: 'node',
@@ -153,51 +188,11 @@ const AuthorInsights = () => {
           },
         },
     ];
+
     const style = { width: '100%', height: '800px', margin: 'auto' };
-    
+
     const layout = { name: 'cose' };
-
-
-    const [availableConferences, setAvailableConferences] = useState([])
-    const [availableEvents,setAvailableEvents]=useState([])
-    useEffect(() => {
-        const getConfs = async () => {
-            try {
-                const response = await fetch(BASE_URL_CONFERENCE  + "conferencesNames");
-                const result = await response.json()
-                setAvailableConferences(result)
-                console.log("availableConferences: ",availableConferences)
-            } catch (error) {
-                console.log("Error fetching conferences:",error)
-            }
-        }
-        getConfs();
-    },[])
-
-    useEffect(() => {
-        if (selectedConferences.length >=1 ) {
-            const getEvents = async () => {
-                try {
-                    const confs = selectedConferences.join('&');
-                    const response = await fetch(BASE_URL_CONFERENCE + "confEvents/" +confs);
-                    const result = await response.json()
-                    setAvailableEvents(result.events)
-                    
-                } catch (error) {
-                    console.log("Error fetching events:",error)
-                }
-            }
-            getEvents();
-        }
-    },[selectedConferences])
-    
-    useEffect(() => {
-
-    }, [])
-
-    let [networkData, setNetworkData] = useState([])
-    let [selectedEvents, setSelectedEvents] = useState([])
-    
+ 
     const handleGenerateGraph = async () => {
         try {
             if (selectedEvents.length >= 1) {
@@ -213,8 +208,6 @@ const AuthorInsights = () => {
             console.log("Error fetching network date",error)
         }
     }
-
-
 
     return (
         <Grid>
