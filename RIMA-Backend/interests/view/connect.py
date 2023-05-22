@@ -1,3 +1,4 @@
+import json
 from ..semantic_scholar import SemanticScholarAPI
 from collections import Counter
 import random
@@ -70,7 +71,7 @@ def getRefCitAuthorsPapers(authorId, method):
 
     return results
 
-def getMostCitedReferenced(authorId, method, n=3):
+def getMostCitedReferenced(authorId, method, n=5):
 
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors=allCitsRefs["listAllAuthors"]
@@ -136,9 +137,22 @@ def getInterests(authorId):
 def getConnectData(id):
     authorId=id["data"]
     print("get most authors who cited me the most")
-    authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations")
+    #authorsCitedMe= []#getMostCitedReferenced(authorId=authorId, method="citations")
     print("get authors Who I cited the most")
-    authorsReferences=getMostCitedReferenced(authorId=authorId, method="references")
+    #authorsReferences=[]#getMostCitedReferenced(authorId=authorId, method="references")
+    """
+    with open("authorsReferences.json", "w") as myfile:
+            json.dump(authorsReferences, myfile)
+    with open("authorsCitedMe.json", "w") as myfile:
+            json.dump(authorsCitedMe, myfile)
+    """
+    with open("authorsReferences.json", "r") as myfile:
+           authorsReferences = json.load(myfile)
+    with open("authorsCitedMe.json", "r") as myfile:
+           authorsCitedMe = json.load(myfile)
+    
+    
+          
     data={"citations":authorsCitedMe, "references":authorsReferences}
     return data
 
