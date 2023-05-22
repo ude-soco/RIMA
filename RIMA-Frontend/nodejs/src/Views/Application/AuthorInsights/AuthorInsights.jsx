@@ -4,9 +4,17 @@ import cytoscape from "cytoscape";
 import cxtmenu from 'cytoscape-cxtmenu'
 import CytoscapeComponent from "react-cytoscapejs";
 import { Autocomplete } from "@mui/material";
-cytoscape.use(cxtmenu)
 
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { json } from "d3";
+import { ResponsiveEmbed } from "react-bootstrap";
+import avsdf from 'cytoscape-avsdf'
+cytoscape.use(cxtmenu)
+cytoscape.use(avsdf)
 const AuthorInsights = () => {
+    const [selectedConference,setSelectedConference]=useState(null)
+    const [selectedConferences, setSelectedConferences] = useState([])
+
     const [cy, setCy] = useState(null);
     const [hoveredNode, setHoveredNode] = useState(null);
     const [authorProfileToShow, setAuthorProfileToShow] = useState(null)
@@ -16,15 +24,19 @@ const AuthorInsights = () => {
     }
     const highlightNode = nodeId => {
         let node = cy.$(`#${nodeId}`);
-        let directlyConnectedNodes = node.connectedNodes();
-        let connectedEdges = node.connectedEdges();
-        let indirectlyConnectedNodes = connectedEdges.connectedNodes();
-        let connectedElements = directlyConnectedNodes
+            let directlyConnectedNodes = node.connectedNodes();
+            let connectedEdges = node.connectedEdges();
+            let indirectlyConnectedNodes = connectedEdges.connectedNodes();
+            let connectedElements = directlyConnectedNodes
             .union(connectedEdges)
             .union(indirectlyConnectedNodes);
-        
-        cy.elements().difference(connectedElements).removeClass('highlighted').addClass('faded');
-        connectedElements.removeClass('faded').addClass('highlighted')
+        if (node.connectedEdges().length === 0) {
+            cy.elements().difference(node).removeClass('highlighted').addClass('faded');
+                node.addClass('highlighted');
+        } else {
+            cy.elements().difference(connectedElements).removeClass('highlighted').addClass('faded');
+            connectedElements.removeClass('faded').addClass('highlighted')
+        }
     }
 
     useEffect(() => {
@@ -65,12 +77,56 @@ const AuthorInsights = () => {
     
     const cytoStyle = [
         {
-          selector: 'node',
-          style: {
-            'background-color': '#666',
-            'label': 'data(label)',
+            selector: 'node',
+            style: {
+              'background-color': '#66ccff',
+              'label': 'data(label)',
+              'border-color': '#000',
+              'border-width': '1px',
+              'shape': 'ellipse',
+              'text-wrap': 'wrap',
+              'text-max-width': '100px',
+              'text-valign': 'center',
+              'color': '#000',
+                'font-size': '12px',
+                'width': '100px',
+                'height':'100px',
+            },
           },
-        },
+        {
+            selector: 'node[type="type1"]',
+            style: {
+              'background-color': '#66ccff',
+              'label': 'data(label)',
+              'border-color': '#000',
+              'border-width': '1px',
+              'shape': 'ellipse',
+            },
+          },
+          {
+            selector: 'node[type="type2"]',
+            style: {
+              'background-color': '#ff6666',
+              'label': 'data(id)',
+              'border-color': '#000',
+              'border-width': '1px',
+              'shape': 'ellipse',
+            },
+          },
+          {
+            selector: 'edge[type="type1"]',
+            style: {
+              'line-color': '#ccc',
+              'width': '2px',
+            },
+          },
+          {
+            selector: 'edge[type="type2"]',
+            style: {
+              'line-color': '#aaa',
+              'width': '2px',
+            },
+          },
         {
           selector: 'edge',
           style: {
@@ -97,64 +153,69 @@ const AuthorInsights = () => {
           },
         },
     ];
-    const style = { width: '100%', height: '600px', margin: 'auto' };
-    const layout = {
-        name: 'circle',
-        animate: true    };
-    const elements = [
-        { data: { id: "1", label: "Author 1" } },
-        { data: { id: "2", label: "Author 2" } },
-        { data: { id: "3", label: "Author 3" } },
-        { data: { id: "4", label: "Author 4" } },
-        { data: { id: "5", label: "Author 5" } },
-        { data: { id: "6", label: "Author 6" } },
-        { data: { id: "7", label: "Author 7" } },
-        { data: { id: "8", label: "Author 8" } },
-        { data: { id: "9", label: "Author 9" } },
-        { data: { id: "10", label: "Author 20" } },
-        { data: { id: "edge1", source: "1", target: "2" } },
-        { data: { id: "edge2", source: "1", target: "3" } },
-        { data: { id: "edge3", source: "2", target: "4" } },
-        { data: { id: "edge4", source: "3", target: "5" } },
-        { data: { id: "edge5", source: "4", target: "5" } },
-        { data: { id: "edge6", source: "5", target: "2" } },
-        { data: { id: "edge7", source: "6", target: "3" } },
-        { data: { id: "edge8", source: "7", target: "4" } },
-        { data: { id: "edge9", source: "8", target: "5" } },
-        { data: { id: "edge10", source: "10", target: "7" } },
-        { data: { id: "edge11", source: "9", target: "7" } },
-        { data: { id: "edge12", source: "10", target: "9" } },
-        { data: { id: "edge13", source: "1", target: "9" } },
+    const style = { width: '100%', height: '800px', margin: 'auto' };
     
-    
-    ];
+    const layout = { name: 'cose' };
 
-    const [availableConferences, setAvailableConferences] = useState([
-        {
-            label: 'lak', 
-            value:'lak'
-        },
-        {
-            label: 'edm', 
-            value:'edm'
-        },
-        {
-            label: 'aied', 
-            value:'aied'
+
+    const [availableConferences, setAvailableConferences] = useState([])
+    const [availableEvents,setAvailableEvents]=useState([])
+    useEffect(() => {
+        const getConfs = async () => {
+            try {
+                const response = await fetch(BASE_URL_CONFERENCE  + "conferencesNames");
+                const result = await response.json()
+                setAvailableConferences(result)
+                console.log("availableConferences: ",availableConferences)
+            } catch (error) {
+                console.log("Error fetching conferences:",error)
+            }
         }
-        
-    ])
+        getConfs();
+    },[])
 
-    const [selectedConference,setSelectedConference]=useState(null)
-    const [selectedConferences, setSelectedConferences] = useState([])
-    const handleAutoCompleteChange = (event,value) => {
-        selectedConferences.push(value)
+    useEffect(() => {
+        if (selectedConferences.length >=1 ) {
+            const getEvents = async () => {
+                try {
+                    const confs = selectedConferences.join('&');
+                    const response = await fetch(BASE_URL_CONFERENCE + "confEvents/" +confs);
+                    const result = await response.json()
+                    setAvailableEvents(result.events)
+                    
+                } catch (error) {
+                    console.log("Error fetching events:",error)
+                }
+            }
+            getEvents();
+        }
+    },[selectedConferences])
+    
+    useEffect(() => {
+
+    }, [])
+
+    let [networkData, setNetworkData] = useState([])
+    let [selectedEvents, setSelectedEvents] = useState([])
+    
+    const handleGenerateGraph = async () => {
+        try {
+            if (selectedEvents.length >= 1) {
+                setNetworkData([]);
+                const selectedEv = selectedEvents.join('&');
+               console.log("selectedEv:",selectedEv)
+                const response = await fetch(BASE_URL_CONFERENCE +"getNetwokGraph/" + selectedEv);
+                const result = await response.json();
+                setNetworkData(result.data);
+                console.log("result",result.data)
+            }
+        } catch (error) {
+            console.log("Error fetching network date",error)
+        }
     }
-    const handleDeleteOption = (optionToDelete) => {
-        setSelectedConference((prevConferences) => {
-            prevConferences.filter((conferences)=> conferences.value !== optionToDelete.value)
-        })
-    }
+
+
+
     return (
         <Grid>
             <Paper
@@ -172,7 +233,10 @@ const AuthorInsights = () => {
                     filterSelectedOptions
                     value={availableConferences.find( conf => conf.value === selectedConferences )}
                     multiple
-                    onChange={(value)=> selectedConferences.push(value)}
+                            onChange={(event, e) => {
+                                const value = Array.isArray(e) ? e.map((s) => s.value) : [];
+                                setSelectedConferences(value);
+                            console.log(value)}}
 
                     renderInput={(params) => (
                         <TextField
@@ -188,9 +252,16 @@ const AuthorInsights = () => {
                 <Autocomplete
                 disablePortal
                 noOptionsText="Select conference first"
-                options={availableConferences}
+                options={availableEvents}
                 getOptionLabel={(option) => option.label}
                 filterSelectedOptions
+                multiple
+                value={availableEvents.find(event => event.value === selectedEvents)}
+                onChange={(event, e) => {
+                    const value = Array.isArray(e) ? e.map((s) => s.value) : [];
+                    setSelectedEvents(value)
+                    console.log("selectedEvents: ",value)
+                }}
                 renderInput={(params) => (
                     <TextField
                     {...params}
@@ -207,19 +278,16 @@ const AuthorInsights = () => {
                     size="large"
                     variant="contained"
                     color="primary"
-                    onClick={(e) => {
-                     
-                      setTimeout(() => {
-                        this.cancelZoom(e);
-                      }, 2000);
-                    }}
+                    onClick={handleGenerateGraph}
                   >
                     Generate Graph
                   </Button>
                 </Grid>
                 </Grid>
             </Paper>
-            <Paper
+            <br/>
+            {networkData.length>0 &&
+                <Paper
                 elevation={6}
                 style={{
             padding: "20px",
@@ -227,8 +295,10 @@ const AuthorInsights = () => {
             
             }}>
             <div>
-                <CytoscapeComponent
-                    elements={elements}
+                    
+                        <CytoscapeComponent
+                        key={networkData}
+                    elements={networkData}
                     layout={layout}
                     style={style}
                     stylesheet={cytoStyle}
@@ -239,7 +309,7 @@ const AuthorInsights = () => {
                     }}
                     />
             </div>
-            </Paper>
+            </Paper>}
         </Grid>
     )
 }
