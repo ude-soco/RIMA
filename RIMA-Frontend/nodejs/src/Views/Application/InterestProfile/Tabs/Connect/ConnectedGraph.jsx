@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import SVGVenn from "./SVGVenn";
 import WhyInterest from "../WhyInterest/WhyInterest"
 import RestAPI from "../../../../../Services/api";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 cytoscape.use(nodeHtmlLabel);
 cytoscape.use(cxtmenu);
@@ -213,6 +214,26 @@ const ConnectedGraph = (props) => {
 
     return (
         <>
+        <Button startIcon={<FilterListIcon/>} color="primary">
+          Number of authors
+        </Button>
+
+        <Button startIcon={<FilterListIcon/>} color="primary">
+          Time period
+        </Button>
+
+        <Button startIcon={<FilterListIcon/>} color="primary">
+          Paper
+        </Button>
+
+        <Button startIcon={<FilterListIcon/>} color="primary">
+          Themes
+        </Button>
+
+        <Button startIcon={<FilterListIcon/>} color="primary">
+          (Co)Authors
+        </Button>
+
             <CytoscapeComponent
                 elements={elements}
                 style={{ width: "100%", height: "600px" }}
@@ -336,7 +357,9 @@ const ConnectedGraph = (props) => {
                                     data.name +
                                     "<br/>" +
                                     '<b class="score">' +
+                                    "<Tooltip title='Number of Papers' placement='right'>" + 
                                     data.score +
+                                    "</Tooltip>" +
                                     "</b>" +
                                     "</span>"
                                 );
