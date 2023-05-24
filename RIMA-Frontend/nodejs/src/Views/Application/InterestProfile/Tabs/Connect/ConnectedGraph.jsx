@@ -22,6 +22,8 @@ import SVGVenn from "./SVGVenn";
 import WhyInterest from "../WhyInterest/WhyInterest"
 import RestAPI from "../../../../../Services/api";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import Contact from "./Contact"
+
 
 cytoscape.use(nodeHtmlLabel);
 cytoscape.use(cxtmenu);
@@ -118,7 +120,8 @@ const ConnectedGraph = (props) => {
         currNode: { name: "" },
         myInterests:myInterests,
         compareInterests: null,
-        userName: "You"
+        userName: "You",
+        openContact:false,
     });
     const [elements, setElements] = useState([]);
     const [paper, setPaper] = useState([]);
@@ -163,12 +166,17 @@ const ConnectedGraph = (props) => {
         setDialog({ ...dialog, openIamCited: true, currNode: ele.data() });
     };
 
+    const handleContact = () => {
+        setDialog({...dialog,  openContact: true });
+    };
+
     const handleClose = () => {
         setDialog({
             ...dialog,
             openCompareInterest: false,
             openIamCited: false,
-            openIhaveCited: false
+            openIhaveCited: false,
+            openContact:false,
         });
     };
 
@@ -259,7 +267,13 @@ const ConnectedGraph = (props) => {
                                     handleIamCited(ele);
                                 },
                                 enabled: true
-                            }
+                            },
+                            {
+                                content: "Contact",
+                                contentStyle: {},
+                                select: handleContact,
+                                enabled: true
+                            },
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
@@ -297,7 +311,13 @@ const ConnectedGraph = (props) => {
                                     handleIhaveCited(ele);
                                 },
                                 enabled: true
-                            }
+                            },
+                            {
+                                content: "Contact",
+                                contentStyle: {},
+                                select: handleContact,
+                                enabled: true
+                            },
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
@@ -394,6 +414,22 @@ const ConnectedGraph = (props) => {
 
                 }}
             />
+
+
+            <Dialog  open={dialog.openContact}  onClose={handleClose} >
+                <DialogContent>
+                        <Grid container>
+                        <Grid item xs>
+                            <Contact />
+                        </Grid>
+                        </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Close</Button>
+                </DialogActions>
+            </Dialog>
+
+
             <Dialog open={dialog.openCompareInterest} onClose={handleClose} maxWidth="md">
                 {dialog.currNode != null ? (
                     <DialogTitle>
