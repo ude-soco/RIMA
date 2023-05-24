@@ -56,7 +56,7 @@ from .my_interests import getDataNewInterestExplore
 
 from .view.discover import getDataDiscover
 from .view.explore import getDataExplore
-from .view.connect import getConnectData
+from .view.connect import getConnectData 
 from .view.connect import getWikiInfo
 
 class TriggerPaperUpdate(APIView):
@@ -251,9 +251,13 @@ def get_data_similiar_interest(request, *args, **kwargs):
 
 @api_view(["post"])
 def get_data_connect(request, *args, **kwargs):
+    print(request.data)#.get('data'))
+    print(request.data.get('test'))
     res =getConnectData(request.data)
     #two list: random and all interests
     return Response({"message": "Successful", "data": res})
+
+
 
 @api_view(["post"])
 def get_wiki_data(request, *args, **kwargs):

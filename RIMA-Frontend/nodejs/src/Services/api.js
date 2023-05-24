@@ -827,7 +827,9 @@ static getListPublications(conference_name_abbr,author_id) {
     }).then((res) => res);
   }
 
+  
   static getConnectData(data) {
+    
     const TOKEN = getItem("accessToken");
     return axios({
       method: "POST",
@@ -837,9 +839,11 @@ static getListPublications(conference_name_abbr,author_id) {
         Accept: "application/json",
         Authorization: `Token ${TOKEN}`,
       },
-      data: data,
+      data: data
     }).then((res) => res);
   }
+
+  
 
   static getWikiInfo(data) {
     const TOKEN = getItem("accessToken");

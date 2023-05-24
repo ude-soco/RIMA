@@ -71,7 +71,7 @@ def getRefCitAuthorsPapers(authorId, method):
 
     return results
 
-def getMostCitedReferenced(authorId, method, n=5):
+def getMostCitedReferenced(authorId, method, n):
 
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors=allCitsRefs["listAllAuthors"]
@@ -136,23 +136,23 @@ def getInterests(authorId):
 
 def getConnectData(id):
     authorId=id["data"]
+    noa = id["test"]
+    print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     print("get most authors who cited me the most")
-    #authorsCitedMe= []#getMostCitedReferenced(authorId=authorId, method="citations")
+    #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa)
     print("get authors Who I cited the most")
-    #authorsReferences=[]#getMostCitedReferenced(authorId=authorId, method="references")
+    #authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa)
     """
     with open("authorsReferences.json", "w") as myfile:
             json.dump(authorsReferences, myfile)
     with open("authorsCitedMe.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-    """
+    """ 
     with open("authorsReferences.json", "r") as myfile:
            authorsReferences = json.load(myfile)
     with open("authorsCitedMe.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
-    
-    
-          
+       
     data={"citations":authorsCitedMe, "references":authorsReferences}
     return data
 

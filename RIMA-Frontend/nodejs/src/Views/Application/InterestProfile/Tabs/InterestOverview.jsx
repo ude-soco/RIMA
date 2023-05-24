@@ -86,10 +86,15 @@ export default function InterestOverview() {
                 setDataDiscover(["Sorry, we are experiencing an error"])
             })
 
-        RestAPI.getConnectData({data:currentUser.author_id}).then(res=>{
+
+        let test = 5;
+        RestAPI.getConnectData({data:currentUser.author_id, test}).then(res=>{
             const {data}=res
             setDataConnect(data.data)
         })
+
+        
+      
 
 
     })};
