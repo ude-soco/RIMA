@@ -230,7 +230,12 @@ const ConnectedGraph = (props) => {
             size="small"
             defaultValue = "3"
             color="primary"
-            style={{ width: "7.5%" }}        
+            style={{ width: "7.5%" }}      
+            inputProps={{
+                min: 0,
+                max: 10,
+                step: 1,
+            }}  
             />
             <Button startIcon={<FilterListIcon/>} color="primary" >
                 MORE

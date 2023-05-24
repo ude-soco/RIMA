@@ -3,6 +3,7 @@ import ConnectedGraph from "./ConnectedGraph"
 import {CircularProgress, Grid, Typography} from "@material-ui/core";
 import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
+import Help from "./Help"
 
 export default function Connect (props) {
     const {data} = props
@@ -36,6 +37,7 @@ export default function Connect (props) {
     console.log(data, "data connect")
     return (
         <>
+            <Help/>
             <Grid container>
 
                 <Grid item xs ={12} style={{padding:"8px"}}>
