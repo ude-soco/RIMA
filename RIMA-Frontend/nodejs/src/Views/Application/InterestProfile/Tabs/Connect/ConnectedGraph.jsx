@@ -1,9 +1,9 @@
 import "./styles.css";
 import React from "react"
 import {
-
+    Box,
     Typography,
-
+    TextField,
     Dialog,
     DialogTitle,
     DialogActions,
@@ -214,25 +214,21 @@ const ConnectedGraph = (props) => {
 
     return (
         <>
-        <Button startIcon={<FilterListIcon/>} color="primary">
-          Number of authors
-        </Button>
+        <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+            <TextField  id="outlined-number"
+            label="Number"
+            type="number"
+            variant="outlined" 
+            size="small"
+            defaultValue = "3"
+            color="primary"
+            style={{ width: "7.5%" }}        
+            />
+            <Button startIcon={<FilterListIcon/>} color="primary" >
+                MORE
+            </Button>
+        </Box>
 
-        <Button startIcon={<FilterListIcon/>} color="primary">
-          Time period
-        </Button>
-
-        <Button startIcon={<FilterListIcon/>} color="primary">
-          Paper
-        </Button>
-
-        <Button startIcon={<FilterListIcon/>} color="primary">
-          Themes
-        </Button>
-
-        <Button startIcon={<FilterListIcon/>} color="primary">
-          (Co)Authors
-        </Button>
 
             <CytoscapeComponent
                 elements={elements}
