@@ -19,10 +19,15 @@ import cxtmenu from "cytoscape-cxtmenu";
 import { useEffect, useState } from "react";
 
 import SVGVenn from "./SVGVenn";
-import WhyInterest from "../WhyInterest/WhyInterest"
+
+import WhyInterest from "../WhyInterest/WhyInterest";
 import RestAPI from "../../../../../Services/api";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Contact from "./Contact"
+
+export {test}
+
+let test = 11
 
 
 cytoscape.use(nodeHtmlLabel);
@@ -30,7 +35,7 @@ cytoscape.use(cxtmenu);
 
 function getGraphData(data) {
     let ids = [...Array(20).keys()];
-
+       
     console.log(data, "data getGraph")
     let citations = data.citations
     let references = data.references
@@ -111,7 +116,7 @@ function getGraphData(data) {
 const ConnectedGraph = (props) => {
     const {data, myInterests}=props
 
-
+     
 
     const [dialog, setDialog] = useState({
         openCompareInterest: false,
@@ -220,14 +225,20 @@ const ConnectedGraph = (props) => {
         }
     ];
 
+    const submitNumber = () => {
+        test = document.getElementById("noa").value;
+        console.log(test)
+    };
+
     return (
         <>
         <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-            <TextField  id="outlined-number"
+            <TextField  id="noa"
             label="Number"
             type="number"
-            variant="outlined" 
+            variant="outlined"
             size="small"
+            onChange={console.log("test")}
             defaultValue = "3"
             color="primary"
             style={{ width: "7.5%" }}      
@@ -240,8 +251,8 @@ const ConnectedGraph = (props) => {
             <Button startIcon={<FilterListIcon/>} color="primary" >
                 MORE
             </Button>
+          
         </Box>
-
 
             <CytoscapeComponent
                 elements={elements}

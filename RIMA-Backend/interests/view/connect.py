@@ -147,7 +147,7 @@ def getConnectData(id):
             json.dump(authorsReferences, myfile)
     with open("authorsCitedMe.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-    """ 
+     """
     with open("authorsReferences.json", "r") as myfile:
            authorsReferences = json.load(myfile)
     with open("authorsCitedMe.json", "r") as myfile:
