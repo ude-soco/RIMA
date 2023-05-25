@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import foto1 from "./fotoAnimation.gif";
+import foto0 from "./null.png";
+import foto1 from "./eins.gif";
+import foto2 from "./zwei.png"
 
 import {
   Dialog,
@@ -13,17 +15,18 @@ export default function Help() {
   const [windows, setWindows] = useState([
     {
       id: 1,
-      title: "Instructions",
+      title: "The Connect page helps you get in touch with other researchers",
+      image: foto0
     },
     {
       id: 2,
-      title: "instruction 1",
+      title: "You can click on the name of the authors",
       image: foto1
     },
     {
       id: 3,
-      title: "instruction 2",
-      image: foto1
+      title: "If you click on the names you get the following options to get more information",
+      image: foto2
     },
     {
       id: 4,
