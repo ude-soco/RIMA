@@ -1,0 +1,9 @@
+.tooltip {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 14px;
+    z-index: 1000; /* Add this line to bring the tooltip to the front */
+  }
+  

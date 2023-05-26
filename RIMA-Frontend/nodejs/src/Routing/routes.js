@@ -28,7 +28,7 @@ import addConference from "../Views/Application/Conferences/addConference.jsx";
 import viewConference from "../Views/Application/Conferences/viewConference.js"; 
 import authorDashboard from "../Views/Application/Conferences/authorDashboard.js"; 
 import compareConferences from "Views/Application/Conferences/Topic/compareConferences";
-import ExplorePublications from "../Views/Application/ConferenceInsights/ExplorePublications/ExplorePublications";
+import ExplorePublications from "../Views/Application/PaperExplorer/PaperExplorerDashboard";
 import ExploreAuthorsNetwork from "../Views/Application/ConferenceInsights/ExploreAuthorsNetwork/ExploreAuthorsNetwork";
 import PaperExplorerDashboard from "../Views/Application/PaperExplorer/PaperExplorerDashboard";
 
