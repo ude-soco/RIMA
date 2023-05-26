@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'interests',
     'drf_yasg',
     'conferences',
+    'paper_explorer'
 ]
 
 REST_FRAMEWORK = {

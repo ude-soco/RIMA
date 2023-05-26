@@ -51,5 +51,6 @@ urlpatterns = [
     #     name='schema-swagger-ui',
     # ),
     path('api/conferences/', include('conferences.urls')),
+    path('api/paper-explorer/', include('paper_explorer.urls')),
 
 ]
