@@ -61,7 +61,9 @@ class TriggerPaperUpdate(APIView):
         import_user_paperdata.delay(request.user.id)
         return Response({})
 
-
+#TODO: optimize the delete function.
+# Delete papers from the database or only delete the relationship to the user
+# Idea: cleaning function
 class ResetData(APIView):
     def post(self, request, *args, **kwargs):
         all_user_papers = request.user.papers.all()

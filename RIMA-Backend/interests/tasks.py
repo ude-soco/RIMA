@@ -352,11 +352,28 @@ def getRefCitAuthorsPapers(authorId, method):
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
 )
 def getConnectedAuthorsData(user_author_id, number_of_top_connected_authors):
-    #This function gets the ids of the top authors connected to a user
+    """
+    Gets the ids of the top authors connected to a user
+    
+    
+    Parameters
+    ----------
+    user_author_id : string
+        The id of the user on semantic scholar
+    number_of_top_connected_authors:
+        The number of connected authors that should be returned
+
+    Output
+    --------
+    Returns a dictionary that has "cited_by" and "referenced" keys
+    each of "cited_by" and "referenced" is linked to a list of tupels 
+    ach tuple represnte the name of the author, his/ her id and the number of times s/he cited / was referenced by the user
+    """
+    #This function g
     # The number of returned authors is specified by the argument number_of_top_connected_authors
-    # The function returns a dictionary that has "cited_by" and "referenced"  keys
-    # each of "cited_by" and "referenced" is linked to a list of tupels 
-    # each tuple represnte the name of the author, his/ her id and the number of times he cited / was referenced by the user
+    # The function 
+    # 
+    # e
 
     # citations
     print("get most authors who cited me the most")

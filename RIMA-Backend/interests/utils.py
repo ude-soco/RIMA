@@ -220,17 +220,22 @@ def generate_short_term_model(user_id, source):
 
 #Osama
 def regenerate_long_term_model(user_id):
-    #    
-    #   regenerates the long term interest model after a user orders to regenerate
-    #   @param user id (The primary key of the user object)
-    #   @pre-request: none
-    #   Discription: 
-    #  The function gets all the NOT MANUALLY ADDED interests in the long-term model, deletes any of them that doesn't have a paper 
-    #  (or have all its papers blacklisted for the user), and updates the weights of the rest of the automatic generated interests 
-    #  to match the ones in the short term interests model
-    #   
-    #   @author Osama Elsafty
-    #
+    """
+    Regenerates the long term interest model after a user orders to regenerate by a user command.
+    It should be triggered when the user commands only and not for the periodic update of the long term model
+    It updated the weights of the non manual interests to match the weight in theshort-term model
+    and deletes the interests that belong to no paper except the manual ones
+    
+    Parameters
+    ----------
+    user_id : int
+        The id of the user object in the database
+
+    Prerequest
+    ----------
+    The short term interest model should have the correct interests and weights (updated)
+    """
+    
     user = User.objects.get(id=user_id)
     long_term_interests= LongTermInterest.objects.filter(user_id= user_id, source__in=[LongTermInterest.SCHOLAR, LongTermInterest.TWITTER])
     short_term_interests = ShortTermInterest.objects.filter(user_id = user_id)
@@ -243,7 +248,7 @@ def regenerate_long_term_model(user_id):
         if interest.keyword.name in blacklisted_keywords:
             continue
         if LongTermInterest.objects.filter(user_id=user_id, keyword=interest.keyword, source=LongTermInterest.MANUAL).exists():
-            #If a manual interest was found for the same keyword, don't update it and don't create a new one.
+            #If the interest was found to be manual in the long term interest (updated manually), don't update it and don't create a new one.
             continue
         long_term_interest,_= LongTermInterest.objects.update_or_create(
             user_id= user_id,
@@ -258,11 +263,16 @@ def regenerate_long_term_model(user_id):
     return
 
 def fetch_papers_keywords(papers):
-    #modified the function from lames. This function is going with the approach that the paper is uniqe and can be stored once
-    # The same paper always have the same keywords and weights
-    # The paper is linked to a user in a many to many relationship. it doesn't have one author id, but many authors can have the same paper
-    # This function is storing no interests. It just fetches the keywords from the papers and stores a relationship between the paper and the keyword
-    # The relationship specifies the weight of the keyword in that paper as well
+    # Modified the function of lames. 
+    """
+    Fetches and stores the keywords of papers, a relationship to store the weight of the keyword in the paper,
+    and the categories of the keywords
+    
+    Parameters
+    ----------
+    papers : paper objects
+        The papers that the keywords should get extracted from
+    """
     dbpedia = DBpediaSpotlight()
     paper_candidates = papers.filter(used_in_calc= False)
     for paper in paper_candidates:
@@ -344,18 +354,18 @@ def fetch_papers_keywords(papers):
         
 #Osama
 def generate_authors_interests(user_id):
-#    
-#   Genrates the interests of an author connected to a certain user
-#   @param user id (The primary key of the user object)
-#   @pre-request: The papers of the authors have their keywords already fetched (used_in_calc = true)
-#   Discription: 
-#   - All the authors that are connected to the user and have not have their interests generated yet are fetched. 
-#   - The interests of authors are generated where the weight of the interest equals the average weight of its keyword in the autho connected papers
-#   - More details about the weight calculations and the normalization process are written in the discription of the function generate_user_short_term_interests
-#   - This function is follwoing the exact same approach but only for the authors connected to the user object instead of the user object itself
-#   
-#   @author Osama Elsafty
-#
+    """
+    Genrates the interests of an author connected to a certain user
+
+    Parameters
+    ----------
+    user_id : int
+        The id of the user object in the database
+    
+    prerequest
+    ----------
+    The papers of the authors have their keywords already fetched (used_in_calc = true)
+    """
     user = User.objects.get(id=user_id)
     userConnectedAuthors = Author.objects.filter(
     author_citations__user=user,
@@ -417,20 +427,15 @@ def generate_authors_interests(user_id):
 
 #Osama
 # def generate_user_short_term_interests_newest_weights(user_id):
-# #    
-# #   Genrates the short term interest model (only papers are considered and not tweets). The newest weight of the keyword is considered as the weight of the interest
-# #   @param user id (The primary key of the user object)
-# #   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
-# #   Discription: 
-# #   - The users are interested in all the keywords that are fetched from all papers in their profile
-# #   - We loop through all the papers of the user (old to new), find the keywords of the paper, and create an interest for each keyword (or get it if already exists) 
-# #   - The weight of the interest = the newest weight of the keyword
-# #   - If another newer paper comes later that has the same keyword, it will override the value of the weight of the interest so that the interest has the newest weight
-# #   
-# #   @author Osama Elsafty
-# #   The function is commented since we are using the average weight instead of the newest weight.
-# #   In Case of returning back to the newest weight approach, this is function is compatible with the new database design 
-
+#     """
+#     Genrates the short term interest model with the weight of the
+#     interest equals to the newest weight of the keyword (only papers are considered and not tweets).
+    
+#     Parameters
+#     ----------
+#     user_id : int
+#         The id of the user object in the database
+#     """
 #     user = User.objects.get(id=user_id)
 #     paper_candidates = user.papers.all().order_by('year')
 #     for paper in paper_candidates:
@@ -455,28 +460,17 @@ def generate_authors_interests(user_id):
 
 #Osama
 def generate_user_short_term_interests(user_id):
-#    
-#   Genrates the short term interest model (only papers are considered and not tweets). The average weight of the keyword is considered as the weight of the interest
-#   @param user_id (The primary key of the user object)
-#   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
-#   Discription: 
-#   - We start by cleaning all the interests of the user that are not linked to any of his papers (manually added interests stay, and twitter interests are not considered here)
-#   - The users are interested in all the keywords that are fetched from all papers in their profile
-#   - We loop through all the papers of the user and find the keywords of the paper, and create an interest for each keyword (or get it if already exists) 
-#   - The weight of a created interest = the weight of the keyword in the paper / numper of papers (w/sum)
-#   - The weight of an updated interest = (w1 + w2 + ....)/ sum = w1/sum + w2/sum +.... = w1/sum + existing weight
-#   - The interest is then linked to the paper and saved and next step is to normalize the weights to be on a scale of 1 to 5
-#   - dataSet is a list of all interests weights. The mean value and the standard diveation are calculated
-#   - The outliers are calculated according to the empirical rule. The high and low limits are set to exclude the outlirs from the scale
-#   - The outliers are getting a value of 1 (for the too low outliers) or 5 (for the too high outliers) without the normalization equation
-#   - The other numbers are getting normalized 
-#   - In some cases, there are no outliers and all the numbers are arround the mean value. That will cause us not to have any 5 weighted interests
-#   - since the weighting is rational and the 5 weighted interests are only the ones that are the user is mostly interested in regardeless of how much they were mentioned,
-#      we scale up all the interests by multiplying all the weights by the number that makes the highest weight = 5 (only if we didn't have any 5 wighted ones)
-#   
-#   @author Osama Elsafty
-#  
+    """
+    Genrates the short term interest model with the weight of the
+    interest equals to the its average weight in all papers (only papers are considered and not tweets).
+    
+    Parameters
+    ----------
+    user_id : int
+        The id of the user object in the database
+    """
     user = User.objects.get(id=user_id)
+    # Delete all interests that are not linked to any of the user's papers
     user.short_term_interests.filter(user_id=user_id).exclude(papers__in=user.papers.all()).delete()
     paper_candidates = user.papers.all().order_by('year')
     
@@ -499,15 +493,16 @@ def generate_user_short_term_interests(user_id):
             interest.save()
             #link the interest to the paper
             interest.papers.add(paper) 
-    #normalize weights
+    #normalize weights to put on scale from 1 to 5
     interests = user.short_term_interests.all().order_by("-weight")
     dataSet = list(interests.values_list('weight', flat=True))
     std_dev = np.std(dataSet)
     mean_value = np.mean(dataSet)
+    # exclude outliers accourding to empirical rule
     highestWeightLimit = mean_value + std_dev * 3
     lowestWeightLimit = mean_value - std_dev * 3
     if(std_dev != 0):
-        #if standard deviation is 0, it means all the interests have the same weight and no need for normalization and only scaling up might be needed
+        #If standard deviation is 0, it means all the interests have the same weight and no need for normalization and only scaling up might be needed
         #Normalizing with this method while havein the std_dev = 0 leads to a division by zero error
         for interest in interests:
             if(interest.weight > highestWeightLimit) :
