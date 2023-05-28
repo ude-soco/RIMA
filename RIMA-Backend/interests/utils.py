@@ -12,7 +12,7 @@ from interests.models import (
     LongTermInterest,
     Category,
     BlacklistedKeyword,
-    Keyword_Paper,
+    KeywordPaper,
     Author,
     AuthorsInterests,
 )
@@ -334,7 +334,7 @@ def fetch_papers_keywords(papers):
 
             keyword_instance.save()
             # store a relationship between the paper and the keyword
-            Keyword_Paper.objects.create(
+            KeywordPaper.objects.create(
                 paper = paper,
                 keyword = keyword_instance,
                 weight = weight
@@ -457,7 +457,7 @@ def generate_authors_interests(user_id):
 def generate_user_short_term_interests(user_id):
 #    
 #   Genrates the short term interest model (only papers are considered and not tweets). The average weight of the keyword is considered as the weight of the interest
-#   @param user id (The primary key of the user object)
+#   @param user_id (The primary key of the user object)
 #   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
 #   Discription: 
 #   - We start by cleaning all the interests of the user that are not linked to any of his papers (manually added interests stay, and twitter interests are not considered here)

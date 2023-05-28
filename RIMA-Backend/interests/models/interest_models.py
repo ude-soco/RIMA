@@ -13,14 +13,8 @@ class Category(models.Model):
         return self.name
 
 
-class Author(models.Model):
-    author_id = models.CharField(max_length=1024, unique=True)
-    name = models.CharField(max_length=1024, null=False, blank=False)
-    interests_generated = models.BooleanField(default=False)
-
 class Paper(models.Model):
     user = models.ManyToManyField(User, related_name= "papers")
-    author = models.ManyToManyField(Author, related_name= "authors_papers")
     paper_id = models.CharField(max_length=255, unique=True, null=False, default=uuid.uuid4)
 
     title = models.CharField(max_length=2048, null=True, blank=True)
@@ -31,7 +25,8 @@ class Paper(models.Model):
     used_in_calc = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     
-class user_blacklisted_paper (models.Model):
+#TODO: Frontend section for blacklisted papers
+class BlacklistedPaper (models.Model):
     user = models.ForeignKey(User,
                              related_name="blacklisted_papers",
                              on_delete=models.CASCADE)
@@ -72,7 +67,7 @@ class Keyword(models.Model):
         self.name = self.name.lower()
         return super().save(*args, **kwargs)
 
-class Keyword_Paper(models.Model):
+class KeywordPaper(models.Model):
     paper = models.ForeignKey(Paper,
                              related_name="paper_keywords",
                              on_delete=models.CASCADE)
@@ -132,7 +127,7 @@ class LongTermInterest(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
-
+# TODO: this class needs to be checked and possibly removed
 class BlacklistedKeyword(models.Model):
     keyword = models.ForeignKey(Keyword,
                                 related_name="blacklisted_preference",
@@ -146,32 +141,4 @@ class BlacklistedKeyword(models.Model):
 
 
 
-class Citation(models.Model):
-    CITED_BY = "CITED_BY" # user is cited by the author
-    REFERENCES = "REFERENCES" # user references the author
-
-    user = models.ForeignKey(User,
-                             related_name="citations",
-                             on_delete=models.CASCADE)
-    author = models.ForeignKey(Author,
-                             related_name="author_citations",
-                             on_delete=models.CASCADE)
-    relation = models.CharField(
-        max_length=512,
-        choices=[(CITED_BY, CITED_BY), (REFERENCES, REFERENCES)],
-    )
-    value = models.IntegerField()
-
-    
-
-
-class AuthorsInterests(models.Model):
-    Keyword = models.ForeignKey(Keyword,
-                             related_name="authors_keyword_interests",
-                             on_delete=models.CASCADE)
-    author = models.ForeignKey(Author,
-                             related_name="authors_interests",
-                             on_delete=models.CASCADE)
-    weight = models.FloatField(default=1)
-    paper = models.ManyToManyField(Paper, related_name= "authors_paper_interests")
 

@@ -5,7 +5,7 @@ import pytz
 from dateutil import parser
 from django.conf import settings
 from accounts.models import User
-from interests.models import Tweet, Paper, ShortTermInterest, Author, Citation, user_blacklisted_paper
+from interests.models import Tweet, Paper, ShortTermInterest, Author, Citation, BlacklistedPaper
 from .utils import (
     generate_long_term_model,
     generate_short_term_model,
@@ -169,7 +169,8 @@ def update_short_term_interest_model():
             # generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
             generate_short_term_model_dbpedia(user.id, ShortTermInterest.SCHOLAR)
 
-
+#TODO: Check the celery task. Add a scheduler to update the long-term intersts
+# Forgetting function
 @task(
     name="update_long_term_interest_model",
     base=BaseCeleryTask,
@@ -190,6 +191,7 @@ def __update_short_term_interest_model_for_user(user_id):
         # generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
         generate_user_short_term_interests(user.id)
 
+#TODO: Enhancement: divide the extraction mechanism into multi threads
 @task(
     name="import_user_citation_data",
     base=BaseCeleryTask,
@@ -226,7 +228,7 @@ def remove_papers_for_user(user_id, papers):
     for paper in papers:
         paper.user.remove(user)
         paper.save()
-        user_blacklisted_paper.objects.get_or_create(user=user, paper_id=paper.paper_id)
+        BlacklistedPaper.objects.get_or_create(user=user, paper_id=paper.paper_id)
         # if the paper is not linked to any user, delete from the database
         if not paper.user.all():
              paper.delete()
