@@ -44,11 +44,11 @@ urlpatterns = [
     path('get-similiar-interest-data', views.get_data_similiar_interest),
 
     #Osama
-    path('papers/', views.PaperView.as_view()), #adding new paper
-    path('reset-data/', views.ResetData.as_view()),
-    path('edit-paper/<int:pk>/', views.EditPaper.as_view()),
-    path('remove-paper-for-user/<int:pk>/', views.RemovePaperForUser.as_view()),
-    path('fetch-papers/', views.FetchUserPapers.as_view()),
-    path('regenerate-interest-profile/', views.regenerateInterestProfile.as_view()),
+    path('papers/', views.paper_view), #adding new paper
+    path('reset-data/', views.reset_data),
+    path('edit-paper/<int:pk>/', views.edit_paper),
+    path('remove-paper-for-user/<int:pk>/', views.remove_paper_for_user),
+    path('fetch-papers/', views.fetch_user_papers),
+    path('regenerate-interest-profile/', views.regenerate_interest_profile),
     
 ]

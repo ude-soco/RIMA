@@ -64,41 +64,45 @@ class TriggerPaperUpdate(APIView):
 #TODO: optimize the delete function.
 # Delete papers from the database or only delete the relationship to the user
 # Idea: cleaning function
-class ResetData(APIView):
-    def post(self, request, *args, **kwargs):
+@api_view(['POST'])
+def reset_data(request):
+    if request.method == 'POST':
         all_user_papers = request.user.papers.all()
         remove_papers_for_user(request.user.id, all_user_papers)
-        request.user.blacklisted_papers.all().delete() #clean the blacklisted papers list for that user
+        request.user.blacklisted_papers.all().delete()  # clean the blacklisted papers list for that user
         LongTermInterest.objects.filter(user_id=request.user.id).delete()
         ShortTermInterest.objects.filter(user_id=request.user.id).delete()
         Tweet.objects.filter(user_id=request.user.id).delete()
         import_user_data.delay(request.user.id)
         return Response({})
     
-class EditPaper(APIView):
-    def post(self, request, pk):
+@api_view(['POST'])
+def edit_paper(request, pk):
+    if request.method == 'POST':
         edited_paper = request.user.papers.filter(id=pk)
-        paper= Paper.objects.create(
-                title= request.data['title'],
-                url= request.data['url'],
-                year= request.data['year'],
-                abstract= request.data['abstract'],
-                authors= request.data['authors'],
-                )
+        paper = Paper.objects.create(
+            title=request.data['title'],
+            url=request.data['url'],
+            year=request.data['year'],
+            abstract=request.data['abstract'],
+            authors=request.data['authors'],
+        )
         paper.user.add(request.user)
         remove_papers_for_user(request.user.id, edited_paper)
         return Response({})
 
 
 
-class RemovePaperForUser(APIView):
-    def post(self, request, pk):
+@api_view(['POST'])
+def remove_paper_for_user(request, pk):
+    if request.method == 'POST':
         removed_paper = request.user.papers.filter(id=pk)
         remove_papers_for_user(request.user.id, removed_paper)
-        return Response({})     
+        return Response({})   
 
-class FetchUserPapers(APIView):
-    def post(self, request):
+@api_view(['POST'])
+def fetch_user_papers(request):
+    if request.method == 'POST':
         user = request.user
         import_user_papers.delay(user.id)
         return Response({})
@@ -108,8 +112,9 @@ class TriggerDataUpdate(APIView):
         import_user_data.delay(request.user.id)
         return Response({})
 
-class regenerateInterestProfile(APIView):
-    def post(self, request, *args, **kwargs):
+@api_view(['POST'])
+def regenerate_interest_profile(request):
+    if request.method == 'POST':
         regenerate_interest_profile.delay(request.user.id)
         return Response({})
 
@@ -210,23 +215,21 @@ def recommended_publications(request, *args, **kwargs):
     # papers = get_recommended_publications_doc_level(request.data)
     return Response({"message": "Hello, world!", "data": papers})
     
-class PaperView(ListCreateAPIView):
-    serializer_class = PaperSerializer
-
-    def get_queryset(self):
-        # return self.request.user.papers.filter(paper_id="manual")
-        return self.request.user.papers.all().order_by("-year")
-
-    def post(self, request, *args, **kwargs):
-        paper= Paper.objects.create(
-                title= request.data['title'],
-                url= request.data['url'],
-                year= request.data['year'],
-                abstract= request.data['abstract'],
-                authors= request.data['authors'],
-                )
+@api_view(['GET', 'POST'])
+def paper_view(request):
+    if request.method == 'GET':
+        queryset = request.user.papers.all().order_by("-year")
+        serializer = PaperSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        paper = Paper.objects.create(
+            title=request.data['title'],
+            url=request.data['url'],
+            year=request.data['year'],
+            abstract=request.data['abstract'],
+            authors=request.data['authors'],
+        )
         paper.user.add(request.user)
-        FetchUserPapers
         return Response({})
 
 
