@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import foto0 from "./null.png";
 import foto1 from "./eins.gif";
-import foto2 from "./zwei.png"
+import foto2 from "./zwei.png";
+import foto3 from "./drei.gif";
+import foto4 from "./vier.gif";
+import foto5 from "./fünf.gif";
 
 import {
   Dialog,
@@ -30,13 +33,18 @@ export default function Help() {
     },
     {
       id: 4,
-      title: "instruction 3",
-      image: foto1
+      title: "If you click 'Compare Interests' the degree of overlap between the circles shows you how much the interests match",
+      image: foto3
     },
     {
       id: 5,
-      title: "instruction 4",
-      image: foto1
+      title: "If you click 'Where am I cited' and 'Where have I cited?' you can see the publications by the other reasearcher which cited you and your publications where you have cited them",
+      image: foto4
+    },
+    {
+      id: 4,
+      title: "The numbers represent the number of papers",
+      image: foto5
     }
   ]);
 
