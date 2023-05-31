@@ -27,7 +27,8 @@ function TabPanel(props) {
   );
 }
 
-export default function InterestOverview() {
+
+export default function InterestOverview () {
   const [value, setValue] = useState(0);
     const [dataExplore, setDataExplore] = useState(false);
     const [dataDiscover, setDataDiscover] = useState(false);
@@ -86,9 +87,8 @@ export default function InterestOverview() {
                 setDataDiscover(["Sorry, we are experiencing an error"])
             })
 
-
-        let test = 5;
-        RestAPI.getConnectData({data:currentUser.author_id, test}).then(res=>{
+        
+        RestAPI.getConnectData({data:currentUser.author_id, noa: 3}).then(res=>{
             const {data}=res
             setDataConnect(data.data)
         })
