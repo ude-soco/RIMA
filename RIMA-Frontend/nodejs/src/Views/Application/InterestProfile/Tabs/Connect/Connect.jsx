@@ -13,11 +13,14 @@ export default function Connect (props) {
     const [dataCollected, setDataCollected]=useState(false)
     const [myInterests, setMyInterests]=useState([])
     const [noa, setNoa] = useState(3)
+    const [fetching, setFetch] = useState(true)
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-     
+    console.log("test", fetching)
 
     //ChatGPT
     const submitNumber = async() => {
+        if(!fetching){
+        setFetch(true)
         console.log("submit")
         setDataCollected(false);
         RestAPI.getConnectData({ data: currentUser.author_id, noa })
@@ -29,6 +32,8 @@ export default function Connect (props) {
           .catch((error) => {
             console.log("Error fetching data:", error);
           });
+        
+        }
       };
  
     useEffect(()=>{
@@ -36,6 +41,7 @@ export default function Connect (props) {
         if(data.length===0){
             setData(props.data)
             setDataCollected(false)
+            
         }
         else{
             RestAPI.longTermInterest(currentUser).then(res=>{
@@ -49,6 +55,7 @@ export default function Connect (props) {
                      
 
             setDataCollected(true)
+            setFetch(false)
         }
 
 
