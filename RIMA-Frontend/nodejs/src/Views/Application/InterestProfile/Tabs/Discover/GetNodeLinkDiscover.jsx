@@ -13,7 +13,6 @@ cytoscape.use(cxtmenu);
 function getColor(currColors) {
   const allColors = [
     "#397367",
-    "#160C28",
     "#EFCB68",
     "#C89FA3",
     "#368F8B",
@@ -60,6 +59,7 @@ function getNodeData(data, values, interest) {
       let pages = d.relatedTopics;
       let idLevel1 = ids.pop();
       let color = colors[0];
+      // Hauptknoten hinzufügen wie hier
       let element = {
         data: {id: idLevel1, label: label, level: 1, color: color},
         classes: ["level1"]
@@ -97,8 +97,9 @@ function getNodeData(data, values, interest) {
   });}
   catch{
     elements = [
-      {data: {id: -1, label: "Sorry an error occurred.", level: 0, color: "red"}}
+      {data: {id: -1, label: "Sorry.", level: 0, color: "red"}}
     ];
+    
   }
 
 
@@ -111,7 +112,7 @@ const GetNodeLink = (props) => {
     openLearn: null,
     nodeObj: null
   });
-
+  const [addNewMark, setAddNewMark] = useState([]);
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest.toLowerCase());
   };
@@ -200,11 +201,11 @@ const GetNodeLink = (props) => {
         "text-valign": "center",
         "text-wrap": "wrap",
         "text-max-width": 20,
-        "font-size": 24
+        "font-size": 20
       }
     },
     {
-      selector: ".collapsed",
+      selector: ".collapsed", // 
       style: {
         display: "none"
       }
@@ -302,6 +303,27 @@ const GetNodeLink = (props) => {
                   }); // `ele` holds the reference to the active element
                 },
                 enabled: true // whether the command is selectable
+              },
+              {
+                // example command
+                //fillColor: "rgba(200, 200, 200, 0.75)", // optional: custom background color for item
+                content: "Mark", // html/text content to be displayed in the menu
+                contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+                select: function (ele) {
+                 let currMark = ele.data()["label"];
+                 setAddNewMark(currMark);
+                 console.log("xx currMark", addNewMark);
+
+                 //addNewMark(currMark);
+                 let msg = "The interest "  + " has been marked";
+                 toast.success(msg, {
+                  toastId: "addLevel2"
+                }); // `ele` holds the reference to the active element
+                 
+                },
+                enabled: true
+
+                // whether the command is selectable
               }
             ], // function( ele ){ return [ /*...*/ ] }, // a function that returns commands or a promise of commands
             fillColor: "black", // the background colour of the menu

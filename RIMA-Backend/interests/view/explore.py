@@ -53,7 +53,7 @@ def getPageData(interest):
             "interest":""
         }
 
-        print(interest, page)
+       # print(interest, page)
     return pageData
 
 
@@ -78,7 +78,7 @@ def getCountLinks(links, text, topN=3):
     return linksWithNum[:topN]
 
 def getDataNewInterestExplore(interest):
-    print(interest, "test test")
+   # print(interest, "test test")
     links, text = getLinksTextInPage(interest.capitalize())
     top3Interests=getCountLinks(links, text)
 
@@ -108,10 +108,10 @@ def getDataNewInterestExplore(interest):
 def getDataExplore(interests):
     data=[]
     for i in interests:
-        print("\n\n\n",i, "new interests")
+        #print("\n\n\n",i, "new interests")
         currData=getDataNewInterestExplore(i)
         time.sleep(1)
         data.append(currData)
-        print(data, "data interest")
+        #print(data, "data interest")
     return data
 

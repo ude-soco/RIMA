@@ -125,7 +125,7 @@ const DiscoverPage = (props) => {
         setCheckNewKeywords(true)
       }
 
-    }
+    } 
 
 
 
@@ -267,7 +267,7 @@ const DiscoverPage = (props) => {
 
   return (
     <>
-      <Grid container justify="flex-end" style={{paddingTop: 24, paddingBottom: 8}}>
+      <Grid container justify="flex-start" style={{paddingTop: 24, paddingBottom: 8}}>
         <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenInterest}>
           Choose interest
         </Button>

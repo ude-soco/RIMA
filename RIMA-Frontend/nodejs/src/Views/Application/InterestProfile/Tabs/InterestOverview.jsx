@@ -70,14 +70,15 @@ export default function InterestOverview() {
             //curInterests=curInterests.slice(0,2)
             setInterests(curInterests)
 
-           RestAPI.getExploreData(curInterests).then(res=>{
+           /*RestAPI.getExploreData(curInterests).then(res=>{
                 const {data}=res
                 setDataExplore(data.data)
                 console.log("done data Explore")
             }).catch(res=>{
                 setDataExplore(["Sorry, we are experiencing an error"])
             })
-
+            */
+           
            RestAPI.getDiscoverData(curInterests).then(res=>{
                 const {data}=res
                 setDataDiscover(data.data)
@@ -86,11 +87,11 @@ export default function InterestOverview() {
                 setDataDiscover(["Sorry, we are experiencing an error"])
             })
 
-        RestAPI.getConnectData({data:currentUser.author_id}).then(res=>{
+        /*RestAPI.getConnectData({data:currentUser.author_id}).then(res=>{
             const {data}=res
             setDataConnect(data.data)
         })
-
+        */
 
     })};
 
