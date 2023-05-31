@@ -7,7 +7,6 @@ import Help from "./Help"
 import FilterListIcon from "@material-ui/icons/FilterList";
 
 export default function Connect (props) {
-    //let {data} = props
     const [data, setData] = useState(props.data)
     console.log(data, "const")
     console.log(data, "useState")
@@ -15,19 +14,13 @@ export default function Connect (props) {
     const [myInterests, setMyInterests]=useState([])
     const [noa, setNoa] = useState(3)
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-    
-    
-
+     
 
     //ChatGPT
     const submitNumber = async() => {
-        const inputValue = document.getElementById("noa").value;
-        const numberOfAuthors = parseInt(inputValue, 10);
-      
-        setNoa(numberOfAuthors);
+        console.log("submit")
         setDataCollected(false);
-      
-        RestAPI.getConnectData({ data: currentUser.author_id, noa: noa })
+        RestAPI.getConnectData({ data: currentUser.author_id, noa })
           .then((res) => {
             const {data}=res
             setData(data.data)
@@ -39,7 +32,9 @@ export default function Connect (props) {
       };
  
     useEffect(()=>{
+        
         if(data.length===0){
+            setData(props.data)
             setDataCollected(false)
         }
         else{
@@ -57,12 +52,9 @@ export default function Connect (props) {
         }
 
 
-    },[data])
+    },[data,props])
 
-
-
-    
-
+   
 
     console.log(data, "const3")
     return (
@@ -76,6 +68,7 @@ export default function Connect (props) {
                         type="number"
                         variant="outlined"
                         size="small"
+                        onChange = {(e) => setNoa(parseInt(e.target.value, 10))}
                         defaultValue = "3"
                         color="primary"
                         style={{ width: "7.5%" }}      

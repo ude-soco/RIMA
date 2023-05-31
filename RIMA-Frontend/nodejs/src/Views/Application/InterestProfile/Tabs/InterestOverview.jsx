@@ -6,7 +6,6 @@ import Connect from "./Connect/Connect";
 import Explore from "./Explore/Explore"
 import Discover from "./Discover/Discover";
 import RestAPI from "../../../../Services/api";
-import { test } from "./Connect/ConnectedGraph";
 
 function TabPanel(props) {
   const {children, value, index, ...other} = props;
@@ -88,9 +87,8 @@ export default function InterestOverview () {
                 setDataDiscover(["Sorry, we are experiencing an error"])
             })
 
-        console.log(test)     
-        //let test = 5;
-        RestAPI.getConnectData({data:currentUser.author_id, test}).then(res=>{
+        
+        RestAPI.getConnectData({data:currentUser.author_id, noa: 3}).then(res=>{
             const {data}=res
             setDataConnect(data.data)
         })

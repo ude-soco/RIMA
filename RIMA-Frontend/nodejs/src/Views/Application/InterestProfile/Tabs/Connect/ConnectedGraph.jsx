@@ -23,11 +23,9 @@ import SVGVenn from "./SVGVenn";
 import WhyInterest from "../WhyInterest/WhyInterest";
 import RestAPI from "../../../../../Services/api";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import Contact from "./Contact"
+import Contact from "./Contact";
 
-export {test}
 
-let test = 11
 
 
 cytoscape.use(nodeHtmlLabel);
@@ -35,7 +33,9 @@ cytoscape.use(cxtmenu);
 
 function getGraphData(data) {
     let ids = [...Array(20).keys()];
-       
+
+     
+
     console.log(data, "data getGraph")
     let citations = data.citations
     let references = data.references
@@ -225,34 +225,13 @@ const ConnectedGraph = (props) => {
         }
     ];
 
-    const submitNumber = () => {
-        test = document.getElementById("noa").value;
-        console.log(test)
-    };
+
+
+    
 
     return (
         <>
-        <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-            <TextField  id="noa"
-            label="Number"
-            type="number"
-            variant="outlined"
-            size="small"
-            onChange={console.log("test")}
-            defaultValue = "3"
-            color="primary"
-            style={{ width: "7.5%" }}      
-            inputProps={{
-                min: 0,
-                max: 10,
-                step: 1,
-            }}  
-            />
-            <Button startIcon={<FilterListIcon/>} color="primary" >
-                MORE
-            </Button>
-          
-        </Box>
+        
 
             <CytoscapeComponent
                 elements={elements}
