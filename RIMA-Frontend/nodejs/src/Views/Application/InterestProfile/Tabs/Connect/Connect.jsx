@@ -1,10 +1,11 @@
 import * as React from "react";
 import ConnectedGraph from "./ConnectedGraph"
-import {CircularProgress, Grid, Typography, Box, TextField, Button} from "@material-ui/core";
+import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent} from "@material-ui/core";
 import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
 import Help from "./Help"
 import FilterListIcon from "@material-ui/icons/FilterList";
+import MoreFilters from "./MoreFilters"
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)
@@ -62,6 +63,15 @@ export default function Connect (props) {
     },[data,props])
 
    
+    const [open, setOpen] = useState(false)
+
+    const handleMoreFilters = () => {
+        setOpen(true);
+    }
+    const closeFilter = () => {
+        setOpen(false);
+    } 
+
 
     console.log(data, "const3")
     return (
@@ -86,9 +96,14 @@ export default function Connect (props) {
                         }}  
                         />
                         <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
-                        <Button startIcon={<FilterListIcon/>} color="primary" >
+                        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleMoreFilters} >
                             MORE
                         </Button>
+                        <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
+                            <DialogContent>
+                                <MoreFilters onClose={closeFilter} />
+                            </DialogContent>
+                        </Dialog>
                     </Box>
                     {dataCollected?
                         <ConnectedGraph data={data} myInterests={myInterests}/>:<Loading/>
