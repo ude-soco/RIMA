@@ -46,7 +46,7 @@ function getColor(currColors) {
 function getNodeData(data, values, interest) {
   let ids = [...Array(200).keys()];
   let elements = [
-    {data: {id: -1, label: interest, level: 0, color: "black"}}
+    {data: {id: -1, label: interest, level: 0, color: "#172B4D"}}
   ];
   let currColors = [];
   try{data.map((d, index) => {
@@ -60,6 +60,9 @@ function getNodeData(data, values, interest) {
       let idLevel1 = ids.pop();
       let color = colors[0];
       // Hauptknoten hinzufügen wie hier
+      let mainNode = {
+        data: {id: -1, label: label, level: 0, color: ""}
+      };
       let element = {
         data: {id: idLevel1, label: label, level: 1, color: color},
         classes: ["level1"]
@@ -97,7 +100,7 @@ function getNodeData(data, values, interest) {
   });}
   catch{
     elements = [
-      {data: {id: -1, label: "Sorry.", level: 0, color: "red"}}
+      {data: {id: -1, label: "Sorry there is an error.", level: 0, color: "red"}}
     ];
     
   }
@@ -112,7 +115,38 @@ const GetNodeLink = (props) => {
     openLearn: null,
     nodeObj: null
   });
+  
   const [addNewMark, setAddNewMark] = useState([]);
+
+  const addMark = async (currMark) => {
+    console.log("xx Discover get node link", currMark)
+    let alreadyExist = validateInterest(keywords, currMark);
+    console.log("xx Discover get node link", alreadyExist);
+    let newMark = "";
+    if (!alreadyExist) {
+      console.log("xx Discover get node link already")
+      let newMarks = keywords;
+      let newMark = {
+        id: Date.now(),
+        categories: [],
+        originalKeywords: [],
+        source: "Manual",
+        text: currMark.toLowerCase(),
+        value: 3,
+      }
+      newMarks.push(newMark);
+      addNewMark.push(newMark);
+    }
+  };
+
+  const colorNodeYellow= async(nodeId) => {
+    var cy = cytoscape(elements);
+    // Wählen Sie den Knoten anhand der ID aus
+    var node = cy.getElementById(nodeId);
+    // Ändern Sie die Hintergrundfarbe des Knotens in Gelb
+    node.style('background-color', 'yellow');
+  };
+
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest.toLowerCase());
   };
@@ -208,6 +242,15 @@ const GetNodeLink = (props) => {
       selector: ".collapsed", // 
       style: {
         display: "none"
+      }
+    },
+    {
+      selector: "node[level=0]",
+      style: {
+        color: "white",
+        shape: "rectangle",
+        width: 160,
+        height: 160
       }
     },
     {
@@ -311,14 +354,12 @@ const GetNodeLink = (props) => {
                 contentStyle: {}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
                  let currMark = ele.data()["label"];
-                 setAddNewMark(currMark);
-                 console.log("xx currMark", addNewMark);
-
-                 //addNewMark(currMark);
-                 let msg = "The interest "  + " has been marked";
+                 addMark(currMark);
+                 console.log("xx currMarkList", addNewMark);
+                 let msg = "The interest has been marked";
                  toast.success(msg, {
                   toastId: "addLevel2"
-                }); // `ele` holds the reference to the active element
+                });
                  
                 },
                 enabled: true
