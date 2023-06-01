@@ -43,7 +43,7 @@ export default function Help() {
     },
     {
       id: 4,
-      title: "The numbers represent the number of papers",
+      title: "The numbers represent the number of citations",
       image: foto5
     }
   ]);
