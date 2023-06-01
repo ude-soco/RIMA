@@ -368,7 +368,7 @@ const ConnectedGraph = (props) => {
                                     data.name +
                                     "<br/>" +
                                     '<b class="score">' +
-                                    "<Tooltip title='Number of Papers' placement='right'>" + 
+                                    "<Tooltip title='Number of Citations' placement='right'>" + 
                                     data.score +
                                     "</Tooltip>" +
                                     "</b>" +
