@@ -69,6 +69,8 @@ export default function Connect (props) {
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
+              {dataCollected?
+              <>
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                         <TextField  id="noa"
                         label="Number"
@@ -84,14 +86,15 @@ export default function Connect (props) {
                             max: 10,
                             step: 1,
                         }}  
-                        />
+                        /> 
                         <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
                         <Button startIcon={<FilterListIcon/>} color="primary" >
                             MORE
                         </Button>
                     </Box>
-                    {dataCollected?
-                        <ConnectedGraph data={data} myInterests={myInterests}/>:<Loading/>
+                    
+                        <ConnectedGraph data={data} myInterests={myInterests}/>
+                </>     :<Loading/>
                     }
              
                 </Grid>
