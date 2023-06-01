@@ -79,12 +79,8 @@ export default function Connect (props) {
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
-<<<<<<< Updated upstream
               {dataCollected?
               <>
-=======
-              {dataCollected?<>
->>>>>>> Stashed changes
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                         <TextField  id="noa"
                         label="Number"
@@ -112,12 +108,8 @@ export default function Connect (props) {
                         </Dialog>
                     </Box>
                     
-<<<<<<< Updated upstream
                         <ConnectedGraph data={data} myInterests={myInterests}/>
                 </>     :<Loading/>
-=======
-                        <ConnectedGraph data={data} myInterests={myInterests}/></>:<Loading/>
->>>>>>> Stashed changes
                     }
              
                 </Grid>
