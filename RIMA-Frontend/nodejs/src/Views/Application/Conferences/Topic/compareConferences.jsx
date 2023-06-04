@@ -1,7 +1,7 @@
 // Implemented By Abdallah
 import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar";
 import React, {useState,useEffect } from "react";
-import {Grid, makeStyles, Paper, Fade, Typography, Button, Tooltip, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Select} from "@material-ui/core";
+import {Grid, makeStyles, Paper, Fade,Card, CardContent,Typography, Button, Tooltip, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Select} from "@material-ui/core";
 import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuthorEvolution";
 import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol";
 import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords";
@@ -26,7 +26,7 @@ import CompareStackedAreaChart from "../../../components/LAKForms/compareStacked
 import RestAPI from "../../../../Services/api";
 
 import {
-    Card,
+   
     CardHeader,
     Row,
     Col,
@@ -279,8 +279,40 @@ export default function EducationalConferences (props) {
     return (
         <>
         <Grid container component={Paper} className={classes.cardHeight}>
-                 <h2> Get insights about Educational Data Science Conferences from different perspectives. </h2>
-       <Grid container component={Paper} className={classes.cardHeight3}>
+          <h2> Get insights about Educational Data Science Conferences from different perspectives. </h2>
+          
+          {/* overview */}
+          <Grid container component={Paper} className={classes.cardHeight3}>        
+            <h1 style={{ width: "100%",borderRadius: "40px", }} 
+              onMouseEnter={changeBackgroundActivity}
+              onMouseLeave={changeBackgroundActivity2}
+              onClick={handleClickActivity}> Activity</h1>
+            <Card className="bg-gradient-default1 shadow" lg={openDrawerActivity ? 4 : ""}
+              style={{
+                display: openDrawerActivity ? "block" : "none", width: "100%",
+                borderRadius: "40px",
+              }}>
+            <Fade unmountOnExit in={openDrawerActivity}> 
+                <CardContent className="bg-transparent">
+                  <Grid container style={{
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "#F0F8FF",
+                    borderRadius: "40px",
+                  }}>
+                    <Grid item xs={12} style={{
+                      margin:'1%'
+                    }}>
+                     <NewCompareAuthorsPapersCol conferencesNames={availableConferences}/>    
+                </Grid>
+              </Grid>
+            </CardContent>
+            </Fade>
+          </Card>
+        </Grid>
+          
+          {/* similarity */}
+          <Grid container component={Paper} className={classes.cardHeight3}>
 
          <h1 style={{width: "100%"}} checked={openDrawer} onMouseEnter={changeBackground} onMouseLeave={changeBackground2} onClick={handleClick}>Similarity</h1>
             <Card className="bg-gradient-default1 shadow" lg={openDrawer ? 4 : ""} style={{display: openDrawer ? "block" : "none", hight: "20%",                    borderRadius: "40px",
@@ -344,7 +376,9 @@ export default function EducationalConferences (props) {
               </CardHeader>
               </Fade>
              </Card>
-            </Grid>
+          </Grid>
+
+          {/* trends */}
             <Grid container component={Paper} className={classes.cardHeight3} >        
             <h1 style={{width: "100%"}} checked={openDrawerYears} onMouseEnter={changeBackgroundYears} onMouseLeave={changeBackgroundYears2} onClick={handleClickYears}> Trends </h1>
             <Card className="bg-gradient-default1 shadow" lg={openDrawerYears ? 4 : ""} style={{display: openDrawerYears ? "block" : "none", hight: "20%", width: "100%",  borderRadius: "40px",}} >
@@ -373,7 +407,7 @@ export default function EducationalConferences (props) {
              </Card>
           </Grid>
     
-
+              {/* Authors */}
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerAuthor} onMouseEnter={changeBackgroundAuthor} onMouseLeave={changeBackgroundAuthor2} onClick={handleClickAuthor}> Authors </h1>
                 <Card className="bg-gradient-default1 shadow" lg={openDrawerAuthor ? 4 : ""} style={{display: openDrawerAuthor ? "block" : "none", width: "100%",                    borderRadius: "40px",
@@ -407,13 +441,11 @@ export default function EducationalConferences (props) {
                   className="row mt-4"
                   style={{
                     display: "flex",
-                    height: "50%",
-                    width: "80%",
+                    height: "55%",
+                    width: "98%",
                     backgroundColor: "#F0F8FF",
-                    marginTop: "2%",
-                    marginLeft: "10%",
-                    marginRight: "10%",
-                    marginBottom: "2%",
+                    marginLeft: "1%",
+                    marginRight: "1%",
                     borderRadius: "40px",
                   }}
                 >
@@ -425,7 +457,9 @@ export default function EducationalConferences (props) {
               </CardHeader>
               </Fade>
              </Card>
-            </Grid>
+          </Grid>
+
+          {/* publications */}
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerPaper} onMouseEnter={changeBackgroundPaper} onMouseLeave={changeBackgroundPaper2} onClick={handleClickPaper}> Publications </h1>
             <Card className="bg-gradient-default1 shadow" lg={openDrawerPaper ? 4 : ""} style={{display: openDrawerPaper ? "block" : "none", width: "100%",                    borderRadius: "40px",
@@ -440,7 +474,7 @@ export default function EducationalConferences (props) {
                   style={{
                     display: "flex",
                     height: "55%",
-                    width: "58%",
+                    width: "100%",
                     backgroundColor: "#F0F8FF",
                     marginLeft: "1%",
                     marginRight: "1%",
@@ -451,82 +485,57 @@ export default function EducationalConferences (props) {
                     <NewComparePapers conferencesNames = {availableConferences}/>    
                   </Col>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    height: "55%",
-                    width: "38%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "40px",
-                  }}
-                >
-                  <Col>
-                    <NewCompareTopicsInPapers conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
                 </Row>
               </CardHeader>
               </Fade>
              </Card>
-            </Grid>
+          </Grid>
+
+          {/* Events */}
             <Grid container component={Paper} className={classes.cardHeight3}>        
             <h1 style={{width: "100%"}} checked={openDrawerWords} onMouseEnter={changeBackgroundWords} onMouseLeave={changeBackgroundWords2} onClick={handleClickWords}> Events </h1>
             <Card className="bg-gradient-default1 shadow" lg={openDrawerWords ? 4 : ""} style={{display: openDrawerWords ? "block" : "none", width: "100%",  borderRadius: "40px",
             }}>
               <Fade unmountOnExit in={openDrawerYears}> 
-                <CardHeader className="bg-transparent">         
-                      <div
-                          className="row mt-4"
+                <CardHeader className="bg-transparent">  
+                <Row> 
+                  <div
                           style={{
-                            height: "900px",
+                            display: "flex",
+                            height: "55%",
                             width: "100%",
                             backgroundColor: "#F0F8FF",
-                            marginLeft: "5px",
+                            marginLeft: "1%",
+                            marginRight: "1%",
                             borderRadius: "40px",
                           }}
-                        >
-                          <Col>
+                    >
+                      <Col>
                            <NewCompareStackedBarChart conferencesNames = {availableConferences}/>    
-                          </Col>
-                        </div>                          
+                      </Col>
+                    </div>
+                    </Row>
+                    <div
+                       className="row mt-4"
+                  style={{
+                    display: "flex",
+                    height: "70%",
+                    width: "100%",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "1%",
+                    marginRight: "1%",
+                    borderRadius: "40px",
+                  }}
+                  >
+                    <Col>
+                    <NewCompareTopicsInPapers conferencesNames = {availableConferences}/>    
+                    </Col>
+                    </div>
               </CardHeader>
               </Fade>
              </Card>
             </Grid>
-            <Grid container component={Paper} className={classes.cardHeight3}>        
-            <h1 style={{width: "100%"}} checked={openDrawerActivity} onMouseEnter={changeBackgroundActivity} onMouseLeave={changeBackgroundActivity2} onClick={handleClickActivity}> Activity</h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawerActivity ? 4 : ""} style={{display: openDrawerActivity ? "block" : "none", width: "100%",                    borderRadius: "40px",
-}}>
-            <Fade unmountOnExit in={openDrawerActivity}> 
-                <CardHeader className="bg-transparent">
-                <Row>
-                <div
-                  style={{
-                    display: "flex",
-                    height: "50%",
-                    width: "100%",
-                    backgroundColor: "#F0F8FF",
-                    marginTop: "2%",
-                    marginLeft: "5%",
-                    marginRight: "5%",
-                    marginBottom: "2%",
-                    borderRadius: "40px",
-                  }}
-                >
-                  <Col>
-                    <NewCompareAuthorsPapersCol conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
 
-                
-              </Row>
-            </CardHeader>
-            </Fade>
-           
-          </Card>
-        </Grid>
         <ScrollTopWrapper/>
         </Grid>
  </>
