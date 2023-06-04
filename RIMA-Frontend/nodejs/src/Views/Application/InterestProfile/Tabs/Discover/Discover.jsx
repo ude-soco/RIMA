@@ -16,7 +16,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import React, {useEffect, useState} from "react";
 import GetNodeLink from "./GetNodeLinkDiscover";
 import RestAPI from "../../../../../Services/api";
-
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const DiscoverPage = (props) => {
   //const [interests, setInterests] = useState([]);
@@ -327,6 +327,7 @@ const DiscoverPage = (props) => {
           })}
         </Menu>:<></>}
       </Grid>
+
       <Grid container>
         <Grid item xs={1}/>
         <Grid item xs={10}>
@@ -341,8 +342,7 @@ const DiscoverPage = (props) => {
             <Loading/>
           )}
         </Grid>
-        <Grid item xs={1}/>
-      </Grid>
+    </Grid>
     </>
   );
 };

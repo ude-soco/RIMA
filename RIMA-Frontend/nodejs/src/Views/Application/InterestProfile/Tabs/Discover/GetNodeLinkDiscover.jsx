@@ -7,6 +7,7 @@ import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import RestAPI from "../../../../../Services/api";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 cytoscape.use(cxtmenu);
 
@@ -120,32 +121,27 @@ const GetNodeLink = (props) => {
 
   const addMark = async (currMark) => {
     console.log("xx Discover get node link", currMark)
-    let alreadyExist = validateInterest(keywords, currMark);
+    let alreadyExist = validateInterest(addNewMark, currMark);
     console.log("xx Discover get node link", alreadyExist);
     let newMark = "";
     if (!alreadyExist) {
       console.log("xx Discover get node link already")
       let newMarks = keywords;
       let newMark = {
-        id: Date.now(),
-        categories: [],
-        originalKeywords: [],
-        source: "Manual",
         text: currMark.toLowerCase(),
-        value: 3,
       }
-      newMarks.push(newMark);
-      addNewMark.push(newMark);
+      setAddNewMark([...addNewMark,newMark]);
+      
     }
   };
 
-  const colorNodeYellow= async(nodeId) => {
-    var cy = cytoscape(elements);
-    // Wählen Sie den Knoten anhand der ID aus
-    var node = cy.getElementById(nodeId);
-    // Ändern Sie die Hintergrundfarbe des Knotens in Gelb
-    node.style('background-color', 'yellow');
+  /*
+  const removeInterest = async (curr) => {
+    let newMarkedInterests = addNewMark.filter((i) => i.id !== curr);
+    setAddNewMark(newMarkedInterests);
+
   };
+  */
 
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest.toLowerCase());
@@ -293,10 +289,55 @@ const GetNodeLink = (props) => {
           cy.layout(layoutGraph).run();
 
           cy.fit();
+          let defaultsLevel1 = {
+            selector: "node[level=1]",
+            menuRadius: 80,
+            commands: [
+              {
+                content: "Reload",
+                contentStyle: {fontSize: "14px"},
+                select: function (ele) {
+                  // a function to execute when the command is selected
+                  handleOpenLearn(ele);
+              },
+              enabled: true
+            },
+            {content: "Remove", // html/text content to be displayed in the menu
+            contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
+            select: function (ele) {
+              let currInterest = ele.data()["label"];
+              let currNeighbor = ele.data()["level = 2"];
+              let msg =
+                "The interest " + currInterest + " has been removed";
+              toast.error(msg, {
+                toastId: "removedLevel1"
+              });
+              ele.addClass("collapsed");
+            },
+            enabled: true
+            }
+            ],
+            fillColor: "black", // the background colour of the menu
+            activeFillColor: "grey", // the colour used to indicate the selected command
+            activePadding: 6, // additional size in pixels for the active command
+            indicatorSize: 24, // the size in pixels of the pointer to the active command, will default to the node size if the node size is smaller than the indicator size,
+            separatorWidth: 3, // the empty spacing in pixels between successive commands
+            spotlightPadding: 8, // extra spacing in pixels between the element and the spotlight
+            adaptativeNodeSpotlightRadius: true, // specify whether the spotlight radius should adapt to the node size
+            //minSpotlightRadius: 24, // the minimum radius in pixels of the spotlight (ignored for the node if adaptativeNodeSpotlightRadius is enabled but still used for the edge & background)
+            //maxSpotlightRadius: 38, // the maximum radius in pixels of the spotlight (ignored for the node if adaptativeNodeSpotlightRadius is enabled but still used for the edge & background)
+            openMenuEvents: "tap", // space-separated cytoscape events that will open the menu; only `cxttapstart` and/or `taphold` work here
+            itemColor: "white", // the colour of text in the command's content
+            itemTextShadowColor: "transparent", // the text shadow colour of the command's content
+            zIndex: 9999, // the z-index of the ui div
+            atMouse: false, // draw menu at mouse position
+            outsideMenuCancel: 8 // if set to a number, this will cancel the command if the pointer is released outside of the spotlight, padded by the number given
+          };
+
           let defaultsLevel2 = {
             selector: "node[level=2]",
-            menuRadius: 75, // the outer radius (node center to the end of the menu) in pixels. It is added to the rendered size of the node. Can either be a number or function as in the example.
-            //selector: "node", // elements matching this Cytoscape.js selector will trigger cxtmenus
+            menuRadius: 80, // the outer radius (node center to the end of the menu) in pixels. It is added to the rendered size of the node. Can either be a number or function as in the example.
+           // selector: "node", // elements matching this Cytoscape.js selector will trigger cxtmenus
             commands: [
               // an array of commands to list in the menu or a function that returns the array
 
@@ -305,7 +346,7 @@ const GetNodeLink = (props) => {
                 // optional: custom background color for item
                 content: "Learn more",
                 // html/text content to be displayed in the menu
-                contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+                contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
                   // a function to execute when the command is selected
                   handleOpenLearn(ele); // `ele` holds the reference to the active element
@@ -316,7 +357,7 @@ const GetNodeLink = (props) => {
                 // example command
                 //fillColor: "rgba(200, 200, 200, 0.75)", // optional: custom background color for item
                 content: "Remove", // html/text content to be displayed in the menu
-                contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+                contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
                   let currInterest = ele.data()["label"];
                   let msg =
@@ -334,7 +375,7 @@ const GetNodeLink = (props) => {
                 // example command
                 //fillColor: "rgba(200, 200, 200, 0.75)", // optional: custom background color for item
                 content: "Add to my interests", // html/text content to be displayed in the menu
-                contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+                contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
                   // a function to execute when the command is selected
                   let currInterest = ele.data()["label"];
@@ -351,7 +392,7 @@ const GetNodeLink = (props) => {
                 // example command
                 //fillColor: "rgba(200, 200, 200, 0.75)", // optional: custom background color for item
                 content: "Mark", // html/text content to be displayed in the menu
-                contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+                contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
                  let currMark = ele.data()["label"];
                  addMark(currMark);
@@ -369,7 +410,7 @@ const GetNodeLink = (props) => {
             ], // function( ele ){ return [ /*...*/ ] }, // a function that returns commands or a promise of commands
             fillColor: "black", // the background colour of the menu
             activeFillColor: "grey", // the colour used to indicate the selected command
-            activePadding: 8, // additional size in pixels for the active command
+            activePadding: 6, // additional size in pixels for the active command
             indicatorSize: 24, // the size in pixels of the pointer to the active command, will default to the node size if the node size is smaller than the indicator size,
             separatorWidth: 3, // the empty spacing in pixels between successive commands
             spotlightPadding: 8, // extra spacing in pixels between the element and the spotlight
@@ -385,6 +426,7 @@ const GetNodeLink = (props) => {
           };
 
           let menu2 = cy.cxtmenu(defaultsLevel2);
+          let menu1 = cy.cxtmenu(defaultsLevel1);
         }}
       />
       <Dialog open={openDialog.openLearn} onClose={handleCloseLearn}>
@@ -402,6 +444,30 @@ const GetNodeLink = (props) => {
         </DialogActions>
       </Dialog>
       <ToastContainer/>
+      <table style={{ borderCollapse: "collapse", width: "100%" }}>
+       <thead>
+        <tr>
+        <th style={{ borderBottom: "2px solid #000", padding: "8px" }}>
+        My marked interests
+        </th>
+          </tr>
+          </thead>
+        <tbody>
+          {addNewMark.map((item) => (
+          <tr key={item.id}>
+          <td
+          style={{
+            borderBottom: "1px solid #ddd",
+            padding: "8px",
+            fontStyle: "italic",
+          }}
+          >
+          {item.text}
+          </td>
+          </tr>
+           ))}
+        </tbody>    
+      </table>
     </>
   );
 };
