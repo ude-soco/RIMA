@@ -4,10 +4,11 @@ import Loader from "react-loader-spinner";
 import Select from "react-select";
 import {BASE_URL_CONFERENCE} from "../../../Services/constants";
 import "d3-transition";
-import {Button, Label, FormGroup, Form, Row, Col,} from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
+import { Box, Grid, Button, InputLabel, MenuItem } from '@mui/material';
+import { json } from "d3";
 
 
 
@@ -28,7 +29,8 @@ class NewCompareAuthorsPapersCol extends Component {
         {value: "paper",      label: "paper"},
         {value: "student",       label: "student"},
         {value: "students",        label: "students"},
-        {value: "system",      label: "system"},],
+        { value: "system", label: "system" },
+      ],
         selectedOption:"",
         weights : [],
         series: [
@@ -49,11 +51,24 @@ class NewCompareAuthorsPapersCol extends Component {
             xaxis: {
               categories: ["1993", "2005", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"],
             },
-          },
-        
+             },
+          barChartOptions: {
+            chart: {
+              id:'bar'
+            },
+            stacked: false,
+            xaxis: {
+              categories:['lak','edm','aied']
+            },
+      },
+      BarChartSeries:  [
+        {
+          name:'',
+          data : [ 120, 339, 100]
+        }
+      ],
+        loader:false
         };
-
-        
       }
       wordhandleChange = (e) =>{
         console.log(e.value)
@@ -89,7 +104,8 @@ class NewCompareAuthorsPapersCol extends Component {
         this.setState({
           active1: true,
           active2: false,
-          key: "topic",
+          loader:true,
+          key: "Authors",
         }, function() {
           this.clickEvent()
         });
@@ -100,7 +116,8 @@ class NewCompareAuthorsPapersCol extends Component {
         this.setState({
           active1: false,
           active2: true,
-          key: "keyowrd",
+          loader:true,
+          key: "Publications",
         }, function() {
           this.clickEvent()
         });
@@ -126,14 +143,35 @@ class NewCompareAuthorsPapersCol extends Component {
         this.selectInputRef.current.select.clearValue();
     
       }
-    
+      get_Authors_Publications_Data(authors_publications) {
+      fetch( BASE_URL_CONFERENCE +
+        "TotalAuthorsPublicationsEvolution/"+authors_publications+"/" + "?" + this.state.selectedConferences.join("&"))
+        .then((response) => response.json())
+        .then((json) => {
+          if (json && json[0].conferences && json[0][authors_publications]) {
+            this.setState({
+              barChartOptions: {
+              ...this.state.barChartOptions,
+              xaxis: {
+                ...this.state.barChartOptions.xaxis,
+                categories: json[0].conferences
+              }
+            },
+            BarChartSeries: [{
+              ...this.state.BarChartSeries[0],
+              data: json[0][authors_publications]
+            }]
+          })
+        }
+        })
+      }
       clickEvent =() => {
-        if (this.state.key == "topic"){
+        if (this.state.key == "Authors"){
           var {series} = this.state;
           var {weights} =  this.state;
           fetch(
             BASE_URL_CONFERENCE +
-            "AuthorsPapersEvolutio/topic/" + "?" + this.state.selectedConferences.join("&")  )
+            "AuthorsPapersEvolutio/Authors/" + "?" + this.state.selectedConferences.join("&")  )
             .then((response) => response.json())
             .then((json) => {
               series = [];
@@ -170,12 +208,13 @@ class NewCompareAuthorsPapersCol extends Component {
                 opacity: "0.9",
               });
             });
+            this.get_Authors_Publications_Data(this.state.key)
         } else {
           var {series} = this.state;
           var {weights} =  this.state;    
           fetch(
             BASE_URL_CONFERENCE +
-            "AuthorsPapersEvolutio/keyword/" +
+            "AuthorsPapersEvolutio/Publications/" +
             "?" +
             this.state.selectedConferences.join("&")  
           )
@@ -218,146 +257,98 @@ class NewCompareAuthorsPapersCol extends Component {
                 opacity: "0.9",
               });
             });
-              
-          
+            this.get_Authors_Publications_Data(this.state.key)
+
         }
       }
 
   render() {
       return (
-        <div id="chart" className="box">
-          <Form role="form" method="POST">
-            <FormGroup>
-              <br></br>
+        <Box component='form' role='form' method='POST'>
+          <Box>
+            <br />
             <h2>Number of authors and publications evolution</h2>
-              <p>
+            <p>
               The evolution of the number of authors and publications between conferences
-              </p>
-
-            <Label>Select conferences</Label>
-          <Row>
-            <div style={{width: "60%", marginLeft: "2%", marginRight: "4%",}}>
-            <Select
-                ref={this.selectInputRef}
-                name="selectOptions"
-                isClearable
-                isMulti
-                placeholder="Select Option"
-                options={this.props.conferencesNames}
-                value={this.props.conferencesNames.find((obj) => obj.value === this.state.selectConference)}
-                onChange={this.conferenceshandleChange}
-                defaultValue={this.state.mulitSelectDefaultValues}
-
-            />
-            </div>
-              <Button
-                outline
-                color="primary"
-                active={this.state.active1}
-                value="topic"                
-                onClick={this.selectSharedTopics}
-              >
-                Authors
-              </Button>
-
-              <Button
-                outline
-                color="primary"
-                active={this.state.active2}
-                value="key"                
-                onClick={this.selectSharedKeywords}
-              >
-                publications
-              </Button>
-              {/* <i
-                className="fas fa-question-circle text-blue"
-                onMouseOver={() => this.handleToogle(true)}
-                onMouseOut={() => this.handleToogle(false)}
-              />
-              {this.state.imageTooltipOpen && (
-                <div
-                  className="imgTooltip"
-                  style={{
-                    marginTop: "0px",
-                    position: "relative",
-                    left: "10px",
-                    width: "400px",
-                    color: "#8E8E8E",
-                    border: "1px solid #BDBDBD",
-                  }}
-                >
-                  <p>
-                    {" "}
-                    Hover over legend to highlight the evolution of specific conference the number of Authors/Papers over the years
-                  </p>
-                </div>
-              )}
-              <br/>
-              {this.state.words.length == 0  && !this.state.active4 ? (
-                <div style={{color: 'red'}}>No Authors/Papers found</div>
-
-              ) : (<div/>)} */}
-
-          </Row>
-<              br/>
-
-              
-              {/* <Label>Select a topic/keyword</Label>
-              <br/>
-              <div style={{width: "250px"}}>
+            </p>
+            <InputLabel>Select conferences</InputLabel>
+            <Grid container spacing={3}>
+              <Grid item style={{width:'60%', }}>
               <Select
-                placeholder="Select conference"
-                options={this.state.words}
-                value={this.state.selectValue}
-                onChange={this.wordhandleChange}
-             /> 
-                </div>
-              <br/> */}
-              
-              {/* <Button
-                outline
-                active={this.state.active3}
-                color="primary"
-                onClick={this.clickEvent}
-              >
-                Compare
-              </Button>
-              <Button
-                outline
-                active={this.state.active4}
-                color="primary"
-                onClick={this.onClear}
-              >
-                Reset
-              </Button> */}
-              <div
-                style={{
-                  marginLeft: "300px",
-                  marginTop: "100px",
-                  position: "absolute",
-                }}
-              >
-                {/* <div style={{backgroundColor: "white", display: this.state.display}}>
-                  <Loader
-                    type="Bars"
-                    visible={this.state.loader}
-                    color="#00BFFF"
-                    height={100}
-                    width={100}
+                  ref={this.selectInputRef}
+                  name="selectOptions"
+                  isClearable
+                  isMulti
+                  placeholder="Select Option"
+                  options={this.props.conferencesNames}
+                  value={this.props.conferencesNames.find((obj) => obj.value === this.state.selectConference)}
+                  onChange={this.conferenceshandleChange}
+                  defaultValue={this.state.mulitSelectDefaultValues}
+                  
                   />
-                </div> */}
-              </div>
-            </FormGroup>
-          </Form>
-          <div style={{opacity: this.state.opacity}}>
-            <ReactApexChart
-              options={this.state.options}
-              series={this.state.series}
-              type="area"
-              height={350}
+              </Grid>
+              <Grid item>
+                <Button
+                  variant={this.state.active1 ? "contained" : 'outlined'}
+                  color="primary"
+                  active={this.state.active1}
+                  value='Authors'
+                  onClick={this.selectSharedTopics}
+                sx={{textTransform:'none'}}>
+                  Authors
+                  </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant={this.state.active2 ? "contained" : 'outlined'}
+                  color='primary'
+                  active={this.state.active2}
+                  value='Publications'
+                  onClick={this.selectSharedKeywords}
+                  sx={{textTransform:'none'}}>
+                  Publications
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+          <br />
+          <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              alignContent: 'center',
+              position: 'absolute',
+              marginLeft:"40%"
+            }}>
+            <Loader
+              type='Bars'
+              visible={this.state.loader}
+              color='#00BFFF'
+              height={100}
+              width={100}
             />
-          </div>
-        </div>
+          </Box>
+          <Grid container sx={{width:'100%'}} style={{opacity: this.state.opacity}}>
+                <Grid item sx={{width:"70%"}}>
+                  <ReactApexChart
+                      options={this.state.options}
+                      series={this.state.series}
+                      type="area"
+                    height={350}
+                    />
+                </Grid>
+                <Grid  item sx={{width:'30%'}}>
+                 <ReactApexChart
+                    options={this.state.barChartOptions}
+                    series={this.state.BarChartSeries}
+                    type="bar"
+                    height={350}
+                    />
+                </Grid>
+            </Grid>
+            
+        </Box>
       );
     } 
 }
