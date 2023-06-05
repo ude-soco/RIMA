@@ -301,7 +301,7 @@ export default function EducationalConferences (props) {
                     borderRadius: "40px",
                   }}>
                     <Grid item xs={12} style={{
-                      margin:'1%'
+                      margin: '1%',
                     }}>
                      <NewCompareAuthorsPapersCol conferencesNames={availableConferences}/>    
                 </Grid>
@@ -312,70 +312,61 @@ export default function EducationalConferences (props) {
         </Grid>
           
           {/* similarity */}
-          <Grid container component={Paper} className={classes.cardHeight3}>
-
-         <h1 style={{width: "100%"}} checked={openDrawer} onMouseEnter={changeBackground} onMouseLeave={changeBackground2} onClick={handleClick}>Similarity</h1>
-            <Card className="bg-gradient-default1 shadow" lg={openDrawer ? 4 : ""} style={{display: openDrawer ? "block" : "none", hight: "20%",                    borderRadius: "40px",
+          <Grid container component={Paper} className={classes.cardHeight3}
+            
+            style={{ width: '100%' }}>
+            <h1 style={{ width: "100%" }} checked={openDrawer}
+              onMouseEnter={changeBackground}
+              onMouseLeave={changeBackground2}
+              onClick={handleClick}>Similarity</h1>
+            <Card className="bg-gradient-default1 shadow"
+              lg={openDrawer ? 4 : ""} style={{
+                display: openDrawer ? "block" : "none", hight: "20%",
+                    
                     borderRadius: "40px",
                   }}>
             <Fade unmountOnExit in={openDrawer}> 
-              <CardHeader className="bg-transparent">
-                  <Row>
-                <div className="main">
-                </div>
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "55%",
-                    width: "98%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "40px",
+                <CardContent className="bg-transparent">
+                  <Grid container>
 
-                  }}
-                >
-                  <Col>
-                    <NewSilmilarityEvolution conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "55%",
-                    width: "48%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "40px",
-                  }}
-                >
-                  <Col>
-                    <NewSharedAuthorEvolution conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                  <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "55%",
-                    width: "48%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "40px",
-                  }}
-                >
-                  <Col>
-                    <NewNumberOfSharedWords conferencesNames = {availableConferences}/>    
-                  </Col>
-                </div>
-                </Row>
-              </CardHeader>
+                  <Grid item xs={12} md={12}
+                    style={{
+                      backgroundColor: "#F0F8FF",
+                      borderRadius: "40px",
+                      padding: '1%',
+                    }}>
+                       <NewSilmilarityEvolution conferencesNames = {availableConferences}/>  
+                    </Grid>
+                    <Grid container
+                       style={{
+                      marginTop:'1%'
+                    }}>
+                    <Grid 
+                    item xs={12}
+                     md={6}
+                          style={{
+                         backgroundColor: "#F0F8FF",
+                            borderRadius: "40px",
+                         padding: '1%',
+                      }}>
+                       <NewSharedAuthorEvolution conferencesNames = {availableConferences}/>   
+                    </Grid>
+                   <Grid item
+                    xs={12}
+                    md={5}
+                          style={{
+                        backgroundColor: "#F0F8FF",
+                        borderRadius: "40px",
+                            padding: '1%',
+                        marginLeft:'1%'
+                      }}>
+                       <NewNumberOfSharedWords conferencesNames = {availableConferences}/> 
+                      </Grid>
+                      </Grid>
+                 </Grid>
+              </CardContent>
               </Fade>
-             </Card>
+              </Card>
           </Grid>
 
           {/* trends */}
