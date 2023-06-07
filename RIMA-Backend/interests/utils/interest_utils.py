@@ -1,38 +1,21 @@
 import json
-import tensorflow as tf
-import math
-from collections import defaultdict
-from django.db.models import (Q, Count)
 from accounts.models import User
 from interests.models import (
-    Tweet,
-    Paper,
     Keyword,
     ShortTermInterest,
     LongTermInterest,
     Category,
     BlacklistedKeyword,
     KeywordPaper,
-    Author,
-    AuthorsInterests,
 )
 import numpy as np
 from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikicategory, wikifilter
-from interests.update_interests import update_interest_models, normalize
+from interests.wikipedia_utils import wikicategory
+from interests.update_interests import normalize
 
 from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpedia_utils import (
     DBpediaSpotlight,
 )
-from interests.Semantic_Similarity.Word_Embedding.Embedding_Methods import (
-    calculate_vector_embedding,
-)
-from interests.Semantic_Similarity.Word_Embedding.IMsim import (
-    calculate_similarity,
-    calculate_weighted_vectors_similarity,
-    calculate_weighted_vectors_similarity_single_word,
-)
-from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 
 #Osama
 def regenerate_long_term_model(user_id):

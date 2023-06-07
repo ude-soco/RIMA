@@ -1,8 +1,7 @@
-import pytz
 from accounts.models import User
 from interests.models import ShortTermInterest, BlacklistedPaper
 from .tasks import update_short_term_interest_model_for_user, fetch_user_papers_keywords
-from interests.utils.interest_utils import fetch_papers_keywords, regenerate_long_term_model
+from interests.utils.interest_utils import regenerate_long_term_model
 from celery.decorators import task
 from common.config import BaseCeleryTask
 

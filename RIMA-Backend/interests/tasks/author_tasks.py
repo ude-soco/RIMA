@@ -1,5 +1,4 @@
 import datetime
-import pytz
 from accounts.models import User
 from interests.models import Paper, Author, Citation
 from interests.utils.interest_utils import fetch_papers_keywords
@@ -109,8 +108,22 @@ def getRefCitAuthorsPapers(authorId, method):
     return results
 
 def store_connections_to_authors(user_id):
+    """
+    Stores the connection of the connected authors to a particulare user in the database    
+    
+    Parameters
+    ----------
+    user_id : int
+        The id of the user object in the database
+
+    Discription
+    --------
+    gets the connected authors by calling the function getConnectedAuthorsData
+    and stores a relationship in the database between the user and the author
+    the value of relation is stored as Cited_By or References according to the relationship
+    between the user and the author
+    """
     user= User.objects.get(id= user_id)
-    # This function stores the connection of the connected authors to a particulare user in the database
     connected_authors = getConnectedAuthorsData(user.author_id, 3)
     cited_by_authors= connected_authors["cited_by"]
     referenced_authors = connected_authors["references"]
@@ -141,7 +154,15 @@ def store_connections_to_authors(user_id):
     return
 
 def import_authors_papers(user_id):
-    # This functions gets the papers for all the authors that are connected to the user in the attributes
+    """
+    Imports the papers of all the author that are related to a specific user
+    
+    Parameters
+    ----------
+    user_id : int
+        The id of the user object in the database
+
+    """
     user = User.objects.get(id=user_id)
     authors = Author.objects.filter(author_citations__user=user)
     current_year = datetime.datetime.now().year
@@ -170,6 +191,14 @@ def import_authors_papers(user_id):
     return
 
 def fetch_authors_papers_keywords(user_id):
+    """
+    Fetches all the keywords from the papers of the authors connected to a specific user
+    
+    Parameters
+    ----------
+    user_id : int
+        The id of the user object in the database
+    """
     user = User.objects.get(id= user_id)
     authors = Author.objects.filter(author_citations__user=user)
     if authors:
