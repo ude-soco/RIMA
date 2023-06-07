@@ -51,7 +51,7 @@ from .utils import (
     get_radar_similarity_data, 
     get_heat_map_data, 
     get_venn_chart_data)
-from interests.tasks import import_user_data, import_user_paperdata, regenerate_interest_profile, import_user_citation_data, remove_papers_for_user, import_user_papers
+from interests.tasks import import_user_data, import_user_paperdata, import_user_papers, import_user_citation_data, regenerate_interest_profile, remove_papers_for_user
 from .publication_utils import API, get_recommended_publications, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
 from .my_interests import getDataExplore, getDataDiscover
 from .my_interests import getDataNewInterestExplore
