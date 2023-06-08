@@ -46,16 +46,19 @@ export default function MoreFilters(props) {
   const handleCheckboxChange = (event) => {
     const{value} = event.target
     console.log(value, "VALUE")
+    setSelectedNames([...selectedNames, value])
   }
+  
+  console.log(selectedNames, "selectedNames")
 
   const classes = useStyles();
 
  const handleApply = () => {
-    props.onClose();
+    props.onClose(selectedNames);
   };
 
  const handleClose = () => {
-    props.onClose();
+    props.onClose(selectedNames);
   };
 
   return (
@@ -65,7 +68,7 @@ export default function MoreFilters(props) {
 
       <Typography variant="h6"  className={classes.title}>Hide</Typography>
             <FormGroup className={classes.checkBox}>
-              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox /*checked={selectedNames.includes(name)}*/  
+              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox checked={selectedNames.includes(name)} 
               onChange={handleCheckboxChange} value={name}/>} label={name} />))} 
             </FormGroup>
           
