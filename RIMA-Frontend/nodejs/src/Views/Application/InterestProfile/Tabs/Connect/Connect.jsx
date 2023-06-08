@@ -103,7 +103,7 @@ export default function Connect (props) {
                         </Button>
                         <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                             <DialogContent>
-                                <MoreFilters onClose={closeFilter} />
+                                <MoreFilters onClose={closeFilter} data={data} />
                             </DialogContent>
                         </Dialog>
                     </Box>
