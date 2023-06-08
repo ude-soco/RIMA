@@ -462,30 +462,20 @@ export default function EducationalConferences(props) {
             }}
           >
             <Fade unmountOnExit in={openDrawerPaper}>
-              <CardHeader className="bg-transparent">
-                {/* <Row>
-                    <h2 className="text-white1 mb-0">The following visualizations compare topics/keywords in papers of selected conference events</h2>
-                </Row> */}
-                <Row>
-                  <div
+              <CardContent className="bg-transparent">
+                <Grid container md={12} xs={12}>
+                  <Grid
+                    md={12}
+                    xs={12}
+                    item
                     style={{
-                      display: "flex",
-                      height: "55%",
-                      width: "100%",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "1%",
-                      marginRight: "1%",
-                      borderRadius: "40px",
+                      ...Style.itemStyle,
                     }}
                   >
-                    <Col>
-                      <NewComparePapers
-                        conferencesNames={availableConferences}
-                      />
-                    </Col>
-                  </div>
-                </Row>
-              </CardHeader>
+                    <NewComparePapers conferencesNames={availableConferences} />
+                  </Grid>
+                </Grid>
+              </CardContent>
             </Fade>
           </Card>
         </Grid>
