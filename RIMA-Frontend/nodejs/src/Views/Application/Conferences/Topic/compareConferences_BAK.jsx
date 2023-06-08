@@ -17,23 +17,27 @@ import {
   AccordionSummary,
   AccordionDetails,
   Select,
-  useMediaQuery,
 } from "@material-ui/core";
-import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuthorEvolution.jsx";
-import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol.jsx";
-import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords.jsx";
+import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuthorEvolution_BAK";
+import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol";
+import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords_BAK";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import NewComparePapers from "../../../components/LAKForms/NewComparePapers";
 import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors";
 import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
 import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
-import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsx";
+import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsX";
 import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+// import {Settings, ExpandMoreIcon} from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
+// import Accordion from '@mui/material/Accordion';
+// import AccordionSummary from '@mui/material/AccordionSummary';
+// import AccordionDetails from '@mui/material/AccordionDetails';
+// // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart.jsx";
+import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart_BAK";
 
 import RestAPI from "../../../../Services/api";
 
@@ -109,6 +113,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// const el = document.getElementsByClassName("myHeader");
+// div.addEventListener('mouseenter',() =>
+//   el.style.background = '#FF0000');
+
 export default function EducationalConferences(props) {
   const [availableConferences, setavailableConferences] = useState([]);
   const classes = useStyles();
@@ -132,6 +140,12 @@ export default function EducationalConferences(props) {
   }
   function changeBackground2(e) {
     e.target.style.background = "#F5F5F2";
+    // if(openDrawer === false){
+    //   e.target.style.background = '#F5F5F2';
+    // }
+    // else {
+    //   e.target.style.background = '#B0D4FF';
+    // }
   }
   function handleClick(e) {
     setOpenDrawer(!openDrawer);
@@ -142,6 +156,12 @@ export default function EducationalConferences(props) {
   }
   function changeBackgroundAuthor2(e) {
     e.target.style.background = "#F5F5F2";
+    // if(openDrawerAuthor === false){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = '#F5F5F2';
+    // }
   }
   function handleClickAuthor(e) {
     setOpenDrawerAuthor(!openDrawerAuthor);
@@ -152,9 +172,45 @@ export default function EducationalConferences(props) {
   }
   function changeBackgroundYears2(e) {
     e.target.style.background = "#F5F5F2";
+    // if(openDrawerYears === false){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = '#F5F5F2';
+    // }
   }
   function handleClickYears(e) {
     setOpenDrawerYears(!openDrawerYears);
+  }
+
+  function changeBackgroundh(e) {
+    e.target.style.background = "#B0D4FF";
+  }
+  function changeBackgroundh2(e) {
+    e.target.style.background = "white";
+    // if(openDrawerh === true){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = 'white';
+    // }
+  }
+  function changeBackgroundhh2(e) {
+    e.target.style.background = "white";
+    // if(openDrawerh2 === true){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = 'white';
+    // }
+  }
+
+  function handleClickh(e) {
+    setOpenDrawerh(!openDrawerh);
+    setOpenDrawerh2(!openDrawerh2);
+  }
+  function handleClickh2(e) {
+    setOpenDrawerh2(!openDrawerh2);
   }
 
   function changeBackgroundPaper(e) {
@@ -162,6 +218,12 @@ export default function EducationalConferences(props) {
   }
   function changeBackgroundPaper2(e) {
     e.target.style.background = "#F5F5F2";
+    // if(openDrawerPaper === false){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = '#F5F5F2';
+    // }
   }
   function handleClickPaper(e) {
     setOpenDrawerPaper(!openDrawerPaper);
@@ -172,6 +234,12 @@ export default function EducationalConferences(props) {
   }
   function changeBackgroundWords2(e) {
     e.target.style.background = "#F5F5F2";
+    // if(openDrawerWords === false){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = '#F5F5F2';
+    // }
   }
   function handleClickWords(e) {
     setOpenDrawerWords(!openDrawerWords);
@@ -182,9 +250,18 @@ export default function EducationalConferences(props) {
   }
   function changeBackgroundActivity2(e) {
     e.target.style.background = "#F5F5F2";
+    // if(openDrawerActivity === false){
+    //   e.target.style.background = '#B0D4FF';
+    // }
+    // else {
+    //   e.target.style.background = '#F5F5F2';
+    // }
   }
   function handleClickActivity(e) {
     setOpenDrawerActivity(!openDrawerActivity);
+  }
+  function conferenceshandleChange(e) {
+    setmulitSelectDefaultValues(true);
   }
 
   useEffect(() => {
@@ -197,21 +274,7 @@ export default function EducationalConferences(props) {
       setavailableConferences(response.data);
     });
   };
-  const Style = {
-    itemStyle: {
-      backgroundColor: "#F0F8FF",
-      borderRadius: "40px",
-      padding: "1%",
-    },
-    cardStyle: {
-      width: "100%",
-      borderRadius: "40px",
-    },
-    h1Style: {
-      width: "100%",
-      borderRadius: "40px",
-    },
-  };
+
   return (
     <>
       <Grid container component={Paper} className={classes.cardHeight}>
@@ -224,7 +287,7 @@ export default function EducationalConferences(props) {
         {/* overview */}
         <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
-            style={{ ...Style.h1Style }}
+            style={{ width: "100%", borderRadius: "40px" }}
             onMouseEnter={changeBackgroundActivity}
             onMouseLeave={changeBackgroundActivity2}
             onClick={handleClickActivity}
@@ -236,8 +299,9 @@ export default function EducationalConferences(props) {
             className="bg-gradient-default1 shadow"
             lg={openDrawerActivity ? 4 : ""}
             style={{
-              ...Style.cardStyle,
               display: openDrawerActivity ? "block" : "none",
+              width: "100%",
+              borderRadius: "40px",
             }}
           >
             <Fade unmountOnExit in={openDrawerActivity}>
@@ -276,7 +340,7 @@ export default function EducationalConferences(props) {
           style={{ width: "100%" }}
         >
           <h1
-            style={{ ...Style.h1Style }}
+            style={{ width: "100%" }}
             checked={openDrawer}
             onMouseEnter={changeBackground}
             onMouseLeave={changeBackground2}
@@ -290,7 +354,8 @@ export default function EducationalConferences(props) {
             style={{
               display: openDrawer ? "block" : "none",
               hight: "20%",
-              ...Style.cardStyle,
+
+              borderRadius: "40px",
             }}
           >
             <Fade unmountOnExit in={openDrawer}>
@@ -301,7 +366,9 @@ export default function EducationalConferences(props) {
                     xs={12}
                     md={12}
                     style={{
-                      ...Style.itemStyle,
+                      backgroundColor: "#F0F8FF",
+                      borderRadius: "40px",
+                      padding: "1%",
                     }}
                   >
                     <NewSilmilarityEvolution
@@ -319,7 +386,9 @@ export default function EducationalConferences(props) {
                       xs={12}
                       md={6}
                       style={{
-                        ...Style.itemStyle,
+                        backgroundColor: "#F0F8FF",
+                        borderRadius: "40px",
+                        padding: "1%",
                       }}
                     >
                       <NewSharedAuthorEvolution
@@ -328,10 +397,13 @@ export default function EducationalConferences(props) {
                     </Grid>
                     <Grid
                       item
+                      xs={12}
+                      md={5}
                       style={{
-                        ...Style.itemStyle,
+                        backgroundColor: "#F0F8FF",
+                        borderRadius: "40px",
+                        padding: "1%",
                         marginLeft: "1%",
-                        width: "49%",
                       }}
                     >
                       <NewNumberOfSharedWords
@@ -348,7 +420,7 @@ export default function EducationalConferences(props) {
         {/* trends */}
         <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
-            style={{ ...Style.h1Style }}
+            style={{ width: "100%" }}
             checked={openDrawerYears}
             onMouseEnter={changeBackgroundYears}
             onMouseLeave={changeBackgroundYears2}
@@ -361,27 +433,34 @@ export default function EducationalConferences(props) {
             className="bg-gradient-default1 shadow"
             lg={openDrawerYears ? 4 : ""}
             style={{
-              ...Style.cardStyle,
               display: openDrawerYears ? "block" : "none",
+              hight: "20%",
+              width: "100%",
+              borderRadius: "40px",
             }}
           >
             <Fade unmountOnExit in={openDrawerYears}>
-              <CardContent className="bg-transparent">
-                <Grid container className="bg-transparent">
-                  <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
+              <CardHeader className="bg-transparent">
+                <div className="main"></div>
+                <div
+                  className="row mt-4"
+                  style={{
+                    display: "flex",
+                    height: "55%",
+                    width: "98%",
+                    backgroundColor: "#F0F8FF",
+                    marginLeft: "1%",
+                    marginRight: "1%",
+                    borderRadius: "40px",
+                  }}
+                >
+                  <Col>
                     <CompareStackedAreaChart
                       conferencesNames={availableConferences}
                     />
-                  </Grid>
-                </Grid>
-              </CardContent>
+                  </Col>
+                </div>
+              </CardHeader>
             </Fade>
           </Card>
         </Grid>
@@ -389,7 +468,7 @@ export default function EducationalConferences(props) {
         {/* Authors */}
         <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
-            style={{ ...Style.h1Style }}
+            style={{ width: "100%" }}
             checked={openDrawerAuthor}
             onMouseEnter={changeBackgroundAuthor}
             onMouseLeave={changeBackgroundAuthor2}
@@ -459,7 +538,7 @@ export default function EducationalConferences(props) {
         {/* publications */}
         <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
-            style={{ ...Style.h1Style }}
+            style={{ width: "100%" }}
             checked={openDrawerPaper}
             onMouseEnter={changeBackgroundPaper}
             onMouseLeave={changeBackgroundPaper2}
@@ -509,7 +588,7 @@ export default function EducationalConferences(props) {
         {/* Events */}
         <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
-            style={{ ...Style.h1Style }}
+            style={{ width: "100%" }}
             checked={openDrawerWords}
             onMouseEnter={changeBackgroundWords}
             onMouseLeave={changeBackgroundWords2}
