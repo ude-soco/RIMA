@@ -24,7 +24,7 @@ import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareA
 import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords.jsx";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import NewComparePapers from "../../../components/LAKForms/NewComparePapers";
-import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors";
+import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors.jsx";
 import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
 import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
@@ -387,7 +387,12 @@ export default function EducationalConferences(props) {
         </Grid>
 
         {/* Authors */}
-        <Grid container component={Paper} className={classes.cardHeight3}>
+        <Grid
+          container
+          component={Paper}
+          className={classes.cardHeight3}
+          style={{ width: "100%" }}
+        >
           <h1
             style={{ ...Style.h1Style }}
             checked={openDrawerAuthor}
@@ -402,56 +407,35 @@ export default function EducationalConferences(props) {
             className="bg-gradient-default1 shadow"
             lg={openDrawerAuthor ? 4 : ""}
             style={{
+              ...Style.cardStyle,
               display: openDrawerAuthor ? "block" : "none",
-              width: "100%",
-              borderRadius: "40px",
             }}
           >
             <Fade unmountOnExit in={openDrawerAuthor}>
-              <CardHeader className="bg-transparent">
-                {/* <Row>                
-                    <h2 className="text-white1 mb-0">Comparison between conferences from authors prespective</h2>
-
-                </Row> */}
-                <Row>
-                  <div
-                    className="row mt-4"
+              <CardContent className="bg-transparent">
+                <Grid container className="bg-transparent">
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
                     style={{
-                      display: "flex",
-                      height: "720px",
-                      width: "80%",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "10%",
-                      marginRight: "10%",
-                      marginBottom: "2%",
-                      marginTop: "3%",
-                      borderRadius: "40px",
+                      ...Style.itemStyle,
                     }}
                   >
-                    <Col>
-                      <NewSharedAuthors
-                        conferencesNames={availableConferences}
-                      />
-                    </Col>
-                  </div>
-                  <div
-                    className="row mt-4"
+                    <NewSharedAuthors conferencesNames={availableConferences} />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
                     style={{
-                      display: "flex",
-                      height: "55%",
-                      width: "98%",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "1%",
-                      marginRight: "1%",
-                      borderRadius: "40px",
+                      ...Style.itemStyle,
+                      marginTop: "1%",
                     }}
                   >
-                    <Col>
-                      <NewAuthorBar conferencesNames={availableConferences} />
-                    </Col>
-                  </div>
-                </Row>
-              </CardHeader>
+                    <NewAuthorBar conferencesNames={availableConferences} />
+                  </Grid>
+                </Grid>{" "}
+              </CardContent>
             </Fade>
           </Card>
         </Grid>
