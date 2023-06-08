@@ -1,4 +1,4 @@
-// Implemented By Abdallah
+// Updated By Islam Abdelghaffar
 import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar.jsx";
 import React, { useState, useEffect } from "react";
 import {
@@ -23,13 +23,13 @@ import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuth
 import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol.jsx";
 import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords.jsx";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
-import NewComparePapers from "../../../components/LAKForms/NewComparePapers";
+import NewComparePapers from "../../../components/LAKForms/NewComparePapers.jsx";
 import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors.jsx";
 import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
 import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsx";
-import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart";
+import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart.jsx";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import { useHistory } from "react-router-dom";
 
@@ -502,45 +502,36 @@ export default function EducationalConferences(props) {
             }}
           >
             <Fade unmountOnExit in={openDrawerYears}>
-              <CardHeader className="bg-transparent">
-                <Row>
-                  <div
+              <CardContent className="bg-transparent">
+                <Grid container xs={12} md={12}>
+                  <Grid
+                    xs={12}
+                    md={12}
+                    item
                     style={{
-                      display: "flex",
-                      height: "55%",
-                      width: "100%",
-                      backgroundColor: "#F0F8FF",
-                      marginLeft: "1%",
-                      marginRight: "1%",
-                      borderRadius: "40px",
+                      ...Style.itemStyle,
                     }}
                   >
-                    <Col>
-                      <NewCompareStackedBarChart
-                        conferencesNames={availableConferences}
-                      />
-                    </Col>
-                  </div>
-                </Row>
-                <div
-                  className="row mt-4"
-                  style={{
-                    display: "flex",
-                    height: "70%",
-                    width: "100%",
-                    backgroundColor: "#F0F8FF",
-                    marginLeft: "1%",
-                    marginRight: "1%",
-                    borderRadius: "40px",
-                  }}
-                >
-                  <Col>
+                    <NewCompareStackedBarChart
+                      conferencesNames={availableConferences}
+                    />
+                  </Grid>
+
+                  <Grid
+                    xs={12}
+                    md={12}
+                    item
+                    style={{
+                      ...Style.itemStyle,
+                      marginTop: "1%",
+                    }}
+                  >
                     <NewCompareTopicsInPapers
                       conferencesNames={availableConferences}
                     />
-                  </Col>
-                </div>
-              </CardHeader>
+                  </Grid>
+                </Grid>
+              </CardContent>
             </Fade>
           </Card>
         </Grid>
