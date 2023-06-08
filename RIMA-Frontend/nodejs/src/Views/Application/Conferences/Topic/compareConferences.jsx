@@ -1,5 +1,5 @@
 // Implemented By Abdallah
-import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar";
+import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar.jsx";
 import React, { useState, useEffect } from "react";
 import {
   Grid,
