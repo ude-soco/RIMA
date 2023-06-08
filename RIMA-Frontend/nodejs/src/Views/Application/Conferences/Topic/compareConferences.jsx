@@ -26,7 +26,7 @@ import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopT
 import NewComparePapers from "../../../components/LAKForms/NewComparePapers.jsx";
 import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors.jsx";
 import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
-import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers";
+import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers.jsx";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsx";
 import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart.jsx";
