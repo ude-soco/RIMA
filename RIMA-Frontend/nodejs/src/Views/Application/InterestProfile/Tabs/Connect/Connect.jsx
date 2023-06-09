@@ -38,6 +38,8 @@ export default function Connect (props) {
       };
  
     useEffect(()=>{
+
+        console.log(selectedNames, "selectedNames in Connect------------------------------");
         
         if(data.length===0){
             setData(props.data)
@@ -60,7 +62,7 @@ export default function Connect (props) {
         }
 
 
-    },[data,props])
+    },[data,props,selectedNames])
 
    
     const [open, setOpen] = useState(false)
@@ -72,10 +74,20 @@ export default function Connect (props) {
         setOpen(false);
     } 
 
+    const [selectedNames, setSelectedNames] = useState([]);
 
-    console.log(data, "const3")
+    const handleSelectedNamesChange = (names) => {
+      setSelectedNames([...names]);
+    };
+
+    const testPrint = () => {
+        console.log(selectedNames, "selectedNames in Connect------------------------------");
+    }
+    
     return (
         <>
+
+            <Button onClick={testPrint}>Test</Button>
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
@@ -103,7 +115,7 @@ export default function Connect (props) {
                         </Button>
                         <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                             <DialogContent>
-                                <MoreFilters onClose={closeFilter} />
+                                <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange}/>
                             </DialogContent>
                         </Dialog>
                     </Box>
