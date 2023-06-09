@@ -53,8 +53,9 @@ export default function MoreFilters(props) {
 
   const classes = useStyles();
 
- const handleApply = () => {
-    props.onClose(selectedNames);
+  const handleApply = () => {
+    props.onSelectedNamesChange(selectedNames)
+    //props.onClose(selectedNames);
   };
 
  const handleClose = () => {

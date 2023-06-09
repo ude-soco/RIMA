@@ -15,6 +15,7 @@ export default function Connect (props) {
     const [myInterests, setMyInterests]=useState([])
     const [noa, setNoa] = useState(3)
     const [fetching, setFetch] = useState(true)
+    const [selectedNames, setSelectedNames] = useState([])
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     console.log("test", fetching)
 
@@ -24,7 +25,7 @@ export default function Connect (props) {
         setFetch(true)
         console.log("submit")
         setDataCollected(false);
-        RestAPI.getConnectData({ data: currentUser.author_id, noa })
+        RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames })
           .then((res) => {
             const {data}=res
             setData(data.data)
@@ -69,8 +70,14 @@ export default function Connect (props) {
         setOpen(true);
     }
     const closeFilter = () => {
+        submitNumber()
         setOpen(false);
     } 
+
+    const handleSelectedNamesChange = (names) => {
+        setSelectedNames([...names]);
+    }
+    console.log(selectedNames, "SlectedNames Connect")
 
 
     console.log(data, "const3")
@@ -103,7 +110,7 @@ export default function Connect (props) {
                         </Button>
                         <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                             <DialogContent>
-                                <MoreFilters onClose={closeFilter} data={data} />
+                                <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange}/>
                             </DialogContent>
                         </Dialog>
                     </Box>

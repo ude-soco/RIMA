@@ -137,6 +137,8 @@ def getInterests(authorId):
 def getConnectData(id):
     authorId=id["data"]
     noa = int(id["noa"])
+    selectedNames = id["selectedNames"]
+    print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     print("get most authors who cited me the most")
     #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa)
