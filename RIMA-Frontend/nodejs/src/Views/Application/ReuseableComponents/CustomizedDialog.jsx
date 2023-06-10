@@ -138,9 +138,7 @@ export default function CustomizedDialogs(props) {
 
   return (
     <Box>
-      <RIMAButton
-        name={"Show publications list"}
-        onClick={handleClickOpen} />
+      <RIMAButton name={"Show publications list"} onClick={handleClickOpen} />
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -242,11 +240,6 @@ export default function CustomizedDialogs(props) {
             </CardContent>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
-        </DialogActions>
       </BootstrapDialog>
     </Box>
   );
