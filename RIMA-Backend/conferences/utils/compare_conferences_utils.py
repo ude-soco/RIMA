@@ -1,3 +1,4 @@
+# implemented by Islam Abdelghaffar
 from conferences import conference_utils as confutils
 from conferences.models.graph_db_entities import Conference as graphConference
 from conferences.models.graph_db_entities import *
@@ -357,7 +358,7 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
 
     # islam Updated
     for conference_event in conference_event_objs:
-        if keyword_or_topic == 'topic':
+        if keyword_or_topic == 'topic' or keyword_or_topic == 'Authors':
             no_of_event_authors = 0
             one_event_authors = []
             # islam Updated
@@ -382,7 +383,7 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
                     'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
 
-        elif keyword_or_topic == 'keyword':
+        elif keyword_or_topic == 'keyword' or keyword_or_topic == 'Publications':
             # islam Updated
             check_exist = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event.conference_event_name_abbr)
@@ -613,18 +614,26 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
     """reteives paper data containing a specific word within an event
     Args:
         conference_event_name_abbr (str): the name of the conference event. For example, lak2020
-        keyword (str): search word (topic or keyword) 
+        keyword (str): search word (topic or keyword)
 
     Returns:
-        list: list of dictionaries of the found papers 
+        list: list of dictionaries of the found papers
     """
     # islam Updated
+    filtered_conference_event_papers_data = []
     conference_event_papers_data = get_event_papers_data(
         conference_event_name_abbr)
-    filtered_conference_event_papers_data = Publication.nodes.filter(
-        Q(abstract__icontains=keyword)
-        | Q(title__icontains=keyword)).filter(paper_id__in=[p.paper_id for p in conference_event_papers_data])
+    # filtered_conference_event_papers_data = Publication.nodes.filter(
+    #     Q(abstract__icontains=keyword)
+    #     | Q(title__icontains=keyword)).filter(paper_id__in=[p.paper_id for p in conference_event_papers_data])
 
+    for publication in conference_event_papers_data:
+        pubHasKeyword = publication.keywords.filter(keyword=keyword)
+        if pubHasKeyword:
+            filtered_conference_event_papers_data.append(publication)
+            print("keyword: ", keyword, "pubHasKeyword: ", pubHasKeyword)
+
+    # print('all papers: ', filtered_conference_event_papers_data)
     print('KEYWORD DATA *********************** ',
           filtered_conference_event_papers_data)
 
@@ -645,3 +654,37 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
     print("number of paper keeeeyword teeeest 2222")
     print(len(titles_abstracts))
     return titles_abstracts
+
+
+def get_conf_total_authors(conf_name):
+    authors_number = 0
+    conf_node = Conference.nodes.filter(conference_name_abbr=conf_name)
+    if conf_node:
+        authors_number = len(conf_node.authors.all())
+    return authors_number
+
+
+def get_conf_total_publications(conf_name):
+    publications_number = 0
+    conf_node = Conference.nodes.filter(conference_name_abbr=conf_name)
+    if conf_node:
+        publications_number = len(conf_node.publication.all())
+    return publications_number
+
+def get_relavant_publication(even_name,keyword_or_topic,keywordTopic_name):
+
+        event_obj_publications = Event.nodes.filter(
+        conference_event_name_abbr=even_name).publications.all()
+        if keyword_or_topic == "keyword":
+            publicationsList = [
+            pub for pub in event_obj_publications 
+            if pub.keywords.filter(keyword=keywordTopic_name)
+            ]
+            return publicationsList
+        
+        elif  keyword_or_topic == "topic" :
+            publicationsList=[
+                pub for pub in event_obj_publications
+                if pub.topics.filter(topics=keywordTopic_name)
+            ]
+            return publicationsList

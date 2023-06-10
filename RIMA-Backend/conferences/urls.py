@@ -7,10 +7,12 @@ urlpatterns = [
     # TODO: All the author insights urls should be called in this block - START
     path("author-insights/", author_insights_url),
     path('getNetwokGraph/<pk1>', getNetworkData.as_view()),
-
+    path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################
+     path('getRelaventPublicationsList/<pk1>',
+         getRelavantPublicationsList.as_view()),
     path('getTotalSharedAuthorsEvolution/',
          TotalSharedAuthorsEvolutionView.as_view()),
     path('getSharedWordsNumber/', TotalSharedWordsNumberView.as_view()),
@@ -28,7 +30,8 @@ urlpatterns = [
          NewconferencesSharedWordsBarView.as_view()),
     path('AuthorsPapersEvolutio/<pk1>/',
          AuthorsPapersEvolutionView.as_view()),
-
+    path('TotalAuthorsPublicationsEvolution/<pk1>/',
+         TotalAuthorsPublicationsEvolution.as_view()),
     ############################################################# islam compare conf. Visulizations updated########################################################################
 
     # BAB Vis Compare Stackes Area

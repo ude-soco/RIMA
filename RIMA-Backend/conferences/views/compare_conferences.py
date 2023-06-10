@@ -258,7 +258,7 @@ class CommonAuthorsview(APIView):
         for AuthorIDs in Authors_intersect_second_event:
             idString = ""
             idString = AuthorIDs[0]
-           
+
             print("string: ", idString)
             # ORM query update Islam Updated
             one_event_authors_name = list(set(
@@ -342,7 +342,6 @@ class AuthorEvents(APIView):
         })
 
 
-
 class AuthorInterestsBar2(APIView):
     def get(self, request, *args, **kwargs):
         result_data = []
@@ -352,10 +351,10 @@ class AuthorInterestsBar2(APIView):
         keyword_or_topic = url_splits[-3]
         second_event = url_splits[-4]
         first_event = url_splits[-5]
-        #Islam Updated 
+        # Islam Updated
         first_author_obj = Author.nodes.get(author_name=first_author)
         second_author_obj = Author.nodes.get(author_name=second_author)
-        #Islam Updated 
+        # Islam Updated
         first_author_interests = compConfUtils.get_author_interests2(
             first_author_obj, first_event, keyword_or_topic)
 
@@ -369,7 +368,7 @@ class AuthorInterestsBar2(APIView):
             itertools.islice(sorted_data_first_author.items(), 10))
         print("first Author interestsssssssss")
         print(reduced_sorted_data_first_author)
-        #Islam Updated 
+        # Islam Updated
         second_author_interests = compConfUtils.get_author_interests2(
             second_author_obj, second_event, keyword_or_topic)
         sorted_data_second_author = dict(
@@ -423,7 +422,7 @@ class ConfEventPapers(APIView):
         conference_event_name_abbr = url_splits[-1]
         print("conference_event_name_abbrrrrrrrrrrrrrrr")
         print(conference_event_name_abbr)
-        #Islam Updated
+        # Islam Updated
         conference_event_papers_data = compConfUtils.get_event_papers_data(
             conference_event_name_abbr)
         print("paper numbeeeeeeerssssss   abstract")
@@ -603,7 +602,7 @@ class getPapersOfWords(APIView):
             print("list progresssss")
             print(first_event_values)
         for word in list_of_shared_words:
-             # islam Updated
+            # islam Updated
             abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
                 second_event_name_abbr, word)
             print("here are the selected word")
@@ -622,11 +621,10 @@ class getPapersOfWords(APIView):
 
 class NewconferencesSharedWordsBarView(APIView):
     def get(self, request, *args, **kwargs):
-        result_data = [[],[]]
-        avaiable_events  = []
+        result_data = [[], []]
+        avaiable_events = []
 
-
-        url_splits = confutils.split_restapi_url(request.get_full_path(),r'/')
+        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         print('url_splits')
         print(url_splits)
 
@@ -644,7 +642,7 @@ class NewconferencesSharedWordsBarView(APIView):
             avaiable_events.append(second_event)
             avaiable_events.append(third_event)
             print("Here is the available eventsssssssss ")
-            print(avaiable_events) 
+            print(avaiable_events)
         else:
             keyword_or_topic = url_splits[-3]
             first_event = url_splits[-2]
@@ -656,15 +654,16 @@ class NewconferencesSharedWordsBarView(APIView):
             avaiable_events.append(first_event)
             avaiable_events.append(second_event)
             print("Here is the available eventsssssssss ")
-            print(avaiable_events) 
-        #islam Updated
-        result_data = compConfUtils.get_shared_words_between_events(avaiable_events,keyword_or_topic)
+            print(avaiable_events)
+        # islam Updated
+        result_data = compConfUtils.get_shared_words_between_events(
+            avaiable_events, keyword_or_topic)
 
         print('result_dat')
         print(result_data)
         print('result_data')
 
-        return Response({'Topiclist': result_data})  
+        return Response({'Topiclist': result_data})
 
 
 class AuthorsPapersEvolutionView(APIView):
@@ -684,16 +683,16 @@ class AuthorsPapersEvolutionView(APIView):
             url_splits_question_mark[0], r'/')[-2]
         print(conferences_list)
         print(keyword_or_topic)
-       
+
         for conference in conferences_list:
-            #islam Updated
+            # islam Updated
             conference_obj = Conference.nodes.get(
                 conference_name_abbr=conference)
             conference_event_objs = Event.nodes.filter(
                 conference_event_name_abbr__icontains=conference_obj.conference_name_abbr)
 
             print("conference_event_objs", conference_event_objs)
-             #islam Updated
+            # islam Updated
             models_data = compConfUtils.get_AuthorPaper_weight_event_based(
                 conference_event_objs, keyword_or_topic)
             print('***'*50)
@@ -734,6 +733,47 @@ class AuthorsPapersEvolutionView(APIView):
                          })
 
 
+class TotalAuthorsPublicationsEvolution(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        conferences_list = confutils.split_restapi_url(
+            url_splits_question_mark[1], r'&')
+        Authors_or_Publications = confutils.split_restapi_url(
+            url_splits_question_mark[0], r'/')[-2]
+        print(conferences_list)
+        print(Authors_or_Publications)
+
+        data = []
+        confs = []
+        if Authors_or_Publications == 'Authors':
+            total_authors = []
+            for conf in conferences_list:
+                conf_author_num = compConfUtils.get_conf_total_authors(conf)
+                confs.append(conf)
+                total_authors.append(conf_author_num)
+
+            data.append({
+                'conferences': confs,
+                'Authors': total_authors
+            })
+
+        elif Authors_or_Publications == 'Publications':
+            publications_num = []
+            for conf in conferences_list:
+                conf_publications_num = compConfUtils.get_conf_total_publications(
+                    conf)
+                confs.append(conf)
+                publications_num.append(conf_publications_num)
+
+            data.append({
+                'conferences': confs,
+                'Publications': publications_num
+            })
+
+        return Response(
+            data
+        )
 # done
 
 
@@ -752,7 +792,7 @@ class MultipleTopicAreaView(APIView):
 
         conference_name_abbr = url_splits_conference_name[-2]
         words_split_params = url_splits_question_mark[-1].split("&")
-        #islam Updated
+        # islam Updated
         conference_obj = Conference.nodes.get(
             conference_name_abbr=conference_name_abbr)
         conference_event_objs = Event.nodes.filter(
@@ -773,7 +813,9 @@ class MultipleTopicAreaView(APIView):
             "years": list(sorted(set(events), key=events.index))
         })
 
-# done 
+# done
+
+
 class confEvents(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -782,11 +824,11 @@ class confEvents(APIView):
         url_path = url_path.replace("%20", " ")
         confs_split = url_path.split(r"/")
         conferences_events_JSON = []
-        if("&" in confs_split[-1]):
-            confs_split=confs_split[-1].split(r'&')
-            print("confs_split: ",confs_split)
+        if ("&" in confs_split[-1]):
+            confs_split = confs_split[-1].split(r'&')
+            print("confs_split: ", confs_split)
             for conf in confs_split:
-                        #Islam Updated
+                # Islam Updated
                 conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
                     conference_event_name_abbr__startswith=conf)]
                 print("conference_events new: ", conference_events)
@@ -796,23 +838,23 @@ class confEvents(APIView):
                         'value': event,
                         'label': event,
                     })
-        else :
+        else:
             conference_events = [e.conference_event_name_abbr for e in Event.nodes.filter(
-            conference_event_name_abbr__startswith=confs_split[-1])]
+                conference_event_name_abbr__startswith=confs_split[-1])]
             print("conference_events new: ", conference_events)
             for event in conference_events:
                 conferences_events_JSON.append({
 
                     'value': event,
                     'label': event,
-                })           
-
+                })
 
         return Response({
             "events":
                 conferences_events_JSON
 
         })
+
 
 class VennOverview(APIView):
     def get(self, request, *args, **kwargs):
@@ -829,14 +871,14 @@ class VennOverview(APIView):
         keyword_or_topic = url_splits[-3]
 
         if keyword_or_topic == 'topic':
-            #Islam Updated
+            # Islam Updated
             models_data_first_event = compConfUtils.get_topics_from_models(
                 first_event)
             models_data_second_event = compConfUtils.get_topics_from_models(
                 second_event)
 
         elif keyword_or_topic == 'keyword':
-            #Islam Updated
+            # Islam Updated
             models_data_first_event = compConfUtils.get_keywords_from_models(
                 first_event)
             models_data_second_event = compConfUtils.get_keywords_from_models(
@@ -847,7 +889,7 @@ class VennOverview(APIView):
 
         for data in models_data_second_event:
             words_second_event.append(data.get(keyword_or_topic))
-        #Islam Updated
+        # Islam Updated
         models_data_intersect_first_and_second = compConfUtils.get_shared_words_between_events(
             [first_event, second_event], keyword_or_topic)
 
@@ -860,4 +902,28 @@ class VennOverview(APIView):
 
         return Response({
             "commontopics": ctx
+        })
+
+class getRelavantPublicationsList(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        conferences_list = confutils.split_restapi_url(
+            url_splits_question_mark[-1], r'&')
+        eventname = conferences_list[-3]
+        keyword_or_topic = conferences_list[-2]
+        keywordTopic_name = conferences_list[-1]
+        publication_List=compConfUtils.get_relavant_publication(
+            eventname,keyword_or_topic,keywordTopic_name)
+        final_pubs_list=[{
+            "title":pub.title,
+                 "data":{
+                     "title":pub.title,
+                     "abstract": pub.abstract,
+                     "years":pub.years,
+                     "url":pub.urls
+        }}for pub in publication_List]
+
+        return Response({
+            "publicationList":final_pubs_list
         })
