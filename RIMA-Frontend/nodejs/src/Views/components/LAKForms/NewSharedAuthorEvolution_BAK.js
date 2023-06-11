@@ -4,19 +4,17 @@ import Loader from "react-loader-spinner";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
-import { Grid, Box, InputLabel } from "@material-ui/core";
+import { Button, Label, FormGroup, Form } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 
-class NewSharedAuthorEvolution extends Component {
+class NewSharedAuthorEvolution_BAK extends Component {
   constructor(props) {
     super(props);
     this.selectInputRef = React.createRef();
 
     this.state = {
-      loader: false,
       mulitSelectDefaultValues: [
         { value: "lak", label: "lak" },
         { value: "edm", label: "edm" },
@@ -37,13 +35,17 @@ class NewSharedAuthorEvolution extends Component {
       weights: [],
       series: [
         {
-          name: "Total number of authors",
+          name: "number of shared authors",
           data: [216, 278, 391, 447, 629, 698, 684, 460, 606, 644],
         },
         {
-          name: "No. of shared authors",
+          name: "Total number of authors",
           data: [2, 3, 16, 11, 41, 61, 43, 15, 36, 16],
         },
+        // {
+        //   name :'lak',
+        //   data :[0, 0, 0, 0, 0, 0, 113, 226, 180, 165, 236, 377, 418, 221, 218, 287, 250]
+        // }
       ],
 
       options: {
@@ -67,7 +69,7 @@ class NewSharedAuthorEvolution extends Component {
         yaxis: [
           {
             title: {
-              text: "No. of Authors",
+              text: "Similarity Index",
               style: {
                 color: "#008FFB",
               },
@@ -105,7 +107,6 @@ class NewSharedAuthorEvolution extends Component {
 
     this.setState(
       {
-        loader: true,
         selectConference: Array.isArray(e) ? e.map((s) => s.value) : [],
         selectedConferences: value,
       },
@@ -149,13 +150,16 @@ class NewSharedAuthorEvolution extends Component {
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
+        console.log("I am here 2 ");
         series = [];
         weights = [];
+        console.log("I am here AFTER ");
         for (let index = 0; index < 2; index++) {
           console.log(index);
           for (let i = 0; i < json.weights.length; i++) {
             weights[i] = json.weights[i][index];
           }
+          console.log("I am here 3 ");
           if (index == 0) {
             series = series.concat([
               { name: "Total number of Authors", data: weights },
@@ -195,47 +199,71 @@ class NewSharedAuthorEvolution extends Component {
 
   render() {
     return (
-      <Box component="form" role="form" method="POST" style={{ width: "100%" }}>
-        <br />
-        <h2>Total and shared authors evolution</h2>
-        <p>
-          The evolution of the number of total/shared authors between
-          conferences.{" "}
-        </p>
-        <Box style={{ width: "100%" }}>
-          <InputLabel>Select conferences</InputLabel>
-          <Select
-            ref={this.selectInputRef}
-            name="selectOptions"
-            isClearable
-            isMulti
-            placeholder="Select conferences to compare"
-            options={this.props.conferencesNames}
-            value={this.props.conferencesNames.find(
-              (obj) => obj.value === this.state.selectConference
+      <div id="chart" className="box">
+        <Form role="form" method="POST">
+          <FormGroup>
+            <br></br>
+            <h2>Shared authors evolution</h2>
+            <p>
+              The evolution of the number of shared authors between conferences.{" "}
+            </p>
+            <div style={{ width: "100%" }}>
+              <Select
+                ref={this.selectInputRef}
+                name="selectOptions"
+                isClearable
+                isMulti
+                placeholder="Select conferences to compare"
+                options={this.props.conferencesNames}
+                value={this.props.conferencesNames.find(
+                  (obj) => obj.value === this.state.selectConference
+                )}
+                onChange={this.conferenceshandleChange}
+                defaultValue={this.state.mulitSelectDefaultValues}
+              />
+            </div>
+
+            {this.state.words.length == 0 && !this.state.active4 ? (
+              <div style={{ color: "red" }}>No common words found</div>
+            ) : (
+              <div />
             )}
-            onChange={this.conferenceshandleChange}
-            defaultValue={this.state.mulitSelectDefaultValues}
-          />
-        </Box>
-        {this.state.words.length == 0 && !this.state.active4 ? (
-          <Box style={{ color: "red" }}>No common authors found</Box>
-        ) : (
-          <Box />
-        )}
-        <br />
-        <Grid item style={{ opacity: this.state.opacity }}>
-          <ActiveLoader height={50} width={50} visible={this.state.loader} />
+            <br />
+            <div
+              style={{
+                marginLeft: "300px",
+                marginTop: "100px",
+                position: "absolute",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "white",
+                  display: this.state.display,
+                }}
+              >
+                <Loader
+                  type="Bars"
+                  visible={this.state.loader}
+                  color="#00BFFF"
+                  height={100}
+                  width={100}
+                />
+              </div>
+            </div>
+          </FormGroup>
+        </Form>
+        <div style={{ opacity: this.state.opacity }}>
           <ReactApexChart
             options={this.state.options}
             series={this.state.series}
             type="area"
             height={350}
           />
-        </Grid>
-      </Box>
+        </div>
+      </div>
     );
   }
 }
 
-export default NewSharedAuthorEvolution;
+export default NewSharedAuthorEvolution_BAK;
