@@ -2,13 +2,14 @@ import React from "react";
 import Loader from "react-loader-spinner";
 
 import { Box } from "@material-ui/core";
-const ActiveLoader = ({ width, height, visible }) => {
+const ActiveLoader = ({ width, height, visible, marginLeft = "50%" }) => {
   return (
     <Box
       style={{
-        marginLeft: "50%",
+        marginLeft: marginLeft,
         marginTop: "2%",
         position: "absolute",
+        zIndex: 999,
       }}
     >
       <Loader

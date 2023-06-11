@@ -198,7 +198,7 @@ class NewSharedAuthors extends Component {
         <p>Shared authors between two conference events</p>
         <Label>Select two conference events to compare</Label>
         <Grid container spacing={3}>
-          <Grid item md={5}>
+          <Grid item md={5} xs={12}>
             <Select
               placeholder="First conference"
               options={this.props.conferencesNames}
@@ -208,7 +208,7 @@ class NewSharedAuthors extends Component {
               onChange={this.conferenceshandleChange}
             />
           </Grid>
-          <Grid item md={5}>
+          <Grid item md={5} xs={12}>
             <Select
               placeholder="First conference event "
               options={this.state.confevents}
@@ -221,7 +221,7 @@ class NewSharedAuthors extends Component {
         </Grid>
         <br />
         <Grid container spacing={3}>
-          <Grid item md={5}>
+          <Grid item md={5} xs={12}>
             <Select
               placeholder="Second conference"
               options={this.props.conferencesNames}
@@ -231,7 +231,7 @@ class NewSharedAuthors extends Component {
               onChange={this.conferenceshandleChangeTwo}
             />
           </Grid>
-          <Grid item md={5}>
+          <Grid item md={5} xs={12}>
             <Select
               placeholder="Second conference event"
               options={this.state.confeventsTwo}

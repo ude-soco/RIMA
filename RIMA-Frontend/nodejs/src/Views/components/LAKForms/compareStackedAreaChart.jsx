@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Loader from "react-loader-spinner";
 import Select from "react-select";
 import { BASE_URL } from "../../../Services/constants";
 import "d3-transition";
@@ -325,7 +324,7 @@ class CompareStackedAreaChart extends Component {
 
         <InputLabel>Select conferences</InputLabel>
 
-        <Box style={{ width: "600px" }}>
+        <Grid xs={12} md={6}>
           <Select
             ref={this.selectInputRef}
             name="selectOptions"
@@ -339,7 +338,7 @@ class CompareStackedAreaChart extends Component {
             onChange={this.conferenceshandleChange}
             defaultValue={this.state.mulitSelectDefaultValues}
           />
-        </Box>
+        </Grid>
         <br />
         <Grid container spacing={3}>
           <Grid item>

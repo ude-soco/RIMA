@@ -13,7 +13,6 @@ class NewNumberOfSharedWords extends Component {
   constructor(props) {
     super(props);
     this.selectInputRef = React.createRef();
-    const hoveredYear = "";
     this.state = {
       loader: false,
       mulitSelectDefaultValues: [
@@ -50,12 +49,6 @@ class NewNumberOfSharedWords extends Component {
           height: 350,
           type: "bar",
           stacked: false,
-          events: {
-            dataPointMouseEnter: function (event, chartContext, config) {
-              this.hoveredYear = config.w.globals.labels[config.dataPointIndex];
-              console.log(this.hoveredYear);
-            }.bind(this),
-          },
         },
         dataLabels: {
           enabled: false,
@@ -94,7 +87,7 @@ class NewNumberOfSharedWords extends Component {
             seriesName: "Shared Topics",
             opposite: true,
             axisTicks: {
-              show: true,
+              show: false,
             },
             axisBorder: {
               show: true,
@@ -116,7 +109,7 @@ class NewNumberOfSharedWords extends Component {
         tooltip: {
           fixed: {
             enabled: true,
-            position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+            position: "topLeft",
             offsetY: 30,
             offsetX: 60,
           },
@@ -129,20 +122,13 @@ class NewNumberOfSharedWords extends Component {
     };
   }
   wordhandleChange = (e) => {
-    console.log(e.value);
     this.setState({
       selectValue: e,
     });
-    console.log(this.state.selectValue);
   };
 
   conferenceshandleChange = (e) => {
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
-
-    console.log("Abdo");
-    console.log(value);
-    console.log("Abdo");
-
     this.setState(
       {
         loader: true,
@@ -153,10 +139,6 @@ class NewNumberOfSharedWords extends Component {
         this.CompareSharedWordNumber();
       }
     );
-
-    console.log("BAB");
-    console.log(this.state.selectedConferences);
-    console.log("BAB");
   };
 
   selectSharedTopics = (e) => {
@@ -177,7 +159,6 @@ class NewNumberOfSharedWords extends Component {
 
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log(this.state.imageTooltipOpen);
   };
 
   onClear = () => {
@@ -206,17 +187,12 @@ class NewNumberOfSharedWords extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
-        console.log("I am here 2 ");
         series = [];
         weights = [];
-        console.log("I am here AFTER ");
         for (let index = 0; index < 2; index++) {
-          console.log(index);
           for (let i = 0; i < json.weights.length; i++) {
             weights[i] = json.weights[i][index];
           }
-          console.log("I am here 3 ");
           if (index == 0) {
             series = series.concat([
               { name: "No. of shared Topics", data: weights },
@@ -226,7 +202,6 @@ class NewNumberOfSharedWords extends Component {
               { name: "No. of shared keywords", data: weights },
             ]);
           }
-          console.log("weights", weights);
           weights = [];
         }
         this.setState({
