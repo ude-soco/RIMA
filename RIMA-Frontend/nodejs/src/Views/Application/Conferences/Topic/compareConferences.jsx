@@ -18,6 +18,7 @@ import {
   AccordionDetails,
   Select,
   useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuthorEvolution.jsx";
 import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol.jsx";
@@ -40,7 +41,6 @@ import RestAPI from "../../../../Services/api";
 import { CardHeader, Row, Col } from "reactstrap";
 window.$value = "";
 var selectInputRef = React.createRef();
-
 const useStyles = makeStyles((theme) => ({
   padding: {
     padding: theme.spacing(4),
@@ -110,6 +110,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EducationalConferences(props) {
+  const theme = useTheme();
+  const matchesXS = useMediaQuery(theme.breakpoints.up("xs"));
+  const matchesMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchesMLG = useMediaQuery(theme.breakpoints.up("lg"));
+
   const [availableConferences, setavailableConferences] = useState([]);
   const classes = useStyles();
   const history = useHistory();
@@ -208,9 +213,20 @@ export default function EducationalConferences(props) {
       borderRadius: "40px",
     },
     h1Style: {
+      padding: "1rem,0,0,0",
       width: "100%",
       borderRadius: "40px",
     },
+  };
+
+  const getWidthBasedScreen = () => {
+    if (matchesMLG) {
+      return "49%";
+    } else if (matchesMD) {
+      return "100%";
+    } else {
+      return "auto";
+    }
   };
   return (
     <>
@@ -297,29 +313,21 @@ export default function EducationalConferences(props) {
               <CardContent className="bg-transparent">
                 <Grid container>
                   <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <NewSilmilarityEvolution
-                      conferencesNames={availableConferences}
-                    />
-                  </Grid>
-                  <Grid
                     container
+                    md={12}
                     style={{
                       marginTop: "1%",
                     }}
                   >
                     <Grid
                       item
+                      ms={12}
                       xs={12}
-                      md={6}
+                      md={12}
+                      lg={6}
                       style={{
                         ...Style.itemStyle,
+                        margin: "auto",
                       }}
                     >
                       <NewSharedAuthorEvolution
@@ -328,16 +336,117 @@ export default function EducationalConferences(props) {
                     </Grid>
                     <Grid
                       item
+                      ms={12}
+                      xs={12}
+                      md={12}
+                      lg={5}
                       style={{
                         ...Style.itemStyle,
-                        marginLeft: "1%",
-                        width: "49%",
+                        margin: "auto",
+                        marginTop: matchesXS ? "1%" : "auto",
                       }}
                     >
                       <NewNumberOfSharedWords
                         conferencesNames={availableConferences}
                       />
                     </Grid>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Fade>
+          </Card>
+        </Grid>
+
+        {/* Events */}
+        <Grid container component={Paper} className={classes.cardHeight3}>
+          <Typography
+            style={{ ...Style.h1Style, fontWeight: "bold" }}
+            variant="h4"
+            component="h1"
+            gutterBottom
+            checked={openDrawerWords}
+            onMouseEnter={changeBackgroundWords}
+            onMouseLeave={changeBackgroundWords2}
+            onClick={handleClickWords}
+          >
+            {" "}
+            Events{" "}
+          </Typography>
+          <Card
+            className="bg-gradient-default1 shadow"
+            lg={openDrawerWords ? 4 : ""}
+            style={{
+              display: openDrawerWords ? "block" : "none",
+              width: "100%",
+              borderRadius: "40px",
+            }}
+          >
+            <Fade unmountOnExit in={openDrawerYears}>
+              <CardContent className="bg-transparent">
+                <Grid container xs={12}>
+                  <Grid
+                    xs={12}
+                    item
+                    style={{
+                      ...Style.itemStyle,
+                    }}
+                  >
+                    <NewCompareStackedBarChart
+                      conferencesNames={availableConferences}
+                    />
+                  </Grid>
+
+                  <Grid
+                    xs={12}
+                    item
+                    style={{
+                      ...Style.itemStyle,
+                      marginTop: "1%",
+                    }}
+                  >
+                    <NewCompareTopicsInPapers
+                      conferencesNames={availableConferences}
+                    />
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Fade>
+          </Card>
+        </Grid>
+
+        {/* publications */}
+        <Grid container component={Paper} className={classes.cardHeight3}>
+          <h1
+            style={{ ...Style.h1Style }}
+            checked={openDrawerPaper}
+            onMouseEnter={changeBackgroundPaper}
+            onMouseLeave={changeBackgroundPaper2}
+            onClick={handleClickPaper}
+          >
+            {" "}
+            Publications{" "}
+          </h1>
+          <Card
+            className="bg-gradient-default1 shadow"
+            lg={openDrawerPaper ? 4 : ""}
+            style={{
+              display: openDrawerPaper ? "block" : "none",
+              width: "100%",
+              borderRadius: "40px",
+            }}
+          >
+            <Fade unmountOnExit in={openDrawerPaper}>
+              <CardContent className="bg-transparent">
+                <Grid container md={12} xs={12}>
+                  <Grid
+                    md={12}
+                    xs={12}
+                    item
+                    style={{
+                      ...Style.itemStyle,
+                    }}
+                  >
+                    <NewComparePapers conferencesNames={availableConferences} />
                   </Grid>
                 </Grid>
               </CardContent>
@@ -435,102 +544,6 @@ export default function EducationalConferences(props) {
                     <NewAuthorBar conferencesNames={availableConferences} />
                   </Grid>
                 </Grid>{" "}
-              </CardContent>
-            </Fade>
-          </Card>
-        </Grid>
-
-        {/* publications */}
-        <Grid container component={Paper} className={classes.cardHeight3}>
-          <h1
-            style={{ ...Style.h1Style }}
-            checked={openDrawerPaper}
-            onMouseEnter={changeBackgroundPaper}
-            onMouseLeave={changeBackgroundPaper2}
-            onClick={handleClickPaper}
-          >
-            {" "}
-            Publications{" "}
-          </h1>
-          <Card
-            className="bg-gradient-default1 shadow"
-            lg={openDrawerPaper ? 4 : ""}
-            style={{
-              display: openDrawerPaper ? "block" : "none",
-              width: "100%",
-              borderRadius: "40px",
-            }}
-          >
-            <Fade unmountOnExit in={openDrawerPaper}>
-              <CardContent className="bg-transparent">
-                <Grid container md={12} xs={12}>
-                  <Grid
-                    md={12}
-                    xs={12}
-                    item
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <NewComparePapers conferencesNames={availableConferences} />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Fade>
-          </Card>
-        </Grid>
-
-        {/* Events */}
-        <Grid container component={Paper} className={classes.cardHeight3}>
-          <h1
-            style={{ ...Style.h1Style }}
-            checked={openDrawerWords}
-            onMouseEnter={changeBackgroundWords}
-            onMouseLeave={changeBackgroundWords2}
-            onClick={handleClickWords}
-          >
-            {" "}
-            Events{" "}
-          </h1>
-          <Card
-            className="bg-gradient-default1 shadow"
-            lg={openDrawerWords ? 4 : ""}
-            style={{
-              display: openDrawerWords ? "block" : "none",
-              width: "100%",
-              borderRadius: "40px",
-            }}
-          >
-            <Fade unmountOnExit in={openDrawerYears}>
-              <CardContent className="bg-transparent">
-                <Grid container xs={12} md={12}>
-                  <Grid
-                    xs={12}
-                    md={12}
-                    item
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <NewCompareStackedBarChart
-                      conferencesNames={availableConferences}
-                    />
-                  </Grid>
-
-                  <Grid
-                    xs={12}
-                    md={12}
-                    item
-                    style={{
-                      ...Style.itemStyle,
-                      marginTop: "1%",
-                    }}
-                  >
-                    <NewCompareTopicsInPapers
-                      conferencesNames={availableConferences}
-                    />
-                  </Grid>
-                </Grid>
               </CardContent>
             </Fade>
           </Card>

@@ -1,5 +1,5 @@
 // Implemented By Abdallah
-import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar";
+import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar_BAK";
 import React, { useState, useEffect } from "react";
 import {
   Grid,
@@ -23,12 +23,12 @@ import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareA
 import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords_BAK";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import NewComparePapers from "../../../components/LAKForms/NewComparePapers";
-import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors";
+import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors_BAK";
 import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
-import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers";
+import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers_BAK";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsX";
-import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart";
+import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart_BAK";
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 // import {Settings, ExpandMoreIcon} from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
