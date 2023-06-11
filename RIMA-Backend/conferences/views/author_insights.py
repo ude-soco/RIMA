@@ -29,3 +29,42 @@ class getNetworkData(APIView):
         return Response({
             "data": allGraphData
         })
+
+
+class getVennDiagramDate(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        Events = url_splits_slash[-1].split('&')
+
+        vennData = []
+        for event in Events:
+            eventAuthorList = get_event_author_set_VennDiagram(event)
+            vennData.append({
+                'sets': [event],
+                'label': eventAuthorList,
+            })
+
+        if (len(vennData) == 1):
+            return Response({
+                'data': vennData})
+
+        intersection = vennData[0]['label']
+        for set in vennData[1:]:
+            intersection = intersection.intersection(set['label'])
+
+        vennData.append({
+            'sets': ([f"{event}" for event in Events]),
+            'label': '' if len(intersection) == 0 else intersection
+        })
+
+        vennDataUpdated = []
+        for set in vennData:
+            vennDataUpdated.append({
+                'sets': set['sets'],
+                'label': set['label'].difference(intersection) if len(set['sets'])==1 else set['label']
+            })
+
+        print("vennData: ", vennDataUpdated)
+        return Response({
+            'data': vennDataUpdated})
