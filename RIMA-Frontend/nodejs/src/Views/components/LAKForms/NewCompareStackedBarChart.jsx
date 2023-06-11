@@ -6,7 +6,14 @@ import "d3-transition";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import { Grid, Box, InputLabel, Fade } from "@material-ui/core";
+import {
+  Grid,
+  Box,
+  InputLabel,
+  Fade,
+  Card,
+  Typography,
+} from "@material-ui/core";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton.jsx";
 import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
@@ -133,7 +140,6 @@ class NewCompareStackedBarChart extends Component {
         },
       },
 
-      loader: false,
       display: "none",
       opacity: "0.9",
       selectValue: { value: "2020", label: "2020" },
@@ -234,6 +240,9 @@ class NewCompareStackedBarChart extends Component {
   };
 
   selectSharedWords = (val) => {
+    if (!this.state.selectedEvent || !this.state.selectedEventTwo) {
+      return;
+    }
     this.setState({
       loader: true,
     });
@@ -419,24 +428,16 @@ class NewCompareStackedBarChart extends Component {
     }
   };
   handleClickh = (e) => {
-    if (this.state.checkThird === true) {
-      this.setState({
-        checkThird: false,
-      });
-    } else {
-      this.setState({
-        checkThird: true,
-      });
-    }
-    if (this.state.checkThird2 === true) {
-      this.setState({
-        checkThird2: false,
-      });
-    } else {
-      this.setState({
-        checkThird2: true,
-      });
-    }
+    console.log("h4 clicked: ", this.state.checkThird);
+    this.setState(
+      {
+        checkThird: !this.state.checkThird,
+        checkThird2: !this.state.checkThird2,
+      },
+      () => {
+        console.log("After update: ", this.state.checkThird);
+      }
+    );
   };
   handleClickh2 = (e) => {
     if (this.state.checkThird2 === true) {
@@ -475,18 +476,23 @@ class NewCompareStackedBarChart extends Component {
     return (
       <Box component="form" role="form" method="form" style={{ width: "100%" }}>
         <br></br>
-        <h2>Popularity of shared topics and keywords</h2>
-        <p>
+        <Typography
+          style={{ fontWeight: "bold" }}
+          variant="h6"
+          component="h1"
+          gutterBottom
+        >
+          Popularity of shared topics and keywords
+        </Typography>
+        <Typography>
           Popularity percentages of the shared topics and keywords between
           conference events.
-        </p>
-        <Grid container md={12}>
-          <Grid item md={3}>
-            <InputLabel style={{ color: "black" }}>
-              Select conference events
-            </InputLabel>
+        </Typography>
+        <Grid container md={12} style={{ marginTop: "2%" }} spacing={0}>
+          <Grid item md={3} xs={4} lg="auto">
+            <InputLabel>Select conference events</InputLabel>
           </Grid>
-          <Grid item md={3}>
+          <Grid item md={1}>
             <i
               className="fas fa-question-circle text-blue"
               onMouseOver={() => this.handleToogle2(true)}
@@ -551,25 +557,18 @@ class NewCompareStackedBarChart extends Component {
         </Grid>
 
         <br />
-        <Grid
-          container
-          xs={12}
-          checked={this.state.checkThird2}
-          onMouseEnter={this.changeBackgroundh}
-          onMouseLeave={this.changeBackgroundh2}
-          onClick={this.handleClickh2}
-        >
-          <Fade unmountOnExit in={this.state.checkThird2}>
-            <h4
-              checked={this.state.checkThird}
-              onMouseEnter={this.changeBackgroundh}
-              onMouseLeave={this.changeBackgroundh2}
-              onClick={this.handleClickh}
-            >
-              + Add third event
-            </h4>
-          </Fade>
-        </Grid>
+        <Fade unmountOnExit in={this.state.checkThird2}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            onMouseEnter={this.changeBackgroundh}
+            onMouseLeave={this.changeBackgroundh2}
+            onClick={this.handleClickh}
+            style={{ width: "100%", borderRadius: "40px", fontSize: "1rem" }}
+          >
+            + Add third event
+          </Typography>
+        </Fade>
         <Fade unmountOnExit in={this.state.checkThird}>
           <Grid container xs={12} md={12} spacing={3}>
             <Grid item xs={5} md={5}>
@@ -592,18 +591,25 @@ class NewCompareStackedBarChart extends Component {
                 onChange={this.setSelectedEventThree}
               />
             </Grid>
+            <Grid item xs={12} md={12}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                checked={this.state.checkThird}
+                onMouseEnter={this.changeBackgroundh}
+                onMouseLeave={this.changeBackgroundhh2}
+                onClick={this.handleClickh}
+                style={{
+                  width: "100%",
+                  borderRadius: "40px",
+                  fontSize: "1rem",
+                }}
+              >
+                {" "}
+                - Shrink third event{" "}
+              </Typography>
+            </Grid>
           </Grid>
-
-          <br />
-          <h4
-            checked={this.state.checkThird}
-            onMouseEnter={this.changeBackgroundh}
-            onMouseLeave={this.changeBackgroundhh2}
-            onClick={this.handleClickh}
-          >
-            {" "}
-            - Shrink third event{" "}
-          </h4>
         </Fade>
         <br />
         <Grid container xs={12} spacing={3}>
@@ -615,23 +621,27 @@ class NewCompareStackedBarChart extends Component {
             />
           </Grid>
           <Grid item>
-            <RIMAButton
-              active={this.state.active2}
-              onClick={() => this.selectSharedWords("keyword")}
-              name={"Keywords"}
-            />
-          </Grid>
-          <Grid item>
-            <i
-              className="fas fa-question-circle text-blue"
-              onMouseOver={() => this.handleToogle(true)}
-              onMouseOut={() => this.handleToogle(false)}
-            />
-            {this.state.imageTooltipOpen && (
-              <InfoBox
-                Info={` Hover over legend to highlight the evolution of a topic/keyword`}
-              />
-            )}
+            <Grid container spacing={1}>
+              <Grid item>
+                <RIMAButton
+                  active={this.state.active2}
+                  onClick={() => this.selectSharedWords("keyword")}
+                  name={"Keywords"}
+                />
+              </Grid>
+              <Grid item>
+                <i
+                  className="fas fa-question-circle text-blue"
+                  onMouseOver={() => this.handleToogle(true)}
+                  onMouseOut={() => this.handleToogle(false)}
+                />
+                {this.state.imageTooltipOpen && (
+                  <InfoBox
+                    Info={` Hover over legend to highlight the evolution of a topic/keyword`}
+                  />
+                )}
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <ActiveLoader
