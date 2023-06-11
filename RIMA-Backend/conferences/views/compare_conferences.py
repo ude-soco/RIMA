@@ -450,114 +450,154 @@ class ConfEventPapers(APIView):
 # done
 
 
+# class ComparePapersView(APIView):
+    # def get(self, request, *args, **kwargs):
+
+    #     abstract_title_str = ""
+    #     abstract_title_strr = ""
+    #     words_author = []
+    #     words_authorTwo = []
+    #     all_words = []
+    #     shared_words_final_data = []
+    #     result_data = []
+
+    #     url_path = request.get_full_path()
+    #     url_path = url_path.replace("%20", " ")
+    #     print("tHE PAAAAAAAAAAAATH")
+    #     print(url_path)
+    #     url_splits = confutils.split_restapi_url(url_path, r'/')
+    #     print("tHE PAAAAAAAAAAAATH 2222222")
+    #     print(url_splits)
+    #     secondEvent = url_splits[-1]
+    #     secondPaperTitle = url_splits[-2]
+    #     firstEvent = url_splits[-3]
+    #     firstPaperTitle = url_splits[-4]
+    #     Event_papers_JSON = []
+    #     print("eventsssss")
+    #     print(firstEvent)
+    #     print(secondEvent)
+    #     # Islam Updated
+    #     first_event_papers_data = compConfUtils.get_event_papers_data(
+    #         firstEvent)
+    #     second_event_papers_data = compConfUtils.get_event_papers_data(
+    #         secondEvent)
+
+    #     for paper in first_event_papers_data:
+    #         if paper.title == firstPaperTitle:
+    #             firstPaperAbstract = paper.abstract
+    #             print("Here is you lasssst test isa")
+    #             print(paper.title)
+    #             print(paper.abstract)
+
+    #     if firstPaperTitle or firstPaperAbstract:
+    #         abstract_title_str += firstPaperTitle + " " + firstPaperAbstract
+
+    #     firstKeywords = getKeyword(abstract_title_str, 'Yake', 600)
+
+    #     for paper in second_event_papers_data:
+    #         if paper.title == secondPaperTitle:
+    #             secondPaperAbstract = paper.abstract
+
+    #     if secondPaperTitle or secondPaperAbstract:
+    #         abstract_title_strr += secondPaperTitle + " " + secondPaperAbstract
+
+    #     secondKeywords = getKeyword(abstract_title_strr, 'Yake', 600)
+
+    #     for key, value in firstKeywords.items():
+    #         words_author.append(key)
+
+    #     for key, value in secondKeywords.items():
+    #         words_authorTwo.append(key)
+
+    #     first_event_papers_data1 = dict(
+    #         sorted(firstKeywords.items(), key=lambda item: item[1], reverse=True))
+    #     first_event_papers_data_final = dict(
+    #         itertools.islice(first_event_papers_data1.items(), 10))
+    #     second_event_papers_data1 = dict(
+    #         sorted(secondKeywords.items(), key=lambda item: item[1], reverse=True))
+    #     second_event_papers_data_final = dict(
+    #         itertools.islice(second_event_papers_data1.items(), 10))
+
+    #     all_words.append(words_author)
+    #     all_words.append(words_authorTwo)
+    #     print("all keywordssss keeeyssss")
+    #     print(words_author)
+
+    #     shared_words = [
+    #         value for value in words_author if value in words_authorTwo]
+    #     shared_words1 = set.intersection(*map(set, all_words))
+
+    #     for word in shared_words:
+    #         words_weights = []
+    #         wieghtOne = firstKeywords[word]
+    #         words_weights.append(wieghtOne)
+    #         wieghtTwo = secondKeywords[word]
+    #         words_weights.append(wieghtTwo)
+    #         shared_words_final_data.append(word)
+
+    #     print("Shaaaareeeed Wooooords")
+    #     print(shared_words)
+    #     print("firstKeywords Wooooords")
+    #     print(firstKeywords)
+    #     print("Shaaaareeeed Wooooords")
+    #     print(shared_words_final_data)
+    #     papers_dict = {
+    #         k: [first_event_papers_data_final.get(k, 0),
+    #             second_event_papers_data_final.get(k, 0)]
+    #         for k in first_event_papers_data_final.keys() | second_event_papers_data_final.keys()
+    #     }
+
+    #     words = papers_dict.keys()
+    #     weights = papers_dict.values()
+    #     result_data.append(words)
+    #     result_data.append(weights)
+
+    #     return Response({
+    #         "firstPaper": firstPaperTitle,
+    #         "firstKeywords": first_event_papers_data_final,
+    #         "secondKeywords": second_event_papers_data_final,
+    #         "paperInterests": result_data,
+    #         "Topiclist": shared_words_final_data
+    #     })
+
 class ComparePapersView(APIView):
     def get(self, request, *args, **kwargs):
+        data = []
+        common_keywords_or_topics = []
+        rl_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+        comparison_based = rl_splits[4]
+        first_paper = rl_splits[5]
+        second_paper = rl_splits[7]
+        print("str(comparison_based)", str(comparison_based))
 
-        abstract_title_str = ""
-        abstract_title_strr = ""
-        words_author = []
-        words_authorTwo = []
-        all_words = []
-        shared_words_final_data = []
-        result_data = []
+        first_paper_keywordsCount = compConfUtils.get_publication_keywords_count(
+            first_paper, str(comparison_based))
 
-        url_path = request.get_full_path()
-        url_path = url_path.replace("%20", " ")
-        print("tHE PAAAAAAAAAAAATH")
-        print(url_path)
-        url_splits = confutils.split_restapi_url(url_path, r'/')
-        print("tHE PAAAAAAAAAAAATH 2222222")
-        print(url_splits)
-        secondEvent = url_splits[-1]
-        secondPaperTitle = url_splits[-2]
-        firstEvent = url_splits[-3]
-        firstPaperTitle = url_splits[-4]
-        Event_papers_JSON = []
-        print("eventsssss")
-        print(firstEvent)
-        print(secondEvent)
-        # Islam Updated
-        first_event_papers_data = compConfUtils.get_event_papers_data(
-            firstEvent)
-        second_event_papers_data = compConfUtils.get_event_papers_data(
-            secondEvent)
+        second_paper_keywordsCount = compConfUtils.get_publication_keywords_count(
+            second_paper, str(comparison_based))
 
-        for paper in first_event_papers_data:
-            if paper.title == firstPaperTitle:
-                firstPaperAbstract = paper.abstract
-                print("Here is you lasssst test isa")
-                print(paper.title)
-                print(paper.abstract)
+        intersection = compConfUtils.get_commen_keywords_or_topics(
+            first_paper_keywordsCount, second_paper_keywordsCount)
 
-        if firstPaperTitle or firstPaperAbstract:
-            abstract_title_str += firstPaperTitle + " " + firstPaperAbstract
+        print("common_topics", intersection)
 
-        firstKeywords = getKeyword(abstract_title_str, 'Yake', 600)
+        if intersection:
+            data.append({
+                "firstPaper": first_paper_keywordsCount,
+                "secondPaper": second_paper_keywordsCount,
+                "common_keywords_topics": intersection[0]["intersection"],
+                "intersectionDetails": intersection[0]["intersectionDetails"]
+            })
+        else:
+            data.append({
+                "firstPaper": first_paper_keywordsCount,
+                "secondPaper": second_paper_keywordsCount,
+            })
 
-        for paper in second_event_papers_data:
-            if paper.title == secondPaperTitle:
-                secondPaperAbstract = paper.abstract
 
-        if secondPaperTitle or secondPaperAbstract:
-            abstract_title_strr += secondPaperTitle + " " + secondPaperAbstract
-
-        secondKeywords = getKeyword(abstract_title_strr, 'Yake', 600)
-
-        for key, value in firstKeywords.items():
-            words_author.append(key)
-
-        for key, value in secondKeywords.items():
-            words_authorTwo.append(key)
-
-        first_event_papers_data1 = dict(
-            sorted(firstKeywords.items(), key=lambda item: item[1], reverse=True))
-        first_event_papers_data_final = dict(
-            itertools.islice(first_event_papers_data1.items(), 10))
-        second_event_papers_data1 = dict(
-            sorted(secondKeywords.items(), key=lambda item: item[1], reverse=True))
-        second_event_papers_data_final = dict(
-            itertools.islice(second_event_papers_data1.items(), 10))
-
-        all_words.append(words_author)
-        all_words.append(words_authorTwo)
-        print("all keywordssss keeeyssss")
-        print(words_author)
-
-        shared_words = [
-            value for value in words_author if value in words_authorTwo]
-        shared_words1 = set.intersection(*map(set, all_words))
-
-        for word in shared_words:
-            words_weights = []
-            wieghtOne = firstKeywords[word]
-            words_weights.append(wieghtOne)
-            wieghtTwo = secondKeywords[word]
-            words_weights.append(wieghtTwo)
-            shared_words_final_data.append(word)
-
-        print("Shaaaareeeed Wooooords")
-        print(shared_words)
-        print("firstKeywords Wooooords")
-        print(firstKeywords)
-        print("Shaaaareeeed Wooooords")
-        print(shared_words_final_data)
-        papers_dict = {
-            k: [first_event_papers_data_final.get(k, 0),
-                second_event_papers_data_final.get(k, 0)]
-            for k in first_event_papers_data_final.keys() | second_event_papers_data_final.keys()
-        }
-
-        words = papers_dict.keys()
-        weights = papers_dict.values()
-        result_data.append(words)
-        result_data.append(weights)
-
+        print("data", data)
         return Response({
-            "firstPaper": firstPaperTitle,
-            "firstKeywords": first_event_papers_data_final,
-            "secondKeywords": second_event_papers_data_final,
-            "paperInterests": result_data,
-            "Topiclist": shared_words_final_data
+            "data": data
         })
 
 
@@ -904,6 +944,7 @@ class VennOverview(APIView):
             "commontopics": ctx
         })
 
+
 class getRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -913,17 +954,17 @@ class getRelavantPublicationsList(APIView):
         eventname = conferences_list[-3]
         keyword_or_topic = conferences_list[-2]
         keywordTopic_name = conferences_list[-1]
-        publication_List=compConfUtils.get_relavant_publication(
-            eventname,keyword_or_topic,keywordTopic_name)
-        final_pubs_list=[{
-            "title":pub.title,
-                 "data":{
-                     "title":pub.title,
-                     "abstract": pub.abstract,
-                     "years":pub.years,
-                     "url":pub.urls
-        }}for pub in publication_List]
+        publication_List = compConfUtils.get_relavant_publication(
+            eventname, keyword_or_topic, keywordTopic_name)
+        final_pubs_list = [{
+            "title": pub.title,
+            "data": {
+                "title": pub.title,
+                "abstract": pub.abstract,
+                "years": pub.years,
+                "url": pub.urls
+            }}for pub in publication_List]
 
         return Response({
-            "publicationList":final_pubs_list
+            "publicationList": final_pubs_list
         })

@@ -688,3 +688,66 @@ def get_relavant_publication(even_name,keyword_or_topic,keywordTopic_name):
                 if pub.topics.filter(topics=keywordTopic_name)
             ]
             return publicationsList
+
+def get_publication_keywords_count(publication_name,keywords_or_topics):
+    keywords_topics_counts=[]
+    publication_node= Publication.nodes.get(title=publication_name.strip())
+    content_words = (str(publication_node.title )+ str(publication_node.abstract)).lower()
+    if keywords_or_topics == "keywords":
+        print("keywords")
+        for keyword in publication_node.keywords.all():
+            keyword_count=content_words.count(keyword.keyword.lower())
+            keywords_topics_counts.append({
+                "text": keyword.keyword,
+                "value":keyword_count
+            })
+
+    elif keywords_or_topics == "topics":  
+        print("topics")
+        for topic in publication_node.topics.all():
+            keyword_count=content_words.count(topic.topic.lower())
+            keywords_topics_counts.append({
+                "text": topic.topic,
+                "value":keyword_count
+            })
+    return keywords_topics_counts
+
+
+def get_commen_keywords_or_topics(first_paper_keywordsCount,second_paper_keywordsCount):
+    topics_first_paper = {d['text']
+                              for d in first_paper_keywordsCount}
+    keywords_second_paper = {d['text']
+                                for d in second_paper_keywordsCount}
+    common_keywords_or_topics = list(
+        topics_first_paper & keywords_second_paper)
+
+    if len(common_keywords_or_topics)==0:
+        return
+    
+    first_paper_dict = {d['text']: d["value"]
+                        for d in first_paper_keywordsCount}
+    second_paper_dict = {d["text"]: d["value"]
+                            for d in second_paper_keywordsCount}
+    final_intersection=[]
+    intersection = [
+        {
+            "text": topic_or_keyword,
+            "value": first_paper_dict.get(topic_or_keyword, 0) + second_paper_dict.get(topic_or_keyword, 0),
+        }
+        for topic_or_keyword in common_keywords_or_topics
+    ]
+    
+    intersectionDetails=[
+        {
+            "text": topic_or_keyword,
+            "firstPapercount": first_paper_dict.get(topic_or_keyword, 0),
+            "secondPaperCount": second_paper_dict.get(topic_or_keyword, 0)
+        }
+        for topic_or_keyword in common_keywords_or_topics
+    ]
+
+    final_intersection.append({
+        "intersection": intersection,
+        "intersectionDetails": intersectionDetails
+    })
+    return final_intersection
