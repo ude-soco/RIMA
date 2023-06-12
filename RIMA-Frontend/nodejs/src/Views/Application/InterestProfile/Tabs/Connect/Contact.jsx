@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import  { makeStyles } from "@material-ui/core/styles";
 import { TextField, Button, Typography } from "@material-ui/core";
 import SendIcon from "@mui/icons-material/Send";
@@ -23,41 +23,14 @@ const useStyles = makeStyles((theme) => ({
   icon: { paddingLeft: "10px" }
 }));
 
-function Contact() {
-  const classes = useStyles();
-  let from = "from@gmail.com"
-  let to = "to@gmail.com"
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    let formData = new FormData(event.target);
-    let data = {
-      to: formData.get("to"),
-      subject: formData.get("subject"),
-      message: formData.get("message")
-    };
-    console.log(data);
-  };
+function Contact(props) {
+  const {authorId} = props;
+  let linkStr = ("https://www.semanticscholar.org/author/"+authorId);
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit} >
-      <Typography variant="h3" className={classes.h1}>
-        Contact
-      </Typography>
-      <TextField name="to" label={from} fullWidth />
-      <TextField name="to" label={to} fullWidth />
-      <TextField name="subject" label="Subject" fullWidth />
-      <TextField name="message" label="Message" fullWidth multiline rows={6} />
-
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="success"
-        type="submit"
-      >
-        Send
-        <SendIcon className={classes.icon} />
-      </Button>
+    <form>
+      <h1>Visit this website to contact this user</h1>
+      <a href={linkStr}>Click me</a>
     </form>
   );
 }
