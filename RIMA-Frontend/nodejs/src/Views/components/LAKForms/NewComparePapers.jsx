@@ -19,13 +19,14 @@ import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 import ReactWordcloud from "react-wordcloud";
 import { CardHeader } from "reactstrap";
 import EnhancedTable from "../../Application/ReuseableComponents/EnhancedTable.jsx";
+import TotalSharedTopicsKeywordsCloud from "../../Application/ReuseableComponents/TotalSharedTopicsKeywordsCloud.jsx";
 class NewComparePapers extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTopicsButton: false,
       activeKeywordsButton: false,
-      compareBased: "",
+      compareBased: "keywords",
       firstPaperData: [
         { text: "understanding", value: 1 },
         { text: "powerful use-cases", value: 1 },
@@ -447,13 +448,8 @@ class NewComparePapers extends Component {
             />
           </Grid>
         </Grid>
-        <ActiveLoader
-          marginLeft={"40%"}
-          height={90}
-          width={90}
-          visible={this.state.loader}
-        />
-        <Grid
+
+        {/* <Grid
           container
           component={Paper}
           md={12}
@@ -561,7 +557,30 @@ class NewComparePapers extends Component {
               </Grid>
             </CardContent>
           </Grid>
-        </Grid>
+        </Grid> */}
+
+        {this.state.loader ? (
+          <ActiveLoader
+            marginLeft={"40%"}
+            height={90}
+            width={90}
+            visible={this.state.loader}
+          />
+        ) : (
+          <TotalSharedTopicsKeywordsCloud
+            callbackCloud={"Occurrences in Title & Abstract"}
+            callbackCommonCloud={"Occurrences in both papers"}
+            firstCloudTitle={"First Paper title:" + this.state.firstPaperTitle}
+            secondCloudTitle={
+              "Second Paper title: " + this.state.secondPaperTitle
+            }
+            fistCloudData={this.state.firstPaperData}
+            secondCloudData={this.state.secondPaperData}
+            commonCloudData={this.state.common_keywords_topics}
+            comparisonBased={this.state.compareBased}
+            comparisonBetween={" papers"}
+          />
+        )}
       </Box>
     );
   }
