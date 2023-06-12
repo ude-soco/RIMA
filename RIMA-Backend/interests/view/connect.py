@@ -71,12 +71,20 @@ def getRefCitAuthorsPapers(authorId, method):
 
     return results
 
-def getMostCitedReferenced(authorId, method, n):
+def getMostCitedReferenced(authorId, method, n, filter):
 
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors=allCitsRefs["listAllAuthors"]
     dictAuthorsName=allCitsRefs["authorsNames"]
+    for i in filter:
+        listAuthors.remove(i)
+    print("--------------------------------------")
+    print(listAuthors)
+    print("--------------------------------------")
+    print(dictAuthorsName)
+    print("--------------------------------------")
     topN=list(Counter(listAuthors).most_common(n))
+    print(topN)
     api=SemanticScholarAPI()
 
     allAuthors=[]
@@ -119,7 +127,7 @@ def getMostCitedReferenced(authorId, method, n):
             "paper":allPapers,
             "interests":interests,
             "score":len(allPapers),
-
+            "id": author,
         }
 
         allAuthors.append(authorData)
@@ -141,20 +149,20 @@ def getConnectData(id):
     print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     print("get most authors who cited me the most")
-    #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa)
+    authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
     print("get authors Who I cited the most")
-    #authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa)
-    """
-    with open("authorsReferences.json", "w") as myfile:
+    authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
+    """ 
+    with open("authorsReferences2.json", "w") as myfile:
             json.dump(authorsReferences, myfile)
-    with open("authorsCitedMe.json", "w") as myfile:
+    with open("authorsCitedMe2.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-     """    
-    with open("authorsReferences.json", "r") as myfile:
+       
+    with open("authorsReferences2.json", "r") as myfile:
            authorsReferences = json.load(myfile)
-    with open("authorsCitedMe.json", "r") as myfile:
+    with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
-    
+    """
     data={"citations":authorsCitedMe, "references":authorsReferences}
     return data
  

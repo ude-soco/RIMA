@@ -34,6 +34,10 @@ export default function MoreFilters(props) {
  
   const {data}=props
   
+
+  const nameId = data.citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
+  console.log(nameId, "TEST")
+
   console.log(data, "DATAAAAAAAAAAAAAAA")
   console.log(data.citations.map(item => item.name))
   const names = data.citations.map(item => item.name).concat(data.references.map(item => item.name))
@@ -46,7 +50,7 @@ export default function MoreFilters(props) {
   const handleCheckboxChange = (event) => {
     const{value} = event.target
     console.log(value, "VALUE")
-    setSelectedNames([...selectedNames, value])
+    setSelectedNames([...selectedNames, nameId[value]])
   }
   
   console.log(selectedNames, "selectedNames")
@@ -69,7 +73,7 @@ export default function MoreFilters(props) {
 
       <Typography variant="h6"  className={classes.title}>Hide</Typography>
             <FormGroup className={classes.checkBox}>
-              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox checked={selectedNames.includes(name)} 
+              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox checked={selectedNames.includes(nameId[name])} 
               onChange={handleCheckboxChange} value={name}/>} label={name} />))} 
             </FormGroup>
           
