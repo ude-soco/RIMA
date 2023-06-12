@@ -83,11 +83,11 @@ def getMostCitedReferenced(authorId, method, n, filter):
             listAuthors.remove(i)
 
 
-    print("--------------------------------------")
-    #print(listAuthors)
-    print("--------------------------------------")
-    #print(dictAuthorsName)
-    print("--------------------------------------")
+    #print("--------------------------------------")
+    ##print(listAuthors)
+    #print("--------------------------------------")
+    ##print(dictAuthorsName)
+    #print("--------------------------------------")
     topN=list(Counter(listAuthors).most_common(n))
     print(topN)
     api=SemanticScholarAPI()
