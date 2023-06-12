@@ -72,16 +72,21 @@ def getRefCitAuthorsPapers(authorId, method):
     return results
 
 def getMostCitedReferenced(authorId, method, n, filter):
-
+    #print(filter)
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
+    #print(allCitsRefs)
     listAuthors=allCitsRefs["listAllAuthors"]
     dictAuthorsName=allCitsRefs["authorsNames"]
+     
     for i in filter:
-        listAuthors.remove(i)
+        while i in listAuthors:
+            listAuthors.remove(i)
+
+
     print("--------------------------------------")
-    print(listAuthors)
+    #print(listAuthors)
     print("--------------------------------------")
-    print(dictAuthorsName)
+    #print(dictAuthorsName)
     print("--------------------------------------")
     topN=list(Counter(listAuthors).most_common(n))
     print(topN)
