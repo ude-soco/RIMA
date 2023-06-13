@@ -9,6 +9,7 @@ from conferences.models.graph_db_entities import *
 from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
 from conferences.conference_utils_cql import cql_get_conference_events
+import urllib.parse
 
 
 # reviewed 12.04
@@ -342,79 +343,109 @@ class AuthorEvents(APIView):
         })
 
 
-class AuthorInterestsBar2(APIView):
+# class AuthorInterestsBar2(APIView):
+#     def get(self, request, *args, **kwargs):
+#         result_data = []
+#         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+#         second_author = url_splits[-1]
+#         first_author = url_splits[-2]
+#         keyword_or_topic = url_splits[-3]
+#         second_event = url_splits[-4]
+#         first_event = url_splits[-5]
+#         # Islam Updated
+#         first_author_obj = Author.nodes.get(author_name=first_author)
+#         second_author_obj = Author.nodes.get(author_name=second_author)
+#         # Islam Updated
+#         first_author_interests = compConfUtils.get_author_interests2(
+#             first_author_obj, first_event, keyword_or_topic)
+
+#         sorted_data_first_author = dict(
+#             sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
+
+#         print("Author interestsssssssss")
+#         print(first_author_interests)
+
+#         reduced_sorted_data_first_author = dict(
+#             itertools.islice(sorted_data_first_author.items(), 10))
+#         print("first Author interestsssssssss")
+#         print(reduced_sorted_data_first_author)
+#         # Islam Updated
+#         second_author_interests = compConfUtils.get_author_interests2(
+#             second_author_obj, second_event, keyword_or_topic)
+#         sorted_data_second_author = dict(
+#             sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
+#         reduced_sorted_data_second_author = dict(
+#             itertools.islice(sorted_data_second_author.items(), 10))
+#         print("second Author interestsssssssss")
+#         print(reduced_sorted_data_second_author)
+
+#         authors_dict = {
+#             k: [reduced_sorted_data_first_author.get(k, 0),
+#                 reduced_sorted_data_second_author.get(k, 0)]
+#             for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
+#         }
+#         print("Author dictttttttttttttt")
+#         print(authors_dict)
+
+#         set_intersect_key = list(
+#             set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
+
+#         words = authors_dict.keys()
+#         weights = authors_dict.values()
+#         authors_name = [first_author, second_author]
+#         print(set_intersect_key, '-----------', words, '+++++++++',
+#               weights, '++++++++', authors_name, '------------')
+
+#         result_data.append(words)
+#         result_data.append(weights)
+#         result_data.append(authors_name)
+#         result_data.append(set_intersect_key)
+
+#         print('######################## HERE #########################')
+#         print(authors_dict)
+#         print('######################## HERE #########################')
+
+#         print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
+#         print('############')
+#         print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
+
+#         return Response({
+#             "authorInterests": result_data})
+
+# new func by Islam
+class AuthorInterestsBar2 (APIView):
     def get(self, request, *args, **kwargs):
-        result_data = []
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         second_author = url_splits[-1]
         first_author = url_splits[-2]
         keyword_or_topic = url_splits[-3]
         second_event = url_splits[-4]
         first_event = url_splits[-5]
-        # Islam Updated
-        first_author_obj = Author.nodes.get(author_name=first_author)
-        second_author_obj = Author.nodes.get(author_name=second_author)
-        # Islam Updated
-        first_author_interests = compConfUtils.get_author_interests2(
-            first_author_obj, first_event, keyword_or_topic)
 
-        sorted_data_first_author = dict(
-            sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
+        first_author_data = compConfUtils.get_author_keywordTopic_eventBased(
+            author_name=first_author,
+            event_name=first_event,
+            keyword_or_topic=keyword_or_topic)
 
-        print("Author interestsssssssss")
-        print(first_author_interests)
+        second_author_data = compConfUtils.get_author_keywordTopic_eventBased(
+            author_name=second_author,
+            event_name=second_event,
+            keyword_or_topic=keyword_or_topic)
 
-        reduced_sorted_data_first_author = dict(
-            itertools.islice(sorted_data_first_author.items(), 10))
-        print("first Author interestsssssssss")
-        print(reduced_sorted_data_first_author)
-        # Islam Updated
-        second_author_interests = compConfUtils.get_author_interests2(
-            second_author_obj, second_event, keyword_or_topic)
-        sorted_data_second_author = dict(
-            sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
-        reduced_sorted_data_second_author = dict(
-            itertools.islice(sorted_data_second_author.items(), 10))
-        print("second Author interestsssssssss")
-        print(reduced_sorted_data_second_author)
+        intersection = compConfUtils.get_commen_keywords_or_topics(
+            first_author_data, second_author_data)
 
-        authors_dict = {
-            k: [reduced_sorted_data_first_author.get(k, 0),
-                reduced_sorted_data_second_author.get(k, 0)]
-            for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
-        }
-        print("Author dictttttttttttttt")
-        print(authors_dict)
-
-        set_intersect_key = list(
-            set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
-
-        words = authors_dict.keys()
-        weights = authors_dict.values()
-        authors_name = [first_author, second_author]
-        print(set_intersect_key, '-----------', words, '+++++++++',
-              weights, '++++++++', authors_name, '------------')
-
-        result_data.append(words)
-        result_data.append(weights)
-        result_data.append(authors_name)
-        result_data.append(set_intersect_key)
-
-        print('######################## HERE #########################')
-        print(authors_dict)
-        print('######################## HERE #########################')
-
-        print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
-        print('############')
-        print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
+        print("intersection", intersection)
 
         return Response({
-            "authorInterests": result_data})
+            "first_author_data": first_author_data,
+            "second_author_data": second_author_data,
+            "common_data": intersection
+        })
 
 
 class ConfEventPapers(APIView):
     def get(self, request, *args, **kwargs):
-
         Event_papers_JSON = []
         Event_papersWithAbstract_JSON = []
 
@@ -566,10 +597,10 @@ class ComparePapersView(APIView):
         common_keywords_or_topics = []
         rl_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         comparison_based = rl_splits[4]
-        first_paper = rl_splits[5]
-        second_paper = rl_splits[7]
-        print("str(comparison_based)", str(comparison_based))
-
+        first_paper = urllib.parse.unquote(rl_splits[5])
+        second_paper = urllib.parse.unquote(rl_splits[7])
+        print("first_paper:", first_paper)
+        print("second_paper:", second_paper)
         first_paper_keywordsCount = compConfUtils.get_publication_keywords_count(
             first_paper, str(comparison_based))
 
@@ -594,8 +625,6 @@ class ComparePapersView(APIView):
                 "secondPaper": second_paper_keywordsCount,
             })
 
-
-        print("data", data)
         return Response({
             "data": data
         })

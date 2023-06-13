@@ -670,7 +670,7 @@ def get_conf_total_publications(conf_name):
     if conf_node:
         publications_number = len(conf_node.publication.all())
     return publications_number
-
+# new func by Islam Abdelghaffar 
 def get_relavant_publication(even_name,keyword_or_topic,keywordTopic_name):
 
         event_obj_publications = Event.nodes.filter(
@@ -688,10 +688,11 @@ def get_relavant_publication(even_name,keyword_or_topic,keywordTopic_name):
                 if pub.topics.filter(topics=keywordTopic_name)
             ]
             return publicationsList
-
+# new func by Islam Abdelghaffar 
 def get_publication_keywords_count(publication_name,keywords_or_topics):
     keywords_topics_counts=[]
-    publication_node= Publication.nodes.get(title=publication_name.strip())
+    print("publication_name.strip(): ",publication_name.strip())
+    publication_node= Publication.nodes.get(title=publication_name)
     content_words = (str(publication_node.title )+ str(publication_node.abstract)).lower()
     if keywords_or_topics == "keywords":
         print("keywords")
@@ -714,21 +715,26 @@ def get_publication_keywords_count(publication_name,keywords_or_topics):
 
 
 def get_commen_keywords_or_topics(first_paper_keywordsCount,second_paper_keywordsCount):
-    topics_first_paper = {d['text']
+    final_intersection=[]
+    keywords_topics_first_paper = {d['text']
                               for d in first_paper_keywordsCount}
-    keywords_second_paper = {d['text']
+    keywords_topics_second_paper = {d['text']
                                 for d in second_paper_keywordsCount}
     common_keywords_or_topics = list(
-        topics_first_paper & keywords_second_paper)
+        keywords_topics_first_paper & keywords_topics_second_paper)
 
     if len(common_keywords_or_topics)==0:
-        return
+        print("common_keywords_or_topics")
+        final_intersection.append({
+            "intersection": [],
+            "intersectionDetails": []
+        })
+        return final_intersection
     
     first_paper_dict = {d['text']: d["value"]
                         for d in first_paper_keywordsCount}
     second_paper_dict = {d["text"]: d["value"]
                             for d in second_paper_keywordsCount}
-    final_intersection=[]
     intersection = [
         {
             "text": topic_or_keyword,
@@ -745,9 +751,56 @@ def get_commen_keywords_or_topics(first_paper_keywordsCount,second_paper_keyword
         }
         for topic_or_keyword in common_keywords_or_topics
     ]
-
     final_intersection.append({
         "intersection": intersection,
         "intersectionDetails": intersectionDetails
     })
     return final_intersection
+
+#new fun implemented by islam abdelghaffar
+def get_author_keywordTopic_eventBased(author_name, event_name,keyword_or_topic):
+    author_node=Author.nodes.get(author_name=author_name)
+    event_node=Event.nodes.filter(conference_event_name_abbr=event_name)
+
+    if keyword_or_topic =="keyword":
+        author_keywords=author_node.keywords.all()
+        event_keywords=set (k.keyword for k in event_node.keywords.all())
+        author_event_keywords_weights=[ 
+            { 
+                "text":author_keyword.keyword,
+                'value': author_node.keywords.relationship(author_keyword).weight
+            }
+          for author_keyword in author_keywords 
+                if author_keyword.keyword in event_keywords]
+
+        return author_event_keywords_weights
+    
+    elif keyword_or_topic =="topic":
+        author_topics=author_node.topics.all()
+        event_topics=set(t.topic for t in event_node.topics.all())
+        author_event_topics_weights=[
+            {
+                "text":author_topic.topic,
+                "value": author_node.topics.relationship(author_topic).weight
+            } for author_topic in author_topics 
+                             if author_topic.topic in event_topics]
+
+        print("author_event_topics_weights: ",author_event_topics_weights)    
+        return author_event_topics_weights
+
+        
+
+# event_obj = Event.nodes.get(
+#         conference_event_name_abbr=conference_event_name_abbr)
+#     event_has_topic_objs = event_obj.topics.all()
+#     for event_has_topic_obj in event_has_topic_objs:
+#         has_topic_relationship = event_obj.topics.relationship(
+#             event_has_topic_obj)
+#         weight = has_topic_relationship.weight
+#         data.append({
+#             'topic': event_has_topic_obj.topic,
+#             'weight': weight,
+#             'event': event_obj.conference_event_name_abbr,
+#         })
+#     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
+#     return sorted_data
