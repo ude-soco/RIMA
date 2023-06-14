@@ -1,3 +1,5 @@
+//implemented by Islam Abdelghaffar
+
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
@@ -72,6 +74,8 @@ export default function CustomizedDialogs(props) {
     selectedKeywordTopicProp,
     eventnameProp,
     keywordsOrTopicProp,
+    firstEvent,
+    secondEvent,
   } = props; // access items from props
   console.log(
     keywordsOrTopicsProp,
@@ -130,7 +134,23 @@ export default function CustomizedDialogs(props) {
       console.log("getPublicationList", result.publicationList);
     } catch (error) {}
   };
-
+  const getPublicatoinListAuthorBased = async () => {
+    try {
+      const response = await fetch(
+        BASE_URL_CONFERENCE +
+          "AuthorInterestsNew" +
+          "/" +
+          firstEvent +
+          "&" +
+          keywordsOrTopic +
+          "&" +
+          keywordTopic_name
+      );
+      const result = await response.json();
+      setFilteredPublications(result.publicationList);
+      console.log("getPublicationList", result.publicationList);
+    } catch (error) {}
+  };
   useEffect(() => {
     console.log("keywordTopic_name:", keywordTopic_name);
     getPublicationList();

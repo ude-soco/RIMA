@@ -8,7 +8,6 @@ import { Button, Label, FormGroup, Form, Row, Col } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 
-
 class TopicBar extends Component {
   constructor(props) {
     super(props);
@@ -50,9 +49,15 @@ class TopicBar extends Component {
 
   displayDocChart(type, topic, year) {
     var selectyear = "2011";
-    console.log("faasdasd", type)
+    console.log("faasdasd", type);
     fetch(
-      `${BASE_URL_CONFERENCE}` + "topicdetails/" + type + "/" + topic + "/" + year
+      `${BASE_URL_CONFERENCE}` +
+        "topicdetails/" +
+        type +
+        "/" +
+        topic +
+        "/" +
+        year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -77,9 +82,7 @@ class TopicBar extends Component {
                   var title =
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
-                  fetch(
-                    `${BASE_URL_CONFERENCE}` + "fetchpaper/" + title
-                  )
+                  fetch(`${BASE_URL_CONFERENCE}` + "fetchpaper/" + title)
                     .then((response) => response.json())
                     .then((json) => {
                       url = json.url;
@@ -92,6 +95,13 @@ class TopicBar extends Component {
             plotOptions: {
               bar: {
                 horizontal: true,
+                colors: {
+                  ranges: {
+                    from: 50,
+                    to: 10,
+                    color: "black",
+                  },
+                },
               },
             },
             xaxis: {
@@ -139,9 +149,7 @@ class TopicBar extends Component {
   /* new function */
   displaytopicDocChart(topic, year) {
     var selectyear = "2011";
-    fetch(
-      `${BASE_URL_CONFERENCE}` + "topicdetails/topic/" + topic + "/" + year
-    )
+    fetch(`${BASE_URL_CONFERENCE}` + "topicdetails/topic/" + topic + "/" + year)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -165,9 +173,7 @@ class TopicBar extends Component {
                   var title =
                     config.w.config.xaxis.categories[config.dataPointIndex];
                   var url;
-                  fetch(
-                    `${BASE_URL_CONFERENCE}` + "fetchpaper/" + title
-                  )
+                  fetch(`${BASE_URL_CONFERENCE}` + "fetchpaper/" + title)
                     .then((response) => response.json())
                     .then((json) => {
                       url = json.url;
@@ -180,6 +186,13 @@ class TopicBar extends Component {
             plotOptions: {
               bar: {
                 horizontal: true,
+                colors: {
+                  ranges: {
+                    from: 50,
+                    to: 10,
+                    color: "black",
+                  },
+                },
               },
             },
             xaxis: {
@@ -226,7 +239,7 @@ class TopicBar extends Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.confEvent !== prevProps.confEvent) {
-      this.componentDidMount()
+      this.componentDidMount();
     }
   }
 
@@ -235,7 +248,6 @@ class TopicBar extends Component {
     fetch(`${BASE_URL_CONFERENCE}` + "toptopics/topic/" + this.props.confEvent)
       .then((response) => response.json())
       .then((json) => {
-
         this.setState(
           {
             selectyear: this.props.confEvent,
@@ -253,15 +265,21 @@ class TopicBar extends Component {
                   dataPointSelection: function (event, chartContext, config) {
                     var topic =
                       config.w.config.xaxis.categories[config.dataPointIndex];
-                    console.log('chartContext ' + chartContext);
-                    console.log('config.w.globals.selectedDataPoints[0][0]' + config.w.globals.selectedDataPoints[0][0]);
+                    console.log("chartContext " + chartContext);
+                    console.log(
+                      "config.w.globals.selectedDataPoints[0][0]" +
+                        config.w.globals.selectedDataPoints[0][0]
+                    );
                     display("topic", topic, this.props.confEvent);
                   },
                 },
               },
               fill: {
                 colors: ["#eababa", "#006400", "#E91E63"],
-
+                Range: {
+                  from: 50,
+                  to: 0,
+                },
                 hover: {
                   size: 20,
                 },
@@ -269,6 +287,13 @@ class TopicBar extends Component {
               plotOptions: {
                 bar: {
                   horizontal: true,
+                  colors: {
+                    ranges: {
+                      from: 50,
+                      to: 10,
+                      color: "#eababa",
+                    },
+                  },
                 },
               },
               xaxis: {
@@ -358,6 +383,13 @@ class TopicBar extends Component {
               plotOptions: {
                 bar: {
                   horizontal: true,
+                  colors: {
+                    ranges: {
+                      from: 50,
+                      to: 0,
+                      color: "black",
+                    },
+                  },
                 },
               },
               xaxis: {
@@ -389,9 +421,7 @@ class TopicBar extends Component {
     const display = this.displayDocChart;
     var year = this.state.selectyear;
     var type = "topic";
-    fetch(
-      `${BASE_URL_CONFERENCE}` + "toptopics/topic/" + this.state.selectyear
-    )
+    fetch(`${BASE_URL_CONFERENCE}` + "toptopics/topic/" + this.state.selectyear)
       .then((response) => response.json())
       .then((json) => {
         this.setState(
@@ -427,6 +457,13 @@ class TopicBar extends Component {
               plotOptions: {
                 bar: {
                   horizontal: true,
+                  colors: {
+                    ranges: {
+                      from: 50,
+                      to: 10,
+                      color: "#eababa",
+                    },
+                  },
                 },
               },
               xaxis: {
@@ -459,7 +496,7 @@ class TopicBar extends Component {
       imageTooltipOpen,
     } = this.state;
 
-    const yeardata = this.props.confEvents; // BAB years/data can be passed in props with the conference name. 
+    const yeardata = this.props.confEvents; // BAB years/data can be passed in props with the conference name.
 
     const topics = [
       {
@@ -474,7 +511,7 @@ class TopicBar extends Component {
 
     if (isLoaded) {
       return (
-        <div >
+        <div>
           <Form role="form">
             <FormGroup>
               <h2> Top 10 topics/keywords </h2>
@@ -547,7 +584,9 @@ class TopicBar extends Component {
                 type="bar"
                 height={400}
               />
-              <div style={{ marginLeft: '140px', textAlign: 'center' }}>Weight</div>
+              <div style={{ marginLeft: "140px", textAlign: "center" }}>
+                Weight
+              </div>
             </Col>
             <Col>
               {secondchart ? (
@@ -558,14 +597,16 @@ class TopicBar extends Component {
                     type="bar"
                     height={400}
                   />
-                  <div style={{ marginLeft: '30px', textAlign: 'center' }}>Count</div>
+                  <div style={{ marginLeft: "30px", textAlign: "center" }}>
+                    Count
+                  </div>
                 </>
               ) : (
                 <div></div>
               )}
             </Col>
           </Row>
-        </div >
+        </div>
       );
     } else {
       return (

@@ -1,14 +1,15 @@
 // Updated By Islam Abdelghaffar
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import { Grid, Box, InputLabel } from "@material-ui/core";
+import { Grid, Box, InputLabel, Typography, Fade } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
+import CustomizedDialog from "Views/Application/ReuseableComponents/CustomizedDialog.jsx";
 
 class NewCompareTopicsInPapers extends Component {
   constructor(props) {
@@ -16,13 +17,14 @@ class NewCompareTopicsInPapers extends Component {
     this.selectInputRef = React.createRef();
 
     this.state = {
+      openCustomizedDialog: false,
+      items: [],
       loader: false,
       mulitSelectDefaultValues: [
         { value: "lak", label: "lak" },
         { value: "aied", label: "aied" },
         { value: "edm", label: "edm" },
       ],
-      // selectedConferences:["lak","aied","edm"],
       words: [
         { value: "data", label: "data" },
         { value: "learning", label: "learning" },
@@ -56,22 +58,18 @@ class NewCompareTopicsInPapers extends Component {
           type: "bar",
           height: 350,
           events: {
-            dataPointSelection: (event, chartContext, config) => {
-              //console.log("mark is clickable", config.w.config.series[config.dataPointIndex]);
-              //   console.log(chartContext, config);
-            },
-          },
-        },
-        events: {
-          markerClick: function (event, chartContext, opts) {
-            //   console.log("mark is clickable 222", config.w.config.yaxis.categories[config.dataPointIndex]);
-            console.log("Marker of value is cliked", event, chartContext);
-          },
-        },
-        markers: {
-          onClick: function () {
-            console.log("Marker of value is cliked 111");
-            // console.log("Marker of value is cliked", e)
+            dataPointSelection: function (event, chartContext, config) {
+              const xAxisLabel = config.w.globals.labels[config.dataPointIndex];
+              const seriesData = chartContext.w.config.series;
+              const seriesIndex = config.seriesIndex; // Index of the series
+              const seriesName = seriesData[seriesIndex].name;
+              this.selectedKeywordTopic = xAxisLabel;
+              this.eventName = seriesName;
+              this.getPublicationList({
+                keywordTopic_name: xAxisLabel,
+                eventname: seriesName,
+              });
+            }.bind(this),
           },
         },
         plotOptions: {
@@ -117,7 +115,6 @@ class NewCompareTopicsInPapers extends Component {
             shared: false,
             intersect: true,
             formatter: function (Abdo) {
-              console.log("markers are hovered over", Abdo);
               return Abdo + " publications mentioned this word";
             },
           },
@@ -126,7 +123,6 @@ class NewCompareTopicsInPapers extends Component {
     };
   }
   conferenceshandleChange = (e) => {
-    console.log("here chooseeen 1");
     this.setState(
       {
         selectedConferences: e.value,
@@ -135,9 +131,6 @@ class NewCompareTopicsInPapers extends Component {
         this.selectConfEvent(this.state.selectedConferences);
       }
     );
-    console.log("here chooseeen");
-
-    console.log("choosen conf ", this.state.selectedConferences);
   };
 
   selectConfEvent = (val) => {
@@ -157,7 +150,6 @@ class NewCompareTopicsInPapers extends Component {
     });
   };
   conferenceshandleChangeTwo = (e) => {
-    console.log("second seleeeeect on change");
     this.setState(
       {
         selectedConferencesTwo: e.value,
@@ -166,9 +158,6 @@ class NewCompareTopicsInPapers extends Component {
         this.selectConfEventTwo(this.state.selectedConferencesTwo);
       }
     );
-    console.log("here chooseeen i");
-
-    console.log("choosen conf i ", this.state.selectedConferencesTwo);
   };
 
   selectConfEventTwo = (val) => {
@@ -189,8 +178,14 @@ class NewCompareTopicsInPapers extends Component {
   };
 
   compareKeywordsInPapers = () => {
+    if (!this.state.selectedEvent || !this.selectConfEventTwo) {
+      return;
+    }
     this.setState({
       loader: true,
+      keywordsOrTopic: "keyword",
+      active1: false,
+      active2: true,
     });
     fetch(
       BASE_URL_CONFERENCE +
@@ -203,15 +198,12 @@ class NewCompareTopicsInPapers extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log("json", json);
         var series = [];
         series = series.concat([
           { name: this.state.selectedEvent, data: json.FirstEventValues },
           { name: this.state.selectedEventTwo, data: json.SecondEventValues },
         ]);
         this.setState({
-          active1: false,
-          active2: true,
           series: series,
           options: {
             ...this.state.options,
@@ -226,8 +218,14 @@ class NewCompareTopicsInPapers extends Component {
   };
 
   compareTopicsInPapers = () => {
+    if (!this.state.selectedEvent || !this.selectConfEventTwo) {
+      return;
+    }
     this.setState({
       loader: true,
+      keywordsOrTopic: "topic",
+      active1: true,
+      active2: false,
     });
     fetch(
       BASE_URL_CONFERENCE +
@@ -240,15 +238,12 @@ class NewCompareTopicsInPapers extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log("json", json);
         var series = [];
         series = series.concat([
           { name: this.state.selectedEvent, data: json.FirstEventValues },
           { name: this.state.selectedEventTwo, data: json.SecondEventValues },
         ]);
         this.setState({
-          active1: true,
-          active2: false,
           series: series,
           options: {
             ...this.state.options,
@@ -261,19 +256,55 @@ class NewCompareTopicsInPapers extends Component {
         });
       });
   };
-
+  async getPublicationList(obj) {
+    try {
+      let keywordsTopics = [];
+      this.state.options.xaxis.categories.forEach((keywordTopic) => {
+        keywordsTopics.push({
+          label: keywordTopic,
+          value: keywordTopic,
+        });
+      });
+      this.setState({
+        words: keywordsTopics,
+        selectedKeywordTopic: obj.keywordTopic_name,
+      });
+      const response = await fetch(
+        BASE_URL_CONFERENCE +
+          "getRelaventPublicationsList" +
+          "/" +
+          obj.eventname +
+          "&" +
+          this.state.keywordsOrTopic +
+          "&" +
+          obj.keywordTopic_name
+      );
+      const result = await response.json();
+      this.setState({
+        items: result.publicationList,
+        eventname: obj.eventname,
+        openCustomizedDialog: true,
+      });
+    } catch (error) {}
+  }
   render() {
     return (
       <Box id="chart" className="box">
         <br></br>
-        <h2>Popularity of topics and keywords in conferences publications</h2>
-        <p>
+        <Typography
+          style={{ fontWeight: "bold" }}
+          variant="h5"
+          component="h1"
+          gutterBottom
+        >
+          Comparative Popularity of Shared Topics/Keywords in Conference Events
+        </Typography>
+        <Typography>
           Number of publications mentioning shared topics and keywords between
           conference events
-        </p>
-        <InputLabel style={{ color: "black" }}>
-          Select two conference events to compare
-        </InputLabel>
+        </Typography>
+        <br />
+        <InputLabel>Select two conference events to compare</InputLabel>
         <Grid container xs={12} md={12} spacing={3}>
           <Grid item md={5} xs={5}>
             <Select
@@ -323,17 +354,32 @@ class NewCompareTopicsInPapers extends Component {
         <Grid container spacing={3}>
           <Grid item>
             <RIMAButton
-              active={this.state.active1}
+              activeButton={this.state.active1}
               onClick={this.compareTopicsInPapers}
               name={"Topics"}
             />
           </Grid>
           <Grid item>
             <RIMAButton
-              active={this.state.active2}
+              activeButton={this.state.active2}
               onClick={this.compareKeywordsInPapers}
               name={"Keywords"}
             />
+          </Grid>
+          <Grid item>
+            {this.state.openCustomizedDialog &&
+              this.state.items &&
+              this.state.eventname &&
+              this.state.keywordsOrTopic &&
+              this.state.selectedKeywordTopic && (
+                <CustomizedDialog
+                  publications={this.state.items}
+                  keywordsOrTopicsProp={this.state.words}
+                  selectedKeywordTopicProp={this.state.selectedKeywordTopic}
+                  eventnameProp={this.state.eventname}
+                  keywordsOrTopicProp={this.state.keywordsOrTopic}
+                />
+              )}
           </Grid>
         </Grid>
         <ActiveLoader

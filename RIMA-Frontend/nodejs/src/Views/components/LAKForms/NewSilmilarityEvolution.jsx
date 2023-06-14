@@ -1,6 +1,7 @@
 // updated By Islam Abdelghaffar
 import React, { Component } from "react";
 import Loader from "react-loader-spinner";
+import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
@@ -8,6 +9,7 @@ import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import { Grid, Box, InputLabel } from "@material-ui/core";
+import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
 class NewSilmilarityEvolution extends Component {
   constructor(props) {
     super(props);
@@ -348,27 +350,15 @@ class NewSilmilarityEvolution extends Component {
                 onMouseOut={() => this.handleToogle(false)}
               />
               {this.state.imageTooltipOpen && (
-                <Box
-                  className="imgTooltip"
-                  style={{
-                    marginTop: "0px",
-                    position: "absolute",
-                    left: "40%",
-                    width: "400px",
-                    color: "#8E8E8E",
-                    border: "1px solid #BDBDBD",
-                    zIndex: 999, // Add this line
-                  }}
-                >
-                  <p>
-                    {" "}
+                <InfoBox
+                  Info={`
                     The similarity index is a measure of similarity between
                     selected conferences. It is calculated by considering the
                     percentage of shared authors compared to the total number of
                     authors, as well as the number of shared topics/keywords
-                    between the conferences during their shared years. .{" "}
-                  </p>
-                </Box>
+                    between the conferences during their shared years.
+                `}
+                />
               )}
             </Grid>
           </Grid>
@@ -396,33 +386,8 @@ class NewSilmilarityEvolution extends Component {
           )}
         </Grid>
         <Grid>
-          <Box style={{ opacity: this.state.opacity, width: "100%" }}>
-            <Box
-              style={{
-                marginLeft: "50%",
-                marginTop: "2%",
-                position: "absolute",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  alignContent: "center",
-                  position: "absolute",
-                  marginLeft: "40%",
-                }}
-              >
-                <Loader
-                  type="Bars"
-                  visible={this.state.loader}
-                  color="#00BFFF"
-                  height={90}
-                  width={90}
-                />
-              </Box>
-            </Box>
+          <Box  style={{ opacity: this.state.opacity, width: "100%" }}>
+            <ActiveLoader visible={this.state.loader} height={90} width={90} />
             <ReactApexChart
               options={this.state.options}
               series={this.state.series}
