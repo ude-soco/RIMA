@@ -1,3 +1,5 @@
+//implemented by Islam Abdelghaffar
+
 import * as React from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
@@ -53,10 +55,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -174,12 +172,12 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Common keyewords/topics list
+          Common keyewords/topics list in details
         </Typography>
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Get Papers">
           <IconButton>
             <ArticleIcon />
           </IconButton>
@@ -266,12 +264,17 @@ export default function EnhancedTable({ rows }) {
   );
 
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
+    <Box sx={{ width: "100%", height: "100%", borderRadius: "40px" }}>
       <Paper sx={{ width: "100%", height: "100%", mb: 2, padding: "1%" }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
+        <TableContainer style={{ width: "100%", height: "100%" }}>
           <Table
-            sx={{ minWidth: 200, height: "80%" }}
+            sx={{
+              minWidth: 200,
+              height: "100%", // Here
+              width: "100%", // Here
+              borderRadius: "40px",
+            }}
             aria-labelledby="tableTitle"
             size={"medium"}
           >
