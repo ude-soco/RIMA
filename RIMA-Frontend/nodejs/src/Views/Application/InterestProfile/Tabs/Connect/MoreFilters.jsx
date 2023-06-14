@@ -49,8 +49,15 @@ export default function MoreFilters(props) {
 
   const handleCheckboxChange = (event) => {
     const{value} = event.target
+    const id = nameId[value]
     console.log(value, "VALUE")
-    setSelectedNames([...selectedNames, nameId[value]])
+    if(!(selectedNames.includes(id)))
+    {
+    setSelectedNames([...selectedNames, id])
+    }
+    else {
+      setSelectedNames(prevArray => prevArray.filter(obj => obj !== id))
+    }
   }
   
   console.log(selectedNames, "selectedNames")
@@ -73,7 +80,7 @@ export default function MoreFilters(props) {
 
       <Typography variant="h6"  className={classes.title}>Hide</Typography>
             <FormGroup className={classes.checkBox}>
-              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox checked={selectedNames.includes(nameId[name])} 
+              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox /*checked={selectedNames.includes(nameId[name])}*/ 
               onChange={handleCheckboxChange} value={name}/>} label={name} />))} 
             </FormGroup>
           

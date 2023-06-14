@@ -154,20 +154,20 @@ def getConnectData(id):
     print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     print("get most authors who cited me the most")
-    authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
+    #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
     print("get authors Who I cited the most")
-    authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
+    #authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
     """ 
     with open("authorsReferences2.json", "w") as myfile:
             json.dump(authorsReferences, myfile)
     with open("authorsCitedMe2.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-       
+       """
     with open("authorsReferences2.json", "r") as myfile:
            authorsReferences = json.load(myfile)
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
-    """
+    
     data={"citations":authorsCitedMe, "references":authorsReferences}
     return data
  
