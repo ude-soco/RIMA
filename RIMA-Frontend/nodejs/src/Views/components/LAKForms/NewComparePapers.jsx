@@ -5,19 +5,10 @@ import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import {
-  Grid,
-  Box,
-  InputLabel,
-  Paper,
-  Typography,
-  CardContent,
-} from "@material-ui/core";
+import { Grid, Box, InputLabel, Typography } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton.jsx";
-import BarCharWithBadge from "Views/Application/ReuseableComponents/BarChartWithBadge";
 import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
-import ReactWordcloud from "react-wordcloud";
-import { CardHeader } from "reactstrap";
+
 import EnhancedTable from "../../Application/ReuseableComponents/EnhancedTable.jsx";
 import TotalSharedTopicsKeywordsCloud from "../../Application/ReuseableComponents/TotalSharedTopicsKeywordsCloud.jsx";
 class NewComparePapers extends Component {
@@ -72,10 +63,6 @@ class NewComparePapers extends Component {
       firstPaperTitle: "Evolving a learning analytics platform",
       secondPaperTitle: "Learning designs and learning analytics",
       loader: false,
-      words: [
-        { value: "data", label: "data" },
-        { value: "system", label: "system" },
-      ],
       years: [],
       commontpcs: [],
       confevents: [],
@@ -83,89 +70,6 @@ class NewComparePapers extends Component {
       eventsPaper: [],
       eventsPaperTwo: [],
       active2: false,
-      // series: [
-      //   {
-      //     name: "Data",
-      //     data: [44, 55],
-      //   },
-      //   {
-      //     name: "Analysis",
-      //     data: [53, 32],
-      //   },
-      //   {
-      //     name: "Student",
-      //     data: [33, 62],
-      //   },
-      // ],
-      // options: {
-      //   chart: {
-      //     type: "bar",
-      //     height: 350,
-      //     stacked: true,
-      //     stackType: "100%",
-      //   },
-      //   plotOptions: {
-      //     bar: {
-      //       horizontal: true,
-      //     },
-      //   },
-      //   stroke: {
-      //     width: 1,
-      //     colors: ["#fff"],
-      //   },
-      //   xaxis: {
-      //     categories: ["Paper 1", "Paper 2"],
-      //   },
-      //   tooltip: {
-      //     y: {
-      //       formatter: function (val) {
-      //         return val;
-      //       },
-      //     },
-      //   },
-      //   fill: {
-      //     opacity: 1,
-      //   },
-      //   legend: {
-      //     position: "top",
-      //     horizontalAlign: "left",
-      //     offsetX: 40,
-      //   },
-      // },
-      options: {
-        colors: ["#90EE90", "#0BDA51", "#17B169", "#03C03C", "#00693E"],
-        enableTooltip: true,
-        deterministic: true,
-        fontFamily: "Arial",
-        fontSizes: [15, 45],
-        fontStyle: "oblique",
-        fontWeight: "normal",
-        padding: 3,
-        rotations: 1,
-        rotationAngles: [0, 90],
-        scale: "sqrt",
-        spiral: "archimedean",
-        transitionDuration: 1000,
-      },
-      style: {
-        ContainerStyle: {
-          borderRadius: "40px",
-          padding: "1%",
-          marginTop: "2%",
-        },
-        itemStyle: {
-          width: "49%",
-          borderRadius: "40px",
-          backgroundColor: "#F0F8FF",
-          border: "1px solid #000",
-          padding: "1%",
-        },
-        CardHeaderStyle: {
-          borderRadius: "40px",
-          backgroundColor: "#F0F8FF",
-          border: "1px solid #000",
-        },
-      },
     };
   }
 
@@ -338,15 +242,6 @@ class NewComparePapers extends Component {
   };
 
   render() {
-    const callbacksParper = {
-      getWordTooltip: (word) =>
-        `Word: ${word.text} | Occurrences in this Paper's Title & Abstract: ${word.value}`,
-    };
-    const callbacksParpers = {
-      getWordTooltip: (word) =>
-        `Word: ${word.text} | Occurrences: ${word.value} in both papers`,
-    };
-
     return (
       <Box component="form" role="form" method="form" style={{ width: "100%" }}>
         <br></br>
@@ -449,116 +344,6 @@ class NewComparePapers extends Component {
           </Grid>
         </Grid>
 
-        {/* <Grid
-          container
-          component={Paper}
-          md={12}
-          style={{
-            ...this.state.style.ContainerStyle,
-          }}
-        >
-          <Grid
-            item
-            xs={12}
-            component={Paper}
-            md="auto"
-            style={{
-              ...this.state.style.itemStyle,
-            }}
-          >
-            <CardHeader
-              style={{
-                ...this.state.style.CardHeaderStyle,
-              }}
-            >
-              <Typography variant="h6" style={{ fontSize: "1rem" }}>
-                First Paper title:
-                {this.state.firstPaperTitle}
-              </Typography>
-            </CardHeader>
-            <CardContent>
-              <ReactWordcloud
-                words={this.state.firstPaperData}
-                options={this.state.options}
-                callbacks={callbacksParper}
-              />
-            </CardContent>
-          </Grid>
-          <Grid
-            item
-            md="auto"
-            xs={12}
-            component={Paper}
-            style={{
-              ...this.state.style.itemStyle,
-              marginLeft: "auto",
-            }}
-          >
-            <CardHeader
-              style={{
-                ...this.state.style.CardHeaderStyle,
-              }}
-            >
-              <Typography variant="h6" style={{ fontSize: "1rem" }}>
-                Second Paper title:
-                {this.state.secondPaperTitle}
-              </Typography>
-            </CardHeader>
-            <CardContent>
-              <ReactWordcloud
-                words={this.state.secondPaperData}
-                options={this.state.options}
-                callbacks={callbacksParper}
-              />
-            </CardContent>
-          </Grid>
-          <Grid
-            item
-            component={Paper}
-            xs={12}
-            style={{
-              ...this.state.style.itemStyle,
-              marginTop: "1%",
-            }}
-          >
-            <CardHeader
-              style={{
-                ...this.state.style.CardHeaderStyle,
-              }}
-            >
-              <Typography variant="h5" align="center">
-                Common {this.state.compareBased} between two selected papers
-              </Typography>
-            </CardHeader>
-            <CardContent>
-              <Grid container xs={12}>
-                <Grid item md={6} xs={12}>
-                  {this.state.common_keywords_topics ? (
-                    <ReactWordcloud
-                      words={this.state.common_keywords_topics}
-                      options={this.state.options}
-                      callbacks={callbacksParpers}
-                    />
-                  ) : (
-                    <Typography align="center">
-                      No common {this.state.compareBased} between two selected
-                      papers
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item md={6}>
-                  {this.state.common_keywords_topics_details &&
-                    this.state.common_keywords_topics_details.length >= 1 && (
-                      <EnhancedTable
-                        rows={this.state.common_keywords_topics_details}
-                      />
-                    )}
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Grid>
-        </Grid> */}
-
         {this.state.loader ? (
           <ActiveLoader
             marginLeft={"40%"}
@@ -574,11 +359,14 @@ class NewComparePapers extends Component {
             secondCloudTitle={
               "Second Paper title: " + this.state.secondPaperTitle
             }
-            fistCloudData={this.state.firstPaperData}
+            firstCloudData={this.state.firstPaperData}
             secondCloudData={this.state.secondPaperData}
             commonCloudData={this.state.common_keywords_topics}
             comparisonBased={this.state.compareBased}
             comparisonBetween={" papers"}
+            common_keywords_topics_details={
+              this.state.common_keywords_topics_details
+            }
           />
         )}
       </Box>
