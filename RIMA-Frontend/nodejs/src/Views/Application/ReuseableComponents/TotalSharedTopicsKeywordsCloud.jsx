@@ -1,37 +1,72 @@
 //Implemented by Islam Abdelghaffar
 import React, { useState } from "react";
-import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 
 import {
   Grid,
   Box,
-  InputLabel,
   Paper,
   Typography,
   CardContent,
   CardHeader,
 } from "@material-ui/core";
 import ReactWordcloud from "react-wordcloud";
+import EnhancedTable from "./EnhancedTable";
+import CustomizedDialog from "Views/Application/ReuseableComponents/CustomizedDialog.jsx";
 
 const TotalSharedTopicsKeywordsCloud = ({
   callbackCloud,
   callbackCommonCloud,
   firstCloudTitle,
   secondCloudTitle,
-  fistCloudData,
+  firstCloudData,
   secondCloudData,
   commonCloudData,
   comparisonBased,
   comparisonBetween,
+  common_keywords_topics_details,
 }) => {
-  const callBack = {
-    getWordTooltip: (word) =>
-      `Word: ${word.text} | ${callbackCloud}: ${word.value}`,
+  console.log("commonCloudData: ", commonCloudData);
+  const [selectedWord, setSelectedWord] = useState("");
+  const [selectedWordCloudData, setSelectedWordCloudData] = useState([]);
+
+  const callbackFirst = {
+    getWordTooltip: (word) => {
+      return `Word: ${word.text} | ${callbackCloud}: ${word.value}`;
+    },
+    onWordClick: (word) => {
+      setSelectedWord(word.text);
+      setSelectedWordCloudData(firstCloudData);
+      return;
+    },
   };
+
+  const callbackSecond = {
+    getWordTooltip: (word) => {
+      return `Word: ${word.text} | ${callbackCloud}: ${word.value}`;
+    },
+    onWordClick: (word) => {
+      setSelectedWord(word.text);
+      setSelectedWordCloudData(secondCloudData);
+      return;
+    },
+  };
+
   const callBackCommon = {
-    getWordTooltip: (word) =>
-      `Word: ${word.text} | ${callbackCommonCloud}: ${word.value}`,
+    getWordTooltip: (word) => {
+      return `Word: ${word.text} | ${callbackCommonCloud}: ${word.value}`;
+    },
+    onWordClick: (word) => {
+      setSelectedWord(word.text);
+      setSelectedWordCloudData(commonCloudData);
+      return;
+    },
   };
+
+  const [openCustomizedDialog, setOpenCustomizedDialog] = useState(false);
+  const [items, setItem] = useState([]);
+  const [eventname, setEventname] = useState();
+  const [keywordOrTopic, setKeywordsOrTopic] = useState("");
+  const [selectedKeywordTopic, setSelectedKeywordTopic] = useState("");
 
   const style = {
     ContainerStyle: {
@@ -96,11 +131,11 @@ const TotalSharedTopicsKeywordsCloud = ({
           titleTypographyProps={style.HeaderTitleStyle}
         />
         <CardContent>
-          {fistCloudData.length != 0 ? (
+          {firstCloudData && firstCloudData.length != 0 ? (
             <ReactWordcloud
-              words={fistCloudData}
+              words={firstCloudData}
               options={style.options}
-              callbacks={callBack}
+              callbacks={callbackFirst}
             />
           ) : (
             <Box>
@@ -131,7 +166,7 @@ const TotalSharedTopicsKeywordsCloud = ({
             <ReactWordcloud
               words={secondCloudData}
               options={style.options}
-              callbacks={callBack}
+              callbacks={callbackSecond}
             />
           ) : (
             <Box>
@@ -144,6 +179,7 @@ const TotalSharedTopicsKeywordsCloud = ({
         item
         component={Paper}
         xs={12}
+        md={6}
         style={{
           ...style.itemStyle,
           marginTop: "1%",
@@ -160,7 +196,7 @@ const TotalSharedTopicsKeywordsCloud = ({
         <CardContent>
           <Grid container xs={12}>
             <Grid item md={6} xs={12}>
-              {commonCloudData ? (
+              {commonCloudData && commonCloudData.length > 0 ? (
                 <ReactWordcloud
                   words={commonCloudData}
                   options={style.options}
@@ -175,6 +211,31 @@ const TotalSharedTopicsKeywordsCloud = ({
             </Grid>
           </Grid>
         </CardContent>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <CardContent>
+          <Grid container xs={12}>
+            {common_keywords_topics_details &&
+              common_keywords_topics_details.length >= 1 && (
+                <EnhancedTable rows={common_keywords_topics_details} />
+              )}
+          </Grid>
+        </CardContent>
+      </Grid>
+      <Grid item>
+        {openCustomizedDialog &&
+          items &&
+          eventname &&
+          comparisonBased &&
+          selectedWord && (
+            <CustomizedDialog
+              publications={items}
+              keywordsOrTopicsProp={selectedWordCloudData}
+              selectedKeywordTopicProp={selectedWord}
+              eventnameProp={eventname}
+              keywordsOrTopicProp={comparisonBased}
+            />
+          )}
       </Grid>
     </Grid>
   );
