@@ -1,19 +1,43 @@
-// Implemented By Abdallah
-
+// Updated By Islam Abdelghaffar
 import React, { Component } from "react";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
-import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import { Grid, Box, InputLabel, Badge } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
-
+import BarCharWithBadge from "Views/Application/ReuseableComponents/BarChartWithBadge";
+import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
+import TotalSharedTopicsKeywordsCloud from "../../Application/ReuseableComponents/TotalSharedTopicsKeywordsCloud";
 class NewAuthorBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedEvent: "lak2011",
+      selectedEventTwo: "lak2012",
+      firstCloudTitle: "A. Pardo",
+      secondCloudTitle: "Ari Bader-Natal",
+      firstCloudData: [
+        { text: "Learning management system", value: 0.9159303695384065 },
+        { text: "Web server", value: 0.8060038661449498 },
+        { text: "Data analysis", value: 0.8678094266345387 },
+      ],
+      secondCloudData: [
+        { text: "Learning analytics", value: 0.9080793903206803 },
+        { text: "Data analysis", value: 0.9678094266345387 },
+      ],
+      commonCloudData: [{ text: "Data analysis", value: 1.835618853 }],
+      common_keywords_topics_details: [
+        {
+          text: "Data analysis",
+          firstPapercount: 0.8678094266345387,
+          secondPaperCount: 0.9678094266345387,
+        },
+      ],
+      comparisonBased: "Keywords",
+      comparisonBetween: " Authors",
+      loader: false,
       words: [
         { value: "data", label: "data" },
         { value: "system", label: "system" },
@@ -21,28 +45,6 @@ class NewAuthorBar extends Component {
       years: [],
       commontpcs: [],
       display: "block",
-      series: [
-        {
-          name: "data",
-          data: [44, 55],
-        },
-        {
-          name: "analysis",
-          data: [53, 32],
-        },
-        {
-          name: "student",
-          data: [53, 32],
-        },
-        {
-          name: "online",
-          data: [53, 32],
-        },
-        {
-          name: "learning",
-          data: [68, 19],
-        },
-      ],
       options: {
         chart: {
           type: "bar",
@@ -91,10 +93,6 @@ class NewAuthorBar extends Component {
         this.selectConfEvent();
       }
     );
-    console.log("here chooseeen");
-    console.log("here chooseeen", e);
-
-    console.log("choosen conf ", this.state.selectedConferences);
   };
 
   selectConfEvent = () => {
@@ -119,11 +117,6 @@ class NewAuthorBar extends Component {
         this.selectEventsAuthors();
       }
     );
-    console.log("here chooseeen 2");
-    console.log("here chooseeen 2", e);
-
-    console.log("choosen event 2", this.state.selectedEvent);
-    console.log("choosen conf of that 2", this.state.selectedConferences);
   };
 
   selectEventsAuthors = () => {
@@ -145,9 +138,6 @@ class NewAuthorBar extends Component {
       selectedEventAuthor: e,
       isLoading: true,
     });
-    console.log("here chooseeen 3");
-    console.log("here chooseeen 3", e);
-    console.log("choosen papaer 3", this.state.selectedEventAuthor);
   };
 
   conferenceshandleChangeTwo = (e) => {
@@ -160,10 +150,6 @@ class NewAuthorBar extends Component {
         this.selectConfEventTwo(this.state.selectedConferencesTwo);
       }
     );
-    console.log("here chooseeen i");
-    console.log("here chooseeen i", e);
-
-    console.log("choosen conf i ", this.state.selectedConferencesTwo);
   };
 
   selectConfEventTwo = (val) => {
@@ -186,10 +172,6 @@ class NewAuthorBar extends Component {
         this.selectEventsAuthorsTwo(this.state.selectedEventTwo);
       }
     );
-    console.log("here chooseeen 2i");
-    console.log("here chooseeen 2i", e);
-
-    console.log("choosen event 2i", this.state.selectedEventTwo);
   };
 
   selectEventsAuthorsTwo = (val) => {
@@ -209,12 +191,15 @@ class NewAuthorBar extends Component {
       selectedEventAuthorTwo: e,
       isLoading: true,
     });
-    console.log("here chooseeen 3i");
-    console.log("here chooseeen 3i", e);
-    console.log("choosen papaer 3i", this.state.selectedEventpaperTwo);
   };
 
   AuthorKeywordInterests = (val) => {
+    this.setState({
+      loader: true,
+      firstCloudTitle: this.state.selectedEventAuthor.value,
+      secondCloudTitle: this.state.selectedEventAuthorTwo.value,
+      comparisonBased: "keywords",
+    });
     fetch(
       BASE_URL_CONFERENCE +
         val +
@@ -230,19 +215,13 @@ class NewAuthorBar extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        var series = [];
-        console.log("auth", json.authorInterests[0]);
-        for (let i = 0; i < json.authorInterests[0].length; i++) {
-          series = series.concat([
-            {
-              name: json.authorInterests[0][i],
-              data: json.authorInterests[1][i],
-            },
-          ]);
-          //selectInputRef1.current.chart.publicMethods.updateOptions({})
-        }
+        console.log("json: ", json);
         this.setState({
-          series: series,
+          firstCloudData: json.first_author_data,
+          secondCloudData: json.second_author_data,
+          commonCloudData: json.common_data[0].intersection,
+          common_keywords_topics_details:
+            json.common_data[0].intersectionDetails,
           active3: false,
           active4: true,
           options: {
@@ -271,18 +250,17 @@ class NewAuthorBar extends Component {
             ],
           },
           display: "block",
-          commontpcs: json.authorInterests[3],
-          options: {
-            ...this.state.options,
-            xaxis: {
-              ...this.state.options.xaxis,
-              categories: json.authorInterests[2],
-            },
-          },
+          loader: false,
         });
       });
   };
   AuthorTopicInterests = (val) => {
+    this.setState({
+      loader: true,
+      firstCloudTitle: this.state.selectedEventAuthor.value,
+      secondCloudTitle: this.state.selectedEventAuthorTwo.value,
+      comparisonBased: "topics",
+    });
     fetch(
       BASE_URL_CONFERENCE +
         val +
@@ -298,19 +276,14 @@ class NewAuthorBar extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        var series = [];
-        console.log("auth", json.authorInterests[0]);
-        for (let i = 0; i < json.authorInterests[0].length; i++) {
-          series = series.concat([
-            {
-              name: json.authorInterests[0][i],
-              data: json.authorInterests[1][i],
-            },
-          ]);
-          //selectInputRef1.current.chart.publicMethods.updateOptions({})
-        }
+        console.log("json: ", json);
+
         this.setState({
-          series: series,
+          firstCloudData: json.first_author_data,
+          secondCloudData: json.second_author_data,
+          commonCloudData: json.common_data[0].intersection,
+          common_keywords_topics_details:
+            json.common_data[0].intersectionDetails,
           active3: true,
           active4: false,
           options: {
@@ -339,14 +312,7 @@ class NewAuthorBar extends Component {
             ],
           },
           display: "block",
-          commontpcs: json.authorInterests[3],
-          options: {
-            ...this.state.options,
-            xaxis: {
-              ...this.state.options.xaxis,
-              categories: json.authorInterests[2],
-            },
-          },
+          loader: false,
         });
       });
   };
@@ -434,32 +400,31 @@ class NewAuthorBar extends Component {
         </Grid>
         <br />
         <Grid container style={{ opacity: this.state.opacity }} md={12}>
-          <Grid item md={8} xs={12}>
-            <ReactApexChart
-              options={this.state.options}
-              series={this.state.series}
-              type="bar"
-              height={300}
+          {this.state.loader ? (
+            <ActiveLoader
+              marginLeft={"40%"}
+              height={90}
+              width={90}
+              visible={true}
             />
-          </Grid>
-          <Grid item md={2} xs={12}>
-            <h5>Common topics/keywords</h5>
-            {this.state.commontpcs.length == 0 ? (
-              <Box style={{ marginBottom: "2%" }}>
-                No common topics/keywords found
-              </Box>
-            ) : (
-              this.state.commontpcs.map((number) => (
-                <Badge
-                  target="_blank"
-                  color="info"
-                  style={{ marginLeft: "1%" }}
-                >
-                  {number}
-                </Badge>
-              ))
-            )}
-          </Grid>
+          ) : (
+            <TotalSharedTopicsKeywordsCloud
+              callbackCloud={"Weight"}
+              callbackCommonCloud={"Aggregate weight"}
+              firstCloudTitle={"First Author:   " + this.state.firstCloudTitle}
+              secondCloudTitle={"Second Author: " + this.state.secondCloudTitle}
+              firstCloudData={this.state.firstCloudData}
+              secondCloudData={this.state.secondCloudData}
+              commonCloudData={this.state.commonCloudData}
+              comparisonBased={this.state.comparisonBased}
+              comparisonBetween={this.state.comparisonBetween}
+              common_keywords_topics_details={
+                this.state.common_keywords_topics_details
+              }
+              firstEvent={this.state.selectedEvent}
+              secondEvent={this.state.selectedEventTwo}
+            />
+          )}
         </Grid>
       </Box>
     );
