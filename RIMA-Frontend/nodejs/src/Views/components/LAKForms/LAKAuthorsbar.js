@@ -61,7 +61,7 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "getauthortopicdetails/" + this.props.conferenceName + "/?" +
+      `${BASE_URL_CONFERENCE}` + "getauthortopicdetails/" + this.props.conferenceName + "/?" +
       this.state.selectVal1 +
       "&" +
       this.state.selectVal2 +
@@ -157,8 +157,9 @@ class LAKAuthorsbar extends Component {
     {
       //fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +"/lak2011")
     }
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` +
-      "getauthorsyearlist/" + this.props.conferenceName + "/lak2011")
+    console.log("called 1 ")
+    fetch(`${BASE_URL_CONFERENCE}` +
+      "getauthorsyearlist/" + this.props.conferenceName + "/lak2011/")
 
       .then((response) => response.json())
       .then((json) => {
@@ -176,13 +177,16 @@ class LAKAuthorsbar extends Component {
     });
 
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "getauthortopicdetails/" + this.props.conferenceName + "/?A. A. Economides&A. Ammari&all years&topic"
+      `${BASE_URL_CONFERENCE}` + "getauthortopicdetails/" + this.props.conferenceName + "/?A. A. Economides&A. Ammari&all years&topic"
     )
       .then((response) => response.json())
       .then((json) => {
         var series = [];
         console.log("auth", json.authortopics[0]);
-        for (let i = 0; i < json.authortopics[0].length; i++) {
+        if (!json.authortopics[0].length()) {
+          return;
+        }
+        for (let i = 0; i < json.authortopics[0].length(); i++) {
           series = series.concat([
             { name: json.authortopics[0][i], data: json.authortopics[1][i] },
           ]);
@@ -281,9 +285,10 @@ class LAKAuthorsbar extends Component {
       display1: "block",
       loader: true,
     });
-
+    console.log("selected", e.target.value
+    )
     fetch(
-      `${BASE_URL_CONFERENCE}/api/conferences/` + "getauthortopicdetails/" + this.props.conferenceName + "/?" +
+      `${BASE_URL_CONFERENCE}` + "getauthortopicdetails/" + this.props.conferenceName + "/?" +
       this.state.selectVal1 +
       "&" +
       this.state.selectVal2 +
@@ -406,15 +411,20 @@ class LAKAuthorsbar extends Component {
   }
 
   selectyearValue(e) {
-    fetch("http://127.0.0.1:8000/api/" + "getauthorsyearlist/" + this.props.conferenceName + "/" + e.value)
+    
+    fetch(`${BASE_URL_CONFERENCE}` + "getauthorsyearlist/" + this.props.conferenceName + "/" + e.value)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
           selectYear: e.value,
           authors1: json.authors.sort((a, b) => (a.label > b.label ? 1 : -1)),
           authors2: json.authors.sort((a, b) => (a.label > b.label ? 1 : -1)),
+        }, () => {
+          console.log("author1: ", this.state.authors1)
+          console.log("author2: ",this.state.authors2)          
         });
       });
+
   }
   render() {
     var {
@@ -477,15 +487,15 @@ class LAKAuthorsbar extends Component {
               <Col>
                 <Select
                   placeholder="Researcher1"
-                  options={authors1}
-                  value={authors1.find((obj) => obj.value === selectVal1)}
+                  options={this.state.authors1.map(author => ({ value: author.semantic_scholar_author_id, label: author.name }))}
+                  value={this.state.authors1.find((obj) => obj.value === selectVal1)}
                   onChange={this.selectValue1}
                 />
               </Col>
               <Col>
                 <Select
                   placeholder="Researcher2"
-                  options={authors2}
+                  options={this.state.authors2.map(author => ({ value: author.semantic_scholar_author_id, label: author.name }))}
                   value={authors2.find((obj) => obj.value === selectVal2)}
                   onChange={this.selectValue}
                 />
@@ -619,15 +629,15 @@ class LAKAuthorsbar extends Component {
                 <Col>
                   <Select
                     placeholder="Researcher1"
-                    options={authors1}
-                    value={authors1.find((obj) => obj.value === selectVal1)}
+                    options={this.state.authors1.map(author => ({ value: author.semantic_scholar_author_id, label: author.name }))}
+                    value={this.state.authors1.find((obj) => obj.value === selectVal1)}
                     onChange={this.selectValue1}
                   />
                 </Col>
                 <Col>
                   <Select
                     placeholder="Researcher2"
-                    options={authors2}
+                    options={this.state.authors2.map(author => ({ value: author.semantic_scholar_author_id, label: author.name }))}
                     value={authors2.find((obj) => obj.value === selectVal2)}
                     onChange={this.selectValue}
                   />
