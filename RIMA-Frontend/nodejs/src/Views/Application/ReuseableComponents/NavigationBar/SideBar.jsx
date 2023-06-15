@@ -157,7 +157,7 @@ export default function SideBar({ selection, setSelection }) {
         history.push("/app/explorePublications");
         break;
       case "authorInsights":
-        history.push('/app/authorInsights')
+        history.push("/app/authorInsights");
         break;
     }
   };
@@ -350,6 +350,19 @@ export default function SideBar({ selection, setSelection }) {
 
           <ListItem
             button
+            id="topicTrends"
+            selected={selectedList("topicTrends")}
+            onClick={handleSelect}
+            className={selectedList("topicTrends")}
+          >
+            <ListItemIcon className={classes.listIconNested}>
+              <MultilineChartIcon className={selectedList("topicTrends")} />
+            </ListItemIcon>
+            <ListItemText primary="Explore Topics and Trends" />
+          </ListItem>
+
+          <ListItem
+            button
             id="compareConferences"
             selected={selectedList("compareConferences")}
             onClick={handleSelect}
@@ -360,30 +373,31 @@ export default function SideBar({ selection, setSelection }) {
             </ListItemIcon>
             <ListItemText primary="Compare Conferences" />
           </ListItem>
+
+          <ListItem
+            button
+            id="conferenceNetwork"
+            selected={selectedList("conferenceNetwork")}
+            onClick={handleSelect}
+            className={selectedList("conferenceNetwork")}
+          >
+            <ListItemIcon className={classes.listIconNested}>
+              <GroupIcon className={selectedList("conferenceNetwork")} />
+            </ListItemIcon>
+            <ListItemText primary="Compare Authors" />
+          </ListItem>
+
           {/* implemented by islam */}
           <ListItem
             button
             id="authorInsights"
-            selected={selectedList('authorInsights')}
+            selected={selectedList("authorInsights")}
             onClick={handleSelect}
-            className={selectedList('authorInsights')}
+            className={selectedList("authorInsights")}
           >
             <ListItemIcon className="classes.listIconNested">
-             
-              <ListItemText primary='Author insights'/>
+              <ListItemText primary="Author insights" />
             </ListItemIcon>
-          </ListItem>
-          <ListItem
-            button
-            id="topicTrends"
-            selected={selectedList("topicTrends")}
-            onClick={handleSelect}
-            className={selectedList("topicTrends")}
-          >
-            <ListItemIcon className={classes.listIconNested}>
-              <MultilineChartIcon className={selectedList("topicTrends")} />
-            </ListItemIcon>
-            <ListItemText primary="Explore Topics and Trends" />
           </ListItem>
 
           {/* <ListItem
@@ -398,19 +412,6 @@ export default function SideBar({ selection, setSelection }) {
               </ListItemIcon>
               <ListItemText primary="Topic Recommendation" />
             </ListItem> */}
-
-          <ListItem
-            button
-            id="conferenceNetwork"
-            selected={selectedList("conferenceNetwork")}
-            onClick={handleSelect}
-            className={selectedList("conferenceNetwork")}
-          >
-            <ListItemIcon className={classes.listIconNested}>
-              <GroupIcon className={selectedList("conferenceNetwork")} />
-            </ListItemIcon>
-            <ListItemText primary="Explore Author Networks" />
-          </ListItem>
 
           {/* <ListItem
             button
