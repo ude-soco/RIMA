@@ -209,7 +209,7 @@ export default class CloudChart extends Component {
           : word.source == "Twitter"
             ? "Extracted from tweets"
             : word.source == "Manual"
-              ? "Manually added"
+              ? "Manually added/Edited"
               : "Extracted from publications & tweets"
         }`,
       onWordClick: this.getCallback("onWordClick"),

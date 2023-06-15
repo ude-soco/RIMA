@@ -131,8 +131,18 @@ class LongTermInterestSerializer(serializers.ModelSerializer):
 
 
 class KeywordCreateSerializer(serializers.Serializer):
+    TWITTER = "Twitter"
+    SCHOLAR = "Scholar"
+    MANUAL = "Manual"
+
     name = serializers.CharField(max_length=1000)
     weight = serializers.FloatField(max_value=5, min_value=1)
+    source = serializers.ChoiceField(choices=[
+        (TWITTER, "Twitter"),
+        (SCHOLAR, "Scholar"),
+        (MANUAL, "Manual")
+    ])
+
 
 
 #class TopicSerializer(serializers.Serializer):

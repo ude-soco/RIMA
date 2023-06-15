@@ -1,41 +1,7 @@
-from .wikipedia_utils import wikicategory
-import wikipediaapi
-import requests
-import json
-import random
-import nltk
+from ..semantic_scholar import SemanticScholarAPI
 from collections import Counter
-from .semantic_scholar import SemanticScholarAPI
-import time
-
-def getPagesInCategory(cat):
-    wiki= wikipediaapi.Wikipedia("en")
-    allPagesCat=wiki.page("Category:"+cat)
-    allPagesCat=allPagesCat.categorymembers
-    allPages=[]
-    subCat=[]
-    for i in allPagesCat:
-        catOrPage=i.split(":")
-        if len(catOrPage) !=1:
-            subCat.append(catOrPage)
-        else:
-            allPages.append(catOrPage[0])
-    return(allPages)
-
-
-def getRandPages(pages, n):
-    pages=list(set(pages))
-    currPages=[]
-    try:
-        for i in range(0,n):
-            page=random.choice(pages)
-            currPages.append(page)
-            pages.pop(pages.index(page))
-    except:
-
-        print("no categories\n\n\n")
-
-    return currPages
+import random
+import wikipediaapi
 
 def getPageData(interest):
     wiki = wikipediaapi.Wikipedia('en')
@@ -61,97 +27,6 @@ def getPageData(interest):
 
         print(interest, page)
     return pageData
-
-def getDataDiscoverInterest(interest):
-    categories=wikicategory(interest)
-    data=[]
-    print(categories, "..........................\n\n\n")
-
-    for c in categories:
-        listPageData=[]
-        allPages=getPagesInCategory(c)
-        pages=getRandPages(allPages,3)
-        for page in pages:
-            pageData=getPageData(page)
-            listPageData.append(pageData)
-        dataCat = {
-            "topic":c,
-            "color": "#397367",
-            "allPages":allPages,
-            "relatedTopics":listPageData
-        }
-        data.append(dataCat)
-    return data
-
-def getDataDiscover(interests):
-    data={}
-    for i in interests:
-        data[i]=getDataDiscoverInterest(i.capitalize())
-        time.sleep(1)
-    return data
-
-
-
-
-
-#start functions for explore.py
-def getLinksTextInPage(interest):
-    wiki=wikipediaapi.Wikipedia('en')
-    page=wiki.page(interest)
-
-    links=page.links
-    text=page.text
-
-
-    return links, text
-
-def getCountLinks(links, text, topN=3):
-    linksWithNum=[]
-    for link in links.keys():
-        count = text.count(link)
-        linksWithNum.append((link,count))
-    linksWithNum.sort(key=lambda tup:tup[1], reverse=True)
-    return linksWithNum[:topN]
-
-def getDataNewInterestExplore(interest):
-    print(interest, "test test")
-    links, text = getLinksTextInPage(interest.capitalize())
-    top3Interests=getCountLinks(links, text)
-
-    relatedTopics=[]
-    for i in top3Interests:
-        currLinks, currText=getLinksTextInPage(i[0])
-        currTop3Interests=getCountLinks(currLinks, currText)
-        currRelatedTopics=[]
-
-
-        for j in currTop3Interests:
-            currPage2=getPageData(j[0])
-            currRelatedTopics.append(currPage2)
-
-
-        currPage=getPageData(i[0])
-
-        currPage["relatedTopics"]=currRelatedTopics
-        relatedTopics.append(currPage)
-
-    data=getPageData(interest)
-    data["relatedTopics"]=relatedTopics
-
-
-    return data
-
-def getDataExplore(interests):
-    data=[]
-    for i in interests:
-        print("\n\n\n",i, "new interests")
-        currData=getDataNewInterestExplore(i)
-        time.sleep(1)
-        data.append(currData)
-        print(data, "data interest")
-    return data
-
-#start functions connect
 
 def getRefCitAuthorsPapers(authorId, method):
     results={"listAllAuthors":[]}
@@ -248,12 +123,12 @@ def getMostCitedReferenced(authorId, method, n=3):
     return allAuthors
 
 def getInterests(authorId):
-    interests=["user modeling", "educational technology","lifelong learning","human-centered design",
-               "keyword extraction", "test","self-actualization",
-               "technology acceptance model","massive open online course" ]
-    k=random.choice(range(8,15))
+    interests=["user modeling", "educational technology","lifelong learning", "artificial intelligence",
+               "learning technologies", "gamification", "higher education", "open educational resources", "anti-phishing",
+               "serious games", "cybersecurity", "xAPI"]
 
-    return random.choices(interests, k=k)
+
+    return interests
 
 def getConnectData(id):
     authorId=id["data"]
@@ -277,8 +152,3 @@ def getWikiInfo(interestsData):
     #answer={"test":"test", "page":page, "dataInterst":dataInterest, "data":data}
 
     return pageData
-
-
-
-
-

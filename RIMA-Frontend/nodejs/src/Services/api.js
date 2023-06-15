@@ -73,6 +73,18 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  static resetData() {
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/interests/reset-data/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${getItem("accessToken")}`,
+      },
+      data: {},
+    }).then((res) => res);
+  }
 
   // OLD APIS
 
@@ -324,6 +336,19 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  static removePaperForUser(id) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/remove-paper-for-user/${id}/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+    }).then((res) => res);
+  }
+
 
 
   //** DELETE A CONFERENCE API **//
@@ -359,6 +384,20 @@ class RestAPI {
     return axios({
       method: "patch",
       url: `${BASE_URL}/api/interests/papers/${id}/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+
+  static editPaper(data, id) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/interests/edit-paper/${id}/`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -431,6 +470,31 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  static regenerateInterestProfile() {
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/interests/regenerate-interest-profile/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${getItem("accessToken")}`,
+      },
+      data: {},
+    }).then((res) => res);
+  }
+
+  static fetchNewPapers() {
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/api/interests/fetch-papers/`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${getItem("accessToken")}`,
+      },
+      data: {},
+    }).then((res) => res);
+  }
   //** GET BLACK KEYWORD  API **//
   static getBlackKeyword() {
     const TOKEN = getItem("accessToken");
@@ -775,6 +839,33 @@ class RestAPI {
     }).then((res) => res);
   }
 
+  static getConnectData(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/get-connect-data`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+
+  static getWikiInfo(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/get-wiki-info`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
   static getSimiliarInterestData(data) {
     const TOKEN = getItem("accessToken");
     return axios({

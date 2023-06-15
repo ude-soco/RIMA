@@ -27,6 +27,7 @@ class EditPaper extends React.Component {
     year: "",
     abstract: "",
     authors: "",
+    used_in_calc: "",
     isLoding: false,
   };
   componentDidMount() {
@@ -72,10 +73,11 @@ class EditPaper extends React.Component {
       year: this.state.year,
       authors: this.state.authors,
       abstract: this.state.abstract,
+      used_in_calc: false,
     };
 
     this.setState({ isLoding: true }, () => {
-      RestAPI.updatePaper(data, this.state.id)
+      RestAPI.editPaper(data, this.state.id)
         .then((response) => {
           toast.success("Paper Updated!", {
             position: toast.POSITION.TOP_RIGHT,
