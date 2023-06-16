@@ -7,6 +7,7 @@ import re
 from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 from neomodel import *
+from itertools import combinations
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
@@ -790,17 +791,157 @@ def get_author_keywordTopic_eventBased(author_name, event_name,keyword_or_topic)
 
         
 
-# event_obj = Event.nodes.get(
-#         conference_event_name_abbr=conference_event_name_abbr)
-#     event_has_topic_objs = event_obj.topics.all()
-#     for event_has_topic_obj in event_has_topic_objs:
-#         has_topic_relationship = event_obj.topics.relationship(
-#             event_has_topic_obj)
-#         weight = has_topic_relationship.weight
-#         data.append({
-#             'topic': event_has_topic_obj.topic,
-#             'weight': weight,
-#             'event': event_obj.conference_event_name_abbr,
-#         })
-#     sorted_data = sorted(data, key=lambda k: k['weight'], reverse=True)
-#     return sorted_data
+def get_conf_events(conf_name):
+   conf_node= Conference.nodes.get(conference_name_abbr=conf_name)
+   return conf_node.events.all()
+
+def get_Shared_years_between_confs(confs_events_list):
+    confs_years=[]
+    for conf in confs_events_list:
+        conf_event_name= conf["conference"]
+        conf_events_list=conf["events"]
+        years= get_years_of_conf(conf_events_list)
+        confs_years.append({
+            "conference":conf_event_name,
+            "years": years
+        })
+    common_years = get_common_years(confs_years)
+    return sorted(common_years)   
+
+
+def get_years_of_conf(conf_events_list):
+    conf_years = set()
+    for event in conf_events_list:
+        match = re.search(r'\d{4}', event.conference_event_name_abbr)
+        if match:
+            conf_years.add(match.group())
+    return list(conf_years)
+
+
+def get_common_years(confs_years):
+    common_years = set(confs_years[0]['years'])
+
+    for conf in confs_years[1:]:
+        common_years &= set(conf['years'])
+
+    return list(common_years)
+
+def get_shared_events_basedOn_shared_years(confs_events_list,common_years):
+    conf_shared_events = []
+
+    for conf in confs_events_list:
+        shared_events = []
+
+        for event in conf['events']:
+            print("match: ", event.conference_event_name_abbr)
+            match = re.search(r'\d{4}', event.conference_event_name_abbr)
+            if match is not None and match.group() in common_years:
+                event_name = re.split("-",event.conference_event_name_abbr)[0]
+                authors_list = [author.semantic_scolar_author_id for author in event.authors.all()]
+                existing_event = next((item for item in shared_events 
+                                    if item["event_name"] == event_name), None)
+                if existing_event:
+                    existing_event["event_authors"].extend(authors_list)
+                else:   
+                    shared_events.append({
+                        "event_name": event_name,
+                        "event_authors": authors_list
+                    })
+
+        if shared_events:
+            conf_shared_events.append({
+                'conference_name': conf['conference'],
+                'events': shared_events
+            })
+
+    return conf_shared_events
+
+   
+
+def get_shared_authors_from_events(shared_years,shared_years_events):
+    #print("shared_years_events",shared_years_events)
+    final_data=[]
+    shared_years_events_length=len(shared_years_events)
+    if shared_years_events_length==1:
+        conf_events=shared_years_events[0]["events"]
+        events_author_count=[len(event["event_authors"]) for event in conf_events]
+        final_data.append({
+            "name": shared_years_events[0]["conference_name"],
+            "data": events_author_count
+        })
+        print("final_data: ",final_data)
+
+        return final_data
+    
+    else:
+        # get all combinations of any length
+        all_combs = []
+        shared_authors_combs=[]
+        final_data=[]
+        conference_names = [item['conference_name'] for item in shared_years_events]
+        for r in range(2, len(conference_names) + 1):
+         all_combs.extend(combinations(conference_names, r))
+
+        for comb in all_combs:
+            relevant_confs=[]
+            for conf in comb:
+              relevant_conf=[item for item in shared_years_events if item["conference_name"]==conf]
+              relevant_confs.append(relevant_conf)
+            shared_authors_combs=get_shared_authors_between_combs(shared_years,relevant_confs)
+
+            final_data.append(shared_authors_combs) 
+        
+        print("shared_authors_combs: ",final_data)   
+        return final_data   
+
+
+def get_shared_authors_between_combs(shared_years,relevant_confs):
+    events_to_compare=[]
+    for year in shared_years:
+        events_in_year = []
+        for conf in relevant_confs:
+            for event in conf[0]["events"]:
+                if year in event["event_name"]:
+                    events_in_year.append(event)
+                    break  
+        if events_in_year:  
+            events_to_compare.append(events_in_year)
+    final = []
+    for event in events_to_compare:
+        events_name = []
+        events_authors = []
+        for obj in event:
+            events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
+            events_authors.append(obj["event_authors"])
+        final.append({
+            "name": events_name,
+            "data": count_common_elements(events_authors)
+          })
+    final=add_all_data_in_one_array(final)
+    return final
+
+
+            
+def count_common_elements(lst):
+    if(len(lst) ==0):
+        return 0
+    common_elements = set(lst[0])
+
+    for sublist in lst[1:]:
+        common_elements.intersection_update(sublist)
+
+    return len(common_elements)    
+
+
+def add_all_data_in_one_array(final_array):
+    output_data = {}
+
+    for item in final_array:
+        name_tuple=tuple(item['name'])
+        if name_tuple not in output_data:
+            output_data[name_tuple]=[]
+
+        output_data[name_tuple].append(item['data'])
+
+    output_data = [{'name': list(name), 'data': data} for name, data in output_data.items()]
+    return output_data

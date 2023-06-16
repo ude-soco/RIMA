@@ -106,6 +106,41 @@ class TotalSharedAuthorsEvolutionView(APIView):
                          })
 
 # done
+# new class by I Islam
+
+#new function 
+class ShareAuthorCompareTrends(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        try:
+            conferences_list = confutils.split_restapi_url(
+                url_splits_question_mark[1], r'&')
+        except Exception as e:
+            return Response({"weights": result_data,
+                             "years": []
+                             })
+        confs_events_list = []
+        for conf in conferences_list:
+            conf_events = compConfUtils.get_conf_events(conf_name=conf)
+            confs_events_list.append({
+                "conference": conf,
+                "events": conf_events
+            })
+
+        shared_years = compConfUtils.get_Shared_years_between_confs(
+            confs_events_list=confs_events_list)
+
+        shared_years_events=compConfUtils.get_shared_events_basedOn_shared_years(
+            confs_events_list, shared_years)
+        
+        shared_authors=compConfUtils.get_shared_authors_from_events(
+            shared_years,shared_years_events)
+        
+        return Response({
+            "data":shared_authors
+        })
 
 
 class TotalSharedWordsNumberView(APIView):
