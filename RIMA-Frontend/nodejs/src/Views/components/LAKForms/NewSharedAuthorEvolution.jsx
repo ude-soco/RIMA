@@ -37,10 +37,6 @@ class NewSharedAuthorEvolution extends Component {
       weights: [],
       series: [
         {
-          name: "Total number of authors",
-          data: [216, 278, 391, 447, 629, 698, 684, 460, 606, 644],
-        },
-        {
           name: "No. of shared authors",
           data: [2, 3, 16, 11, 41, 61, 43, 15, 36, 16],
         },
@@ -67,7 +63,7 @@ class NewSharedAuthorEvolution extends Component {
         yaxis: [
           {
             title: {
-              text: "No. of Authors",
+              text: "No. of shared authors",
               style: {
                 color: "#008FFB",
               },
@@ -138,8 +134,45 @@ class NewSharedAuthorEvolution extends Component {
   };
 
   compareSharedTotalAuthors = () => {
-    var { series } = this.state;
-    var { weights } = this.state;
+    var { series, yaxis } = this.state;
+    var selectedConfsCount = this.state.selectedConferences.length;
+    if (selectedConfsCount == 0) {
+      this.setState({
+        loader: false,
+        series: [],
+      });
+      return;
+    }
+    if (selectedConfsCount <= 1) {
+      yaxis = [
+        {
+          title: {
+            text: "No. of total authors",
+            style: {
+              color: "#008FFB",
+            },
+          },
+        },
+      ];
+      this.setState({
+        yaxis: yaxis,
+      });
+    }
+    if (selectedConfsCount > 1) {
+      yaxis = [
+        {
+          title: {
+            text: "No. of shared authors",
+            style: {
+              color: "#008FFB",
+            },
+          },
+        },
+      ];
+      this.setState({
+        yaxis: yaxis,
+      });
+    }
     fetch(
       BASE_URL_CONFERENCE +
         "getTotalSharedAuthorsEvolution/" +
@@ -150,24 +183,13 @@ class NewSharedAuthorEvolution extends Component {
       .then((json) => {
         console.log(json);
         series = [];
-        weights = [];
-        for (let index = 0; index < 2; index++) {
-          console.log(index);
-          for (let i = 0; i < json.weights.length; i++) {
-            weights[i] = json.weights[i][index];
-          }
-          if (index == 0) {
-            series = series.concat([
-              { name: "Total number of Authors", data: weights },
-            ]);
-          } else {
-            series = series.concat([
-              { name: "number of Shared Authors", data: weights },
-            ]);
-          }
-          console.log("weights", weights);
-          weights = [];
-        }
+        json.data.forEach((tuple) => {
+          console.log("tuple", tuple[0]["name"], ",", tuple[0]["data"]);
+          series = series.concat([
+            { name: tuple[0]["name"], data: tuple[0]["data"] },
+          ]);
+        });
+        console.log("json.sharedYears: ", json.sharedYears);
         this.setState({
           selectConference: this.state.selectedConferences,
           active1: true,
@@ -178,15 +200,14 @@ class NewSharedAuthorEvolution extends Component {
           datalabels: {
             enabled: true,
           },
-
           options: {
             ...this.state.options,
             xaxis: {
               ...this.state.options.xaxis,
-              categories: json.years,
+              categories: json.sharedYears,
             },
+            yaxis: yaxis,
           },
-
           loader: false,
           opacity: "0.9",
         });
