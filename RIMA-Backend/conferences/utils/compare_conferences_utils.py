@@ -856,8 +856,37 @@ def get_shared_events_basedOn_shared_years(confs_events_list,common_years):
 
     return conf_shared_events
 
-   
+def get_shared_events_keyword_basedOn_shared_years(shared_based,confs_events_list,common_years):
+    conf_shared_events = []
 
+    for conf in confs_events_list:
+        shared_events = []
+
+        for event in conf['events']:
+            print("get data of: ", event.conference_event_name_abbr)
+            match = re.search(r'\d{4}', event.conference_event_name_abbr)
+            if match is not None and match.group() in common_years:
+                event_name = re.split("-",event.conference_event_name_abbr)[0]
+                keywords_list = [keyword.keyword for keyword in event.keywords.all()]
+                existing_event = next((item for item in shared_events 
+                                    if item["event_name"] == event_name), None)
+                if existing_event:
+                    existing_event[shared_based].extend(keywords_list)
+                else:   
+                    shared_events.append({
+                        "event_name": event_name,
+                        shared_based: keywords_list
+                    })
+
+        if shared_events:
+            conf_shared_events.append({
+                'conference_name': conf['conference'],
+                'events': shared_events
+            })
+    print("shared events between conferences get collectted")
+    return conf_shared_events   
+
+#new function by Islam
 def get_shared_authors_from_events(shared_years,shared_years_events):
     #print("shared_years_events",shared_years_events)
     final_data=[]
@@ -871,7 +900,7 @@ def get_shared_authors_from_events(shared_years,shared_years_events):
         })
         print("final_data: ",final_data)
 
-        return final_data
+        return [final_data]
     
     else:
         # get all combinations of any length
@@ -899,6 +928,7 @@ def get_shared_authors_between_combs(shared_years,relevant_confs):
     events_to_compare=[]
     for year in shared_years:
         events_in_year = []
+        print("relevant_confs",relevant_confs)
         for conf in relevant_confs:
             for event in conf[0]["events"]:
                 if year in event["event_name"]:
@@ -920,6 +950,30 @@ def get_shared_authors_between_combs(shared_years,relevant_confs):
     final=add_all_data_in_one_array(final)
     return final
 
+def get_shared_between_combs(shared_based,shared_years,shared_years_events):
+    events_to_compare=[]
+    for year in shared_years:
+        events_in_year = []
+        for conf in shared_years_events:
+            for event in conf[0]["events"]:
+                if year in event["event_name"]:
+                    events_in_year.append(event)
+                    break  
+        if events_in_year:  
+            events_to_compare.append(events_in_year)
+    final = []
+    for event in events_to_compare:
+        events_name = []
+        events_authors = []
+        for obj in event:
+            events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
+            events_authors.append(obj[shared_based])
+        final.append({
+            "name": events_name,
+            "data": count_common_elements(events_authors)
+          })
+    final=add_all_data_in_one_array(final)
+    return final
 
             
 def count_common_elements(lst):
@@ -945,3 +999,39 @@ def add_all_data_in_one_array(final_array):
 
     output_data = [{'name': list(name), 'data': data} for name, data in output_data.items()]
     return output_data
+
+
+def get_shared_from_events(shared_based,shared_years,shared_years_events):
+    final_data=[]
+    shared_years_events_length=len(shared_years_events)
+    if shared_years_events_length==1:
+        conf_events=shared_years_events[0]["events"]
+        events_author_count=[len(event[shared_based]) for event in conf_events]
+        final_data.append({
+            "name": shared_years_events[0]["conference_name"],
+            "data": events_author_count
+        })
+        print("final_data: ",final_data)
+
+        return [final_data]
+    
+    else:
+        # get all combinations of any length
+        all_combs = []
+        shared_authors_combs=[]
+        final_data=[]
+        conference_names = [item['conference_name'] for item in shared_years_events]
+        for r in range(2, len(conference_names) + 1):
+         all_combs.extend(combinations(conference_names, r))
+
+        for comb in all_combs:
+            relevant_confs=[]
+            for conf in comb:
+              relevant_conf=[item for item in shared_years_events if item["conference_name"]==conf]
+              relevant_confs.append(relevant_conf)
+            shared_authors_combs=get_shared_between_combs("keywords",shared_years,relevant_confs)
+
+            final_data.append(shared_authors_combs) 
+        
+        print("shared_authors_combs: ",final_data)   
+        return final_data   

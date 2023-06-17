@@ -7,9 +7,18 @@ import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import { Grid, Box, InputLabel } from "@material-ui/core";
+import {
+  Grid,
+  Box,
+  InputLabel,
+  Fade,
+  Typography,
+  CardContent,
+  Card,
+} from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
+import SharedAuthorVennDiagram from "./SharedAuthorVennDiagram.jsx";
 window.$value = "";
 
 class NewSharedAuthors extends Component {
@@ -19,6 +28,9 @@ class NewSharedAuthors extends Component {
     this.selectSahredAuthors = this.selectSahredAuthors.bind(this);
     this.selectKey = this.selectKey.bind(this);
     this.state = {
+      confeventsThird: [],
+      openThirdEvent: false,
+      closeThirdEvent: true,
       isLoaded: false,
       active1: false,
       confevents: [],
@@ -36,9 +48,31 @@ class NewSharedAuthors extends Component {
       data: [],
       conferences: [],
       items_confCompare: [],
+      Style: {
+        itemStyle: {
+          backgroundColor: "#F0F8FF",
+          borderRadius: "40px",
+          padding: "1%",
+        },
+        cardStyle: {
+          width: "100%",
+          borderRadius: "40px",
+        },
+        h1Style: {
+          padding: "1rem,0,0,0",
+          width: "100%",
+          borderRadius: "40px",
+        },
+      },
     };
   }
 
+  changeBackgroundPaper(e) {
+    e.target.style.background = "#B0D4FF";
+  }
+  changeBackgroundPaper2(e) {
+    e.target.style.background = "#F5F5F2";
+  }
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
@@ -120,10 +154,27 @@ class NewSharedAuthors extends Component {
         this.selectConfEventTwo(this.state.selectedConferencesTwo);
       }
     );
-    console.log("here chooseeen i");
-    console.log("here chooseeen i", e);
-
     console.log("choosen conf i ", this.state.selectedConferencesTwo);
+  };
+
+  conferenceshandleChangeThird = (e) => {
+    this.setState(
+      {
+        thirdSelectedConf: e.value,
+      },
+      function () {
+        this.selectConfEventThird(this.state.thirdSelectedConf);
+      }
+    );
+  };
+  selectConfEventThird = (val) => {
+    fetch(BASE_URL_CONFERENCE + "confEvents/" + val)
+      .then((response) => response.json())
+      .then((json) => {
+        this.setState({
+          confeventsThird: json.events,
+        });
+      });
   };
 
   selectConfEventTwo = (val) => {
@@ -144,6 +195,12 @@ class NewSharedAuthors extends Component {
     console.log("here chooseeen 2i");
 
     console.log("choosen event 2i", this.state.selectedEventTwo);
+  };
+  setSelectedEventThird = (e) => {
+    this.setState({
+      selectedEventThird: e.value,
+      isLoading: true,
+    });
   };
 
   selectKey(e) {
@@ -167,8 +224,10 @@ class NewSharedAuthors extends Component {
       BASE_URL_CONFERENCE +
         "commonAuthors/" +
         this.state.selectedEvent +
-        "/" +
-        this.state.selectedEventTwo
+        "&" +
+        this.state.selectedEventTwo +
+        "&" +
+        this.state.selectedEventThird
     )
       .then((response) => response.json())
       .then((json) => {
@@ -243,6 +302,74 @@ class NewSharedAuthors extends Component {
           </Grid>
         </Grid>
         <br />
+        <Grid item xs={12}>
+          {this.state.closeThirdEvent && (
+            <Typography
+              style={{ ...this.state.Style.h1Style }}
+              checked={this.state.openThirdEvent}
+              onMouseEnter={this.changeBackgroundPaper}
+              onMouseLeave={this.changeBackgroundPaper2}
+              onClick={() =>
+                this.setState({
+                  openThirdEvent: true,
+                  closeThirdEvent: false,
+                })
+              }
+            >
+              {" "}
+              + Add third event
+            </Typography>
+          )}
+          {this.state.openThirdEvent && (
+            <Fade
+              unmountOnExist
+              in={this.state.openThirdEvent}
+              style={{ position: "relative" }}
+            >
+              <Grid container spacing={3}>
+                <Grid item md={5} xs={12}>
+                  <Select
+                    placeholder="Third conference"
+                    options={this.props.conferencesNames}
+                    value={this.props.conferencesNames.find(
+                      (obj) => obj.value === this.state.thirdSelectedConf
+                    )}
+                    onChange={this.conferenceshandleChangeThird}
+                  />
+                </Grid>
+                <Grid item md={5} xs={12}>
+                  <Select
+                    placeholder="Third conference event"
+                    options={this.state.confeventsThird}
+                    value={this.state.confeventsTwo.find(
+                      (obj) => obj.value === this.state.selectedEventThird
+                    )}
+                    onChange={this.setSelectedEventThird}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    style={{ ...this.state.Style.h1Style }}
+                    checked={this.state.closeThirdEvent}
+                    onMouseEnter={this.changeBackgroundPaper}
+                    onMouseLeave={this.changeBackgroundPaper2}
+                    onClick={() =>
+                      this.setState({
+                        closeThirdEvent: true,
+                        openThirdEvent: false,
+                        selectedEventThird: "",
+                      })
+                    }
+                  >
+                    {" "}
+                    - Shrink third event{" "}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Fade>
+          )}
+        </Grid>
+        <br />
         <Grid container spacing={2}>
           <Grid item>
             <RIMAButton
@@ -270,20 +397,16 @@ class NewSharedAuthors extends Component {
             container
             justify="center"
             alignItems="center"
-            style={{ height: "50vh" }}
+            style={{ height: "50vh", padding: "1%" }}
           >
-            <Grid
-              item
-              style={{
-                display: this.state.display,
-              }}
-            >
-              <img
+            <Grid item xs={12}>
+              {/* <img
                 src={`data:image/png;base64,${this.state.items_y1}`}
                 style={{
                   width: "80%",
                 }}
-              />
+              /> */}
+              <SharedAuthorVennDiagram />
             </Grid>
           </Grid>
         </Grid>
