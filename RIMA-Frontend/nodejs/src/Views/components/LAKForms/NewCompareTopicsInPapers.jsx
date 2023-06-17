@@ -223,7 +223,7 @@ class NewCompareTopicsInPapers extends Component {
     }
     this.setState({
       loader: true,
-      keywordsOrTopic: "topic",
+      keywordsOrTopic: "keyword",
       active1: true,
       active2: false,
     });
@@ -234,7 +234,7 @@ class NewCompareTopicsInPapers extends Component {
         "/" +
         this.state.selectedEventTwo +
         "/" +
-        "topic"
+        "keyword"
     )
       .then((response) => response.json())
       .then((json) => {
@@ -359,13 +359,13 @@ class NewCompareTopicsInPapers extends Component {
               name={"Topics"}
             />
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <RIMAButton
               activeButton={this.state.active2}
               onClick={this.compareKeywordsInPapers}
               name={"Keywords"}
             />
-          </Grid>
+          </Grid> */}
           <Grid item>
             {this.state.openCustomizedDialog &&
               this.state.items &&
