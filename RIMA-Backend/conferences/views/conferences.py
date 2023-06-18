@@ -480,7 +480,7 @@ BAB get conf events/years
 # Updated by Basem Abughallya 08.06.2021:: Extension for other conferences other than LAK
 # modified 04.07.2021
 
-#reused by abdalla, build by fathi
+# reused by abdalla, build by fathi
 
 
 class conferenceAuthors(APIView):
@@ -522,7 +522,7 @@ class WordCloudView(APIView):
         number = url_splits[-2]
         conference_event_name_abbr = url_splits[-1]
         result_data = []
-
+        models_data = []
         if keyword_or_topic == "topic":
 
             models_data = confutils.get_topics_from_models(
@@ -531,11 +531,9 @@ class WordCloudView(APIView):
         elif keyword_or_topic == "keyword":
             models_data = confutils.get_keywords_from_models(
                 conference_event_name_abbr)
+
         print(models_data)
-        if number == '5':
-            reduced_models_data = models_data[:5]
-        elif number == '10':
-            reduced_models_data = models_data[:10]
+        reduced_models_data = models_data[:int(number)]
 
         for model_data in reduced_models_data:
             result_data.append({
@@ -924,9 +922,6 @@ View to get topics for stacked area chart- topic evolution
 # BAB
 
 
-
-
-
 '''
 View to get keywords for stacked area chart- topic evolution
 '''
@@ -968,9 +963,11 @@ class FetchPaperView(APIView):
         url_spilts = confutils.split_restapi_url(request.get_full_path(), r'/')
         title = url_spilts[-1]
         # print(url_spilts[-1], 'URL REQUEST TEST')
+        print("paper title:", title)
         conference_event_paper_obj = session.execute_read()
-        Conference_Event_Paper.objects.get(
+        conf = Conference_Event_Paper.objects.get(
             Q(title__icontains=title))
+        print("conf:", conf)
         session.close()
         # print("URL TEST ", conference_event_paper_obj.url, "URL TEST")
         return Response({'url': conference_event_paper_obj.url})
@@ -1337,11 +1334,13 @@ class FetchAbstractView(APIView):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference_name = url_splits[-3]
         word = url_splits[-2]
+        print('WORD: ', word)
         conference_event_name_abbr = url_splits[-1]
+        print("conference_event_name_abbr: ", conference_event_name_abbr)
         # sconfutils.get_abstract_based_on_keyword(conference_event_name_abbr,word)
         return Response(
             confutils.get_abstract_based_on_keyword(
-                conference_event_name_abbr, word)
+                conference_event_name_abbr, word, 'keyword')
         )
 
 
@@ -1413,22 +1412,31 @@ class AuthorTopicComparisonView(APIView):
         print(url_splits_and_symbol)
         keyword_or_topic = url_splits_and_symbol[-1]
         conference_event_name_abbr = url_splits_and_symbol[-2]
-        first_author_name = url_splits_and_symbol[-4]
-        second_author_name = url_splits_and_symbol[-3]
+        first_author_semantic_scholar_author_id = url_splits_and_symbol[-4]
+        second_author_semantic_scholar_author_id = url_splits_and_symbol[-3]
         conference_name = url_splits_slash[-2]
         session = settings.NEO4J_SESSION.session()
-        first_author_obj = session.execute_read(
-            cql_get_author_by_name, first_author_name)
-        second_author_obj = session.execute_read(
-            cql_get_author_by_name, second_author_name)
-
+        authors_ids = [first_author_semantic_scholar_author_id,
+                       second_author_semantic_scholar_author_id]
+        authors_keywords_Topics = []
         if (keyword_or_topic == 'keyword'):
-            keywords = session.execute_read(
-                cql_get_author_keyword, first_author_obj.get('semantic_scolar_author_id'))
-            return keywords
+            for author_id in authors_ids:
+                keywords = session.execute_read(
+                    cql_get_author_keyword, author_id)
+                authors_keywords_Topics.append({
+                    'author_id': author_id,
+                    'keywords': keywords
+                })
+
         elif keyword_or_topic == 'topic':
-            topics = session.execute_read(
-                cql_get_author_topic, first_author_obj.get('semantic_scolar_author_id'))
+            for author_id in authors_ids:
+                topics = session.execute_read(
+                    cql_get_author_topic, second_author_semantic_scholar_author_id)
+                authors_keywords_Topics.append({
+                    'author_id': author_id,
+                    'topics': topics
+                })
+
         # first_author_publications = confutils.get_author_publications_in_conf(
         #     first_author_obj.get('semantic_scolar_author_id'), conference_name, conference_event_name_abbr)
 
@@ -1476,7 +1484,7 @@ class AuthorTopicComparisonView(APIView):
         # print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
         # print('############')
         # print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
-
+        print("authors_keywords_Topics: ", authors_keywords_Topics)
         return Response({
             "authortopics": result_data})
 
@@ -1545,8 +1553,6 @@ class AuthorConfComparisonData(APIView):
             "vals":
             compareLAKwithAuthortopics(topics_split[-2], topics_split[-1])
         })
-
-
 
 
 if __name__ == "__main__":
