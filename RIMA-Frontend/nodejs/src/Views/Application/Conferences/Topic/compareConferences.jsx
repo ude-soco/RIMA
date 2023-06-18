@@ -332,6 +332,49 @@ export default function EducationalConferences(props) {
                     >
                       <NewSharedAuthorEvolution
                         conferencesNames={availableConferences}
+                        chartType="area"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      ms={12}
+                      xs={12}
+                      md={12}
+                      lg={5}
+                      style={{
+                        ...Style.itemStyle,
+                        margin: "auto",
+                        marginTop: matchesXS ? "1%" : "auto",
+                      }}
+                    >
+                      <NewSharedAuthorEvolution
+                        conferencesNames={availableConferences}
+                        chartType="bar"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    container
+                    md={12}
+                    style={{
+                      marginTop: "1%",
+                    }}
+                  >
+                    <Grid
+                      item
+                      ms={12}
+                      xs={12}
+                      md={12}
+                      lg={6}
+                      style={{
+                        ...Style.itemStyle,
+                        margin: "auto",
+                      }}
+                    >
+                      <NewNumberOfSharedWords
+                        conferencesNames={availableConferences}
+                        chartType="area"
+
                       />
                     </Grid>
                     <Grid
@@ -348,6 +391,8 @@ export default function EducationalConferences(props) {
                     >
                       <NewNumberOfSharedWords
                         conferencesNames={availableConferences}
+                        chartType="bar"
+
                       />
                     </Grid>
                   </Grid>
@@ -384,7 +429,7 @@ export default function EducationalConferences(props) {
             <Fade unmountOnExit in={openDrawerYears}>
               <CardContent className="bg-transparent">
                 <Grid container xs={12}>
-                  <Grid
+                  {/* <Grid
                     xs={12}
                     item
                     style={{
@@ -394,7 +439,7 @@ export default function EducationalConferences(props) {
                     <NewCompareStackedBarChart
                       conferencesNames={availableConferences}
                     />
-                  </Grid>
+                  </Grid> */}
 
                   <Grid
                     xs={12}
@@ -415,7 +460,7 @@ export default function EducationalConferences(props) {
         </Grid>
 
         {/* publications */}
-        <Grid container component={Paper} className={classes.cardHeight3}>
+        {/* <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
             style={{ ...Style.h1Style }}
             checked={openDrawerPaper}
@@ -452,9 +497,9 @@ export default function EducationalConferences(props) {
               </CardContent>
             </Fade>
           </Card>
-        </Grid>
+        </Grid> */}
 
-        {/* trends */}
+        {/* trends
         <Grid container component={Paper} className={classes.cardHeight3}>
           <h1
             style={{ ...Style.h1Style }}
@@ -493,7 +538,7 @@ export default function EducationalConferences(props) {
               </CardContent>
             </Fade>
           </Card>
-        </Grid>
+        </Grid> */}
 
         {/* Authors */}
         <Grid
@@ -533,7 +578,7 @@ export default function EducationalConferences(props) {
                   >
                     <NewSharedAuthors conferencesNames={availableConferences} />
                   </Grid>
-                  <Grid
+                  {/* <Grid
                     item
                     md={12}
                     style={{
@@ -542,7 +587,7 @@ export default function EducationalConferences(props) {
                     }}
                   >
                     <NewAuthorBar conferencesNames={availableConferences} />
-                  </Grid>
+                  </Grid> */}
                 </Grid>{" "}
               </CardContent>
             </Fade>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Highcharts from "highcharts";
 import VennModule from "highcharts/modules/venn.js";
 import HighchartsReact from "highcharts-react-official";
@@ -12,76 +12,28 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-import Autocomplete from "@mui/material/Autocomplete";
 import InfoBox from "../../Application/ReuseableComponents/InfoBox";
 
 VennModule(Highcharts);
-const SharedAuthorVennDiagram = () => {
+const SharedAuthorVennDiagram = ({ sets, authorsNames }) => {
   const [selectedEvent, setSelectedEvent] = useState([]);
+  const [selectedSet, setSelectedSet] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
 
-  const lak2011_authors = [
-    "author1",
-    "author2",
-    "author3",
-    "author4",
-    "author5",
-    "author6",
-    "author7",
-    "author8",
-    "author9",
-    "author10",
-  ];
-  const lak2015_authors = [
-    "author6",
-    "author7",
-    "author8",
-    "author9",
-    "author10",
-    "author11",
-    "author12",
-    "author13",
-    "author14",
-    "author15",
-    "author16",
-    "author17",
-    "author18",
-    "author19",
-    "author20",
-  ];
-  const lak2021_authors = [
-    "author11",
-    "author12",
-    "author13",
-    "author21",
-    "author22",
-    "author23",
-    "author24",
-    "author25",
-    "author26",
-    "author27",
-    "author28",
-    "author29",
-    "author30",
-  ];
+  const authorsNamesRef = useRef(authorsNames);
+  useEffect(() => {
+    authorsNamesRef.current = authorsNames;
+  }, [authorsNames]);
 
-  const getIntersection = (arrs) => {
-    return arrs.reduce((a, b) => a.filter((c) => b.includes(c)));
-  };
-  const [selectedSet, setSelectedSet] = useState("lak2011");
+  useEffect(() => {
+    setSelectedEvent(
+      selectedEvent.filter((author) =>
+        author.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm]);
 
-  const sets = [
-    { sets: ["lak2011"], value: 10, name: "lak2011" },
-    { sets: ["lak2015"], value: 20, name: "lak2015" },
-    { sets: ["lak2021"], value: 20, name: "lak2021" },
-    { sets: ["lak2011", "lak2015"], value: 5, name: "lak2011_lak2015" },
-    { sets: ["lak2011", "lak2021"], value: 5, name: "lak2011_lak2021" },
-    { sets: ["lak2015", "lak2021"], value: 10, name: "lak2015_lak2021" },
-    {
-      sets: ["lak2011", "lak2015", "lak2021"],
-      value: 5,
-      name: "lak2011_lak2015_lak2021",
-    },
-  ];
   const vennOptions = {
     title: {
       text: "Shared Authors",
@@ -126,9 +78,9 @@ const SharedAuthorVennDiagram = () => {
           enabled: true,
           formatter: function () {
             if (this.point.sets.length === 1) {
-              return this.point.name;
+              return this.point.name + "<br>" + this.point.value;
             }
-            return null;
+            return this.point.value;
           },
         },
       },
@@ -142,39 +94,24 @@ const SharedAuthorVennDiagram = () => {
           events: {
             click: function () {
               const clickedSets = this.sets;
-
-              let authorsSets = [];
-              if (clickedSets.includes("lak2011")) {
-                authorsSets.push(lak2011_authors);
-                setSelectedSet("lak2011");
-              }
-              if (clickedSets.includes("lak2015")) {
-                authorsSets.push(lak2015_authors);
-                setSelectedSet("lak2015");
-              }
-              if (clickedSets.includes("lak2021")) {
-                authorsSets.push(lak2021_authors);
-                setSelectedSet("lak2021");
-              }
-
-              const selectedAuthors = getIntersection(authorsSets);
-              setSelectedEvent(selectedAuthors);
+              clickedSets.sort();
+              let clickedSetesName = clickedSets.join(" and ");
+              authorsNamesRef.current.map((set) => {
+                console.log("set name", set.name);
+                console.log("clickedSets", clickedSetesName);
+                if (set.name === clickedSetesName) {
+                  console.log("names equal");
+                  setSelectedSet(set.name);
+                  setSelectedEvent(set.authors_names);
+                }
+              });
             },
           },
         },
       },
     ],
   };
-  const [searchTerm, setSearchTerm] = useState("");
-  const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
 
-  useEffect(() => {
-    setSelectedEvent(
-      selectedEvent.filter((author) =>
-        author.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [searchTerm]);
   return (
     <Grid container={12} spacing={2}>
       <Grid item xs={8}>

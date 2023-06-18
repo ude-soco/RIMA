@@ -28,6 +28,9 @@ class NewSharedAuthors extends Component {
     this.selectSahredAuthors = this.selectSahredAuthors.bind(this);
     this.selectKey = this.selectKey.bind(this);
     this.state = {
+      selectedEvent: "",
+      selectedEventTwo: "",
+      selectedEventThird: "",
       confeventsThird: [],
       openThirdEvent: false,
       closeThirdEvent: true,
@@ -64,6 +67,22 @@ class NewSharedAuthors extends Component {
           borderRadius: "40px",
         },
       },
+      sets: [
+        { sets: ["lak2011"], value: 10, name: "lak2011" },
+        { sets: ["lak2015"], value: 20, name: "lak2015" },
+        { sets: ["lak2021"], value: 20, name: "lak2021" },
+        { sets: ["lak2011", "lak2015"], value: 5, name: "lak2011_lak2015" },
+        { sets: ["lak2011", "lak2021"], value: 5, name: "lak2011_lak2021" },
+        { sets: ["lak2015", "lak2021"], value: 10, name: "lak2015_lak2021" },
+        {
+          sets: ["lak2011", "lak2015", "lak2021"],
+          value: 5,
+          name: "lak2011_lak2015_lak2021",
+        },
+      ],
+      authorsNames: [],
+      showWarningEmptyEvents: false,
+      showWarningSameEvents: false,
     };
   }
 
@@ -219,7 +238,39 @@ class NewSharedAuthors extends Component {
       display1: "block",
       loader: true,
       display: "none",
+      authorsNames: [],
     });
+    let firstEvent = this.state.selectedEvent;
+    let secondEvent = this.state.selectedEventTwo;
+    let thirdEvent = this.state.selectedEventThird;
+
+    if (
+      (firstEvent === "" && secondEvent == "") ||
+      (firstEvent == "" && thirdEvent == "") ||
+      (secondEvent == "" && thirdEvent == "")
+    ) {
+      this.setState({
+        showWarningEmptyEvents: true,
+        showWarningSameEvents: false,
+      });
+      return;
+    }
+    if (
+      firstEvent === secondEvent ||
+      firstEvent === thirdEvent ||
+      secondEvent == thirdEvent
+    ) {
+      this.setState({
+        showWarningEmptyEvents: false,
+        showWarningSameEvents: true,
+      });
+      return;
+    } else {
+      this.setState({
+        showWarningEmptyEvents: false,
+        showWarningSameEvents: false,
+      });
+    }
     fetch(
       BASE_URL_CONFERENCE +
         "commonAuthors/" +
@@ -231,6 +282,8 @@ class NewSharedAuthors extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
+        console.log("json:", json);
+        console.log("json.sets:", json.sets);
         this.setState({
           active1: true,
           selectValue: e,
@@ -239,6 +292,8 @@ class NewSharedAuthors extends Component {
           display: "block",
           isLoaded: true,
           display1: "none",
+          sets: json.sets,
+          authorsNames: json.names,
         });
       });
   }
@@ -397,7 +452,7 @@ class NewSharedAuthors extends Component {
             container
             justify="center"
             alignItems="center"
-            style={{ height: "50vh", padding: "1%" }}
+            style={{ height: "50%", padding: "1%" }}
           >
             <Grid item xs={12}>
               {/* <img
@@ -406,7 +461,20 @@ class NewSharedAuthors extends Component {
                   width: "80%",
                 }}
               /> */}
-              <SharedAuthorVennDiagram />
+              {this.state.showWarningEmptyEvents && (
+                <Typography color="error">
+                  Please select at least two events.
+                </Typography>
+              )}
+              {this.state.showWarningSameEvents && (
+                <Typography color="error">
+                  An events can't be selected twice.
+                </Typography>
+              )}
+              <SharedAuthorVennDiagram
+                sets={this.state.sets}
+                authorsNames={this.state.authorsNames}
+              />
             </Grid>
           </Grid>
         </Grid>

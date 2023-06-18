@@ -8,6 +8,7 @@ from interests.Keyword_Extractor.extractor import getKeyword
 from interests.wikipedia_utils import wikicategory, wikifilter
 from neomodel import *
 from itertools import combinations
+import numpy as np
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
@@ -943,14 +944,15 @@ def get_shared_authors_between_combs(shared_years,relevant_confs):
         for obj in event:
             events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
             events_authors.append(obj["event_authors"])
+        common_elements=common_elements_in_set(events_authors)
         final.append({
             "name": events_name,
-            "data": count_common_elements(events_authors)
+            "data": len(common_elements)
           })
     final=add_all_data_in_one_array(final)
     return final
 
-def get_shared_between_combs(shared_based,shared_years,shared_years_events):
+def get_shared_between_combs(full_name,shared_based,shared_years,shared_years_events):
     events_to_compare=[]
     for year in shared_years:
         events_in_year = []
@@ -966,25 +968,43 @@ def get_shared_between_combs(shared_based,shared_years,shared_years_events):
         events_name = []
         events_authors = []
         for obj in event:
-            events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
+            if full_name:
+                events_name.append(obj["event_name"])
+            else:    
+                events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
             events_authors.append(obj[shared_based])
         final.append({
             "name": events_name,
-            "data": count_common_elements(events_authors)
+            "data": len(common_elements_in_set(events_authors))
           })
     final=add_all_data_in_one_array(final)
     return final
 
+def get_shared_between_events_combs(shared_based,events):
+    final = []
+    events_name = []
+    events_authors_list = []
+    for event in events:
+        for obj in event:  
+            events_name.append((obj["event_name"]))
+            events_authors_list.append(obj[shared_based])
+    common_authors=common_elements_in_set(events_authors_list)        
+    final.append({
+        "name": events_name,
+        "data": len(common_authors),
+        "authors_names":[author for author in common_authors]
+        })
+    return final
             
-def count_common_elements(lst):
+def common_elements_in_set(lst):
     if(len(lst) ==0):
-        return 0
-    common_elements = set(lst[0])
+        return set()
+    common_elements_in_set = set(lst[0])
 
     for sublist in lst[1:]:
-        common_elements.intersection_update(sublist)
+        common_elements_in_set.intersection_update(sublist)
 
-    return len(common_elements)    
+    return common_elements_in_set    
 
 
 def add_all_data_in_one_array(final_array):
@@ -1029,9 +1049,69 @@ def get_shared_from_events(shared_based,shared_years,shared_years_events):
             for conf in comb:
               relevant_conf=[item for item in shared_years_events if item["conference_name"]==conf]
               relevant_confs.append(relevant_conf)
-            shared_authors_combs=get_shared_between_combs("keywords",shared_years,relevant_confs)
+            shared_authors_combs=get_shared_between_combs(
+                full_name=False,
+                shared_based="keywords",
+                shared_years=shared_years,
+                shared_years_events=relevant_confs)
 
             final_data.append(shared_authors_combs) 
         
         print("shared_authors_combs: ",final_data)   
         return final_data   
+    
+
+
+def get_events_authors(events):
+    results=[]
+    for event in events:
+            event_authors = Event.nodes.get(
+                conference_event_name_abbr=event).authors.all()
+            results.append({
+                "event_name": event,
+                "authors": [author.author_name for author in event_authors]
+            }) 
+
+    return results    
+
+def get_shared_authors_basedOn_combs(events_authors,all_combs):
+        result=[]
+        final_sets = []
+        authors_name = []
+        for comb in all_combs:
+            sets = []
+            relevant_confs = []
+            for event in comb:
+                relevant_conf = [
+                    item for item in events_authors if item["event_name"] == event]
+                relevant_confs.append(relevant_conf)
+            shared_authors_combs = get_shared_between_events_combs(
+                shared_based="authors",
+                events=relevant_confs)
+
+            names = sorted(shared_authors_combs[0]["name"])
+            print("names: ", names)
+            value = shared_authors_combs[0]["data"]
+            if value != 0:
+                sets.append({
+                    "sets": names,
+                    "value": value,
+                    "name": " and ".join(names)
+                })
+                final_sets.extend(
+                    sets
+                )
+                authors_name.append({
+                    "name": " and ".join(names),
+                    "authors_names": shared_authors_combs[0]["authors_names"]
+                })
+        print("***********************************************************")
+        print("shared_authors_combs: ", final_sets)
+        print("******************************************************")
+        print("authors_name: ", authors_name)
+        result.append(final_sets)
+        result.append(authors_name)
+
+
+        return result
+
