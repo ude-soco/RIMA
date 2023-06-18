@@ -92,3 +92,4 @@ class Conference(StructuredNode):
 
     publication = RelationshipTo(Publication, "has_publication")
     authors= RelationshipTo(Author,'has_author')
+    events=RelationshipTo(Event,"has_event")
