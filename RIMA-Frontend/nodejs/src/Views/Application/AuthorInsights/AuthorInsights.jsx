@@ -4,9 +4,11 @@ import cytoscape from "cytoscape";
 import cxtmenu from 'cytoscape-cxtmenu'
 import CytoscapeComponent from "react-cytoscapejs";
 import { Autocomplete } from "@mui/material";
-
+import Select from 'react-select'
+import SharedAuthorVennDiagram from './SharedAuthorVennDiagram'
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
-
+import * as d3 from 'd3';
+import ColoredBox from "./ColoredBox";
 cytoscape.use(cxtmenu)
 
 const AuthorInsights = () => {
@@ -20,7 +22,62 @@ const AuthorInsights = () => {
     const [availableEvents, setAvailableEvents] = useState([])
     let [networkData, setNetworkData] = useState([])
     let [selectedEvents, setSelectedEvents] = useState([])
-   
+    const [selectedNode, setSelectedNode] = useState(null)
+    const [sets, setSets] = useState([]);
+    const [isIntersection, setThereIntersection] = useState(false)
+    
+    const [confColor, setConfColor] = useState([])
+    const [colors, setColors] = useState(
+        ["#dae6c5", "#d7ece2", "#dae6c5", "#d7ece2"])
+    
+        const getVennDiagramData = async () => {
+        let i = 0;
+        try {
+            setSets([])
+            const events = selectedEvents.join('&');
+            const response=await fetch(BASE_URL_CONFERENCE + 'getVennDiagramDate/'+ events);
+            const result = await response.json();
+            const intersection = (result.data.length > 1 && result.data.length <= 3 &&result.data.slice(-1)[0]['label'].length !==0)
+            setThereIntersection(intersection);
+            if(!intersection){
+                return;
+            }
+            if( result.data)
+            setConfColor([])
+            for (let item of result.data) {
+              
+                console.log("i :",i)
+                console.log("color number : ",colors[i])
+                setSets(pervSets => [...pervSets, {
+                    sets: item['sets'],
+                    size: (item['sets']).length == 1 ? 5 : 2,
+                    label: (item['label']).length >= 1 ? (item['label']).join(','): '',
+                    fill:'#f00'
+                }])
+                setConfColor(pervSets => [...pervSets, {
+                    setName: item['sets'],
+                    setColor: colors[i],
+                }])
+                i++;
+            }
+            
+        } catch (error) {
+            console.log("Error fetch Venn Diagram Data",error)            
+        }
+    }
+    const updateVennSets = nodeId => {
+        let tempSets = [...sets]
+        tempSets.forEach(set => {
+            if (set.label.includes(nodeId)) {
+                console.log("included node: ",nodeId)
+                set.label += ' (selected)';
+            } else {
+                set.label = set.label.replace(" (selected)", "")
+            }
+        });
+        setSets(tempSets);
+    }
+
     useEffect(() => {
         const getConfs = async () => {
             try {
@@ -94,6 +151,7 @@ const AuthorInsights = () => {
     }
 
     const highlightNode = nodeId => {
+        console.log("node: ",nodeId)
         let node = cy.$(`#${nodeId}`);
             let directlyConnectedNodes = node.connectedNodes();
             let connectedEdges = node.connectedEdges();
@@ -189,6 +247,7 @@ const AuthorInsights = () => {
         },
     ];
 
+
     const style = { width: '100%', height: '800px', margin: 'auto' };
 
     const layout = { name: 'cose' };
@@ -198,7 +257,7 @@ const AuthorInsights = () => {
             if (selectedEvents.length >= 1) {
                 setNetworkData([]);
                 const selectedEv = selectedEvents.join('&');
-               console.log("selectedEv:",selectedEv)
+                console.log("selectedEv:",selectedEv)
                 const response = await fetch(BASE_URL_CONFERENCE +"getNetwokGraph/" + selectedEv);
                 const result = await response.json();
                 setNetworkData(result.data);
@@ -207,8 +266,10 @@ const AuthorInsights = () => {
         } catch (error) {
             console.log("Error fetching network date",error)
         }
-    }
-
+    }    
+    const selectOption = networkData.filter(el => el.data.label)
+        .map(el => ({ value: el.data.id, label: el.data.label }))
+    
     return (
         <Grid>
             <Paper
@@ -271,7 +332,11 @@ const AuthorInsights = () => {
                     size="large"
                     variant="contained"
                     color="primary"
-                    onClick={handleGenerateGraph}
+                            onClick={() => {
+                                handleGenerateGraph();
+                                getVennDiagramData();
+                            } 
+                            }
                   >
                     Generate Graph
                   </Button>
@@ -286,10 +351,25 @@ const AuthorInsights = () => {
             padding: "20px",
             maxWidth: "1300px",
             
-            }}>
+                    }}>
+                    <Select
+                        options={selectOption}
+                        isClearable
+                        isSearchable
+                        onChange={e => {
+                            setSelectedNode(e ? e.label : null);
+                            if (e) {
+                                highlightNode(e.value)
+                                updateVennSets(e.label);
+                            }
+                        }}
+                        onInputChange={
+                            removeHighlight
+                        }
+                    />
             <div>
                     
-                        <CytoscapeComponent
+                    <CytoscapeComponent
                         key={networkData}
                     elements={networkData}
                     layout={layout}
@@ -301,7 +381,19 @@ const AuthorInsights = () => {
                         }
                     }}
                     />
-            </div>
+                    </div>
+                    {isIntersection &&
+                        <>
+                    <div>
+                            <SharedAuthorVennDiagram sets={sets} selectedNode={selectedNode} setsColor={ confColor} />
+                        <div className="row justify-content-center align-items-center">
+                          {confColor.slice(0,confColor.length-1).map((color, index) => 
+                                <ColoredBox confColor={color} key={index} />
+                            )}
+                        </div>
+                        </div>
+                    </>
+                    }
             </Paper>}
         </Grid>
     )
