@@ -18,6 +18,7 @@ class NewNumberOfSharedWords extends Component {
       mulitSelectDefaultValues: [
         { value: "lak", label: "lak" },
         { value: "edm", label: "edm" },
+        { value: "aied", label: "aied" },
       ],
       selectedConferences: ["lak", "aied", "edm"],
       words: [
@@ -35,89 +36,50 @@ class NewNumberOfSharedWords extends Component {
       weights: [],
       series: [
         {
-          name: "No. of shared Topics",
-
-          data: [3, 4, 4, 5, 5, 5, 4, 3, 4, 4],
+          name: "lak, edm, aied",
+          data: [23, 34, 56, 43, 33],
         },
         {
-          name: "No. of shared keywords",
-          data: [4, 5, 6, 8, 7, 7, 6, 4, 10, 5],
+          name: "lak, edm",
+          data: [44, 56, 32, 52, 36],
+        },
+        {
+          name: "lak, aied",
+          data: [32, 46, 34, 52, 45],
+        },
+        {
+          name: "edm, aied",
+          data: [35, 40, 34, 38, 32],
         },
       ],
       options: {
-        chart: {
-          height: 350,
-          type: "bar",
-          stacked: false,
-        },
-        dataLabels: {
-          enabled: false,
-        },
         stroke: {
-          width: [1, 1, 4],
+          curve: "smooth",
         },
         xaxis: {
-          categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
+          categories: [
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+          ],
         },
         yaxis: [
           {
-            axisTicks: {
-              show: true,
-            },
-            axisBorder: {
-              show: true,
-              color: "#008FFB",
-            },
-            labels: {
-              style: {
-                colors: "#008FFB",
-              },
-            },
             title: {
-              text: "",
+              text: "No. of shared topics",
               style: {
                 color: "#008FFB",
               },
             },
-            tooltip: {
-              enabled: true,
-            },
-          },
-          {
-            seriesName: "Shared Topics",
-            opposite: true,
-            axisTicks: {
-              show: false,
-            },
-            axisBorder: {
-              show: true,
-              color: "#00E396",
-            },
-            labels: {
-              style: {
-                colors: "#00E396",
-              },
-            },
-            title: {
-              text: "",
-              style: {
-                color: "#00E396",
-              },
-            },
           },
         ],
-        tooltip: {
-          fixed: {
-            enabled: true,
-            position: "topLeft",
-            offsetY: 30,
-            offsetX: 60,
-          },
-        },
-        legend: {
-          horizontalAlign: "left",
-          offsetX: 40,
-        },
       },
     };
   }
@@ -189,21 +151,27 @@ class NewNumberOfSharedWords extends Component {
       .then((json) => {
         series = [];
         weights = [];
-        for (let index = 0; index < 2; index++) {
-          for (let i = 0; i < json.weights.length; i++) {
-            weights[i] = json.weights[i][index];
-          }
-          if (index == 0) {
-            series = series.concat([
-              { name: "No. of shared Topics", data: weights },
-            ]);
-          } else {
-            series = series.concat([
-              { name: "No. of shared keywords", data: weights },
-            ]);
-          }
-          weights = [];
-        }
+        // for (let index = 0; index < 2; index++) {
+        //   for (let i = 0; i < json.weights.length; i++) {
+        //     weights[i] = json.weights[i][index];
+        //   }
+        //   if (index == 0) {
+        //     // series = series.concat([
+        //     //   { name: "No. of shared Topics", data: weights },
+        //     // ]);
+        //   } else {
+        //     series = series.concat([
+        //       { name: "No. of shared Topics", data: weights },
+        //     ]);
+        //   }
+        //   weights = [];
+        // }
+        json.data.forEach((tuple) => {
+          series = series.concat([
+            { name: tuple[0]["name"], data: tuple[0]["data"] },
+          ]);
+        });
+        console.log("json.sharedYears: ", json.sharedYears);
         this.setState({
           selectConference: this.state.selectedConferences,
           active1: true,
@@ -219,7 +187,7 @@ class NewNumberOfSharedWords extends Component {
             ...this.state.options,
             xaxis: {
               ...this.state.options.xaxis,
-              categories: json.years,
+              categories: json.sharedYears,
             },
           },
 
@@ -245,7 +213,7 @@ class NewNumberOfSharedWords extends Component {
             name="selectOptions"
             isClearable
             isMulti
-            placeholder="Select conferences to compare"
+            placeholder="Select conferences to compare *"
             options={this.props.conferencesNames}
             value={this.props.conferencesNames.find(
               (obj) => obj.value === this.state.selectConference
@@ -290,8 +258,8 @@ class NewNumberOfSharedWords extends Component {
           <ReactApexChart
             options={this.state.options}
             series={this.state.series}
-            type="bar"
-            height={350}
+            type={this.props.chartType}
+            height={400}
           />
         </Grid>
       </Box>

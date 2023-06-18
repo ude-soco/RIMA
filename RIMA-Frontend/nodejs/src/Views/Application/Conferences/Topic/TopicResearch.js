@@ -1,7 +1,7 @@
 import React from "react";
 import Chart from "chart.js";
 import Select from "react-select";
-import WordCloud from "../../../components/LAKForms/WordCloud";
+import WordCloud from "../../../components/LAKForms/WordCloud.jsx";
 import {
   Card,
   CardHeader,

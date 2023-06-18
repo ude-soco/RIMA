@@ -10,13 +10,12 @@ from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
 from conferences.conference_utils_cql import cql_get_conference_events
 import urllib.parse
+from itertools import combinations
 
 
 # reviewed 12.04
 
 # done
-
-
 class TotalSharedAuthorsEvolutionView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -105,21 +104,19 @@ class TotalSharedAuthorsEvolutionView(APIView):
                          "years": shared_years
                          })
 
-# done
-# new class by I Islam
+# new class by Islam Abdelghaffar
 
-#new function 
+
 class ShareAuthorCompareTrends(APIView):
     def get(self, request, *args, **kwargs):
-        result_data = []
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'?')
         try:
             conferences_list = confutils.split_restapi_url(
                 url_splits_question_mark[1], r'&')
         except Exception as e:
-            return Response({"weights": result_data,
-                             "years": []
+            return Response({"data": [[]],
+                             "sharedYears": [[]]
                              })
         confs_events_list = []
         for conf in conferences_list:
@@ -132,14 +129,52 @@ class ShareAuthorCompareTrends(APIView):
         shared_years = compConfUtils.get_Shared_years_between_confs(
             confs_events_list=confs_events_list)
 
-        shared_years_events=compConfUtils.get_shared_events_basedOn_shared_years(
+        shared_years_events = compConfUtils.get_shared_events_basedOn_shared_years(
             confs_events_list, shared_years)
-        
-        shared_authors=compConfUtils.get_shared_authors_from_events(
-            shared_years,shared_years_events)
-        
+
+        shared_authors = compConfUtils.get_shared_authors_from_events(
+            shared_years, shared_years_events)
+
         return Response({
-            "data":shared_authors
+            "data": shared_authors,
+            "sharedYears": shared_years
+        })
+
+# new class by Islam Abdelghaffar
+
+
+class SharedKeywordCompareTrends(APIView):
+    def get(self, request, *args, **kwargs):
+        result_data = []
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        try:
+            conferences_list = confutils.split_restapi_url(
+                url_splits_question_mark[1], r'&')
+        except Exception as e:
+            return Response({"data": [[]],
+                             "sharedYears": [[]]
+                             })
+        confs_events_list = []
+        for conf in conferences_list:
+            conf_events = compConfUtils.get_conf_events(conf_name=conf)
+            confs_events_list.append({
+                "conference": conf,
+                "events": conf_events
+            })
+
+        shared_years = compConfUtils.get_Shared_years_between_confs(
+            confs_events_list=confs_events_list)
+
+        shared_years_events = compConfUtils.get_shared_events_keyword_basedOn_shared_years("keywords",
+                                                                                           confs_events_list, shared_years)
+
+        shared_authors = compConfUtils.get_shared_from_events("keywords",
+                                                              shared_years, shared_years_events)
+
+        return Response({
+            "data": shared_authors,
+            "sharedYears": shared_years
         })
 
 
@@ -216,6 +251,7 @@ class TotalSharedWordsNumberView(APIView):
                          })
 
 # done
+# updated by Islam Abdelghaffar
 
 
 class topWordsOverYears(APIView):
@@ -337,6 +373,43 @@ class CommonAuthorsview(APIView):
             "commontopics": ctx
         })
 
+# new class by Islam Abdelghaffar
+
+
+class SharedAuthorsBetweenEventsView(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits = confutils.split_restapi_url(
+            request.get_full_path(), r'/')[-1]
+        events = url_splits.split('&')
+        filtered_events = [event for event in events if event != ""]
+        final_sets = []
+        authors_name = []
+
+        if (len(filtered_events) == 0):
+            return Response({
+                "sets": final_sets,
+                "names": authors_name
+            })
+
+        events_authors = compConfUtils.get_events_authors(filtered_events)
+
+        all_combs = []
+        event_names = [item for item in filtered_events]
+        for r in range(1, len(event_names) + 1):
+            all_combs.extend(combinations(event_names, r))
+
+        print("all_combinations: ", all_combs)
+
+        results = compConfUtils.get_shared_authors_basedOn_combs(
+            events_authors, all_combs)
+
+        return Response({
+            "sets": results[0],
+            "names": results[1]
+        })
+
+# updated by Islam Abdelghaffar
+
 
 class AuthorEvents(APIView):
     def get(self, request, *args, **kwargs):
@@ -378,76 +451,7 @@ class AuthorEvents(APIView):
         })
 
 
-# class AuthorInterestsBar2(APIView):
-#     def get(self, request, *args, **kwargs):
-#         result_data = []
-#         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
-#         second_author = url_splits[-1]
-#         first_author = url_splits[-2]
-#         keyword_or_topic = url_splits[-3]
-#         second_event = url_splits[-4]
-#         first_event = url_splits[-5]
-#         # Islam Updated
-#         first_author_obj = Author.nodes.get(author_name=first_author)
-#         second_author_obj = Author.nodes.get(author_name=second_author)
-#         # Islam Updated
-#         first_author_interests = compConfUtils.get_author_interests2(
-#             first_author_obj, first_event, keyword_or_topic)
-
-#         sorted_data_first_author = dict(
-#             sorted(first_author_interests.items(), key=lambda item: item[1], reverse=True))
-
-#         print("Author interestsssssssss")
-#         print(first_author_interests)
-
-#         reduced_sorted_data_first_author = dict(
-#             itertools.islice(sorted_data_first_author.items(), 10))
-#         print("first Author interestsssssssss")
-#         print(reduced_sorted_data_first_author)
-#         # Islam Updated
-#         second_author_interests = compConfUtils.get_author_interests2(
-#             second_author_obj, second_event, keyword_or_topic)
-#         sorted_data_second_author = dict(
-#             sorted(second_author_interests.items(), key=lambda item: item[1], reverse=True))
-#         reduced_sorted_data_second_author = dict(
-#             itertools.islice(sorted_data_second_author.items(), 10))
-#         print("second Author interestsssssssss")
-#         print(reduced_sorted_data_second_author)
-
-#         authors_dict = {
-#             k: [reduced_sorted_data_first_author.get(k, 0),
-#                 reduced_sorted_data_second_author.get(k, 0)]
-#             for k in reduced_sorted_data_first_author.keys() | reduced_sorted_data_second_author.keys()
-#         }
-#         print("Author dictttttttttttttt")
-#         print(authors_dict)
-
-#         set_intersect_key = list(
-#             set(reduced_sorted_data_first_author.keys()).intersection(set(reduced_sorted_data_second_author.keys())))
-
-#         words = authors_dict.keys()
-#         weights = authors_dict.values()
-#         authors_name = [first_author, second_author]
-#         print(set_intersect_key, '-----------', words, '+++++++++',
-#               weights, '++++++++', authors_name, '------------')
-
-#         result_data.append(words)
-#         result_data.append(weights)
-#         result_data.append(authors_name)
-#         result_data.append(set_intersect_key)
-
-#         print('######################## HERE #########################')
-#         print(authors_dict)
-#         print('######################## HERE #########################')
-
-#         print(dict(itertools.islice(sorted_data_first_author.items(), 10)))
-#         print('############')
-#         print(dict(itertools.islice(sorted_data_second_author.items(), 10)))
-
-#         return Response({
-#             "authorInterests": result_data})
-
-# new func by Islam
+# new class by Islam Abdelghaffar
 class AuthorInterestsBar2 (APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
@@ -477,6 +481,8 @@ class AuthorInterestsBar2 (APIView):
             "second_author_data": second_author_data,
             "common_data": intersection
         })
+
+# updated by Islam Abdelghaffar
 
 
 class ConfEventPapers(APIView):
@@ -514,117 +520,8 @@ class ConfEventPapers(APIView):
         })
 
 # done
+# new class by Islam Abdelghaffar
 
-
-# class ComparePapersView(APIView):
-    # def get(self, request, *args, **kwargs):
-
-    #     abstract_title_str = ""
-    #     abstract_title_strr = ""
-    #     words_author = []
-    #     words_authorTwo = []
-    #     all_words = []
-    #     shared_words_final_data = []
-    #     result_data = []
-
-    #     url_path = request.get_full_path()
-    #     url_path = url_path.replace("%20", " ")
-    #     print("tHE PAAAAAAAAAAAATH")
-    #     print(url_path)
-    #     url_splits = confutils.split_restapi_url(url_path, r'/')
-    #     print("tHE PAAAAAAAAAAAATH 2222222")
-    #     print(url_splits)
-    #     secondEvent = url_splits[-1]
-    #     secondPaperTitle = url_splits[-2]
-    #     firstEvent = url_splits[-3]
-    #     firstPaperTitle = url_splits[-4]
-    #     Event_papers_JSON = []
-    #     print("eventsssss")
-    #     print(firstEvent)
-    #     print(secondEvent)
-    #     # Islam Updated
-    #     first_event_papers_data = compConfUtils.get_event_papers_data(
-    #         firstEvent)
-    #     second_event_papers_data = compConfUtils.get_event_papers_data(
-    #         secondEvent)
-
-    #     for paper in first_event_papers_data:
-    #         if paper.title == firstPaperTitle:
-    #             firstPaperAbstract = paper.abstract
-    #             print("Here is you lasssst test isa")
-    #             print(paper.title)
-    #             print(paper.abstract)
-
-    #     if firstPaperTitle or firstPaperAbstract:
-    #         abstract_title_str += firstPaperTitle + " " + firstPaperAbstract
-
-    #     firstKeywords = getKeyword(abstract_title_str, 'Yake', 600)
-
-    #     for paper in second_event_papers_data:
-    #         if paper.title == secondPaperTitle:
-    #             secondPaperAbstract = paper.abstract
-
-    #     if secondPaperTitle or secondPaperAbstract:
-    #         abstract_title_strr += secondPaperTitle + " " + secondPaperAbstract
-
-    #     secondKeywords = getKeyword(abstract_title_strr, 'Yake', 600)
-
-    #     for key, value in firstKeywords.items():
-    #         words_author.append(key)
-
-    #     for key, value in secondKeywords.items():
-    #         words_authorTwo.append(key)
-
-    #     first_event_papers_data1 = dict(
-    #         sorted(firstKeywords.items(), key=lambda item: item[1], reverse=True))
-    #     first_event_papers_data_final = dict(
-    #         itertools.islice(first_event_papers_data1.items(), 10))
-    #     second_event_papers_data1 = dict(
-    #         sorted(secondKeywords.items(), key=lambda item: item[1], reverse=True))
-    #     second_event_papers_data_final = dict(
-    #         itertools.islice(second_event_papers_data1.items(), 10))
-
-    #     all_words.append(words_author)
-    #     all_words.append(words_authorTwo)
-    #     print("all keywordssss keeeyssss")
-    #     print(words_author)
-
-    #     shared_words = [
-    #         value for value in words_author if value in words_authorTwo]
-    #     shared_words1 = set.intersection(*map(set, all_words))
-
-    #     for word in shared_words:
-    #         words_weights = []
-    #         wieghtOne = firstKeywords[word]
-    #         words_weights.append(wieghtOne)
-    #         wieghtTwo = secondKeywords[word]
-    #         words_weights.append(wieghtTwo)
-    #         shared_words_final_data.append(word)
-
-    #     print("Shaaaareeeed Wooooords")
-    #     print(shared_words)
-    #     print("firstKeywords Wooooords")
-    #     print(firstKeywords)
-    #     print("Shaaaareeeed Wooooords")
-    #     print(shared_words_final_data)
-    #     papers_dict = {
-    #         k: [first_event_papers_data_final.get(k, 0),
-    #             second_event_papers_data_final.get(k, 0)]
-    #         for k in first_event_papers_data_final.keys() | second_event_papers_data_final.keys()
-    #     }
-
-    #     words = papers_dict.keys()
-    #     weights = papers_dict.values()
-    #     result_data.append(words)
-    #     result_data.append(weights)
-
-    #     return Response({
-    #         "firstPaper": firstPaperTitle,
-    #         "firstKeywords": first_event_papers_data_final,
-    #         "secondKeywords": second_event_papers_data_final,
-    #         "paperInterests": result_data,
-    #         "Topiclist": shared_words_final_data
-    #     })
 
 class ComparePapersView(APIView):
     def get(self, request, *args, **kwargs):
@@ -663,6 +560,8 @@ class ComparePapersView(APIView):
         return Response({
             "data": data
         })
+
+# updated by Islam Abdelghaffar
 
 
 class getPapersOfWords(APIView):
@@ -722,6 +621,8 @@ class getPapersOfWords(APIView):
             "SecondEventValues": second_event_values
         })
 
+# updated by Islam Abdelghaffar
+
 
 class NewconferencesSharedWordsBarView(APIView):
     def get(self, request, *args, **kwargs):
@@ -768,6 +669,8 @@ class NewconferencesSharedWordsBarView(APIView):
         print('result_data')
 
         return Response({'Topiclist': result_data})
+
+# updated by Islam Abdelghaffar
 
 
 class AuthorsPapersEvolutionView(APIView):
@@ -836,6 +739,8 @@ class AuthorsPapersEvolutionView(APIView):
                          "years": years_range
                          })
 
+# updated by Islam Abdelghaffar
+
 
 class TotalAuthorsPublicationsEvolution(APIView):
     def get(self, request, *args, **kwargs):
@@ -878,7 +783,9 @@ class TotalAuthorsPublicationsEvolution(APIView):
         return Response(
             data
         )
+
 # done
+# updated by Islam Abdelghaffar
 
 
 class MultipleTopicAreaView(APIView):
@@ -918,6 +825,7 @@ class MultipleTopicAreaView(APIView):
         })
 
 # done
+# updated by Islam Abdelghaffar
 
 
 class confEvents(APIView):
@@ -958,6 +866,8 @@ class confEvents(APIView):
                 conferences_events_JSON
 
         })
+
+# updated by Islam Abdelghaffar
 
 
 class VennOverview(APIView):
@@ -1008,6 +918,8 @@ class VennOverview(APIView):
             "commontopics": ctx
         })
 
+# new class created by Islam Abdelghaffar
+
 
 class getRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
@@ -1020,15 +932,16 @@ class getRelavantPublicationsList(APIView):
         keywordTopic_name = conferences_list[-1]
         publication_List = compConfUtils.get_relavant_publication(
             eventname, keyword_or_topic, keywordTopic_name)
-        final_pubs_list = [{
-            "title": pub.title,
-            "data": {
+        if publication_List is not None:
+            final_pubs_list = [{
                 "title": pub.title,
-                "abstract": pub.abstract,
-                "years": pub.years,
-                "url": pub.urls
-            }}for pub in publication_List]
+                "data": {
+                    "title": pub.title,
+                    "abstract": pub.abstract,
+                    "years": pub.years,
+                    "url": pub.urls
+                }}for pub in publication_List]
 
-        return Response({
-            "publicationList": final_pubs_list
-        })
+            return Response({
+                "publicationList": final_pubs_list
+            })
