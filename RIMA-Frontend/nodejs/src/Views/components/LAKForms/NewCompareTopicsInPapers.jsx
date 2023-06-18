@@ -308,7 +308,7 @@ class NewCompareTopicsInPapers extends Component {
         <Grid container xs={12} md={12} spacing={3}>
           <Grid item md={5} xs={5}>
             <Select
-              placeholder="First conference"
+              placeholder="First conference *"
               options={this.props.conferencesNames}
               value={this.props.conferencesNames.find(
                 (obj) => obj.value === this.state.selectConference
@@ -318,7 +318,7 @@ class NewCompareTopicsInPapers extends Component {
           </Grid>
           <Grid item md={5} xs={5}>
             <Select
-              placeholder="First conference event "
+              placeholder="First conference event *"
               options={this.state.confevents}
               value={this.state.confevents.find(
                 (obj) => obj.value === this.state.selectedEvent
@@ -331,7 +331,7 @@ class NewCompareTopicsInPapers extends Component {
         <Grid container xs={12} md={12} spacing={3}>
           <Grid item md={5} xs={5}>
             <Select
-              placeholder="Second conference"
+              placeholder="Second conference *"
               options={this.props.conferencesNames}
               value={this.props.conferencesNames.find(
                 (obj) => obj.value === this.state.selectConferenceTwo
@@ -341,7 +341,7 @@ class NewCompareTopicsInPapers extends Component {
           </Grid>
           <Grid item md={5} xs={5}>
             <Select
-              placeholder="Second conference event"
+              placeholder="Second conference event *"
               options={this.state.confeventsTwo}
               value={this.state.confeventsTwo.find(
                 (obj) => obj.value === this.state.selectedEventTwo

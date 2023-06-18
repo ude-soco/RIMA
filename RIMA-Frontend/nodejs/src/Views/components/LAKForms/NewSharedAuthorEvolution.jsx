@@ -20,6 +20,7 @@ class NewSharedAuthorEvolution extends Component {
       mulitSelectDefaultValues: [
         { value: "lak", label: "lak" },
         { value: "edm", label: "edm" },
+        { value: "aied", label: "aied" },
       ],
       selectedConferences: ["lak", "aied", "edm"],
       words: [
@@ -37,8 +38,20 @@ class NewSharedAuthorEvolution extends Component {
       weights: [],
       series: [
         {
-          name: "No. of shared authors",
-          data: [2, 3, 16, 11, 41, 61, 43, 15, 36, 16],
+          name: "lak, edm, aied",
+          data: [23, 34, 56, 43, 33],
+        },
+        {
+          name: "lak, edm",
+          data: [44, 56, 32, 52, 36],
+        },
+        {
+          name: "lak, aied",
+          data: [32, 46, 34, 52, 45],
+        },
+        {
+          name: "edm, aied",
+          data: [35, 40, 34, 38, 32],
         },
       ],
 
@@ -230,7 +243,7 @@ class NewSharedAuthorEvolution extends Component {
             name="selectOptions"
             isClearable
             isMulti
-            placeholder="Select conferences to compare"
+            placeholder="Select conferences to compare *"
             options={this.props.conferencesNames}
             value={this.props.conferencesNames.find(
               (obj) => obj.value === this.state.selectConference
@@ -250,7 +263,7 @@ class NewSharedAuthorEvolution extends Component {
           <ReactApexChart
             options={this.state.options}
             series={this.state.series}
-            type="area"
+            type={this.props.chartType}
             height={350}
           />
         </Grid>

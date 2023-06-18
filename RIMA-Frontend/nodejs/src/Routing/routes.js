@@ -14,7 +14,7 @@ import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
 import PublicationRecommendation from "../Views/Application/Publications/Recommendation/Publications";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
-import ConferenceBar from "../Views/Application/Conferences/Topic/ConferenceBar";
+import ConferenceBar from "../Views/Application/Conferences/Topic/ConferenceBar.jsx";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
 // import AuthorVenn from "Views/components/LAKForms/AuthorVenn";
 import RecommendTopic from "Views/RecommendTopic";

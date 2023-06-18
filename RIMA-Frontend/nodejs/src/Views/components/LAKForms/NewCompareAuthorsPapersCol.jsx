@@ -383,7 +383,7 @@ class NewCompareAuthorsPapersCol extends Component {
                 name="selectOptions"
                 isClearable
                 isMulti
-                placeholder="Select Option"
+                placeholder="Select Option *"
                 options={this.props.conferencesNames}
                 value={this.props.conferencesNames.find(
                   (obj) => obj.value === this.state.selectConference

@@ -314,7 +314,7 @@ class NewSharedAuthors extends Component {
         <Grid container spacing={3}>
           <Grid item md={5} xs={12}>
             <Select
-              placeholder="First conference"
+              placeholder="First conference *"
               options={this.props.conferencesNames}
               value={this.props.conferencesNames.find(
                 (obj) => obj.value === this.state.selectConference
@@ -324,7 +324,7 @@ class NewSharedAuthors extends Component {
           </Grid>
           <Grid item md={5} xs={12}>
             <Select
-              placeholder="First conference event "
+              placeholder="First conference event *"
               options={this.state.confevents}
               value={this.state.confevents.find(
                 (obj) => obj.value === this.state.selectedEvent
@@ -337,7 +337,7 @@ class NewSharedAuthors extends Component {
         <Grid container spacing={3}>
           <Grid item md={5} xs={12}>
             <Select
-              placeholder="Second conference"
+              placeholder="Second conference *"
               options={this.props.conferencesNames}
               value={this.props.conferencesNames.find(
                 (obj) => obj.value === this.state.selectConferenceTwo
@@ -347,7 +347,7 @@ class NewSharedAuthors extends Component {
           </Grid>
           <Grid item md={5} xs={12}>
             <Select
-              placeholder="Second conference event"
+              placeholder="Second conference event *"
               options={this.state.confeventsTwo}
               value={this.state.confeventsTwo.find(
                 (obj) => obj.value === this.state.selectedEventTwo
@@ -384,7 +384,7 @@ class NewSharedAuthors extends Component {
               <Grid container spacing={3}>
                 <Grid item md={5} xs={12}>
                   <Select
-                    placeholder="Third conference"
+                    placeholder="Third conference (optional)"
                     options={this.props.conferencesNames}
                     value={this.props.conferencesNames.find(
                       (obj) => obj.value === this.state.thirdSelectedConf
@@ -394,7 +394,7 @@ class NewSharedAuthors extends Component {
                 </Grid>
                 <Grid item md={5} xs={12}>
                   <Select
-                    placeholder="Third conference event"
+                    placeholder="Third conference event  (optional)" 
                     options={this.state.confeventsThird}
                     value={this.state.confeventsTwo.find(
                       (obj) => obj.value === this.state.selectedEventThird
