@@ -1,37 +1,75 @@
-import React, {useEffect} from "react"
-import  { makeStyles } from "@material-ui/core/styles";
-import { TextField, Button, Typography } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import SendIcon from "@mui/icons-material/Send";
+import { Card, CardActionArea, Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  form: {
-    width: 500,
-    margin: "0 auto",
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
+  card: {
+    border: "1px solid #e4e4e4",
+    borderRadius: 6,
+    margin: 4,
     alignItems: "center"
   },
-  button: {
-    marginTop: theme.spacing(2),
-    alignSelf: "flex-end",
-    color: "green"
+  imageContainer: {
+    height: "100px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  h1: {
-    marginBottom: "50px"
-  },
-  icon: { paddingLeft: "10px" }
 }));
 
 function Contact(props) {
-  const {authorId} = props;
-  let linkStr = ("https://www.semanticscholar.org/author/"+authorId);
+  const { authorId } = props;
+  const classes = useStyles();
 
   return (
-    <form>
-      <h1>Visit this website to contact this user</h1>
-      <a href={linkStr}>Click me</a>
-    </form>
+    <>
+      <Grid container>
+        <Grid item xs={12} align="center" style={{ paddingBottom: 16 }}>
+          <Typography variant="h5">
+            Visit this user's Semantic Scholar page
+          </Typography>
+        </Grid>
+
+        <Grid container>
+          {authorId ? (
+            <Grid item sm={8} md={4} align="center">
+              <Card elevation={0} className={classes.card}>
+                <CardActionArea
+                  onClick={() =>
+                    window.open(
+                      `https://www.semanticscholar.org/author/${authorId}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  <Grid container align="center" style={{ padding: 24 }}>
+                    <Grid item xs>
+                      <Typography align="center">Semantic Scholar</Typography>
+                    </Grid>
+                    <Grid item xs={12} className={classes.imageContainer}>
+                      <img
+                        src="/images/ss-logo.png"
+                        height="100"
+                        alt="Semantic Scholar Logo"
+                      />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography align="center">
+                        ID: <b>{authorId}</b>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ) : (
+            <></>
+          )}
+        </Grid>
+      </Grid>
+    </>
   );
 }
+
 export default Contact;
