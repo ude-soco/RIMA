@@ -14,6 +14,7 @@ export default function Connect (props) {
     const [dataCollected, setDataCollected]=useState(false)
     const [myInterests, setMyInterests]=useState([])
     const [noa, setNoa] = useState(3)
+    const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
     const [selectedNames, setSelectedNames] = useState([])
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
@@ -25,7 +26,7 @@ export default function Connect (props) {
         setFetch(true)
         console.log("submit")
         setDataCollected(false);
-        RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames })
+        RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames, papers})
           .then((res) => {
             const {data}=res
             setData(data.data)
@@ -86,39 +87,38 @@ export default function Connect (props) {
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
-              {dataCollected?
-              <>
-                    <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-                        <TextField  id="noa"
-                        label="Number"
-                        type="number"
-                        variant="outlined"
-                        size="small"
-                        onChange = {(e) => setNoa(parseInt(e.target.value, 10))}
-                        defaultValue = "3"
-                        color="primary"
-                        style={{ width: "7.5%" }}      
-                        inputProps={{
-                            min: 0,
-                            max: 10,
-                            step: 1,
-                        }}  
-                        /> 
-                        <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
-                        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleMoreFilters} >
-                            MORE
-                        </Button>
-                        <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
-                            <DialogContent>
-                                <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange}/>
-                            </DialogContent>
-                        </Dialog>
-                    </Box>
+            
+              
+                                
+                    {dataCollected? 
                     
-                        <ConnectedGraph data={data} myInterests={myInterests}/>
-                </>     :<Loading/>
-                    }
-             
+                    <><Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+                            <TextField id="noa"
+                                label="Number"
+                                type="number"
+                                variant="outlined"
+                                size="small"
+                                onChange={(e) => setNoa(parseInt(e.target.value, 10))}
+                                defaultValue="3"
+                                color="primary"
+                                style={{ width: "7.5%" }}
+                                inputProps={{
+                                    min: 0,
+                                    max: 10,
+                                    step: 1,
+                                }} />
+                            <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
+                            <Button startIcon={<FilterListIcon />} color="primary" onClick={handleMoreFilters}>
+                                MORE
+                            </Button>
+                            <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
+                                <DialogContent>
+                                    <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
+                                </DialogContent>
+                            </Dialog>
+                        </Box><ConnectedGraph data={data} myInterests={myInterests} /></>
+                        
+                        :<Loading/>}
                 </Grid>
             </Grid>
         </>

@@ -32,10 +32,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MoreFilters(props) {
  
-  const {data}=props
+  const {data} = props
+  
   
 
-  const nameId = data.citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
+  const nameId = data.filter//citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
+  const namesList = Object.values(nameId).map((value) => value[0])
+  console.log(namesList)
   console.log(nameId, "TEST")
 
   console.log(data, "DATAAAAAAAAAAAAAAA")
@@ -49,8 +52,8 @@ export default function MoreFilters(props) {
 
   const handleCheckboxChange = (event) => {
     const{value} = event.target
-    const id = nameId[value]
-    console.log(value, "VALUE")
+    const id = (Object.entries(nameId).find(([key, value2]) => value2[0] === value))[0]
+    console.log(id, "VALUE")
     if(!(selectedNames.includes(id)))
     {
     setSelectedNames([...selectedNames, id])
@@ -75,40 +78,18 @@ export default function MoreFilters(props) {
 
   return (
     <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth >
-      <DialogTitle className={classes.title}>More Filters </DialogTitle>
+      <DialogTitle className={classes.title}>Hide Authors you already know </DialogTitle>
       <DialogContent dividers>
 
-      <Typography variant="h6"  className={classes.title}>Hide</Typography>
+      <Typography variant="h6"  className={classes.title}>Select</Typography>
             <FormGroup className={classes.checkBox}>
-              {uniqNames.map(name =>(<FormControlLabel key = {name} control={<Checkbox /*checked={selectedNames.includes(nameId[name])}*/ 
-              onChange={handleCheckboxChange} value={name}/>} label={name} />))} 
+              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} value={name}/>} label={name} />))} 
             </FormGroup>
           
           
           <Divider className={classes.divider}/>
 
-          <Typography variant="h6" className={classes.title}>Time Period</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="This Year" />
-            <FormControlLabel control={<Checkbox />} label="Last 5 Years" />
-            <FormControlLabel control={<Checkbox />} label="Last 10 Years" />
-          </FormGroup>
-          <Divider className={classes.divider}/>
-
-          <Typography variant="h6" className={classes.title}>Paper</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-          </FormGroup>
-          <Divider className={classes.divider}/>
-
-          <Typography variant="h6" className={classes.title}>Themes</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-          </FormGroup>
+          
           
 
          

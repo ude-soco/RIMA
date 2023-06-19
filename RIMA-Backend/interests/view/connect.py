@@ -72,9 +72,8 @@ def getRefCitAuthorsPapers(authorId, method):
     return results
 
 def getMostCitedReferenced(authorId, method, n, filter):
-    #print(filter)
+    
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
-    #print(allCitsRefs)
     listAuthors=allCitsRefs["listAllAuthors"]
     dictAuthorsName=allCitsRefs["authorsNames"]
      
@@ -82,14 +81,10 @@ def getMostCitedReferenced(authorId, method, n, filter):
         while i in listAuthors:
             listAuthors.remove(i)
 
-
-    #print("--------------------------------------")
-    ##print(listAuthors)
-    #print("--------------------------------------")
-    ##print(dictAuthorsName)
-    #print("--------------------------------------")
     topN=list(Counter(listAuthors).most_common(n))
     print(topN)
+
+
     api=SemanticScholarAPI()
 
     allAuthors=[]
@@ -148,27 +143,40 @@ def getInterests(authorId):
     return interests
 
 def getConnectData(id):
+
     authorId=id["data"]
     noa = int(id["noa"])
+    doIt = bool(id["papers"])
+    print(doIt)
     selectedNames = id["selectedNames"]
     print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
-    print("get most authors who cited me the most")
-    #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
-    print("get authors Who I cited the most")
-    #authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
+    if(doIt):
+        print("get most authors who cited me the most")
+        authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
+        print("get authors Who I cited the most")
+        authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
+        x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
+        x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
+    else:
+        authorsReferences = authorsCitedMe = []
+        x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
+        x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
+        print(x)
+        
+
     """ 
     with open("authorsReferences2.json", "w") as myfile:
             json.dump(authorsReferences, myfile)
     with open("authorsCitedMe2.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-       """
+    
     with open("authorsReferences2.json", "r") as myfile:
            authorsReferences = json.load(myfile)
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
-    
-    data={"citations":authorsCitedMe, "references":authorsReferences}
+    """
+    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x}
     return data
  
 def getWikiInfo(interestsData):
@@ -184,3 +192,14 @@ def getWikiInfo(interestsData):
     #answer={"test":"test", "page":page, "dataInterst":dataInterest, "data":data}
 
     return pageData
+
+def testMet(authorId, method, filter):
+    allCitsRefs = getRefCitAuthorsPapers(authorId=authorId, method=method)
+    listAuthors = allCitsRefs["listAllAuthors"]
+    dictAuthorsName = allCitsRefs["authorsNames"]
+    for i in filter:
+        while i in listAuthors:
+            listAuthors.remove(i)
+    topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10)))]
+    x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} 
+    return x
