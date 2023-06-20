@@ -9,14 +9,14 @@ import MoreFilters from "./MoreFilters"
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)
-    console.log(data, "const")
+    console.log(data.selectedNames, "const")
     console.log(data, "useState")
     const [dataCollected, setDataCollected]=useState(false)
     const [myInterests, setMyInterests]=useState([])
     const [noa, setNoa] = useState(3)
     const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
-    const [selectedNames, setSelectedNames] = useState([])
+    const [selectedNames, setSelectedNames] = useState([data.selectedNames])
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     console.log("test", fetching)
 

@@ -176,7 +176,7 @@ def getConnectData(id):
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
     """
-    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x}
+    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames}
     return data
  
 def getWikiInfo(interestsData):
@@ -197,9 +197,9 @@ def testMet(authorId, method, filter):
     allCitsRefs = getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors = allCitsRefs["listAllAuthors"]
     dictAuthorsName = allCitsRefs["authorsNames"]
-    for i in filter:
+    """for i in filter:
         while i in listAuthors:
-            listAuthors.remove(i)
-    topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10)))]
+            listAuthors.remove(i)"""
+    topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
     x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} 
     return x

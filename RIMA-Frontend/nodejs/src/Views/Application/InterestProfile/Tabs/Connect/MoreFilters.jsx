@@ -34,10 +34,11 @@ export default function MoreFilters(props) {
  
   const {data} = props
   
-  
+  const [selectedNames, setSelectedNames] = useState(data.selectedNames);
 
   const nameId = data.filter//citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
   const namesList = Object.values(nameId).map((value) => value[0])
+  
   console.log(namesList)
   console.log(nameId, "TEST")
 
@@ -47,7 +48,8 @@ export default function MoreFilters(props) {
   const uniqNames = [...new Set(names)]
   console.log(names, uniqNames)
 
-  const [selectedNames, setSelectedNames] = useState([]);
+  
+  
 
 
   const handleCheckboxChange = (event) => {
@@ -83,17 +85,12 @@ export default function MoreFilters(props) {
 
       <Typography variant="h6"  className={classes.title}>Select</Typography>
             <FormGroup className={classes.checkBox}>
-              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} value={name}/>} label={name} />))} 
+              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} 
+              value={name} checked={selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
             </FormGroup>
-          
-          
+                  
           <Divider className={classes.divider}/>
-
-          
-          
-
-         
-
+                  
           <Box
             style={{
               display: "flex",

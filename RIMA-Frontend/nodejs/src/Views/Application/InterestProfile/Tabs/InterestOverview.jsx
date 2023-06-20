@@ -88,7 +88,7 @@ export default function InterestOverview () {
             })
 
         
-        RestAPI.getConnectData({data:currentUser.author_id, noa: 3, selectedNames: [], papers: false}).then(res=>{
+        RestAPI.getConnectData({data:currentUser.author_id, noa: 3, selectedNames: '', papers: false}).then(res=>{
             const {data}=res
             setDataConnect(data.data)
         })
