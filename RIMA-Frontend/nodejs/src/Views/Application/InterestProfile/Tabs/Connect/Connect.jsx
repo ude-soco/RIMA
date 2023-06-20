@@ -115,7 +115,7 @@ export default function Connect (props) {
                                 MORE
                                 
                             </Button>
-                            {button?<Button disabled><ArrowBackIcon htmlColor="red"/> <Typography color="primary"> Click me </Typography ></Button>:<></>}
+                            {button?<Button disabled><ArrowBackIcon htmlColor="red"/> <Typography color="primary"> Please Configurate</Typography ></Button>:<></>}
                             <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                                 <DialogContent>
                                     <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
