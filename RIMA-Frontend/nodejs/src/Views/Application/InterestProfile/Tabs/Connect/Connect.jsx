@@ -1,11 +1,12 @@
 import * as React from "react";
 import ConnectedGraph from "./ConnectedGraph"
-import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent} from "@material-ui/core";
+import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent,IconButton } from "@material-ui/core";
 import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
 import Help from "./Help"
 import FilterListIcon from "@material-ui/icons/FilterList";
 import MoreFilters from "./MoreFilters"
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)
@@ -16,6 +17,7 @@ export default function Connect (props) {
     const [noa, setNoa] = useState(3)
     const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
+    const [button, setButton] = useState(true)
     const [selectedNames, setSelectedNames] = useState([data.selectedNames])
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     console.log("test", fetching)
@@ -26,6 +28,7 @@ export default function Connect (props) {
         setFetch(true)
         console.log("submit")
         setDataCollected(false);
+        setButton(false)
         RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames, papers})
           .then((res) => {
             const {data}=res
@@ -108,15 +111,18 @@ export default function Connect (props) {
                                     step: 1,
                                 }} />
                             <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
-                            <Button startIcon={<FilterListIcon />} color="primary" onClick={handleMoreFilters}>
+                            <Button color="primary" onClick={handleMoreFilters}>
                                 MORE
+                                
                             </Button>
+                            {button?<Button disabled><ArrowBackIcon htmlColor="red"/> <Typography color="primary"> Click me </Typography ></Button>:<></>}
                             <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                                 <DialogContent>
                                     <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
                                 </DialogContent>
                             </Dialog>
-                        </Box><ConnectedGraph data={data} myInterests={myInterests} /></>
+                           </Box><ConnectedGraph data={data} myInterests={myInterests} />
+                        </>
                         
                         :<Loading/>}
                 </Grid>
