@@ -1,4 +1,4 @@
-import React, {useMemo, useEffect} from "react"
+import React, {useEffect} from "react"
 import {
     Dialog,
     DialogActions,
@@ -15,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 import WikiDesc from "./WikiDesc";
 import RestAPI from "../../../../../Services/api";
 import {Loading} from "../Loading";
-import { extractSets, generateCombinations, VennDiagram } from '@upsetjs/react';
 
 const SVGVenn = (props) => {
     const { authorInterest, authorName, userName } = props;
@@ -225,32 +224,6 @@ const SVGVenn = (props) => {
         posUser = posUser - 10;
     }
 
-    function GettingStarted() {
-        const elems = useMemo(
-          () => [
-            { name: 'A', sets: ['S1', 'S2'] },
-            { name: 'B', sets: ['S1'] },
-            { name: 'C', sets: ['S2'] },
-            { name: 'D', sets: ['S1', 'S3'] },
-          ],
-          []
-        );
-      
-        const sets = useMemo(() => extractSets(elems), [elems]);
-        const combinations = useMemo(() => generateCombinations(sets), [sets]);
-      
-        const [selection, setSelection] = React.useState(null);
-        return (
-          <VennDiagram
-            sets={sets}
-            combinations={combinations}
-            width={780}
-            height={400}
-            selection={selection}
-            onHover={setSelection}
-          />
-        );
-    }
 
     return (
         <>
