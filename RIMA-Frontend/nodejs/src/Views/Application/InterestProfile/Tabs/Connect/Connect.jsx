@@ -94,7 +94,7 @@ export default function Connect (props) {
     return (
         <>
 
-            <Button onClick={testPrint}>Test</Button>
+            
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
