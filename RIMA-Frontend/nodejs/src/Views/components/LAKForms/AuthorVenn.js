@@ -1,10 +1,10 @@
 //Done by Swarna
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import "d3-transition";
-import {BASE_URL_CONFERENCE} from "../../../Services/constants";
-import {Label} from "reactstrap";
+import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { Label } from "reactstrap";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -12,7 +12,7 @@ import "tippy.js/animations/scale.css";
 // Themes begin
 // Themes end
 
-import {Button, Row, Col} from "reactstrap";
+import { Button, Row, Col } from "reactstrap";
 
 window.$value = "";
 
@@ -51,12 +51,17 @@ class AuthorVenn extends Component {
   }
 
   handleToogle = (status) => {
-    this.setState({imageTooltipOpen: status});
+    this.setState({ imageTooltipOpen: status });
     console.log(this.state.imageTooltipOpen);
   };
 
   componentWillMount() {
-    fetch(BASE_URL_CONFERENCE + "getauthorsyearlist/" + this.props.conferenceName +  "/all years")
+    fetch(
+      BASE_URL_CONFERENCE +
+        "getauthorsyearlist/" +
+        this.props.conferenceName +
+        "/all years"
+    )
       .then((response) => response.json())
       .then((json) => {
         console.log("json", json);
@@ -96,15 +101,17 @@ class AuthorVenn extends Component {
       display1: "none",
       loader: true,
     });
-    var selectVal = this.state.selectVal;
+    // var selectVal = this.state.selectVal;
     fetch(
       BASE_URL_CONFERENCE +
-      "authorconfcomparison/" + this.props.conferenceName +"/" +
-      e.target.value +
-      "/" +
-      this.state.author +
-      "/" +
-      this.state.year
+        "authorconfcomparison/" +
+        this.props.conferenceName +
+        "/" +
+        e.target.value +
+        "/" +
+        this.state.author +
+        "/" +
+        this.state.year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -130,12 +137,14 @@ class AuthorVenn extends Component {
 
     fetch(
       BASE_URL_CONFERENCE +
-      "authorconfcomparison/" + this.props.conferenceName +"/" +
-      e.target.value +
-      "/" +
-      this.state.author +
-      "/" +
-      this.state.year
+        "authorconfcomparison/" +
+        this.props.conferenceName +
+        "/" +
+        e.target.value +
+        "/" +
+        this.state.author +
+        "/" +
+        this.state.year
     )
       .then((response) => response.json())
       .then((json) => {
@@ -166,7 +175,7 @@ class AuthorVenn extends Component {
       display1,
     } = this.state;
 
-    const data  = this.props.confEvents;
+    const data = this.props.confEvents;
 
     //var{items,arr_keys,arr_vals}=this.state;
     if (isLoaded) {
@@ -174,12 +183,12 @@ class AuthorVenn extends Component {
         <>
           <div>
             <h2>Common Topics/Keywords - Researcher and Conference</h2>
-            <br/>
+            <br />
             <p>
               This visualization displays the common topics/keywords of selected
               researcher and selected year of conference
             </p>
-            <br/>
+            <br />
             <div>
               <Row>
                 <Col>
@@ -190,7 +199,7 @@ class AuthorVenn extends Component {
                     value={items_authors.find((obj) => obj.value === author)}
                     onChange={this.selectAuthor}
                   />
-                  <div style={{display: txtdisplay, color: "green"}}>
+                  <div style={{ display: txtdisplay, color: "green" }}>
                     <Label>{textholder}</Label>
                   </div>
                   {/* <Input type="text" name="authorid" id="authorid" placeholder="Enter authorid" onMouseLeave={this.handleInput}/> */}
@@ -206,7 +215,7 @@ class AuthorVenn extends Component {
                   />
                 </Col>
               </Row>
-              <br/>
+              <br />
               <Button
                 outline
                 color="primary"
@@ -250,8 +259,8 @@ class AuthorVenn extends Component {
                 </div>
               )}
 
-              <br/>
-              <br/>
+              <br />
+              <br />
 
               <div
                 style={{
@@ -275,7 +284,7 @@ class AuthorVenn extends Component {
 
               <img
                 src={`data:image/png;base64,${items_y1}`}
-                style={{marginLeft: "50px", display: display1}}
+                style={{ marginLeft: "50px", display: display1 }}
               />
             </div>
           </div>
@@ -286,12 +295,12 @@ class AuthorVenn extends Component {
         <>
           <div>
             <h2>Common Topics/Keywords - Researcher and Conference</h2>
-            <br/>
+            <br />
             <p>
               This visualization displays the common topics/keywords of selected
               researcher and selected year of conference
             </p>
-            <br/>
+            <br />
             <div>
               <Row>
                 <Col>
@@ -303,7 +312,7 @@ class AuthorVenn extends Component {
                     value={items_authors.find((obj) => obj.value === author)}
                     onChange={this.selectAuthor}
                   />
-                  <div style={{display: txtdisplay, color: "green"}}>
+                  <div style={{ display: txtdisplay, color: "green" }}>
                     <Label>{textholder}</Label>
                   </div>
                 </Col>
@@ -319,7 +328,7 @@ class AuthorVenn extends Component {
                 </Col>
               </Row>
 
-              <br/>
+              <br />
               <Button
                 outline
                 color="primary"

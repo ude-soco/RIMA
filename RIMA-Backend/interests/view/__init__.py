@@ -1,1 +1,1 @@
-from interests.view.interests import *
+from .interests import *

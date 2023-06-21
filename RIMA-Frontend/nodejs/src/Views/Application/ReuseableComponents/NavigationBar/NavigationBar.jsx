@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {useHistory} from "react-router-dom";
-import {logout} from "../../../../Services/helper";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { logout } from "../../../../Services/helper";
 import SideBar from "./SideBar";
 import {
   AppBar,
@@ -23,25 +23,27 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import PersonIcon from '@material-ui/icons/Person';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import PersonIcon from "@material-ui/icons/Person";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import MenuIcon from "@material-ui/icons/Menu";
-import {getRandomColor, toFirstLetter} from "../../../../Services/utils/functions";
-
+import {
+  getRandomColor,
+  toFirstLetter,
+} from "../../../../Services/utils/functions";
 
 const drawerWidth = 320;
 let avatarColor = getRandomColor();
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   drawer: {
     [theme.breakpoints.up("lg")]: {
       width: drawerWidth,
-      flexShrink: 0
+      flexShrink: 0,
     },
   },
   appBar: {
@@ -50,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     [theme.breakpoints.up("lg")]: {
-      display: "none"
+      display: "none",
     },
     color: theme.palette.common.white,
   },
@@ -58,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     // backgroundColor: "#172B4D",
     width: drawerWidth,
-    zIndex: 6
+    zIndex: 6,
   },
   buttonSettings: {
     color: theme.palette.common.white,
@@ -67,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     backgroundColor: avatarColor,
     color: theme.palette.common.white,
-    marginLeft: theme.spacing(3)
+    marginLeft: theme.spacing(3),
   },
   avatarProfile: {
     backgroundColor: avatarColor,
@@ -75,57 +77,55 @@ const useStyles = makeStyles((theme) => ({
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
   popper: {
     zIndex: 9,
-    width: 220
-  }
+    width: 220,
+  },
 }));
-
 
 export default function NavigationBar() {
   const [openHelp, setOpenHelp] = useState(null);
   const [openProfile, setOpenProfile] = useState(null);
   const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [selection, setSelection] = useState("interestOverview");
-  const firstname = localStorage.getItem('name');
-  const lastname = localStorage.getItem('lastname');
+  const [selection, setSelection] = useState("publicationRecommendation");
+  const firstname = localStorage.getItem("name");
+  const lastname = localStorage.getItem("lastname");
   const userName = toFirstLetter(firstname) + toFirstLetter(lastname);
   const welcome = firstname + " " + lastname;
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles();
 
-
   const toggleDrawer = () => {
     setOpenLeftDrawer(!openLeftDrawer);
-  }
+  };
 
   const toggleHelpList = (e) => {
     setOpenHelp(e.currentTarget);
-  }
+  };
 
   const toggleProfileList = (e) => {
     setOpenProfile(e.currentTarget);
-  }
+  };
 
   const openSettings = () => {
     setOpenProfile(null);
-    setSelection("myProfile")
-    history.push('/app/user-profile');
-  }
+    setSelection("myProfile");
+    history.push("/app/user-profile");
+  };
 
   const handleLogout = () => {
     setOpenProfile(null);
     setLoggingOut(!loggingOut);
     logout();
-  }
+  };
 
   return (
     <>
-      <CssBaseline/>
+      <CssBaseline />
 
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -135,23 +135,23 @@ export default function NavigationBar() {
             onClick={toggleDrawer}
             className={classes.menuButton}
           >
-            <MenuIcon/>
+            <MenuIcon />
           </IconButton>
 
           <Grid container alignItems="center">
-
             {/* Logo */}
             <Grid item xs>
-              <img src={"/images/rimaLogo.svg"} height='38' alt="Logo"/>
+              <img src={"/images/rimaLogo.svg"} height="38" alt="Logo" />
             </Grid>
-
 
             {/* Help button */}
             <Grid item>
               <Tooltip arrow title="Support">
-                <IconButton className={classes.buttonSettings}
-                            onClick={toggleHelpList}>
-                  <HelpOutlineIcon/>
+                <IconButton
+                  className={classes.buttonSettings}
+                  onClick={toggleHelpList}
+                >
+                  <HelpOutlineIcon />
                 </IconButton>
               </Tooltip>
 
@@ -159,28 +159,39 @@ export default function NavigationBar() {
                 id="simple-menu"
                 anchorEl={openHelp}
                 getContentAnchorEl={null}
-                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
-                transformOrigin={{vertical: "top", horizontal: "right"}}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
                 open={Boolean(openHelp)}
                 onClose={() => setOpenHelp(null)}
               >
                 <MenuItem>
-                  <ListItemText primary='Tour' secondary="Start here for a quick overview of RIMA"/>
+                  <ListItemText
+                    primary="Tour"
+                    secondary="Start here for a quick overview of RIMA"
+                  />
                 </MenuItem>
                 <MenuItem>
-                  <ListItemText primary='FAQ' secondary="Frequently Asked Questions"/>
+                  <ListItemText
+                    primary="FAQ"
+                    secondary="Frequently Asked Questions"
+                  />
                 </MenuItem>
-                <Divider/>
+                <Divider />
                 <MenuItem>
-                  <ListItemText primary='Feedback' secondary="Send your opinions about our platform"/>
+                  <ListItemText
+                    primary="Feedback"
+                    secondary="Send your opinions about our platform"
+                  />
                 </MenuItem>
               </Menu>
             </Grid>
 
-
             {/* Avatar to show username*/}
             <Grid item>
-              <Avatar className={classes.avatarName} onClick={toggleProfileList}>
+              <Avatar
+                className={classes.avatarName}
+                onClick={toggleProfileList}
+              >
                 {userName}
               </Avatar>
 
@@ -188,8 +199,8 @@ export default function NavigationBar() {
                 id="simple-menu"
                 anchorEl={openProfile}
                 getContentAnchorEl={null}
-                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
-                transformOrigin={{vertical: "top", horizontal: "right"}}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
                 open={Boolean(openProfile)}
                 onClose={() => setOpenProfile(null)}
               >
@@ -199,31 +210,33 @@ export default function NavigationBar() {
                       {userName}
                     </Avatar>
                   </ListItemIcon>
-                  <ListItemText primary={<b>{welcome}</b>}/>
+                  <ListItemText primary={<b>{welcome}</b>} />
                 </ListItem>
 
-                <Divider/>
+                <Divider />
 
                 <MenuItem onClick={openSettings}>
-                  <ListItemIcon> <PersonIcon color="primary"/> </ListItemIcon>
-                  <ListItemText primary='My Profile'/>
+                  <ListItemIcon>
+                    {" "}
+                    <PersonIcon color="primary" />{" "}
+                  </ListItemIcon>
+                  <ListItemText primary="My Profile" />
                 </MenuItem>
 
-                <Divider/>
+                <Divider />
 
                 <MenuItem onClick={handleLogout}>
-                  <ListItemIcon> <ExitToAppIcon color="primary"/> </ListItemIcon>
-                  <ListItemText primary='Sign-out'/>
+                  <ListItemIcon>
+                    {" "}
+                    <ExitToAppIcon color="primary" />{" "}
+                  </ListItemIcon>
+                  <ListItemText primary="Sign-out" />
                 </MenuItem>
               </Menu>
             </Grid>
-
           </Grid>
-
         </Toolbar>
-
       </AppBar>
-
 
       <Box className={classes.drawer} aria-label="side panel">
         <Hidden lgUp implementation="css">
@@ -232,30 +245,35 @@ export default function NavigationBar() {
             anchor={theme.direction === "rtl" ? "right" : "left"}
             open={openLeftDrawer}
             onClose={toggleDrawer}
-            classes={{paper: classes.drawerPaper}}
-            ModalProps={{keepMounted: true}}
+            classes={{ paper: classes.drawerPaper }}
+            ModalProps={{ keepMounted: true }}
           >
-            <SideBar selection={selection} setSelection={setSelection}/>
+            <SideBar selection={selection} setSelection={setSelection} />
           </Drawer>
         </Hidden>
         <Hidden mdDown implementation="css">
           <Drawer
             classes={{
-              paper: classes.drawerPaper
+              paper: classes.drawerPaper,
             }}
             variant="permanent"
             open
           >
-            <SideBar selection={selection} setSelection={setSelection}/>
+            <SideBar selection={selection} setSelection={setSelection} />
           </Drawer>
         </Hidden>
       </Box>
 
       {/*Animation for logging out*/}
       <Backdrop className={classes.backdrop} open={loggingOut}>
-        <Grid container direction="column" justifyContent="center" alignItems="center">
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
           <Grid item>
-            <CircularProgress color="inherit"/>
+            <CircularProgress color="inherit" />
           </Grid>
           <Grid item>
             <Typography>Logging out</Typography>
