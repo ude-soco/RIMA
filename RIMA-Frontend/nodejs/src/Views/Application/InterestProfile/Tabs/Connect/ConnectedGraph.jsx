@@ -130,9 +130,40 @@ const ConnectedGraph = (props) => {
     });
     const [elements, setElements] = useState([]);
     const [paper, setPaper] = useState([]);
+    
+    const years = paper.map(pap => pap.year);
+    const minYear = Math.min(...years);
+    const maxYear = Math.max(...years);
+    const [yearRange, setYearRange] = useState([1990,2023]);
+    const filteredPapers = paper.filter(pap => pap.year >= yearRange[0] && pap.year <= yearRange[1]);
+    
+    
+    
+    
 
 
+    const handleMinYearChange = (minYear) => {
+        const newMinYear = parseInt(minYear);
+        const newMaxYear = yearRange[1];
 
+        if (newMinYear > newMaxYear) {
+          setYearRange([newMaxYear, newMinYear]);
+        } else {
+          setYearRange([newMinYear, newMaxYear]);
+        }
+      };
+      
+      const handleMaxYearChange = (maxYear) => {
+        const newMaxYear = parseInt(maxYear);
+        const newMinYear = yearRange[0];
+        
+        if (newMinYear > newMaxYear) {
+          setYearRange([newMaxYear, newMinYear]);
+        } else {
+          setYearRange([newMinYear, newMaxYear]);
+        }
+      };
+      
 
 
 
@@ -183,6 +214,7 @@ const ConnectedGraph = (props) => {
             openIhaveCited: false,
             openContact:false,
         });
+        setYearRange([1990, 2023]);
     };
 
     const layout = { name: "preset" };
@@ -462,9 +494,45 @@ const ConnectedGraph = (props) => {
                         {" "}
                         Publications by {dialog.currNode.name} which cited you
                     </Typography>
+                    <Typography>
+                        Number of Papers found : {filteredPapers.length}
+                    </Typography>
+                   
+                    <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+                        <TextField
+                            label="MinYear"
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            onChange={(e) => handleMinYearChange(e.target.value)}
+                            defaultValue={minYear.toString()}
+                            color="primary"
+                            style={{ width: "9%" }}      
+                            inputProps={{
+                                min: minYear,
+                                max: yearRange[1],
+                                step: 1,
+                            }}  
+                            /> 
+                        <TextField 
+                            label="MaxYear"
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            onChange={(e) => handleMaxYearChange(e.target.value)}
+                            defaultValue={maxYear.toString()}
+                            color="primary"
+                            style={{ width: "9%" }}      
+                            inputProps={{
+                                min: yearRange[0],
+                                max: maxYear,
+                                step: 1,
+                            }}  
+                            /> 
+                    </Box>
 
                     {dialog.currNode != null ? (
-                        <WhyInterest papers={paper} originalKeywords={[]}/>
+                        <WhyInterest papers={filteredPapers} originalKeywords={[]}/>
                     ) : (
                         <></>
                     )}
@@ -484,9 +552,43 @@ const ConnectedGraph = (props) => {
                         {" "}
                         My publications where I have cited {dialog.currNode.name}
                     </Typography>
+                    <Typography>
+                        Number of Papers found : {filteredPapers.length}
+                    </Typography>
+                    <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+                            <TextField
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            onChange={(e) => handleMinYearChange(e.target.value)}
+                            defaultValue={minYear.toString()}
+                            color="primary"
+                            style={{ width: "9%" }}      
+                            inputProps={{
+                                min: minYear,
+                                max: yearRange[1],
+                                step: 1,
+                            }}  
+                            /> 
+                            <TextField
+                            label="MaxYear"
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            onChange={(e) => handleMaxYearChange(e.target.value)}
+                            defaultValue={maxYear.toString()}
+                            color="primary"
+                            style={{ width: "9%" }}      
+                            inputProps={{
+                                min: yearRange[0],
+                                max: maxYear,
+                                step: 1,
+                            }}  
+                            /> 
+                        </Box>
 
                     {dialog.currNode != null ? (
-                        <WhyInterest papers={paper} originalKeywords={[]}/>
+                        <WhyInterest papers={filteredPapers} originalKeywords={[]}/>
                     ) : (
                         <></>
                     )}
