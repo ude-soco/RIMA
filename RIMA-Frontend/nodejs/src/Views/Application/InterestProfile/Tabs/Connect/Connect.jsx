@@ -44,6 +44,8 @@ export default function Connect (props) {
       };
  
     useEffect(()=>{
+
+        console.log(selectedNames, "selectedNames in Connect------------------------------");
         
         if(data.length===0){
             setData(props.data)
@@ -66,7 +68,7 @@ export default function Connect (props) {
         }
 
 
-    },[data,props])
+    },[data,props,selectedNames])
 
    
     const [open, setOpen] = useState(false)
@@ -91,6 +93,8 @@ export default function Connect (props) {
     console.log(data, "const3")
     return (
         <>
+
+            <Button onClick={testPrint}>Test</Button>
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>

@@ -1,64 +1,80 @@
-import React from "react"
-import  { makeStyles } from "@material-ui/core/styles";
-import { TextField, Button, Typography } from "@material-ui/core";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import SendIcon from "@mui/icons-material/Send";
+import { Card, CardActionArea, Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  form: {
-    width: 500,
-    margin: "0 auto",
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
+  card: {
+    border: "1px solid #e4e4e4",
+    borderRadius: 6,
+    margin: 4,
     alignItems: "center"
   },
-  button: {
-    marginTop: theme.spacing(2),
-    alignSelf: "flex-end",
-    color: "green"
+  imageContainer: {
+    height: "100px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  h1: {
-    marginBottom: "50px"
+  contentContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
   },
-  icon: { paddingLeft: "10px" }
 }));
 
-function Contact() {
+function Contact(props) {
+  const { authorId } = props;
   const classes = useStyles();
-  let from = "from@gmail.com"
-  let to = "to@gmail.com"
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    let formData = new FormData(event.target);
-    let data = {
-      to: formData.get("to"),
-      subject: formData.get("subject"),
-      message: formData.get("message")
-    };
-    console.log(data);
-  };
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit} >
-      <Typography variant="h3" className={classes.h1}>
-        Contact
-      </Typography>
-      <TextField name="to" label={from} fullWidth />
-      <TextField name="to" label={to} fullWidth />
-      <TextField name="subject" label="Subject" fullWidth />
-      <TextField name="message" label="Message" fullWidth multiline rows={6} />
+    <Grid container>
+      <Grid item xs={12} align="center" style={{ paddingBottom: 16 }}>
+        <Typography variant="h5">
+          Visit this users Semantic Scholar page
+        </Typography>
+      </Grid>
 
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="success"
-        type="submit"
-      >
-        Send
-        <SendIcon className={classes.icon} />
-      </Button>
-    </form>
+      <Grid container alignItems="center" justify="center">
+        {authorId ? (
+          <Grid item sm={8} md={4} align="center">
+            <Card elevation={0} className={classes.card}>
+              <CardActionArea
+                onClick={() =>
+                  window.open(
+                    `https://www.semanticscholar.org/author/${authorId}`,
+                    "_blank"
+                  )
+                }
+              >
+                <div className={classes.contentContainer}>
+                  <Typography align="center">Semantic Scholar</Typography>
+                  <div className={classes.imageContainer}>
+                    <img
+                      src="/images/ss-logo.png"
+                      height="100"
+                      alt="Semantic Scholar Logo"
+                    />
+                  </div>
+                  <Typography align="center">
+                    ID: <b>{authorId}</b>
+                  </Typography>
+                </div>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ) : (
+          <Grid item xs={12} align="center">
+            <Typography variant="h6" color="error">
+              Error. Can't find authorId.
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
+    </Grid>
   );
 }
+
 export default Contact;
