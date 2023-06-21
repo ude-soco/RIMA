@@ -272,12 +272,7 @@ const ConnectedGraph = (props) => {
                                 },
                                 enabled: true
                             },
-                            {
-                                content: "Hide",
-                                contentStyle: {},
-                                select: {},
-                                enabled: true
-                            }
+                            
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
@@ -324,12 +319,7 @@ const ConnectedGraph = (props) => {
                                 },
                                 enabled: true
                             },
-                            {
-                                content: "Hide",
-                                contentStyle: {},
-                                select: {},
-                                enabled: true
-                            }
+                            
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
