@@ -1,20 +1,25 @@
 import * as React from "react";
 import ConnectedGraph from "./ConnectedGraph"
-import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent} from "@material-ui/core";
+import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent,IconButton,Tooltip } from "@material-ui/core";
 import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
 import Help from "./Help"
 import FilterListIcon from "@material-ui/icons/FilterList";
 import MoreFilters from "./MoreFilters"
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)
-    console.log(data, "const")
+    console.log(data.selectedNames, "const")
     console.log(data, "useState")
     const [dataCollected, setDataCollected]=useState(false)
     const [myInterests, setMyInterests]=useState([])
     const [noa, setNoa] = useState(3)
+    const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
+    const [button, setButton] = useState(true)
+    const [changed, setChange] = useState(false)
+    const [selectedNames, setSelectedNames] = useState([data.selectedNames])
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     console.log("test", fetching)
 
@@ -24,7 +29,8 @@ export default function Connect (props) {
         setFetch(true)
         console.log("submit")
         setDataCollected(false);
-        RestAPI.getConnectData({ data: currentUser.author_id, noa })
+        setButton(false)
+        RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames, papers})
           .then((res) => {
             const {data}=res
             setData(data.data)
@@ -38,6 +44,8 @@ export default function Connect (props) {
       };
  
     useEffect(()=>{
+
+        console.log(selectedNames, "selectedNames in Connect------------------------------");
         
         if(data.length===0){
             setData(props.data)
@@ -60,7 +68,7 @@ export default function Connect (props) {
         }
 
 
-    },[data,props])
+    },[data,props,selectedNames])
 
    
     const [open, setOpen] = useState(false)
@@ -69,49 +77,73 @@ export default function Connect (props) {
         setOpen(true);
     }
     const closeFilter = () => {
+       if(button || changed){    //prevent new api calls althoug no filters are done
+        submitNumber()
+        setChange(false)}
         setOpen(false);
     } 
+
+    const handleSelectedNamesChange = (names) => {
+        setSelectedNames([...names]);
+        setChange(true)
+    }
+    console.log(selectedNames, "SlectedNames Connect")
 
 
     console.log(data, "const3")
     return (
         <>
+
+            
             <Help/>
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
-              {dataCollected?
-              <>
-                    <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-                        <TextField  id="noa"
-                        label="Number"
-                        type="number"
-                        variant="outlined"
-                        size="small"
-                        onChange = {(e) => setNoa(parseInt(e.target.value, 10))}
-                        defaultValue = "3"
-                        color="primary"
-                        style={{ width: "7.5%" }}      
-                        inputProps={{
-                            min: 0,
-                            max: 10,
-                            step: 1,
-                        }}  
-                        /> 
-                        <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
-                        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleMoreFilters} >
-                            MORE
-                        </Button>
-                        <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
-                            <DialogContent>
-                                <MoreFilters onClose={closeFilter} />
-                            </DialogContent>
-                        </Dialog>
-                    </Box>
+            
+              
+                                
+                    {dataCollected? 
                     
-                        <ConnectedGraph data={data} myInterests={myInterests}/>
-                </>     :<Loading/>
-                    }
-             
+                    <><Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+                            <TextField id="noa"
+                                label="Number"
+                                type="number"
+                                variant="outlined"
+                                size="small"
+                                onChange={(e) => setNoa(parseInt(e.target.value, 10))}
+                                defaultValue="3"
+                                color="primary"
+                                style={{ width: "7.5%" }}
+                                inputProps={{
+                                    min: 0,
+                                    max: 10,
+                                    step: 1,
+                                }} />
+                            <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
+                            <Button color="primary" onClick={handleMoreFilters}>
+                                MORE
+                                
+                            </Button>
+                            <div>
+                                    {button ? (
+                                        <Tooltip title="Test">
+                                        <Button disabled>
+                                            <ArrowBackIcon htmlColor="red" />
+                                            <Typography color="primary">Please Configure</Typography>
+                                        </Button>
+                                        </Tooltip>
+                                    ) : (
+                                        <></>
+                                    )}
+                                    </div>
+                            <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
+                                <DialogContent>
+                                    <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
+                                </DialogContent>
+                            </Dialog>
+                           </Box><ConnectedGraph data={data} myInterests={myInterests} />
+                        </>
+                        
+                        :<Loading/>}
                 </Grid>
             </Grid>
         </>
@@ -131,7 +163,7 @@ export const Loading = () => {
                     <CircularProgress/>
                 </Grid>
                 <Grid item>
-                    <Typography variant="overline"> Loading data </Typography>
+                    <Tooltip title="this can take some time"><Typography variant="overline"> Loading data  </Typography></Tooltip>
                 </Grid>
             </Grid>
         </>

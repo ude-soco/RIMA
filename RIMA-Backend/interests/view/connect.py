@@ -71,12 +71,20 @@ def getRefCitAuthorsPapers(authorId, method):
 
     return results
 
-def getMostCitedReferenced(authorId, method, n):
-
+def getMostCitedReferenced(authorId, method, n, filter):
+    
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors=allCitsRefs["listAllAuthors"]
     dictAuthorsName=allCitsRefs["authorsNames"]
+     
+    for i in filter:                            #Filter known Authors, the User selected
+        while i in listAuthors:
+            listAuthors.remove(i)
+
     topN=list(Counter(listAuthors).most_common(n))
+    print(topN)
+
+
     api=SemanticScholarAPI()
 
     allAuthors=[]
@@ -119,7 +127,7 @@ def getMostCitedReferenced(authorId, method, n):
             "paper":allPapers,
             "interests":interests,
             "score":len(allPapers),
-
+            "id": author,
         }
 
         allAuthors.append(authorData)
@@ -135,25 +143,40 @@ def getInterests(authorId):
     return interests
 
 def getConnectData(id):
+
     authorId=id["data"]
     noa = int(id["noa"])
+    doIt = bool(id["papers"]) #fetch papers not directly
+    print(doIt)
+    selectedNames = id["selectedNames"]
+    print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
-    print("get most authors who cited me the most")
-    #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa)
-    print("get authors Who I cited the most")
-    #authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa)
-    """
-    with open("authorsReferences.json", "w") as myfile:
+    if(doIt):
+        print("get most authors who cited me the most")
+        authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
+        print("get authors Who I cited the most")
+        authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
+        x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
+        x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
+    else:
+        authorsReferences = authorsCitedMe = []
+        x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
+        x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
+        print(x)
+        
+
+    """ 
+    with open("authorsReferences2.json", "w") as myfile:
             json.dump(authorsReferences, myfile)
-    with open("authorsCitedMe.json", "w") as myfile:
+    with open("authorsCitedMe2.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-     """    
-    with open("authorsReferences.json", "r") as myfile:
-           authorsReferences = json.load(myfile)
-    with open("authorsCitedMe.json", "r") as myfile:
-           authorsCitedMe = json.load(myfile)
     
-    data={"citations":authorsCitedMe, "references":authorsReferences}
+    with open("authorsReferences2.json", "r") as myfile:
+           authorsReferences = json.load(myfile)
+    with open("authorsCitedMe2.json", "r") as myfile:
+           authorsCitedMe = json.load(myfile)
+    """
+    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames}
     return data
  
 def getWikiInfo(interestsData):
@@ -169,3 +192,16 @@ def getWikiInfo(interestsData):
     #answer={"test":"test", "page":page, "dataInterst":dataInterest, "data":data}
 
     return pageData
+
+
+#get the Top 10+x Authors the User could know
+def testMet(authorId, method, filter):
+    allCitsRefs = getRefCitAuthorsPapers(authorId=authorId, method=method)
+    listAuthors = allCitsRefs["listAllAuthors"]
+    dictAuthorsName = allCitsRefs["authorsNames"]
+    """for i in filter:
+        while i in listAuthors:
+            listAuthors.remove(i)"""
+    topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
+    x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} 
+    return x

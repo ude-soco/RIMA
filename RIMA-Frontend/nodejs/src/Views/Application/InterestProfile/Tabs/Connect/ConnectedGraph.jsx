@@ -34,8 +34,6 @@ cytoscape.use(cxtmenu);
 function getGraphData(data) {
     let ids = [...Array(20).keys()];
 
-     
-
     console.log(data, "data getGraph")
     let citations = data.citations
     let references = data.references
@@ -68,6 +66,7 @@ function getGraphData(data) {
         let element = {
             data: {
                 id: id,
+                authorId: a.id,
                 name: a.name,
                 score: a.score,
                 interests: a.interests,
@@ -90,6 +89,7 @@ function getGraphData(data) {
         let element = {
             data: {
                 id: id,
+                authorId: b.id,
                 name: b.name,
                 score: b.score,
                 interests: b.interests,
@@ -130,11 +130,7 @@ const ConnectedGraph = (props) => {
     });
     const [elements, setElements] = useState([]);
     const [paper, setPaper] = useState([]);
-
-
-
-
-
+    const [authorId, setAuthorId] = useState("");
 
     const getData = async ()=>{
 
@@ -171,8 +167,10 @@ const ConnectedGraph = (props) => {
         setDialog({ ...dialog, openIamCited: true, currNode: ele.data() });
     };
 
-    const handleContact = () => {
-        setDialog({...dialog,  openContact: true });
+    const handleContact = (ele) => {
+        setAuthorId(ele.data().authorId);
+        //console.log(ele.data().authorId);
+        setDialog({...dialog,  openContact: true});
     };
 
     const handleClose = () => {
@@ -184,6 +182,10 @@ const ConnectedGraph = (props) => {
             openContact:false,
         });
     };
+
+   /* const testPrint2 = () => {
+        console.log(data.id);
+    };*/
 
     const layout = { name: "preset" };
     const stylesheet = [
@@ -232,7 +234,6 @@ const ConnectedGraph = (props) => {
     return (
         <>
         
-
             <CytoscapeComponent
                 elements={elements}
                 style={{ width: "100%", height: "600px" }}
@@ -266,9 +267,12 @@ const ConnectedGraph = (props) => {
                             {
                                 content: "Contact",
                                 contentStyle: {},
-                                select: handleContact,
+                                select: function (ele) {
+                                    handleContact(ele);
+                                },
                                 enabled: true
                             },
+                            
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
@@ -310,9 +314,12 @@ const ConnectedGraph = (props) => {
                             {
                                 content: "Contact",
                                 contentStyle: {},
-                                select: handleContact,
+                                select: function (ele) {
+                                    handleContact(ele);
+                                },
                                 enabled: true
                             },
+                            
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
@@ -415,7 +422,7 @@ const ConnectedGraph = (props) => {
                 <DialogContent>
                         <Grid container>
                         <Grid item xs>
-                            <Contact />
+                            <Contact authorId={authorId}/>
                         </Grid>
                         </Grid>
                 </DialogContent>

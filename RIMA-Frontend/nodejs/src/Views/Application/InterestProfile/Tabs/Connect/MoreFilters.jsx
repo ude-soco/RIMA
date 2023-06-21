@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/styles";
 import {
   Typography,
@@ -30,51 +30,68 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-export default function MoreFilters({ onClose }) {
- const classes = useStyles();
- const handleApply = () => {
-    onClose();
+export default function MoreFilters(props) {
+ 
+  const {data} = props
+  
+  const [selectedNames, setSelectedNames] = useState(data.selectedNames);
+  
+
+  const nameId = data.filter//citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
+  const namesList = Object.values(nameId).map((value) => value[0])
+  
+  console.log(namesList)
+  console.log(nameId, "TEST")
+
+  console.log(data, "DATAAAAAAAAAAAAAAA")
+  console.log(data.citations.map(item => item.name))
+  /*const names = data.citations.map(item => item.name).concat(data.references.map(item => item.name))
+  const uniqNames = [...new Set(names)]
+  console.log(names, uniqNames)*/
+
+  
+  
+
+
+  const handleCheckboxChange = (event) => {
+    const{value} = event.target
+    const id = (Object.entries(nameId).find(([key, value2]) => value2[0] === value))[0] //[0] cause its an array
+    console.log(id, "VALUE")
+    if(!(selectedNames.includes(id)))
+    {
+    setSelectedNames([...selectedNames, id])
+    }
+    else {
+      setSelectedNames(prevArray => prevArray.filter(obj => obj !== id))
+    }
+  }
+  
+  console.log(selectedNames, "selectedNames")
+
+  const classes = useStyles();
+
+  const handleApply = () => {
+    props.onSelectedNamesChange(selectedNames)
+    //props.onClose(selectedNames);
   };
 
  const handleClose = () => {
-    onClose();
+    props.onClose(selectedNames);
   };
 
   return (
     <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth >
-      <DialogTitle className={classes.title}>More Filters </DialogTitle>
+      <DialogTitle className={classes.title}>Hide Authors you already know </DialogTitle>
       <DialogContent dividers>
-          <Typography variant="h6" className={classes.title}>Time Period</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="This Year" />
-            <FormControlLabel control={<Checkbox />} label="Last 5 Years" />
-            <FormControlLabel control={<Checkbox />} label="Last 10 Years" />
-          </FormGroup>
+
+      <Typography variant="h6"  className={classes.title}>Select</Typography>
+            <FormGroup className={classes.checkBox}>
+              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} 
+              value={name} checked={selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
+            </FormGroup>
+                  
           <Divider className={classes.divider}/>
-
-          <Typography variant="h6" className={classes.title}>Paper</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-          </FormGroup>
-          <Divider className={classes.divider}/>
-
-          <Typography variant="h6" className={classes.title}>Themes</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-          </FormGroup>
-          <Divider className={classes.divider}/>
-
-          <Typography variant="h6"  className={classes.title}>(Co)Authors</Typography>
-          <FormGroup className={classes.checkBox}>
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-            <FormControlLabel control={<Checkbox />} label="Content" />
-          </FormGroup>
-
+                  
           <Box
             style={{
               display: "flex",
