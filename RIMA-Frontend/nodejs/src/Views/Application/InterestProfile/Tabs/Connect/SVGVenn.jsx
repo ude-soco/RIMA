@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React, {useMemo, useEffect} from "react"
 import {
     Dialog,
     DialogActions,
@@ -6,7 +6,8 @@ import {
     DialogTitle,
     Menu,
     MenuItem,
-    Button
+    Button,
+    Stack
 } from "@material-ui/core";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -14,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import WikiDesc from "./WikiDesc";
 import RestAPI from "../../../../../Services/api";
 import {Loading} from "../Loading";
+import { extractSets, generateCombinations, VennDiagram } from '@upsetjs/react';
 
 const SVGVenn = (props) => {
     const { authorInterest, authorName, userName } = props;
@@ -39,6 +41,11 @@ const SVGVenn = (props) => {
 
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
+    const buttonStyle = {
+        position: 'absolute',
+        top: '500px',
+        left: '220px',
+    };
     const fetchKeywords = async () => {
         //setState({...state,userInterests: []})
 
@@ -218,6 +225,33 @@ const SVGVenn = (props) => {
         posUser = posUser - 10;
     }
 
+    function GettingStarted() {
+        const elems = useMemo(
+          () => [
+            { name: 'A', sets: ['S1', 'S2'] },
+            { name: 'B', sets: ['S1'] },
+            { name: 'C', sets: ['S2'] },
+            { name: 'D', sets: ['S1', 'S3'] },
+          ],
+          []
+        );
+      
+        const sets = useMemo(() => extractSets(elems), [elems]);
+        const combinations = useMemo(() => generateCombinations(sets), [sets]);
+      
+        const [selection, setSelection] = React.useState(null);
+        return (
+          <VennDiagram
+            sets={sets}
+            combinations={combinations}
+            width={780}
+            height={400}
+            selection={selection}
+            onHover={setSelection}
+          />
+        );
+    }
+
     return (
         <>
             {userInterest.length !== 0?<svg height="500" width="600">
@@ -270,13 +304,13 @@ const SVGVenn = (props) => {
                         }
                     })}
                 </text>
-                <text fill="white">
+                <text fill="black">
                     {bothInterest.map((u, i) => {
                         return (
                             <tspan
                                 class="text"
                                 x={posTextBoth - 50}
-                                y={100 + yPosText * i}
+                                y={75 + yPosText * i}
                                 onClick={handleClickOnlyLearn}
                             >
                                 {u}
@@ -329,9 +363,12 @@ const SVGVenn = (props) => {
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
-
+            <Button variant="outlined" style={buttonStyle}>
+                shared interests: {bothInterest.length}
+            </Button>
+            
         </>
-    );
+    );    
 };
 
 export default SVGVenn;
