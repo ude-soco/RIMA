@@ -35,6 +35,7 @@ export default function MoreFilters(props) {
   const {data} = props
   
   const [selectedNames, setSelectedNames] = useState(data.selectedNames);
+  
 
   const nameId = data.filter//citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
   const namesList = Object.values(nameId).map((value) => value[0])
@@ -44,9 +45,9 @@ export default function MoreFilters(props) {
 
   console.log(data, "DATAAAAAAAAAAAAAAA")
   console.log(data.citations.map(item => item.name))
-  const names = data.citations.map(item => item.name).concat(data.references.map(item => item.name))
+  /*const names = data.citations.map(item => item.name).concat(data.references.map(item => item.name))
   const uniqNames = [...new Set(names)]
-  console.log(names, uniqNames)
+  console.log(names, uniqNames)*/
 
   
   
@@ -54,7 +55,7 @@ export default function MoreFilters(props) {
 
   const handleCheckboxChange = (event) => {
     const{value} = event.target
-    const id = (Object.entries(nameId).find(([key, value2]) => value2[0] === value))[0]
+    const id = (Object.entries(nameId).find(([key, value2]) => value2[0] === value))[0] //[0] cause its an array
     console.log(id, "VALUE")
     if(!(selectedNames.includes(id)))
     {

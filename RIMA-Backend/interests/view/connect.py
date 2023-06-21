@@ -77,7 +77,7 @@ def getMostCitedReferenced(authorId, method, n, filter):
     listAuthors=allCitsRefs["listAllAuthors"]
     dictAuthorsName=allCitsRefs["authorsNames"]
      
-    for i in filter:
+    for i in filter:                            #Filter known Authors, the User selected
         while i in listAuthors:
             listAuthors.remove(i)
 
@@ -146,7 +146,7 @@ def getConnectData(id):
 
     authorId=id["data"]
     noa = int(id["noa"])
-    doIt = bool(id["papers"])
+    doIt = bool(id["papers"]) #fetch papers not directly
     print(doIt)
     selectedNames = id["selectedNames"]
     print(selectedNames)
@@ -193,6 +193,8 @@ def getWikiInfo(interestsData):
 
     return pageData
 
+
+#get the Top 10+x Authors the User could know
 def testMet(authorId, method, filter):
     allCitsRefs = getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors = allCitsRefs["listAllAuthors"]

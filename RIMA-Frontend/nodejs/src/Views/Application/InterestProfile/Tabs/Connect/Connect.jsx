@@ -1,6 +1,6 @@
 import * as React from "react";
 import ConnectedGraph from "./ConnectedGraph"
-import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent,IconButton } from "@material-ui/core";
+import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, DialogContent,IconButton,Tooltip } from "@material-ui/core";
 import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
 import Help from "./Help"
@@ -18,6 +18,7 @@ export default function Connect (props) {
     const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
     const [button, setButton] = useState(true)
+    const [changed, setChange] = useState(false)
     const [selectedNames, setSelectedNames] = useState([data.selectedNames])
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     console.log("test", fetching)
@@ -74,12 +75,15 @@ export default function Connect (props) {
         setOpen(true);
     }
     const closeFilter = () => {
+       if(button || changed){    //prevent new api calls althoug no filters are done
         submitNumber()
+        setChange(false)}
         setOpen(false);
     } 
 
     const handleSelectedNamesChange = (names) => {
         setSelectedNames([...names]);
+        setChange(true)
     }
     console.log(selectedNames, "SlectedNames Connect")
 
@@ -115,7 +119,18 @@ export default function Connect (props) {
                                 MORE
                                 
                             </Button>
-                            {button?<Button disabled><ArrowBackIcon htmlColor="red"/> <Typography color="primary"> Please Configurate</Typography ></Button>:<></>}
+                            <div>
+                                    {button ? (
+                                        <Tooltip title="Test">
+                                        <Button disabled>
+                                            <ArrowBackIcon htmlColor="red" />
+                                            <Typography color="primary">Please Configure</Typography>
+                                        </Button>
+                                        </Tooltip>
+                                    ) : (
+                                        <></>
+                                    )}
+                                    </div>
                             <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                                 <DialogContent>
                                     <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
@@ -144,7 +159,7 @@ export const Loading = () => {
                     <CircularProgress/>
                 </Grid>
                 <Grid item>
-                    <Typography variant="overline"> Loading data </Typography>
+                    <Tooltip title="this can take some time"><Typography variant="overline"> Loading data  </Typography></Tooltip>
                 </Grid>
             </Grid>
         </>
