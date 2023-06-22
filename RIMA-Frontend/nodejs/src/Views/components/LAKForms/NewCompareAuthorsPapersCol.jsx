@@ -9,6 +9,9 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import { Box, Grid, InputLabel } from "@mui/material";
 import RIMAButton from "../../Application/ReuseableComponents/RIMAButton";
+import { Paper, Typography } from "@material-ui/core";
+import { wrap } from "highcharts";
+import { json } from "d3";
 
 class NewCompareAuthorsPapersCol extends Component {
   constructor(props) {
@@ -61,6 +64,8 @@ class NewCompareAuthorsPapersCol extends Component {
         stroke: {
           curve: "smooth",
         },
+        color: "#008FFB",
+
         xaxis: {
           categories: [
             "1993",
@@ -84,23 +89,14 @@ class NewCompareAuthorsPapersCol extends Component {
         },
       },
       barChartOptions: {
-        chart: {
-          id: "bar",
-          events: {
-            dataPointMouseEnter: function (event, chartContext, config) {
-              const xAxisLabel = config.w.globals.labels[config.dataPointIndex];
-              this.updateBarChartTooltip(xAxisLabel);
-            }.bind(this),
-          },
-        },
         stacked: false,
         xaxis: {
           categories: ["lak", "edm", "aied"],
         },
         yaxis: {
-          show: false,
+          show: true,
           labels: {
-            show: false,
+            show: true,
           },
         },
       },
@@ -108,7 +104,34 @@ class NewCompareAuthorsPapersCol extends Component {
         {
           name: `The total no. of ${this.authorsOrPubs}
           in ${this.hoveredConf} conference ${this.firstYear}-${this.lastYear}`,
-          data: [120, 339, 100],
+          data: [120],
+        },
+        {
+          name: `The total no. of ${this.authorsOrPubs}
+          in ${this.hoveredConf} conference ${this.firstYear}-${this.lastYear}`,
+          data: [130],
+        },
+        {
+          name: `The total no. of ${this.authorsOrPubs}
+          in ${this.hoveredConf} conference ${this.firstYear}-${this.lastYear}`,
+          data: [150],
+        },
+      ],
+      BarChartEventsSeries: [
+        {
+          name: `The total no. of events
+          in ${this.hoveredConf} conference `,
+          data: [13],
+        },
+        {
+          name: `The total no. of events
+          in ${this.hoveredConf} conference `,
+          data: [15],
+        },
+        {
+          name: `The total no. of events
+          in ${this.hoveredConf} conference`,
+          data: [16],
         },
       ],
       loader: false,
@@ -235,6 +258,7 @@ class NewCompareAuthorsPapersCol extends Component {
           this.years = json.years;
         });
       this.get_Authors_Publications_Data(this.state.key);
+      this.getEventNoForEachConf();
     } else {
       var { series } = this.state;
       var { weights } = this.state;
@@ -289,6 +313,7 @@ class NewCompareAuthorsPapersCol extends Component {
           this.years = json.years;
         });
       this.get_Authors_Publications_Data(this.state.key);
+      this.getEventNoForEachConf();
     }
   };
 
@@ -324,6 +349,14 @@ class NewCompareAuthorsPapersCol extends Component {
       .then((response) => response.json())
       .then((json) => {
         if (json && json[0].conferences && json[0][authors_publications]) {
+          let newSeries = json[0].conferences.map((conf, i) => {
+            return {
+              name: `The total no. of ${authors_publications} 
+              in ${conf} conference ${this.firstYear}-${this.lastYear}`,
+              data: [json[0][authors_publications][i]],
+            };
+          });
+
           this.setState({
             barChartOptions: {
               ...this.state.barChartOptions,
@@ -332,14 +365,30 @@ class NewCompareAuthorsPapersCol extends Component {
                 categories: json[0].conferences,
               },
             },
-            BarChartSeries: [
-              {
-                ...this.state.BarChartSeries[0],
-                data: json[0][authors_publications],
-              },
-            ],
+            BarChartSeries: newSeries,
           });
         }
+      });
+  }
+  getEventNoForEachConf() {
+    fetch(
+      BASE_URL_CONFERENCE +
+        "TotalEventsForEachConf/" +
+        this.state.selectedConferences.join("&")
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        let newSeries = json.map((item) => {
+          console.log("s", item.data);
+          return {
+            name: `The total no. of events in ${item.name} conference`,
+            data: item.data,
+          };
+        });
+
+        this.setState({
+          BarChartEventsSeries: newSeries,
+        });
       });
   }
 
@@ -370,10 +419,10 @@ class NewCompareAuthorsPapersCol extends Component {
       <Box component="form" role="form" method="POST">
         <Box>
           <br />
-          <h2>Number of authors and publications evolution</h2>
+          <h2>Evolution of Authors and Publications over the Years</h2>
           <p>
-            The total number and evolution of authors and publications between
-            conferences
+            Total Number and Evolution of Authors and Publications among
+            Conference Events
           </p>
           <InputLabel>Select conferences</InputLabel>
           <Grid container spacing={3}>
@@ -409,52 +458,93 @@ class NewCompareAuthorsPapersCol extends Component {
           </Grid>
         </Box>
         <br />
-
         <Grid
           container
-          xs={12}
-          style={{ opacity: this.state.opacity, marginTop: "5%" }}
+          style={{
+            opacity: this.state.opacity,
+            marginTop: "1%",
+          }}
+          spacing={3}
         >
-          <Grid item xs={12} sm={8}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                alignContent: "center",
-                position: "absolute",
-                marginLeft: "40%",
-              }}
-            >
-              <Loader
-                type="Bars"
-                visible={this.state.loader}
-                color="#00BFFF"
-                height={90}
-                width={90}
+          {/* <Grid item xs={12} lg={6}>
+            <Paper style={{ borderRadius: "40px" }} elevation={10}>
+              <Typography
+                variant="h5"
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                The total number of events in each conference
+              </Typography>
+              <ReactApexChart
+                options={this.state.barChartOptions}
+                series={this.state.BarChartEventsSeries}
+                type="bar"
+                height={350}
+                width="100%"
               />
-            </Box>
-            <ReactApexChart
-              options={this.state.options}
-              series={this.state.series}
-              type="area"
-              height={350}
-            />
+            </Paper>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <ReactApexChart
-              options={this.state.barChartOptions}
-              series={this.state.BarChartSeries}
-              type="bar"
-              height={350}
-            />
-            <p
-              style={{
-                marginLeft: "25%",
-              }}
+          <Grid item xs={12} lg={6}>
+            <Paper style={{ borderRadius: "40px" }} elevation={10}>
+              <Typography
+                variant="h5"
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                The total number of {this.state.space} {this.state.key} in each
+                conference
+              </Typography>
+              <ReactApexChart
+                options={this.state.barChartOptions}
+                series={this.state.BarChartSeries}
+                type="bar"
+                height={350}
+                width="100%"
+              />
+            </Paper>
+          </Grid> */}
+          <Grid item xs={12}>
+            <Paper
+              style={{ borderRadius: "40px", padding: "1%" }}
+              elevation={10}
             >
-              The total number of {this.state.space} {this.state.key}
-            </p>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignContent: "center",
+                  position: "absolute",
+                  marginLeft: "50%",
+                  marginTop: "2%",
+                }}
+              >
+                <Loader
+                  type="Bars"
+                  visible={this.state.loader}
+                  color="#00BFFF"
+                  height={90}
+                  width={90}
+                />
+              </Box>
+              <Typography
+                variant="h5"
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                The Total Number of {this.state.space} {this.state.key} in each
+                Conference Event
+              </Typography>
+              <ReactApexChart
+                options={this.state.options}
+                series={this.state.series}
+                type="area"
+                height={350}
+              />
+            </Paper>
           </Grid>
         </Grid>
       </Box>

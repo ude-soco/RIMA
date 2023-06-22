@@ -34,6 +34,8 @@ urlpatterns = [
          AuthorsPapersEvolutionView.as_view()),
     path('TotalAuthorsPublicationsEvolution/<pk1>/',
          TotalAuthorsPublicationsEvolution.as_view()),
+    path('TotalEventsForEachConf/<pk1>/',
+         TotalEventsForEachConf.as_view()),
     ############################################################# islam compare conf. Visulizations updated########################################################################
 
     # BAB Vis Compare Stackes Area
