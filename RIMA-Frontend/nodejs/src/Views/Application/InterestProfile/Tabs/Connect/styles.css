@@ -45,3 +45,11 @@
 tspan .text {
     background-color: black;
 }
+
+.node-pointer {
+    cursor: pointer;
+  }
+
+.nodetest:hover {
+    cursor: pointer;
+}
