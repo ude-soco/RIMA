@@ -745,47 +745,60 @@ class AuthorsPapersEvolutionView(APIView):
 class TotalAuthorsPublicationsEvolution(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
+            request.get_full_path(), r'/')[-2]
+        print("url_splits_question_mark: ", url_splits_question_mark)
         conferences_list = confutils.split_restapi_url(
-            url_splits_question_mark[1], r'&')
-        Authors_or_Publications = confutils.split_restapi_url(
-            url_splits_question_mark[0], r'/')[-2]
-        print(conferences_list)
-        print(Authors_or_Publications)
+            url_splits_question_mark, r'&')
 
+        print(conferences_list)
         data = []
         confs = []
-        if Authors_or_Publications == 'Authors':
-            total_authors = []
-            for conf in conferences_list:
-                conf_author_num = compConfUtils.get_conf_total_authors(conf)
-                confs.append(conf)
-                total_authors.append(conf_author_num)
 
-            data.append({
-                'conferences': confs,
-                'Authors': total_authors
-            })
+        total_authors = []
+        for conf in conferences_list:
+            conf_author_num = compConfUtils.get_conf_total_authors(conf)
+            confs.append(conf)
+            total_authors.append(conf_author_num)
 
-        elif Authors_or_Publications == 'Publications':
-            publications_num = []
-            for conf in conferences_list:
-                conf_publications_num = compConfUtils.get_conf_total_publications(
-                    conf)
-                confs.append(conf)
-                publications_num.append(conf_publications_num)
+        publications_num = []
+        for conf in conferences_list:
+            conf_publications_num = compConfUtils.get_conf_total_publications(
+                conf)
+            confs.append(conf)
+            publications_num.append(conf_publications_num)
 
-            data.append({
-                'conferences': confs,
-                'Publications': publications_num
-            })
+        data.append({
+            'Authors': total_authors,
+            'Publications': publications_num
+        })
 
+        print("Data: ", data)
         return Response(
             data
         )
 
 # done
 # updated by Islam Abdelghaffar
+
+# new class by Islam Abdelghaffar
+
+
+class TotalEventsForEachConf(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'/')[-2]
+        conferences_list = confutils.split_restapi_url(
+            url_splits_question_mark, r'&')
+
+        data = []
+        for conf in conferences_list:
+            events = compConfUtils.get_conf_events(conf)
+            data.append({
+                "name": conf,
+                "data": [len(events)]
+            })
+
+        return Response(data)
 
 
 class MultipleTopicAreaView(APIView):
