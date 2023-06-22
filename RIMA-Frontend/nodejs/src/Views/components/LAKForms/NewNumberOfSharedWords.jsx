@@ -4,7 +4,7 @@ import Loader from "react-loader-spinner";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
-import { Grid, Box, InputLabel } from "@material-ui/core";
+import { Grid, Box, InputLabel, Paper } from "@material-ui/core";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -76,6 +76,13 @@ class NewNumberOfSharedWords extends Component {
               text: "No. of shared topics",
               style: {
                 color: "#008FFB",
+                fontSize: 10,
+              },
+            },
+            labels: {
+              style: {
+                fontSize: "20px",
+                fontWeight: 500,
               },
             },
           },
@@ -139,8 +146,60 @@ class NewNumberOfSharedWords extends Component {
   };
 
   CompareSharedWordNumber = () => {
-    var { series } = this.state;
+    var { series, yaxis } = this.state;
+    var selectedConfsCount = this.state.selectedConferences.length;
+    if (selectedConfsCount == 0) {
+      this.setState({
+        loader: false,
+        series: [],
+      });
+      return;
+    }
     var { weights } = this.state;
+    if (selectedConfsCount <= 1) {
+      let optionsCopy = { ...this.state.options };
+      optionsCopy.yaxis = [
+        {
+          title: {
+            text: "No. of total topics",
+            style: {
+              color: "#008FFB",
+            },
+          },
+          labels: {
+            style: {
+              fontSize: "20px",
+              fontWeight: 500,
+            },
+          },
+        },
+      ];
+      this.setState({
+        options: optionsCopy,
+      });
+    }
+    if (selectedConfsCount > 1) {
+      let optionsCopy = { ...this.state.options };
+      optionsCopy.yaxis = [
+        {
+          title: {
+            text: "No. of shared topics",
+            style: {
+              color: "#008FFB",
+            },
+          },
+          labels: {
+            style: {
+              fontSize: "20px",
+              fontWeight: 500,
+            },
+          },
+        },
+      ];
+      this.setState({
+        options: optionsCopy,
+      });
+    }
     fetch(
       BASE_URL_CONFERENCE +
         "getSharedWordsNumber/" +
@@ -201,10 +260,12 @@ class NewNumberOfSharedWords extends Component {
     return (
       <Box component="form" role="form" method="POST" style={{ width: "100%" }}>
         <br></br>
-        <h2>Shared topics and keywords evolution</h2>
+        <h2>
+          Similarity Comparison based on Shared Topics Evolution between
+          Conferences
+        </h2>
         <p>
-          The evolution of the number of shared topics and keywords between
-          conferences.
+          The Evolution of Shared Topics Among Selected Conferences Over Time.
         </p>
         <Box style={{ width: "100%" }}>
           <InputLabel>Select conferences</InputLabel>
@@ -229,38 +290,40 @@ class NewNumberOfSharedWords extends Component {
           <Box />
         )}
         <Grid style={{ opacity: this.state.opacity }}>
-          <Box
-            style={{
-              marginLeft: "50%",
-              marginTop: "2%",
-              position: "absolute",
-            }}
-          >
+          <Paper style={{ borderRadius: "40px", padding: "1%" }} elevation={10}>
             <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                alignContent: "center",
+              style={{
+                marginLeft: "50%",
+                marginTop: "2%",
                 position: "absolute",
-                marginLeft: "40%",
               }}
             >
-              <Loader
-                type="Bars"
-                visible={this.state.loader}
-                color="#00BFFF"
-                height={50}
-                width={50}
-              />
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignContent: "center",
+                  position: "absolute",
+                  marginLeft: "40%",
+                }}
+              >
+                <Loader
+                  type="Bars"
+                  visible={this.state.loader}
+                  color="#00BFFF"
+                  height={50}
+                  width={50}
+                />
+              </Box>
             </Box>
-          </Box>
-          <ReactApexChart
-            options={this.state.options}
-            series={this.state.series}
-            type={this.props.chartType}
-            height={400}
-          />
+            <ReactApexChart
+              options={this.state.options}
+              series={this.state.series}
+              type={this.props.chartType}
+              height={400}
+            />
+          </Paper>
         </Grid>
       </Box>
     );

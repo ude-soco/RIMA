@@ -263,6 +263,7 @@ export default function ConferenceBar(props) {
       .then((response) => response.json())
       .then((json) => {
         setConferenceOtherData(json.other_data);
+        console.log("bar chart grouped: ", json.series);
         setBarChartseries(json.series);
         setBarConfEventsList(json.conference_events);
         setBarOptions({
@@ -427,9 +428,9 @@ export default function ConferenceBar(props) {
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <NewTopWordsInYears selectedConferences={selectedOption.value} />
           </Grid>
-          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
+          {/* <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <NewEvolutionTopTopics selectedConferences={selectedOption.value} />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <WordCloud
               conferenceName={selectedOption.value}

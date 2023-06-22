@@ -4,7 +4,7 @@ import Loader from "react-loader-spinner";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import "d3-transition";
-import { Grid, Box, InputLabel } from "@material-ui/core";
+import { Grid, Box, InputLabel, Paper } from "@material-ui/core";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -231,10 +231,13 @@ class NewSharedAuthorEvolution extends Component {
     return (
       <Box component="form" role="form" method="POST" style={{ width: "100%" }}>
         <br />
-        <h2>Total and shared authors evolution</h2>
+        <h2>
+          {" "}
+          Similarity Comparison based on Shared Authors Evolution between
+          Conferences
+        </h2>
         <p>
-          The evolution of the number of total/shared authors between
-          conferences.{" "}
+          The Evolution of Shared Authors Among Selected Conferences Over Time.{" "}
         </p>
         <Box style={{ width: "100%" }}>
           <InputLabel>Select conferences</InputLabel>
@@ -259,13 +262,15 @@ class NewSharedAuthorEvolution extends Component {
         )}
         <br />
         <Grid item style={{ opacity: this.state.opacity }}>
-          <ActiveLoader height={50} width={50} visible={this.state.loader} />
-          <ReactApexChart
-            options={this.state.options}
-            series={this.state.series}
-            type={this.props.chartType}
-            height={350}
-          />
+          <Paper style={{ borderRadius: "40px", padding: "1%" }} elevation={10}>
+            <ActiveLoader height={50} width={50} visible={this.state.loader} />
+            <ReactApexChart
+              options={this.state.options}
+              series={this.state.series}
+              type={this.props.chartType}
+              height={350}
+            />
+          </Paper>
         </Grid>
       </Box>
     );

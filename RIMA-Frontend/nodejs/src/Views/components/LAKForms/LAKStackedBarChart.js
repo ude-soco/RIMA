@@ -5,7 +5,7 @@ import Select from "react-select";
 import "./styles.css";
 import ReactApexChart from "react-apexcharts";
 import { Button, Label } from "reactstrap";
-import { Grid, InputLabel } from "@material-ui/core";
+import { Grid, InputLabel, Paper } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
 
@@ -385,24 +385,24 @@ class LAKStackedBarChart extends Component {
             container
             xs={12}
             md={8}
-            spacing={1}
+            spacing={2}
             style={{ marginTop: "1%" }}
           >
-            <Grid item md={2} xs={3}>
+            <Grid item lg={1} md={2} xs={3}>
               <RIMAButton
                 name={"Compare"}
                 activeButton={active3}
                 onClick={this.compareTopic}
               />
             </Grid>
-            <Grid item md={2} xs={3}>
+            <Grid item lg={1} md={2} xs={3}>
               <RIMAButton
                 name={"Reset"}
                 activeButton={active4}
                 onClick={this.clearValues}
               />
             </Grid>
-            <Grid item md={2} xs={3}>
+            <Grid item lg={1} md={2} xs={3}>
               <i
                 className="fas fa-question-circle text-blue"
                 onMouseOver={() => this.handleToogle(true)}
@@ -429,14 +429,20 @@ class LAKStackedBarChart extends Component {
             Topic
           </Button> */}
 
-          <Grid container xs={12} style={{ opacity: opacity }}>
+          <Grid container xs={12} style={{ opacity: opacity, marginTop: "1%" }}>
             <Grid item xs={12}>
-              <ReactApexChart
-                options={this.state.options}
-                series={this.state.series}
-                type="bar"
-                height={450}
-              />
+              <Paper
+                style={{ borderRadius: "40px", padding: "1%" }}
+                elevation={10}
+              >
+                {" "}
+                <ReactApexChart
+                  options={this.state.options}
+                  series={this.state.series}
+                  type="bar"
+                  height={450}
+                />
+              </Paper>
             </Grid>
           </Grid>
         </Grid>

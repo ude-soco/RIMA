@@ -39,6 +39,7 @@ import CompareStackedAreaChart from "../../../components/LAKForms/compareStacked
 import RestAPI from "../../../../Services/api";
 
 import { CardHeader, Row, Col } from "reactstrap";
+import ConferenceOverview from "../../../components/LAKForms/ConferenceOverview.jsx";
 window.$value = "";
 var selectInputRef = React.createRef();
 const useStyles = makeStyles((theme) => ({
@@ -246,7 +247,7 @@ export default function EducationalConferences(props) {
             onClick={handleClickActivity}
           >
             {" "}
-            Activity
+            General Overview
           </h1>
           <Card
             className="bg-gradient-default1 shadow"
@@ -265,6 +266,28 @@ export default function EducationalConferences(props) {
                     width: "100%",
                     backgroundColor: "#F0F8FF",
                     borderRadius: "40px",
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      margin: "1%",
+                    }}
+                  >
+                    <ConferenceOverview
+                      conferencesNames={availableConferences}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "#F0F8FF",
+                    borderRadius: "40px",
+                    marginTop: "1%",
                   }}
                 >
                   <Grid
@@ -324,7 +347,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={6}
+                      lg={7}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -340,7 +363,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={5}
+                      lg={4}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -365,7 +388,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={6}
+                      lg={7}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -374,7 +397,6 @@ export default function EducationalConferences(props) {
                       <NewNumberOfSharedWords
                         conferencesNames={availableConferences}
                         chartType="area"
-
                       />
                     </Grid>
                     <Grid
@@ -382,7 +404,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={5}
+                      lg={4}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -440,7 +462,16 @@ export default function EducationalConferences(props) {
                       conferencesNames={availableConferences}
                     />
                   </Grid> */}
-
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    style={{
+                      ...Style.itemStyle,
+                    }}
+                  >
+                    <NewSharedAuthors conferencesNames={availableConferences} />
+                  </Grid>
                   <Grid
                     xs={12}
                     item
@@ -541,58 +572,7 @@ export default function EducationalConferences(props) {
         </Grid> */}
 
         {/* Authors */}
-        <Grid
-          container
-          component={Paper}
-          className={classes.cardHeight3}
-          style={{ width: "100%" }}
-        >
-          <h1
-            style={{ ...Style.h1Style }}
-            checked={openDrawerAuthor}
-            onMouseEnter={changeBackgroundAuthor}
-            onMouseLeave={changeBackgroundAuthor2}
-            onClick={handleClickAuthor}
-          >
-            {" "}
-            Authors{" "}
-          </h1>
-          <Card
-            className="bg-gradient-default1 shadow"
-            lg={openDrawerAuthor ? 4 : ""}
-            style={{
-              ...Style.cardStyle,
-              display: openDrawerAuthor ? "block" : "none",
-            }}
-          >
-            <Fade unmountOnExit in={openDrawerAuthor}>
-              <CardContent className="bg-transparent">
-                <Grid container className="bg-transparent">
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <NewSharedAuthors conferencesNames={availableConferences} />
-                  </Grid>
-                  {/* <Grid
-                    item
-                    md={12}
-                    style={{
-                      ...Style.itemStyle,
-                      marginTop: "1%",
-                    }}
-                  >
-                    <NewAuthorBar conferencesNames={availableConferences} />
-                  </Grid> */}
-                </Grid>{" "}
-              </CardContent>
-            </Fade>
-          </Card>
-        </Grid>
+
 
         <ScrollTopWrapper />
       </Grid>

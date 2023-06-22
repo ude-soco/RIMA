@@ -308,8 +308,15 @@ class NewSharedAuthors extends Component {
     return (
       <Box component="form" role="form" method="form" style={{ width: "100%" }}>
         <br></br>
-        <h2>Shared authors</h2>
-        <p>Shared authors between two conference events</p>
+        <Typography
+          style={{ fontWeight: "bold" }}
+          variant="h5"
+          component="h1"
+          gutterBottom
+        >
+          Shared Authors between Conference Events
+        </Typography>
+        <p>Shared authors between two or three conference events</p>
         <Label>Select two conference events to compare</Label>
         <Grid container spacing={3}>
           <Grid item md={5} xs={12}>
@@ -394,7 +401,7 @@ class NewSharedAuthors extends Component {
                 </Grid>
                 <Grid item md={5} xs={12}>
                   <Select
-                    placeholder="Third conference event  (optional)" 
+                    placeholder="Third conference event  (optional)"
                     options={this.state.confeventsThird}
                     value={this.state.confeventsTwo.find(
                       (obj) => obj.value === this.state.selectedEventThird

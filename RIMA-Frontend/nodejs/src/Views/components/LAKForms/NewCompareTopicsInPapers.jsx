@@ -6,7 +6,14 @@ import "d3-transition";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import { Grid, Box, InputLabel, Typography, Fade } from "@material-ui/core";
+import {
+  Grid,
+  Box,
+  InputLabel,
+  Typography,
+  Fade,
+  Paper,
+} from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 import CustomizedDialog from "Views/Application/ReuseableComponents/CustomizedDialog.jsx";
@@ -297,7 +304,7 @@ class NewCompareTopicsInPapers extends Component {
           component="h1"
           gutterBottom
         >
-          Comparative Popularity of Shared Topics/Keywords in Conference Events
+          Comparative Popularity of Shared Topics in Conference Events
         </Typography>
         <Typography>
           Number of publications mentioning shared topics and keywords between
@@ -388,14 +395,16 @@ class NewCompareTopicsInPapers extends Component {
           width={90}
           visible={this.state.loader}
         />
-        <Box style={{ opacity: this.state.opacity }}>
-          <ReactApexChart
-            options={this.state.options}
-            series={this.state.series}
-            type="bar"
-            height={600}
-          />
-        </Box>
+        <Grid style={{ opacity: this.state.opacity, marginTop: "1%" }}>
+          <Paper style={{ borderRadius: "40px", padding: "1%" }} elevation={10}>
+            <ReactApexChart
+              options={this.state.options}
+              series={this.state.series}
+              type="bar"
+              height={600}
+            />
+          </Paper>
+        </Grid>
       </Box>
     );
   }
