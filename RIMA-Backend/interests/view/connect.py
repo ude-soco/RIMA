@@ -29,7 +29,7 @@ def getPageData(interest):
             "interest":""
         }
 
-        print(interest, page)
+        #print(interest, page)
     return pageData
 
 def getRefCitAuthorsPapers(authorId, method):
@@ -149,6 +149,7 @@ def getConnectData(id):
     doIt = bool(id["papers"]) #fetch papers not directly
     print(doIt)
     selectedNames = id["selectedNames"]
+    #selectedNames.append(authorId)
     print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     if(doIt):
@@ -157,12 +158,17 @@ def getConnectData(id):
         print("get authors Who I cited the most")
         authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
         x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
+        print("first")
+        print(x)
         x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
+        print("second")
+        print(x)
+        
     else:
         authorsReferences = authorsCitedMe = []
         x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
         x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
-        print(x)
+        
         
 
     """ 
@@ -176,6 +182,7 @@ def getConnectData(id):
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
     """
+    print(x)
     data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames}
     return data
  
@@ -199,9 +206,10 @@ def testMet(authorId, method, filter):
     allCitsRefs = getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors = allCitsRefs["listAllAuthors"]
     dictAuthorsName = allCitsRefs["authorsNames"]
-    """for i in filter:
-        while i in listAuthors:
-            listAuthors.remove(i)"""
+    while authorId in listAuthors:
+        listAuthors.remove(authorId)
     topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
+    print(len(topN))
     x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} 
+    print(x)
     return x
