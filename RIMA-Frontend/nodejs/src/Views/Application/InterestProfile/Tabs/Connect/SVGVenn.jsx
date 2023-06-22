@@ -6,7 +6,8 @@ import {
     DialogTitle,
     Menu,
     MenuItem,
-    Button
+    Button,
+    Stack
 } from "@material-ui/core";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -39,6 +40,11 @@ const SVGVenn = (props) => {
 
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
+    const buttonStyle = {
+        position: 'absolute',
+        top: '500px',
+        left: '220px',
+    };
     const fetchKeywords = async () => {
         //setState({...state,userInterests: []})
 
@@ -218,6 +224,7 @@ const SVGVenn = (props) => {
         posUser = posUser - 10;
     }
 
+
     return (
         <>
             {userInterest.length !== 0?<svg height="500" width="600">
@@ -270,13 +277,13 @@ const SVGVenn = (props) => {
                         }
                     })}
                 </text>
-                <text fill="white">
+                <text fill="black">
                     {bothInterest.map((u, i) => {
                         return (
                             <tspan
                                 class="text"
                                 x={posTextBoth - 50}
-                                y={100 + yPosText * i}
+                                y={75 + yPosText * i}
                                 onClick={handleClickOnlyLearn}
                             >
                                 {u}
@@ -329,9 +336,12 @@ const SVGVenn = (props) => {
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
-
+            <Button variant="outlined" style={buttonStyle}>
+                shared interests: {bothInterest.length}
+            </Button>
+            
         </>
-    );
+    );    
 };
 
 export default SVGVenn;
