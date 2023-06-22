@@ -1,9 +1,24 @@
 import React from "react"
 import PublicationList from "./PublicationList";
 import {Box, Grid, Paper, Typography} from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  fancyText: {
+    fontFamily: "Helvetica, Arial, sans-serif",
+    fontWeight: 'bold',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop:"30px",
+    marginBottom:"30px",
+    width: "60vw"
+  },
+}));
 
 const WhyInterest = (props) => {
   const {papers, originalKeywords} = props
+  const classes = useStyles();
   console.log("test ", papers)
   return (
     <>
@@ -41,9 +56,17 @@ const WhyInterest = (props) => {
           </Grid>
         </Paper>
       </Box>
-      {papers.map((paper) => {
-        return <PublicationList publication={paper} originalKeywords={originalKeywords}/>;
-      })}
+      {papers.length > 0 ? (
+        papers.map((paper) => (
+          <PublicationList
+            publication={paper}
+            originalKeywords={originalKeywords}
+          />
+      ))
+      ) : (
+        <Typography variant="h4" className={classes.fancyText}>NO PAPERS FOUND</Typography>
+      )}
+
     </>
   )
 }
