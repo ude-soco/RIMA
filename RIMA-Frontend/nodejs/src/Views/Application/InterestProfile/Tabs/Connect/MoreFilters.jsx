@@ -80,7 +80,7 @@ export default function MoreFilters(props) {
   };
 
   return (
-    <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth >
+    <Dialog open={true} onClose={handleClose} maxWidth="md"  >
       <DialogTitle className={classes.title}>Hide Authors you already know </DialogTitle>
       <DialogContent dividers>
 

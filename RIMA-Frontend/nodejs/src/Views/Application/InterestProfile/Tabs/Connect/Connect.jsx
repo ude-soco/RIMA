@@ -84,8 +84,12 @@ export default function Connect (props) {
     } 
 
     const handleSelectedNamesChange = (names) => {
+        console.log(names, "names")
+        console.log(selectedNames.some(item => item === names))
+        if((names.some(item => !selectedNames.includes(item)))){setChange(true)}
+        else {setChange(false)}
         setSelectedNames([...names]);
-        setChange(true)
+        
     }
     console.log(selectedNames, "SlectedNames Connect")
 
