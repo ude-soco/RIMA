@@ -570,6 +570,7 @@ const ConnectedGraph = (props) => {
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                             <TextField
                             type="number"
+                            label="MinYear"
                             variant="outlined"
                             size="small"
                             onChange={(e) => handleMinYearChange(e.target.value)}
