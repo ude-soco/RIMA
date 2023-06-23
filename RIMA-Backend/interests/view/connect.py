@@ -149,7 +149,6 @@ def getConnectData(id):
     doIt = bool(id["papers"]) #fetch papers not directly
     print(doIt)
     selectedNames = id["selectedNames"]
-    #selectedNames.append(authorId)
     print(selectedNames)
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     if(doIt):
@@ -207,7 +206,7 @@ def testMet(authorId, method, filter):
     listAuthors = allCitsRefs["listAllAuthors"]
     dictAuthorsName = allCitsRefs["authorsNames"]
     while authorId in listAuthors:
-        listAuthors.remove(authorId)
+        listAuthors.remove(str(authorId))    
     topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
     print(len(topN))
     x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} 
