@@ -7,6 +7,7 @@ import Help from "./Help"
 import FilterListIcon from "@material-ui/icons/FilterList";
 import MoreFilters from "./MoreFilters"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import arrow from "./arrow.gif";
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)
@@ -131,7 +132,7 @@ export default function Connect (props) {
                                     {button ? (
                                         <Tooltip title="Test">
                                         <Button disabled>
-                                            <ArrowBackIcon htmlColor="red" />
+                                            <img src={arrow} alt="gif" style={{ width: '40px', height: '25px', transform: 'rotate(90deg)'}}/>
                                             <Typography color="primary">Please Configure</Typography>
                                         </Button>
                                         </Tooltip>
