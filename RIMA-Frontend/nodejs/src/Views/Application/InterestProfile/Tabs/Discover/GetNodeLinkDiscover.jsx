@@ -5,10 +5,10 @@ import cxtmenu from "cytoscape-cxtmenu";
 import WikiDesc from "../Connect/WikiDesc";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import RestAPI from "../../../../../Services/api";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-
+import swal from 'sweetalert';
 cytoscape.use(cxtmenu);
 
 function getColor(currColors) {
@@ -197,6 +197,60 @@ const GetNodeLink = (props) => {
     setOpenDialog({...openDialog, openLearn: false});
   };
 
+  function showConfirmationPopup(ele) {
+    swal({
+      title: "Sind Sie sich sicher?",
+      text: "Möchten Sie das wirklich entfernen?",
+      icon: "warning",
+      buttons: ["Abbrechen", "Entfernen"],
+      dangerMode: true,
+    })
+    .then((willRemove) => {
+      if (willRemove) {
+        let currInterest = ele.data()["label"];
+              console.log(currInterest,"test curr");
+              let msg =
+                "The interest " + currInterest + " has been removed";
+              toast.error(msg, {
+                toastId: "removedLevel1"
+              });
+              
+              ele.addClass("collapsed");
+              ele.successors().addClass("collapsed");
+      } else {
+        // Der Benutzer hat auf "Abbrechen" geklickt
+        console.log("Entfernung abgebrochen");
+      }
+    });
+  }
+  function showConfirmationPopup2(ele) {
+    swal({
+      title: "Sind Sie sich sicher?",
+      text: "Möchten Sie das wirklich entfernen?",
+      icon: "warning",
+      buttons: ["Abbrechen", "Entfernen"],
+      dangerMode: true,
+    })
+    .then((willRemove) => {
+      if (willRemove) {
+        let currInterest = ele.data()["label"];
+              console.log(currInterest,"test curr");
+              let msg =
+                "The interest " + currInterest + " has been removed";
+              toast.error(msg, {
+                toastId: "removedLevel1"
+              });
+              
+              ele.addClass("collapsed");
+      } else {
+        // Der Benutzer hat auf "Abbrechen" geklickt
+        console.log("Entfernung abgebrochen");
+      }
+    });
+  }
+  
+
+
   const layoutGraph = {
     name: "concentric",
     concentric: function (node) {
@@ -305,14 +359,7 @@ const GetNodeLink = (props) => {
             {content: "Remove", // html/text content to be displayed in the menu
             contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
             select: function (ele) {
-              let currInterest = ele.data()["label"];
-              let currNeighbor = ele.data()["level = 2"];
-              let msg =
-                "The interest " + currInterest + " has been removed";
-              toast.error(msg, {
-                toastId: "removedLevel1"
-              });
-              ele.addClass("collapsed");
+              showConfirmationPopup(ele);
             },
             enabled: true
             }
@@ -359,13 +406,7 @@ const GetNodeLink = (props) => {
                 content: "Remove", // html/text content to be displayed in the menu
                 contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
-                  let currInterest = ele.data()["label"];
-                  let msg =
-                    "The interest " + currInterest + " has been removed";
-                  toast.error(msg, {
-                    toastId: "removedLevel2"
-                  });
-                  ele.addClass("collapsed");
+                  showConfirmationPopup2(ele);
                 },
                 enabled: true
 
