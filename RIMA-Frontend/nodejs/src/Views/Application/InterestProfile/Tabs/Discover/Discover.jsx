@@ -324,6 +324,21 @@ const handleZoomIn = () => {
           })}
         </Menu>:<></>}
       </Grid>
+      <Grid container>
+        <Grid item xs={1}/>
+        <Grid item xs={10}>
+          {checkNewKeywords ? (
+            <GetNodeLink
+              interest={state.currInterest}
+              categoriesChecked={state.currCategoriesValue}
+              data={state.currData}
+              keywords={keywords}
+            />
+          ) : (
+            <Loading/>
+          )}
+        </Grid>
+    </Grid>
 
       <Grid container>
   <Grid item xs={6} style={{ textAlign: 'right' }}>
