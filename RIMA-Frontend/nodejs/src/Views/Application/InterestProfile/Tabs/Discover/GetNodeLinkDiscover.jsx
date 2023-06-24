@@ -2,6 +2,7 @@ import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import React, {useEffect, useState} from "react";
 import cxtmenu from "cytoscape-cxtmenu";
+import zoom from "cytoscape-cxtmenu";
 import WikiDesc from "../Connect/WikiDesc";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +11,8 @@ import RestAPI from "../../../../../Services/api";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import swal from 'sweetalert';
 cytoscape.use(cxtmenu);
+cytoscape.use(zoom);
+
 
 function getColor(currColors) {
   const allColors = [
@@ -142,6 +145,7 @@ const GetNodeLink = (props) => {
 
   };
   */
+ 
 
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest.toLowerCase());
@@ -260,6 +264,7 @@ const GetNodeLink = (props) => {
       return 1;
     }
   };
+
   const stylesheet = [
     {
       selector: "node",
@@ -468,6 +473,7 @@ const GetNodeLink = (props) => {
 
           let menu2 = cy.cxtmenu(defaultsLevel2);
           let menu1 = cy.cxtmenu(defaultsLevel1);
+          
         }}
       />
       <Dialog open={openDialog.openLearn} onClose={handleCloseLearn}>
