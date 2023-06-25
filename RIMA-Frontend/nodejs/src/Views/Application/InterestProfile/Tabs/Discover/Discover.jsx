@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button,Checkbox, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Menu, MenuItem, Radio, RadioGroup, Typography } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import { Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Menu, MenuItem, Radio, RadioGroup, Typography } from '@material-ui/core';import FilterListIcon from '@material-ui/icons/FilterList';
 import GetNodeLink from './GetNodeLinkDiscover';
 import RestAPI from '../../../../../Services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { IconButton } from '@mui/material';
 
 const DiscoverPage = (props) => {
   const { data, interests, setInterests, setData } = props;
+  const [showPopup, setShowPopup] = useState(false);
   const [state, setState] = useState({
     openInterest: null,
     openCategory: null,
@@ -50,6 +52,14 @@ const DiscoverPage = (props) => {
 
 };
 // Restlicher Code ...
+const handleOpenPopup = () => {
+  setShowPopup(true);
+};
+
+const handleClosePopup = () => {
+  setShowPopup(false);
+};
+
 
 const handleZoomOut = () => {
   setZoomFactor(prevZoom => Math.max(prevZoom * 0.9, 0.1));
@@ -58,6 +68,10 @@ const handleZoomOut = () => {
 
 const handleZoomIn = () => {
   setZoomFactor(prevZoom => prevZoom * 1.1); // Increase zoom factor by 10%
+};
+
+const handleInfoButtonClick = () => {
+  setState({ ...state, infoDialogOpen: true });
 };
 
   const compareInterests = async () => {
@@ -263,10 +277,14 @@ const handleZoomIn = () => {
 
   return (
     <>
-      <Grid container justify="flex-start" style={{paddingTop: 24, paddingBottom: 8}}>
+      <Grid container justify="flex-start" style={{paddingTop: 24, paddingBottom: 8}}> 
         <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenInterest}>
           Choose interest
         </Button>
+        <IconButton aria-label="more information" color="primary" onClick={handleOpenPopup}>
+        <InfoOutlinedIcon/>
+      </IconButton>
+      {showPopup && <Popup onClose={handleClosePopup} />}
         <Menu
           id="currInterestDiscover"
           anchorEl={state.openInterest}
@@ -357,10 +375,20 @@ const handleZoomIn = () => {
   );
 };
 
+const Popup = ({ onClose }) => {
+  return (
+    <div>
+      <h3>Information</h3>
+      <p>On this page, immerse yourself in new and controversial interests that may initially seem unfamiliar. Step outside your comfort zone and delve into uncharted territory. While it may be confusing at first, this journey of discovery will unlock your unique taste and broaden your personal abilities.</p>
+      <button onClick={onClose}>Close</button>
+    </div>
+  );
+};
+
 export default DiscoverPage;
 
 export const Loading = () => {
-  return (
+     return (
     <>
       <Grid
         container
@@ -377,3 +405,4 @@ export const Loading = () => {
       </Grid>
     </>
   )};
+
