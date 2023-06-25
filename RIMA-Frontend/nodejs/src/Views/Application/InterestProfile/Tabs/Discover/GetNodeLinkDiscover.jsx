@@ -128,7 +128,7 @@ const GetNodeLink = (props) => {
     minZoom: 0.1, // Minimale Zoomstufe
     maxZoom: 10, // Maximale Zoomstufe
     fitPadding: 50, // Innenabstand für das Einpassen des Graphen
-    panSpeed: 10, // Geschwindigkeit des Pannens
+    panSpeed: 15, // Geschwindigkeit des Pannens
     panDistance: 10, // Entfernung, um zu pannen
     // Weitere Optionen hier...
   };
