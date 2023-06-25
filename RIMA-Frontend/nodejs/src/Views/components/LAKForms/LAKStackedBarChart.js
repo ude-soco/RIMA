@@ -86,12 +86,22 @@ class LAKStackedBarChart extends Component {
             },
 
             stroke: {
-              width: 1,
-              colors: ["#fff"],
+              curve: "smooth",
             },
 
-            yaxis: {
-              categories: json.Topiclist[1],
+            xaxis: {
+              categories: [
+                "lak2011",
+                "lak2012",
+                "lak2013",
+                "lak2014",
+                "lak2018",
+                "lak2019",
+                "lak2020",
+                "lak2021",
+                "lak2022",
+                "lak2023",
+              ],
             },
             xaxis: {
               title: {
@@ -114,23 +124,26 @@ class LAKStackedBarChart extends Component {
           },
           series: [
             {
-              name: "lak2011",
-              data: [91, 89, 88, 86, 85],
+              name: "data",
+              data: [7, 8, 5, 5, 7, 8, 8, 7, 3, 1],
             },
             {
-              name: "lak2012",
-              data: [44, 56, 32, 52, 36],
-            },
-            {
-              name: "lak2013",
-              data: [32, 46, 34, 52, 45],
-            },
-            {
-              name: "edm1204",
-              data: [35, 40, 34, 38, 32],
+              name: "learning",
+              data: [9, 7, 8, 7, 5, 12, 17, 7, 4, 0],
             },
           ],
-          years: json.Topiclist[1],
+          years: [
+            "lak2011",
+            "lak2012",
+            "lak2013",
+            "lak2014",
+            "lak2018",
+            "lak2019",
+            "lak2020",
+            "lak2021",
+            "lak2022",
+            "lak2023",
+          ],
           isLoaded: true,
         });
       });
@@ -245,7 +258,7 @@ class LAKStackedBarChart extends Component {
           ]);
           //selectInputRef1.current.chart.publicMethods.updateOptions({})
         }
-        console.log("json.Topiclist[1]", json.Topiclist[1]);
+        console.log("series", series);
         this.setState({
           active1: true,
           active2: false,
@@ -256,7 +269,7 @@ class LAKStackedBarChart extends Component {
 
           options: {
             chart: {
-              type: "bar",
+              type: "line",
               height: 350,
               stacked: false,
               toolbar: {
@@ -280,8 +293,8 @@ class LAKStackedBarChart extends Component {
               categories: json.Topiclist[1],
             },
             yaxis: {
-              min: 0.6,
-              max: 1,
+              min: 0,
+              max: 10,
               forceNiceScale: true,
               title: {
                 text: undefined,

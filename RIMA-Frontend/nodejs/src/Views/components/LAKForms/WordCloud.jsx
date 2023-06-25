@@ -31,7 +31,7 @@ import {
   ListGroupItem,
   Col,
 } from "reactstrap";
-import { Grid, InputLabel, Paper } from "@material-ui/core";
+import { Grid, InputLabel, Paper } from "@mui/material";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
 import RIMAButton from "../../Application/ReuseableComponents/RIMAButton.jsx";
 
@@ -192,6 +192,7 @@ class WordCloud extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
+        console.log(json);
         this.setState({
           modal: true,
           scroll: true,

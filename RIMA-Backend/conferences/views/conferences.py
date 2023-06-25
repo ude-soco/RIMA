@@ -671,6 +671,8 @@ class FetchTopicView(APIView):
             result_data[0], key=lambda k: k['weight'], reverse=True)
 
         sorted_data = [result_data[0][:5], result_data[1]]
+        print("data: ", sorted_data)
+
         return Response(
             {"Topiclist": sorted_data})
 
@@ -1340,7 +1342,7 @@ class FetchAbstractView(APIView):
         # sconfutils.get_abstract_based_on_keyword(conference_event_name_abbr,word)
         return Response(
             confutils.get_abstract_based_on_keyword(
-                conference_event_name_abbr, word, 'keyword')
+                conference_event_name_abbr, word, 'topic')
         )
 
 

@@ -322,7 +322,7 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOr
         titles_abstracts.append({
             'title': paper_data.get('title'),
             'abstarct': paper_data.get('abstract'),
-            'year': paper_data.get('year'),
+            'year': paper_data.get('years'),
             'venue': paper_data.get('paper_venu'),
             'paper_id': paper_data.get('paper_id')
         })

@@ -8,6 +8,7 @@ import { Button, Label, FormGroup, Form, Row, Col } from "reactstrap";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
+import { Grid, InputLabel, Paper } from "@mui/material";
 
 import mostPopularKeyphraseInConf from "./MostPopularKeyphraseInConf.jsx";
 class NewEvolutionTopTopics extends Component {
@@ -60,21 +61,24 @@ class NewEvolutionTopTopics extends Component {
       ],
       options: {
         chart: {
+          type: "bar",
           height: 350,
-          type: "line",
-          zoom: {
-            enabled: false,
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: "55%",
+            endingShape: "rounded",
           },
         },
         yaxis: [
           {
             title: {
-              text: "Weight",
+              text: "No. of publications",
               style: {
                 color: "#008FFB",
               },
             },
-
             forceNiceScale: true,
           },
         ],
@@ -82,14 +86,10 @@ class NewEvolutionTopTopics extends Component {
           enabled: false,
         },
         stroke: {
-          width: [5, 7, 5],
-          curve: "smooth",
-          dashArray: [0, 8, 5],
+          show: true,
+          width: 2,
+          colors: ["transparent"],
         },
-        // title: {
-        //   text: 'Page Statistics',
-        //   align: 'left'
-        // },
         legend: {
           tooltipHoverFormatter: function (val, opts) {
             return (
@@ -100,24 +100,13 @@ class NewEvolutionTopTopics extends Component {
             );
           },
         },
-        markers: {
-          size: 0,
-          hover: {
-            sizeOffset: 6,
-          },
+        fill: {
+          opacity: 1,
         },
         xaxis: {
           categories: [
-            "2012",
-            "2013",
-            "2014",
-            "2015",
-            "2016",
-            "2017",
-            "2018",
-            "2019",
-            "2020",
-            "2021",
+            2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,
+            2021,
           ],
         },
         tooltip: {
@@ -302,7 +291,7 @@ class NewEvolutionTopTopics extends Component {
               conference.
             </p>
             <br></br>
-            <Button
+            {/* <Button
               outline
               color="primary"
               active={this.state.active1}
@@ -310,16 +299,16 @@ class NewEvolutionTopTopics extends Component {
               onClick={this.topTopicsInYears}
             >
               Topics
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               outline
               color="primary"
               active={this.state.active2}
               value="key"
               onClick={this.topKeywordsInInYears}
             >
-              Keywords
-            </Button>
+              Topics
+            </Button> */}
             <i
               className="fas fa-question-circle text-blue"
               onMouseOver={() => this.handleToogle(true)}
@@ -347,14 +336,16 @@ class NewEvolutionTopTopics extends Component {
             )}
           </FormGroup>
         </Form>
-        <div style={{ opacity: this.state.opacity }}>
-          <ReactApexChart
-            options={this.state.options}
-            series={this.state.series}
-            type="bar"
-            height={350}
-          />
-        </div>
+        <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
+          <Paper style={{ width: "100%", borderRadius: "40px", padding: "1%" }}>
+            <ReactApexChart
+              options={this.state.options}
+              series={this.state.series}
+              type="bar"
+              height={350}
+            />
+          </Paper>
+        </Grid>
       </div>
     );
   }

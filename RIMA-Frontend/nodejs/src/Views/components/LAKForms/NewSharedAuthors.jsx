@@ -18,7 +18,7 @@ import {
 } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
-import SharedAuthorVennDiagram from "./SharedAuthorVennDiagram.jsx";
+import InteractiveVennDiagram from "./InteractiveVennDiagram.jsx";
 window.$value = "";
 
 class NewSharedAuthors extends Component {
@@ -478,9 +478,10 @@ class NewSharedAuthors extends Component {
                   An events can't be selected twice.
                 </Typography>
               )}
-              <SharedAuthorVennDiagram
+              <InteractiveVennDiagram
                 sets={this.state.sets}
-                authorsNames={this.state.authorsNames}
+                listContent={this.state.authorsNames}
+                label={"authors"}
               />
             </Grid>
           </Grid>
