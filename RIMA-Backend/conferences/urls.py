@@ -118,7 +118,8 @@ urlpatterns = [
     path('getallkeysevolution/keyword/<pk>/',
          RelevantPublicationsOfKeywords.as_view()),
 
-
+    path('getPublicationsConfCount/<pk>/',
+         RelevantPubsCountOfConf.as_view()),
 
     # BAB 08.06.2021 Extension for other conferences other than LAK
     path('gettopicsforpie/<pk1>/<pk2>/<pk3>', TopicPieView.as_view()),
@@ -178,4 +179,7 @@ urlpatterns = [
          AuthorConfComparisionView.as_view()),
     path('updatealltopics/', UpdateAllTopics.as_view()),
 
+    # ****************************************************Explore topics and trend new created by Islam ******************************
+    path('sharedTopicsBetweenEvents/<pk1>/',
+         SharedTopicsBetweenEvents.as_view()),
 ]

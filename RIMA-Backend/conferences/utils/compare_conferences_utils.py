@@ -9,6 +9,7 @@ from interests.wikipedia_utils import wikicategory, wikifilter
 from neomodel import *
 from itertools import combinations
 import numpy as np
+from collections import Counter
 
 
 def get_years_range_of_conferences(conferences_list, all_or_shared):
@@ -1205,3 +1206,64 @@ def Conf_All_years(conf_name):
         years.append(year)
 
     return years
+
+
+def get_relavant_pubsCount__keywordTopic_conf_based(conf_name, keyword_or_topic):
+    all_event = get_conf_events(conf_name)
+    events_Pubs_keywords = get_events_publications_keywordsOrTopics(
+        keyword_or_topic, all_event)
+
+    return events_Pubs_keywords
+
+
+def get_events_publications_keywordsOrTopics(keyword_or_topic, all_event):
+    events_keywordsOrTopic = []
+
+    for event in all_event:
+        pubs_keywordsTopics = get_event_publications_keywordsTopics(
+            keyword_or_topic, event)
+        counter = Counter(pubs_keywordsTopics)
+        result = [{'name': key, 'count': value}
+                  for key, value in counter.items()]
+        result = sorted(result, key=lambda x: x['count'], reverse=True)
+
+        events_keywordsOrTopic.append({
+            "year": re.sub(
+                "[^0-9]", "", event.conference_event_name_abbr),
+            "keywords": result[:5]
+        })
+
+    return events_keywordsOrTopic
+
+
+def get_event_publications_keywordsTopics(keyword_or_topic, event):
+    pubs_keywordsTopics = []
+    event_pubs = event.publications.all()
+    for pub in event_pubs:
+        keywords = [keyword.keyword for keyword in pub.keywords.all()]
+        if (keyword_or_topic == "keyword"):
+            pubs_keywordsTopics.extend(keywords)
+        elif (keyword_or_topic == "topic"):
+            pubs_keywordsTopics.extend(keywords)
+    return pubs_keywordsTopics
+
+
+def convert_data_to_barChart_sets(data):
+    all_keywords = set()
+    for year_data in data:
+        for keyword_data in year_data['keywords']:
+            all_keywords.add(keyword_data['name'])
+
+    keyword_counts = {keyword: [0] * len(data) for keyword in all_keywords}
+
+    for i, year_data in enumerate(data):
+        year_keywords = {k['name']: k['count'] for k in year_data['keywords']}
+        for keyword in all_keywords:
+            if keyword in year_keywords:
+                keyword_counts[keyword][i] = year_keywords[keyword]
+
+    final_data = []
+    for keyword, counts in keyword_counts.items():
+        final_data.append({'name': keyword, 'data': counts})
+
+    return final_data
