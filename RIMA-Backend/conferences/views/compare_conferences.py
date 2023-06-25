@@ -259,7 +259,7 @@ class topWordsOverYears(APIView):
         top_words_over_years = []
         result_words = []
         list_all_events_of_conf = []
-        resulte_weight = []
+        result_weight = []
 
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
         conference = url_splits[-2]
@@ -282,14 +282,20 @@ class topWordsOverYears(APIView):
             last_five_events, keyword_or_topic)
 
         print('Modelsssssssssss data yearssssssss')
-        print(top_words_over_years)
+        # print(top_words_over_years)
 
         for key, value in top_words_over_years.items():
             result_words.append(key)
-            resulte_weight.append(value)
+            result_weight.append(value)
+
+        top_words = top_words_over_years.items()
+        print("result_words[-10:]", result_words[-10:])
+        print("result_weight[-10:]", result_weight[-10:])
+        # compConfUtils.get_relavant_publication_for_aList(result_words[-10:])
+
         return Response({
             'WordsList': result_words[-10:],
-            "values": resulte_weight[-10:]
+            "values": result_weight[-10:]
         })
 
 
@@ -803,7 +809,6 @@ class TotalEventsForEachConf(APIView):
 
 class MultipleTopicAreaView(APIView):
     def get(self, request, *args, **kwargs):
-        session = settings.NEO4J_SESSION.session()
         models_data = []
         result_data = []
         weights = []
@@ -831,11 +836,43 @@ class MultipleTopicAreaView(APIView):
             result_data.append(weights)
             weights = []
 
-        session.close()
+        print("result_data", result_data)
+        print("ist(sorted(set(events), key=events.index)",
+              list(sorted(set(events))))
         return Response({
             "weights": result_data,
             "years": list(sorted(set(events), key=events.index))
         })
+
+
+# new class created by Islam
+class RelevantPublicationsOfKeywords(APIView):
+    def get(self, request, *args, **kwargs):
+
+        url_splits_question_mark = confutils.split_restapi_url(
+            request.get_full_path(), r'?')
+        url_splits_conference_name = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+
+        conference_name_abbr = url_splits_conference_name[-2]
+        words_split_params = url_splits_question_mark[-1].split("&")
+
+        publications = compConfUtils.get_relavant_publication_for_aList(
+            conference_name_abbr, words_split_params)
+        years = compConfUtils.Conf_All_years(conference_name_abbr)
+        if publications is not None:
+            names = [obj['name'] for obj in publications]
+            data = [obj['data'] for obj in publications]
+
+            print("final names: ", names)
+            print("final data: ", data)
+            print("final years: ", years)
+
+            return Response({
+                "names": names,
+                "data": data,
+                "years": years
+            })
 
 # done
 # updated by Islam Abdelghaffar

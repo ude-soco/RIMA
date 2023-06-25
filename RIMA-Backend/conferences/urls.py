@@ -116,7 +116,7 @@ urlpatterns = [
     # BAB 08.06.2021 Extension for other conferences other than LAK
     # reused by Abdallah
     path('getallkeysevolution/keyword/<pk>/',
-         MultipleTopicAreaView.as_view()),
+         RelevantPublicationsOfKeywords.as_view()),
 
 
 

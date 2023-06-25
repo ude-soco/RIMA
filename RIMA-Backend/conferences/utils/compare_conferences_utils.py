@@ -226,13 +226,10 @@ def get_top_words_in_years(list_of_events, keyword_or_topic):
 
     count = 0
     for event in list_of_events:
-        print("here are some important test")
-        print(event)
+        print("event name: ", event)
         for model in models_data_total[count]:
-            print("here are some important test 22")
-            print(count)
-            print(model)
-            print("here are some important test 222")
+            print("event keywords count: ", count)
+            print("event keywords date: ", model)
             if model[keyword_or_topic] in list_of_final_words.keys():
                 list_of_final_words[model[keyword_or_topic]] += model['weight']
             else:
@@ -389,6 +386,8 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
             # islam Updated
             check_exist = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event.conference_event_name_abbr)
+            no_of_event_papers = ""
+            one_event_authors = ""
             if check_exist:
                 no_of_event_papers = len(Event.nodes.filter(
                     conference_event_name_abbr=conference_event.conference_event_name_abbr).publications.all())
@@ -413,6 +412,8 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
 
     return result_data
 
+# updated by islam
+
 
 def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
     """retrieves weights of a specific word in a list on conference events. If the word does not exist in an event, its weight is zero
@@ -427,7 +428,7 @@ def get_word_weight_event_based(conference_event_objs, word, keyword_or_topic):
     """
 
     result_data = []
-
+    word_object = ""
     if keyword_or_topic == 'topic':
         # islam Updated
         word_object = Topic.nodes.filter(topic=word)
@@ -672,71 +673,76 @@ def get_conf_total_publications(conf_name):
     if conf_node:
         publications_number = len(conf_node.publication.all())
     return publications_number
-# new func by Islam Abdelghaffar 
-def get_relavant_publication(even_name,keyword_or_topic,keywordTopic_name):
+# new func by Islam Abdelghaffar
 
-        event_obj_publications = Event.nodes.filter(
+
+def get_relavant_publication(even_name, keyword_or_topic, keywordTopic_name):
+
+    event_obj_publications = Event.nodes.filter(
         conference_event_name_abbr=even_name).publications.all()
-        if keyword_or_topic == "keyword":
-            publicationsList = [
-            pub for pub in event_obj_publications 
+    if keyword_or_topic == "keyword":
+        publicationsList = [
+            pub for pub in event_obj_publications
             if pub.keywords.filter(keyword=keywordTopic_name)
-            ]
-            return publicationsList
-        
-        elif  keyword_or_topic == "topic" :
-            publicationsList=[
-                pub for pub in event_obj_publications
-                if pub.topics.filter(topics=keywordTopic_name)
-            ]
-            return publicationsList
-# new func by Islam Abdelghaffar 
-def get_publication_keywords_count(publication_name,keywords_or_topics):
-    keywords_topics_counts=[]
-    print("publication_name.strip(): ",publication_name.strip())
-    publication_node= Publication.nodes.get(title=publication_name)
-    content_words = (str(publication_node.title )+ str(publication_node.abstract)).lower()
+        ]
+        return publicationsList
+
+    elif keyword_or_topic == "topic":
+        publicationsList = [
+            pub for pub in event_obj_publications
+            if pub.topics.filter(topics=keywordTopic_name)
+        ]
+        return publicationsList
+# new func by Islam Abdelghaffar
+
+
+def get_publication_keywords_count(publication_name, keywords_or_topics):
+    keywords_topics_counts = []
+    print("publication_name.strip(): ", publication_name.strip())
+    publication_node = Publication.nodes.get(title=publication_name)
+    content_words = (str(publication_node.title) +
+                     str(publication_node.abstract)).lower()
     if keywords_or_topics == "keywords":
         print("keywords")
         for keyword in publication_node.keywords.all():
-            keyword_count=content_words.count(keyword.keyword.lower())
+            keyword_count = content_words.count(keyword.keyword.lower())
             keywords_topics_counts.append({
                 "text": keyword.keyword,
-                "value":keyword_count
+                "value": keyword_count
             })
 
-    elif keywords_or_topics == "topics":  
+    elif keywords_or_topics == "topics":
         print("topics")
         for topic in publication_node.topics.all():
-            keyword_count=content_words.count(topic.topic.lower())
+            keyword_count = content_words.count(topic.topic.lower())
             keywords_topics_counts.append({
                 "text": topic.topic,
-                "value":keyword_count
+                "value": keyword_count
             })
     return keywords_topics_counts
 
 
-def get_commen_keywords_or_topics(first_paper_keywordsCount,second_paper_keywordsCount):
-    final_intersection=[]
+def get_commen_keywords_or_topics(first_paper_keywordsCount, second_paper_keywordsCount):
+    final_intersection = []
     keywords_topics_first_paper = {d['text']
-                              for d in first_paper_keywordsCount}
+                                   for d in first_paper_keywordsCount}
     keywords_topics_second_paper = {d['text']
-                                for d in second_paper_keywordsCount}
+                                    for d in second_paper_keywordsCount}
     common_keywords_or_topics = list(
         keywords_topics_first_paper & keywords_topics_second_paper)
 
-    if len(common_keywords_or_topics)==0:
+    if len(common_keywords_or_topics) == 0:
         print("common_keywords_or_topics")
         final_intersection.append({
             "intersection": [],
             "intersectionDetails": []
         })
         return final_intersection
-    
+
     first_paper_dict = {d['text']: d["value"]
                         for d in first_paper_keywordsCount}
     second_paper_dict = {d["text"]: d["value"]
-                            for d in second_paper_keywordsCount}
+                         for d in second_paper_keywordsCount}
     intersection = [
         {
             "text": topic_or_keyword,
@@ -744,8 +750,8 @@ def get_commen_keywords_or_topics(first_paper_keywordsCount,second_paper_keyword
         }
         for topic_or_keyword in common_keywords_or_topics
     ]
-    
-    intersectionDetails=[
+
+    intersectionDetails = [
         {
             "text": topic_or_keyword,
             "firstPapercount": first_paper_dict.get(topic_or_keyword, 0),
@@ -759,55 +765,58 @@ def get_commen_keywords_or_topics(first_paper_keywordsCount,second_paper_keyword
     })
     return final_intersection
 
-#new fun implemented by islam abdelghaffar
-def get_author_keywordTopic_eventBased(author_name, event_name,keyword_or_topic):
-    author_node=Author.nodes.get(author_name=author_name)
-    event_node=Event.nodes.filter(conference_event_name_abbr=event_name)
+# new fun implemented by islam abdelghaffar
 
-    if keyword_or_topic =="keyword":
-        author_keywords=author_node.keywords.all()
-        event_keywords=set (k.keyword for k in event_node.keywords.all())
-        author_event_keywords_weights=[ 
-            { 
-                "text":author_keyword.keyword,
+
+def get_author_keywordTopic_eventBased(author_name, event_name, keyword_or_topic):
+    author_node = Author.nodes.get(author_name=author_name)
+    event_node = Event.nodes.filter(conference_event_name_abbr=event_name)
+
+    if keyword_or_topic == "keyword":
+        author_keywords = author_node.keywords.all()
+        event_keywords = set(k.keyword for k in event_node.keywords.all())
+        author_event_keywords_weights = [
+            {
+                "text": author_keyword.keyword,
                 'value': author_node.keywords.relationship(author_keyword).weight
             }
-          for author_keyword in author_keywords 
-                if author_keyword.keyword in event_keywords]
+            for author_keyword in author_keywords
+            if author_keyword.keyword in event_keywords]
 
         return author_event_keywords_weights
-    
-    elif keyword_or_topic =="topic":
-        author_topics=author_node.topics.all()
-        event_topics=set(t.topic for t in event_node.topics.all())
-        author_event_topics_weights=[
-            {
-                "text":author_topic.topic,
-                "value": author_node.topics.relationship(author_topic).weight
-            } for author_topic in author_topics 
-                             if author_topic.topic in event_topics]
 
-        print("author_event_topics_weights: ",author_event_topics_weights)    
+    elif keyword_or_topic == "topic":
+        author_topics = author_node.topics.all()
+        event_topics = set(t.topic for t in event_node.topics.all())
+        author_event_topics_weights = [
+            {
+                "text": author_topic.topic,
+                "value": author_node.topics.relationship(author_topic).weight
+            } for author_topic in author_topics
+            if author_topic.topic in event_topics]
+
+        print("author_event_topics_weights: ", author_event_topics_weights)
         return author_event_topics_weights
 
-        
 
 def get_conf_events(conf_name):
-   conf_node= Conference.nodes.get(conference_name_abbr=conf_name)
-   return conf_node.events.all()
+    conference_event_objs = Event.nodes.filter(
+        conference_event_name_abbr__startswith=conf_name)
+    return conference_event_objs
+
 
 def get_Shared_years_between_confs(confs_events_list):
-    confs_years=[]
+    confs_years = []
     for conf in confs_events_list:
-        conf_event_name= conf["conference"]
-        conf_events_list=conf["events"]
-        years= get_years_of_conf(conf_events_list)
+        conf_event_name = conf["conference"]
+        conf_events_list = conf["events"]
+        years = get_years_of_conf(conf_events_list)
         confs_years.append({
-            "conference":conf_event_name,
+            "conference": conf_event_name,
             "years": years
         })
     common_years = get_common_years(confs_years)
-    return sorted(common_years)   
+    return sorted(common_years)
 
 
 def get_years_of_conf(conf_events_list):
@@ -827,7 +836,8 @@ def get_common_years(confs_years):
 
     return list(common_years)
 
-def get_shared_events_basedOn_shared_years(confs_events_list,common_years):
+
+def get_shared_events_basedOn_shared_years(confs_events_list, common_years):
     conf_shared_events = []
 
     for conf in confs_events_list:
@@ -837,13 +847,14 @@ def get_shared_events_basedOn_shared_years(confs_events_list,common_years):
             print("match: ", event.conference_event_name_abbr)
             match = re.search(r'\d{4}', event.conference_event_name_abbr)
             if match is not None and match.group() in common_years:
-                event_name = re.split("-",event.conference_event_name_abbr)[0]
-                authors_list = [author.semantic_scolar_author_id for author in event.authors.all()]
-                existing_event = next((item for item in shared_events 
-                                    if item["event_name"] == event_name), None)
+                event_name = re.split("-", event.conference_event_name_abbr)[0]
+                authors_list = [
+                    author.semantic_scolar_author_id for author in event.authors.all()]
+                existing_event = next((item for item in shared_events
+                                       if item["event_name"] == event_name), None)
                 if existing_event:
                     existing_event["event_authors"].extend(authors_list)
-                else:   
+                else:
                     shared_events.append({
                         "event_name": event_name,
                         "event_authors": authors_list
@@ -857,7 +868,8 @@ def get_shared_events_basedOn_shared_years(confs_events_list,common_years):
 
     return conf_shared_events
 
-def get_shared_events_keyword_basedOn_shared_years(shared_based,confs_events_list,common_years):
+
+def get_shared_events_keyword_basedOn_shared_years(shared_based, confs_events_list, common_years):
     conf_shared_events = []
 
     for conf in confs_events_list:
@@ -867,13 +879,14 @@ def get_shared_events_keyword_basedOn_shared_years(shared_based,confs_events_lis
             print("get data of: ", event.conference_event_name_abbr)
             match = re.search(r'\d{4}', event.conference_event_name_abbr)
             if match is not None and match.group() in common_years:
-                event_name = re.split("-",event.conference_event_name_abbr)[0]
-                keywords_list = [keyword.keyword for keyword in event.keywords.all()]
-                existing_event = next((item for item in shared_events 
-                                    if item["event_name"] == event_name), None)
+                event_name = re.split("-", event.conference_event_name_abbr)[0]
+                keywords_list = [
+                    keyword.keyword for keyword in event.keywords.all()]
+                existing_event = next((item for item in shared_events
+                                       if item["event_name"] == event_name), None)
                 if existing_event:
                     existing_event[shared_based].extend(keywords_list)
-                else:   
+                else:
                     shared_events.append({
                         "event_name": event_name,
                         shared_based: keywords_list
@@ -885,83 +898,90 @@ def get_shared_events_keyword_basedOn_shared_years(shared_based,confs_events_lis
                 'events': shared_events
             })
     print("shared events between conferences get collectted")
-    return conf_shared_events   
+    return conf_shared_events
 
-#new function by Islam
-def get_shared_authors_from_events(shared_years,shared_years_events):
-    #print("shared_years_events",shared_years_events)
-    final_data=[]
-    shared_years_events_length=len(shared_years_events)
-    if shared_years_events_length==1:
-        conf_events=shared_years_events[0]["events"]
-        events_author_count=[len(event["event_authors"]) for event in conf_events]
+# new function by Islam
+
+
+def get_shared_authors_from_events(shared_years, shared_years_events):
+    # print("shared_years_events",shared_years_events)
+    final_data = []
+    shared_years_events_length = len(shared_years_events)
+    if shared_years_events_length == 1:
+        conf_events = shared_years_events[0]["events"]
+        events_author_count = [len(event["event_authors"])
+                               for event in conf_events]
         final_data.append({
             "name": shared_years_events[0]["conference_name"],
             "data": events_author_count
         })
-        print("final_data: ",final_data)
+        print("final_data: ", final_data)
 
         return [final_data]
-    
+
     else:
         # get all combinations of any length
         all_combs = []
-        shared_authors_combs=[]
-        final_data=[]
-        conference_names = [item['conference_name'] for item in shared_years_events]
+        shared_authors_combs = []
+        final_data = []
+        conference_names = [item['conference_name']
+                            for item in shared_years_events]
         for r in range(2, len(conference_names) + 1):
-         all_combs.extend(combinations(conference_names, r))
+            all_combs.extend(combinations(conference_names, r))
 
         for comb in all_combs:
-            relevant_confs=[]
+            relevant_confs = []
             for conf in comb:
-              relevant_conf=[item for item in shared_years_events if item["conference_name"]==conf]
-              relevant_confs.append(relevant_conf)
-            shared_authors_combs=get_shared_authors_between_combs(shared_years,relevant_confs)
+                relevant_conf = [
+                    item for item in shared_years_events if item["conference_name"] == conf]
+                relevant_confs.append(relevant_conf)
+            shared_authors_combs = get_shared_authors_between_combs(
+                shared_years, relevant_confs)
 
-            final_data.append(shared_authors_combs) 
-        
-        print("shared_authors_combs: ",final_data)   
-        return final_data   
+            final_data.append(shared_authors_combs)
+
+        print("shared_authors_combs: ", final_data)
+        return final_data
 
 
-def get_shared_authors_between_combs(shared_years,relevant_confs):
-    events_to_compare=[]
+def get_shared_authors_between_combs(shared_years, relevant_confs):
+    events_to_compare = []
     for year in shared_years:
         events_in_year = []
-        print("relevant_confs",relevant_confs)
+        print("relevant_confs", relevant_confs)
         for conf in relevant_confs:
             for event in conf[0]["events"]:
                 if year in event["event_name"]:
                     events_in_year.append(event)
-                    break  
-        if events_in_year:  
+                    break
+        if events_in_year:
             events_to_compare.append(events_in_year)
     final = []
     for event in events_to_compare:
         events_name = []
         events_authors = []
         for obj in event:
-            events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
+            events_name.append(re.sub('\\d{4}$', '', obj["event_name"]))
             events_authors.append(obj["event_authors"])
-        common_elements=common_elements_in_set(events_authors)
+        common_elements = common_elements_in_set(events_authors)
         final.append({
             "name": events_name,
             "data": len(common_elements)
-          })
-    final=add_all_data_in_one_array(final)
+        })
+    final = add_all_data_in_one_array(final)
     return final
 
-def get_shared_between_combs(full_name,shared_based,shared_years,shared_years_events):
-    events_to_compare=[]
+
+def get_shared_between_combs(full_name, shared_based, shared_years, shared_years_events):
+    events_to_compare = []
     for year in shared_years:
         events_in_year = []
         for conf in shared_years_events:
             for event in conf[0]["events"]:
                 if year in event["event_name"]:
                     events_in_year.append(event)
-                    break  
-        if events_in_year:  
+                    break
+        if events_in_year:
             events_to_compare.append(events_in_year)
     final = []
     for event in events_to_compare:
@@ -970,148 +990,218 @@ def get_shared_between_combs(full_name,shared_based,shared_years,shared_years_ev
         for obj in event:
             if full_name:
                 events_name.append(obj["event_name"])
-            else:    
-                events_name.append(re.sub('\\d{4}$','',obj["event_name"]))
+            else:
+                events_name.append(re.sub('\\d{4}$', '', obj["event_name"]))
             events_authors.append(obj[shared_based])
         final.append({
             "name": events_name,
             "data": len(common_elements_in_set(events_authors))
-          })
-    final=add_all_data_in_one_array(final)
+        })
+    final = add_all_data_in_one_array(final)
     return final
 
-def get_shared_between_events_combs(shared_based,events):
+
+def get_shared_between_events_combs(shared_based, events):
     final = []
     events_name = []
     events_authors_list = []
     for event in events:
-        for obj in event:  
+        for obj in event:
             events_name.append((obj["event_name"]))
             events_authors_list.append(obj[shared_based])
-    common_authors=common_elements_in_set(events_authors_list)        
+    common_authors = common_elements_in_set(events_authors_list)
     final.append({
         "name": events_name,
         "data": len(common_authors),
-        "authors_names":[author for author in common_authors]
-        })
+        "authors_names": [author for author in common_authors]
+    })
     return final
-            
+
+
 def common_elements_in_set(lst):
-    if(len(lst) ==0):
+    if (len(lst) == 0):
         return set()
     common_elements_in_set = set(lst[0])
 
     for sublist in lst[1:]:
         common_elements_in_set.intersection_update(sublist)
 
-    return common_elements_in_set    
+    return common_elements_in_set
 
 
 def add_all_data_in_one_array(final_array):
     output_data = {}
 
     for item in final_array:
-        name_tuple=tuple(item['name'])
+        name_tuple = tuple(item['name'])
         if name_tuple not in output_data:
-            output_data[name_tuple]=[]
+            output_data[name_tuple] = []
 
         output_data[name_tuple].append(item['data'])
 
-    output_data = [{'name': list(name), 'data': data} for name, data in output_data.items()]
+    output_data = [{'name': list(name), 'data': data}
+                   for name, data in output_data.items()]
     return output_data
 
 
-def get_shared_from_events(shared_based,shared_years,shared_years_events):
-    final_data=[]
-    shared_years_events_length=len(shared_years_events)
-    if shared_years_events_length==1:
-        conf_events=shared_years_events[0]["events"]
-        events_author_count=[len(event[shared_based]) for event in conf_events]
+def get_shared_from_events(shared_based, shared_years, shared_years_events):
+    final_data = []
+    shared_years_events_length = len(shared_years_events)
+    if shared_years_events_length == 1:
+        conf_events = shared_years_events[0]["events"]
+        events_author_count = [len(event[shared_based])
+                               for event in conf_events]
         final_data.append({
             "name": shared_years_events[0]["conference_name"],
             "data": events_author_count
         })
-        print("final_data: ",final_data)
+        print("final_data: ", final_data)
 
         return [final_data]
-    
+
     else:
         # get all combinations of any length
         all_combs = []
-        shared_authors_combs=[]
-        final_data=[]
-        conference_names = [item['conference_name'] for item in shared_years_events]
+        shared_authors_combs = []
+        final_data = []
+        conference_names = [item['conference_name']
+                            for item in shared_years_events]
         for r in range(2, len(conference_names) + 1):
-         all_combs.extend(combinations(conference_names, r))
+            all_combs.extend(combinations(conference_names, r))
 
         for comb in all_combs:
-            relevant_confs=[]
+            relevant_confs = []
             for conf in comb:
-              relevant_conf=[item for item in shared_years_events if item["conference_name"]==conf]
-              relevant_confs.append(relevant_conf)
-            shared_authors_combs=get_shared_between_combs(
+                relevant_conf = [
+                    item for item in shared_years_events if item["conference_name"] == conf]
+                relevant_confs.append(relevant_conf)
+            shared_authors_combs = get_shared_between_combs(
                 full_name=False,
                 shared_based="keywords",
                 shared_years=shared_years,
                 shared_years_events=relevant_confs)
 
-            final_data.append(shared_authors_combs) 
-        
-        print("shared_authors_combs: ",final_data)   
-        return final_data   
-    
+            final_data.append(shared_authors_combs)
+
+        print("shared_authors_combs: ", final_data)
+        return final_data
 
 
 def get_events_authors(events):
-    results=[]
+    results = []
     for event in events:
-            event_authors = Event.nodes.get(
-                conference_event_name_abbr=event).authors.all()
-            results.append({
-                "event_name": event,
-                "authors": [author.author_name for author in event_authors]
-            }) 
+        event_authors = Event.nodes.get(
+            conference_event_name_abbr=event).authors.all()
+        results.append({
+            "event_name": event,
+            "authors": [author.author_name for author in event_authors]
+        })
 
-    return results    
-
-def get_shared_authors_basedOn_combs(events_authors,all_combs):
-        result=[]
-        final_sets = []
-        authors_name = []
-        for comb in all_combs:
-            sets = []
-            relevant_confs = []
-            for event in comb:
-                relevant_conf = [
-                    item for item in events_authors if item["event_name"] == event]
-                relevant_confs.append(relevant_conf)
-            shared_authors_combs = get_shared_between_events_combs(
-                shared_based="authors",
-                events=relevant_confs)
-
-            names = sorted(shared_authors_combs[0]["name"])
-            print("names: ", names)
-            value = shared_authors_combs[0]["data"]
-            if value != 0:
-                sets.append({
-                    "sets": names,
-                    "value": value,
-                    "name": " and ".join(names)
-                })
-                final_sets.extend(
-                    sets
-                )
-                authors_name.append({
-                    "name": " and ".join(names),
-                    "authors_names": shared_authors_combs[0]["authors_names"]
-                })
-        print("***********************************************************")
-        print("shared_authors_combs: ", final_sets)
-        print("******************************************************")
-        print("authors_name: ", authors_name)
-        result.append(final_sets)
-        result.append(authors_name)
+    return results
 
 
-        return result
+def get_shared_authors_basedOn_combs(events_authors, all_combs):
+    result = []
+    final_sets = []
+    authors_name = []
+    for comb in all_combs:
+        sets = []
+        relevant_confs = []
+        for event in comb:
+            relevant_conf = [
+                item for item in events_authors if item["event_name"] == event]
+            relevant_confs.append(relevant_conf)
+        shared_authors_combs = get_shared_between_events_combs(
+            shared_based="authors",
+            events=relevant_confs)
 
+        names = sorted(shared_authors_combs[0]["name"])
+        print("names: ", names)
+        value = shared_authors_combs[0]["data"]
+        if value != 0:
+            sets.append({
+                "sets": names,
+                "value": value,
+                "name": " and ".join(names)
+            })
+            final_sets.extend(
+                sets
+            )
+            authors_name.append({
+                "name": " and ".join(names),
+                "authors_names": shared_authors_combs[0]["authors_names"]
+            })
+    print("***********************************************************")
+    print("shared_authors_combs: ", final_sets)
+    print("******************************************************")
+    print("authors_name: ", authors_name)
+    result.append(final_sets)
+    result.append(authors_name)
+
+    return result
+
+
+# new Func by Islam
+def get_relavant_publication_for_aList(conf_name, list_of_keywords_topics):
+    if (len(list_of_keywords_topics) != 0):
+        keyphrase_events = get_keyphrase_events(
+            conf_name, list_of_keywords_topics)
+        keyphrase_publications_count = get_keyphrase_publications_based_event(
+            conf_name, keyphrase_events)
+
+        return keyphrase_publications_count
+
+
+# new func by Islam
+def get_keyphrase_events(conf_name, list_of_keywords_topics):
+    conf_events = get_conf_events(conf_name=conf_name)
+    data = []
+    for keyphrase in list_of_keywords_topics:
+        keyphrase_events = [event for event in conf_events if keyphrase in [
+            Keyword.keyword for Keyword in event.keywords.all()]]
+        data.append({
+            "keyphrase": keyphrase,
+            "events": keyphrase_events
+        })
+
+    return data
+
+# new func by Islam
+
+
+def get_keyphrase_publications_based_event(conf_name, keyphrase_events):
+    data_dict = {}
+    all_event = get_conf_events(conf_name)
+    if keyphrase_events:
+        for obj in keyphrase_events:
+            keywordTopic_name = obj["keyphrase"]
+
+            if keywordTopic_name not in data_dict:
+                data_dict[keywordTopic_name] = []
+            for event in all_event:
+                if event in obj["events"]:
+                    publications = get_relavant_publication(
+                        event.conference_event_name_abbr, "keyword", keywordTopic_name)
+
+                    if publications is not None:
+                        count = len([pub.title for pub in publications])
+                        data_dict[keywordTopic_name].append(count)
+
+                else:
+                    count = 0
+                    data_dict[keywordTopic_name].append(count)
+
+    data = [{"name": k, "data": v} for k, v in data_dict.items()]
+
+    return data
+
+
+def Conf_All_years(conf_name):
+    years = []
+    all_event = get_conf_events(conf_name)
+    for event in all_event:
+        year = re.sub(
+            "[^0-9]", "", event.conference_event_name_abbr.split('-')[0])
+        years.append(year)
+
+    return years
