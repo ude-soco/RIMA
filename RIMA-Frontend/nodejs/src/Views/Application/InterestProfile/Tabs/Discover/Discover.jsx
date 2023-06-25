@@ -325,6 +325,20 @@ const handleZoomIn = () => {
         </Menu>:<></>}
       </Grid>
       <Grid container>
+  <Grid item xs={6} style={{ textAlign: 'right' }}>
+    {/* Zoom-Out Button */}
+    <Button onClick={handleZoomOut} variant="contained" style={{ fontSize: '24px' }}>
+      -
+    </Button>
+  </Grid>
+  <Grid item xs={6} style={{ textAlign: 'left' }}>
+    {/* Zoom-In Button */}
+    <Button onClick={handleZoomIn} variant="contained" style={{ fontSize: '24px' }}>
+      +
+    </Button>
+  </Grid>
+</Grid>
+      <Grid container>
         <Grid item xs={1}/>
         <Grid item xs={10}>
           {checkNewKeywords ? (
@@ -339,22 +353,6 @@ const handleZoomIn = () => {
           )}
         </Grid>
     </Grid>
-
-      <Grid container>
-  <Grid item xs={6} style={{ textAlign: 'right' }}>
-    {/* Zoom-Out Button */}
-    <Button onClick={handleZoomOut} variant="contained" style={{ fontSize: '24px' }}>
-      -
-    </Button>
-  </Grid>
-  <Grid item xs={6} style={{ textAlign: 'left' }}>
-    {/* Zoom-In Button */}
-    <Button onClick={handleZoomIn} variant="contained" style={{ fontSize: '24px' }}>
-      +
-    </Button>
-  </Grid>
-</Grid>
-
     </>
   );
 };

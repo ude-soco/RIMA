@@ -10,8 +10,11 @@ import {Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle} fro
 import RestAPI from "../../../../../Services/api";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import swal from 'sweetalert';
+import panzoom from "cytoscape-panzoom";
+import "cytoscape-panzoom/cytoscape.js-panzoom.css";
 cytoscape.use(cxtmenu);
 cytoscape.use(zoom);
+cytoscape.use(panzoom);
 
 
 function getColor(currColors) {
@@ -119,7 +122,16 @@ const GetNodeLink = (props) => {
     openLearn: null,
     nodeObj: null
   });
-  
+  const panzoomOptions = {
+    zoomFactor: 0.1, // Faktor für die Zoomstufe
+    zoomDelay: 45, // Verzögerung (in ms) für die Zoomaktion
+    minZoom: 0.1, // Minimale Zoomstufe
+    maxZoom: 10, // Maximale Zoomstufe
+    fitPadding: 50, // Innenabstand für das Einpassen des Graphen
+    panSpeed: 10, // Geschwindigkeit des Pannens
+    panDistance: 10, // Entfernung, um zu pannen
+    // Weitere Optionen hier...
+  };
   const [addNewMark, setAddNewMark] = useState([]);
 
   const addMark = async (currMark) => {
@@ -341,12 +353,13 @@ const GetNodeLink = (props) => {
         style={{width: "100%", height: "800px", backgroundColor: "#F8F4F2"}}
         layout={layoutGraph}
         stylesheet={stylesheet}
+        zoom={false}
         cy={(cy) => {
           cy.elements().remove();
           cy.add(elements);
           //cy.layout(layoutGraph)
           cy.layout(layoutGraph).run();
-
+          cy.panzoom(panzoomOptions);
           cy.fit();
           let defaultsLevel1 = {
             selector: "node[level=1]",
