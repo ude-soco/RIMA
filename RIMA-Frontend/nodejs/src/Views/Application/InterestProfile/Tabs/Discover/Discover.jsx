@@ -277,7 +277,7 @@ const handleInfoButtonClick = () => {
 
   return (
     <>
-      <Grid container justify="flex-start" style={{paddingTop: 24, paddingBottom: 8}}> 
+      <Grid container justify="flex-end" style={{paddingTop: 24, paddingBottom: 8}}> 
         <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenInterest}>
           Choose interest
         </Button>
@@ -341,20 +341,6 @@ const handleInfoButtonClick = () => {
             );
           })}
         </Menu>:<></>}
-      </Grid>
-      <Grid container>
-  <Grid item xs={6} style={{ textAlign: 'right' }}>
-    {/* Zoom-Out Button */}
-    <Button onClick={handleZoomOut} variant="contained" style={{ fontSize: '24px' }}>
-      -
-    </Button>
-  </Grid>
-  <Grid item xs={6} style={{ textAlign: 'left' }}>
-    {/* Zoom-In Button */}
-    <Button onClick={handleZoomIn} variant="contained" style={{ fontSize: '24px' }}>
-      +
-    </Button>
-  </Grid>
 </Grid>
       <Grid container>
         <Grid item xs={1}/>
