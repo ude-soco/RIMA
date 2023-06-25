@@ -1,10 +1,10 @@
 //Done by Swarna
 // Updated by Basem Abughallya
 import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core";
 import {
   CircularProgress,
   Grid,
-  makeStyles,
   Paper,
   Tab,
   Tabs,
@@ -14,9 +14,9 @@ import {
   CardHeader,
   CardContent,
   Card,
-} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+} from "@mui/material";
 
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import Chart from "chart.js";
 import Select from "react-select";
 import WordCloud from "../../../components/LAKForms/WordCloud.jsx";
@@ -37,7 +37,9 @@ import { Link } from "react-router-dom";
 import RestAPI from "../../../../Services/api";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
-
+import InteractiveVennDiagram from "../../../components/LAKForms/InteractiveVennDiagram";
+import MostPopularKeyphraseInConf from "../../../components/LAKForms/MostPopularKeyphraseInConf.jsx";
+import SharedTopicsVennDiagram from "../../../components/LAKForms/SharedTopicsVennDiagram.jsx";
 // BAB:END 08/06/2021 :: cover other conferences.
 
 const useStyles = makeStyles((theme) => ({
@@ -428,9 +430,10 @@ export default function ConferenceBar(props) {
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <NewTopWordsInYears selectedConferences={selectedOption.value} />
           </Grid>
-          {/* <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <NewEvolutionTopTopics selectedConferences={selectedOption.value} />
-          </Grid> */}
+          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
+            {/* <NewEvolutionTopTopics selectedConferences={selectedOption.value} /> */}
+            <MostPopularKeyphraseInConf />
+          </Grid>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <WordCloud
               conferenceName={selectedOption.value}
@@ -470,12 +473,18 @@ export default function ConferenceBar(props) {
           {/*  BAB 08.06.2021 */}
 
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <VennChart
+            {/* <VennChart
               conferenceName={selectedOption.value}
               confEvents={confEvents}
               page="topicbar"
               conferences={conference}
-            />{" "}
+            />{" "} */}
+            <SharedTopicsVennDiagram
+              conferenceName={selectedOption.value}
+              confEvents={confEvents}
+              page="topicbar"
+              conferences={conference}
+            />
             {/* BAB 08.06.2021 */}
           </Grid>
         </Grid>
