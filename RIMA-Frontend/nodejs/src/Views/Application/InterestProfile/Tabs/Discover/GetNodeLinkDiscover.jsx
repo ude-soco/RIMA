@@ -456,7 +456,7 @@ const GetNodeLink = (props) => {
                  let currMark = ele.data()["label"];
                  addMark(currMark);
                  console.log("xx currMarkList", addNewMark);
-                 let msg = "The interest has been marked";
+                 let msg = "The interest is added in your favour list";
                  toast.success(msg, {
                   toastId: "addLevel2"
                 });
