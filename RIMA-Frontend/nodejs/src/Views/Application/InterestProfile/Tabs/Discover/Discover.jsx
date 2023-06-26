@@ -365,7 +365,7 @@ const Popup = ({ onClose }) => {
   return (
     <div>
       <h3>Information</h3>
-      <p>On this page, immerse yourself in new and controversial interests that may initially seem unfamiliar. Step outside your comfort zone and delve into uncharted territory. While it may be confusing at first, this journey of discovery will unlock your unique taste and broaden your personal abilities.</p>
+      <p>On this page, you can explore interests that go beyond your usual topics. These controversial interests aim to introduce you to new subject areas and expand your knowledge.</p>
       <button onClick={onClose}>Close</button>
     </div>
   );
