@@ -90,7 +90,7 @@ export default function NavigationBar() {
   const [openProfile, setOpenProfile] = useState(null);
   const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [selection, setSelection] = useState("publicationRecommendation");
+  const [selection, setSelection] = useState("interestOverview");
   const firstname = localStorage.getItem("name");
   const lastname = localStorage.getItem("lastname");
   const userName = toFirstLetter(firstname) + toFirstLetter(lastname);

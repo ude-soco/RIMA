@@ -1,8 +1,8 @@
 import Profile from "../Views/Application/Settings/Profile/Profile";
 import Login from "../Views/Website/Login/Login";
-import AddPaper from "../Views/Application/Publications/Paper/AddPaper.jsx";
-import ViewPaper from "../Views/Application/Publications/Paper/ViewPaper";
-import EditPaper from "../Views/Application/Publications/Paper/EditPaper";
+import AddPaper from "../Views/Application/Publications/Function1/Paper/AddPaper.jsx";
+import ViewPaper from "../Views/Application/Publications/Function1/Paper/ViewPaper";
+import EditPaper from "../Views/Application/Publications/Function1/Paper/EditPaper";
 // import InterestOverview from "../Views/Application/InterestProfile/InterestOverview/InterestOverview";
 import ConceptChartPage from "../Views/Application/InterestProfile/PotentialInterests/PotentialInterests";
 import Keyword from "../Views/Keywords";
@@ -12,7 +12,8 @@ import LoginRedirecting from "../Views/Website/Login/LoginRedirecting";
 import RecentInterest from "../Views/Application/InterestProfile/RecentInterest/RecentInterest";
 // import Activities from "../Views/Activities";
 import TweetsAndPeople from "../Views/Application/Twitter/TweetsAndPeople";
-import PublicationRecommendation from "../Views/Application/Publications/Recommendation/Publications";
+// import PublicationRecommendation from "../Views/Application/Publications/Recommendation/Publications";
+import PublicationRec from "../Views/Application/Publications/PublicationRec";
 import TopicFormPage from "../Views/Application/Conferences/Topic/TopicForm";
 import ConferenceBar from "../Views/Application/Conferences/Topic/ConferenceBar";
 import TopicComparisions from "../Views/Application/Conferences/Topic/TopicComparisions";
@@ -25,14 +26,12 @@ import InterestProfile from "../Views/Application/InterestProfile/InterestProfil
 import CompareAuthors from "../Views/Application/CompareAuthors/CompareAuthors";
 
 import addConference from "../Views/Application/Conferences/addConference.jsx";
-import viewConference from "../Views/Application/Conferences/viewConference.js"; 
-import authorDashboard from "../Views/Application/Conferences/authorDashboard.js"; 
+import viewConference from "../Views/Application/Conferences/viewConference.js";
+import authorDashboard from "../Views/Application/Conferences/authorDashboard.js";
 import compareConferences from "Views/Application/Conferences/Topic/compareConferences";
 import ExplorePublications from "../Views/Application/ConferenceInsights/ExplorePublications/ExplorePublications";
 import ExploreAuthorsNetwork from "../Views/Application/ConferenceInsights/ExploreAuthorsNetwork/ExploreAuthorsNetwork";
 import PaperExplorerDashboard from "../Views/Application/PaperExplorer/PaperExplorerDashboard";
-
-
 
 let routes = [
   {
@@ -207,7 +206,8 @@ let routes = [
     path: "/publication",
     name: "Publications Recommenation",
     icon: "fas fa-bars text-primary",
-    component: PublicationRecommendation,
+    component: PublicationRec,
+    // component: PublicationRecommendation,
     layout: "/recommendation",
     // display: "none",
   },

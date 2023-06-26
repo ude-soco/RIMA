@@ -240,9 +240,6 @@ else:
         configuration["transformer_model_file"]
     )
 
-print(f'transformer model path: {configuration["transformer_model_file"]}')
-print(f"transformer model found: {TRANSFORMER_MODEL_FILE_PATH}")
-
 if not configuration["stanfordcorenlp_file"]:
     STANFORDCORENLP = None
 else:

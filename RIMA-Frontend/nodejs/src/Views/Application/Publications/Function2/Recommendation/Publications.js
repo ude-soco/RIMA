@@ -23,7 +23,7 @@ import { handleServerErrors } from "Services/utils/errorHandler";
 import InterestsTags from "./TagSearch.js";
 import PaperCard from "./PaperCard.js";
 import RestAPI from "Services/api";
-import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
+import ScrollTopWrapper from "../../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import {
   pink,
   purple,
@@ -36,7 +36,7 @@ import {
   amber,
   brown,
 } from "@material-ui/core/colors";
-import CloudChart from "../../ReuseableComponents/Charts/CloudChart/CloudChart";
+import CloudChart from "../../../ReuseableComponents/Charts/CloudChart/CloudChart";
 import CloudIcon from "@material-ui/icons/Cloud";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -44,9 +44,8 @@ import { Collapse } from "react-bootstrap";
 import TuneIcon from "@material-ui/icons/Tune";
 
 // Hoda start- Sticky bar with collapse button
-function StickyInterestTags({tags})
-{
-  const [collapseInterest,setCollapseInterest]=useState(true);
+function StickyInterestTags({ tags }) {
+  const [collapseInterest, setCollapseInterest] = useState(true);
 
   return (
     <Sticky
@@ -153,7 +152,7 @@ export default function PublicationRecommendation() {
     });
   };
 
-  // Hoda start- defined static colors 
+  // Hoda start- defined static colors
   const generateRandomRGB = (indexcolor) => {
     var hexValues = [
       pink[300],
@@ -298,7 +297,7 @@ export default function PublicationRecommendation() {
                   </legend>
                   <StickyInterestTags tags={refineInterests(state.interests)} />
                   <Grid item md={2} style={{ float: "right" }}>
-                    <Grid onClick={() => openWhatIfModal()}>
+                    {/* <Grid onClick={() => openWhatIfModal()}>
                       <Button variant="outlined" color="primary" size="small">
                         <TuneIcon
                           style={{ color: "#333fa1" }}
@@ -312,7 +311,7 @@ export default function PublicationRecommendation() {
                           What-If?
                         </Typography>
                       </Button>
-                    </Grid>
+                    </Grid> */}
                     <Modal
                       open={state.modal}
                       onClose={closeWhatIfModal}
@@ -357,7 +356,7 @@ export default function PublicationRecommendation() {
             </Grid>
           </Grid>
           {/* Tanaz */}
-          <Grid className="d-flex align-items-center ml-3">
+          {/* <Grid className="d-flex align-items-center ml-3">
             <Button
               variant="outlined"
               color="primary"
@@ -368,7 +367,7 @@ export default function PublicationRecommendation() {
                 Interests Sources
               </Typography>
             </Button>
-          </Grid>
+          </Grid> */}
           {/* What Modal */}
 
           <Modal

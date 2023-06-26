@@ -11,6 +11,7 @@ import {
   CssBaseline,
   Grid,
   makeStyles,
+  MenuItem,
   Paper,
   TextField,
   Typography,
@@ -57,6 +58,7 @@ export default function Login() {
   const [details, setDetails] = useState({
     email: "",
     password: "",
+    function: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
@@ -82,21 +84,22 @@ export default function Login() {
       .then((res) => {
         setIsLoading(false);
         console.log(res.data);
-        console.log(res.data.is_staff)
+        console.log(res.data.is_staff);
         if (res.status === 200) {
-          // console.log(res.data)
           localStorage.setItem("rimaUser", JSON.stringify(res.data));
           localStorage.setItem("accessToken", res.data.token);
           localStorage.setItem("name", res.data.first_name);
           localStorage.setItem("lastname", res.data.last_name);
           localStorage.setItem("userId", res.data.id);
           localStorage.setItem("mId", res.data.id);
-          localStorage.setItem("isStaff", res.data.is_staff);     //Basem Abughallya::15.09.2021::Check if staff
-          const {data: {data_being_loaded}} = res;
+          localStorage.setItem("isStaff", res.data.is_staff); //Basem Abughallya::15.09.2021::Check if staff
+          localStorage.setItem("rima-function", details.function);
+          const {
+            data: { data_being_loaded },
+          } = res;
           if (data_being_loaded) {
             window.location.href = "/app/redirect";
           } else {
-            // history.push("/app/cloud-chart/" + res.data.id);
             history.push("/app/interest-profile");
           }
         }
@@ -107,6 +110,8 @@ export default function Login() {
         handleServerErrors(error, toast.error);
       });
   };
+
+  const functions = ["Option 1", "Option 2", "Option 3"];
 
   return (
     <>
@@ -129,6 +134,27 @@ export default function Login() {
               Sign in
             </Typography>
             <form className={classes.form} noValidate onSubmit={handleSubmit}>
+              <TextField
+                select
+                label="Select"
+                helperText="Please select your function"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="function"
+                name="function"
+                value={details.function}
+                autoComplete="function"
+                autoFocus
+                onChange={handleChange}
+              >
+                {functions.map((option, index) => (
+                  <MenuItem key={index} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -169,6 +195,11 @@ export default function Login() {
                     type="submit"
                     fullWidth
                     variant="contained"
+                    disabled={
+                      details.function === "" ||
+                      details.email === "" ||
+                      details.password === ""
+                    }
                     color="primary"
                     className={classes.submit}
                   >
