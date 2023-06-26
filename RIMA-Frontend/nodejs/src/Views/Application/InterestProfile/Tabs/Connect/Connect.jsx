@@ -15,7 +15,7 @@ export default function Connect (props) {
     console.log(data, "useState")
     const [dataCollected, setDataCollected]=useState(false)
     const [myInterests, setMyInterests]=useState([])
-    const [noa, setNoa] = useState(data.noa)
+    const [noa, setNoa] = useState(data.noa ? data.noa: 3)
     const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
     const [button, setButton] = useState(true)
