@@ -15,7 +15,7 @@ export default function Connect (props) {
     console.log(data, "useState")
     const [dataCollected, setDataCollected]=useState(false)
     const [myInterests, setMyInterests]=useState([])
-    const [noa, setNoa] = useState(3)
+    const [noa, setNoa] = useState(data.noa)
     const [papers, setPapers] = useState(true)
     const [fetching, setFetch] = useState(true)
     const [button, setButton] = useState(true)
@@ -115,7 +115,7 @@ export default function Connect (props) {
                                 variant="outlined"
                                 size="small"
                                 onChange={(e) => setNoa(parseInt(e.target.value, 10))}
-                                defaultValue="3"
+                                defaultValue={noa ? noa : parseInt(3)}
                                 color="primary"
                                 style={{ width: "7.5%" }}
                                 inputProps={{

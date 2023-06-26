@@ -182,7 +182,7 @@ def getConnectData(id):
            authorsCitedMe = json.load(myfile)
     """
     print(x)
-    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames}
+    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames, "noa": noa}
     return data
  
 def getWikiInfo(interestsData):
