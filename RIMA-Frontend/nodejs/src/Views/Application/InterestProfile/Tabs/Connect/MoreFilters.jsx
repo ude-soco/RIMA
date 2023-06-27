@@ -37,17 +37,15 @@ export default function MoreFilters(props) {
   const [selectedNames, setSelectedNames] = useState(data.selectedNames);
   
 
-  const nameId = data.filter//citations.reduce((obj, item) => {obj[item.name] = item.id; return obj}, {})
+  const nameId = data.filter
   const namesList = Object.values(nameId).map((value) => value[0])
   
   console.log(namesList)
   console.log(nameId, "TEST")
-
   console.log(data, "DATAAAAAAAAAAAAAAA")
   console.log(data.citations.map(item => item.name))
-  /*const names = data.citations.map(item => item.name).concat(data.references.map(item => item.name))
-  const uniqNames = [...new Set(names)]
-  console.log(names, uniqNames)*/
+  console.log(namesList.map(name => name))
+  
 
   
   
@@ -86,8 +84,11 @@ export default function MoreFilters(props) {
 
       <Typography variant="h6"  className={classes.title}>Select</Typography>
             <FormGroup className={classes.checkBox}>
+            <FormControlLabel key = "Select All" control={<Checkbox onChange={handleCheckboxChange} 
+              value={namesList.map((name) => name).join(",")} /*checked={""}*//>} label={"Select All"} />
+            <Divider className={classes.divider}/>
               {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} 
-              value={name} checked={selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
+              value={name} checked={!selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
             </FormGroup>
                   
           <Divider className={classes.divider}/>
