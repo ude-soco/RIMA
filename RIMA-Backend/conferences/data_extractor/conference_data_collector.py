@@ -43,6 +43,7 @@ def fetch_soup(url):
     Returns:
         obj: Beautifulsoup Object of the page
     """
+    print(url, "URL FOR FETCH SOUP \n\n\n")
     try:
         raw_request = Request(url, headers=headers_windows)
         resp = urlopen(raw_request)
@@ -134,22 +135,23 @@ def search_publicationid_in_semscholar_selenium(semscholar_titles):
     print(' ')
     publications_ids = []
     elements_list = []
+    service = Service(executable_path=r"C:\Program Files (x86)\chromedriver.exe")
     option = webdriver.ChromeOptions()
     option.add_argument('headless')
     PATH = "C:\Program Files (x86)\chromedriver.exe"
-    driver = webdriver.Chrome(PATH, options=option)
-
+    driver = webdriver.Chrome(service=service, options=option)
+    
     for title in semscholar_titles:
         driver.get(semantic_scholar_url_search)
-        search = driver.find_element_by_name("q")
+        search = driver.find_element("name","q")
         search.send_keys(title)
         search.send_keys(Keys.RETURN)
+        
         try:
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "result-page")))
-            elements_list = element.find_elements_by_tag_name("div")
+            elements_list = element.find_elements(By.TAG_NAME,"div")
             id = elements_list[0].get_attribute('data-paper-id')
-            print(id)
             publications_ids.append(id)
         except TimeoutException:
             print('Timeout - No tag found in this page')
