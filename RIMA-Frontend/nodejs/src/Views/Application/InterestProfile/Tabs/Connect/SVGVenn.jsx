@@ -19,8 +19,8 @@ import {Loading} from "../Loading";
 const SVGVenn = (props) => {
     const { authorInterest, authorName, userName } = props;
     let bothInterest = [];
-    let posUser = 174;
-    let posAuthor = 374;
+    let posUser = 200;
+    let posAuthor = 420;
     let radUser = 100;
     const yPosText = 15;
     let posTextBoth = 0;
@@ -227,32 +227,32 @@ const SVGVenn = (props) => {
 
     return (
         <>
-            {userInterest.length !== 0?<svg height="500" width="600">
+            {userInterest.length !== 0?<svg height="700" width="800">
                 <circle
-                    cx={posUser}
-                    cy="130"
-                    r="100"
+                    cx={posUser-25}
+                    cy="200"
+                    r="190"
                     fill="darkorange"
                     stroke="black"
                     class="circle"
                 ></circle>
 
                 <circle
-                    cx={posAuthor}
-                    cy="130"
-                    r={radAuthor}
+                    cx={posAuthor+30}
+                    cy="200"
+                    r="190"//{radAuthor}
                     fill="darkblue"
                     stroke="black"
                     class="circle"
                 ></circle>
-                <text fill="#522D00">
+                <text fill="blue"/*"#522D00"*/>
                     {userInterest.map((u, i) => {
                         if (!authorInterest.includes(u)) {
                             return (
                                 <tspan
                                     class="text"
-                                    x={posUser - 80}
-                                    y={100 + yPosText * i}
+                                    x={posUser - 165}
+                                    y={85 + yPosText * i}
                                     onClick={handleClickOnlyLearn}
                                 >
                                     {u}
@@ -261,14 +261,14 @@ const SVGVenn = (props) => {
                         }
                     })}
                 </text>
-                <text fill="black">
+                <text fill="red">
                     {authorInterest.map((u, i) => {
                         if (!userInterest.includes(u)) {
                             return (
                                 <tspan
                                     class="text"
                                     x={posAuthor}
-                                    y={100 + yPosText * i}
+                                    y={105 + yPosText * i}
                                     onClick={handleClick}
                                 >
                                     {u}
@@ -277,13 +277,13 @@ const SVGVenn = (props) => {
                         }
                     })}
                 </text>
-                <text fill="black">
+                <text fill="orange">
                     {bothInterest.map((u, i) => {
                         return (
                             <tspan
                                 class="text"
                                 x={posTextBoth - 50}
-                                y={75 + yPosText * i}
+                                y={200 + yPosText * i}
                                 onClick={handleClickOnlyLearn}
                             >
                                 {u}
@@ -295,7 +295,7 @@ const SVGVenn = (props) => {
                     <tspan x={25} y={50} fill="darkorange">
                         {userName}
                     </tspan>
-                    <tspan x={450} y={50} fill="darkblue">
+                    <tspan x={575} y={50} fill="darkblue">
                         {authorName}
                     </tspan>
                 </text>
