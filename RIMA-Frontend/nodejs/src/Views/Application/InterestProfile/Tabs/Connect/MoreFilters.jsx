@@ -84,8 +84,6 @@ export default function MoreFilters(props) {
 
       <Typography variant="h6"  className={classes.title}>Select</Typography>
             <FormGroup className={classes.checkBox}>
-            <FormControlLabel key = "Select All" control={<Checkbox onChange={handleCheckboxChange} 
-              value={namesList.map((name) => name).join(",")} /*checked={""}*//>} label={"Select All"} />
             <Divider className={classes.divider}/>
               {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} 
               value={name} checked={!selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
