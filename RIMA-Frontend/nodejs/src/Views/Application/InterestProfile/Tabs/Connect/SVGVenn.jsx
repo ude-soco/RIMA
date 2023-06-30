@@ -40,10 +40,44 @@ const SVGVenn = (props) => {
 
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
+    
+
+    const newArray = (oldArr) => {
+        const outputArray = [];
+
+             oldArr.forEach((item) => {
+            const words = item.split(' ');
+            if (words.length > 2) {
+                const firstTwoWords = words.slice(0, 2).join(' ');
+                const remainingWords = '-' + words.slice(2).join(' ');
+                outputArray.push(firstTwoWords, remainingWords);
+            } else {
+                outputArray.push(item);
+            }
+            })
+            return outputArray
+    }
+
+    const getHighestWordCount = (strings) => {
+        let highestCount = 0;
+      
+        for (let i = 0; i < strings.length; i++) {
+          const wordCount = strings[i].split(' ').length;
+          if (wordCount > highestCount) {
+            highestCount = wordCount;
+          }
+        }
+      
+        return highestCount;
+      }
+
+    console.log(authorInterest)
+    console.log(newArray(authorInterest))
+    let x = 40*getHighestWordCount(authorInterest)
     const buttonStyle = {
         position: 'absolute',
-        top: '500px',
-        left: '220px',
+        top: `${500+x}px`,
+        left: '300px',
     };
     const fetchKeywords = async () => {
         //setState({...state,userInterests: []})
@@ -79,6 +113,18 @@ const SVGVenn = (props) => {
         let interests=await fetchKeywords()
         console.log(interests, "test explore.py get data")
         if (interests) {
+            /*const outputArray = [];
+
+                interests.forEach((item) => {
+                    const words = item.split(' ');
+                    if (words.length > 2) {
+                      const firstTwoWords = words.slice(0, 2).join(' ');
+                       const remainingWords = '-' + words.slice(2).join(' ');
+                      outputArray.push(firstTwoWords, remainingWords);
+                    } else {
+                      outputArray.push(item);
+                    }
+                  })*/
             setUserInterest(interests)
             let allInterests=interests.concat(authorInterest)
             /*let pageData=await RestAPI.getWikiInfo({interests:allInterests})
@@ -223,57 +269,57 @@ const SVGVenn = (props) => {
         posAuthor = posAuthor + 10;
         posUser = posUser - 10;
     }
-
+    
     let xAu = 0
     let xUs = 0
     return (
         <>
             {userInterest.length !== 0?<svg height="700" width="800">
                 <circle
-                    cx={posUser-25}
-                    cy="200"
-                    r="190"
+                    cx={250}
+                    cy="250"
+                    r={110+x+bothInterest.length}
                     fill="darkorange"
                     stroke="black"
                     class="circle"
                 ></circle>
 
                 <circle
-                    cx={posAuthor+30}
-                    cy="200"
-                    r="190"//{radAuthor}
+                    cx={515}
+                    cy="250"
+                    r={110+x+bothInterest.length}//{radAuthor}
                     fill="darkblue"
                     stroke="black"
                     class="circle"
                 ></circle>
-                <text fill="blue"/*"#522D00"*/>
+                <text fill="#522D00">
                     {userInterest.map((u, i) => {
                         if (!authorInterest.includes(u)) {
-                            const yPos = 85 + yPosText * xUs
+                            const yPos = (270-x)+15*xUs//yPosText * xUs
                             xUs ++
                             console.log(u.split(/\s+/).length >= 2 ? u.replace(' ', "\n") : u)
                             return (
                                 <tspan
                                     class="text"
-                                    x={posUser - 165}
+                                    x={170 - x}
                                     y={yPos}
                                     onClick={handleClickOnlyLearn}
                                 >
-                                    {u.split(/\s+/).length >= 3 ? u.replace(' ', "\n") : u}
+                                    {u}
                                 </tspan>
                             );
                         }
                     })}
                 </text>
-                <text fill="red">
+                <text fill="black">
                     {authorInterest.map((u, i) => {
                         if (!userInterest.includes(u)) {
-                            const yPos = 105 + yPosText * xAu;
+                            const yPos = (270-x)+15 * xAu;
                             xAu ++
                             return (
                                 <tspan
                                     class="text"
-                                    x={posAuthor}
+                                    x={620-x}
                                     y={yPos}
                                     onClick={handleClick}
                                 >
@@ -283,13 +329,13 @@ const SVGVenn = (props) => {
                         }
                     })}
                 </text>
-                <text fill="orange">
+                <text fill="black">
                     {bothInterest.map((u, i) => {
                         return (
                             <tspan
                                 class="text"
-                                x={posTextBoth - 50}
-                                y={200 + yPosText * i}
+                                x={((450-x)+(250))/2}
+                                y={215 + yPosText * i}
                                 onClick={handleClickOnlyLearn}
                             >
                                 {u}
@@ -301,7 +347,7 @@ const SVGVenn = (props) => {
                     <tspan x={25} y={50} fill="darkorange">
                         {userName}
                     </tspan>
-                    <tspan x={575} y={50} fill="darkblue">
+                    <tspan x={577+x+bothInterest.length} y={50} fill="darkblue">
                         {authorName}
                     </tspan>
                 </text>
