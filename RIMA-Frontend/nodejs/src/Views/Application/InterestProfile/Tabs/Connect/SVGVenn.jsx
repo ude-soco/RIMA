@@ -224,7 +224,8 @@ const SVGVenn = (props) => {
         posUser = posUser - 10;
     }
 
-
+    let xAu = 0
+    let xUs = 0
     return (
         <>
             {userInterest.length !== 0?<svg height="700" width="800">
@@ -248,14 +249,17 @@ const SVGVenn = (props) => {
                 <text fill="blue"/*"#522D00"*/>
                     {userInterest.map((u, i) => {
                         if (!authorInterest.includes(u)) {
+                            const yPos = 85 + yPosText * xUs
+                            xUs ++
+                            console.log(u.split(/\s+/).length >= 2 ? u.replace(' ', "\n") : u)
                             return (
                                 <tspan
                                     class="text"
                                     x={posUser - 165}
-                                    y={85 + yPosText * i}
+                                    y={yPos}
                                     onClick={handleClickOnlyLearn}
                                 >
-                                    {u}
+                                    {u.split(/\s+/).length >= 3 ? u.replace(' ', "\n") : u}
                                 </tspan>
                             );
                         }
@@ -264,14 +268,16 @@ const SVGVenn = (props) => {
                 <text fill="red">
                     {authorInterest.map((u, i) => {
                         if (!userInterest.includes(u)) {
+                            const yPos = 105 + yPosText * xAu;
+                            xAu ++
                             return (
                                 <tspan
                                     class="text"
                                     x={posAuthor}
-                                    y={105 + yPosText * i}
+                                    y={yPos}
                                     onClick={handleClick}
                                 >
-                                    {u}
+                                   {u}
                                 </tspan>
                             );
                         }
