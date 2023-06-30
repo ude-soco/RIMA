@@ -347,7 +347,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={7}
+                      lg={12}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -363,7 +363,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={4}
+                      lg={12}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",

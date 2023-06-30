@@ -8,6 +8,7 @@ import { Button, Label } from "reactstrap";
 import { Grid, InputLabel, Paper } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
+import GroupBarChart from "../../Application/ReuseableComponents/GroupBarChart.jsx";
 
 class LAKStackedBarChart extends Component {
   constructor(props) {
@@ -241,31 +242,30 @@ class LAKStackedBarChart extends Component {
     var text = this.state.selectedValue;
 
     fetch(
-      `${BASE_URL_CONFERENCE}` + "getallkeylist/keyword/" + "?" + text.join("&")
+      `${BASE_URL_CONFERENCE}` + "getPublicationsMultiEvents/" + text.join("&")
     )
       .then((response) => response.json())
       .then((json) => {
-        var series = [];
+        // var series = [];
 
-        for (let i = 0; i < json.Topiclist[0].length; i++) {
-          var weight = json.Topiclist[0][i].weight[0];
-          var num = Math.floor(weight * 100);
-          series = series.concat([
-            {
-              name: json.Topiclist[0][i].word,
-              data: json.Topiclist[0][i].weight,
-            },
-          ]);
-          //selectInputRef1.current.chart.publicMethods.updateOptions({})
-        }
-        console.log("series", series);
+        // for (let i = 0; i < json.Topiclist[0].length; i++) {
+        //   var weight = json.Topiclist[0][i].weight[0];
+        //   var num = Math.floor(weight * 100);
+        //   series = series.concat([
+        //     {
+        //       name: json.Topiclist[0][i].word,
+        //       data: json.Topiclist[0][i].weight,
+        //     },
+        //   ]);
+        //   //selectInputRef1.current.chart.publicMethods.updateOptions({})
+        // }
+        console.log("json.years", json.years);
         this.setState({
           active1: true,
           active2: false,
           active3: true,
           active4: false,
           opacity: 1,
-          series: series,
 
           options: {
             chart: {
@@ -289,12 +289,28 @@ class LAKStackedBarChart extends Component {
               width: 1,
               colors: ["#fff"],
             },
+            colors: [
+              "#1f77b4",
+              "#ff7f0e",
+              "#2ca02c",
+              "#d62728",
+              "#9467bd",
+              "#8c564b",
+              "#e377c2",
+              "#7f7f7f",
+              "#bcbd22",
+              "#17becf",
+              "#aec7e8",
+              "#ffbb78",
+              "#98df8a",
+              "#ff9896",
+              "#c5b0d5",
+              "#c49c94",
+            ],
             xaxis: {
-              categories: json.Topiclist[1],
+              categories: json.years,
             },
             yaxis: {
-              min: 0,
-              max: 10,
               forceNiceScale: true,
               title: {
                 text: undefined,
@@ -309,13 +325,13 @@ class LAKStackedBarChart extends Component {
               opacity: 1,
             },
             dataLabels: {
-              enabled: false,
+              enabled: true,
             },
             tooltip: {
               enabled: true,
             },
           },
-          years: json.Topiclist[1],
+          series: json.data,
           isLoaded: true,
         });
       });
@@ -441,23 +457,10 @@ class LAKStackedBarChart extends Component {
           >
             Topic
           </Button> */}
-
-          <Grid container xs={12} style={{ opacity: opacity, marginTop: "1%" }}>
-            <Grid item xs={12}>
-              <Paper
-                style={{ borderRadius: "40px", padding: "1%" }}
-                elevation={10}
-              >
-                {" "}
-                <ReactApexChart
-                  options={this.state.options}
-                  series={this.state.series}
-                  type="bar"
-                  height={450}
-                />
-              </Paper>
-            </Grid>
-          </Grid>
+          <GroupBarChart
+            options={this.state.options}
+            series={this.state.series}
+          />
         </Grid>
       );
     } else {

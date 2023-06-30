@@ -38,8 +38,10 @@ import RestAPI from "../../../../Services/api";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import InteractiveVennDiagram from "../../../components/LAKForms/InteractiveVennDiagram";
-import MostPopularKeyphraseInConf from "../../../components/LAKForms/MostPopularKeyphraseInConf.jsx";
+import MostPopularKeyphraseInConf from "../../../components/LAKForms/EvolutionOfPopularKeyphraseInConf.jsx";
 import SharedTopicsVennDiagram from "../../../components/LAKForms/SharedTopicsVennDiagram.jsx";
+import TopicPopularityOverYears from "../../../components/LAKForms/TopicPopularityOverYears.jsx";
+import TopicPopularityKeyphraseInCOnf from "../../../components/LAKForms/TopPopularKeyphraseInConf.jsx";
 // BAB:END 08/06/2021 :: cover other conferences.
 
 const useStyles = makeStyles((theme) => ({
@@ -428,11 +430,30 @@ export default function ConferenceBar(props) {
       <Grid container component={Paper} className={classes.cardHeight} xs={12}>
         <Grid container xs={12} spacing={2}>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <NewTopWordsInYears selectedConferences={selectedOption.value} />
+            <TopicPopularityKeyphraseInCOnf
+              selectedConferencesProps={selectedOption.value}
+            />
           </Grid>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            {/* <NewEvolutionTopTopics selectedConferences={selectedOption.value} /> */}
-            <MostPopularKeyphraseInConf />
+            <MostPopularKeyphraseInConf
+              selectedConferencesProps={selectedOption.value}
+            />
+          </Grid>
+          <br></br>
+          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
+            <TopicPopularityOverYears
+              selectedConferenceProps={selectedOption.value}
+              confEvents={confEvents}
+            />
+          </Grid>
+          <br></br>
+          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
+            <SharedTopicsVennDiagram
+              conferenceName={selectedOption.value}
+              confEvents={confEvents}
+              page="topicbar"
+              conferences={conference}
+            />
           </Grid>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <WordCloud
@@ -440,52 +461,6 @@ export default function ConferenceBar(props) {
               confEvents={confEvents}
               confEvent={confEvents[0].value}
             />{" "}
-            {/*  BAB 08.06.2021 */}
-          </Grid>
-          {/* <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-              <TopicBar
-                conferenceName={selectedOption.value}
-                confEvents={confEvents}
-                confEvent={confEvents[0].value}
-              />{" "}
-            </Grid> */}
-          {/*  BAB 08.06.2021 */}
-          <br></br>
-          {/* <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-              <LAKPie
-                conferenceName={selectedOption.value}
-                confEvents={confEvents}
-              />{" "}
-            </Grid> */}
-          {/*  BAB 08.06.2021 */}
-          <br></br>
-          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <LAKStackedBarChart
-              conferenceName={selectedOption.value}
-              confEvents={confEvents}
-            />{" "}
-            {/*  BAB 08.06.2021 */}
-          </Grid>
-          <br></br>
-          {/* <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-              <LAKStackedAreaChart conferenceName={selectedOption.value} />{" "}
-            </Grid> */}
-          {/*  BAB 08.06.2021 */}
-
-          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            {/* <VennChart
-              conferenceName={selectedOption.value}
-              confEvents={confEvents}
-              page="topicbar"
-              conferences={conference}
-            />{" "} */}
-            <SharedTopicsVennDiagram
-              conferenceName={selectedOption.value}
-              confEvents={confEvents}
-              page="topicbar"
-              conferences={conference}
-            />
-            {/* BAB 08.06.2021 */}
           </Grid>
         </Grid>
       </Grid>

@@ -4,12 +4,16 @@ import { BASE_URL_CONFERENCE } from "../../../Services/constants";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Grid, Paper, Typography } from "@mui/material";
+import ActiveLoader from "./ActiveLoader";
 
-const GroupBarChart = ({ options, series }) => {
-
+const GroupBarChart = ({ options, series, loader }) => {
   return (
     <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
-      <Paper style={{ width: "100%", borderRadius: "40px", padding: "1%" }}>
+      <Paper
+        style={{ width: "100%", borderRadius: "40px", padding: "1%" }}
+        elevation={10}
+      >
+        <ActiveLoader height={50} width={50} visible={loader} />
         <ReactApexChart
           options={options}
           series={series}

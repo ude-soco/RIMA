@@ -8,6 +8,8 @@ import {
   Select,
   FormControl,
   MenuItem,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import React, { Component } from "react";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
@@ -16,10 +18,7 @@ import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "../../Application/ReuseableComponents/InfoBox";
 import GroupBarChart from "../../Application/ReuseableComponents/GroupBarChart.jsx";
 
-const MostPopularKeyphraseInConf = ({
-  selectedConferenceProps,
-  confEvents,
-}) => {
+const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
   const [series, setSeries] = useState([
     {
       name: "analytics",
@@ -42,6 +41,7 @@ const MostPopularKeyphraseInConf = ({
   const [numerOfTopics, setNumberOfTopics] = useState([5, 10, 15, 20]);
   const [selectedNumber, setSelectedNumber] = useState();
   const [loader, setLoader] = useState(false);
+  const [checked, setChecked] = useState(false);
   useEffect(() => {
     setSelectedConference(selectedConferenceProps);
     console.log("selected: ", selectedConference);
@@ -89,7 +89,9 @@ const MostPopularKeyphraseInConf = ({
         "getPublicationsMultiEvents/" +
         selectedEvents.join("&") +
         "/" +
-        selectedNumber
+        selectedNumber +
+        "/" +
+        checked
     );
     const response = await request.json();
     console.log("response", response);
@@ -163,21 +165,18 @@ const MostPopularKeyphraseInConf = ({
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography>
+        <Typography style={{ paddingTop: "1%" }}>
           This visualization displays the comparison of topics over multiple
           years
         </Typography>
       </Grid>
-      <Grid container xs={12}>
+      <Grid container xs={12} style={{ paddingTop: "1%" }}>
         <Grid item xs={12}>
-          <InputLabel>Select a year *</InputLabel>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={5}>
             <FormControl
-              sx={{ m: 1, minWidth: "80%", backgroundColor: "white" }}
+              sx={{ m: 1, minWidth: "100%", backgroundColor: "white" }}
             >
-              <InputLabel>First Event*</InputLabel>
+              <InputLabel>Select one Event or more*</InputLabel>
               <Select
                 labelId="First Event"
                 value={selectedEvents}
@@ -198,27 +197,46 @@ const MostPopularKeyphraseInConf = ({
                 })}
               </Select>
             </FormControl>
-            <FormControl
-              sx={{ m: 1, minWidth: "50%", backgroundColor: "white" }}
-            >
-              <InputLabel>Select Number of Topics*</InputLabel>
-              <Select
-                labelId="No. Topics"
-                value={selectedNumber}
-                onChange={(e) => {
-                  setSelectedNumber(e.target.value);
-                }}
-                fullWidth={true}
+          </Grid>
+          <Grid container xs={12}>
+            <Grid item md={4} xs={12}>
+              <FormControl
+                sx={{ m: 1, minWidth: "100%", backgroundColor: "white" }}
               >
-                {numerOfTopics.map((event) => {
-                  return (
-                    <MenuItem key={event} value={event}>
-                      {event}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <InputLabel>Select Number of Topics*</InputLabel>
+                <Select
+                  labelId="No. Topics"
+                  value={selectedNumber}
+                  onChange={(e) => {
+                    setSelectedNumber(e.target.value);
+                  }}
+                  fullWidth={true}
+                >
+                  {numerOfTopics.map((event) => {
+                    return (
+                      <MenuItem key={event} value={event}>
+                        {event}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid
+              item
+              md={4}
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Checkbox
+                checked={checked}
+                onChange={() => setChecked(!checked)}
+              />
+              <InputLabel>Show only shared topics</InputLabel>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -263,4 +281,4 @@ const MostPopularKeyphraseInConf = ({
   );
 };
 
-export default MostPopularKeyphraseInConf;
+export default TopicPopularityOverYears;

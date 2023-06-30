@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Grid, Paper, Typography } from "@mui/material";
 import ActiveLoader from "../../Application/ReuseableComponents/ActiveLoader.jsx";
+import GroupBarChart from "Views/Application/ReuseableComponents/GroupBarChart";
 const MostPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const [series, setSeries] = useState([
     {
@@ -140,15 +141,7 @@ const MostPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
         </Grid>
       </Grid>
       <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
-        <Paper style={{ width: "100%", borderRadius: "40px", padding: "1%" }}>
-          <ActiveLoader height={50} width={50} visible={loader} />
-          <ReactApexChart
-            options={options}
-            series={series}
-            type="bar"
-            height={350}
-          />
-        </Paper>
+        <GroupBarChart options={options} series={series} loader={ loader} />
       </Grid>
     </Grid>
   );

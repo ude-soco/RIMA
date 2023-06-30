@@ -10,7 +10,7 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import { Grid, InputLabel, Paper } from "@mui/material";
 
-import mostPopularKeyphraseInConf from "./MostPopularKeyphraseInConf.jsx";
+import mostPopularKeyphraseInConf from "./EvolutionOfPopularKeyphraseInConf.jsx";
 class NewEvolutionTopTopics extends Component {
   constructor(props) {
     super(props);

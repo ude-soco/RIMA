@@ -875,26 +875,6 @@ class RelevantPublicationsOfKeywords(APIView):
             })
 
 
-# new class created by Islam
-class RelevantPubsCountOfConf(APIView):
-    def get(self, request, *args, **kwargs):
-        print("getPublicationsConfCount called")
-        conf_name = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-2]
-        print("conf_name", conf_name)
-        keyword_or_topic = "keyword"
-        data = []
-        data = compConfUtils.get_relavant_pubsCount__keywordTopic_conf_based(
-            conf_name, keyword_or_topic)
-
-        sets = compConfUtils.convert_data_to_barChart_sets(data)
-        all_years = compConfUtils.Conf_All_years(conf_name)
-        print("sets", sets)
-        return Response({
-            "data": sets,
-            "years": all_years
-        })
-
 
 # done
 # updated by Islam Abdelghaffar
@@ -991,8 +971,6 @@ class VennOverview(APIView):
         })
 
 # new class created by Islam Abdelghaffar
-
-
 class getRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -1017,3 +995,6 @@ class getRelavantPublicationsList(APIView):
             return Response({
                 "publicationList": final_pubs_list
             })
+
+
+
