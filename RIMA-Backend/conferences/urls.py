@@ -184,7 +184,7 @@ urlpatterns = [
          SharedTopicsBetweenEvents.as_view()),
 
 
-    path('getPublicationsMultiEvents/<pk1>/<pk2>/',
+    path('getPublicationsMultiEvents/<pk1>/<pk2>/<pk3>/',
          TopicPopularityAcrossYears.as_view()),
     path('getTopPublicationsInConf/<pk1>/',
          TopicPopularityInConf.as_view()),

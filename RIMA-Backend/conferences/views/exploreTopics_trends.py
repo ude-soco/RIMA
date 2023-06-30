@@ -56,19 +56,18 @@ class TopicPopularityAcrossYears(APIView):
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'/')
         events_list = confutils.split_restapi_url(
-            url_splits_question_mark[-3], r'&')
-        number_of_keyphrase = url_splits_question_mark[-2]
+            url_splits_question_mark[-4], r'&')
+        number_of_keyphrase = url_splits_question_mark[-3]
         Keyword_or_topics = "keyword"
+        shared_keyphrase = url_splits_question_mark[-2]
 
-        print("number_of_keyphrase: ", number_of_keyphrase)
         number_of_keyphrase = int(number_of_keyphrase)
         data = expoTopicsUtils.get_publication_count_for_Multi_events(
-            events_list, Keyword_or_topics, number_of_keyphrase)
-        print("data: ", data)
+            events_list, Keyword_or_topics, number_of_keyphrase, shared_keyphrase)
+
         sets = expoTopicsUtils.convert_data_to_barChart_sets(data)
         print("sets", sets)
 
-        print("events_list", events_list)
         return Response({
             "data": sets,
             "years": events_list
