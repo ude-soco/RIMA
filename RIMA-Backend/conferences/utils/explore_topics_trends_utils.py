@@ -65,14 +65,42 @@ def get_relavant_pubsCount__keywordTopic_conf_based(
 
 
 def get_publication_count_for_Multi_events(
-        eventsList, Keyword_or_topic, number_of_keyphrase):
+        eventsList, Keyword_or_topic, number_of_keyphrase, shared_keyphrase):
 
     events_nodes = get_eventsNode_for_eventsname(eventsList)
 
     events_Pubs_keywords = get_all_keywordsOrTopic_of_Event_Publications(
         Keyword_or_topic, events_nodes, number_of_keyphrase)
+    if (shared_keyphrase == "true"):
+        events_Pubs_keywords = get_shared_between_keyphrase(
+            events_Pubs_keywords)
 
     return events_Pubs_keywords
+
+
+def get_shared_between_keyphrase(events_Pubs_keywords):
+    if (len(events_Pubs_keywords) == 1):
+        return events_Pubs_keywords
+    else:
+        final_results = []
+        keywords = [item["keywords"]
+                    for item in events_Pubs_keywords]
+        sets = [set(item["name"] for item in subset) for subset in keywords]
+        shared_Keyphrase = set.intersection(*sets)
+
+        print("shared_Keyphrase", shared_Keyphrase)
+        for item in events_Pubs_keywords:
+            year = item["year"]
+            Event_keywords = item["keywords"]
+            final_kewords = [
+                event_keyword for event_keyword in Event_keywords if event_keyword["name"] in shared_Keyphrase]
+            final_results.append({
+                "year": year,
+                "keywords": final_kewords
+            })
+
+        print("final results: ", final_results)
+        return final_results
 
 
 def get_Top_Keyphrase_In_Conf(
