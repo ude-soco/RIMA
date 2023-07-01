@@ -38,10 +38,11 @@ import RestAPI from "../../../../Services/api";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import InteractiveVennDiagram from "../../../components/LAKForms/InteractiveVennDiagram";
-import MostPopularKeyphraseInConf from "../../../components/LAKForms/EvolutionOfPopularKeyphraseInConf.jsx";
-import SharedTopicsVennDiagram from "../../../components/LAKForms/SharedTopicsVennDiagram.jsx";
-import TopicPopularityOverYears from "../../../components/LAKForms/TopicPopularityOverYears.jsx";
-import TopicPopularityKeyphraseInCOnf from "../../../components/LAKForms/TopPopularKeyphraseInConf.jsx";
+import EvolutionOfPopularKeyphraseInConf from "../../../components/LAKForms/ExploreTopicsAndTrends/EvolutionOfPopularKeyphraseInConf.jsx";
+import SharedTopicsVennDiagram from "../../../components/LAKForms/ExploreTopicsAndTrends/SharedTopicsVennDiagram.jsx";
+import TopicPopularityOverYears from "../../../components/LAKForms/ExploreTopicsAndTrends/TopicPopularityOverYears.jsx";
+import TopPopularKeyphraseInConf from "../../../components/LAKForms/ExploreTopicsAndTrends/TopPopularKeyphraseInConf.jsx";
+import TopRelevantTopicsInConf from "../../../components/LAKForms/ExploreTopicsAndTrends/TopRelevantTopicsInConf.jsx";
 // BAB:END 08/06/2021 :: cover other conferences.
 
 const useStyles = makeStyles((theme) => ({
@@ -430,12 +431,12 @@ export default function ConferenceBar(props) {
       <Grid container component={Paper} className={classes.cardHeight} xs={12}>
         <Grid container xs={12} spacing={2}>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <TopicPopularityKeyphraseInCOnf
+            <TopPopularKeyphraseInConf
               selectedConferencesProps={selectedOption.value}
             />
           </Grid>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <MostPopularKeyphraseInConf
+            <EvolutionOfPopularKeyphraseInConf
               selectedConferencesProps={selectedOption.value}
             />
           </Grid>
@@ -456,7 +457,7 @@ export default function ConferenceBar(props) {
             />
           </Grid>
           <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
-            <WordCloud
+            <TopRelevantTopicsInConf
               conferenceName={selectedOption.value}
               confEvents={confEvents}
               confEvent={confEvents[0].value}

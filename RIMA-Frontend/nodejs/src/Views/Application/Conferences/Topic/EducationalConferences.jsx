@@ -17,7 +17,7 @@ import {
   Select,
 } from "@material-ui/core";
 import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuthorEvolution_BAK";
-import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol";
+import NewCompareAuthorsPapersCol from "../../../components/LAKForms/CompareConferences/EvolutionAuthorsPublicationsOverview";
 import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords_BAK";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import NewComparePapers from "../../../components/LAKForms/NewComparePapers";

@@ -20,14 +20,14 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import NewSharedAuthorEvolution from "../../../components/LAKForms/NewSharedAuthorEvolution.jsx";
-import NewCompareAuthorsPapersCol from "../../../components/LAKForms/NewCompareAuthorsPapersCol.jsx";
-import NewNumberOfSharedWords from "../../../components/LAKForms/NewNumberOfSharedWords.jsx";
+import SimilarityComparisonSharedAuthorsBased from "../../../components/LAKForms/CompareConferences/SimilarityComparisonSharedAuthorsBased.jsx";
+import EvolutionAuthorsPublicationsOverview from "../../../components/LAKForms/CompareConferences/EvolutionAuthorsPublicationsOverview.jsx";
+import SimilarityComparisonSharedTopicsBased from "../../../components/LAKForms/CompareConferences/SimilarityComparisonSharedTopicsBased.jsx";
+import SharedAuthorsiVennDiagram from "../../../components/LAKForms/CompareConferences/SharedAuthorsiVennDiagram.jsx";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
+import ComparativePopularitySharedTopics from "../../../components/LAKForms/CompareConferences/ComparativePopularitySharedTopics.jsx";
 import NewComparePapers from "../../../components/LAKForms/NewComparePapers.jsx";
-import NewSharedAuthors from "../../../components/LAKForms/NewSharedAuthors.jsx";
 import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
-import NewCompareTopicsInPapers from "../../../components/LAKForms/NewCompareTopicsInPapers.jsx";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsx";
 import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart.jsx";
@@ -39,7 +39,7 @@ import CompareStackedAreaChart from "../../../components/LAKForms/compareStacked
 import RestAPI from "../../../../Services/api";
 
 import { CardHeader, Row, Col } from "reactstrap";
-import ConferenceOverview from "../../../components/LAKForms/ConferenceOverview.jsx";
+import ConferenceOverview from "../../../components/LAKForms/CompareConferences/ConferenceOverview.jsx";
 window.$value = "";
 var selectInputRef = React.createRef();
 const useStyles = makeStyles((theme) => ({
@@ -297,7 +297,7 @@ export default function EducationalConferences(props) {
                       margin: "1%",
                     }}
                   >
-                    <NewCompareAuthorsPapersCol
+                    <EvolutionAuthorsPublicationsOverview
                       conferencesNames={availableConferences}
                     />
                   </Grid>
@@ -353,7 +353,7 @@ export default function EducationalConferences(props) {
                         margin: "auto",
                       }}
                     >
-                      <NewSharedAuthorEvolution
+                      <SimilarityComparisonSharedAuthorsBased
                         conferencesNames={availableConferences}
                         chartType="area"
                       />
@@ -370,7 +370,7 @@ export default function EducationalConferences(props) {
                         marginTop: matchesXS ? "1%" : "auto",
                       }}
                     >
-                      <NewSharedAuthorEvolution
+                      <SimilarityComparisonSharedAuthorsBased
                         conferencesNames={availableConferences}
                         chartType="bar"
                       />
@@ -394,7 +394,7 @@ export default function EducationalConferences(props) {
                         margin: "auto",
                       }}
                     >
-                      <NewNumberOfSharedWords
+                      <SimilarityComparisonSharedTopicsBased
                         conferencesNames={availableConferences}
                         chartType="area"
                       />
@@ -411,10 +411,9 @@ export default function EducationalConferences(props) {
                         marginTop: matchesXS ? "1%" : "auto",
                       }}
                     >
-                      <NewNumberOfSharedWords
+                      <SimilarityComparisonSharedTopicsBased
                         conferencesNames={availableConferences}
                         chartType="bar"
-
                       />
                     </Grid>
                   </Grid>
@@ -470,7 +469,9 @@ export default function EducationalConferences(props) {
                       ...Style.itemStyle,
                     }}
                   >
-                    <NewSharedAuthors conferencesNames={availableConferences} />
+                    <SharedAuthorsiVennDiagram
+                      conferencesNames={availableConferences}
+                    />
                   </Grid>
                   <Grid
                     xs={12}
@@ -480,7 +481,7 @@ export default function EducationalConferences(props) {
                       marginTop: "1%",
                     }}
                   >
-                    <NewCompareTopicsInPapers
+                    <ComparativePopularitySharedTopics
                       conferencesNames={availableConferences}
                     />
                   </Grid>
@@ -572,7 +573,6 @@ export default function EducationalConferences(props) {
         </Grid> */}
 
         {/* Authors */}
-
 
         <ScrollTopWrapper />
       </Grid>

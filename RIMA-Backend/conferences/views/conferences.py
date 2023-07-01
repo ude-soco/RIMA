@@ -532,7 +532,6 @@ class WordCloudView(APIView):
             models_data = confutils.get_keywords_from_models(
                 conference_event_name_abbr)
 
-        print(models_data)
         reduced_models_data = models_data[:int(number)]
 
         for model_data in reduced_models_data:
@@ -541,6 +540,8 @@ class WordCloudView(APIView):
                 "value": model_data.get('weight'),
 
             })
+
+        print("words: ", result_data)
         return Response({
             "words":
             result_data
