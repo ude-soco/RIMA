@@ -222,11 +222,11 @@ def get_events_TopicsOrKeywords(Keyword_topics, events):
     results = []
     for event in events:
         if (Keyword_topics == "keyword"):
-            event_authors = Event.nodes.get(
+            event_keywords = Event.nodes.get(
                 conference_event_name_abbr=event).keywords.all()
             results.append({
                 "event_name": event,
-                "keywords": [author.author_name for author in event_authors]
+                "keywords": [Keyword.keyword for Keyword in event_keywords]
             })
 
     return results

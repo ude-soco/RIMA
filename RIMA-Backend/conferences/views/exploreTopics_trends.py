@@ -1,4 +1,3 @@
-
 import itertools
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -26,7 +25,7 @@ class SharedTopicsBetweenEvents(APIView):
         topicsKeywords_name = []
 
         filtered_events = [event for event in events if event != ""]
-
+        print("events: ", events)
         if len(events) == 0:
             return Response({
                 "sets": final_sets,
@@ -41,7 +40,7 @@ class SharedTopicsBetweenEvents(APIView):
         for r in range(1, len(event_names) + 1):
             all_combs.extend(combinations(event_names, r))
 
-        results = compConfUtils.get_shared_authors_basedOn_combs(
+        results = expoTopicsUtils.get_shared_keywordsOrTopics_basedOn_combs(
             events_keywords, all_combs)
 
         return Response({

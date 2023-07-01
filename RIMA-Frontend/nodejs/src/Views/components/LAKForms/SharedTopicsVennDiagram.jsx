@@ -1,15 +1,11 @@
-import {
-  Select,
-  FormControl,
-  Grid,
-  InputLabel,
-  Paper,
-  MenuItem,
-} from "@mui/material";
+// new class created by Islam
+import { Grid, Paper } from "@mui/material";
 import React, { useState } from "react";
 import InteractiveVennDiagram from "./InteractiveVennDiagram";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import { BASE_URL_CONFERENCE } from "Services/constants";
+import SelectWithCancelIcon from "../../Application/ReuseableComponents/SelectWithCancelIcon.jsx";
+import { Typography } from "@material-ui/core";
 
 const SharedTopicsVennDiagram = ({
   conferenceName,
@@ -33,9 +29,31 @@ const SharedTopicsVennDiagram = ({
   const [firstSelectedEvent, setFirstSelectEvent] = useState("");
   const [secondSelectedEvent, setSecondSelectEvent] = useState("");
   const [thirdSelectedEvent, setthirdSelectEvent] = useState("");
+  const [selectedEvents, setSelectedEvents] = useState([]);
   const [buttonActive, setButtonActive] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [showSimilarityWarning, setShowSimilarityWarning] = useState(false);
+  const [eventSelectedTwice, setEventSelectedTwice] = useState("");
+  const [listContent, setListContent] = useState([]);
+
   const handleCompare = async () => {
+    SetSets([]);
+    setListContent([]);
+    const isOneEvent = oneEventSelected();
+    if (isOneEvent) {
+      setShowWarning(true);
+      setShowSimilarityWarning(false);
+      return;
+    }
+    const isSimilar = twoSimilarEventsSelected();
+    if (isSimilar) {
+      setShowWarning(false);
+      setShowSimilarityWarning(true);
+      return;
+    }
+
     setButtonActive(true);
+
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "sharedTopicsBetweenEvents/" +
@@ -46,68 +64,136 @@ const SharedTopicsVennDiagram = ({
         thirdSelectedEvent
     );
     const response = await request.json();
+    SetSets(response.sets);
+    setListContent(response.names);
+    setShowWarning(false);
+    setShowSimilarityWarning(false);
   };
-  console.log("events", confEvents);
+  const oneEventSelected = () => {
+    let firstSecond = firstSelectedEvent === "" && secondSelectedEvent === "";
+    let firstThird = firstSelectedEvent === "" && thirdSelectedEvent === "";
+    let secondThird = secondSelectedEvent === "" && thirdSelectedEvent === "";
+
+    if (firstSecond || firstThird) {
+      return true;
+    }
+    if (secondThird) {
+      return true;
+    }
+    return false;
+  };
+
+  const twoSimilarEventsSelected = () => {
+    if (
+      firstSelectedEvent === secondSelectedEvent ||
+      firstSelectedEvent === thirdSelectedEvent
+    ) {
+      setEventSelectedTwice(firstSelectedEvent);
+      return true;
+    }
+    if (secondSelectedEvent === thirdSelectedEvent) {
+      setEventSelectedTwice(secondSelectedEvent);
+      return true;
+    }
+    return false;
+  };
+
+  const clearSelectedEvent = (event) => {
+    let selectedEvent;
+    switch (event) {
+      case "firstEvent":
+        selectedEvent = firstSelectedEvent;
+        setFirstSelectEvent("");
+        break;
+      case "secondEvent":
+        selectedEvent = secondSelectedEvent;
+        setSecondSelectEvent("");
+        break;
+      case "thirdEvent":
+        selectedEvent = thirdSelectedEvent;
+        setthirdSelectEvent("");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <Grid container xs={12}>
       <Grid container xs={12}>
         <Grid item xs={12}>
-          Shared Topics between events
+          <Typography
+            style={{ fontWeight: "bold" }}
+            variant="h5"
+            component="h1"
+            gutterBottom
+          >
+            Shared Topics between events
+          </Typography>
         </Grid>
         <Grid item xs={12}>
-          the venn diagram shows shared topic between selected events within
-          selected conference
+          <Typography style={{ paddingTop: "1%" }}>
+            the venn diagram shows shared topic between selected events within
+            selected conference
+          </Typography>
         </Grid>
         <Grid container style={{ paddingTop: "3%" }}>
-          <Grid item xs={12} sm={6} md={4}>
-            <FormControl sx={{ m: 1, minWidth: 250, backgroundColor: "white" }}>
-              <InputLabel>First Event*</InputLabel>
-              <Select
-                labelId="First Event"
-                value={firstSelectedEvent}
-                onChange={(e) => setFirstSelectEvent(e.target.value)}
-              >
-                {confEvents.map((event) => {
-                  return <MenuItem value={event.label}>{event.label}</MenuItem>;
-                })}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <FormControl sx={{ m: 1, minWidth: 250, backgroundColor: "white" }}>
-              <InputLabel>Second Event*</InputLabel>
-
-              <Select
-                labelId="Second Event"
-                value={secondSelectedEvent}
-                onChange={(e) => setSecondSelectEvent(e.target.value)}
-              >
-                {confEvents.map((event) => {
-                  return <MenuItem value={event.label}>{event.label}</MenuItem>;
-                })}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <FormControl sx={{ m: 1, minWidth: 250, backgroundColor: "white" }}>
-              <InputLabel>Third Event (Optional)</InputLabel>
-              <Select
-                labelId="Third Event"
-                value={thirdSelectedEvent}
-                onChange={(e) => setthirdSelectEvent(e.target.value)}
-              >
-                {confEvents.map((event) => {
-                  return <MenuItem value={event.label}>{event.label}</MenuItem>;
-                })}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} style={{ paddingTop: "3%", paddingLeft: "1%" }}>
-            <RIMAButton
-              name="Compare"
-              onClick={handleCompare}
-              activeButton={buttonActive}
-            />
+          <SelectWithCancelIcon
+            InputLabelProps="First Event*"
+            SelectLabelIdProps="First Event"
+            SelectValueProps={firstSelectedEvent}
+            onChangeActionProps={(e) => {
+              setFirstSelectEvent(e.target.value);
+            }}
+            confEventsProps={confEvents}
+            clearSelectedEventProps={() => clearSelectedEvent("firstEvent")}
+          />
+          <SelectWithCancelIcon
+            InputLabelProps="Second Event*"
+            SelectLabelIdProps="Second Event"
+            SelectValueProps={secondSelectedEvent}
+            onChangeActionProps={(e) => {
+              setSecondSelectEvent(e.target.value);
+            }}
+            confEventsProps={confEvents}
+            clearSelectedEventProps={() => clearSelectedEvent("secondEvent")}
+          />
+          <SelectWithCancelIcon
+            InputLabelProps="Third Event (Optional)"
+            SelectLabelIdProps="Third Event"
+            SelectValueProps={thirdSelectedEvent}
+            onChangeActionProps={(e) => {
+              setthirdSelectEvent(e.target.value);
+            }}
+            confEventsProps={confEvents}
+            clearSelectedEventProps={() => clearSelectedEvent("thirdEvent")}
+          />
+          <Grid
+            container
+            item
+            xs={12}
+            spacing={1}
+            style={{ paddingTop: "3%", paddingLeft: "1%" }}
+          >
+            <Grid item>
+              <RIMAButton
+                name="Compare"
+                onClick={handleCompare}
+                activeButton={buttonActive}
+              />
+            </Grid>
+            <Grid item>
+              {showWarning && (
+                <Typography variant="h6" color="error">
+                  At least 2 events should be selected
+                </Typography>
+              )}
+              {showSimilarityWarning && (
+                <Typography variant="h6" color="error">
+                  An Event {eventSelectedTwice} should not be selected Twice
+                </Typography>
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -118,8 +204,8 @@ const SharedTopicsVennDiagram = ({
         >
           <InteractiveVennDiagram
             sets={sets}
-            listContent={[]}
-            label={"topics"}
+            listContent={listContent}
+            label={"topic"}
           />
         </Paper>
       </Grid>
