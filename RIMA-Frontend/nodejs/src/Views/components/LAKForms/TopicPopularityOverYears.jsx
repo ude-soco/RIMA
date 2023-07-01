@@ -17,6 +17,7 @@ import "./styles.css";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "../../Application/ReuseableComponents/InfoBox";
 import GroupBarChart from "../../Application/ReuseableComponents/GroupBarChart.jsx";
+import SelectWithCancelIcon from "../../Application/ReuseableComponents/SelectWithCancelIcon.jsx";
 
 const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
   const [series, setSeries] = useState([
@@ -172,6 +173,7 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
       </Grid>
       <Grid container xs={12} style={{ paddingTop: "1%" }}>
         <Grid item xs={12}>
+
           <Grid item xs={12} md={5}>
             <FormControl
               sx={{ m: 1, minWidth: "100%", backgroundColor: "white" }}

@@ -481,7 +481,7 @@ class NewSharedAuthors extends Component {
               <InteractiveVennDiagram
                 sets={this.state.sets}
                 listContent={this.state.authorsNames}
-                label={"authors"}
+                label={"author"}
               />
             </Grid>
           </Grid>

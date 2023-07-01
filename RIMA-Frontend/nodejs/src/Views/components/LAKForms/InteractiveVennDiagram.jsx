@@ -15,13 +15,14 @@ import {
 import InfoBox from "../../Application/ReuseableComponents/InfoBox";
 
 VennModule(Highcharts);
-const InteractiveVennDiagram = ({ sets, listContent,label }) => {
+const InteractiveVennDiagram = ({ sets, listContent, label }) => {
   const [selectedEvent, setSelectedEvent] = useState([]);
   const [selectedSet, setSelectedSet] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
 
   const listContentRef = useRef(listContent);
+
   useEffect(() => {
     listContentRef.current = listContent;
   }, [listContent]);
@@ -36,7 +37,7 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
 
   const vennOptions = {
     title: {
-      text: `Shared ${label}`,
+      text: `Shared ${label}s`,
     },
     chart: {
       backgroundColor: "#ffffff",
@@ -52,21 +53,21 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
           return (
             '<span style="color:' +
             this.point.color +
-            `">\u25CF</span> Total number of ${label} in ` +
+            `">\u25CF</span> Total number of ${label}s in ` +
             this.point.name +
             ": " +
             this.point.value +
-            `<br>Click to get ${label}' list`
+            `<br>Click to get ${label} list`
           );
         } else {
           return (
             '<span style="color:' +
             this.point.color +
-            `">\u25CF</span> Shared number of ${label} between ` +
+            `">\u25CF</span> Shared number of ${label}s between ` +
             this.point.name +
             ": " +
             this.point.value +
-            `<br>Click to get ${label}' list`
+            `<br>Click to get ${label} list`
           );
         }
       },
@@ -88,7 +89,7 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
     series: [
       {
         type: "venn",
-        name: `Shared ${label}`,
+        name: `Shared ${label}s`,
         data: sets,
         point: {
           events: {
@@ -97,12 +98,15 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
               clickedSets.sort();
               let clickedSetesName = clickedSets.join(" and ");
               listContentRef.current.map((set) => {
-                console.log("set name", set.name);
-                console.log("clickedSets", clickedSetesName);
                 if (set.name === clickedSetesName) {
                   console.log("names equal");
                   setSelectedSet(set.name);
-                  setSelectedEvent(set.authors_names);
+                  if (label == "author") {
+                    setSelectedEvent(set.authors_names);
+                  }
+                  if (label == "topic") {
+                    setSelectedEvent(set.keywords);
+                  }
                 }
               });
             },
@@ -112,6 +116,7 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
     ],
   };
 
+  console.log("listContent: ", listContent);
   return (
     <Grid container={12} spacing={2}>
       <Grid item xs={8}>
@@ -121,7 +126,7 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
         <Grid container xs={12}>
           <Grid item xs={10}>
             <Typography style={{ marginTop: "1%" }} variant="h6">
-              list of {label} in {selectedSet}
+              list of {label}s in {selectedSet}
             </Typography>
           </Grid>
           <Grid item xs={2} justify="center" alignItems="center">
@@ -138,7 +143,7 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
                     left: "50%",
                     transform: "translateX(-50%)",
                   }}
-                  Info={`Enter the author's name to check if they're in the list.`}
+                  Info={`Enter the ${label}'s name to check if they're in the list.`}
                 />
               )}
             </i>
@@ -155,9 +160,9 @@ const InteractiveVennDiagram = ({ sets, listContent,label }) => {
         <Paper style={{ maxHeight: "30vh", overflow: "scroll" }}>
           <List>
             {selectedEvent &&
-              selectedEvent.map((author) => (
+              selectedEvent.map((item) => (
                 <ListItem button>
-                  <ListItemText primary={author}></ListItemText>{" "}
+                  <ListItemText primary={item}></ListItemText>{" "}
                 </ListItem>
               ))}
           </List>
