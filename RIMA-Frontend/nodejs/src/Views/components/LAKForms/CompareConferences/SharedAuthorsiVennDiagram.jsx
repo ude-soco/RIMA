@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Button, Label, FormGroup, Form, Row, Col } from "reactstrap";
 import Select from "react-select";
 import "d3-transition";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import "react-tabs/style/react-tabs.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -18,10 +18,10 @@ import {
 } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
-import InteractiveVennDiagram from "./InteractiveVennDiagram.jsx";
+import InteractiveVennDiagram from "../InteractiveVennDiagram.jsx";
 window.$value = "";
 
-class NewSharedAuthors extends Component {
+class SharedAuthorsiVennDiagram extends Component {
   constructor(props) {
     super(props);
     this.selectValue = this.selectValue.bind(this);
@@ -491,4 +491,4 @@ class NewSharedAuthors extends Component {
   }
 }
 
-export default NewSharedAuthors;
+export default SharedAuthorsiVennDiagram;

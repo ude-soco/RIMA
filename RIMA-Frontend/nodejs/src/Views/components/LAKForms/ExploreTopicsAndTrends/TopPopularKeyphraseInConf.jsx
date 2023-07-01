@@ -1,11 +1,11 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Grid, Paper, Typography } from "@mui/material";
-import ActiveLoader from "../../Application/ReuseableComponents/ActiveLoader.jsx";
-const TopicPopularityKeyphraseInCOnf = ({ selectedConferencesProps }) => {
+import ActiveLoader from "../../../Application/ReuseableComponents/ActiveLoader.jsx";
+const TopPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const [loader, setLoader] = useState(false);
   const [selectedConference, setSelectedConference] = useState(
     selectedConferencesProps
@@ -199,4 +199,4 @@ const TopicPopularityKeyphraseInCOnf = ({ selectedConferencesProps }) => {
   );
 };
 
-export default TopicPopularityKeyphraseInCOnf;
+export default TopPopularKeyphraseInConf;

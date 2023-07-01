@@ -1,7 +1,7 @@
 // Updated By Islam Abdelghaffar
 import React, { Component } from "react";
 import Select from "react-select";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import "d3-transition";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
@@ -18,7 +18,7 @@ import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 import CustomizedDialog from "Views/Application/ReuseableComponents/CustomizedDialog.jsx";
 
-class NewCompareTopicsInPapers extends Component {
+class ComparativePopularitySharedTopics extends Component {
   constructor(props) {
     super(props);
     this.selectInputRef = React.createRef();
@@ -410,4 +410,4 @@ class NewCompareTopicsInPapers extends Component {
   }
 }
 
-export default NewCompareTopicsInPapers;
+export default ComparativePopularitySharedTopics;

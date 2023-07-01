@@ -2,19 +2,17 @@
 import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import "d3-transition";
 import { Grid, Box, InputLabel, Paper } from "@material-ui/core";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
-import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 
-class NewSharedAuthorEvolution extends Component {
+class SimilarityComparisonSharedTopicsBased extends Component {
   constructor(props) {
     super(props);
     this.selectInputRef = React.createRef();
-
     this.state = {
       loader: false,
       mulitSelectDefaultValues: [
@@ -54,7 +52,6 @@ class NewSharedAuthorEvolution extends Component {
           data: [35, 40, 34, 38, 32],
         },
       ],
-
       options: {
         stroke: {
           curve: "smooth",
@@ -76,42 +73,31 @@ class NewSharedAuthorEvolution extends Component {
         yaxis: [
           {
             title: {
-              text: "No. of shared authors",
+              text: "No. of shared topics",
               style: {
                 color: "#008FFB",
+                fontSize: 10,
+              },
+            },
+            labels: {
+              style: {
+                fontSize: "20px",
+                fontWeight: 500,
               },
             },
           },
         ],
       },
-
-      loader: false,
-      display: "none",
-      opacity: "0.9",
-      selectValue: { value: "learning", label: "learning" },
-      selectConference: "",
-      key: "",
-      active1: false,
-      active2: true,
-      active3: true,
-      active4: false,
-      imageTooltipOpen: false,
     };
   }
-
   wordhandleChange = (e) => {
-    console.log(e.value);
     this.setState({
       selectValue: e,
     });
-    console.log(this.state.selectValue);
   };
 
   conferenceshandleChange = (e) => {
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
-
-    console.log(value);
-
     this.setState(
       {
         loader: true,
@@ -119,16 +105,29 @@ class NewSharedAuthorEvolution extends Component {
         selectedConferences: value,
       },
       function () {
-        this.compareSharedTotalAuthors();
+        this.CompareSharedWordNumber();
       }
     );
+  };
 
-    console.log(this.state.selectedConferences);
+  selectSharedTopics = (e) => {
+    this.setState({
+      active1: true,
+      active2: false,
+      key: "topic",
+    });
+  };
+
+  selectSharedKeywords = (e) => {
+    this.setState({
+      active1: false,
+      active2: true,
+      key: "keyowrd",
+    });
   };
 
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log(this.state.imageTooltipOpen);
   };
 
   onClear = () => {
@@ -146,7 +145,7 @@ class NewSharedAuthorEvolution extends Component {
     this.selectInputRef.current.select.clearValue();
   };
 
-  compareSharedTotalAuthors = () => {
+  CompareSharedWordNumber = () => {
     var { series, yaxis } = this.state;
     var selectedConfsCount = this.state.selectedConferences.length;
     if (selectedConfsCount == 0) {
@@ -156,48 +155,77 @@ class NewSharedAuthorEvolution extends Component {
       });
       return;
     }
+    var { weights } = this.state;
     if (selectedConfsCount <= 1) {
-      yaxis = [
+      let optionsCopy = { ...this.state.options };
+      optionsCopy.yaxis = [
         {
           title: {
-            text: "No. of total authors",
+            text: "No. of total topics",
             style: {
               color: "#008FFB",
+            },
+          },
+          labels: {
+            style: {
+              fontSize: "20px",
+              fontWeight: 500,
             },
           },
         },
       ];
       this.setState({
-        yaxis: yaxis,
+        options: optionsCopy,
       });
     }
     if (selectedConfsCount > 1) {
-      yaxis = [
+      let optionsCopy = { ...this.state.options };
+      optionsCopy.yaxis = [
         {
           title: {
-            text: "No. of shared authors",
+            text: "No. of shared topics",
             style: {
               color: "#008FFB",
+            },
+          },
+          labels: {
+            style: {
+              fontSize: "20px",
+              fontWeight: 500,
             },
           },
         },
       ];
       this.setState({
-        yaxis: yaxis,
+        options: optionsCopy,
       });
     }
     fetch(
       BASE_URL_CONFERENCE +
-        "getTotalSharedAuthorsEvolution/" +
+        "getSharedWordsNumber/" +
         "?" +
         this.state.selectedConferences.join("&")
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         series = [];
+        weights = [];
+        // for (let index = 0; index < 2; index++) {
+        //   for (let i = 0; i < json.weights.length; i++) {
+        //     weights[i] = json.weights[i][index];
+        //   }
+        //   if (index == 0) {
+        //     // series = series.concat([
+        //     //   { name: "No. of shared Topics", data: weights },
+        //     // ]);
+        //   } else {
+        //     series = series.concat([
+        //       { name: "No. of shared Topics", data: weights },
+        //     ]);
+        //   }
+        //   weights = [];
+        // }
         json.data.forEach((tuple) => {
-          console.log("tuple", tuple[0]["name"], ",", tuple[0]["data"]);
           series = series.concat([
             { name: tuple[0]["name"], data: tuple[0]["data"] },
           ]);
@@ -213,14 +241,15 @@ class NewSharedAuthorEvolution extends Component {
           datalabels: {
             enabled: true,
           },
+
           options: {
             ...this.state.options,
             xaxis: {
               ...this.state.options.xaxis,
               categories: json.sharedYears,
             },
-            yaxis: yaxis,
           },
+
           loader: false,
           opacity: "0.9",
         });
@@ -230,14 +259,13 @@ class NewSharedAuthorEvolution extends Component {
   render() {
     return (
       <Box component="form" role="form" method="POST" style={{ width: "100%" }}>
-        <br />
+        <br></br>
         <h2>
-          {" "}
-          Similarity Comparison based on Shared Authors Evolution between
+          Similarity Comparison based on Shared Topics Evolution between
           Conferences
         </h2>
         <p>
-          The Evolution of Shared Authors Among Selected Conferences Over Time.{" "}
+          The Evolution of Shared Topics Among Selected Conferences Over Time.
         </p>
         <Box style={{ width: "100%" }}>
           <InputLabel>Select conferences</InputLabel>
@@ -255,20 +283,45 @@ class NewSharedAuthorEvolution extends Component {
             defaultValue={this.state.mulitSelectDefaultValues}
           />
         </Box>
+        <br />
         {this.state.words.length == 0 && !this.state.active4 ? (
-          <Box style={{ color: "red" }}>No common authors found</Box>
+          <Box style={{ color: "red" }}>No common words found</Box>
         ) : (
           <Box />
         )}
-        <br />
-        <Grid item style={{ opacity: this.state.opacity }}>
+        <Grid style={{ opacity: this.state.opacity }}>
           <Paper style={{ borderRadius: "40px", padding: "1%" }} elevation={10}>
-            <ActiveLoader height={50} width={50} visible={this.state.loader} />
+            <Box
+              style={{
+                marginLeft: "50%",
+                marginTop: "2%",
+                position: "absolute",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignContent: "center",
+                  position: "absolute",
+                  marginLeft: "40%",
+                }}
+              >
+                <Loader
+                  type="Bars"
+                  visible={this.state.loader}
+                  color="#00BFFF"
+                  height={50}
+                  width={50}
+                />
+              </Box>
+            </Box>
             <ReactApexChart
               options={this.state.options}
               series={this.state.series}
               type={this.props.chartType}
-              height={350}
+              height={400}
             />
           </Paper>
         </Grid>
@@ -277,4 +330,4 @@ class NewSharedAuthorEvolution extends Component {
   }
 }
 
-export default NewSharedAuthorEvolution;
+export default SimilarityComparisonSharedTopicsBased;

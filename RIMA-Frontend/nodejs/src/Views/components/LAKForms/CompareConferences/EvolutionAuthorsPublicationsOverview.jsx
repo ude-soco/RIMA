@@ -2,18 +2,18 @@
 import React, { Component } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import "d3-transition";
 import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import { Box, Grid, InputLabel } from "@mui/material";
-import RIMAButton from "../../Application/ReuseableComponents/RIMAButton";
+import RIMAButton from "../../../Application/ReuseableComponents/RIMAButton";
 import { Paper, Typography } from "@material-ui/core";
 import { wrap } from "highcharts";
 import { json } from "d3";
 
-class NewCompareAuthorsPapersCol extends Component {
+class EvolutionAuthorsPublicationsOverview extends Component {
   constructor(props) {
     super(props);
     this.updateBarChartTooltip = this.updateBarChartTooltip.bind(this);
@@ -552,4 +552,4 @@ class NewCompareAuthorsPapersCol extends Component {
   }
 }
 
-export default NewCompareAuthorsPapersCol;
+export default EvolutionAuthorsPublicationsOverview;

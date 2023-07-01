@@ -1,12 +1,12 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
-import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Grid, Paper, Typography } from "@mui/material";
-import ActiveLoader from "../../Application/ReuseableComponents/ActiveLoader.jsx";
+import ActiveLoader from "../../../Application/ReuseableComponents/ActiveLoader.jsx";
 import GroupBarChart from "Views/Application/ReuseableComponents/GroupBarChart";
-const MostPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
+const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const [series, setSeries] = useState([
     {
       name: "analytics",
@@ -141,10 +141,10 @@ const MostPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
         </Grid>
       </Grid>
       <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
-        <GroupBarChart options={options} series={series} loader={ loader} />
+        <GroupBarChart options={options} series={series} loader={loader} />
       </Grid>
     </Grid>
   );
 };
 
-export default MostPopularKeyphraseInConf;
+export default EvolutionOfPopularKeyphraseInConf;
