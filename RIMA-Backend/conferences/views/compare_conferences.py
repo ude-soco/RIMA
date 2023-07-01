@@ -875,7 +875,6 @@ class RelevantPublicationsOfKeywords(APIView):
             })
 
 
-
 # done
 # updated by Islam Abdelghaffar
 
@@ -971,6 +970,8 @@ class VennOverview(APIView):
         })
 
 # new class created by Islam Abdelghaffar
+
+
 class getRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -984,17 +985,14 @@ class getRelavantPublicationsList(APIView):
             eventname, keyword_or_topic, keywordTopic_name)
         if publication_List is not None:
             final_pubs_list = [{
+                "paper_id": pub.paper_id,
                 "title": pub.title,
-                "data": {
-                    "title": pub.title,
-                    "abstract": pub.abstract,
-                    "years": pub.years,
-                    "url": pub.urls
-                }}for pub in publication_List]
+                "authors": "A1,A2",
+                "abstract": pub.abstract,
+                "year": pub.years,
+                "url": pub.urls
+            }for pub in publication_List]
 
             return Response({
                 "publicationList": final_pubs_list
             })
-
-
-

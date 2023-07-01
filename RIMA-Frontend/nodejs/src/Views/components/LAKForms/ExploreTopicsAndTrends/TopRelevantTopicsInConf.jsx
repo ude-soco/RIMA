@@ -60,7 +60,9 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
   const [numerOfTopics, setNumberOfTopics] = useState([5, 10, 15, 20]);
   const [selectedNumber, setSelectedNumber] = useState();
   const [loader, setLoader] = useState(false);
-
+  const [selectedWord, setSelectedWord] = useState("");
+  const [publicationList, setPublicationList] = useState([]);
+  const [openDialog, setOpenDiaglog] = useState(false);
   useEffect(() => {
     setSelectedConference(selectedConferenceProps);
   }, [selectedConferenceProps]);
@@ -89,6 +91,26 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
     console.log("response", response);
     setSeries(response.words);
   };
+
+  useEffect(() => {
+    getPublicationList();
+  }, [selectedWord]);
+
+  const getPublicationList = async () => {
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "getRelaventPublicationsList/" +
+        selectedEvent +
+        "&" +
+        "keyword" +
+        "&" +
+        selectedWord
+    );
+    const response = await request.json();
+    console.log("response00: ", response["publicationList"]);
+    setPublicationList(response["publicationList"]);
+    setOpenDiaglog(true);
+  };
   useEffect(() => {
     if (loader == true) {
       setLoader(false);
@@ -99,8 +121,8 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
   };
 
   const callbacks = {
+    onWordClick: (word) => setSelectedWord(word.text),
     getWordTooltip: (word) => `click to view details`,
-    
   };
   return (
     <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
@@ -207,7 +229,12 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
             words={series}
           />
         </Paper>
-        <PublicationDialog openDialogProps={true} />
+        {publicationList && publicationList.length > 0 && (
+          <PublicationDialog
+            openDialogProps={openDialog}
+            papersProps={publicationList}
+          />
+        )}
       </Grid>
     </Grid>
   );
