@@ -241,15 +241,22 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container xs={12} md={8} spacing={3} style={{ marginTop: "1%" }}>
-        <Grid item md={2} xs={3}>
+      <Grid
+        container
+        xs={12}
+        md={9}
+        lg={6}
+        spacing={3}
+        style={{ marginTop: "1%" }}
+      >
+        <Grid item>
           <RIMAButton
             name={"Compare"}
             activeButton={CompareBtnactive}
             onClick={getPublicationsCounts}
           />
         </Grid>
-        <Grid item lg={1} md={2} xs={3}>
+        <Grid item>
           <RIMAButton
             name={"Reset"}
             activeButton={ResetBtnactive}
@@ -260,7 +267,7 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
             }}
           />
         </Grid>
-        <Grid item lg={1} md={2} xs={3}>
+        <Grid item>
           <i
             className="fas fa-question-circle text-blue"
             onMouseOver={() => handleToogle(true)}

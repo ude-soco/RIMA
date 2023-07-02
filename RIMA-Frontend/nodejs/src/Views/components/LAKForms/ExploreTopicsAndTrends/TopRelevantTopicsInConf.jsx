@@ -103,7 +103,6 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
   };
 
   const getPublicationList = async () => {
-    
     if (selectedEvent == "" && selectedNumber == 0) {
       return;
     }
@@ -206,14 +205,14 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
         </Grid>
       </Grid>
       <Grid container xs={12} md={8} spacing={3} style={{ marginTop: "1%" }}>
-        <Grid item md={2} xs={3}>
+        <Grid item>
           <RIMAButton
             name={"Topics"}
             activeButton={CompareBtnactive}
             onClick={getPublicationsCounts}
           />
         </Grid>
-        <Grid item lg={1} md={2} xs={3}>
+        <Grid item >
           <i
             className="fas fa-question-circle text-blue"
             onMouseOver={() => handleToogle(true)}
@@ -245,7 +244,7 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
             openDialogProps={openDialog}
             papersProps={publicationList}
             handleCloseDiaglog={handleCloseDiaglog}
-            originalKeywordsProps={ [selectedWord]}
+            originalKeywordsProps={[selectedWord]}
           />
         )}
       </Grid>

@@ -141,13 +141,13 @@ const InteractiveVennDiagram = ({
         <HighchartsReact highcharts={Highcharts} options={vennOptions} />
       </Grid>
       <Grid item xs={4}>
-        <Grid container xs={12}>
-          <Grid item xs={10}>
+        <Grid container xs={12} md={8}>
+          <Grid item>
             <Typography style={{ marginTop: "1%" }} variant="h6">
               list of {label}s in {selectedSet}
             </Typography>
           </Grid>
-          <Grid item xs={2} justify="center" alignItems="center">
+          <Grid item justify="center" alignItems="center">
             <i
               className="fas fa-question-circle text-blue"
               onMouseOver={() => setImageTooltipOpen(true)}
