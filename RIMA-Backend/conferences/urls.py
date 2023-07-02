@@ -11,8 +11,7 @@ urlpatterns = [
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################
-    path('getRelaventPublicationsList/<pk1>',
-         getRelavantPublicationsList.as_view()),
+
     path('getTotalSharedAuthorsEvolution/',
          ShareAuthorCompareTrends.as_view()),
     path('getSharedWordsNumber/', SharedKeywordCompareTrends.as_view()),
@@ -177,15 +176,17 @@ urlpatterns = [
     path('updatealltopics/', UpdateAllTopics.as_view()),
 
     # ****************************************************Explore topics and trend new created by Islam ******************************
-    path('getPublicationsConfCount/<pk>/',
+    path('getRelevantPubsCountOfConf/<pk>/',
          RelevantPubsCountOfConf.as_view()),
 
-    path('sharedTopicsBetweenEvents/<pk1>/',
+    path('getSharedTopicsBetweenEvents/<pk1>/',
          SharedTopicsBetweenEvents.as_view()),
 
+    path('getRelaventPublicationsList/<pk1>',
+         getRelavantPublicationsList.as_view()),
 
-    path('getPublicationsMultiEvents/<pk1>/<pk2>/<pk3>/',
+    path('getTopicPopularityAcrossYears/<pk1>/<pk2>/<pk3>/',
          TopicPopularityAcrossYears.as_view()),
-    path('getTopPublicationsInConf/<pk1>/',
+    path('getTopicPublicationsInConf/<pk1>/',
          TopicPopularityInConf.as_view()),
 ]
