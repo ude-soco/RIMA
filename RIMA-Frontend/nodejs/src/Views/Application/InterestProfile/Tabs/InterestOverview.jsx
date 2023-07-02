@@ -151,7 +151,8 @@ export default function InterestOverview() {
       <TabPanel value={value} index={3}>
         <Connect data={dataConnect} />
       </TabPanel> */}
-      <TabPanel value={value} index={4}>
+      {/* <TabPanel value={value} index={4}> */}
+      <TabPanel value={value} index={1}>
         <HowDoesItWork />
       </TabPanel>
     </Paper>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { logout } from "../../../../Services/helper";
 import SideBar from "./SideBar";
@@ -98,6 +98,13 @@ export default function NavigationBar() {
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles();
+
+  useEffect(() => {
+    let functionSet = localStorage.getItem("rima-function");
+    if (functionSet !== "Option 1") {
+      setSelection("publicationRecommendation");
+    }
+  }, []);
 
   const toggleDrawer = () => {
     setOpenLeftDrawer(!openLeftDrawer);

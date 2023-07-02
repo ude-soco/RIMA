@@ -1,14 +1,9 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
-import {
-  Typography,
-  Grid,
-  Chip,
-  makeStyles,
-} from "@material-ui/core";
+import { Typography, Grid, Chip, makeStyles } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 const useStyles = makeStyles((theme) => ({
   italicBody2: {
@@ -148,8 +143,10 @@ function Title({ paper, similarityScore }) {
               noWrap
               gutterBottom
               variant="h6"
-              dangerouslySetInnerHTML={{ __html: modified_title }}
-            />
+              // dangerouslySetInnerHTML={{ __html: modified_title }}
+            >
+              {paper.title}
+            </Typography>
           </Grid>
           <Grid item xs>
             <a
@@ -165,7 +162,7 @@ function Title({ paper, similarityScore }) {
           <Authors authorsList={paper.authors} />
         </Grid>
       </Grid>
-      <Grid
+      {/* <Grid
         item
         xs={2}
         container
@@ -173,7 +170,6 @@ function Title({ paper, similarityScore }) {
         justifyContent="flex-end"
         alignItems="flex-start"
       >
-        {/* Hoda end */}
         {paper.modified ? (
           <Chip
             style={{ borderRadius: 5 }}
@@ -190,7 +186,7 @@ function Title({ paper, similarityScore }) {
             size="medium"
           />
         )}
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }
@@ -224,7 +220,8 @@ function PaperAbstract({ paper }) {
   );
 
   // Tannaz start
-  let SplitTextArry = SplitText(modified_text);
+  // let SplitTextArry = SplitText(modified_text);
+  let SplitTextArry = SplitText(paper.abstract);
   let firstPart = SplitTextArry.slice(0, 3);
   let secondPart = SplitTextArry.slice(3);
   firstPart.push(" ");

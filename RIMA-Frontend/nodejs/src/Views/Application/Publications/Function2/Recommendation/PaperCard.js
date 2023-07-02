@@ -73,10 +73,10 @@ export default function PaperCard(props) {
     >
       {state.done ? (
         <>
-          <ColoredBand
+          {/* <ColoredBand
             interests_similarity={paper.interests_similarity}
             tags={state.interests}
-          />
+          /> */}
           <Grid container className="card-body">
             <Grid
               item

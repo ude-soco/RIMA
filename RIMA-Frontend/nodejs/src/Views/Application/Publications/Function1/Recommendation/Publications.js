@@ -15,6 +15,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import CloseIcon from "@material-ui/icons/Close";
 
 import Seperator from "./components/Seperator";
@@ -42,6 +43,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { Collapse } from "react-bootstrap";
 import TuneIcon from "@material-ui/icons/Tune";
+import { useHistory } from "react-router-dom";
 
 // Hoda start- Sticky bar with collapse button
 function StickyInterestTags({ tags }) {
@@ -72,6 +74,7 @@ function StickyInterestTags({ tags }) {
 // Hoda end
 
 export default function PublicationRecommendation() {
+  const history = useHistory();
   const [state, setState] = useState({
     papersLoaded: false,
     interests: [],
@@ -278,6 +281,23 @@ export default function PublicationRecommendation() {
     <>
       <Grid container>
         <Grid container component={Paper}>
+          <Grid
+            item
+            xs={12}
+            style={{
+              padding: "16px 16px 0px 16px ",
+              // paddingBottom: "16px",
+            }}
+          >
+            <Button
+              startIcon={<ArrowBackIosIcon />}
+              style={{ color: "black" }}
+              onClick={() => history.push("/app/interest-profile")}
+            >
+              Back to Interest profile
+            </Button>
+          </Grid>
+
           <Grid item md={12} style={{ padding: "15px" }} className="">
             <Typography variant="h6">Publications Recommendation</Typography>
             {/* start Tannaz */}

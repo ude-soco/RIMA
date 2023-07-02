@@ -184,7 +184,7 @@ def get_recommended_publications(interests):
 
     user_interest_model_dict = {}  # creates a dictionary of user interest model
 
-    limit = 10  # number of papers to be retrieved
+    limit = 1  # number of papers to be retrieved
     for interest in interests:
         user_interest_model_dict[interest["text"]] = interest["weight"]
         # e.x user_interest_model_dict = {'analytics': 5, 'peer assessment': 5, 'personalization': 5, 'theory': 5, 'recommender system': 5}

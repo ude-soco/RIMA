@@ -100,7 +100,11 @@ export default function Login() {
           if (data_being_loaded) {
             window.location.href = "/app/redirect";
           } else {
-            history.push("/app/interest-profile");
+            if (details.function === "Option 1") {
+              history.push("/app/interest-profile");
+            } else {
+              history.push("/recommendation/publication/");
+            }
           }
         }
       })

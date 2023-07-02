@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import {
   Button,
@@ -12,7 +12,7 @@ import {
   Menu,
   MenuItem,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 
 import SearchIcon from "@material-ui/icons/Search";
@@ -21,11 +21,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
 import SimiliarInterests from "../SimiliarInterests";
 
-
 // changed the original Class component to a functional component - Clara
 const BarChart = (props) => {
-  const {keywords, setWordCloudInterest, setOpen} = props;
-  const [openSimiliar, setOpenSimiliar]= useState(false)
+  const { keywords, setWordCloudInterest, setOpen } = props;
+  const [openSimiliar, setOpenSimiliar] = useState(false);
 
   const [interests, setInterests] = useState([]);
   const [weights, setWeights] = useState([]);
@@ -33,37 +32,37 @@ const BarChart = (props) => {
   const [state, setState] = useState({
     openMenu: null,
     openWhyInterest: false,
-    currentInterest: ""
-  })
+    currentInterest: "",
+  });
 
   const handleCloseMenu = () => {
-    setState({...state, openMenu: null})
-  }
+    setState({ ...state, openMenu: null });
+  };
   const handleToggleWhyInterest = () => {
     setState({
       ...state,
       openMenu: null,
-      openWhyInterest: !state.openWhyInterest
+      openWhyInterest: !state.openWhyInterest,
     });
-  }
+  };
 
   const handleToggleEditInterest = () => {
     setState({
       ...state,
       openMenu: null,
     });
-    setOpen(prevState => !prevState);
-    setWordCloudInterest(state.currentInterest)
-  }
+    setOpen((prevState) => !prevState);
+    setWordCloudInterest(state.currentInterest);
+  };
 
-  const handleToggleSimiliarInterest=()=>{
+  const handleToggleSimiliarInterest = () => {
     setState({
       ...state,
       openMenu: null,
     });
     setOpenSimiliar(!openSimiliar);
-    setWordCloudInterest(state.currentInterest)
-  }
+    setWordCloudInterest(state.currentInterest);
+  };
 
   useEffect(() => {
     let tempInterests = [];
@@ -79,25 +78,32 @@ const BarChart = (props) => {
   const options = {
     chart: {
       events: {
-        dataPointMouseEnter: function(event) {
+        dataPointMouseEnter: function (event) {
           event.fromElement.style.cursor = "pointer";
         },
         dataPointSelection: (event, chartContext, config) => {
           setState({
             ...state,
             openMenu: event.currentTarget,
-            currentInterest: keywords[config.dataPointIndex]
+            currentInterest: keywords[config.dataPointIndex],
           });
           // Can define at this point what happens when the user clicks on a bar - Alptug
         },
       },
+      width: "100%",
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        horizontal: true,
+      },
     },
     xaxis: {
-      title: {text: "Interests"},
+      title: { text: "Interests" },
       //what are the interests, fetched as keywords from the user model - Clara
       categories: interests,
     },
-    yaxis: {title: {text: "Weight of interests"}},
+    yaxis: { title: { text: "Weight of interests" } },
   };
   // console.log(options, "test");
   const series = [
@@ -111,83 +117,116 @@ const BarChart = (props) => {
   return (
     <>
       {!interests ? (
-          <>
-            <Grid container direction="column" justifyContent="center" alignItems="center">
-              <Grid item>
-                <CircularProgress/>
-              </Grid>
-              <Grid item>
-                <Typography variant="overline"> Loading data </Typography>
-              </Grid>
+        <>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <CircularProgress />
             </Grid>
-          </>
-        ) :
-        <Chart options={options} series={series} type="bar" width="700"/>
-      }
+            <Grid item>
+              <Typography variant="overline"> Loading data </Typography>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <Grid container>
+          <Grid item xs={12} style={{ height: "50vh" }}>
+            <Chart
+              options={options}
+              series={series}
+              type="bar"
+              height="100%"
+              width="700"
+            />
+          </Grid>
+        </Grid>
+      )}
 
-      <Menu open={Boolean(state.openMenu)} anchorEl={state.openMenu} onClose={handleCloseMenu}
-            anchorOrigin={{vertical: 'center', horizontal: 'right'}}
-            transformOrigin={{vertical: 'top', horizontal: 'center'}}>
-        <MenuItem onClick={handleToggleSimiliarInterest}>
+      <Menu
+        open={Boolean(state.openMenu)}
+        anchorEl={state.openMenu}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "center", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        {/* <MenuItem onClick={handleToggleSimiliarInterest}>
           <ListItemIcon>
             <SearchIcon fontSize="small"/>
           </ListItemIcon>
           <Typography variant="inherit">
             Similar Interests
           </Typography>
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem onClick={handleToggleWhyInterest}>
           <ListItemIcon>
-            <HelpOutlineIcon fontSize="small"/>
+            <HelpOutlineIcon fontSize="small" />
           </ListItemIcon>
-          <Typography variant="inherit">
-            Why this Interest
-          </Typography>
+          <Typography variant="inherit">Why this Interest</Typography>
         </MenuItem>
 
         <MenuItem onClick={handleToggleEditInterest}>
           <ListItemIcon>
-            <EditIcon fontSize="small"/>
+            <EditIcon fontSize="small" />
           </ListItemIcon>
-          <Typography variant="inherit">
-            Edit
-          </Typography>
+          <Typography variant="inherit">Edit</Typography>
         </MenuItem>
       </Menu>
 
       <Dialog open={state.openWhyInterest} fullWidth={true} maxWidth="lg">
-        <DialogTitle>
-          Why this interest?
-        </DialogTitle>
+        <DialogTitle>Why this interest?</DialogTitle>
         <DialogContent>
           <Paper elevation={0}>
             <Grid container>
               <Grid item xs={12}>
-                {state.currentInterest.papers !== 0 ?
-                  <WhyInterest papers={state.currentInterest.papers} originalKeywords={state.currentInterest.originalKeywords}/>
-                  : <Typography>The interest {state.currentInterest.text} has been added manually.</Typography>}
+                {state.currentInterest.papers !== 0 ? (
+                  <WhyInterest
+                    papers={state.currentInterest.papers}
+                    originalKeywords={state.currentInterest.originalKeywords}
+                  />
+                ) : (
+                  <Typography>
+                    The interest {state.currentInterest.text} has been added
+                    manually.
+                  </Typography>
+                )}
               </Grid>
             </Grid>
-
           </Paper>
         </DialogContent>
 
-        <DialogActions style={{padding: 16}}>
-          <Button onClick={handleToggleWhyInterest} variant="contained" color="primary">
+        <DialogActions style={{ padding: 16 }}>
+          <Button
+            onClick={handleToggleWhyInterest}
+            variant="contained"
+            color="primary"
+          >
             Close
           </Button>
         </DialogActions>
-
       </Dialog>
-      <Dialog open={openSimiliar} fullWidth={true} maxWidth="lg" onClose={handleToggleSimiliarInterest}>
-        <DialogTitle>Similiar Interests to {state.currentInterest.text}</DialogTitle>
+      <Dialog
+        open={openSimiliar}
+        fullWidth={true}
+        maxWidth="lg"
+        onClose={handleToggleSimiliarInterest}
+      >
+        <DialogTitle>
+          Similiar Interests to {state.currentInterest.text}
+        </DialogTitle>
         <DialogContent>
-          <SimiliarInterests interest={[state.currentInterest.text]}/>
-
+          <SimiliarInterests interest={[state.currentInterest.text]} />
         </DialogContent>
-        <DialogActions style={{padding: 16}}>
-          <Button onClick={handleToggleSimiliarInterest} variant="contained" color="primary">
+        <DialogActions style={{ padding: 16 }}>
+          <Button
+            onClick={handleToggleSimiliarInterest}
+            variant="contained"
+            color="primary"
+          >
             Close
           </Button>
         </DialogActions>
