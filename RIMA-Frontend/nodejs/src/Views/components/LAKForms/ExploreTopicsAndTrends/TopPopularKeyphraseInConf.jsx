@@ -97,7 +97,7 @@ const TopPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const getTopPublicationsCounts = async () => {
     setLoader(true);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getTopPublicationsInConf/" + selectedConference
+      BASE_URL_CONFERENCE + "getTopicPublicationsInConf/" + selectedConference
     );
     const response = await request.json();
 

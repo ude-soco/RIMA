@@ -103,7 +103,7 @@ class TopicPopularityInConf(APIView):
 
 class RelevantPubsCountOfConf(APIView):
     def get(self, request, *args, **kwargs):
-        print("getPublicationsConfCount called")
+        print("getRelevantPubsCountOfConf called")
         conf_name = confutils.split_restapi_url(
             request.get_full_path(), r'/')[-2]
         print("conf_name", conf_name)
@@ -121,3 +121,4 @@ class RelevantPubsCountOfConf(APIView):
             "data": sets,
             "years": all_years
         })
+

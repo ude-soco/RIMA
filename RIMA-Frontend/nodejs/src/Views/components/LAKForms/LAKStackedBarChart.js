@@ -242,7 +242,7 @@ class LAKStackedBarChart extends Component {
     var text = this.state.selectedValue;
 
     fetch(
-      `${BASE_URL_CONFERENCE}` + "getPublicationsMultiEvents/" + text.join("&")
+      `${BASE_URL_CONFERENCE}` + "getTopicPopularityAcrossYears/" + text.join("&")
     )
       .then((response) => response.json())
       .then((json) => {

@@ -61,7 +61,7 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const getPublicationsCounts = async () => {
     setLoader(true);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getPublicationsConfCount/" + selectedConference
+      BASE_URL_CONFERENCE + "getRelevantPubsCountOfConf/" + selectedConference
     );
     const response = await request.json();
     console.log("response", response);

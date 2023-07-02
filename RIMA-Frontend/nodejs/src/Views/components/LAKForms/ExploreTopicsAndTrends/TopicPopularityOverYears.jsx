@@ -87,7 +87,7 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
     setLoader(true);
     const request = await fetch(
       `${BASE_URL_CONFERENCE}` +
-        "getPublicationsMultiEvents/" +
+        "getTopicPopularityAcrossYears/" +
         selectedEvents.join("&") +
         "/" +
         selectedNumber +

@@ -182,11 +182,12 @@ urlpatterns = [
     path('getSharedTopicsBetweenEvents/<pk1>/',
          SharedTopicsBetweenEvents.as_view()),
 
-    path('getRelaventPublicationsList/<pk1>',
+    path('getRelaventPublicationsList/<pk1>/<pk2>',
          getRelavantPublicationsList.as_view()),
 
     path('getTopicPopularityAcrossYears/<pk1>/<pk2>/<pk3>/',
          TopicPopularityAcrossYears.as_view()),
+
     path('getTopicPublicationsInConf/<pk1>/',
          TopicPopularityInConf.as_view()),
 ]
