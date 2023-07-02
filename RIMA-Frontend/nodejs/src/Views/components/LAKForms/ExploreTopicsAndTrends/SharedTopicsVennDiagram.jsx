@@ -3,9 +3,10 @@ import { Grid, Paper } from "@mui/material";
 import React, { useState } from "react";
 import InteractiveVennDiagram from "../InteractiveVennDiagram";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
-import { BASE_URL_CONFERENCE } from "Services/constants";
+import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import SelectWithCancelIcon from "../../../Application/ReuseableComponents/SelectWithCancelIcon.jsx";
 import { Typography } from "@material-ui/core";
+import PublicationDialog from "../../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
 
 const SharedTopicsVennDiagram = ({
   conferenceName,
@@ -29,12 +30,14 @@ const SharedTopicsVennDiagram = ({
   const [firstSelectedEvent, setFirstSelectEvent] = useState("");
   const [secondSelectedEvent, setSecondSelectEvent] = useState("");
   const [thirdSelectedEvent, setthirdSelectEvent] = useState("");
-  const [selectedEvents, setSelectedEvents] = useState([]);
   const [buttonActive, setButtonActive] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [showSimilarityWarning, setShowSimilarityWarning] = useState(false);
   const [eventSelectedTwice, setEventSelectedTwice] = useState("");
   const [listContent, setListContent] = useState([]);
+  const [publicationList, setPublicationList] = useState([]);
+  const [openDialog, setOpenDiaglog] = useState(false);
+  const [selectedWord, setSelectedWord] = useState("");
 
   const handleCompare = async () => {
     SetSets([]);
@@ -56,7 +59,7 @@ const SharedTopicsVennDiagram = ({
 
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "sharedTopicsBetweenEvents/" +
+        "getSharedTopicsBetweenEvents/" +
         firstSelectedEvent +
         "&" +
         secondSelectedEvent +
@@ -116,6 +119,34 @@ const SharedTopicsVennDiagram = ({
       default:
         break;
     }
+  };
+
+  const handleCloseDiaglog = () => {
+    setOpenDiaglog(false);
+  };
+
+  const handleGetPublications = async (selectedWord, selectedEvents) => {
+    console.log("selected Item: ", selectedWord);
+    console.log("selectedEvents: ", selectedEvents);
+    setSelectedWord(selectedWord);
+    let Events = selectedEvents.replace(/and/g, "&");
+    console.log("Events", Events.trim());
+    if (selectedWord == "") {
+      return;
+    }
+
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "getRelaventPublicationsList/keyword/" +
+        Events +
+        "&" +
+        selectedWord
+    );
+
+    const response = await request.json();
+    console.log("response00: ", response["publicationList"]);
+    setOpenDiaglog(true);
+    setPublicationList(response["publicationList"]);
   };
 
   return (
@@ -206,8 +237,17 @@ const SharedTopicsVennDiagram = ({
             sets={sets}
             listContent={listContent}
             label={"topic"}
+            handleGetPublications={handleGetPublications}
           />
         </Paper>
+        {publicationList && publicationList.length > 0 && (
+          <PublicationDialog
+            openDialogProps={openDialog}
+            papersProps={publicationList}
+            handleCloseDiaglog={handleCloseDiaglog}
+            originalKeywordsProps={[selectedWord]}
+          />
+        )}
       </Grid>
     </Grid>
   );

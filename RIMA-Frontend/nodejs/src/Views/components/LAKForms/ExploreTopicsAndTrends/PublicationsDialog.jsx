@@ -12,27 +12,27 @@ import {
 
 import WhyInterest from "../../../Application/InterestProfile/Tabs/WhyInterest/WhyInterest";
 
-const PublicationDialog = ({ openDialogProps, papersProps }) => {
+const PublicationDialog = ({
+  openDialogProps,
+  papersProps,
+  handleCloseDiaglog,
+  originalKeywordsProps,
+}) => {
   const [papers, setPapers] = useState(papersProps);
   const [originalKeywords, setOriginalKeywords] = useState([]);
-  const [openDialog, setOpenDiaglog] = useState(openDialogProps);
-
-  const handleDiaglog = () => {
-    setOpenDiaglog(false);
-  };
 
   return (
     <>
-      <Dialog open={openDialog} fullWidth={true} maxWidth="lg">
+      <Dialog open={openDialogProps} fullWidth={true} maxWidth="lg">
         <DialogTitle>Publications List</DialogTitle>
         <DialogContent>
           <Paper elevation={0}>
             <Grid container>
               <Grid item xs={12}>
-                {papers && (
+                {papersProps && (
                   <WhyInterest
-                    papers={papers}
-                    originalKeywords={originalKeywords}
+                    papers={papersProps}
+                    originalKeywords={originalKeywordsProps}
                   />
                 )}
               </Grid>
@@ -41,7 +41,11 @@ const PublicationDialog = ({ openDialogProps, papersProps }) => {
         </DialogContent>
 
         <DialogActions style={{ padding: 16 }}>
-          <Button onClick={handleDiaglog} variant="contained" color="primary">
+          <Button
+            onClick={handleCloseDiaglog}
+            variant="contained"
+            color="primary"
+          >
             Close
           </Button>
         </DialogActions>

@@ -8,10 +8,8 @@ import {
   Select,
   FormControl,
   MenuItem,
-  Checkbox,
-  FormControlLabel,
 } from "@mui/material";
-import React, { Component } from "react";
+import React from "react";
 import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import ".././styles.css";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
@@ -34,6 +32,7 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
     },
     { text: "learning activity design", value: 0.9270649279070103 },
   ]);
+
   const options = {
     colors: ["#b39ddb", "#7e57c2", "#4fc3f7", "#03a9f4", "#0288d1", "#01579b"],
     enableTooltip: true,
@@ -58,11 +57,12 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
   const [CompareBtnactive, setCompareBtnactive] = useState(false);
   const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
   const [numerOfTopics, setNumberOfTopics] = useState([5, 10, 15, 20]);
-  const [selectedNumber, setSelectedNumber] = useState();
+  const [selectedNumber, setSelectedNumber] = useState(0);
   const [loader, setLoader] = useState(false);
   const [selectedWord, setSelectedWord] = useState("");
   const [publicationList, setPublicationList] = useState([]);
   const [openDialog, setOpenDiaglog] = useState(false);
+
   useEffect(() => {
     setSelectedConference(selectedConferenceProps);
   }, [selectedConferenceProps]);
@@ -73,6 +73,16 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
     };
     getPubs();
   }, [selectedConference]);
+
+  useEffect(() => {
+    if (loader == true) {
+      setLoader(false);
+    }
+  }, [series]);
+
+  useEffect(() => {
+    getPublicationList();
+  }, [selectedWord]);
 
   const getPublicationsCounts = async () => {
     if (selectedEvent == "") {
@@ -92,38 +102,39 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
     setSeries(response.words);
   };
 
-  useEffect(() => {
-    getPublicationList();
-  }, [selectedWord]);
-
   const getPublicationList = async () => {
+    
+    if (selectedEvent == "" && selectedNumber == 0) {
+      return;
+    }
+
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getRelaventPublicationsList/" +
+        "getRelaventPublicationsList/keyword/" +
         selectedEvent +
-        "&" +
-        "keyword" +
         "&" +
         selectedWord
     );
+
     const response = await request.json();
     console.log("response00: ", response["publicationList"]);
-    setPublicationList(response["publicationList"]);
     setOpenDiaglog(true);
+    setPublicationList(response["publicationList"]);
   };
-  useEffect(() => {
-    if (loader == true) {
-      setLoader(false);
-    }
-  }, [series]);
+
   const handleToogle = (status) => {
     setImageTooltipOpen(status);
+  };
+
+  const handleCloseDiaglog = () => {
+    setOpenDiaglog(false);
   };
 
   const callbacks = {
     onWordClick: (word) => setSelectedWord(word.text),
     getWordTooltip: (word) => `click to view details`,
   };
+
   return (
     <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
       <Grid item xs={12}>
@@ -233,6 +244,8 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
           <PublicationDialog
             openDialogProps={openDialog}
             papersProps={publicationList}
+            handleCloseDiaglog={handleCloseDiaglog}
+            originalKeywordsProps={ [selectedWord]}
           />
         )}
       </Grid>

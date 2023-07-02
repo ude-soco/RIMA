@@ -1,3 +1,4 @@
+// created by Islam Abdelghaffar
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Highcharts from "highcharts";
 import VennModule from "highcharts/modules/venn.js";
@@ -11,12 +12,20 @@ import {
   Grid,
   Paper,
   Typography,
+  Tooltip,
 } from "@material-ui/core";
 import InfoBox from "../../Application/ReuseableComponents/InfoBox";
-
+import { IconButton, ListItemSecondaryAction } from "@mui/material";
+import ArticleIcon from "@mui/icons-material/Article";
 VennModule(Highcharts);
-const InteractiveVennDiagram = ({ sets, listContent, label }) => {
-  const [selectedEvent, setSelectedEvent] = useState([]);
+const InteractiveVennDiagram = ({
+  sets,
+  listContent,
+  label,
+  handleGetPublications,
+}) => {
+  const [selectedEventOriginal, setSelectedEventOriginal] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(selectedEventOriginal);
   const [selectedSet, setSelectedSet] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
@@ -24,15 +33,23 @@ const InteractiveVennDiagram = ({ sets, listContent, label }) => {
   const listContentRef = useRef(listContent);
 
   useEffect(() => {
+    setSelectedEvent(selectedEventOriginal);
+  }, [selectedEventOriginal]);
+
+  useEffect(() => {
     listContentRef.current = listContent;
   }, [listContent]);
 
   useEffect(() => {
-    setSelectedEvent(
-      selectedEvent.filter((author) =>
-        author.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
+    if (searchTerm.trim() === "") {
+      setSelectedEvent(selectedEventOriginal);
+    } else {
+      setSelectedEvent(
+        selectedEvent.filter((author) =>
+          author.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
   }, [searchTerm]);
 
   const vennOptions = {
@@ -102,10 +119,10 @@ const InteractiveVennDiagram = ({ sets, listContent, label }) => {
                   console.log("names equal");
                   setSelectedSet(set.name);
                   if (label == "author") {
-                    setSelectedEvent(set.authors_names);
+                    setSelectedEventOriginal(set.authors_names);
                   }
                   if (label == "topic") {
-                    setSelectedEvent(set.keywords);
+                    setSelectedEventOriginal(set.keywords);
                   }
                 }
               });
@@ -117,6 +134,7 @@ const InteractiveVennDiagram = ({ sets, listContent, label }) => {
   };
 
   console.log("listContent: ", listContent);
+
   return (
     <Grid container={12} spacing={2}>
       <Grid item xs={8}>
@@ -163,6 +181,19 @@ const InteractiveVennDiagram = ({ sets, listContent, label }) => {
               selectedEvent.map((item) => (
                 <ListItem button>
                   <ListItemText primary={item}></ListItemText>{" "}
+                  {label == "topic" && (
+                    <ListItemSecondaryAction>
+                      <Tooltip title="Publications">
+                        <IconButton
+                          onClick={() =>
+                            handleGetPublications(item, selectedSet)
+                          }
+                        >
+                          <ArticleIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </ListItemSecondaryAction>
+                  )}
                 </ListItem>
               ))}
           </List>

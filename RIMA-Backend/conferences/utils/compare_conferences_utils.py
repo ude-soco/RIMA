@@ -674,29 +674,33 @@ def get_conf_total_publications(conf_name):
     if conf_node:
         publications_number = len(conf_node.publication.all())
     return publications_number
+
 # new func by Islam Abdelghaffar
 
 
-def get_relavant_publication(even_name, keyword_or_topic, keywordTopic_name):
+def get_relavant_publication(event_list, keyword_or_topic, keywordTopic_name):
+    publicationList = []
+    for event in event_list:
+        event_obj_publications = Event.nodes.filter(
+            conference_event_name_abbr=event.strip()).publications.all()
+        if keyword_or_topic == "keyword":
+            pubs = [
+                pub for pub in event_obj_publications
+                if pub.keywords.filter(keyword=keywordTopic_name)
+            ]
+            publicationList.extend(pubs)
 
-    event_obj_publications = Event.nodes.filter(
-        conference_event_name_abbr=even_name).publications.all()
-    if keyword_or_topic == "keyword":
-        publicationsList = [
-            pub for pub in event_obj_publications
-            if pub.keywords.filter(keyword=keywordTopic_name)
-        ]
-        return publicationsList
+        elif keyword_or_topic == "topic":
+            pubs = [
+                pub for pub in event_obj_publications
+                if pub.topics.filter(topics=keywordTopic_name)
+            ]
+            publicationList.extend(pubs)
 
-    elif keyword_or_topic == "topic":
-        publicationsList = [
-            pub for pub in event_obj_publications
-            if pub.topics.filter(topics=keywordTopic_name)
-        ]
-        return publicationsList
+    return publicationList
+
+
 # new func by Islam Abdelghaffar
-
-
 def get_publication_keywords_count(publication_name, keywords_or_topics):
     keywords_topics_counts = []
     print("publication_name.strip(): ", publication_name.strip())
@@ -1206,9 +1210,3 @@ def Conf_All_years(conf_name):
         years.append(year)
 
     return years
-
-
-
-
-
-

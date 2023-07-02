@@ -1,4 +1,3 @@
-
 import itertools
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -974,15 +973,24 @@ class VennOverview(APIView):
 
 class getRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
+
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        conferences_list = confutils.split_restapi_url(
+        keyword_or_topic = url_splits_question_mark[-2]
+
+        url_split_And_mark = confutils.split_restapi_url(
             url_splits_question_mark[-1], r'&')
-        eventname = conferences_list[-3]
-        keyword_or_topic = conferences_list[-2]
-        keywordTopic_name = conferences_list[-1]
+
+        eventsList = url_split_And_mark[:len(url_split_And_mark)-1]
+        keywordTopic_name = url_split_And_mark[-1]
+
+        print("keyword_or_topic: ", keyword_or_topic)
+        print("eventsList: ", eventsList)
+        print("keywordTopic_name: ", keywordTopic_name)
+
         publication_List = compConfUtils.get_relavant_publication(
-            eventname, keyword_or_topic, keywordTopic_name)
+            eventsList, keyword_or_topic, keywordTopic_name)
+
         if publication_List is not None:
             final_pubs_list = [{
                 "paper_id": pub.paper_id,
@@ -992,6 +1000,8 @@ class getRelavantPublicationsList(APIView):
                 "year": pub.years,
                 "url": pub.urls
             }for pub in publication_List]
+
+            print("publicationList", (final_pubs_list))
 
             return Response({
                 "publicationList": final_pubs_list
