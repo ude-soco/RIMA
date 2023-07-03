@@ -287,7 +287,7 @@ const SVGVenn = (props) => {
                 <circle
                     cx={515}
                     cy="250"
-                    r={110+x+bothInterest.length}//{radAuthor}
+                    r={110+x+bothInterest.length}
                     fill="darkblue"
                     stroke="black"
                     class="circle"

@@ -153,9 +153,9 @@ def getConnectData(id):
     print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
     if(doIt):
         print("get most authors who cited me the most")
-        #authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
+        authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
         print("get authors Who I cited the most")
-        #authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
+        authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
         x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
         print("first")
         print(x)
@@ -164,7 +164,7 @@ def getConnectData(id):
         print(x)
         
     else:
-        #authorsReferences = authorsCitedMe = []
+        authorsReferences = authorsCitedMe = [{"name": "Author 1", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },{"name": "Author 2", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },{"name": "Author 3", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" }]
         x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
         x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
         
@@ -175,12 +175,12 @@ def getConnectData(id):
             json.dump(authorsReferences, myfile)
     with open("authorsCitedMe2.json", "w") as myfile:
             json.dump(authorsCitedMe, myfile)
-    """
+    
     with open("authorsReferences2.json", "r") as myfile:
            authorsReferences = json.load(myfile)
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
-    
+    """
     print(x)
     data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames, "noa": noa}
     return data

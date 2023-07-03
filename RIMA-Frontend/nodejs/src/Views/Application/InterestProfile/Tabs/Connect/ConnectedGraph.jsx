@@ -280,7 +280,7 @@ const ConnectedGraph = (props) => {
                     cy.fit(elements, 20);
                     cy.autolock(true);
 
-
+                    
                     const menuCiteMe = {
                         selector: ".citeMe",
                         menuRadius: 50,
@@ -309,7 +309,7 @@ const ConnectedGraph = (props) => {
                                 },
                                 enabled: true
                             },
-                            
+                             
                         ],
                         fillColor: "black",
                         activeFillColor: "grey",
@@ -411,7 +411,7 @@ const ConnectedGraph = (props) => {
                                     "<span class='nodetest'>" +
                                     data.name +
                                     "<br/>" +
-                                    '<b class="score">' +
+                                    (props.button ? '<b class="score">': '<b class="score2">') +  //So that the Textsize changes.
                                     "<Tooltip title='Number of Citations' placement='right'>" + 
                                     data.score +
                                     "</Tooltip>" +
@@ -446,8 +446,8 @@ const ConnectedGraph = (props) => {
                         }
                     ]
                     let htmlLabel=cy.nodeHtmlLabel(labels);
-                    let menu2 = cy.cxtmenu(menuCitedByMe);
-                    let menu1 = cy.cxtmenu(menuCiteMe);
+                    let menu2 = cy.cxtmenu(!props.button ? menuCitedByMe: "");  //no Menu without proper data
+                    let menu1 = cy.cxtmenu(!props.button ? menuCiteMe : "");
                     let menu3 = cy.cxtmenu(menuheader)
 
 

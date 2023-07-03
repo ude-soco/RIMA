@@ -145,7 +145,7 @@ export default function Connect (props) {
                                     <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
                                 </DialogContent>
                             </Dialog>
-                           </Box><ConnectedGraph data={data} myInterests={myInterests} />
+                           </Box><ConnectedGraph data={data} myInterests={myInterests} button={button} />
                         </>
                         
                         :<Loading/>}

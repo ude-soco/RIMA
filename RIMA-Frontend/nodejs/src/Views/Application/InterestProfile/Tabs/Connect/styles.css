@@ -1,5 +1,10 @@
 .score {
     color: blue;
+    font-size: 8px;
+}
+
+.score2 {
+    color: blue;
 }
 
 .header {
