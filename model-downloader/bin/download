@@ -13,7 +13,7 @@ else
   $HOME/.local/bin/gdown "${GLOVE_MODEL_GDRIVE_ID}&confirm=t" -O $GLOVE_MODEL_FILE_PATH
 
   if [ ! -f "$GLOVE_MODEL_FILE_PATH" ]; then
-    >&2 echo "GloVe model not downloaded, aborting."
+    >&2 echo "GloVe model not downloaded, aborting"
     exit 1
   fi
 fi
@@ -32,3 +32,4 @@ echo "Downloading ${MODEL_DIR}/${NLTK_MODEL_DIR} now ..."
 python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
 
 touch "${MODEL_DIR}/.done"
+echo "Model downloads succeeded"
