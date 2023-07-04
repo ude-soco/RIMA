@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM node:14.20.0 as build
+FROM node:20.3.1 as build
 WORKDIR /app
 
 COPY ./nodejs/package*.json ./
