@@ -5,6 +5,15 @@ updates:
   schedule:
     interval: "weekly"
 
+- package-ecosystem: "docker"
+  directory: "/RIMA-Frontend"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "RIMA-Frontend"
+
 - package-ecosystem: "npm"
   directory: "/RIMA-Frontend/nodejs"
   schedule:
@@ -17,6 +26,15 @@ updates:
   - "javascript"
   - "RIMA-Frontend"
 
+- package-ecosystem: "docker"
+  directory: "/RIMA-Backend"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "RIMA-Backend"
+
 - package-ecosystem: "pip"
   directory: "/RIMA-Backend"
   schedule:
@@ -26,5 +44,35 @@ updates:
     update-types: ["version-update:semver-major"]
   labels:
   - "dependencies"
-  - "javascript"
+  - "python"
   - "RIMA-Backend"
+
+- package-ecosystem: "docker"
+  directory: "/model-downloader"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "Model Downloader"
+
+- package-ecosystem: "pip"
+  directory: "/model-downloader"
+  schedule:
+    interval: "daily"
+  ignore:
+  - dependency-name: "*"
+    update-types: ["version-update:semver-major"]
+  labels:
+  - "dependencies"
+  - "python"
+  - "Model Downloader"
+
+- package-ecosystem: "docker"
+  directory: "/model-server"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "Model Server"
