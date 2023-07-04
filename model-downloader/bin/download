@@ -29,7 +29,7 @@ fi
 
 # ENV NLTK_MODEL_DIR=nltk
 echo "Downloading ${MODEL_DIR}/${NLTK_MODEL_DIR} now ..."
-python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
+python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES -u https://www.nltk.org/nltk_data/index.xml
 
 touch "${MODEL_DIR}/.done"
 echo "Model downloads succeeded"
