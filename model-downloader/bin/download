@@ -28,10 +28,12 @@ else
 fi
 
 # ENV NLTK_MODEL_DIR=nltk
-if [ -f "${MODEL_DIR}/${NLTK_MODEL_DIR}" ]; then
-  echo "${MODEL_DIR}/${NLTK_MODEL_DIR} already present"
+if [ -d "/home/app/nltk_data" ]; then
+  echo "NLTK data packaged in container image; copying now ..."
+  mkdir -p $MODEL_DIR/$NLTK_MODEL_DIR
+  cp -Rf /home/app/nltk_data/* $MODEL_DIR/$NLTK_MODEL_DIR
 else
-  echo "${MODEL_DIR}/${NLTK_MODEL_DIR} missing; downloading now ..."
+  echo "NLTK data not packaged in container image;  downloading now ..."
   python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
 fi
 
