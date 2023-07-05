@@ -28,8 +28,12 @@ else
 fi
 
 # ENV NLTK_MODEL_DIR=nltk
-echo "Downloading ${MODEL_DIR}/${NLTK_MODEL_DIR} now ..."
-python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES -u https://www.nltk.org/nltk_data/index.xml
+if [ -f "${MODEL_DIR}/${NLTK_MODEL_DIR}" ]; then
+  echo "${MODEL_DIR}/${NLTK_MODEL_DIR} already present"
+else
+  echo "${MODEL_DIR}/${NLTK_MODEL_DIR} missing; downloading now ..."
+  python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
+fi
 
 touch "${MODEL_DIR}/.done"
 echo "Model downloads succeeded"
