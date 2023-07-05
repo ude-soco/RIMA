@@ -8,6 +8,10 @@ dc_resource("backend-worker", labels = ["Backend"])
 dc_resource("model-downloader", labels = ["Model"])
 dc_resource("model-server", labels = ["Model"])
 
+docker_build('model-downloader', './model-downloader')
+
+docker_build('model-server', './model-server')
+
 docker_build('rima-frontend', './RIMA-Frontend',
   dockerfile = './RIMA-Frontend/Dockerfile-dev',
   live_update = [
