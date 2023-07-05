@@ -1,5 +1,6 @@
 from conferences.models.graph_db_entities import *
 from collections import defaultdict
+from collections import Counter
 
 
 def get_author_network(authorName):
@@ -35,6 +36,21 @@ def handle_coauthor_data(author_nodes):
     return event_authors_list + all_author_couthors_list
 
 
+def get_author_pubs_overYears(author_name):
+    author_node = Author.nodes.get_or_none(author_name=author_name)
+    author_pubs = author_node.published.all()
+    pubs_counst = {}
+
+    years = [pub.years for pub in author_pubs]
+
+    sorted_years = sorted(years)
+    counter = Counter(sorted_years)
+    identities = list(counter.keys())
+    pubs_counst = {"years": identities, "count": list(counter.values())}
+
+    return pubs_counst
+
+
 def get_event_author_set_VennDiagram(event_name):
     event_authors_list = []
     event_node = Event.nodes.filter(conference_event_name_abbr=event_name)
@@ -45,23 +61,19 @@ def get_event_author_set_VennDiagram(event_name):
     return set(event_authors_list)
 
 
-def get_author_detailed_info(author_id):
-    author_data = []
-    author_node = Author.nodes.filter(semantic_scolar_author_id=author_id)
+def get_author_detailed_info(authorName):
+    author_data = {}
+    author_node = Author.nodes.get_or_none(author_name=authorName.strip())
     author_keywords = author_node.keywords.all()
     author_interests = author_node.topics.all()
-    # author_coauthor_network = create_coauthor_links(author_node)
-    author_publication_links = create_author_publication_links(author_node)
-    author_data.append({
-        "author name": author_node.author_name,
-        "publication counts": len(author_node.all_papers),
-        "Author publications": author_publication_links,
-        "semantic scolar author id": author_node.semantic_scolar_author_id,
-        "author url": author_node.author_url,
-        "author keywords": author_keywords,
-        "author interests": author_interests,
-        # "coauthor network": author_coauthor_network
-    })
+    author_publications = len(author_node.published.all())
+    author_data = {
+        "author_name": author_node.author_name,
+        "publications_count": author_publications,
+        "semantic_scolar_author_id": author_node.semantic_scolar_author_id,
+        "author_url": author_node.author_url,
+    }
+    return author_data
 
 
 def generate_coauthor_links_within_list(author_nodes):
@@ -102,10 +114,11 @@ def create_author_publication_links(author_node):
               to the author node's author_name property) and "publication" (with the value set to the title of a publication).
     """
     author_publication_links = []
+    print("author_node", author_node)
     publications = author_node.published.all()
     for publication in publications:
         author_publication_links.append({
-            "author name": author_node.author_name,
+            "author_name": author_node["author_name"],
             "publication ": publication.title
         })
     return author_publication_links

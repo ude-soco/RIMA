@@ -5,10 +5,11 @@ from conferences.views import *
 urlpatterns = [
 
     # TODO: All the author insights urls should be called in this block - START
-    path("author-insights/", author_insights_url),
+    path("getAuthorDetails/<pk1>", getAuthorDetails.as_view()),
     path('getNetwokGraphEvents/<pk1>', getNetworkDataSpecificEvents.as_view()),
     path('getNetwokGraphAuthor/<pk1>', getNetworkDataAuthor.as_view()),
-
+    path("getAuthorPublicationsOverYears/<pk1>",
+         getAuthorPublicationsOverYears.as_view()),
     path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
     path('getAllAvailabeAuthors/', getAllAvailableAuthors.as_view()),
     # TODO: All the author insights urls should be called in this block - END

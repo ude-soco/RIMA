@@ -8,8 +8,28 @@ from rest_framework.response import Response
 from itertools import chain
 
 
-def author_insights_url():
-    return HttpResponse("Author Insights.")
+class getAuthorDetails(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        author_name = url_splits_slash[-1]
+        author_data = authorInsightsUtil.get_author_detailed_info(author_name)
+
+        print("author_data11: ", author_data)
+        return Response({
+            "data": author_data
+        })
+
+
+class getAuthorPublicationsOverYears(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        author_name = url_splits_slash[-1]
+        author_data = authorInsightsUtil.get_author_pubs_overYears(author_name)
+        print("author_data: ", author_data)
+        
+        return Response(author_data)
 
 
 class getNetworkDataAuthor(APIView):
@@ -21,7 +41,6 @@ class getNetworkDataAuthor(APIView):
 
         graphData = authorInsightsUtil.get_author_network(author_name)
 
-        print("graphData: ", graphData)
         return Response({
             "data": graphData
         })
