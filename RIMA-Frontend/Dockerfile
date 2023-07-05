@@ -3,7 +3,7 @@ FROM node:14.20.0 as build
 WORKDIR /app
 
 COPY ./nodejs/package*.json ./
-RUN  npm ci --omit=dev 2>&1
+RUN  npm ci --production 2>&1
 
 COPY ./nodejs ./
 RUN  npm run build 2>&1
