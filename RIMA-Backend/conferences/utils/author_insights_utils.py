@@ -2,11 +2,24 @@ from conferences.models.graph_db_entities import *
 from collections import defaultdict
 
 
-def get_event_coauthor_data(event_name):
+def get_author_network(authorName):
+    all_authors = []
+    author = Author.nodes.filter(author_name=authorName)
+    author_nodes = author.co_authors.all()
+
+    author_nodes.extend(author)
+    return handle_coauthor_data(author_nodes)
+
+
+def get_event_coauthor_data(event):
+    author_nodes = event.authors.all()
+
+    return handle_coauthor_data(author_nodes)
+
+
+def handle_coauthor_data(author_nodes):
     event_authors_list = []
     all_author_couthors_list = []
-    event_node = Event.nodes.filter(conference_event_name_abbr=event_name)
-    author_nodes = event_node.authors.all()
     for author_node in author_nodes:
         event_authors_list.append({
             'data':
@@ -14,7 +27,6 @@ def get_event_coauthor_data(event_name):
                 "id": author_node.semantic_scolar_author_id,
                 "label": author_node.author_name
             }
-
         })
 
     all_author_couthors_list = generate_coauthor_links_within_list(
@@ -30,7 +42,6 @@ def get_event_author_set_VennDiagram(event_name):
     for author_node in author_nodes:
         event_authors_list.append(author_node.author_name)
 
-   
     return set(event_authors_list)
 
 
@@ -243,3 +254,15 @@ def find_similar_authors_by_shared_topics(author_id):
             shared_topic_counts.items(), key=lambda x: x[1])
 
         return similar_authors
+
+
+def get_available_events():
+    events = Event.nodes.all()
+    return events
+
+
+def getAllAuthors():
+    authors = Author.nodes.all()
+    authors_Name = [{"name": author.author_name,
+                     "label": author.author_name} for author in authors]
+    return authors_Name
