@@ -21,6 +21,7 @@ export default function Connect (props) {
     const [button, setButton] = useState(true)
     const [changed, setChange] = useState(false)
     const [selectedNames, setSelectedNames] = useState([data.selectedNames])
+    const [help, setHelp] = useState(false)
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
     console.log("test", fetching)
 
@@ -45,6 +46,7 @@ export default function Connect (props) {
       };
  
     useEffect(()=>{
+
 
         console.log(selectedNames, "selectedNames in Connect------------------------------");
         
@@ -92,6 +94,10 @@ export default function Connect (props) {
         setSelectedNames([...names]);
         
     }
+
+    const closeHelp = () => {
+        setHelp(false);
+    }
     console.log(selectedNames, "SlectedNames Connect")
 
 
@@ -100,15 +106,28 @@ export default function Connect (props) {
         <>
 
             
-            <Help/>
+            
             <Grid container>
               <Grid item xs ={12} style={{padding:"8px"}}>
             
               
                                 
-                    {dataCollected? 
+                    {dataCollected? (
                     
-                    <><Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+                    <>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Button onClick={setHelp} color="primary">
+                      Help
+                    </Button>
+                    {help ? (
+                      <>
+                        <Help closeHelp={closeHelp} />
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    
+                    <Box display="flex"  justifyContent="flex-end" alignItems="center">
                             <TextField id="noa"
                                 label="Number"
                                 type="number"
@@ -117,7 +136,7 @@ export default function Connect (props) {
                                 onChange={(e) => setNoa(parseInt(e.target.value, 10))}
                                 defaultValue={noa ? noa : parseInt(3)}
                                 color="primary"
-                                style={{ width: "7.5%" }}
+                                style={button? {width: "12%" } : {width: "25%" }}
                                 inputProps={{
                                     min: 0,
                                     max: 10,
@@ -145,14 +164,17 @@ export default function Connect (props) {
                                     <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
                                 </DialogContent>
                             </Dialog>
-                           </Box><ConnectedGraph data={data} myInterests={myInterests} button={button} />
+                           </Box></Box><ConnectedGraph data={data} myInterests={myInterests} button={button} />
                         </>
                         
-                        :<Loading/>}
+                        ):(<Loading/>)}
                 </Grid>
             </Grid>
+          
         </>
-        )
+      );
+      
+        
 };
 
 export const Loading = () => {
