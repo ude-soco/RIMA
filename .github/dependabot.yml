@@ -9,6 +9,9 @@ updates:
   directory: "/RIMA-Frontend"
   schedule:
     interval: "weekly"
+  ignore:
+  - dependency-name: "node"
+    versions: ["15.x", "17.x", "19.x", "21.x", "23.x", "25.x"]
   labels:
   - "dependencies"
   - "docker"
