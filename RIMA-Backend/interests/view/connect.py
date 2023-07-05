@@ -164,7 +164,9 @@ def getConnectData(id):
         print(x)
         
     else:
-        authorsReferences = authorsCitedMe = [{"name": "Author 1", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },{"name": "Author 2", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },{"name": "Author 3", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" }]
+        authorsReferences = authorsCitedMe = [{"name": "Author 1", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },
+                                              {"name": "Author 2", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },
+                                              {"name": "Author 3", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" }]
         x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
         x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
         
