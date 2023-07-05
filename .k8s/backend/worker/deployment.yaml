@@ -59,7 +59,7 @@ spec:
           limits:
             memory: 2Gi
             cpu: 2
-        readinessProbe:
+        startupProbe:
           exec:
             command:
             - /bin/bash
