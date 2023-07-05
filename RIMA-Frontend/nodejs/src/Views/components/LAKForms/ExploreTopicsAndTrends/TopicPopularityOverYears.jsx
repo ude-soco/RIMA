@@ -18,6 +18,7 @@ import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "../../../Application/ReuseableComponents/InfoBox";
 import GroupBarChart from "../../../Application/ReuseableComponents/GroupBarChart.jsx";
 import SelectWithCancelIcon from "../../../Application/ReuseableComponents/SelectWithCancelIcon.jsx";
+import PublicationDialog from "../../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
 
 const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
   const [series, setSeries] = useState([
@@ -43,6 +44,11 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
   const [selectedNumber, setSelectedNumber] = useState();
   const [loader, setLoader] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [selectedWord, setSelectedWord] = useState("");
+  const [publicationList, setPublicationList] = useState([]);
+  const [openDialog, setOpenDiaglog] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState("");
+
   useEffect(() => {
     setSelectedConference(selectedConferenceProps);
     console.log("selected: ", selectedConference);
@@ -53,6 +59,10 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
     console.log(" get publications called");
   }, [selectedConference]);
 
+  useEffect(() => {
+    getPublicationList();
+  }, [selectedEvent, selectedWord]);
+
   const plotOptions = {
     bar: {
       horizontal: false,
@@ -62,6 +72,7 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
       distributed: false,
     },
   };
+
   const [options, setOptions] = useState({
     chart: {
       stroke: {
@@ -69,6 +80,14 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
       },
       type: "bar",
       height: 350,
+      events: {
+        dataPointSelection: function (event, chartContext, config) {
+          const selectedEvent = config.w.globals.labels[config.dataPointIndex];
+          const selectedword = config.w.config.series[config.seriesIndex].name;
+          setSelectedEvent(selectedEvent);
+          setSelectedWord(selectedword);
+        },
+      },
     },
     plotOptions: plotOptions,
     dataLabels: { enabled: true },
@@ -153,6 +172,31 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
   const handleToogle = (status) => {
     setImageTooltipOpen(status);
   };
+
+  const handleCloseDiaglog = () => {
+    setOpenDiaglog(false);
+  };
+
+  const getPublicationList = async () => {
+    if (selectedEvent == "" || selectedWord == "") {
+      return;
+    }
+    console.log("selectedEvent: ", selectedEvent);
+    console.log("selectedWord: ", selectedWord);
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "getRelaventPublicationsList/keyword/" +
+        selectedEvent +
+        "&" +
+        selectedWord
+    );
+
+    const response = await request.json();
+    console.log("response00: ", response["publicationList"]);
+    setOpenDiaglog(true);
+    setPublicationList(response["publicationList"]);
+  };
+
   return (
     <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
       <Grid item xs={12}>
@@ -285,6 +329,14 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
       </Grid>
       <br />
       <GroupBarChart options={options} series={series} loader={loader} />
+      {publicationList && publicationList.length > 0 && (
+        <PublicationDialog
+          openDialogProps={openDialog}
+          papersProps={publicationList}
+          handleCloseDiaglog={handleCloseDiaglog}
+          originalKeywordsProps={[selectedWord]}
+        />
+      )}
     </Grid>
   );
 };

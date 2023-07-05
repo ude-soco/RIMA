@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Grid, Paper, Typography } from "@mui/material";
 import ActiveLoader from "../../../Application/ReuseableComponents/ActiveLoader.jsx";
 import GroupBarChart from "Views/Application/ReuseableComponents/GroupBarChart";
+import PublicationDialog from "../../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
+
 const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const [series, setSeries] = useState([
     {
@@ -23,6 +25,11 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const [selectedConference, setSelectedConference] = useState(
     selectedConferencesProps
   );
+  const [selectedWord, setSelectedWord] = useState("");
+  const [publicationList, setPublicationList] = useState([]);
+  const [openDialog, setOpenDiaglog] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState("");
+  
   useEffect(() => {
     setSelectedConference(selectedConferencesProps);
     console.log("selected: ", selectedConference);
@@ -32,6 +39,10 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
     getPublicationsCounts();
     console.log(" get publications called");
   }, [selectedConference]);
+
+  useEffect(() => {
+    getPublicationList();
+  }, [selectedEvent, selectedWord]);
 
   const plotOptions = {
     bar: {
@@ -49,6 +60,15 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
       },
       type: "bar",
       height: 350,
+      events: {
+        dataPointSelection: function (event, chartContext, config) {
+          const selectedYear = config.w.globals.labels[config.dataPointIndex];
+          const selectedword = config.w.config.series[config.seriesIndex].name;
+          const selectedevent = selectedConferencesProps + selectedYear;
+          setSelectedEvent(selectedYear);
+          setSelectedWord(selectedword);
+        },
+      },
     },
     plotOptions: plotOptions,
     dataLabels: { enabled: true },
@@ -57,7 +77,9 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
       categories: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020],
     },
   });
-
+  const handleCloseDiaglog = () => {
+    setOpenDiaglog(false);
+  };
   const getPublicationsCounts = async () => {
     setLoader(true);
     const request = await fetch(
@@ -120,6 +142,28 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
     setLoader(false);
   };
 
+  const getPublicationList = async () => {
+    if (selectedEvent == "" || selectedWord == "") {
+      return;
+    }
+    console.log("selectedConferencesProps: ", selectedConferencesProps);
+    console.log("selectedEvent: ", selectedEvent);
+    console.log("selectedWord: ", selectedWord);
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "getRelaventPublicationsList/keyword/" +
+        selectedConferencesProps +
+        selectedEvent +
+        "&" +
+        selectedWord
+    );
+
+    const response = await request.json();
+    console.log("response00: ", response["publicationList"]);
+    setOpenDiaglog(true);
+    setPublicationList(response["publicationList"]);
+  };
+
   return (
     <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
       <Grid container xs={12}>
@@ -143,6 +187,14 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
       <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
         <GroupBarChart options={options} series={series} loader={loader} />
       </Grid>
+      {publicationList && publicationList.length > 0 && (
+        <PublicationDialog
+          openDialogProps={openDialog}
+          papersProps={publicationList}
+          handleCloseDiaglog={handleCloseDiaglog}
+          originalKeywordsProps={[selectedWord]}
+        />
+      )}
     </Grid>
   );
 };
