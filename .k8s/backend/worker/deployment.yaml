@@ -55,10 +55,10 @@ spec:
         resources:
           requests:
             memory: 900Mi
-            cpu: 100m
+            cpu: 50m
           limits:
             memory: 2Gi
-            cpu: 2
+            cpu: 500m
         startupProbe:
           exec:
             command:
