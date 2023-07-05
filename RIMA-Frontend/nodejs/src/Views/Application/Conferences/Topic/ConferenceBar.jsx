@@ -37,7 +37,7 @@ import { Link } from "react-router-dom";
 import RestAPI from "../../../../Services/api";
 import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
 import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
-import InteractiveVennDiagram from "../../../components/LAKForms/InteractiveVennDiagram";
+import InteractiveVennDiagram from "../../ReuseableComponents/InteractiveVennDiagram.jsx";
 import EvolutionOfPopularKeyphraseInConf from "../../../components/LAKForms/ExploreTopicsAndTrends/EvolutionOfPopularKeyphraseInConf.jsx";
 import SharedTopicsVennDiagram from "../../../components/LAKForms/ExploreTopicsAndTrends/SharedTopicsVennDiagram.jsx";
 import TopicPopularityOverYears from "../../../components/LAKForms/ExploreTopicsAndTrends/TopicPopularityOverYears.jsx";

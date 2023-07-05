@@ -17,10 +17,13 @@ const SelectWithCancelIcon = ({
   onChangeActionProps,
   confEventsProps,
   clearSelectedEventProps,
+  mdProp = 4,
+  smProp = 6,
+  minWidthProp = 250,
 }) => {
   return (
-    <Grid item xs={12} sm={6} md={4}>
-      <FormControl sx={{ m: 1, minWidth: 250, backgroundColor: "white" }}>
+    <Grid item xs={12} sm={smProp} md={mdProp}>
+      <FormControl sx={{ m: 1, minWidth: minWidthProp, backgroundColor: "white" }}>
         <InputLabel>{InputLabelProps}</InputLabel>
         <Select
           labelId={SelectLabelIdProps}

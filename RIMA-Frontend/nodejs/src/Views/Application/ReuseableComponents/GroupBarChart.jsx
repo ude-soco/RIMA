@@ -8,7 +8,7 @@ import ActiveLoader from "./ActiveLoader";
 
 const GroupBarChart = ({ options, series, loader }) => {
   return (
-    <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
+    <Grid container xs={12} style={{ padding: "1%", marginTop: "2%" }}>
       <Paper
         style={{ width: "100%", borderRadius: "40px", padding: "1%" }}
         elevation={10}

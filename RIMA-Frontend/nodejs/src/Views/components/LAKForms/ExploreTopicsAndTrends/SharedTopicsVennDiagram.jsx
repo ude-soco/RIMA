@@ -1,7 +1,7 @@
 // new class created by Islam
 import { Grid, Paper } from "@mui/material";
 import React, { useState } from "react";
-import InteractiveVennDiagram from "../InteractiveVennDiagram";
+import InteractiveVennDiagram from "../../../Application/ReuseableComponents/InteractiveVennDiagram";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import SelectWithCancelIcon from "../../../Application/ReuseableComponents/SelectWithCancelIcon.jsx";

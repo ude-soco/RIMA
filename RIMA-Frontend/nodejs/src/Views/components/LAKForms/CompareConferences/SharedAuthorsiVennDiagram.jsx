@@ -18,7 +18,7 @@ import {
 } from "@material-ui/core";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
 import InfoBox from "Views/Application/ReuseableComponents/InfoBox";
-import InteractiveVennDiagram from "../InteractiveVennDiagram.jsx";
+import InteractiveVennDiagram from "../../../Application/ReuseableComponents/InteractiveVennDiagram.jsx";
 window.$value = "";
 
 class SharedAuthorsiVennDiagram extends Component {

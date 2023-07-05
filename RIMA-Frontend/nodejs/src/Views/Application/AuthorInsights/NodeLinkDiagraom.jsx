@@ -1,4 +1,12 @@
-import { Grid, Paper, TextField } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
@@ -175,43 +183,49 @@ const NodeLinkDiagram = ({ networkDataProp }) => {
 
   return (
     <Grid>
-      <br />
       {networkDataProp.length > 0 && (
-        <Paper
-          elevation={6}
-          style={{
-            padding: "20px",
-            maxWidth: "1300px",
-          }}
+        <Card
+          sx={{ margin: "20px", boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)" }}
         >
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={selectOption}
-            renderInput={(params) => <TextField {...params} label="Author" />}
-            onChange={(e1, e) => {
-              setSelectedNode(e ? e.label : null);
-              if (e) {
-                highlightNode(e.value);
-              }
+          <CardHeader
+            title="Co-author network"
+            titleTypographyProps={{
+              variant: "h4",
+              color: "primary",
+              textAlign: "center",
             }}
-            onInputChange={removeHighlight}
+            sx={{ backgroundColor: "secondary", padding: "20px" }}
           />
-          <div>
-            <CytoscapeComponent
-              key={networkDataProp}
-              elements={networkDataProp}
-              layout={layout}
-              style={style}
-              stylesheet={cytoStyle}
-              cy={(cytoscapeInstance) => {
-                if (cytoscapeInstance) {
-                  setCy(cytoscapeInstance);
+          <CardContent sx={{ padding: "30px" }}>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={selectOption}
+              renderInput={(params) => <TextField {...params} label="Author" />}
+              onChange={(e1, e) => {
+                setSelectedNode(e ? e.label : null);
+                if (e) {
+                  highlightNode(e.value);
                 }
               }}
+              onInputChange={removeHighlight}
             />
-          </div>
-        </Paper>
+            <div>
+              <CytoscapeComponent
+                key={networkDataProp}
+                elements={networkDataProp}
+                layout={layout}
+                style={style}
+                stylesheet={cytoStyle}
+                cy={(cytoscapeInstance) => {
+                  if (cytoscapeInstance) {
+                    setCy(cytoscapeInstance);
+                  }
+                }}
+              />
+            </div>
+          </CardContent>
+        </Card>
       )}
     </Grid>
   );

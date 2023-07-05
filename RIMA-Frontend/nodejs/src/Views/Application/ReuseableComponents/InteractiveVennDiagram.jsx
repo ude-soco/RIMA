@@ -14,7 +14,7 @@ import {
   Typography,
   Tooltip,
 } from "@material-ui/core";
-import InfoBox from "../../Application/ReuseableComponents/InfoBox";
+import InfoBox from "./InfoBox";
 import { IconButton, ListItemSecondaryAction } from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
 VennModule(Highcharts);
