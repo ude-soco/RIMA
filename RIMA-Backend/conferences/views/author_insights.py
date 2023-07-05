@@ -28,7 +28,7 @@ class getAuthorPublicationsOverYears(APIView):
         author_name = url_splits_slash[-1]
         author_data = authorInsightsUtil.get_author_pubs_overYears(author_name)
         print("author_data: ", author_data)
-        
+
         return Response(author_data)
 
 
@@ -43,6 +43,33 @@ class getNetworkDataAuthor(APIView):
 
         return Response({
             "data": graphData
+        })
+
+
+class getAuthorPublicatinInYear(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        author_name = url_splits_slash[-2]
+        pub_year = url_splits_slash[-1]
+        final_pubs_list = []
+        publication_List = authorInsightsUtil.get_Author_Pubs_InYear(
+            author_name, pub_year)
+        
+        if publication_List is not None:
+            final_pubs_list = [{
+                "paper_id": pub.paper_id,
+                "title": pub.title,
+                "authors": "A1,A2",
+                "abstract": pub.abstract,
+                "year": pub.years,
+                "url": pub.urls
+            }for pub in publication_List]
+
+        print("publicationList", (final_pubs_list))
+
+        return Response({
+            "publicationList": final_pubs_list
         })
 
 

@@ -8,8 +8,10 @@ urlpatterns = [
     path("getAuthorDetails/<pk1>", getAuthorDetails.as_view()),
     path('getNetwokGraphEvents/<pk1>', getNetworkDataSpecificEvents.as_view()),
     path('getNetwokGraphAuthor/<pk1>', getNetworkDataAuthor.as_view()),
-    path("getAuthorPublicationsOverYears/<pk1>",
+    path("getAuthorPublicationCountOverYears/<pk1>",
          getAuthorPublicationsOverYears.as_view()),
+    path("getAuthorPublicatinListInYear/<pk1>/<pk2>",
+         getAuthorPublicatinInYear.as_view()),
     path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
     path('getAllAvailabeAuthors/', getAllAvailableAuthors.as_view()),
     # TODO: All the author insights urls should be called in this block - END

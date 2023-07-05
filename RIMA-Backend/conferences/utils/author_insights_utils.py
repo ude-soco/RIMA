@@ -279,3 +279,13 @@ def getAllAuthors():
     authors_Name = [{"name": author.author_name,
                      "label": author.author_name} for author in authors]
     return authors_Name
+
+
+def get_Author_Pubs_InYear(author_name, pub_year):
+    author_node = Author.nodes.filter(author_name=author_name.strip())
+    author_pubs = author_node.published.all()
+    print("author_pubs: ", author_pubs)
+    pubs = [publication for publication in author_pubs
+            if publication.years == pub_year.strip()]
+
+    return pubs

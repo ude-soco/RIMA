@@ -4,11 +4,12 @@ import GroupBarChart from "../ReuseableComponents/GroupBarChart";
 import { useEffect } from "react";
 import { useState } from "react";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
+import PublicationDialog from "../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog";
 
 const AuthorOverview = ({ authorNameProps }) => {
   const [publicationList, setPublicationList] = useState([]);
   const [openDialog, setOpenDiaglog] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
   const [loader, setLoader] = useState(false);
   const [series, setSeries] = useState([
     {
@@ -34,8 +35,8 @@ const AuthorOverview = ({ authorNameProps }) => {
       events: {
         dataPointSelection: function (event, chartContext, config) {
           const selectedYear = config.w.globals.labels[config.dataPointIndex];
-          const selectedword = config.w.config.series[config.seriesIndex].name;
-          setSelectedEvent(selectedYear);
+          console.log("selectedYear", selectedYear);
+          setSelectedYear(selectedYear);
         },
       },
     },
@@ -48,17 +49,19 @@ const AuthorOverview = ({ authorNameProps }) => {
   });
   useEffect(() => {
     console.log("authorNameProps: ", authorNameProps);
-    getAuthorPublicationList();
+    getAuthorPublicationCount();
   }, [authorNameProps]);
 
   useEffect(() => {
     console.log("authorNameProps: ", authorNameProps);
-    getAuthorPublicationList();
+    getAuthorPublicationCount();
   }, []);
-  const getAuthorPublicationList = async () => {
+  const getAuthorPublicationCount = async () => {
     setLoader(true);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAuthorPublicationsOverYears/" + authorNameProps
+      BASE_URL_CONFERENCE +
+        "getAuthorPublicationCountOverYears/" +
+        authorNameProps
     );
     const response = await request.json();
     console.log("request count", { data: response.count });
@@ -121,9 +124,38 @@ const AuthorOverview = ({ authorNameProps }) => {
     });
     setLoader(false);
   };
+
+  useEffect(() => {
+    getAuthorPublicationList();
+  }, [selectedYear, authorNameProps]);
+
+  const getAuthorPublicationList = async () => {
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "getAuthorPublicatinListInYear/" +
+        authorNameProps +
+        "/" +
+        selectedYear
+    );
+    const response = await request.json();
+    console.log("response: ", response);
+    setOpenDiaglog(true);
+    setPublicationList(response["publicationList"]);
+  };
+
+  const handleCloseDiaglog = () => {
+    setOpenDiaglog(false);
+  };
   return (
     <Grid>
       <GroupBarChart options={options} series={series} loader={loader} />
+      {publicationList && publicationList.length > 0 && (
+        <PublicationDialog
+          openDialogProps={openDialog}
+          papersProps={publicationList}
+          handleCloseDiaglog={handleCloseDiaglog}
+        />
+      )}
     </Grid>
   );
 };
