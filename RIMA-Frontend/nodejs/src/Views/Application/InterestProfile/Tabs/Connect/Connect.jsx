@@ -7,7 +7,7 @@ import Help from "./Help"
 import FilterListIcon from "@material-ui/icons/FilterList";
 import MoreFilters from "./MoreFilters"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import arrow from "./arrow.gif";
+import arrow from "./Animations/arrow.gif";
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)

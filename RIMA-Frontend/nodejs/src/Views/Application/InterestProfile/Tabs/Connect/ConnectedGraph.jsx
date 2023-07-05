@@ -133,35 +133,37 @@ const ConnectedGraph = (props) => {
     const [authorId, setAuthorId] = useState("");
     
     const years = paper.map(pap => pap.year);
-    const minYear = Math.min(...years);
-    const maxYear = Math.max(...years);
-    const [yearRange, setYearRange] = useState([1990,2023]);
+    const startYear = Math.min(...years);
+    const endYear = Math.max(...years);
+    const [yearRange, setYearRange] = useState([startYear,endYear]);
     const filteredPapers = paper.filter(pap => pap.year >= yearRange[0] && pap.year <= yearRange[1]);
     
-    
-    
+    // Update yearRange whenever startYear or endYear changes
+    useEffect(() => {
+        setYearRange([startYear, endYear]);
+    }, [startYear, endYear]);
     
 
-
-    const handleMinYearChange = (minYear) => {
-        const newMinYear = parseInt(minYear);
-        const newMaxYear = yearRange[1];
-
-        if (newMinYear > newMaxYear) {
-          setYearRange([newMaxYear, newMinYear]);
-        } else {
-          setYearRange([newMinYear, newMaxYear]);
+    const handleStartYearChange = (startYear) => {
+        const newStartYear = parseInt(startYear);
+        const newEndYear = yearRange[1];
+        
+        if (startYear.length === 4 && (newStartYear > newEndYear)) {
+          alert("Enter a valid value: startYear should be smaller than endYear");
+        } 
+        else {
+          setYearRange([newStartYear, newEndYear]);
         }
       };
       
-      const handleMaxYearChange = (maxYear) => {
-        const newMaxYear = parseInt(maxYear);
-        const newMinYear = yearRange[0];
+      const handleEndYearChange = (endYear) => {
+        const newEndYear = parseInt(endYear);
+        const newStartYear = yearRange[0];
         
-        if (newMinYear > newMaxYear) {
-          setYearRange([newMaxYear, newMinYear]);
+        if (endYear.length === 4 && (newStartYear > newEndYear)) {
+          alert("Enter a valid value: endYear should be greater than startYear");
         } else {
-          setYearRange([newMinYear, newMaxYear]);
+          setYearRange([newStartYear, newEndYear]);
         }
       };
       
@@ -512,32 +514,32 @@ const ConnectedGraph = (props) => {
                    
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                         <TextField
-                            label="MinYear"
+                            label="StartYear"
                             type="number"
                             variant="outlined"
                             size="small"
-                            onChange={(e) => handleMinYearChange(e.target.value)}
-                            defaultValue={minYear.toString()}
+                            onChange={(e) => handleStartYearChange(e.target.value)}
+                            defaultValue={startYear.toString()}
                             color="primary"
                             style={{ width: "9%" }}      
                             inputProps={{
-                                min: minYear,
+                                min: startYear,
                                 max: yearRange[1],
                                 step: 1,
                             }}  
                             /> 
                         <TextField 
-                            label="MaxYear"
+                            label="EndYear"
                             type="number"
                             variant="outlined"
                             size="small"
-                            onChange={(e) => handleMaxYearChange(e.target.value)}
-                            defaultValue={maxYear.toString()}
+                            onChange={(e) => handleEndYearChange(e.target.value)}
+                            defaultValue={endYear.toString()}
                             color="primary"
                             style={{ width: "9%" }}      
                             inputProps={{
                                 min: yearRange[0],
-                                max: maxYear,
+                                max: endYear,
                                 step: 1,
                             }}  
                             /> 
@@ -570,31 +572,31 @@ const ConnectedGraph = (props) => {
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                             <TextField
                             type="number"
-                            label="MinYear"
+                            label="StartYear"
                             variant="outlined"
                             size="small"
-                            onChange={(e) => handleMinYearChange(e.target.value)}
-                            defaultValue={minYear.toString()}
+                            onChange={(e) => handleStartYearChange(e.target.value)}
+                            defaultValue={startYear.toString()}
                             color="primary"
                             style={{ width: "9%" }}      
                             inputProps={{
-                                min: minYear,
+                                min: startYear,
                                 max: yearRange[1],
                                 step: 1,
                             }}  
                             /> 
                             <TextField
-                            label="MaxYear"
+                            label="EndYear"
                             type="number"
                             variant="outlined"
                             size="small"
-                            onChange={(e) => handleMaxYearChange(e.target.value)}
-                            defaultValue={maxYear.toString()}
+                            onChange={(e) => handleEndYearChange(e.target.value)}
+                            defaultValue={endYear.toString()}
                             color="primary"
                             style={{ width: "9%" }}      
                             inputProps={{
                                 min: yearRange[0],
-                                max: maxYear,
+                                max: endYear,
                                 step: 1,
                             }}  
                             /> 

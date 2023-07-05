@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import foto0 from "./null.png";
-import foto1 from "./eins.gif";
-import foto2 from "./zwei.png";
-import foto3 from "./drei.gif";
-import foto4 from "./vier.gif";
-import foto5 from "./fünf.gif";
+import foto0 from "./Animations/null.png";
+import foto1 from "./Animations/eins.gif";
+import foto2 from "./Animations/zwei.png";
+import foto3 from "./Animations/drei.gif";
+import foto4 from "./Animations/vier.gif";
+import foto5 from "./Animations/fünf.gif";
 
 import {
   Dialog,
