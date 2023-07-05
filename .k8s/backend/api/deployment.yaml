@@ -46,8 +46,8 @@ spec:
           httpGet:
             path: /api/accounts/data-import-status/
             port: 8080
-          initialDelaySeconds: 300
-          periodSeconds: 60
+          initialDelaySeconds: 120
+          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /api/accounts/data-import-status/

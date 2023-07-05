@@ -65,8 +65,8 @@ spec:
             - /bin/bash
             - -c
             - celery inspect ping -b redis://$REDIS_HOST
-          initialDelaySeconds: 300
-          periodSeconds: 60
+          initialDelaySeconds: 120
+          periodSeconds: 30
           timeoutSeconds: 10
         volumeMounts:
         - mountPath: /tmp/models
