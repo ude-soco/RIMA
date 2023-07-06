@@ -172,7 +172,7 @@ def get_top_popular_keyphrase(eventsKeyphrase, numberTopKeyphrase):
             sum_dict[key]["sum"] += value
             sum_dict[key]["count"] += 1
 
-    average_dict = {key: value['sum'] / value['count']
+    average_dict = {key: value['sum']
                     for key, value in sum_dict.items()}
 
     average_dict = dict(sorted(average_dict.items(),
