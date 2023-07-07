@@ -42,9 +42,7 @@ updates:
   directory: "/RIMA-Backend"
   schedule:
     interval: "daily"
-  ignore:
-  - dependency-name: "*"
-    update-types: ["version-update:semver-major"]
+  open-pull-requests-limit: 20
   labels:
   - "dependencies"
   - "python"
