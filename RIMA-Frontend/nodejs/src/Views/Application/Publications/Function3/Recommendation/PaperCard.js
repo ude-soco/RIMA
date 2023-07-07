@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./assets/paper_card.css";
-import { Button, CircularProgress, Grid } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import ExpansionPanel from "./components/ExpansionPanel";
 import PaperContent from "./components/PaperContent";
 import { CalcMaxkeyword, getKeywordScore } from "./components/FlowChartUtil";
@@ -15,17 +21,28 @@ function ColoredBand({ interests_similarity, tags }) {
     if (Math.round(sim) != 0) {
       height = Math.round(sim * 100) / totalValues;
       res.push(
-        <Grid
-          container
-          className="align-items-center"
-          key={int}
-          style={{
-            backgroundColor: tags.find((t) => t.text == int).color,
-            height: height + "%",
-          }}
+        <Tooltip
+          arrow
+          title={
+            <Typography>
+              {`Similarity score between '${int}' and the publication: ${Math.round(
+                sim
+              )}%`}
+            </Typography>
+          }
+          placement="right"
         >
-          {Math.round(sim)}%
-        </Grid>
+          <Grid
+            container
+            className="align-items-center"
+            key={int}
+            style={{
+              backgroundColor: tags.find((t) => t.text == int).color,
+              height: height + "%",
+            }}
+          />
+          {/* {Math.round(sim)}% */}
+        </Tooltip>
       );
       // res.push(<Row className="align-items-center" key={int} style={{  height: height + '%' }}>{Math.round(sim)}%</Row>)
     }

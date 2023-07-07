@@ -1,14 +1,9 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import "../assets/paper_card.css";
 import ReactTooltip from "react-tooltip";
 import ShowMoreText from "react-show-more-text";
 import TopSimilarityChart from "./TopSimilarityChart";
-import {
-  Typography,
-  Grid,
-  Chip,
-  makeStyles,
-} from "@material-ui/core";
+import { Typography, Grid, Chip, makeStyles, Tooltip } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 const useStyles = makeStyles((theme) => ({
   italicBody2: {
@@ -31,9 +26,9 @@ function highlighter(
   originalText,
   lookupkey
 ) {
-  return `<a data-tip="${lookupkey}" aria-describedby="${paperId}"  data-for="${paperId}" data-event="click" title="Similarity Score: ${
+  return `<a data-tip="${lookupkey}" aria-describedby="${paperId}"  data-for="${paperId}" data-event="click" title="Similarity with Your Interests: ${
     Math.round(max_score * 100) / 100
-  }" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
+  }%" class="highlight-keyword" style="color:${max_interest_color}">${originalText}</a>`;
 }
 
 /**
@@ -175,20 +170,44 @@ function Title({ paper, similarityScore }) {
       >
         {/* Hoda end */}
         {paper.modified ? (
-          <Chip
-            style={{ borderRadius: 5 }}
-            variant="default"
-            size="medium"
-            title="Modified"
-            label={`Similarity Score: ${similarityScore} % (Modified)`}
-          />
+          <Tooltip
+            arrow
+            title={
+              <Typography>
+                The similarity score signals how similar the publications is to
+                Your Interests. A higher score means higher similarity between
+                Your Interests and the publication.
+              </Typography>
+            }
+            // placement="top"
+          >
+            <Chip
+              style={{ borderRadius: 5 }}
+              variant="default"
+              size="medium"
+              title="Modified"
+              label={`Similarity Score: ${similarityScore} % (Modified)`}
+            />
+          </Tooltip>
         ) : (
-          <Chip
-            label={`Similarity Score: ${similarityScore} %`}
-            style={{ borderRadius: 5 }}
-            variant="default"
-            size="medium"
-          />
+          <Tooltip
+            arrow
+            title={
+              <Typography>
+                The similarity score signals how similar the publications is to
+                Your Interests. A higher score means higher similarity between
+                Your Interests and the publication.
+              </Typography>
+            }
+            // placement="top"
+          >
+            <Chip
+              label={`Similarity Score: ${similarityScore} %`}
+              style={{ borderRadius: 5 }}
+              variant="default"
+              size="medium"
+            />
+          </Tooltip>
         )}
       </Grid>
     </Grid>
