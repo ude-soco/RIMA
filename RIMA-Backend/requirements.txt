@@ -35,7 +35,7 @@ mpld3
 murmurhash==1.0.9
 networkx==2.4
 nltk==3.5
-numpy==1.18.2
+numpy==1.25.0
 oauthlib==3.1.1
 pandas
 pattern
