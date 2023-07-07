@@ -99,7 +99,7 @@ export default function Connect (props) {
         setHelp(false);
     }
     console.log(selectedNames, "SlectedNames Connect")
-
+    console.log(help)
 
     console.log(data, "const3")
     return (
