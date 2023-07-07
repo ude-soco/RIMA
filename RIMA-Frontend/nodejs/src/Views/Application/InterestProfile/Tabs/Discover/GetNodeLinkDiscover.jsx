@@ -117,11 +117,15 @@ function getNodeData(data, values, interest) {
 }
 
 const GetNodeLink = (props) => {
+var cytoscape = require('cytoscape');
+var panzoom = require('cytoscape-panzoom');
+panzoom( cytoscape ); 
   const {interest, categoriesChecked, data, keywords} = props;
   const [openDialog, setOpenDialog] = useState({
     openLearn: null,
     nodeObj: null
   });
+
   const panzoomOptions = {
     zoomFactor: 0.1, // Faktor für die Zoomstufe
     zoomDelay: 45, // Verzögerung (in ms) für die Zoomaktion
@@ -130,22 +134,24 @@ const GetNodeLink = (props) => {
     fitPadding: 50, // Innenabstand für das Einpassen des Graphen
     panSpeed: 15, // Geschwindigkeit des Pannens
     panDistance: 10, // Entfernung, um zu pannen
-    // Weitere Optionen hier...
+    zIndex: -20,
+  
   };
-  const [addNewMark, setAddNewMark] = useState([]);
 
-  const addMark = async (currMark) => {
-    console.log("xx Discover get node link", currMark)
-    let alreadyExist = validateInterest(addNewMark, currMark);
+  const [addNewFavour, setAddNewFavour] = useState([]);
+
+  const addFavours= async (currFavour) => {
+    console.log("xx Discover get node link", currFavour)
+    let alreadyExist = validateInterest(addNewFavour, currFavour);
     console.log("xx Discover get node link", alreadyExist);
-    let newMark = "";
+    let newFavour = "";
     if (!alreadyExist) {
       console.log("xx Discover get node link already")
-      let newMarks = keywords;
-      let newMark = {
-        text: currMark.toLowerCase(),
+      let newFavours = keywords;
+      let newFavour = {
+        text: currFavour.toLowerCase(),
       }
-      setAddNewMark([...addNewMark,newMark]);
+      setAddNewFavour([...addNewFavour,newFavour]);
       
     }
   };
@@ -346,6 +352,7 @@ const GetNodeLink = (props) => {
     }
   ];
 
+
   return (
     <>
       <CytoscapeComponent
@@ -355,12 +362,13 @@ const GetNodeLink = (props) => {
         stylesheet={stylesheet}
         zoom={false}
         cy={(cy) => {
+          cy.userZoomingEnabled(false);
           cy.elements().remove();
           cy.add(elements);
           //cy.layout(layoutGraph)
           cy.layout(layoutGraph).run();
-          cy.panzoom(panzoomOptions);
           cy.fit();
+          cy.panzoom(panzoomOptions);
           let defaultsLevel1 = {
             selector: "node[level=1]",
             menuRadius: 80,
@@ -369,6 +377,7 @@ const GetNodeLink = (props) => {
                 content: "Reload",
                 contentStyle: {fontSize: "14px"},
                 select: function (ele) {
+                  
                   // a function to execute when the command is selected
                   handleOpenLearn(ele);
               },
@@ -453,9 +462,11 @@ const GetNodeLink = (props) => {
                 content: "Favour", // html/text content to be displayed in the menu
                 contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
-                 let currMark = ele.data()["label"];
-                 addMark(currMark);
-                 console.log("xx currMarkList", addNewMark);
+                let currFavour = ele.data()["label"];
+                //getElementById(ele.data()["id"])
+                 //let currFavourLabel = ele.data()["label"];
+                 addFavours(currFavour);
+                 console.log("xx currMarkList", addNewFavour);
                  let msg = "The interest is added in your favour list";
                  toast.success(msg, {
                   toastId: "addLevel2"
@@ -487,7 +498,8 @@ const GetNodeLink = (props) => {
           let menu2 = cy.cxtmenu(defaultsLevel2);
           let menu1 = cy.cxtmenu(defaultsLevel1);
           
-        }}
+        }
+      }
       />
       <Dialog open={openDialog.openLearn} onClose={handleCloseLearn}>
         {openDialog.nodeObj != null ? (
@@ -513,7 +525,7 @@ const GetNodeLink = (props) => {
           </tr>
           </thead>
         <tbody>
-          {addNewMark.map((item) => (
+          {addNewFavour.map((item) => (
           <tr key={item.id}>
           <td
           style={{
@@ -528,6 +540,7 @@ const GetNodeLink = (props) => {
            ))}
         </tbody>    
       </table>
+      <div id="panzoom"></div>
     </>
   );
 };

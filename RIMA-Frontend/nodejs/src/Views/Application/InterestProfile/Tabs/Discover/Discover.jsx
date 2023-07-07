@@ -364,7 +364,7 @@ const handleInfoButtonClick = () => {
 const Popup = ({ onClose }) => {
   return (
     <div>
-      <h3>Information</h3>
+      <h1>Information</h1>
       <p>On this page, you can explore interests that go beyond your usual topics. These controversial interests aim to introduce you to new subject areas and expand your knowledge.
         Moreover you can add your interest to your favorite-interests table. </p>
       <button onClick={onClose}>Close</button>
