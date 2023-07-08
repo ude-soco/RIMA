@@ -133,25 +133,29 @@ panzoom( cytoscape );
     maxZoom: 10, // Maximale Zoomstufe
     fitPadding: 50, // Innenabstand für das Einpassen des Graphen
     panSpeed: 15, // Geschwindigkeit des Pannens
-    panDistance: 10, // Entfernung, um zu pannen
-    zIndex: -20,
-  
+    panDistance: 10, // Entfernung, um zu pannen  
   };
 
-  const [addNewFavour, setAddNewFavour] = useState([]);
+  const [addNewFavour, setAddNewFavour] = useState([]); 
+  const [addNewFavourUrl, setAddNewFavourUrl] = useState([]);
 
   const addFavours= async (currFavour) => {
-    console.log("xx Discover get node link", currFavour)
-    let alreadyExist = validateInterest(addNewFavour, currFavour);
+    let currFavourLabel = currFavour.label;
+    console.log("xx Discover get node link", currFavourLabel);
+    let alreadyExist = validateInterest(addNewFavour, currFavourLabel);
     console.log("xx Discover get node link", alreadyExist);
-    let newFavour = "";
     if (!alreadyExist) {
       console.log("xx Discover get node link already")
-      let newFavours = keywords;
       let newFavour = {
-        text: currFavour.toLowerCase(),
+        text: currFavourLabel.toLowerCase(),
+      }
+      let newFavourUrl = {
+        text: currFavour.label.toLowerCase(),
+        url : currFavour.url
+    
       }
       setAddNewFavour([...addNewFavour,newFavour]);
+      setAddNewFavourUrl([...addNewFavourUrl,newFavourUrl]);
       
     }
   };
@@ -160,7 +164,6 @@ panzoom( cytoscape );
   const removeInterest = async (curr) => {
     let newMarkedInterests = addNewMark.filter((i) => i.id !== curr);
     setAddNewMark(newMarkedInterests);
-
   };
   */
  
@@ -245,6 +248,7 @@ panzoom( cytoscape );
       }
     });
   }
+
   function showConfirmationPopup2(ele) {
     swal({
       title: "Are you sure?",
@@ -351,6 +355,12 @@ panzoom( cytoscape );
       }
     }
   ];
+  const panzoomstyle = `
+  .panzoom-container {
+    position: relative;
+    z-index: -1;
+  }
+`;
 
 
   return (
@@ -462,10 +472,14 @@ panzoom( cytoscape );
                 content: "Favour", // html/text content to be displayed in the menu
                 contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
-                let currFavour = ele.data()["label"];
+                let currFavour = ele.data()["label"].toLowerCase();
+                let currUrl = ele.data().url;
+                let currElem = {text: currFavour,url: currUrl}
+                console.log('xxx', currUrl)
                 //getElementById(ele.data()["id"])
                  //let currFavourLabel = ele.data()["label"];
-                 addFavours(currFavour);
+                 addFavours(ele.data());
+                 console.log('xxx1', toString(ele.data().url))
                  console.log("xx currMarkList", addNewFavour);
                  let msg = "The interest is added in your favour list";
                  toast.success(msg, {
@@ -524,23 +538,24 @@ panzoom( cytoscape );
         </th>
           </tr>
           </thead>
-        <tbody>
-          {addNewFavour.map((item) => (
-          <tr key={item.id}>
-          <td
-          style={{
-            borderBottom: "1px solid #ddd",
-            padding: "8px",
-            fontStyle: "italic",
-          }}
-          >
+          <tbody>
+        {addNewFavourUrl.map((item) => (
+         <tr key={item.text}>
+        <td
+        style={{
+          borderBottom: "1px solid #ddd",
+          padding: "8px",
+          fontStyle: "italic",
+        }}
+      >
+        <a href={item.url} target="_blank" rel="noopener noreferrer">
           {item.text}
-          </td>
-          </tr>
-           ))}
-        </tbody>    
+        </a>
+      </td>
+    </tr>
+  ))}
+</tbody>  
       </table>
-      <div id="panzoom"></div>
     </>
   );
 };
