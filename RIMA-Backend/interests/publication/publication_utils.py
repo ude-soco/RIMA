@@ -138,7 +138,7 @@ def process_publication(paper, user_interest_model_vector, user_interest_model):
 
 def get_recommended_publications_updated(user_interest_model):
     user_interest_model_dict = {}
-    limit = 1
+    limit = 10
     for interest in user_interest_model:
         user_interest_model_dict[interest["text"]] = interest["weight"]
     response = API.search_papers_by_keyword(user_interest_model_dict.keys(), limit)
@@ -151,7 +151,7 @@ def get_recommended_publications_updated(user_interest_model):
         each["paperId"]: each for each in papers if each["abstract"]
     }.values()
     tasks = group(
-        process_publication.s(paper, user_interest_model_vector, user_interest_model)
+        process_publication.s(paper, user_interest_model_vector, user_interest_model)  # type: ignore
         for paper in unique_papers
     )
     results = tasks.apply_async().get()
