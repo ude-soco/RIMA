@@ -35,7 +35,7 @@ export default function InterestOverview() {
   const [interests, setInterests] = useState(false);
   let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
 
-  console.log(currentUser, "data cur user");
+  // console.log(currentUser, "data cur user");
   // useEffect(() => {
   //   fetchData()
   //     .then()

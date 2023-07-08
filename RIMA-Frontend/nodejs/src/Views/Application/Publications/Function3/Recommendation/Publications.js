@@ -245,6 +245,7 @@ export default function PublicationRecommendation() {
     return res;
   };
   const { papers } = state;
+  // console.log("papers", papers);
   const style = {
     position: "absolute",
     top: "50%",

@@ -371,6 +371,9 @@ export function CalcMaxkeyword(paper, interests) {
     let max_interest = "";
     let max_interest_color = "";
     for (let p2 in tInterests) {
+      if (p2.toLowerCase().indexOf("interest_model_publication_keyword_score") >= 0) {
+        continue;
+      }
       if (p2.toLowerCase().indexOf("data_") >= 0) {
         continue;
       }

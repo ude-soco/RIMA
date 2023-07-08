@@ -39,7 +39,7 @@ export default function MyInterests() {
     setKeywords([]);
     const response = await RestAPI.longTermInterest(currentUser);
     const { data } = response;
-    console.log(data);
+    // console.log(data);
     let dataArray = [];
     data.forEach((d) => {
       const {

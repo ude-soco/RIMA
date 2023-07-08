@@ -83,8 +83,8 @@ export default function Login() {
     RestAPI.userSignIn(data)
       .then((res) => {
         setIsLoading(false);
-        console.log(res.data);
-        console.log(res.data.is_staff);
+        // console.log(res.data);
+        // console.log(res.data.is_staff);
         if (res.status === 200) {
           localStorage.setItem("rimaUser", JSON.stringify(res.data));
           localStorage.setItem("accessToken", res.data.token);

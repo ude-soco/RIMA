@@ -43,7 +43,8 @@ function KeywordSimObjToArray(keywords_similarity) {
     items.push({
       keyword: p2,
       weight: value.data_weight,
-      max_score: value.data_max_score,
+      // max_score: value.data_max_score,
+      max_score: value.data_interest_model_publication_keyword_score,
       max_interest_color: value.data_max_interest_color,
       numberOfWord: p2.split(" ").length,
     });
@@ -119,6 +120,7 @@ function Title({ paper, similarityScore }) {
     paper.keywords_similarity,
     paper.title
   );
+
   return (
     <Grid container style={{ justifyContent: "space-between" }}>
       <Grid
@@ -287,6 +289,7 @@ function PaperAbstract({ paper }) {
  * @returns
  */
 export default function PaperContent({ paper }) {
+  // console.log(paper);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
