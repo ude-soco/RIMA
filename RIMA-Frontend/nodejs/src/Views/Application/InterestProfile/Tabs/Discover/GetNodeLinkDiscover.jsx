@@ -151,9 +151,15 @@ panzoom( cytoscape );
       }
       let newFavourUrl = {
         text: currFavour.label.toLowerCase(),
-        url : currFavour.url
-    
+         url : currFavour.url
+       };
+      if (currFavour.url == 'en.wikipedia.org'){
+        newFavourUrl = {
+          text: currFavour.label.toLowerCase(),
+          url : 'https://en.wikipedia.org/wiki/Main_Page'
+        }
       }
+
       setAddNewFavour([...addNewFavour,newFavour]);
       setAddNewFavourUrl([...addNewFavourUrl,newFavourUrl]);
       
