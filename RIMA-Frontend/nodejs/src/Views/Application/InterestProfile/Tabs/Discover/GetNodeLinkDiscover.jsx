@@ -117,11 +117,15 @@ function getNodeData(data, values, interest) {
 }
 
 const GetNodeLink = (props) => {
+var cytoscape = require('cytoscape');
+var panzoom = require('cytoscape-panzoom');
+panzoom( cytoscape ); 
   const {interest, categoriesChecked, data, keywords} = props;
   const [openDialog, setOpenDialog] = useState({
     openLearn: null,
     nodeObj: null
   });
+
   const panzoomOptions = {
     zoomFactor: 0.1, // Faktor für die Zoomstufe
     zoomDelay: 45, // Verzögerung (in ms) für die Zoomaktion
@@ -129,23 +133,36 @@ const GetNodeLink = (props) => {
     maxZoom: 10, // Maximale Zoomstufe
     fitPadding: 50, // Innenabstand für das Einpassen des Graphen
     panSpeed: 15, // Geschwindigkeit des Pannens
-    panDistance: 10, // Entfernung, um zu pannen
-    // Weitere Optionen hier...
+    panDistance: 10, // Entfernung, um zu pannen  
   };
-  const [addNewMark, setAddNewMark] = useState([]);
 
-  const addMark = async (currMark) => {
-    console.log("xx Discover get node link", currMark)
-    let alreadyExist = validateInterest(addNewMark, currMark);
+  const [addNewFavour, setAddNewFavour] = useState([]); 
+  const [addNewFavourUrl, setAddNewFavourUrl] = useState([]);
+
+  const addFavours= async (currFavour) => {
+    let currFavourLabel = currFavour.label;
+    console.log("xx Discover get node link", currFavourLabel);
+    let alreadyExist = validateInterest(addNewFavour, currFavourLabel);
     console.log("xx Discover get node link", alreadyExist);
-    let newMark = "";
     if (!alreadyExist) {
       console.log("xx Discover get node link already")
-      let newMarks = keywords;
-      let newMark = {
-        text: currMark.toLowerCase(),
+      let newFavour = {
+        text: currFavourLabel.toLowerCase(),
       }
-      setAddNewMark([...addNewMark,newMark]);
+      let newFavourUrl = {
+        text: currFavour.label.toLowerCase(),
+         url : currFavour.url
+       };
+       // Wenn kein Wikipedia Artikel gefunden wird
+      if (currFavour.url == 'en.wikipedia.org'){
+        newFavourUrl = {
+          text: currFavour.label.toLowerCase(),
+          url : 'https://en.wikipedia.org/wiki/Main_Page'
+        }
+      }
+
+      setAddNewFavour([...addNewFavour,newFavour]);
+      setAddNewFavourUrl([...addNewFavourUrl,newFavourUrl]);
       
     }
   };
@@ -154,11 +171,8 @@ const GetNodeLink = (props) => {
   const removeInterest = async (curr) => {
     let newMarkedInterests = addNewMark.filter((i) => i.id !== curr);
     setAddNewMark(newMarkedInterests);
-
   };
   */
- 
-
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest.toLowerCase());
   };
@@ -239,6 +253,7 @@ const GetNodeLink = (props) => {
       }
     });
   }
+
   function showConfirmationPopup2(ele) {
     swal({
       title: "Are you sure?",
@@ -345,6 +360,13 @@ const GetNodeLink = (props) => {
       }
     }
   ];
+  const panzoomstyle = `
+  .panzoom-container {
+    position: relative;
+    z-index: -1;
+  }
+`;
+
 
   return (
     <>
@@ -355,12 +377,13 @@ const GetNodeLink = (props) => {
         stylesheet={stylesheet}
         zoom={false}
         cy={(cy) => {
+          cy.userZoomingEnabled(false);
           cy.elements().remove();
           cy.add(elements);
           //cy.layout(layoutGraph)
           cy.layout(layoutGraph).run();
-          cy.panzoom(panzoomOptions);
           cy.fit();
+          cy.panzoom(panzoomOptions);
           let defaultsLevel1 = {
             selector: "node[level=1]",
             menuRadius: 80,
@@ -369,6 +392,7 @@ const GetNodeLink = (props) => {
                 content: "Reload",
                 contentStyle: {fontSize: "14px"},
                 select: function (ele) {
+                  
                   // a function to execute when the command is selected
                   handleOpenLearn(ele);
               },
@@ -453,10 +477,12 @@ const GetNodeLink = (props) => {
                 content: "Favour", // html/text content to be displayed in the menu
                 contentStyle: {fontSize: "14px"}, // css key:value pairs to set the command's css in js if you want
                 select: function (ele) {
-                 let currMark = ele.data()["label"];
-                 addMark(currMark);
-                 console.log("xx currMarkList", addNewMark);
-                 let msg = "The interest is added in your favour list";
+                //getElementById(ele.data()["id"])
+                 //let currFavourLabel = ele.data()["label"];
+                 addFavours(ele.data());
+                 console.log('xxx1', toString(ele.data().url))
+                 console.log("xx currMarkList", addNewFavour);
+                 let msg = "The interest is added in your favourite ";
                  toast.success(msg, {
                   toastId: "addLevel2"
                 });
@@ -487,7 +513,8 @@ const GetNodeLink = (props) => {
           let menu2 = cy.cxtmenu(defaultsLevel2);
           let menu1 = cy.cxtmenu(defaultsLevel1);
           
-        }}
+        }
+      }
       />
       <Dialog open={openDialog.openLearn} onClose={handleCloseLearn}>
         {openDialog.nodeObj != null ? (
@@ -512,21 +539,23 @@ const GetNodeLink = (props) => {
         </th>
           </tr>
           </thead>
-        <tbody>
-          {addNewMark.map((item) => (
-          <tr key={item.id}>
-          <td
-          style={{
-            borderBottom: "1px solid #ddd",
-            padding: "8px",
-            fontStyle: "italic",
-          }}
-          >
+          <tbody>
+        {addNewFavourUrl.map((item) => (
+         <tr key={item.text}>
+        <td
+        style={{
+          borderBottom: "1px solid #ddd",
+          padding: "8px",
+          fontStyle: "italic",
+        }}
+      >
+        <a href={item.url} target="_blank" rel="noopener noreferrer">
           {item.text}
-          </td>
-          </tr>
-           ))}
-        </tbody>    
+        </a>
+      </td>
+    </tr>
+  ))}
+</tbody>  
       </table>
     </>
   );
