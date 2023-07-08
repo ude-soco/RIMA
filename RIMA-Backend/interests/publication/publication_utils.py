@@ -136,9 +136,8 @@ def process_publication(paper, user_interest_model_vector, user_interest_model):
         return paper
 
 
-def get_recommended_publications_updated(user_interest_model):
+def get_recommended_publications_updated(user_interest_model, limit=10):
     user_interest_model_dict = {}
-    limit = 10
     for interest in user_interest_model:
         user_interest_model_dict[interest["text"]] = interest["weight"]
     response = API.search_papers_by_keyword(user_interest_model_dict.keys(), limit)
