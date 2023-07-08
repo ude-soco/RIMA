@@ -106,25 +106,25 @@ def calculate_vector_embedding(data_type, data, embedding) -> np.array:
             vec_list = []
             doc = list(data.keys())
             weights = list(data.values())   
-            print("doc values: ", doc)
-            print("\nweights values ", weights)
+            # print("doc values: ", doc)
+            # print("weights values ", weights)
             for phrase in doc:
-                print('phrase\n', phrase)
+                # print('phrase\n', phrase)
                 try:
                     vector = transformer_model.encode(phrase, normalize_embeddings=False, convert_to_tensor=False)
-                    print('vector\n', vector)
+                    # print('vector\n', vector)
                 except KeyError:
                     pass
 
                 weighted_vector = weights[doc.index(phrase)] * np.array(vector)  # multiply each element in the vector with the weight value
-                print('weighted_vectors\n', weighted_vector)
+                # print('weighted_vectors\n', weighted_vector)
                 vec_list.append(weighted_vector)
             # summing all vectors of keywords into one vector
             vectors = np.sum(vec_list, axis=0)
-            print(vectors)
+            # print(vectors)
             # dividing by the sum of weights
             weighted_average_vector = vectors / np.sum(weights)
-            print('weighted_average_vectors\n', weighted_average_vector)
+            # print('weighted_average_vectors\n', weighted_average_vector)
             return weighted_average_vector
 
 

@@ -51,6 +51,9 @@ from .utils import (
     get_heat_map_data, 
     get_venn_chart_data)
 from interests.tasks import import_user_data, import_user_paperdata, regenerate_interest_profile, import_user_citation_data, remove_papers_for_user, import_user_papers
+# New imports
+from .publication.publication_utils import get_recommended_publications_updated
+#
 from .publication_utils import API, get_recommended_publications, get_recommended_publications, get_recommended_publications_doc_level, get_interest_paper_similarity, get_keywords_similarities
 from .my_interests import getDataNewInterestExplore
 
@@ -215,7 +218,8 @@ class LongTermInterestItemView(RetrieveUpdateDestroyAPIView):
 # jaleh
 @api_view(["post"])
 def recommended_papers(request, *args, **kwargs):
-    papers = get_recommended_publications(request.data)
+    # papers = get_recommended_publications(request.data)
+    papers = get_recommended_publications_updated(request.data)
     return Response({"message": "Successful", "data": papers})
 
 @api_view(["post"])
