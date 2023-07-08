@@ -55,6 +55,7 @@ function getNodeData(data, values, interest) {
   let elements = [
     {data: {id: -1, label: interest, level: 0, color: "#172B4D"}}
   ];
+  
   let currColors = [];
   try{data.map((d, index) => {
     if (values[index]) {
@@ -123,15 +124,17 @@ const GetNodeLink = (props) => {
     nodeObj: null
   });
   const panzoomOptions = {
-    zoomFactor: 0.1, // Faktor für die Zoomstufe
-    zoomDelay: 45, // Verzögerung (in ms) für die Zoomaktion
-    minZoom: 0.1, // Minimale Zoomstufe
-    maxZoom: 10, // Maximale Zoomstufe
-    fitPadding: 50, // Innenabstand für das Einpassen des Graphen
-    panSpeed: 15, // Geschwindigkeit des Pannens
-    panDistance: 10, // Entfernung, um zu pannen
+    zoomFactor: 0.1,
+    zoomDelay: 45,
+    minZoom: 0.1,
+    maxZoom: 10,
+    fitPadding: 50, // Innerer Abstand für das Einpassen des Graphen
+    panSpeed: 15,
+    panDistance: 10,
+    wheelSensitivity: {} // Deaktiviert das Zoomen per Maus
     // Weitere Optionen hier...
   };
+  
   const [addNewMark, setAddNewMark] = useState([]);
 
   const addMark = async (currMark) => {
@@ -276,7 +279,7 @@ const GetNodeLink = (props) => {
       return 1;
     }
   };
-
+    
   const stylesheet = [
     {
       selector: "node",
@@ -350,7 +353,7 @@ const GetNodeLink = (props) => {
     <>
       <CytoscapeComponent
         elements={elements}
-        style={{width: "100%", height: "800px", backgroundColor: "#F8F4F2"}}
+        style={{width: "100%", height: "800px", backgroundColor: "#F8F4F2", overflow: 'hidden' }}
         layout={layoutGraph}
         stylesheet={stylesheet}
         zoom={false}
@@ -360,6 +363,7 @@ const GetNodeLink = (props) => {
           //cy.layout(layoutGraph)
           cy.layout(layoutGraph).run();
           cy.panzoom(panzoomOptions);
+          cy.userZoomingEnabled(false);
           cy.fit();
           let defaultsLevel1 = {
             selector: "node[level=1]",

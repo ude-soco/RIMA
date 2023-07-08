@@ -277,13 +277,16 @@ const handleInfoButtonClick = () => {
 
   return (
     <>
-      <Grid container justify="flex-end" style={{paddingTop: 24, paddingBottom: 8}}> 
-        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenInterest}>
-          Choose interest
+      <Grid container justify="flex-start" style={{ paddingTop: 24, paddingBottom: 8 }}>
+         <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenInterest}>
+           Choose interest
         </Button>
-        <IconButton aria-label="more information" color="primary" onClick={handleOpenPopup}>
-        <InfoOutlinedIcon/>
-      </IconButton>
+        <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenCategory} style={{ marginRight: 8 }}>
+           Field of Study
+        </Button>
+         <IconButton aria-label="more information" color="primary" onClick={handleOpenPopup}>
+          <InfoOutlinedIcon />
+        </IconButton>
       {showPopup && <Popup onClose={handleClosePopup} />}
         <Menu
           id="currInterestDiscover"
@@ -314,9 +317,6 @@ const handleInfoButtonClick = () => {
             </RadioGroup>:<></>}
           </FormControl>
         </Menu>
-        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenCategory} style={{marginLeft: 8}}>
-          Field of Study
-        </Button>
         {state.currCategoriesLabel?<Menu
             id="filterInterestExplore"
             anchorEl={state.openCategory}
@@ -364,16 +364,16 @@ const handleInfoButtonClick = () => {
 const Popup = ({ onClose }) => {
   return (
     <div>
-      <h3>Information</h3>
-      <p>On this page, you can explore interests that go beyond your usual topics. These controversial interests aim to introduce you to new subject areas and expand your knowledge.
-        Moreover you can add your interest to your favorite-interests table. </p>
+      <h3 style={{ fontFamily: 'Arial, sans-serif' }}>Information:</h3>
+      <p style={{ fontFamily: 'Arial, sans-serif' }}>On this page, you can explore interests that go beyond your usual topics. 
+      These controversial interests aim to introduce you to new subject areas and expand your knowledge.</p>
       <button onClick={onClose}>Close</button>
     </div>
   );
 };
 
-export default DiscoverPage;
 
+export default DiscoverPage;
 export const Loading = () => {
      return (
     <>
