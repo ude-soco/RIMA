@@ -42,7 +42,7 @@ urlpatterns = [
     path('get-discover-data', views.get_data_discover),
     path('get-explore-data', views.get_data_explore),
     path('get-similiar-interest-data', views.get_data_similiar_interest),
-
+    path('get-topics-related',views.get_related_topics),
     #Osama
     path('papers/', views.PaperView.as_view()), #adding new paper
     path('reset-data/', views.ResetData.as_view()),
@@ -52,5 +52,5 @@ urlpatterns = [
     path('regenerate-interest-profile/', views.regenerateInterestProfile.as_view()),
     
     path('get-connect-data', views.get_data_connect),
-    path('get-wiki-info', views.get_wiki_data)
+    path('get-wiki-info', views.get_wiki_data),
 ]

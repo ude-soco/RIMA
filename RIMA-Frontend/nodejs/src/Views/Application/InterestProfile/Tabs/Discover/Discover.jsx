@@ -23,7 +23,7 @@ const DiscoverPage = (props) => {
   const [zoomFactor, setZoomFactor] = useState(1); // Zoomfaktor (Standard: 1)
 
   let currentUser = JSON.parse(localStorage.getItem('rimaUser'));
-
+  
   const fetchKeywords = async () => {
   //setState({...state,userInterests: []})
   const response = await RestAPI.longTermInterest(currentUser);
@@ -277,7 +277,7 @@ const handleInfoButtonClick = () => {
 
   return (
     <>
-      <Grid container justify="flex-end" style={{ paddingTop: 24, paddingBottom: 8 }}>
+      <Grid container justify="flex-start" style={{ paddingTop: 24, paddingBottom: 8 }}>
          <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenInterest}>
            Choose interest
         </Button>
