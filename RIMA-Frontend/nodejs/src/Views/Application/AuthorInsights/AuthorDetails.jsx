@@ -13,7 +13,7 @@ import React from "react";
 
 const AuthorDetails = ({ authorDataProp }) => {
   const {
-    author_name,
+    author_name = "",
     publication_counts,
     Author_publications,
     semantic_scolar_author_id,
@@ -24,7 +24,7 @@ const AuthorDetails = ({ authorDataProp }) => {
   const firstLetter = author_name ? author_name.charAt(0) : "";
 
   return (
-    <Grid container justify="center">
+    <Grid container justify="center" xs={12}>
       <Card
         variant="outlined"
         sx={{ display: "flex", alignItems: "center", width: "100%" }}

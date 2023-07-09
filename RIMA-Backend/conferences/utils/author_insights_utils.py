@@ -37,16 +37,35 @@ def handle_coauthor_data(author_nodes):
 
 
 def get_author_pubs_overYears(author_name):
-    author_node = Author.nodes.get_or_none(author_name=author_name)
+    author_node = Author.nodes.get_or_none(author_name=author_name.strip())
     author_pubs = author_node.published.all()
+    
+    pubs_counst=get_publications_with_years(author_pubs)
+
+    return pubs_counst
+
+def filter_publication_basedOn_confs(author_name, selectedConfs):
+    author_node = Author.nodes.get_or_none(author_name=author_name.strip())
+    author_pubs = author_node.published.all()
+    
+    filtered_pubs=[pub for pub in author_pubs if pub.published_in_Confs[0].conference_name_abbr.strip() 
+                 in selectedConfs]
+   
+    pubs_counst=get_publications_with_years(filtered_pubs)
+    return pubs_counst
+
+def get_publications_with_years(author_pubs):
     pubs_counst = {}
 
     years = [pub.years for pub in author_pubs]
-
+    publicationsConfs=[pub.published_in_Confs[0].conference_name_abbr for pub in author_pubs]
+    publicationsConfs=set(publicationsConfs)
     sorted_years = sorted(years)
     counter = Counter(sorted_years)
     identities = list(counter.keys())
-    pubs_counst = {"years": identities, "count": list(counter.values())}
+    pubs_counst = {"years": identities, 
+                   "count": list(counter.values()),
+                   "conferences":publicationsConfs}
 
     return pubs_counst
 

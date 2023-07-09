@@ -14,6 +14,8 @@ urlpatterns = [
          getAuthorPublicatinInYear.as_view()),
     path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
     path('getAllAvailabeAuthors/', getAllAvailableAuthors.as_view()),
+    path("getPublicationListBasedOnFilter/<pk1>/<pk2>/",
+         getPublicationListBasedOnFilter.as_view()),
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################
@@ -196,4 +198,6 @@ urlpatterns = [
 
     path('getTopicPublicationsInConf/<pk1>/',
          TopicPopularityInConf.as_view()),
+
+
 ]

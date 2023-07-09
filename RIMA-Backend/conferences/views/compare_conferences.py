@@ -995,7 +995,7 @@ class getRelavantPublicationsList(APIView):
             final_pubs_list = [{
                 "paper_id": pub.paper_id,
                 "title": pub.title,
-                "authors": "A1,A2",
+                "authors": ', '.join([author.author_name for author in pub.authors]),
                 "abstract": pub.abstract,
                 "year": pub.years,
                 "url": pub.urls

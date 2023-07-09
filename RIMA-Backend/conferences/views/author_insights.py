@@ -32,6 +32,25 @@ class getAuthorPublicationsOverYears(APIView):
         return Response(author_data)
 
 
+class getPublicationListBasedOnFilter(APIView):
+    def get(self, request, *args, **kwargs):
+
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+
+        print("url_splits_slash", url_splits_slash)
+        author_name = url_splits_slash[-3]
+        selectedConfs = (url_splits_slash[-2]).split("&")
+
+        print("author_name: ", author_name)
+        print("selectedConfs: ", selectedConfs)
+
+        author_data = authorInsightsUtil.filter_publication_basedOn_confs(
+            author_name, selectedConfs)
+
+        return Response(author_data)
+
+
 class getNetworkDataAuthor(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -55,12 +74,12 @@ class getAuthorPublicatinInYear(APIView):
         final_pubs_list = []
         publication_List = authorInsightsUtil.get_Author_Pubs_InYear(
             author_name, pub_year)
-        
+
         if publication_List is not None:
             final_pubs_list = [{
                 "paper_id": pub.paper_id,
                 "title": pub.title,
-                "authors": "A1,A2",
+                "authors": ', '.join([author.author_name for author in pub.authors]),
                 "abstract": pub.abstract,
                 "year": pub.years,
                 "url": pub.urls
