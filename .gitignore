@@ -105,7 +105,6 @@ dist
 
 
 .DS_Store
-.envrc
 .idea/*
 .vscode/*
 *.pyc

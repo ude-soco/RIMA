@@ -27,13 +27,13 @@ services:
     restart: "no"
 
   model-downloader:
-    image: model-downloader
+    image: rima-model-downloader
     restart: "no"
     volumes:
     - ./tmp/download:/tmp
 
   model-server:
-    image: model-server
+    image: rima-model-server
     ports:
     - 8001:8080
     restart: "no"

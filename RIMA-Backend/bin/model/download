@@ -15,11 +15,8 @@ fi
 echo "Model files available:"
 find ${MODEL_DIR} -type f
 
-<<<<<<< HEAD
 echo "Download spaCy data ..."
 python -m spacy download en
 
 echo "Download NLTK data ..."
 python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
-=======
->>>>>>> 525df97f6286fd3f766792833cc11757a37fc363

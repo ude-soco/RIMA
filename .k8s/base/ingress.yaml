@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    description: RIMA
+spec:
+  rules:
+  - host: rima.sc.inko.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: web
+          servicePort: 8080
+      - path: /api
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /docs
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /swagger
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /assets
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /admin
+        backend:
+          serviceName: api
+          servicePort: 8080
+      - path: /reset-app-data
+        backend:
+          serviceName: api
+          servicePort: 8080
+  tls:
+  - hosts:
+    - rima.sc.inko.cloud
+    secretName: web-tls-crt

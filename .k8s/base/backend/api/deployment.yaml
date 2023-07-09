@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app.kubernetes.io/component: api
+    keel.sh/policy: patch
+    keel.sh/match-tag: "true"
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      initContainers:
+      - name: setup
+        image: inko/soco-rima-backend
+        command: ['bin/model/download']
+        env:
+        - name: DJANGO_LOGLEVEL
+          value: error
+        - name: MODEL_DIR
+          value: /tmp/models
+        - name: MODEL_SERVER
+          value: "http://$(MODEL_SERVER_SERVICE):8080"
+        - name: GLOVE_MODEL_FILE
+          value: glove/datatest_word2vec.txt
+        volumeMounts:
+        - mountPath: /tmp/models
+          name: tmp
+      containers:
+      - name: web
+        image: inko/soco-rima-backend
+        command: ['bin/api']
+        ports:
+        - containerPort: 8080
+        # startupProbe:
+        #   httpGet:
+        #     path: /api/accounts/data-import-status/
+        #     port: 8080
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 15
+        #   failureThreshold: 40
+        # livenessProbe:
+        #   httpGet:
+        #     path: /api/accounts/data-import-status/
+        #     port: 8080
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 15
+        #   failureThreshold: 40
+        readinessProbe:
+          httpGet:
+            path: /api/accounts/data-import-status/
+            port: 8080
+          initialDelaySeconds: 300
+          periodSeconds: 15
+        env:
+        - name: POSTGRES_HOST
+          value: $(DB_SERVICE)
+        - name: REDIS_HOST
+          value: $(REDIS_SERVICE)
+        - name: TEMP_DIR
+          value: /tmp
+        - name: MODEL_DIR
+          value: /tmp/models
+        - name: MODEL_SERVER
+          value: "http://$(MODEL_SERVER_SERVICE):8080"
+        - name: GLOVE_MODEL_FILE
+          value: glove/datatest_word2vec.txt
+        envFrom:
+        - secretRef:
+            name: configuration
+        volumeMounts:
+        - mountPath: /tmp/models
+          name: tmp
+        resources:
+          requests:
+            memory: 600Mi
+            cpu: 100m
+          limits:
+            memory: 2Gi
+            cpu: 2
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: api
+              topologyKey: kubernetes.io/hostname
+      volumes:
+      - name: tmp
+        emptyDir: {}

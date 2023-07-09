@@ -147,7 +147,7 @@ panzoom( cytoscape );
     setAddNewFavourUrl(updatedList);
     setAddNewFavour(updatedList2);
   };
-  /*
+  
   const reload = async (interest) => {
     //setState({...state,userInterests: []})
     const response = await RestAPI.getTopicsRelated(interest);
@@ -168,8 +168,6 @@ panzoom( cytoscape );
     })
     return dataArray
   };
-  */
-  /*
   const reloadold = async (interest) => {
 
     const response = await RestAPI.getTopicsRelated(interest);
@@ -189,7 +187,6 @@ panzoom( cytoscape );
     });
     return nodes
   };
-  */
   const [addNewFavour, setAddNewFavour] = useState([]); 
   const [addNewFavourUrl, setAddNewFavourUrl] = useState([]);
 
