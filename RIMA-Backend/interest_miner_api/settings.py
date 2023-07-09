@@ -237,6 +237,7 @@ else:
     GLOVE_MODEL_FILE = os.path.join(MODEL_DIR, configuration["glove_model_file"])
     GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
 
+<<<<<<< HEAD
 if not configuration["glove_model_file"]:
     TRANSFORMER_MODEL_FILE_PATH = None
 else:
@@ -352,3 +353,14 @@ else:
 # SEMEVALVOCAB2017 = os.environ.get("SemEval2017Vocab", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/semeval_vocal.txt")
 
 # DUC2001= os.environ.get("Duc2001", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/duc2001.txt")
+=======
+if not os.environ.get("NLTK_DATA"):
+    if os.environ.get("NLTK_MODEL_DIR"):
+        os.environ["NLTK_DATA"] = os.path.join(
+            MODEL_DIR,
+            os.environ.get("NLTK_MODEL_DIR")
+        )
+
+if PRELOAD_MODELS:
+    from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model
+>>>>>>> 525df97f6286fd3f766792833cc11757a37fc363

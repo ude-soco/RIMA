@@ -38,6 +38,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+<<<<<<< HEAD
     "@antv/g2": "^4.0.12",
     "@brainhubeu/react-carousel": "^2.0.4",
     "@emotion/react": "^11.4.1",
@@ -55,9 +56,20 @@
     "@nivo/core": "^0.79.0",
     "@sweetalert/with-react": "^0.1.1",
     "apexcharts": "^3.27.1",
+=======
+    "@antv/g2": "^4.2.10",
+    "@fortawesome/fontawesome-free": "5.15.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@material-ui/core": "^4.12.4",
+    "@sweetalert/with-react": "^0.1.1",
+    "apexcharts": "^3.41.0",
+>>>>>>> 525df97f6286fd3f766792833cc11757a37fc363
     "axios": "^0.19.2",
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.3",
+<<<<<<< HEAD
     "classnames": "2.2.6",
     "cytoscape": "^3.21.1",
     "cytoscape-cxtmenu": "^3.4.0",
@@ -73,6 +85,16 @@
     "re-resizable": "^6.5.5",
     "react": "^17.0.1",
     "react-apexcharts": "^1.3.9",
+=======
+    "classnames": "2.3.2",
+    "d3": "^5.5.0",
+    "konva": "^8.4.3",
+    "moment": "2.29.4",
+    "node-sass": "4.14.1",
+    "re-resizable": "^6.9.9",
+    "react": "^17.0.2",
+    "react-apexcharts": "^1.4.0",
+>>>>>>> 525df97f6286fd3f766792833cc11757a37fc363
     "react-autosuggest": "^10.0.0",
     "react-awesome-slider": "^4.1.0",
     "react-bootstrap": "^1.4.3",
@@ -89,8 +111,12 @@
     "react-icons": "^3.10.0",
     "react-konva": "^16.13.0-0",
     "react-loader-spinner": "^3.1.14",
+<<<<<<< HEAD
     "react-mermaid2": "^0.1.4",
     "react-router-dom": "^5.1.2",
+=======
+    "react-router-dom": "^5.3.4",
+>>>>>>> 525df97f6286fd3f766792833cc11757a37fc363
     "react-scripts": "^3.4.3",
     "react-select": "^2.4.4",
     "react-show-more-text": "^1.5.2",
@@ -100,6 +126,7 @@
     "react-tabs": "^3.1.0",
     "react-text-collapse": "^0.6.1",
     "react-toastify": "^5.5.0",
+<<<<<<< HEAD
     "react-tooltip": "^4.2.5",
     "react-twitter-embed": "^3.0.3",
     "react-wordcloud": "^1.2.3",
@@ -108,6 +135,14 @@
     "sweetalert": "^2.1.2",
     "text-metrics": "^3.0.0",
     "tippy.js": "^6.2.5"
+=======
+    "react-tooltip": "^4.5.1",
+    "react-twitter-embed": "^3.0.3",
+    "react-wordcloud": "^1.2.3",
+    "reactstrap": "8.10.1",
+    "styled-components": "^5.3.11",
+    "sweetalert": "^2.1.2"
+>>>>>>> 525df97f6286fd3f766792833cc11757a37fc363
   },
   "devDependencies": {
     "@types/googlemaps": "3.39.2",

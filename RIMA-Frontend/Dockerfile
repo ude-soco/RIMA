@@ -10,7 +10,7 @@ RUN  npm run build 2>&1
 
 
 
-FROM nginxinc/nginx-unprivileged:1.22
+FROM nginxinc/nginx-unprivileged:1.25
 USER root
 WORKDIR /usr/share/nginx/html
 RUN chown -R nginx:nginx .

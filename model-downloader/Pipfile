@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 gdown = "*"
+<<<<<<< HEAD
+=======
+nltk = "*"
+>>>>>>> 525df97f6286fd3f766792833cc11757a37fc363
 
 [dev-packages]
 
