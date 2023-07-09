@@ -121,4 +121,4 @@ class RelevantPubsCountOfConf(APIView):
             "data": sets,
             "years": all_years
         })
-
+    

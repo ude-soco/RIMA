@@ -159,7 +159,7 @@ const SharedTopicsVennDiagram = ({
             component="h1"
             gutterBottom
           >
-            Shared Topics Across Events
+            Shared Topics Across Events of {conferenceName} Conference
           </Typography>
         </Grid>
         <Grid item xs={12}>

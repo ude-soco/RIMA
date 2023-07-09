@@ -96,22 +96,25 @@ const AuthorProfile = () => {
           </Grid>
         </Grid>
       </Paper>
-      <Grid
-        container
-        justify="center"
-        alignItems="flex-start"
-        columnSpacing={{ xs: 1, sm: 2, md: 4 }}
-        sx={{ width: "100%" }}
-      >
-        <Grid item xs={12} lg={5} sx={{ margin: "20px" }}>
-          {authorData && <AuthorDetails authorDataProp={authorData} />}
+      <Paper sx={{ width: "100%", margin: "20px" }}>
+        <Grid
+          container
+          justify="center"
+          alignItems="flex-start"
+          columnSpacing={{ xs: 1, sm: 2, md: 4 }}
+          sx={{ width: "100%" }}
+        >
+          <Grid item xs={12} lg={5} sx={{ margin: "20px" }}>
+            {authorData && <AuthorDetails authorDataProp={authorData} />}
+          </Grid>
+          <Grid item xs={12} lg={6}>
+            {authorData && (
+              <AuthorOverview authorNameProps={selectedAuthor.label}
+                />
+            )}
+          </Grid>
         </Grid>
-        <Grid xs={12} lg={6}>
-          {authorData && (
-            <AuthorOverview authorNameProps={selectedAuthor.label} />
-          )}
-        </Grid>
-      </Grid>
+      </Paper>
 
       <Grid item xs={12}>
         <NodeLinkDiagram networkDataProp={networkData} />

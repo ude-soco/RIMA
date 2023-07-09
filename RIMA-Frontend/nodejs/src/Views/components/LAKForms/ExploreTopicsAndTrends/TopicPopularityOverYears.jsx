@@ -206,7 +206,8 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
           component="h1"
           gutterBottom
         >
-          Topic Popularity Comparison across years
+          Topic Popularity Comparison Across years in {selectedConferenceProps}{" "}
+          Conference
         </Typography>
       </Grid>
       <Grid item xs={12}>

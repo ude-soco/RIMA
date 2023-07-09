@@ -149,7 +149,7 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
       <Grid item xs={12}>
         <Typography style={{ paddingTop: "1%" }}>
           Identifying the Most Relevant Topics in Conference Publications Based
-          on Occurrence and Influence Scores
+          on Occurrence and Influence
         </Typography>
       </Grid>
       <Grid container xs={12} style={{ paddingTop: "1%" }}>
@@ -223,7 +223,7 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
           />
           {imageTooltipOpen && (
             <InfoBox
-              Info={`The size of each word corresponds to its weight or significance.
+              Info={`The size of each word corresponds to its significance.
              Larger words indicate topics of greater importance or influence. `}
             ></InfoBox>
           )}
