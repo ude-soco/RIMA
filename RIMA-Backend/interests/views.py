@@ -55,7 +55,6 @@ from .publication_utils import API, get_recommended_publications, get_recommende
 from .my_interests import getDataNewInterestExplore
 
 from .view.discover import getDataDiscover
-from .view.discover import getRelatedTopics
 from .view.explore import getDataExplore
 from .view.connect import getConnectData
 from .view.connect import getWikiInfo
@@ -229,12 +228,7 @@ def recommended_keywords_similarities(request, *args, **kwargs):
     res = get_keywords_similarities(request.data)
     return Response({"message": "Successful", "data": res})
 
-#DiscoverGroup
-@api_view(["post"])
-def get_related_topics(request, *args, **kwargs):
-    res =getRelatedTopics(request.data)
-    #two list: random and all interests
-    return Response({"message": "Successful", "data": res})
+
 
 #Clara
 @api_view(["post"])

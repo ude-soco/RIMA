@@ -23,7 +23,7 @@ const DiscoverPage = (props) => {
   const [zoomFactor, setZoomFactor] = useState(1); // Zoomfaktor (Standard: 1)
 
   let currentUser = JSON.parse(localStorage.getItem('rimaUser'));
-  
+
   const fetchKeywords = async () => {
   //setState({...state,userInterests: []})
   const response = await RestAPI.longTermInterest(currentUser);
