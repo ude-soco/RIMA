@@ -194,6 +194,8 @@ const NodeLink = (props) => {
      console.log("Interest already exists in my list!")
   }
 
+ 
+
   //const [state, setState]=useState(getElements(data))
 
   useEffect(() => {

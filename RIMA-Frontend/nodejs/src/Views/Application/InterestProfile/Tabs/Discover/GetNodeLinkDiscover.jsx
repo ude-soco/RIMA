@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import swal from 'sweetalert';
 import panzoom from "cytoscape-panzoom";
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
+import { FaTrash } from "react-icons/fa";
 cytoscape.use(cxtmenu);
 cytoscape.use(zoom);
 cytoscape.use(panzoom);
@@ -49,6 +50,7 @@ function getColor(currColors) {
 
   return [pickedColor, currColors];
 }
+
 
 function getNodeData(data, values, interest) {
   let ids = [...Array(200).keys()];
@@ -133,9 +135,58 @@ panzoom( cytoscape );
     maxZoom: 10, // Maximale Zoomstufe
     fitPadding: 50, // Innenabstand für das Einpassen des Graphen
     panSpeed: 15, // Geschwindigkeit des Pannens
-    panDistance: 10, // Entfernung, um zu pannen  
+    panDistance: 10, // Entfernung, um zu pannen 
+    zIndex: 9999, 
   };
+  const handleDeleteItem = (item) => {
+    // Filtere den Eintrag aus der Liste
+    const updatedList = addNewFavourUrl.filter((i) => i.text !== item.text);
+    const updatedList2 = addNewFavour.filter((i) => i.text !== item.text);
+    
+    // Aktualisiere den Zustand oder führe andere erforderliche Aktionen aus
+    setAddNewFavourUrl(updatedList);
+    setAddNewFavour(updatedList2);
+  };
+  
+  const reload = async (interest) => {
+    //setState({...state,userInterests: []})
+    const response = await RestAPI.getTopicsRelated(interest);
+    console.log(response,"xxxx", "1");
+    const data = response;
+    let dataArray = [];
+    data.foreach((d) => {
+      //console.log(d, "test")
+      //const {title, summary, url, interest, failure} = d;
+      const newData = {
+        title: d.title,
+        summary: d.summary,
+        url: d.url,
+        interest: d.interest,
+        failure: d.failure,
+      };
+      dataArray.push(newData);
+    })
+    return dataArray
+  };
+  const reloadold = async (interest) => {
 
+    const response = await RestAPI.getTopicsRelated(interest);
+    const dataArray = response;
+    const nodes = [];
+    dataArray.forEach((item) => {
+      const node = {
+        data: {
+          id: "a",
+          title: "b",
+          summary: "c",
+          url: "url",
+          failure: "failure"
+        }
+      };
+      nodes.push(node);
+    });
+    return nodes
+  };
   const [addNewFavour, setAddNewFavour] = useState([]); 
   const [addNewFavourUrl, setAddNewFavourUrl] = useState([]);
 
@@ -370,6 +421,8 @@ panzoom( cytoscape );
 
   return (
     <>
+    <div style={{ display: "flex" }}>
+    <div style={{ flex: 1 }}>
       <CytoscapeComponent
         elements={elements}
         style={{width: "100%", height: "800px", backgroundColor: "#F8F4F2"}}
@@ -392,9 +445,26 @@ panzoom( cytoscape );
                 content: "Reload",
                 contentStyle: {fontSize: "14px"},
                 select: function (ele) {
-                  
-                  // a function to execute when the command is selected
-                  handleOpenLearn(ele);
+                  let list = reload(ele.data()["label"])[0];
+                  console.log(list, "xxxx");
+                  ele.successors().addClass("collapsed");
+                  let succ = ele.successors().targets();
+                  let edges = ele.successors();
+                  let ids = [];
+                  edges.map((e) => {
+                    e.removeClass("collapsed");
+                    ids.push(
+                      e.data()["target"],
+                      e.data()["source"],
+                      e.data()["id"]
+                    );
+                    console.log(ids, "test");
+                  });
+
+                  /*succ.map((s) => {
+                    s.removeClass("collapsed");
+                  });*/
+                  cy.fit([ele, succ, edges], 16);
               },
               enabled: true
             },
@@ -531,31 +601,102 @@ panzoom( cytoscape );
         </DialogActions>
       </Dialog>
       <ToastContainer/>
-      <table style={{ borderCollapse: "collapse", width: "100%" }}>
-       <thead>
-        <tr>
-        <th style={{ borderBottom: "2px solid #000", padding: "8px" }}>
-        My favorite interests
-        </th>
-          </tr>
-          </thead>
-          <tbody>
-        {addNewFavourUrl.map((item) => (
-         <tr key={item.text}>
-        <td
+      </div>
+      </div>
+    <div style={{ flex: 1 }}></div>
+    <table
         style={{
-          borderBottom: "1px solid #ddd",
-          padding: "8px",
-          fontStyle: "italic",
+          borderCollapse: "collapse",
+          width: "100%",
+          marginTop: "20px",
+          fontFamily: "Arial, sans-serif",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
         }}
       >
-        <a href={item.url} target="_blank" rel="noopener noreferrer">
-          {item.text}
-        </a>
-      </td>
-    </tr>
-  ))}
-</tbody>  
+        <thead>
+          <tr>
+            <th
+              style={{
+                borderBottom: "2px solid #000",
+                padding: "8px",
+                backgroundColor: "#e5e6ec",
+                textAlign: "left",
+                fontWeight: "bold",
+                fontSize: "16px",
+                color: "#333",
+              }}
+            >
+              My favorite interests
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {addNewFavourUrl.map((item) => (
+            <tr key={item.text}>
+              <td
+                style={{
+                  borderBottom: "1px solid #ddd",
+                  padding: "8px",
+                  position: "relative",
+                  fontStyle: "italic",
+                  background: "#f2f3f6",
+                }}
+              >
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: "#8890aa",
+                    textDecoration: "none",
+                    fontSize: "14px",
+                  }}
+                >
+                  {item.text}
+                </a>
+                <button
+                  style={{
+                    position: "absolute",
+                    right: "40px",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#333",
+                    fontSize: "14px",
+                  }}
+                  onClick={() => handleDeleteItem(item)}
+                >
+                  <FaTrash />
+                </button>
+                <button
+                  style={{
+                    position: "absolute",
+                    right: "80px",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#333",
+                    fontSize: "14px",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    border: "1px solid #333",
+                    backgroundColor: "#bdc2d0",
+                  }}
+                  onClick={() => {
+                    addNewInterest(item.text);
+                    let msg = "The interest " + item.text + " has been saved";
+                    toast.success(msg, {
+                      toastId: "addLevel2",
+                    });
+                  }}
+                >
+                  Add to my interersts
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </>
   );
