@@ -71,27 +71,25 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 7. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
 
-8. Download [StanfordCoreNLP](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip) and extract the ZIP file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
+8. Download [StanfordCoreNLP](https://uni-duisburg-essen.sciebo.de/s/nO06q2wY0t5h8SO/download) and extract the ZIP file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
 
-9. Download [MSmarco model](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in the location `RIMA-Backend/transformers`
+9. Download [MSmarco model](https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in the location `RIMA-Backend/transformers`
 
 10. Download and install [Java JDK](https://www.oracle.com/java/technologies/downloads/)
 
-11. Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the `RIMA-Backend`
-
-12. In the command prompt to create the database
+11. In the command prompt to create the database
 
     ```
     python manage.py migrate
     ```
 
-13. Run the django server and do not close it
+12. Run the django server and do not close it
 
     ```
     python manage.py runserver
     ```
 
-14. Open a new command prompt with admin rights or terminal
+13. Open a new command prompt with admin rights or terminal
 
     - Move to the `RIMA-Backend` in your command prompt
 
@@ -101,10 +99,17 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
       pipenv shell
       ```
 
-    - Start the celery workers and do not close the command prompt
+    - Start the celery workers (using one of the suitable commands below) and do not close the command prompt
 
       ```
-      celery worker --app=interest_miner_api -l info -P eventlet
+      # For Windows if you have more than 4 cores
+      celery -A interest_miner_api worker --concurrency=4 -l info -P eventlet
+
+      # For Windows if you have less than 4 cores
+      celery -A server worker --pool=solo -l info
+
+      # For Linux: Atleast 4 cores. Set --concurrency value to 1 if you have less than 4 cores
+      celery -A interest_miner_api worker --concurrency=4 -l info
       ```
 
 #### Step 2: Installation Guide for RIMA-Frontend
@@ -117,47 +122,21 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 4. Type the command in the command prompt/terminal to install node packages
 
-    ```bash
-    npm ci
-    ```
+   ```bash
+   npm ci
+   ```
 
-    If you face issue with `npm ci` command, try `npm install` or `npm install --force` command. Caution: `npm install` and `npm install --force` will delete all the existing node packages, install the new ones and update the `package-lock.json` file. Please make sure you DO NOT push your changes to the `package-lock.json` file.
+   If you face issue with `npm ci` command, try `npm install` or `npm install --force` command. Caution: `npm install` and `npm install --force` will delete all the existing node packages, install the new ones and update the `package-lock.json` file. Please make sure you DO NOT push your changes to the `package-lock.json` file.
 
 5. After the packages are installed, type the following command to run the server
 
-    ```bash
-    npm start
-    ```
+   ```bash
+   npm start
+   ```
 
-    The server will run at [http://localhost:8080](http://localhost:8080)
+   The server will run at [http://localhost:8080](http://localhost:8080)
 
 6. Stop the server by pressing `Cntl + c` inside the command prompt
-
-### 🐳 Docker Installation Guide (Outdated)
-
-1. Download and install [Docker](https://www.docker.com/products/docker-desktop)
-
-2. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
-
-3. Download [StanfordCoreNLP](https://uni-duisburg-essen.sciebo.de/s/jADBrM5PUgVqMIr/download) and unzip the file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
-
-4. Download [MSmarco model](https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in `RIMA-Backend/transformers`
-
-5. Download the [GloVe model](https://uni-duisburg-essen.sciebo.de/s/cKZLWBtulWHoCaT/download) and unzip the model inside the `RIMA-Backend` folder
-
-6. Using your file explorer, go inside the directory `RIMA-Backend\config`, copy the twitter config file `rename_twitter_config.yaml` and paste it in the same folder. Rename the copied twitter config file to `twitter_config.yaml`
-
-7. Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
-
-8. Download and install [Node.js ver.12.13.0](https://nodejs.org/dist/v12.13.0). Using a terminal/command prompt, move to the `RIMA-Frontend/nodejs` and type `npm install`
-
-9. In the `RIMA-Frontend\nodejs` folder, rename the environment variable file from `.env.example` to `.env`
-
-10. Run the following command in the root directory `RIMA`
-
-    ```
-    docker-compose -f docker-compose-dev-alp.yml up --build
-    ```
 
 **FAQ**
 
