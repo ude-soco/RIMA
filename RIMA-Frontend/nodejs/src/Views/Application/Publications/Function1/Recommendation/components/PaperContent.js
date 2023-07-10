@@ -140,7 +140,7 @@ function Title({ paper, similarityScore }) {
         >
           <Grid item xs>
             <Typography
-              noWrap
+              // noWrap
               gutterBottom
               variant="h6"
               // dangerouslySetInnerHTML={{ __html: modified_title }}
@@ -159,7 +159,14 @@ function Title({ paper, similarityScore }) {
           </Grid>
         </Grid>
         <Grid item xs>
-          <Authors authorsList={paper.authors} />
+          <Grid container>
+            <Grid item>
+              <Authors authorsList={paper.authors} />
+            </Grid>
+            <Grid item style={{ paddingLeft: "6px" }}>
+              <Typography variant="body2">- ({paper.year})</Typography>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       {/* <Grid

@@ -180,8 +180,11 @@ export default function PublicationRecommendation() {
       .then((response, err) => {
         let rowArray = [];
         if (response.data) {
-          //Top 5
-          for (let i = 0; i < 5; i++) {
+          let responseLength = response.data.length
+          if (responseLength >= 5) {
+            responseLength = 5
+          } 
+          for (let i = 0; i < responseLength; i++) {
             rowArray.push({
               text: response.data[i].keyword,
               weight: response.data[i].weight,
@@ -199,7 +202,7 @@ export default function PublicationRecommendation() {
       })
       .catch((error) => {
         setState({ ...state, isLoding: false });
-        handleServerErrors(error, toast.error);
+        // handleServerErrors(error, toast.error);
       });
   };
   /**
