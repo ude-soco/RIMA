@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.5
-FROM --platform=linux/amd64 python:3.7-slim AS python
+FROM --platform=linux/amd64 python:3.8-slim AS python
 
 # Install dependencies
-ENV BUILD_DEPS "build-essential libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
+ENV BUILD_DEPS "build-essential pkg-config libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
 ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3 "
 RUN --mount=type=cache,target=/var/cache/apt,rw --mount=type=cache,target=/var/lib/apt,rw <<EOF
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
