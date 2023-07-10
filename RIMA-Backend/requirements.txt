@@ -20,7 +20,7 @@ drf-yasg==1.17.1
 gensim==3.8.3
 gunicorn==20.1.0
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#en_core_web_sm
-idna==2.10
+idna==3.4
 image
 importlib-metadata==1.7.0
 jellyfish==0.9.0
