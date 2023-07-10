@@ -225,13 +225,7 @@ TEMP_DIR = os.environ.get("TEMP_DIR", "../tmp")
 MODEL_DIR = os.environ.get("MODEL_DIR", "../model")
 PRELOAD_MODELS = os.environ.get("PRELOAD_MODELS", "false").lower() == "true"
 
-
-if not configuration["glove_model_file"]:
-    GLOVE_MODEL_FILE = None
-    GLOVE_MODEL_FILE_PATH = None
-else:
-    GLOVE_MODEL_FILE = os.path.join(MODEL_DIR, configuration["glove_model_file"])
-    GLOVE_MODEL_FILE_PATH = os.path.abspath(configuration["glove_model_file"])
+SEMANTIC_SCHOLAR = os.environ.get("SEMANTIC_SCHOLAR")
 
 if not configuration["transformer_model_file"]:
     TRANSFORMER_MODEL_FILE_PATH = None

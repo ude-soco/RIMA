@@ -1,13 +1,9 @@
 import requests
 from requests.auth import HTTPBasicAuth
 from langdetect import detect
-import os
-from dotenv import load_dotenv
+from django.conf import settings
 
-load_dotenv()
-
-SEMANTIC_SCHOLAR = os.environ.get("SEMANTIC_SCHOLAR")
-
+print(settings.SEMANTIC_SCHOLAR)
 
 class SemanticScholarAPI:
     def __init__(self):
@@ -15,7 +11,7 @@ class SemanticScholarAPI:
         self.API_URL_NEW = "https://api.semanticscholar.org/graph/v1"
         self.API_Search_URL = "https://api.semanticscholar.org/graph/v1/paper/search"  # API url for getting papers by keyword #LK
         auth = HTTPBasicAuth("", "")
-        headers = {"x-api-key": SEMANTIC_SCHOLAR}
+        headers = {"x-api-key": settings.SEMANTIC_SCHOLAR}
         self.HEADERS = headers
         self.AUTH = auth
 
