@@ -48,6 +48,7 @@ spec:
             port: 8080
           initialDelaySeconds: 120
           periodSeconds: 30
+          failureThreshold: 30 # (2 +) 15 minutes
         readinessProbe:
           httpGet:
             path: /api/accounts/data-import-status/
