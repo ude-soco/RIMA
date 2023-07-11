@@ -48,18 +48,19 @@ updates:
   - "python"
   - "RIMA-Backend"
   groups:
-    computing:
+    scipy-related:
       patterns:
       - "scipy"
       - "numpy"
-    queueing:
+    celery-related:
       patterns:
       - "celery"
       - "django-celery-beat"
       - "billiard"
       - "vine"
       - "amqp"
-    framework:
+      - "kombu"
+    django-related:
       patterns:
       - "django"
       - "django-cors-headers"
