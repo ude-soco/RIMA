@@ -27,11 +27,9 @@ Developed by ... at ... for ... since ...
 * Frontend: [socialcomputing/rima-frontend](https://hub.docker.com/repository/docker/socialcomputing/rima-frontend)
 * Model Downloader: [socialcomputing/rima-model-downloader](https://hub.docker.com/repository/docker/socialcomputing/rima-model-downloader)
 
-### Live deployments
+### Live instances
 
-* [Production](https://rima.sc.inko.cloud/) (tagged versions)
-* [Development](https://rima-dev.sc.inko.cloud/)
-* [Branch dev-alp](https://rima-dev-alp.sc.inko.cloud/)
+* Preview: [edge.rima.soco.inko.cloud](https://edge.rima.soco.inko.cloud/) ([branch `master`](https://github.com/ude-soco/CourseMapper-webserver/tree/master))
 
 
 ## Run on Docker
