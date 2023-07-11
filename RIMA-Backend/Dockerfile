@@ -17,12 +17,23 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log &&\
 RUN adduser --disabled-login --gecos "" -u 1000 app
 USER 1000
 WORKDIR /home/app
-ENV PATH "$PATH:/home/app/.local/bin"
+
+# Configure Python environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PIPENV_VENV_IN_PROJECT 1
+ENV PIPENV_VERBOSITY -1
+ENV VIRTUAL_ENV=/home/app/.venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install Python dependencies
-ENV  PYTHONUNBUFFERED 1
-COPY --chown=app:app requirements.txt requirements.txt
-RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 pip install --no-color --user -r requirements.txt
+COPY --chown=app:app Pipfile* .
+RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 --mount=type=cache,target=/home/app/.cache/pipenv,uid=1000 <<EOF
+  pip install --no-color pipenv &&
+  pipenv install --deploy &&
+  pipenv graph
+EOF
 
 # Clean up build dependencies
 USER root
