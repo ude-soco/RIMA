@@ -1,5 +1,5 @@
 amqp==2.5.2
-asgiref==3.6.0
+asgiref==3.7.2
 billiard==3.6.4.0
 blis==0.7.9
 catalogue==1.0.2
