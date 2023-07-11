@@ -42,7 +42,7 @@ updates:
   directory: "/RIMA-Backend"
   schedule:
     interval: "daily"
-  open-pull-requests-limit: 20
+  open-pull-requests-limit: 40
   labels:
   - "dependencies"
   - "python"
