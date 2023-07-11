@@ -57,7 +57,7 @@ segtok==1.5.9
 six==1.15.0
 spacy>=2.0.0,<4.0.0
 sqlparse==0.4.4
-srsly==1.0.6
+srsly==2.4.6
 thinc==7.4.6
 tqdm==4.65.0
 tweepy==3.10.0
