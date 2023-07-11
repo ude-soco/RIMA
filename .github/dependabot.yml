@@ -55,7 +55,6 @@ updates:
     celery-related:
       patterns:
       - "celery"
-      - "django-celery-beat"
       - "billiard"
       - "vine"
       - "amqp"
@@ -64,6 +63,8 @@ updates:
       patterns:
       - "django"
       - "django-cors-headers"
+      - "django-celery-beat"
+      - "django-timezone-field"
 
 - package-ecosystem: "docker"
   directory: "/model-downloader"
