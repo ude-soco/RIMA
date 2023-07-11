@@ -47,6 +47,22 @@ updates:
   - "dependencies"
   - "python"
   - "RIMA-Backend"
+  groups:
+    computing:
+      patterns:
+      - "scipy"
+      - "numpy"
+    queueing:
+      patterns:
+      - "celery"
+      - "django-celery-beat"
+      - "billiard"
+      - "vine"
+      - "amqp"
+    framework:
+      patterns:
+      - "django"
+      - "django-cors-headers"
 
 - package-ecosystem: "docker"
   directory: "/model-downloader"
