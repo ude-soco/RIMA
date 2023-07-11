@@ -5,7 +5,7 @@ blis==0.7.9
 catalogue==1.0.2
 celery==4.3.0
 certifi==2020.12.5
-chardet==3.0.4
+chardet==5.1.0
 click==8.1.4
 cymem==2.0.7
 decorator==5.1.1
