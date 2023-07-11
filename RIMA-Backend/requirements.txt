@@ -1,4 +1,4 @@
-amqp==2.5.2
+amqp==5.1.1
 asgiref==3.7.2
 billiard==3.6.4.0
 blis==0.7.9
