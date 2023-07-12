@@ -28,10 +28,10 @@ RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install Python dependencies
-COPY --chown=app:app requirements.txt .
+COPY --chown=app:app Pipfile* .
 RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 --mount=type=cache,target=/home/app/.cache/pipenv,uid=1000 <<EOF
   pip install --no-color pipenv &&
-  pipenv install -r requirements.txt &&
+  pipenv install &&
   pipenv graph
 EOF
 
