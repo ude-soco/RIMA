@@ -12,6 +12,4 @@ else
   echo "No Model Server configured; expecting model files present in: ${MODEL_DIR}"
 fi
 
-echo "Model files available:"
-find ${MODEL_DIR} -type f
-
+echo "$(find ${MODEL_DIR} -type f | wc -l) model files available"
