@@ -13,7 +13,7 @@ django-celery-beat = "*"
 django-celery-results = "*"
 django-celerybeat-status = "*"
 django-cors-headers = "*"
-django = "<3.0.0"
+django = "<4.0.0"
 drf-yasg = "*"
 en_core_web_sm = { file = 'https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#en_core_web_sm' }
 gensim = "*"
