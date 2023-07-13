@@ -37,7 +37,7 @@ const FilterButton = ({
         {optionsProps.map((option, index) => (
           <MenuItem key={option} onClick={() => handleToggleProps(index)}>
             <Checkbox checked={checkedProps[index]} />
-            show only publications of {option}
+            {option} publications
           </MenuItem>
         ))}
         <MenuItem>

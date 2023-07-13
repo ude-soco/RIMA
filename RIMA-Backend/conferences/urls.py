@@ -12,10 +12,14 @@ urlpatterns = [
          getAuthorPublicationsOverYears.as_view()),
     path("getAuthorPublicatinListInYear/<pk1>/<pk2>",
          getAuthorPublicatinInYear.as_view()),
+    path("getPublicationListBasedOnEventName/<pk1>/<pk2>",
+         getPublicationListBasedOnEventName.as_view()),
     path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
     path('getAllAvailabeAuthors/', getAllAvailableAuthors.as_view()),
-    path("getPublicationListBasedOnFilter/<pk1>/<pk2>/",
-         getPublicationListBasedOnFilter.as_view()),
+    path("getAuthorPublicationCountBasedConfs/<pk1>/<pk2>/",
+         getAuthorPublicationCountBasedConfs.as_view()),
+    path("getAllAuthorPublicationList/<pk1>/",
+         getAllAuthorPublicationList.as_view()),
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################

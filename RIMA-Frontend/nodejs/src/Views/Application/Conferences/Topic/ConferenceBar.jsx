@@ -363,7 +363,7 @@ export default function ConferenceBar(props) {
       </Grid>
 
       <Grid container component={Paper} className={classes.cardHeight}>
-        <Grid item xs>
+        <Grid item xs={12} lg={4}>
           <Typography variant="body2" gutterBottom>
             Conference Complete Name
           </Typography>
@@ -409,7 +409,7 @@ export default function ConferenceBar(props) {
           </Link>
         </Grid>
 
-        <Grid item xs>
+        <Grid item xs={12} lg={8}>
           <Typography variant="h5" gutterBottom>
             General Overview
           </Typography>

@@ -35,18 +35,24 @@ const AuthorDetails = ({ authorDataProp }) => {
           </Avatar>
         </Box>
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom>
-            {`Author Name: ${author_name}`}
-          </Typography>
-          <Typography variant="body2">
-            {`Author ID: ${semantic_scolar_author_id}`}
-          </Typography>
-          <Typography variant="body2">
-            {`Author Profile URL: `}
-            <Link href={author_url} target="_blank" rel="noopener noreferrer">
-              {author_url}
-            </Link>
-          </Typography>
+          <Grid>
+            <Typography variant="h5" gutterBottom>
+              {`Author Name: ${author_name}`}
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography variant="body2">
+              {`Author ID: ${semantic_scolar_author_id}`}
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography variant="body2">
+              {`Author Profile URL: `}
+              <Link href={author_url} target="_blank" rel="noopener noreferrer">
+                {author_url}
+              </Link>
+            </Typography>
+          </Grid>
         </CardContent>
       </Card>
     </Grid>

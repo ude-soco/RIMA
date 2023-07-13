@@ -1,11 +1,12 @@
 from conferences.models.graph_db_entities import *
 from collections import defaultdict
 from collections import Counter
+import re
 
 
-def get_author_network(authorName):
+def get_author_network(author_id):
     all_authors = []
-    author = Author.nodes.filter(author_name=authorName)
+    author = Author.nodes.filter(semantic_scolar_author_id=author_id)
     author_nodes = author.co_authors.all()
 
     author_nodes.extend(author)
@@ -36,38 +37,93 @@ def handle_coauthor_data(author_nodes):
     return event_authors_list + all_author_couthors_list
 
 
-def get_author_pubs_overYears(author_name):
-    author_node = Author.nodes.get_or_none(author_name=author_name.strip())
+def get_author_pubs_overYears(author_id):
+    author_node = Author.nodes.get_or_none(
+        semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
-    
-    pubs_counst=get_publications_with_years(author_pubs)
+
+    pubs_counst = get_publications_with_years_event_based(author_pubs)
 
     return pubs_counst
 
-def filter_publication_basedOn_confs(author_name, selectedConfs):
-    author_node = Author.nodes.get_or_none(author_name=author_name.strip())
+
+def filter_publication_basedOn_confs(author_id, selectedConfs):
+    author_node = Author.nodes.get_or_none(
+        semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
-    
-    filtered_pubs=[pub for pub in author_pubs if pub.published_in_Confs[0].conference_name_abbr.strip() 
-                 in selectedConfs]
-   
-    pubs_counst=get_publications_with_years(filtered_pubs)
+
+    filtered_pubs = [pub for pub in author_pubs if pub.published_in_Confs[0].conference_name_abbr.strip()
+                     in selectedConfs]
+
+    pubs_counst = get_publications_with_years_event_based(filtered_pubs)
     return pubs_counst
 
-def get_publications_with_years(author_pubs):
+
+def get_publications_with_years_conf_based(author_pubs):
     pubs_counst = {}
 
     years = [pub.years for pub in author_pubs]
-    publicationsConfs=[pub.published_in_Confs[0].conference_name_abbr for pub in author_pubs]
-    publicationsConfs=set(publicationsConfs)
+    publicationsConfs = [
+        pub.published_in_Confs[0].conference_name_abbr for pub in author_pubs]
+    publicationsConfs = set(publicationsConfs)
     sorted_years = sorted(years)
     counter = Counter(sorted_years)
     identities = list(counter.keys())
-    pubs_counst = {"years": identities, 
+    pubs_counst = {"years": identities,
                    "count": list(counter.values()),
-                   "conferences":publicationsConfs}
+                   "conferences": publicationsConfs}
 
     return pubs_counst
+
+
+def get_publications_with_years_event_based(author_pubs):
+    pubs_counst = {}
+
+    years = [pub.years for pub in author_pubs]
+    years = [year[:4] for year in years]
+
+    events = [pub.published_in[0].conference_event_name_abbr for pub in author_pubs]
+    publicationsConfs = [
+        pub.published_in_Confs[0].conference_name_abbr for pub in author_pubs]
+
+    publicationsConfs = set(publicationsConfs)
+    counter = Counter(events)
+    category_data = defaultdict(lambda: defaultdict(int))
+    pattern = re.compile(r'(\D+)(\d+-*\d*)')
+
+    for key, count in counter.items():
+        match = pattern.match(key)
+        if match:
+            category, year = match.groups()[:2]
+            year = year.split("-")[0]
+            category_data[category][year] += count
+            
+    print("category_data: ", category_data)
+    identities = sorted(set(years))
+    series = []
+    for category, years in category_data.items():
+        data = []
+        for year in identities:
+            if year in years:
+                data.append(years[year])
+            else:
+                data.append(0)
+        series.append({"name": category, "data": data})
+
+    pubs_counst = {
+        "series": series,
+        "categories": identities,
+        "conferences": publicationsConfs
+    }
+
+    return pubs_counst
+
+
+def get_author_publications(author_id):
+    author_node = Author.nodes.get_or_none(
+        semantic_scolar_author_id=author_id.strip())
+    author_pubs = author_node.published.all()
+    return author_pubs
 
 
 def get_event_author_set_VennDiagram(event_name):
@@ -80,9 +136,10 @@ def get_event_author_set_VennDiagram(event_name):
     return set(event_authors_list)
 
 
-def get_author_detailed_info(authorName):
+def get_author_detailed_info(author_id):
     author_data = {}
-    author_node = Author.nodes.get_or_none(author_name=authorName.strip())
+    author_node = Author.nodes.get_or_none(
+        semantic_scolar_author_id=author_id.strip())
     author_keywords = author_node.keywords.all()
     author_interests = author_node.topics.all()
     author_publications = len(author_node.published.all())
@@ -296,15 +353,24 @@ def get_available_events():
 def getAllAuthors():
     authors = Author.nodes.all()
     authors_Name = [{"name": author.author_name,
-                     "label": author.author_name} for author in authors]
+                     "label": author.semantic_scolar_author_id} for author in authors]
     return authors_Name
 
 
 def get_Author_Pubs_InYear(author_name, pub_year):
     author_node = Author.nodes.filter(author_name=author_name.strip())
     author_pubs = author_node.published.all()
-    print("author_pubs: ", author_pubs)
+
     pubs = [publication for publication in author_pubs
             if publication.years == pub_year.strip()]
+
+    return pubs
+
+
+def filter_publication_basedOn_Events(publication_List, events):
+    pattern = re.compile(r'(\D+\d+)(?:-\d+)?')
+
+    pubs = [pub for pub in publication_List
+            if pattern.match(pub.published_in[0].conference_event_name_abbr).group(1) in events]
 
     return pubs

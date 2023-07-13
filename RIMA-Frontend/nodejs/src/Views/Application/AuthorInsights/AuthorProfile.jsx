@@ -13,6 +13,7 @@ import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import NodeLinkDiagram from "./NodeLinkDiagraom";
 import AuthorDetails from "./AuthorDetails";
 import AuthorOverview from "./AuthorOverview";
+
 const AuthorProfile = () => {
   const [selectedAuthor, setSelectedAuthor] = useState("");
   const [authors, setAuthors] = useState([]);
@@ -82,6 +83,7 @@ const AuthorProfile = () => {
               disablePortal
               id="combo-box-demo"
               options={authors}
+              getOptionLabel={(option) => option.name}
               renderInput={(params) => <TextField {...params} label="Author" />}
               sx={{ width: "100%" }}
               onChange={(event, newInputValue) => {
@@ -96,26 +98,26 @@ const AuthorProfile = () => {
           </Grid>
         </Grid>
       </Paper>
-      <Paper sx={{ width: "100%", margin: "20px" }}>
-        <Grid
-          container
-          justify="center"
-          alignItems="flex-start"
-          columnSpacing={{ xs: 1, sm: 2, md: 4 }}
-          sx={{ width: "100%" }}
-        >
-          <Grid item xs={12} lg={5} sx={{ margin: "20px" }}>
-            {authorData && <AuthorDetails authorDataProp={authorData} />}
+      {authorData && (
+        <Paper sx={{ width: "100%", margin: "20px" }}>
+          <Grid
+            container
+            justify="center"
+            alignItems="flex-start"
+            columnSpacing={{ xs: 1, sm: 2, md: 4 }}
+            sx={{ width: "100%" }}
+          >
+            <Grid item xs={12} lg={5} sx={{ margin: "20px" }}>
+              {authorData && <AuthorDetails authorDataProp={authorData} />}
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              {authorData && (
+                <AuthorOverview authorNameProps={selectedAuthor} />
+              )}
+            </Grid>
           </Grid>
-          <Grid item xs={12} lg={6}>
-            {authorData && (
-              <AuthorOverview authorNameProps={selectedAuthor.label}
-                />
-            )}
-          </Grid>
-        </Grid>
-      </Paper>
-
+        </Paper>
+      )}
       <Grid item xs={12}>
         <NodeLinkDiagram networkDataProp={networkData} />
       </Grid>

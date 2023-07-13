@@ -17,14 +17,15 @@ const PublicationDialog = ({
   papersProps,
   handleCloseDiaglog,
   originalKeywordsProps,
+  ConfsOrEventsNameProps,
 }) => {
-  const [papers, setPapers] = useState(papersProps);
-  const [originalKeywords, setOriginalKeywords] = useState([]);
-
   return (
     <>
       <Dialog open={openDialogProps} fullWidth={true} maxWidth="lg">
-        <DialogTitle>Publications List</DialogTitle>
+        <DialogTitle>
+          Publications List in{" "}
+          {Array.from(new Set(papersProps.map((pub) => pub.event))).join(",")}
+        </DialogTitle>
         <DialogContent>
           <Paper elevation={0}>
             <Grid container>
