@@ -2,6 +2,8 @@
 FROM node:18.16.1 as build
 WORKDIR /app
 
+RUN apt-get update || : && apt-get install python3 -yq
+
 COPY ./nodejs/package*.json ./
 RUN  npm ci --production 2>&1
 
