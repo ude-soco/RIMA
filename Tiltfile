@@ -25,6 +25,6 @@ docker_build('rima-backend', './RIMA-Backend',
   live_update = [
     fall_back_on(['./RIMA-Backend/Dockerfile']),
     sync('./RIMA-Backend', '/home/app'),
-    run('cd /home/app && pip install --no-color --user -r requirements.txt', trigger = './RIMA-Backend/requirements.txt'),
+    run('cd /home/app && pipenv install', trigger = './RIMA-Backend/Pipfile'),
   ]
 )

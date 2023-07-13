@@ -8,7 +8,7 @@ from accounts.models import User
 from interests.models import Tweet, Paper, ShortTermInterest
 from .utils import generate_long_term_model, generate_short_term_model
 
-from celery.decorators import task
+from celery import shared_task
 from common.config import BaseCeleryTask
 
 from .twitter_utils import TwitterAPI
@@ -18,10 +18,10 @@ from .semantic_scholar import SemanticScholarAPI
 utc = pytz.timezone('UTC')
 
 
-@task(
+@shared_task(
     name="import_tweets",
     base=BaseCeleryTask,
-    autoretry_for=(tweepy.RateLimitError, ),
+    autoretry_for=(tweepy.errors.TooManyRequests, ),
     retry_kwargs={
         'max_retries': 5,
         'countdown': 30 * 60
@@ -51,7 +51,7 @@ def import_tweets():
         print("Tweets import completed for {}".format(user.username))
 
 
-@task(
+@shared_task(
     name="import_papers",
     base=BaseCeleryTask,
     autoretry_for=(ConnectionRefusedError, ),
@@ -93,10 +93,10 @@ def __import_tweets_for_user(user_id):
     print("Tweets import completed for {}".format(user.username))
 
 
-@task(
+@shared_task(
     name="import_tweets_for_user",
     base=BaseCeleryTask,
-    autoretry_for=(tweepy.RateLimitError, ),
+    autoretry_for=(tweepy.errors.TooManyRequests, ),
     retry_kwargs={
         'max_retries': 5,
         'countdown': 30 * 60
@@ -136,7 +136,7 @@ def __import_papers_for_user(user_id):
     print("Papers import completed for {}".format(user.username))
 
 
-@task(
+@shared_task(
     name="import_papers_for_user",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),
@@ -149,7 +149,7 @@ def import_papers_for_user(user_id):
     __import_papers_for_user(user_id)
 
 
-@task(
+@shared_task(
     name="update_short_term_interest_model",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),
@@ -166,7 +166,7 @@ def update_short_term_interest_model():
             generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
 
 
-@task(
+@shared_task(
     name="update_long_term_interest_model",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),
@@ -188,7 +188,7 @@ def __update_short_term_interest_model_for_user(user_id):
         generate_short_term_model(user.id, ShortTermInterest.SCHOLAR)
 
 
-@task(
+@shared_task(
     name="update_short_term_interest_model_for_user",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),
@@ -201,7 +201,7 @@ def update_short_term_interest_model_for_user(user_id):
     __update_short_term_interest_model_for_user(user_id)
 
 
-@task(
+@shared_task(
     name="update_long_term_interest_model_for_user",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),
@@ -214,7 +214,7 @@ def update_long_term_interest_model_for_user(user_id):
     generate_long_term_model(user_id)
 
 
-@task(
+@shared_task(
     name="import_user_data",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),
@@ -237,7 +237,7 @@ def import_user_data(user_id):
     generate_long_term_model(user_id)
 
 
-@task(
+@shared_task(
     name="import_user_paperdata",
     base=BaseCeleryTask,
     autoretry_for=(Exception, ),

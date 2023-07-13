@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
-from gensim.models.wrappers import FastText
+from gensim.models.fasttext import FastText
 from nltk.corpus import stopwords
 from django.conf import settings
 from interests.Semantic_Similarity.Word_Embedding.data_models import glove_model

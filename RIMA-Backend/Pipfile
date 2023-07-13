@@ -1,0 +1,41 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+amqp = "*"
+asgiref = "*"
+celery = "<5.0.0"
+chardet = "*"
+decorator = "*"
+django-celery-beat = "*"
+django-celery-results = "*"
+django-celerybeat-status = "*"
+django-cors-headers = "*"
+django = "<3.0.0"
+drf-yasg = "*"
+en_core_web_sm = { file = 'https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#en_core_web_sm' }
+gensim = "*"
+gunicorn = "*"
+image = "*"
+importlib-metadata = "*"
+jellyfish = "*"
+langdetect = "*"
+matplotlib-venn-wordcloud = "*"
+monthdelta = "*"
+mpld3 = "*"
+networkx = "*"
+nltk = "*"
+pandas = "*"
+pattern = "*"
+psycopg2 = "*"
+pysocks = "*"
+redis = "*"
+retrying = "*"
+scikit-learn = "*"
+segtok = "*"
+tweepy = "*"
+wikipedia-api = "*"
+
+[dev-packages]

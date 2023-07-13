@@ -116,4 +116,5 @@ build/*
 connect_to_server.sh
 deploy.sh
 static/*
+requirements*.txt
 venv
