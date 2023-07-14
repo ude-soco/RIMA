@@ -29,6 +29,7 @@ Developed by ... at ... for ... since ...
 
 ### Live instances
 
+* Production: [rima.soco.inko.cloud](https://rima.soco.inko.cloud/) (latest [release](https://github.com/ude-soco/RIMA/releases))
 * Preview: [edge.rima.soco.inko.cloud](https://edge.rima.soco.inko.cloud/) ([branch `master`](https://github.com/ude-soco/CourseMapper-webserver/tree/master))
 
 
