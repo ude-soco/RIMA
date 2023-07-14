@@ -8,4 +8,4 @@ echo "Migrating database ..."
 GLOVE_MODEL_FILE="" python manage.py migrate --verbosity 0
 
 echo "Starting Celery job queue ..."
-celery worker --app=interest_miner_api --concurrency=1 -l warning
+celery -A interest_miner_api worker -c 1 -l warning

@@ -16,7 +16,7 @@ from .utils import (
     regenerate_long_term_model,
 )
 
-from celery.decorators import task
+from celery import task
 from common.config import BaseCeleryTask
 
 from .twitter_utils import TwitterAPI
@@ -30,8 +30,11 @@ utc = pytz.timezone("UTC")
 @task(
     name="import_tweets",
     base=BaseCeleryTask,
-    # autoretry_for=(tweepy.RateLimitError, ),
-    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
+    autoretry_for=(tweepy.errors.TooManyRequests, ),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 30 * 60
+    },
 )
 def import_tweets():
     for user in User.objects.exclude(twitter_account_id=None):
@@ -105,8 +108,11 @@ def __import_tweets_for_user(user_id):
 @task(
     name="import_tweets_for_user",
     base=BaseCeleryTask,
-    # autoretry_for=(tweepy.RateLimitError, ),
-    retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
+    autoretry_for=(tweepy.errors.TooManyRequests, ),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 30 * 60
+    },
 )
 def import_tweets_for_user(user_id):
     __import_tweets_for_user(user_id)

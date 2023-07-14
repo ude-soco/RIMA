@@ -1,10 +1,21 @@
 version: 2
 updates:
-
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
-    interval: "daily"
+    interval: "weekly"
+
+- package-ecosystem: "docker"
+  directory: "/RIMA-Frontend"
+  schedule:
+    interval: "weekly"
+  ignore:
+  - dependency-name: "node"
+    versions: ["15.x", "17.x", "19.x", "21.x", "23.x", "25.x"]
+  labels:
+  - "dependencies"
+  - "docker"
+  - "RIMA-Frontend"
 
 - package-ecosystem: "npm"
   directory: "/RIMA-Frontend/nodejs"
@@ -13,11 +24,76 @@ updates:
   ignore:
   - dependency-name: "*"
     update-types: ["version-update:semver-major"]
+  labels:
+  - "dependencies"
+  - "javascript"
+  - "RIMA-Frontend"
+
+- package-ecosystem: "docker"
+  directory: "/RIMA-Backend"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "RIMA-Backend"
 
 - package-ecosystem: "pip"
   directory: "/RIMA-Backend"
   schedule:
     interval: "daily"
+  open-pull-requests-limit: 40
+  labels:
+  - "dependencies"
+  - "python"
+  - "RIMA-Backend"
+  groups:
+    scipy-related:
+      patterns:
+      - "scipy"
+      - "numpy"
+    celery-related:
+      patterns:
+      - "celery"
+      - "billiard"
+      - "vine"
+      - "amqp"
+      - "kombu"
+    django-related:
+      patterns:
+      - "django"
+      - "django-cors-headers"
+      - "django-timezone-field"
+      - "django-celery-beat"
+      - "django-celery-results"
+      - "django-celerybeat-status"
+
+- package-ecosystem: "docker"
+  directory: "/model-downloader"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "Model Downloader"
+
+- package-ecosystem: "pip"
+  directory: "/model-downloader"
+  schedule:
+    interval: "daily"
   ignore:
   - dependency-name: "*"
     update-types: ["version-update:semver-major"]
+  labels:
+  - "dependencies"
+  - "python"
+  - "Model Downloader"
+
+- package-ecosystem: "docker"
+  directory: "/model-server"
+  schedule:
+    interval: "weekly"
+  labels:
+  - "dependencies"
+  - "docker"
+  - "Model Server"

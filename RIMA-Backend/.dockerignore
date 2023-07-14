@@ -1,11 +1,15 @@
 .dockerignore
 .DS_Store
+.env
+.gitignore
+**/*.pyc
 /*.md
 Dockerfile
-venv
 example.env
 example.flaskenv
 Dockerfile.dev
 .env
 README.md
 **/*.pyc
+requirements*.txt
+venv

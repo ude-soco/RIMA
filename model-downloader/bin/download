@@ -10,10 +10,10 @@ if [ -f "$GLOVE_MODEL_FILE_PATH" ]; then
 else
   echo "$GLOVE_MODEL_FILE_PATH missing; downloading now ..."
   mkdir -p -- "${GLOVE_MODEL_FILE_PATH%/*}"
-  $HOME/.local/bin/gdown $GLOVE_MODEL_GDRIVE_ID -O $GLOVE_MODEL_FILE_PATH
+  $HOME/.local/bin/gdown "${GLOVE_MODEL_GDRIVE_ID}&confirm=t" -O $GLOVE_MODEL_FILE_PATH
 
   if [ ! -f "$GLOVE_MODEL_FILE_PATH" ]; then
-    >&2 echo "GloVe model not downloaded, aborting."
+    >&2 echo "GloVe model not downloaded, aborting"
     exit 1
   fi
 fi
@@ -25,6 +25,16 @@ else
   echo "${MODEL_DIR}/${LDA_MODEL_FILE} missing; downloading now ..."
   wget --continue -O "${TEMP_DIR}/lda.gz" ${LDA_MODEL_URL}
   mkdir -p `dirname ${MODEL_DIR}/${LDA_MODEL_FILE}` && mv -f "${TEMP_DIR}/lda.gz" ${MODEL_DIR}/${LDA_MODEL_FILE}
+fi
+
+# ENV NLTK_MODEL_DIR=nltk
+if [ -d "/home/app/nltk_data" ]; then
+  echo "NLTK data packaged in container image; copying now ..."
+  mkdir -p $MODEL_DIR/$NLTK_MODEL_DIR
+  cp -Rf /home/app/nltk_data/* $MODEL_DIR/$NLTK_MODEL_DIR
+else
+  echo "NLTK data not packaged in container image;  downloading now ..."
+  python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
 fi
 
 if [ -d "${MODEL_DIR}/stanford-corenlp/" ]; then
@@ -52,3 +62,4 @@ else
 fi
 
 touch "${MODEL_DIR}/.done"
+echo "Model downloads succeeded"

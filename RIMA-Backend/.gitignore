@@ -1,0 +1,14 @@
+/config/twitter_config.yaml
+/datatest_word2vec.txt
+/interests/Keyword_Extractor/Algorithms/auxiliary_data
+/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
+/interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27
+/interests/Keyword_Extractor/Algorithms/stanford-corenlp-full-2018-02-27
+/scibert_scivocab_uncased/
+/specter/
+/transformers/all_distilroberta
+/transformers/all_minilm
+/transformers/all_mpnet
+/transformers/msmarco
+/USE_model/
+/venv

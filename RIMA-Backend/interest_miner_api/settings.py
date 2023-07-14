@@ -216,6 +216,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 60  # 1 hour timeout
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
@@ -233,6 +234,13 @@ else:
     TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(
         configuration["transformer_model_file"]
     )
+
+if not os.environ.get("NLTK_DATA"):
+    if os.environ.get("NLTK_MODEL_DIR"):
+        os.environ["NLTK_DATA"] = os.path.join(
+            MODEL_DIR,
+            os.environ.get("NLTK_MODEL_DIR")
+        )
 
 if not configuration["stanfordcorenlp_file"]:
     STANFORDCORENLP = None
