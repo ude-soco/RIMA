@@ -3,21 +3,6 @@ set -euo pipefail
 
 rm -f "${MODEL_DIR}/.done"
 
-# ENV GLOVE_MODEL_FILE=glove/datatest_word2vec.txt
-GLOVE_MODEL_FILE_PATH="${MODEL_DIR}/${GLOVE_MODEL_FILE}"
-if [ -f "$GLOVE_MODEL_FILE_PATH" ]; then
-  echo "$GLOVE_MODEL_FILE_PATH already present"
-else
-  echo "$GLOVE_MODEL_FILE_PATH missing; downloading now ..."
-  mkdir -p -- "${GLOVE_MODEL_FILE_PATH%/*}"
-  $HOME/.local/bin/gdown "${GLOVE_MODEL_GDRIVE_ID}&confirm=t" -O $GLOVE_MODEL_FILE_PATH
-
-  if [ ! -f "$GLOVE_MODEL_FILE_PATH" ]; then
-    >&2 echo "GloVe model not downloaded, aborting"
-    exit 1
-  fi
-fi
-
 # ENV LDA_MODEL_FILE=keyword_extractor/lda-1000-semeval2010.py3.pickle.gz
 if [ -f "${MODEL_DIR}/${LDA_MODEL_FILE}" ]; then
   echo "${MODEL_DIR}/${LDA_MODEL_FILE} already present"

@@ -9,8 +9,6 @@ This is a script for fetching model files required by the main application from 
 | Variable                | Purpose                        |
 |------------------------ | ------------------------------ |
 | MODEL_PATH              | Destination (directory)        |
-| GLOVE_MODEL_GDRIVE_ID   | Source (Google Drive id)       |
-| GLOVE_MODEL_FILE        | Destination (file name) |
 
 
 ## Possible usage patterns

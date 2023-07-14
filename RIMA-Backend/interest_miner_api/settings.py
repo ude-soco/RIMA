@@ -308,14 +308,6 @@ else:
 #     os.environ.get("LDA_MODEL_FILE", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
 # )
 
-# if os.environ.get("GLOVE_MODEL_FILE"):
-#     GLOVE_MODEL_FILE_PATH = os.path.join(
-#         MODEL_DIR,
-#         os.environ.get("GLOVE_MODEL_FILE")
-#     )
-# else:
-#     GLOVE_MODEL_FILE_PATH = None
-
 # use bellow line if use_model is not used
 # USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
 # use bellow line for USE_model after downloading it

@@ -168,8 +168,8 @@ A. Delete the python virtual environment, db.sqllite3 file inside RIMA-Backend f
 - RIMA-Frontend
   - web: User-facing React (Node.js) UI, offering ...
 - model:
-  - downloader: Bash, fetches GloVe model from Google Drive
-  - server: nginx, serves GloVe model to RIMA-Backend via HTTP
+  - downloader: Bash, fetches model files from Google Drive
+  - server: nginx, serves model files to RIMA-Backend via HTTP
 
 ## Official builds and deployments
 
