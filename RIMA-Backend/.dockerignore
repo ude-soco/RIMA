@@ -1,5 +1,8 @@
 .dockerignore
 .DS_Store
+.env
+.gitignore
+**/*.pyc
 /*.md
 Dockerfile
 requirements*.txt

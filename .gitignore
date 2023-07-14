@@ -103,18 +103,19 @@ dist
 # TernJS port file
 .tern-port
 
-
 .DS_Store
 .envrc
-.idea/*
-.vscode/*
+.idea
+.vscode
+*.iml
 *.pyc
 *.sqlite3
 */__pycache__/*
+/RIMA-Frontend/nodejs/.env
 /tmp/*
 build/*
 connect_to_server.sh
 deploy.sh
-static/*
 requirements*.txt
+static/*
 venv
