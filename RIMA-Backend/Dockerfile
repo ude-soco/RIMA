@@ -31,8 +31,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY --chown=app:app Pipfile* .
 RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 --mount=type=cache,target=/home/app/.cache/pipenv,uid=1000 <<EOF
   pip install --no-color pipenv &&
-  pipenv install --deploy &&
-  pipenv graph
+  pipenv install --deploy
 EOF
 
 # Clean up build dependencies
