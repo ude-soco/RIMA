@@ -1,6 +1,8 @@
 from conferences.models.graph_db_entities import *
 from collections import defaultdict
+from collections import OrderedDict
 from collections import Counter
+import ast
 import re
 
 
@@ -97,7 +99,7 @@ def get_publications_with_years_event_based(author_pubs):
             category, year = match.groups()[:2]
             year = year.split("-")[0]
             category_data[category][year] += count
-            
+
     print("category_data: ", category_data)
     identities = sorted(set(years))
     series = []
@@ -120,7 +122,7 @@ def get_publications_with_years_event_based(author_pubs):
 
 
 def get_author_publications(author_id):
-    author_node = Author.nodes.get_or_none(
+    author_node = Author.nodes.filter(
         semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
     return author_pubs
@@ -254,10 +256,31 @@ def generate_pub_citations_info(publication_node):
               including the number of authors, the intent, the level of influence, the paper ID, the title, the venue,
               and the year.
     """
-    citations = publication_node.citiations
+    citationsString = publication_node.citiations
+    citations = ast.literal_eval(citationsString)
     publication_citations_detailed_info = []
     for obj in citations:
         publication_citations_detailed_info.append(
+            {
+                "no_ofauthors": obj["authors"],
+                "intent": obj["intent"],
+                "isInfluential": obj["isInfluential"],
+                "authors": obj["authors"],
+                "paper Id": obj["paperId"],
+                "title": obj["title"],
+                "venue": obj["venue"],
+                "year": obj["year"]
+            }
+        )
+    return publication_citations_detailed_info
+
+
+def generate_pub_citations_Count(publication_node):
+
+    citations = publication_node.citiations
+    publication_citations_count = []
+    for obj in citations:
+        publication_citations_count.append(
             {
                 "no of authors": obj.authors,
                 "intent": obj.intent,
@@ -270,7 +293,7 @@ def generate_pub_citations_info(publication_node):
 
             }
         )
-    return publication_citations_detailed_info
+    return publication_citations_count
 
 
 def find_similar_authors_by_shared_keywords(author_id):
@@ -350,11 +373,56 @@ def get_available_events():
     return events
 
 
-def getAllAuthors():
-    authors = Author.nodes.all()
-    authors_Name = [{"name": author.author_name,
-                     "label": author.semantic_scolar_author_id} for author in authors]
-    return authors_Name
+def getAllAuthors(conferences):
+    if "All Conferences" in conferences:
+        confs = Conference.nodes.all()
+        conferences = [conf.conference_name_abbr for conf in confs]
+
+    all_authors = []
+    for conf in conferences:
+        authors = Conference.nodes.filter(conference_name_abbr=conf).authors
+        all_authors.extend(authors)
+
+    authors_Names = ([{"name": author.author_name,
+                       "label": author.semantic_scolar_author_id} for author in all_authors])
+
+    authors_dict = {author["label"]: author for author in authors_Names}
+    authors_Names = list(authors_dict.values())
+
+    return authors_Names
+
+
+def get_Most_Published_authors(conferences):
+    data = []
+    if "All Conferences" in conferences:
+        allAuthors = Author.nodes.all()
+        data = sort_authors(allAuthors)
+
+    else:
+        all_authors = []
+        print("conferences", conferences)
+        for conf in conferences:
+            print("conf: ", conf)
+            authors = Conference.nodes.filter(
+                conference_name_abbr=conf).authors
+            all_authors.extend(authors)
+
+        data = sort_authors(all_authors)
+
+    return data
+
+
+def sort_authors(authors):
+    author_pubs_counts = [{"label": author.semantic_scolar_author_id,
+                           "name": author.author_name,
+                           "count": len(author.published.all())} for author in authors]
+    data = sorted(author_pubs_counts,
+                  key=lambda x: x["count"], reverse=True)
+
+    author_dict = {author["label"]: author for author in data}
+    data = list(author_dict.values())
+
+    return data
 
 
 def get_Author_Pubs_InYear(author_name, pub_year):
@@ -374,3 +442,90 @@ def filter_publication_basedOn_Events(publication_List, events):
             if pattern.match(pub.published_in[0].conference_event_name_abbr).group(1) in events]
 
     return pubs
+
+
+def get_available_confs():
+    confs = Conference.nodes.all()
+    conferences = [{"name": conference.conference_name_abbr,
+                    "label": conference.conference_name_abbr} for conference in confs]
+    conferences.append({
+        "name": "All Conferences",
+        "label": "All Conferences"
+    })
+
+    return conferences
+
+
+def get_Author_Pubs_Citations_Analysis(author_name):
+    pubs = get_author_publications(author_name)
+    data = []
+    for pub in pubs:
+        citations_detalis = generate_pub_citations_info(pub)
+        data.extend(citations_detalis)
+
+    print("ciatation detailss : ", data)
+    return data
+
+
+def get_Author_Pubs_Citations_OverTime(author_id):
+    pubs = get_author_publications(author_id)
+    pubs_counts = get_publications_with_years_event_based2(pubs)
+    return pubs_counts
+
+
+def get_publications_with_years_event_based2(author_pubs):
+    print("get_publications_with_years_event_based2 called")
+    pubs_counst = {}
+
+    years = [pub.years for pub in author_pubs]
+    years = [year[:4] for year in years]
+
+    events_pubs1 = [extract_year(pub.published_in[0].conference_event_name_abbr)
+                    for pub in author_pubs]
+    counts = Counter(events_pubs1)
+    sorted_countes = OrderedDict(sorted(counts.items()))
+    publications = list(sorted_countes.values())
+
+    events_pubs = [{"year":  extract_year(pub.published_in[0].conference_event_name_abbr),
+                    "citationsCounts": len(ast.literal_eval(pub.citiations))}
+                   for pub in author_pubs]
+
+    event_publication_counts = defaultdict(int)
+    for item in events_pubs:
+        event_publication_counts[item['year']] += item['citationsCounts']
+
+    result = [{'year': event, 'citationsCounts': count}
+              for event, count in event_publication_counts.items()]
+
+    data = sorted(result,
+                  key=lambda x: x["year"], reverse=False)
+
+    categories = [obj["year"] for obj in data]
+    citations_count = [obj["citationsCounts"] for obj in data]
+
+    citations = {"name": "Citations",
+                 "type": "line",
+                 "data": citations_count}
+
+    publications = {"name": "Publications",
+                    "type": "column",
+                    "data": publications}
+
+    publicationsConfs = [
+        pub.published_in_Confs[0].conference_name_abbr for pub in author_pubs]
+    author_pubs = [pub for pub in author_pubs]
+
+    publicationsConfs = set(publicationsConfs)
+
+    final_data = {
+        "series": [publications, citations],
+        "categories": categories,
+        "conferences": publicationsConfs
+    }
+
+    return final_data
+
+
+def extract_year(event):
+    match = re.search(r'\d{4}', event)
+    return match.group(0) if match else None

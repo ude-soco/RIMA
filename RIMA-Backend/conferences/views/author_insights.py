@@ -231,5 +231,62 @@ class getVennDiagramDate(APIView):
 
 class getAllAvailableAuthors(APIView):
     def get(self, request, *args, **kwargs):
-        authors = authorInsightsUtil.getAllAuthors()
+        confs = Conference.nodes.all()
+        confs = [conf.conference_name_abbr for conf in confs]
+        authors = authorInsightsUtil.getAllAuthors(confs)
         return Response(authors)
+
+
+class getAllAvailabeAuthorsFilterBased(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+
+        print("url_splits_slash: ", url_splits_slash)
+        selectedConf = url_splits_slash[-2].split("&")
+        mostPublished = url_splits_slash[-3]
+        print("selectedConf: ", selectedConf)
+        print("mostPublished: ", mostPublished)
+        orderedAuthors = []
+        if mostPublished == "true":
+            orderedAuthors = authorInsightsUtil.get_Most_Published_authors(
+                selectedConf)
+
+        else:
+
+            orderedAuthors = authorInsightsUtil.getAllAuthors(selectedConf)
+
+        return Response(orderedAuthors)
+
+
+class getAllAvailabelConfs(APIView):
+    def get(self, request, *args, **kwargs):
+        conferences = authorInsightsUtil.get_available_confs()
+        return Response(conferences)
+
+
+class getAllAvailabelEvents(APIView):
+    def get(self, request, *args, **kwargs):
+
+        events = authorInsightsUtil.get_available_events()
+        confs = authorInsightsUtil.get_available_confs()
+
+        events = [{"name": event.conference_event_name_abbr,
+                   "label": event.conference_event_name_abbr} for event in events]
+
+        confs.extend(events)
+
+        return Response(confs)
+
+
+class getAuthorPublicationsCitations(APIView):
+    def get(self, request, *args, **kwargs):
+        print("getAuthorPublicationsCitations called")
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        autorName = url_splits_slash[-2]
+        print("author: ", autorName)
+        data = authorInsightsUtil.get_Author_Pubs_Citations_OverTime(autorName)
+
+        print("data: ", data)
+        return Response(data)

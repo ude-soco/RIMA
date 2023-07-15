@@ -11,7 +11,7 @@ const StackedBarChart = ({ DataProps, loader }) => {
     setChartData(DataProps);
   }, [DataProps]);
   return (
-    <Grid container xs={12} style={{ padding: "1%", marginTop: "2%" }}>
+    <Grid container xs={12} style={{ padding: "2%", marginTop: "2%" }}>
       <ActiveLoader height={50} width={50} visible={loader} />
       <Grid item xs={12}>
         <ReactApexChart
@@ -19,6 +19,7 @@ const StackedBarChart = ({ DataProps, loader }) => {
           series={chartData.series}
           type="bar"
           width="100%"
+          height={350}
         />
       </Grid>
     </Grid>

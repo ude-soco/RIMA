@@ -373,7 +373,7 @@ class NewSilmilarityEvolution extends Component {
                     width: "400px",
                     color: "#8E8E8E",
                     border: "1px solid #BDBDBD",
-                    zIndex: 999, // Add this line
+                    zIndex: 999, 
                   }}
                 >
                   <p>
