@@ -23,11 +23,13 @@ import AuthorOverview from "./AuthorOverview";
 import SearchBarFilterOption from "./SearchBarFilterOption";
 import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 import ComboBarLineChart from "./ComboBarLineChart.jsx";
-import AuthorTopCitedPubs from "./AuthorTopCitedPubs";
+import AllAuthorPublication from "./AllAuthorPublication";
+import PublicationWordCloud from "./PublicationWordCloud";
 
 const _filterOptions = createFilterOptions();
 
 const AuthorProfile = () => {
+  const [selectedPublication, setSelectedPublication] = useState({});
   const [optionCount, setOptionCount] = useState(0);
   const [openFitler, setOpenFilter] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState("");
@@ -40,7 +42,11 @@ const AuthorProfile = () => {
   ]);
   const [conferences, setConferences] = useState([]);
   const [activeLoader, setActiveLoader] = useState(false);
-  const orderString = " order by most published author in Descending order";
+  const orderString = ` The authors are ordered based on their publication count, 
+      with the most published author appearing at the top of the list in descending order.
+      This ranking allows for easy identification of the most top contributors in  ${
+        conferences.length === 1 ? " this conference" : " these conferences."
+      }`;
   useEffect(() => {
     getAuthorFilterBased();
     getAllAvailbelConfs();
@@ -153,7 +159,9 @@ const AuthorProfile = () => {
     setAuthors(response);
     setActiveLoader(false);
   };
-
+  const handleSelectedPublication = (publication) => {
+    setSelectedPublication(publication);
+  };
   return (
     <Grid container>
       <Paper
@@ -162,6 +170,7 @@ const AuthorProfile = () => {
         style={{
           padding: "20px",
           width: "100%",
+          borderRadius: "40px",
         }}
       >
         <Grid container xs={12} spacing={2} justify="center">
@@ -172,9 +181,9 @@ const AuthorProfile = () => {
             <Grid container xs={12}>
               <Grid item xs={12} style={{ margin: "1%" }}>
                 <Typography variant="h6">
-                  The list contains all authors published in (
+                  The list contains all authors who have published in (
                   {conferences.join(",")}){" "}
-                  {conferences.length === 1 ? "conference" : "conferences"}
+                  {conferences.length === 1 ? "conference" : "conferences"}.
                   {mostPublisehd && orderString}
                 </Typography>
               </Grid>
@@ -253,15 +262,10 @@ const AuthorProfile = () => {
               marginTop: "20px",
               alignContent: "center",
               alignItems: "center",
+              borderRadius: "40px",
             }}
           >
-            <Grid
-              container
-              xs={12}
-              spacing={1}
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container spacing={2} justify="center" alignItems="center">
               <Grid item lg={7} xs={12}>
                 <ComboBarLineChart AuthorName={selectedAuthor} />
               </Grid>
@@ -275,19 +279,36 @@ const AuthorProfile = () => {
         </Grid>
       )}
       {selectedAuthor && (
-        <Paper
-          sx={{
-            width: "100%",
-            marginTop: "20px",
-            alignContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <AuthorTopCitedPubs
-            authorNameProps={selectedAuthor}
-            conferencesProps={conferences}
-          />
-        </Paper>
+        <Grid container justify="center" alignItems="center">
+          <Paper
+            sx={{
+              width: "100%",
+              marginTop: "20px",
+              alignContent: "center",
+              alignItems: "center",
+              borderRadius: "40px",
+            }}
+          >
+            <Grid
+              container
+              xs={12}
+              spacing={2}
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item lg={5} xs={12}>
+                <AllAuthorPublication
+                  authorNameProps={selectedAuthor}
+                  conferencesProps={conferences}
+                  selectedPublicationProp={handleSelectedPublication}
+                />
+              </Grid>
+              <Grid item lg={7} xs={12}>
+                <PublicationWordCloud PublicationProp={selectedPublication} />
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
       )}
       <Grid item xs={12}>
         <NodeLinkDiagram networkDataProp={networkData} />

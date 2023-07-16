@@ -541,13 +541,28 @@ def extract_year(event):
 
 
 def sort_publication_citation_based(authorPublications):
-    pubs = [{"title": pub.title, "citations": len(
+    pubs = [{"title": pub.title, "paper_id": pub.paper_id, "citations": len(
         ast.literal_eval(pub.citiations))} for pub in authorPublications]
     sorted_pubs = sorted(pubs,
                          key=lambda x: x["citations"], reverse=True)
 
     print("pubs with citations: ", sorted_pubs)
 
-    pub_title = [pub["title"] for pub in sorted_pubs]
+    pub_title = [{"title": pub["title"], "id": pub["paper_id"]}
+                 for pub in sorted_pubs]
 
     return pub_title
+
+
+def get_publication_keywords(publication_id):
+    data = []
+    publicaton = Publication.nodes.get(
+        paper_id=publication_id.strip())
+
+    keywords = publicaton.keywords.all()
+
+    keywords = [{"text": keyword.keyword, "value": publicaton.keywords.relationship(keyword).weight}
+                for keyword in keywords]
+
+    print("keyword with weight: ", keywords)
+    return keywords

@@ -323,3 +323,41 @@ class getAuthorPublications(APIView):
             authorPublications)
 
         return Response(sort_pubs)
+
+
+class getPublicationKeywords(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        publication_id = url_splits_slash[-2]
+
+        keywords = authorInsightsUtil.get_publication_keywords(publication_id)
+
+        return Response(keywords)
+
+
+class getPublicationByID(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        publication_id = url_splits_slash[-2]
+        final_pubs_list = []
+
+        publication_List = Publication.nodes.filter(paper_id=publication_id.strip())
+
+        if publication_List is not None:
+            final_pubs_list = [{
+                "paper_id": pub.paper_id,
+                "title": pub.title,
+                "authors": ', '.join([author.author_name for author in pub.authors]),
+                "abstract": pub.abstract,
+                "year": pub.years,
+                "url": pub.urls,
+                "event":pub.published_in[0].conference_event_name_abbr,
+            }for pub in publication_List]
+
+        print("publicationList", (final_pubs_list))
+
+        return Response({
+            "publicationList": final_pubs_list
+        })
