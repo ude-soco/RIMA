@@ -10,6 +10,8 @@ import {
   createFilterOptions,
   IconButton,
   CardContent,
+  Typography,
+  Box,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { BASE_URL_CONFERENCE } from "Services/constants";
@@ -21,6 +23,7 @@ import AuthorOverview from "./AuthorOverview";
 import SearchBarFilterOption from "./SearchBarFilterOption";
 import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 import ComboBarLineChart from "./ComboBarLineChart.jsx";
+import AuthorTopCitedPubs from "./AuthorTopCitedPubs";
 
 const _filterOptions = createFilterOptions();
 
@@ -31,13 +34,16 @@ const AuthorProfile = () => {
   const [authors, setAuthors] = useState([]);
   let [networkData, setNetworkData] = useState([]);
   const [authorData, setAuthorData] = useState(null);
-  const [mostPublisehd, setMostPublisehd] = useState(false);
+  const [mostPublisehd, setMostPublisehd] = useState(true);
   const [selectedConferences, setSelectedConferences] = useState([
     { name: "All Conferences", label: "All Conferences" },
   ]);
+  const [conferences, setConferences] = useState([]);
   const [activeLoader, setActiveLoader] = useState(false);
+  const orderString = " order by most published author in Descending order";
   useEffect(() => {
     getAuthorFilterBased();
+    getAllAvailbelConfs();
   }, []);
 
   useEffect(() => {
@@ -97,15 +103,31 @@ const AuthorProfile = () => {
       console.log("Error fetching Author date", error);
     }
   };
+  const getAllAvailbelConfs = async () => {
+    const request = await fetch(
+      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+    );
+    const response = await request.json();
+    const confs = extractConfsNames(response);
+    setConferences(confs);
+  };
   const handleClickSearchBarFilter = () => {
     setOpenFilter((prevOpen) => !prevOpen);
   };
-
+  const extractConfsNames = (conferences) => {
+    const confs = [];
+    conferences.forEach((conf) => {
+      if (conf.name !== "All Conferences") confs.push(conf.name);
+    });
+    return confs;
+  };
   const handelMostPublishedAuthors = (MostPublished) => {
     setMostPublisehd(MostPublished);
   };
   const handleSelectedConferences = (selectedConfs) => {
     setSelectedConferences(selectedConfs);
+    const confs = extractConfsNames(selectedConfs);
+    setConferences(confs);
     console.log("selectedConfs", selectedConfs);
   };
 
@@ -131,44 +153,75 @@ const AuthorProfile = () => {
     setAuthors(response);
     setActiveLoader(false);
   };
+
   return (
     <Grid container>
       <Paper
         elevation={6}
-        sx={{ margin: "20px", boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)" }}
+        sx={{ boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)" }}
         style={{
           padding: "20px",
           width: "100%",
         }}
       >
-        <Grid container xs={12} spacing={2}>
+        <Grid container xs={12} spacing={2} justify="center">
           <Grid item>
-            <PersonSearchIcon color="primary" sx={{ fontSize: 20 }} />
+            <PersonSearchIcon color="primary" sx={{ fontSize: 40 }} />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} justify="center" alignItems="center">
             <Grid container xs={12}>
-              <Autocomplete
-                filterOptions={filterOptions}
-                disablePortal
-                id="combo-box-demo"
-                options={authors}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField {...params} label="Author" />
-                )}
-                sx={{ width: "100%", marginBottom: "5%" }}
-                onChange={(event, newInputValue) => {
-                  if (newInputValue) {
-                    setSelectedAuthor(newInputValue);
-                  }
-                }}
-              />
-              <ActiveLoader
-                marginLeft={"30%"}
-                height={50}
-                width={50}
-                visible={activeLoader}
-              />
+              <Grid item xs={12} style={{ margin: "1%" }}>
+                <Typography variant="h6">
+                  The list contains all authors published in (
+                  {conferences.join(",")}){" "}
+                  {conferences.length === 1 ? "conference" : "conferences"}
+                  {mostPublisehd && orderString}
+                </Typography>
+              </Grid>
+              <Grid container xs={12}>
+                <Grid item xs={11}>
+                  <Autocomplete
+                    filterOptions={filterOptions}
+                    disablePortal
+                    id="combo-box-demo"
+                    options={authors}
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Author" />
+                    )}
+                    sx={{ width: "100%", marginBottom: "5%" }}
+                    onChange={(event, newInputValue) => {
+                      if (newInputValue) {
+                        setSelectedAuthor(newInputValue);
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={1}
+                  style={{
+                    marginBottom: "5%",
+                    display: "flex",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <Tooltip title="Filter" placement="top">
+                    <IconButton onClick={handleClickSearchBarFilter}>
+                      <FilterAltIcon
+                        color="primary"
+                        sx={{ fontSize: 50, marginBottom: "1%" }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <ActiveLoader
+                  marginLeft={"30%"}
+                  height={50}
+                  width={50}
+                  visible={activeLoader}
+                />
+              </Grid>
               {openFitler && (
                 <Grid
                   item
@@ -185,38 +238,55 @@ const AuthorProfile = () => {
                 </Grid>
               )}
             </Grid>
-            <Grid item xs={12} sx={{ margin: "20px" }}>
+            <Grid item xs={12} sx={{ margin: "2px" }}>
               {authorData && <AuthorDetails authorDataProp={authorData} />}
             </Grid>
-          </Grid>
-          <Grid item>
-            <Tooltip title="Filter" placement="top">
-              <IconButton onClick={handleClickSearchBarFilter}>
-                <FilterAltIcon color="primary" sx={{ fontSize: 50 }} />
-              </IconButton>
-            </Tooltip>
           </Grid>
         </Grid>
       </Paper>
 
       {authorData && (
-        <Paper sx={{ width: "100%", margin: "20px" }}>
-          <Grid
-            container
-            justify="center"
-            alignItems="flex-start"
-            columnSpacing={{ xs: 1, sm: 2, md: 4 }}
-            sx={{ width: "100%" }}
+        <Grid container xs={12} justify="center" alignItems="center">
+          <Paper
+            sx={{
+              width: "100%",
+              marginTop: "20px",
+              alignContent: "center",
+              alignItems: "center",
+            }}
           >
-            <Grid item xs={6}>
-              <ComboBarLineChart AuthorName={selectedAuthor}  />
+            <Grid
+              container
+              xs={12}
+              spacing={1}
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item lg={7} xs={12}>
+                <ComboBarLineChart AuthorName={selectedAuthor} />
+              </Grid>
+              <Grid item lg={5} xs={12}>
+                {authorData && (
+                  <AuthorOverview authorNameProps={selectedAuthor} />
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              {authorData && (
-                <AuthorOverview authorNameProps={selectedAuthor} />
-              )}
-            </Grid>
-          </Grid>
+          </Paper>
+        </Grid>
+      )}
+      {selectedAuthor && (
+        <Paper
+          sx={{
+            width: "100%",
+            marginTop: "20px",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <AuthorTopCitedPubs
+            authorNameProps={selectedAuthor}
+            conferencesProps={conferences}
+          />
         </Paper>
       )}
       <Grid item xs={12}>

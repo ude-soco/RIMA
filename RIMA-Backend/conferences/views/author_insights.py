@@ -284,9 +284,42 @@ class getAuthorPublicationsCitations(APIView):
         print("getAuthorPublicationsCitations called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        autorName = url_splits_slash[-2]
-        print("author: ", autorName)
-        data = authorInsightsUtil.get_Author_Pubs_Citations_OverTime(autorName)
+        autorName = url_splits_slash[-3]
+        selectedConfs = url_splits_slash[-2].split("&")
+
+        print("seelected: ", selectedConfs)
+
+        data = authorInsightsUtil.get_Author_Pubs_Citations_OverTime(
+            selectedConfs, autorName)
 
         print("data: ", data)
         return Response(data)
+
+
+class getAuthorPublicationsCitationsAnalysis(APIView):
+    def get(self, request, *args, **kwargs):
+        print("getAuthorPublicationsCitations called")
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        autorName = url_splits_slash[-2]
+       # selectedConfs = url_splits_slash[-2].split("&")
+
+        data = authorInsightsUtil.get_Author_Pubs_Citations_Analysis(autorName)
+
+        print("Citation Analysis: ", data)
+        return Response(data)
+
+
+class getAuthorPublications(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        autorId = url_splits_slash[-2]
+
+        authorPublications = authorInsightsUtil.get_author_publications(
+            autorId)
+
+        sort_pubs = authorInsightsUtil.sort_publication_citation_based(
+            authorPublications)
+
+        return Response(sort_pubs)

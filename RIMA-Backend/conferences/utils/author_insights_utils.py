@@ -467,15 +467,24 @@ def get_Author_Pubs_Citations_Analysis(author_name):
     return data
 
 
-def get_Author_Pubs_Citations_OverTime(author_id):
+def get_Author_Pubs_Citations_OverTime(selectedConferences, author_id):
+    pubs_counts = []
     pubs = get_author_publications(author_id)
-    pubs_counts = get_publications_with_years_event_based2(pubs)
+
+    if "All Conferences" in selectedConferences:
+        pubs_counts = get_publications_citation_count(pubs)
+    else:
+        pubs = [
+            pub for pub in pubs
+            if pub.published_in_Confs[0].conference_name_abbr
+            in selectedConferences]
+        pubs_counts = get_publications_citation_count(pubs)
+
     return pubs_counts
 
 
-def get_publications_with_years_event_based2(author_pubs):
+def get_publications_citation_count(author_pubs):
     print("get_publications_with_years_event_based2 called")
-    pubs_counst = {}
 
     years = [pub.years for pub in author_pubs]
     years = [year[:4] for year in years]
@@ -529,3 +538,16 @@ def get_publications_with_years_event_based2(author_pubs):
 def extract_year(event):
     match = re.search(r'\d{4}', event)
     return match.group(0) if match else None
+
+
+def sort_publication_citation_based(authorPublications):
+    pubs = [{"title": pub.title, "citations": len(
+        ast.literal_eval(pub.citiations))} for pub in authorPublications]
+    sorted_pubs = sorted(pubs,
+                         key=lambda x: x["citations"], reverse=True)
+
+    print("pubs with citations: ", sorted_pubs)
+
+    pub_title = [pub["title"] for pub in sorted_pubs]
+
+    return pub_title

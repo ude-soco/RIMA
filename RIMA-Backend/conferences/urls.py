@@ -18,15 +18,17 @@ urlpatterns = [
     path('getAllAvailabeAuthors/', getAllAvailableAuthors.as_view()),
     path('getAllAvailabeAuthorsFilterBased/<pk1>/<pk2>/',
          getAllAvailabeAuthorsFilterBased.as_view()),
-    path('getAuthorPublicationsCitations/<pk1>/',
+    path('getAuthorPublicationsCitations/<pk1>/<pk2>/',
          getAuthorPublicationsCitations.as_view()),
-
+    path('getAuthorPublicationsCitationsAnalysis/<pk1>/',
+         getAuthorPublicationsCitationsAnalysis.as_view()),
     path("getAuthorPublicationCountBasedConfs/<pk1>/<pk2>/",
          getAuthorPublicationCountBasedConfs.as_view()),
     path("getAllAuthorPublicationList/<pk1>/",
          getAllAuthorPublicationList.as_view()),
     path("getAllAvailableConferences/", getAllAvailabelConfs.as_view()),
     path("getAllAvailableEvents/", getAllAvailabelEvents.as_view()),
+    path("getAuthorPublications/<pk1>/", getAuthorPublications.as_view()),
 
     # TODO: All the author insights urls should be called in this block - END
 

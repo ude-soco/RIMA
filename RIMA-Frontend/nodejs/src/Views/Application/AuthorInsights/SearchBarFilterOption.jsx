@@ -111,7 +111,7 @@ const SearchBarFilterOption = ({
             <FormGroup>
               <FormControlLabel
                 onChange={(e) => MostPublisehd(e.target.checked)}
-                control={<Checkbox />}
+                control={<Checkbox defaultChecked />}
                 label="Most Published Authors"
               />
             </FormGroup>
