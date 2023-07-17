@@ -30,7 +30,8 @@ urlpatterns = [
     path("getAllAvailableEvents/", getAllAvailabelEvents.as_view()),
     path("getAuthorPublications/<pk1>/", getAuthorPublications.as_view()),
     path("getPublicationKeywords/<pk1>/", getPublicationKeywords.as_view()),
-        path("getPublicationByID/<pk1>/", getPublicationByID.as_view()),
+    path("getPublicationByID/<pk1>/", getPublicationByID.as_view()),
+    path("getAuthorInterestes/<pk1>/", getAuthorInterestes.as_view()),
 
     # TODO: All the author insights urls should be called in this block - END
 

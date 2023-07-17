@@ -25,6 +25,7 @@ import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 import ComboBarLineChart from "./ComboBarLineChart.jsx";
 import AllAuthorPublication from "./AllAuthorPublication";
 import PublicationWordCloud from "./PublicationWordCloud";
+import InterestsAnalysis from "./InterestsAnalysis.jsx";
 
 const _filterOptions = createFilterOptions();
 
@@ -33,6 +34,7 @@ const AuthorProfile = () => {
   const [optionCount, setOptionCount] = useState(0);
   const [openFitler, setOpenFilter] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState("");
+  const [authorsToCompare, setAuthorsToCompare] = useState([]);
   const [authors, setAuthors] = useState([]);
   let [networkData, setNetworkData] = useState([]);
   const [authorData, setAuthorData] = useState(null);
@@ -161,6 +163,19 @@ const AuthorProfile = () => {
   };
   const handleSelectedPublication = (publication) => {
     setSelectedPublication(publication);
+  };
+  const showCoAuthorPropfile = (author) => {
+    setSelectedAuthor(author);
+    window.scrollTo({
+      top: 10,
+      behavior: "smooth",
+    });
+  };
+  const handleSetAuthorsToCompare = (author) => {
+    let isExists = authorsToCompare.some((a) => a.label === author.label);
+    if (!isExists) {
+      setAuthorsToCompare((prev) => [...prev, author]);
+    }
   };
   return (
     <Grid container>
@@ -310,8 +325,36 @@ const AuthorProfile = () => {
           </Paper>
         </Grid>
       )}
+      {selectedAuthor && (
+        <Grid container xs={12} justify="center" alignItems="center">
+          <Paper
+            sx={{
+              width: "100%",
+              marginTop: "20px",
+              alignContent: "center",
+              alignItems: "center",
+              borderRadius: "40px",
+            }}
+          >
+            <Grid
+              item
+              xs={12}
+              spacing={2}
+              padding="1%"
+              justify="center"
+              alignItems="center"
+            >
+              <InterestsAnalysis authorProp={selectedAuthor} />
+            </Grid>
+          </Paper>
+        </Grid>
+      )}
       <Grid item xs={12}>
-        <NodeLinkDiagram networkDataProp={networkData} />
+        <NodeLinkDiagram
+          networkDataProp={networkData}
+          setAuthorProfileToShowProp={showCoAuthorPropfile}
+          setAuthorsToCompareProp={handleSetAuthorsToCompare}
+        />
       </Grid>
     </Grid>
   );
