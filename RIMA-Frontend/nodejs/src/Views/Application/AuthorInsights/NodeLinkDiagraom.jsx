@@ -17,7 +17,11 @@ import coseBilkent from "cytoscape-cose-bilkent";
 cytoscape.use(cxtmenu);
 cytoscape.use(coseBilkent);
 
-const NodeLinkDiagram = ({ networkDataProp }) => {
+const NodeLinkDiagram = ({
+  networkDataProp,
+  setAuthorProfileToShowProp,
+  setAuthorsToCompareProp,
+}) => {
   const [cy, setCy] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [authorProfileToShow, setAuthorProfileToShow] = useState(null);
@@ -46,13 +50,20 @@ const NodeLinkDiagram = ({ networkDataProp }) => {
           {
             content: "show profile",
             select: (element) => {
-              setAuthorProfileToShow(element);
+              console.log("element : ", element.data("label"));
+              setAuthorProfileToShowProp({
+                label: element.data("id"),
+                name: element.data("label"),
+              });
             },
           },
           {
             content: "add to compare list",
             select: (element) => {
-              compareAuthorslist.push(element);
+              setAuthorsToCompareProp({
+                label: element.data("id"),
+                name: element.data("label"),
+              });
             },
           },
         ],
@@ -167,7 +178,11 @@ const NodeLinkDiagram = ({ networkDataProp }) => {
     },
   ];
 
-  const style = { width: "100%", height: "800px", margin: "auto" };
+  const style = {
+    width: "100%",
+    height: "500px",
+    margin: "auto",
+  };
 
   const layout = {
     name: "cose-bilkent",
@@ -185,7 +200,11 @@ const NodeLinkDiagram = ({ networkDataProp }) => {
     <Grid>
       {networkDataProp.length > 0 && (
         <Card
-          sx={{ margin: "20px", boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)" }}
+          sx={{
+            margin: "20px",
+            boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)",
+            borderRadius: "40px",
+          }}
         >
           <CardHeader
             title="Co-author network"
@@ -201,7 +220,9 @@ const NodeLinkDiagram = ({ networkDataProp }) => {
               disablePortal
               id="combo-box-demo"
               options={selectOption}
-              renderInput={(params) => <TextField {...params} label="Author" />}
+              renderInput={(params) => (
+                <TextField {...params} label="Search co-authors" />
+              )}
               onChange={(e1, e) => {
                 setSelectedNode(e ? e.label : null);
                 if (e) {

@@ -284,13 +284,13 @@ class getAuthorPublicationsCitations(APIView):
         print("getAuthorPublicationsCitations called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        autorName = url_splits_slash[-3]
+        author_id = url_splits_slash[-3]
         selectedConfs = url_splits_slash[-2].split("&")
 
         print("seelected: ", selectedConfs)
 
         data = authorInsightsUtil.get_Author_Pubs_Citations_OverTime(
-            selectedConfs, autorName)
+            selectedConfs, author_id)
 
         print("data: ", data)
         return Response(data)
@@ -343,7 +343,8 @@ class getPublicationByID(APIView):
         publication_id = url_splits_slash[-2]
         final_pubs_list = []
 
-        publication_List = Publication.nodes.filter(paper_id=publication_id.strip())
+        publication_List = Publication.nodes.filter(
+            paper_id=publication_id.strip())
 
         if publication_List is not None:
             final_pubs_list = [{
@@ -361,3 +362,15 @@ class getPublicationByID(APIView):
         return Response({
             "publicationList": final_pubs_list
         })
+
+
+class getAuthorInterestes(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        author_id = url_splits_slash[-2]
+
+        print("author_id", author_id)
+        interests = authorInsightsUtil.get_author_interests(author_id)
+
+        return Response(interests)

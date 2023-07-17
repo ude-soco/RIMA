@@ -100,7 +100,6 @@ def get_publications_with_years_event_based(author_pubs):
             year = year.split("-")[0]
             category_data[category][year] += count
 
-    print("category_data: ", category_data)
     identities = sorted(set(years))
     series = []
     for category, years in category_data.items():
@@ -192,7 +191,6 @@ def create_author_publication_links(author_node):
               to the author node's author_name property) and "publication" (with the value set to the title of a publication).
     """
     author_publication_links = []
-    print("author_node", author_node)
     publications = author_node.published.all()
     for publication in publications:
         author_publication_links.append({
@@ -546,8 +544,6 @@ def sort_publication_citation_based(authorPublications):
     sorted_pubs = sorted(pubs,
                          key=lambda x: x["citations"], reverse=True)
 
-    print("pubs with citations: ", sorted_pubs)
-
     pub_title = [{"title": pub["title"], "id": pub["paper_id"]}
                  for pub in sorted_pubs]
 
@@ -562,7 +558,41 @@ def get_publication_keywords(publication_id):
     keywords = publicaton.keywords.all()
 
     keywords = [{"text": keyword.keyword, "value": publicaton.keywords.relationship(keyword).weight}
-                for keyword in keywords]
+                for keyword in keywords if keyword.keyword != "none"]
 
     print("keyword with weight: ", keywords)
     return keywords
+
+
+def get_author_interests(author_id):
+    minimum = 4
+    author_node = Author.nodes.filter(
+        semantic_scolar_author_id=author_id.strip())
+
+    author_identical_keywords = [
+        keyword.keyword for keyword in author_node.keywords.all()]
+    publications = author_node.published.all()
+
+    data = [{"keyword": author_keyword, "year": pub.years} for pub in publications for author_keyword in author_identical_keywords if author_keyword in [
+        pub_keyword.keyword for pub_keyword in pub.keywords.all()]]
+
+    categories = sorted(list(set([item['year'] for item in data])))
+    keyword_counts = defaultdict(lambda: [0]*len(categories))
+
+    for item in data:
+        year_index = categories.index(item['year'])
+        keyword_counts[item['keyword']][year_index] += 1
+
+    final_data = []
+    for keyword, counts in keyword_counts.items():
+        final_data.append({'name': keyword, 'data': counts})
+
+    data = {
+        "categories": categories,
+        "series": final_data
+    }
+
+    print("***********************************************************************************")
+    print(data)
+    print("***********************************************************************************")
+    return data
