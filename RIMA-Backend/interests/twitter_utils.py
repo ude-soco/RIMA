@@ -1,10 +1,7 @@
 import tweepy
 import pytz
-import os
-import random
 from tweepy.parsers import JSONParser
 from interests.Keyword_Extractor.extractor import getKeyword
-from interests.wikipedia_utils import wikifilter
 from .utils import get_interest_similarity_score
 from django.conf import settings
 

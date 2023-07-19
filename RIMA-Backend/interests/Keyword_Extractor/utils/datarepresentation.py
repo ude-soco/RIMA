@@ -4,7 +4,6 @@ from segtok.tokenizer import web_tokenizer, split_contractions
 import networkx as nx
 import numpy as np
 import string
-import os
 import math
 import jellyfish
 import re

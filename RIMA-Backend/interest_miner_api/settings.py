@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "common",
     "accounts",
     "interests",
-    "drf_yasg",
 ]
 
 REST_FRAMEWORK = {

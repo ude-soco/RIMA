@@ -1,13 +1,7 @@
-from array import array
-from gensim.models.keyedvectors import KeyedVectors
 from django.conf import settings
-import json
-from os.path import exists
-from sentence_transformers import SentenceTransformer, models
-import tensorflow as tf
+from sentence_transformers import SentenceTransformer
 import tensorflow_hub as hub
 from transformers import AutoTokenizer, AutoModel
-import torch
 from transformers import BertTokenizer, BertModel
 
 use_model = None

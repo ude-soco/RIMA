@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Main module."""
 from __future__ import absolute_import
-import string
 import os
 import jellyfish
 from interests.Keyword_Extractor.utils.Levenshtein import Levenshtein
