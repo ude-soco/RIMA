@@ -1,15 +1,9 @@
 import pytz
-from torch import embedding
 from interests.Keyword_Extractor.extractor import getKeyword
 from ..utils import get_interest_paper_similarity_score, get_vector_representation
-from ..utils import (
-    get_weighted_interest_similarity_score,
-    get_single_interest_similarity_score,
-)
 from ..semantic_scholar import SemanticScholarAPI
 from interests.update_interests import normalize
 import numpy as np
-import matplotlib.pyplot as plt
 from celery import shared_task, group
 
 utc = pytz.timezone("UTC")
