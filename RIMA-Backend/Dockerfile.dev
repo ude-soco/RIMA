@@ -1,0 +1,15 @@
+FROM python:3.7
+
+WORKDIR /app
+
+COPY . /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip setuptools wheel
+
+RUN pip install -r req-updated.txt
+
+CMD ["python", "manage.py", "runserver"]

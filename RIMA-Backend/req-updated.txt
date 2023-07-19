@@ -131,7 +131,7 @@ python-dotenv==0.21.1
 pytorch-pretrained-bert==0.6.2
 pytorch-transformers==1.1.0
 pytz==2023.3
-pywin32==306
+pywin32==306; sys_platform == 'win32'
 PyYAML==6.0.1
 rdflib==6.2.0
 redis==3.4.1
@@ -180,7 +180,7 @@ threadpoolctl==3.1.0
 tokenizers==0.13.3
 tomli==2.0.1
 torch==1.7.1
-torchvision==0.4.1
+torchvision>=0.4.1
 tqdm==4.64.0
 transformers==4.30.2
 tweepy==3.8.0
