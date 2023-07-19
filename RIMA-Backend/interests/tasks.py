@@ -30,12 +30,12 @@ utc = pytz.timezone("UTC")
 @task(
     name="import_tweets",
     base=BaseCeleryTask,
-    autoretry_for=(tweepy.errors.TooManyRequests, ),
+    # autoretry_for=(tweepy.errors.TooManyRequests, ),
     retry_kwargs={
         'max_retries': 5,
         'countdown': 30 * 60
     },
-)
+) # type: ignore
 def import_tweets():
     for user in User.objects.exclude(twitter_account_id=None):
         end_date = utc.localize(
@@ -108,12 +108,12 @@ def __import_tweets_for_user(user_id):
 @task(
     name="import_tweets_for_user",
     base=BaseCeleryTask,
-    autoretry_for=(tweepy.errors.TooManyRequests, ),
+    # autoretry_for=(tweepy.errors.TooManyRequests, ),
     retry_kwargs={
         'max_retries': 5,
         'countdown': 30 * 60
     },
-)
+) # type: ignore
 def import_tweets_for_user(user_id):
     __import_tweets_for_user(user_id)
 
@@ -155,7 +155,7 @@ def __import_publications_for_user(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def import_papers_for_user(user_id):
     __import_publications_for_user(user_id)
 
@@ -165,7 +165,7 @@ def import_papers_for_user(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def update_short_term_interest_model():
     for user in User.objects.all():
         if user.twitter_account_id:
@@ -181,7 +181,7 @@ def update_short_term_interest_model():
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def update_long_term_interest_model():
     for user in User.objects.all():
         generate_long_term_model(user.id)
@@ -201,7 +201,7 @@ def __update_short_term_interest_model_for_user(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def import_user_citation_data(user_id):
             store_connections_to_authors(user_id) #done    
             import_authors_papers(user_id) #done
@@ -213,7 +213,7 @@ def import_user_citation_data(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def update_short_term_interest_model_for_user(user_id):
     __update_short_term_interest_model_for_user(user_id)
 
@@ -223,7 +223,7 @@ def update_short_term_interest_model_for_user(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def update_long_term_interest_model_for_user(user_id):
     generate_long_term_model(user_id)
 
@@ -243,7 +243,7 @@ def remove_papers_for_user(user_id, papers):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def import_user_data(user_id):  # it is executed in the sign-up
     print("importing tweets")
     __import_tweets_for_user(user_id)
@@ -269,7 +269,7 @@ def import_user_data(user_id):  # it is executed in the sign-up
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def regenerate_interest_profile(user_id):
     __fetch_user_papers_keywords(user_id)
     regenerate_short_term_interest_model(user_id)
@@ -281,7 +281,7 @@ def regenerate_interest_profile(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def regenerate_short_term_interest_model(user_id):
     user = User.objects.get(id=user_id)
     ShortTermInterest.objects.filter(user_id=user_id).exclude(papers__in=user.papers.all()).delete()
@@ -293,7 +293,7 @@ def regenerate_short_term_interest_model(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def manual_regenerate_long_term_model (user_id):
     regenerate_long_term_model(user_id)
     return
@@ -304,7 +304,7 @@ def manual_regenerate_long_term_model (user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def import_user_papers(user_id):
     __import_publications_for_user(user_id)
     return
@@ -314,7 +314,7 @@ def import_user_papers(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def getRefCitAuthorsPapers(authorId, method):
     results={"listAllAuthors":[]}
     dictAuthorsNames={}
@@ -354,7 +354,7 @@ def getRefCitAuthorsPapers(authorId, method):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def getConnectedAuthorsData(user_author_id, number_of_top_connected_authors):
     #This function gets the ids of the top authors connected to a user
     # The number of returned authors is specified by the argument number_of_top_connected_authors
@@ -480,7 +480,7 @@ def generate_user_authors_interests(user_id):
     base=BaseCeleryTask,
     autoretry_for=(Exception,),
     retry_kwargs={"max_retries": 5, "countdown": 30 * 60},
-)
+) # type: ignore
 def import_user_paperdata(user_id):
 
     print("compute short term model")

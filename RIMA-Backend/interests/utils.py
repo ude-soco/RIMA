@@ -2,7 +2,7 @@ import json
 import tensorflow as tf
 import math
 from collections import defaultdict
-from django.db.models import (Q, Count)
+from django.db.models import Q, Count
 from accounts.models import User
 from interests.models import (
     Tweet,
@@ -26,11 +26,6 @@ from interests.Keyword_Extractor.Algorithms.embedding_based.sifrank.dbpedia.dbpe
 )
 from interests.Semantic_Similarity.Word_Embedding.Embedding_Methods import (
     calculate_vector_embedding,
-)
-from interests.Semantic_Similarity.Word_Embedding.IMsim import (
-    calculate_similarity,
-    calculate_weighted_vectors_similarity,
-    calculate_weighted_vectors_similarity_single_word,
 )
 from interests.Semantic_Similarity.WikiLink_Measure.Wiki import wikisim
 
@@ -218,7 +213,8 @@ def generate_short_term_model(user_id, source):
     if source == ShortTermInterest.SCHOLAR:
         generate_user_short_term_interests(user_id)
 
-#Osama
+
+# Osama
 def regenerate_long_term_model(user_id):
     #
     #   regenerates the long term interest model after a user orders to regenerate
@@ -232,48 +228,60 @@ def regenerate_long_term_model(user_id):
     #   @author Osama Elsafty
     #
     user = User.objects.get(id=user_id)
-    long_term_interests= LongTermInterest.objects.filter(user_id= user_id, source__in=[LongTermInterest.SCHOLAR, LongTermInterest.TWITTER])
-    short_term_interests = ShortTermInterest.objects.filter(user_id = user_id)
+    long_term_interests = LongTermInterest.objects.filter(
+        user_id=user_id, source__in=[LongTermInterest.SCHOLAR, LongTermInterest.TWITTER]
+    )
+    short_term_interests = ShortTermInterest.objects.filter(user_id=user_id)
     blacklisted_keywords = list(
-    BlacklistedKeyword.objects.filter(user_id=user_id).values_list(
-        "keyword__name", flat=True
-    ))
-    long_term_interests.filter(user_id=user_id).exclude(papers__in=user.papers.all()).delete()
+        BlacklistedKeyword.objects.filter(user_id=user_id).values_list(
+            "keyword__name", flat=True
+        )
+    )
+    long_term_interests.filter(user_id=user_id).exclude(
+        papers__in=user.papers.all()
+    ).delete()
     for interest in short_term_interests:
         if interest.keyword.name in blacklisted_keywords:
             continue
-        if LongTermInterest.objects.filter(user_id=user_id, keyword=interest.keyword, source=LongTermInterest.MANUAL).exists():
-            #If a manual interest was found for the same keyword, don't update it and don't create a new one.
+        if LongTermInterest.objects.filter(
+            user_id=user_id, keyword=interest.keyword, source=LongTermInterest.MANUAL
+        ).exists():
+            # If a manual interest was found for the same keyword, don't update it and don't create a new one.
             continue
-        long_term_interest,_= LongTermInterest.objects.update_or_create(
-            user_id= user_id,
-            keyword = interest.keyword,
-            defaults= {
-            "weight": interest.weight,
-            "updated_on": interest.updated_on,
-            "source": interest.source
-            }
+        long_term_interest, _ = LongTermInterest.objects.update_or_create(
+            user_id=user_id,
+            keyword=interest.keyword,
+            defaults={
+                "weight": interest.weight,
+                "updated_on": interest.updated_on,
+                "source": interest.source,
+            },
         )
         long_term_interest.papers.set(interest.papers.all())
     return
 
+
 def fetch_papers_keywords(papers):
-    #modified the function from lames. This function is going with the approach that the paper is uniqe and can be stored once
+    # modified the function from lames. This function is going with the approach that the paper is uniqe and can be stored once
     # The same paper always have the same keywords and weights
     # The paper is linked to a user in a many to many relationship. it doesn't have one author id, but many authors can have the same paper
     # This function is storing no interests. It just fetches the keywords from the papers and stores a relationship between the paper and the keyword
     # The relationship specifies the weight of the keyword in that paper as well
     dbpedia = DBpediaSpotlight()
-    paper_candidates = papers.filter(used_in_calc= False)
+    paper_candidates = papers.filter(used_in_calc=False)
     for paper in paper_candidates:
-        text = (paper.title if paper.title else "") + " " + (paper.abstract if paper.abstract else "")
+        text = (
+            (paper.title if paper.title else "")
+            + " "
+            + (paper.abstract if paper.abstract else "")
+        )
         try:
             keywords = getKeyword(text, model="SifRank", num=15)
         except:
             continue
         if not len(keywords.keys()):
             # print("No keywords found")
-            paper.used_in_calc=True
+            paper.used_in_calc = True
             paper.save()
             continue
         (
@@ -281,7 +289,7 @@ def fetch_papers_keywords(papers):
             keyword_weight_mapping,
         ) = dbpedia.annotate(keywords)
         if not len(keyword_weight_mapping.keys()):
-            paper.used_in_calc=True
+            paper.used_in_calc = True
             paper.save()
             continue
         keywords = normalize(
@@ -290,28 +298,19 @@ def fetch_papers_keywords(papers):
 
         # find the category for each keyword seperatly and store the keyword in database as a row
         for keyword, weight in keywords.items():
-            original_keyword_name = wiki_keyword_redirect_mapping.get(
-                keyword, keyword
-            )
+            original_keyword_name = wiki_keyword_redirect_mapping.get(keyword, keyword)
             keyword = keyword.lower()
             keyword_instance, created = Keyword.objects.get_or_create(
                 name=keyword.lower()
             )
             if created:
-
-                categories = wikicategory(
-                    keyword
-                )
+                categories = wikicategory(keyword)
                 for category in categories:
-                    category_instance, _ = Category.objects.get_or_create(
-                        name=category
-                    )
+                    category_instance, _ = Category.objects.get_or_create(name=category)
                     keyword_instance.categories.add(category_instance)
                 keyword_instance.save()
             try:
-                original_keywords = json.loads(
-                    keyword_instance.original_keywords
-                )
+                original_keywords = json.loads(keyword_instance.original_keywords)
 
                 original_keywords_with_weights = json.loads(
                     keyword_instance.original_keywords_with_weights
@@ -335,70 +334,78 @@ def fetch_papers_keywords(papers):
             keyword_instance.save()
             # store a relationship between the paper and the keyword
             Keyword_Paper.objects.create(
-                paper = paper,
-                keyword = keyword_instance,
-                weight = weight
+                paper=paper, keyword=keyword_instance, weight=weight
             )
-            paper.used_in_calc=True
+            paper.used_in_calc = True
             paper.save()
 
-#Osama
+
+# Osama
 def generate_authors_interests(user_id):
-#
-#   Genrates the interests of an author connected to a certain user
-#   @param user id (The primary key of the user object)
-#   @pre-request: The papers of the authors have their keywords already fetched (used_in_calc = true)
-#   Discription:
-#   - All the authors that are connected to the user and have not have their interests generated yet are fetched.
-#   - The interests of authors are generated where the weight of the interest equals the average weight of its keyword in the autho connected papers
-#   - More details about the weight calculations and the normalization process are written in the discription of the function generate_user_short_term_interests
-#   - This function is follwoing the exact same approach but only for the authors connected to the user object instead of the user object itself
-#
-#   @author Osama Elsafty
-#
+    #
+    #   Genrates the interests of an author connected to a certain user
+    #   @param user id (The primary key of the user object)
+    #   @pre-request: The papers of the authors have their keywords already fetched (used_in_calc = true)
+    #   Discription:
+    #   - All the authors that are connected to the user and have not have their interests generated yet are fetched.
+    #   - The interests of authors are generated where the weight of the interest equals the average weight of its keyword in the autho connected papers
+    #   - More details about the weight calculations and the normalization process are written in the discription of the function generate_user_short_term_interests
+    #   - This function is follwoing the exact same approach but only for the authors connected to the user object instead of the user object itself
+    #
+    #   @author Osama Elsafty
+    #
     user = User.objects.get(id=user_id)
     userConnectedAuthors = Author.objects.filter(
-    author_citations__user=user,
-    interests_generated = False
-)
+        author_citations__user=user, interests_generated=False
+    )
     for author in userConnectedAuthors:
         # Get all AuthorsPaper linked to the author sorted by year (old to new)
-        authors_papers = Paper.objects.filter(
-        author=author).order_by('year')
+        authors_papers = Paper.objects.filter(author=author).order_by("year")
         for paper in authors_papers:
             for paper in authors_papers:
                 # get the keywords and weights for every paper
                 paper_keywords_with_weight = paper.paper_keywords.all()
                 for keyword_with_weight in paper_keywords_with_weight:
-                    #create/ update an interest for every keyword
-                    average_weight = round(keyword_with_weight.weight/authors_papers.count(),1)
+                    # create/ update an interest for every keyword
+                    average_weight = round(
+                        keyword_with_weight.weight / authors_papers.count(), 1
+                    )
                     author_interest, created = AuthorsInterests.objects.get_or_create(
-                    Keyword=keyword_with_weight.keyword,
-                    author=author,
-                    defaults={'weight': keyword_with_weight.weight})
+                        Keyword=keyword_with_weight.keyword,
+                        author=author,
+                        defaults={"weight": keyword_with_weight.weight},
+                    )
                     if created:
                         author_interest.weight = average_weight
                     else:
-                        #if the interest was there already (from an older paper), add the weight to what was existing
+                        # if the interest was there already (from an older paper), add the weight to what was existing
                         author_interest.weight += average_weight
                     author_interest.save()
-                    #link the interest to the paper
+                    # link the interest to the paper
                     author_interest.papers.add(paper)
         # end of papers for loop
-        #normalize weights
+        # normalize weights
         AuthorInterests = author.authors_interests.all().order_by("-weight")
-        dataSet = list(AuthorInterests.values_list('weight', flat=True))
+        dataSet = list(AuthorInterests.values_list("weight", flat=True))
         std_dev = np.std(dataSet)
         mean_value = np.mean(dataSet)
         highestWeightLimit = mean_value + std_dev * 3
         lowestWeightLimit = mean_value - std_dev * 3
         for AuthorInterest in AuthorInterests:
-            if(AuthorInterest.weight > highestWeightLimit) :
+            if AuthorInterest.weight > highestWeightLimit:
                 AuthorInterest.weight = 5
-            elif(AuthorInterest.weight < lowestWeightLimit):
+            elif AuthorInterest.weight < lowestWeightLimit:
                 AuthorInterest.weight = 1
             else:
-                AuthorInterest.weight = round(((AuthorInterest.weight - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
+                AuthorInterest.weight = round(
+                    (
+                        (AuthorInterest.weight - lowestWeightLimit)
+                        / (highestWeightLimit - lowestWeightLimit)
+                    )
+                    * 4
+                    + 1,
+                    1,
+                )
             # AuthorInterest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
             AuthorInterest.save()
         # now we need to scale up so that the highest is always 5
@@ -407,14 +414,15 @@ def generate_authors_interests(user_id):
             scale = 5 / AuthorInterests.first().weight
             for AuthorInterest in AuthorInterests:
                 AuthorInterest.weight *= scale
-                AuthorInterest.weight = round(AuthorInterest.weight,1)
+                AuthorInterest.weight = round(AuthorInterest.weight, 1)
                 # AuthorInterest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
                 AuthorInterest.save()
-        author.interests_generated= True
+        author.interests_generated = True
         author.save()
     return
 
-#Osama
+
+# Osama
 # def generate_user_short_term_interests_newest_weights(user_id):
 # #
 # #   Genrates the short term interest model (only papers are considered and not tweets). The newest weight of the keyword is considered as the weight of the interest
@@ -452,69 +460,84 @@ def generate_authors_interests(user_id):
 #             interest.papers.add(paper)
 #     return
 
-#Osama
+
+# Osama
 def generate_user_short_term_interests(user_id):
-#
-#   Genrates the short term interest model (only papers are considered and not tweets). The average weight of the keyword is considered as the weight of the interest
-#   @param user id (The primary key of the user object)
-#   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
-#   Discription:
-#   - We start by cleaning all the interests of the user that are not linked to any of his papers (manually added interests stay, and twitter interests are not considered here)
-#   - The users are interested in all the keywords that are fetched from all papers in their profile
-#   - We loop through all the papers of the user and find the keywords of the paper, and create an interest for each keyword (or get it if already exists)
-#   - The weight of a created interest = the weight of the keyword in the paper / numper of papers (w/sum)
-#   - The weight of an updated interest = (w1 + w2 + ....)/ sum = w1/sum + w2/sum +.... = w1/sum + existing weight
-#   - The interest is then linked to the paper and saved and next step is to normalize the weights to be on a scale of 1 to 5
-#   - dataSet is a list of all interests weights. The mean value and the standard diveation are calculated
-#   - The outliers are calculated according to the empirical rule. The high and low limits are set to exclude the outlirs from the scale
-#   - The outliers are getting a value of 1 (for the too low outliers) or 5 (for the too high outliers) without the normalization equation
-#   - The other numbers are getting normalized
-#   - In some cases, there are no outliers and all the numbers are arround the mean value. That will cause us not to have any 5 weighted interests
-#   - since the weighting is rational and the 5 weighted interests are only the ones that are the user is mostly interested in regardeless of how much they were mentioned,
-#      we scale up all the interests by multiplying all the weights by the number that makes the highest weight = 5 (only if we didn't have any 5 wighted ones)
-#
-#   @author Osama Elsafty
-#
+    #
+    #   Genrates the short term interest model (only papers are considered and not tweets). The average weight of the keyword is considered as the weight of the interest
+    #   @param user id (The primary key of the user object)
+    #   @pre-request: The papers of the user have their keywords already fetched (used_in_calc = true)
+    #   Discription:
+    #   - We start by cleaning all the interests of the user that are not linked to any of his papers (manually added interests stay, and twitter interests are not considered here)
+    #   - The users are interested in all the keywords that are fetched from all papers in their profile
+    #   - We loop through all the papers of the user and find the keywords of the paper, and create an interest for each keyword (or get it if already exists)
+    #   - The weight of a created interest = the weight of the keyword in the paper / numper of papers (w/sum)
+    #   - The weight of an updated interest = (w1 + w2 + ....)/ sum = w1/sum + w2/sum +.... = w1/sum + existing weight
+    #   - The interest is then linked to the paper and saved and next step is to normalize the weights to be on a scale of 1 to 5
+    #   - dataSet is a list of all interests weights. The mean value and the standard diveation are calculated
+    #   - The outliers are calculated according to the empirical rule. The high and low limits are set to exclude the outlirs from the scale
+    #   - The outliers are getting a value of 1 (for the too low outliers) or 5 (for the too high outliers) without the normalization equation
+    #   - The other numbers are getting normalized
+    #   - In some cases, there are no outliers and all the numbers are arround the mean value. That will cause us not to have any 5 weighted interests
+    #   - since the weighting is rational and the 5 weighted interests are only the ones that are the user is mostly interested in regardeless of how much they were mentioned,
+    #      we scale up all the interests by multiplying all the weights by the number that makes the highest weight = 5 (only if we didn't have any 5 wighted ones)
+    #
+    #   @author Osama Elsafty
+    #
     user = User.objects.get(id=user_id)
-    user.short_term_interests.filter(user_id=user_id).exclude(papers__in=user.papers.all()).delete()
-    paper_candidates = user.papers.all().order_by('year')
+    user.short_term_interests.filter(user_id=user_id).exclude(
+        papers__in=user.papers.all()
+    ).delete()
+    paper_candidates = user.papers.all().order_by("year")
 
     for paper in paper_candidates:
         # get the keywords and weights for every paper
         paper_keywords_with_weight = paper.paper_keywords.all()
         for keyword_with_weight in paper_keywords_with_weight:
-            #create/ update an interest for every keyword
-            average_weight = keyword_with_weight.weight/paper_candidates.count()
+            # create/ update an interest for every keyword
+            average_weight = keyword_with_weight.weight / paper_candidates.count()
             interest, created = ShortTermInterest.objects.update_or_create(
                 user_id=user_id,
                 keyword=keyword_with_weight.keyword,
-                defaults={"source": ShortTermInterest.SCHOLAR, "model_year": paper.year, "model_month": 1},
-                )
+                defaults={
+                    "source": ShortTermInterest.SCHOLAR,
+                    "model_year": paper.year,
+                    "model_month": 1,
+                },
+            )
             if created:
                 interest.weight = average_weight
             else:
-                #if the interest was there already (from an older paper), add the weight to what was existing
+                # if the interest was there already (from an older paper), add the weight to what was existing
                 interest.weight += average_weight
             interest.save()
-            #link the interest to the paper
+            # link the interest to the paper
             interest.papers.add(paper)
-    #normalize weights
+    # normalize weights
     interests = user.short_term_interests.all().order_by("-weight")
-    dataSet = list(interests.values_list('weight', flat=True))
+    dataSet = list(interests.values_list("weight", flat=True))
     std_dev = np.std(dataSet)
     mean_value = np.mean(dataSet)
     highestWeightLimit = mean_value + std_dev * 3
     lowestWeightLimit = mean_value - std_dev * 3
-    if(std_dev != 0):
-        #if standard deviation is 0, it means all the interests have the same weight and no need for normalization and only scaling up might be needed
-        #Normalizing with this method while havein the std_dev = 0 leads to a division by zero error
+    if std_dev != 0:
+        # if standard deviation is 0, it means all the interests have the same weight and no need for normalization and only scaling up might be needed
+        # Normalizing with this method while havein the std_dev = 0 leads to a division by zero error
         for interest in interests:
-            if(interest.weight > highestWeightLimit) :
+            if interest.weight > highestWeightLimit:
                 interest.weight = 5
-            elif(interest.weight < lowestWeightLimit):
+            elif interest.weight < lowestWeightLimit:
                 interest.weight = 1
             else:
-                interest.weight = round(((interest.weight - lowestWeightLimit) / (highestWeightLimit - lowestWeightLimit)) * 4 + 1, 1)
+                interest.weight = round(
+                    (
+                        (interest.weight - lowestWeightLimit)
+                        / (highestWeightLimit - lowestWeightLimit)
+                    )
+                    * 4
+                    + 1,
+                    1,
+                )
             # interest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
             interest.save()
     # now we need to scale up so that the highest is always 5
@@ -523,10 +546,11 @@ def generate_user_short_term_interests(user_id):
         scale = 5 / interests.first().weight
         for interest in interests:
             interest.weight *= scale
-            interest.weight = round(interest.weight,1)
+            interest.weight = round(interest.weight, 1)
             # interest.weight = round(interest.weight * 2) / 2 # can be uncommented to make the step size 0.5 instead of 0.1
             interest.save()
     return
+
 
 # LK
 def generate_short_term_model_dbpedia(user_id, source):
@@ -732,36 +756,14 @@ def generate_short_term_model_dbpedia(user_id, source):
 
 def get_weighted_interest_similarity_score(
     keyword_list_1, keyword_list_2, weights_1, weights_2, algorithm="WordEmbedding"
-):  # note add the new embedding here #LK
-    # print("keyword_list_1",keyword_list_1)#LK
-    if algorithm == "WordEmbedding":
-        return calculate_weighted_vectors_similarity(
-            keyword_list_1, keyword_list_2, weights_1, weights_2, embedding="Glove"
-        )
-    else:
-        return wikisim(keyword_list_1, keyword_list_2)
+):
+    return wikisim(keyword_list_1, keyword_list_2)
 
 
 def get_interest_similarity_score(
     keyword_list_1, keyword_list_2, algorithm="WordEmbedding"
 ):
-    # print("keyword_list_1",keyword_list_1)#LK
-    if algorithm == "WordEmbedding":
-        return calculate_similarity(keyword_list_1, keyword_list_2, embedding="Glove")
-    else:
-        return wikisim(keyword_list_1, keyword_list_2)
-
-
-# Jaleh
-def get_single_interest_similarity_score(
-    source_doc, target_doc, source_weight, target_weights, algorithm="WordEmbedding"
-):  # note add the new embedding here #LK
-    if algorithm == "WordEmbedding":
-        return calculate_weighted_vectors_similarity_single_word(
-            source_doc, target_doc, source_weight, target_weights, embedding="Glove"
-        )
-    else:
-        return wikisim(source_doc, target_doc)
+    return wikisim(keyword_list_1, keyword_list_2)
 
 
 def get_heat_map_data(user_1_interests, user_2_interests):
@@ -803,6 +805,7 @@ def get_venn_chart_data(user_1_interests, user_2_interests):
         "user_2_exclusive_interest": list(exclusive_user_2_interests),
         "similar_interests": similar_interests,
     }
+
 
 def get_top_short_term_interest_by_weight(user_id, count=10):
     paper_weight = 0.6
