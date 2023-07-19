@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     "accounts",
     "interests",
     "drf_yasg",
-    "conferences",
 ]
 
 REST_FRAMEWORK = {
