@@ -26,7 +26,6 @@ from .serializers import (
     InterestExtractionSerializer,
     KeywordSimilariySerializer,
     WikiCategoriesSerializer,
-    TweetSerializer,
 )
 from .models import (
     Keyword,
@@ -37,7 +36,6 @@ from .models import (
     LongTermInterest,
 )
 from accounts.models import User
-from .twitter_utils import get_recommended_tweets
 from .utils import (
     get_interest_similarity_score,
     get_top_long_term_interest_by_weight,
@@ -480,4 +478,3 @@ class UserActivityStatsView(APIView):
             key_name = tweet.created_at.strftime("%B %Y") # type: ignore
             tweet_data[key_name] = tweet_data.get(key_name, 0) + 1
         return Response({"papers": paper_data, "tweets": tweet_data})
-

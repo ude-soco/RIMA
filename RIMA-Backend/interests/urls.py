@@ -24,10 +24,7 @@ urlpatterns = [
     path("long/", views.UserShortTermInterestViewDummy.as_view()),
     path("activity-stats/user/<int:pk>/", views.UserActivityStatsView.as_view()),
     path("stream-graph/user/<int:pk>/", views.UserStreamGraphView.as_view()),
-    path("recommended-tweets", views.recommended_tweets),
-    path("tweets", views.TweetView.as_view()),
-    path("tweets/<slug:id_str>", views.DeleteTweetView.as_view()),
-    path("hello", views.HelloView.as_view()),
+
     # Jaleh
     path("recommended-publications", views.recommended_papers),
     path(
