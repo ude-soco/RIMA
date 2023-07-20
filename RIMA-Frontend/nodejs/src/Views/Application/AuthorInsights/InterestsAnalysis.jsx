@@ -1,13 +1,18 @@
-import { Grid, Paper, Typography, Select, MenuItem } from "@mui/material";
+import { Grid, Paper, Typography, Select, MenuItem, Box } from "@mui/material";
 import { BASE_URL_CONFERENCE } from "Services/constants";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 import InfoBox from "../ReuseableComponents/InfoBox";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import PublicationDialog from "../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
 
 const InterestsAnalysis = ({ authorProp }) => {
   const [minCount, setMinCount] = useState(1);
+  const [publicationList, setPublicationList] = useState([]);
+
   const [option, setOption] = useState({
     options: {
       chart: {
@@ -41,18 +46,36 @@ const InterestsAnalysis = ({ authorProp }) => {
       data: [0, 1, 0],
     },
   ]);
+  const [chartKey, setChartKey] = useState(Date.now());
+
+  const [openDialog, setOpenDialog] = useState(false);
   const [fetchedData, setFetchedData] = useState(null);
   const [loader, setLoader] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
-
+  const [selectedWord, setSelectedWord] = useState(null);
+  const [selectedSegmentWord, setSelectedSegmentWord] = useState("");
+  const [selectedSegmentWorYear, setSelectedSegmentWordYear] = useState("");
   useEffect(() => {
     getData();
   }, []);
   useEffect(() => {
     getData();
   }, [authorProp]);
+  useEffect(() => {
+    if (selectedSegmentWord !== "" && selectedSegmentWorYear !== "")
+      getWordPublication();
+  }, [selectedSegmentWord, selectedSegmentWorYear]);
 
+  useEffect(() => {
+    if (fetchedData !== null) {
+      updateChartData(fetchedData);
+    }
+  }, [minCount]);
+
+  const handleCountChange = (e) => {
+    setMinCount(parseInt(e.target.value));
+  };
   const getData = async () => {
     setShowWarning(false);
     setLoader(true);
@@ -65,6 +88,17 @@ const InterestsAnalysis = ({ authorProp }) => {
         chart: {
           type: "bar",
           stacked: true,
+          events: {
+            dataPointSelection: function (event, chartContext, config) {
+              const word = config.w.globals.labels[config.dataPointIndex];
+              const wordYear = response.series[config.seriesIndex].name;
+              console.log("selected Segment", word);
+              console.log("Segment", wordYear);
+
+              setSelectedSegmentWord(word);
+              setSelectedSegmentWordYear(wordYear);
+            },
+          },
         },
         plotOptions: {
           bar: {
@@ -86,42 +120,48 @@ const InterestsAnalysis = ({ authorProp }) => {
         },
       },
     };
-    console.log("response option: ", response.categories);
-    console.log("series", response.series);
     if (response.categories.length == 0) {
       setShowWarning(true);
     }
     setOption(opt);
-    setSeries(response.series);
+    let seriesWithOriginalIndex = response.series.map((item, index) => ({
+      ...item,
+      originalIndex: index,
+    }));
+    setSeries(seriesWithOriginalIndex);
     setLoader(false);
     setFetchedData(response);
+    setChartKey(Date.now());
   };
-
-  const handleCountChange = (e) => {
-    setMinCount(parseInt(e.target.value));
-  };
-
-  useEffect(() => {
-    if (fetchedData !== null) {
-      updateChartData(fetchedData);
-    }
-  }, [minCount]);
 
   const updateChartData = (data) => {
     setLoader(true);
-    let filteredSeries = data.series.filter((item) => {
-      let count = item.data.reduce(
-        (total, val) => total + (val > 0 ? 1 : 0),
-        0
-      );
-      return count >= minCount;
-    });
+    let filteredSeries = data.series
+      .map((item, index) => ({ ...item, originalIndex: index }))
+      .filter((item) => {
+        let count = item.data.reduce(
+          (total, val) => total + (val > 0 ? 1 : 0),
+          0
+        );
+        return count >= minCount;
+      });
 
     let opt = {
       options: {
         chart: {
           type: "bar",
           stacked: true,
+          events: {
+            dataPointSelection: function (event, chartContext, config) {
+              const word = config.w.globals.labels[config.dataPointIndex];
+              const wordYear = filteredSeries[config.seriesIndex].name;
+              console.log("selected word after filter: ", word);
+              console.log("selected year after filter:", wordYear);
+
+              setSelectedSegmentWord(word);
+              setSelectedSegmentWordYear(wordYear);
+            },
+          },
         },
         plotOptions: {
           bar: {
@@ -147,6 +187,29 @@ const InterestsAnalysis = ({ authorProp }) => {
     setOption(opt);
     setSeries(filteredSeries);
     setLoader(false);
+    setChartKey(Date.now());
+  };
+  const handleCloseDiaglog = () => {
+    setOpenDialog(false);
+    setSelectedSegmentWord("");
+    setSelectedSegmentWordYear("");
+  };
+  const getWordPublication = async () => {
+    console.log(" selectedSegmentWord:  ", selectedSegmentWord);
+    console.log(" selectedSegmentWorYear:  ", selectedSegmentWorYear);
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "getWordPublicationByYearAndAuthor" +
+        "/" +
+        authorProp.label +
+        "/" +
+        selectedSegmentWorYear +
+        "/" +
+        selectedSegmentWord
+    );
+    const response = await request.json();
+    setPublicationList(response.publicationList);
+    setOpenDialog(true);
   };
   return (
     <Grid
@@ -215,21 +278,25 @@ const InterestsAnalysis = ({ authorProp }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={1} marginBottom="2%" borderRadius="40px">
-        <Paper>
-          <Typography variant="body1">Minimum Count:</Typography>
-          <Select
-            value={minCount}
-            onChange={handleCountChange}
-            style={{ width: "100%" }}
-          >
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-          </Select>
-        </Paper>
+      <Grid item xs={4} marginBottom="2%" borderRadius="40px">
+        <Box sx={{ minWidth: "100%" }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Minimun Count</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={minCount}
+              label="Minimun Count"
+              onChange={handleCountChange}
+            >
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={4}>4</MenuItem>
+              <MenuItem value={5}>5</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Grid>
       <ActiveLoader
         marginLeft={"35%"}
@@ -240,6 +307,7 @@ const InterestsAnalysis = ({ authorProp }) => {
       <Grid item xs={12}>
         <Paper style={{ borderRadius: "40px", padding: "2%" }}>
           <ReactApexChart
+            key={chartKey}
             options={option.options}
             series={series}
             type="bar"
@@ -247,8 +315,15 @@ const InterestsAnalysis = ({ authorProp }) => {
           />
         </Paper>
       </Grid>
+      {publicationList && publicationList.length > 0 && (
+        <PublicationDialog
+          openDialogProps={openDialog}
+          papersProps={publicationList}
+          handleCloseDiaglog={handleCloseDiaglog}
+          originalKeywordsProps={[selectedSegmentWord]}
+        />
+      )}
     </Grid>
   );
 };
-
 export default InterestsAnalysis;

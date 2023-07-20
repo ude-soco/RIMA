@@ -66,6 +66,7 @@ const AuthorProfile = () => {
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
     const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailabeAuthors");
+
     const response = await request.json();
     setAuthors(response);
     console.log("authors", response);
@@ -115,6 +116,7 @@ const AuthorProfile = () => {
     const request = await fetch(
       BASE_URL_CONFERENCE + "getAllAvailableConferences/"
     );
+
     const response = await request.json();
     const confs = extractConfsNames(response);
     setConferences(confs);
@@ -311,15 +313,19 @@ const AuthorProfile = () => {
               justify="center"
               alignItems="center"
             >
-              <Grid item lg={5} xs={12}>
+              {/* <Grid item lg={5} xs={12}>
                 <AllAuthorPublication
                   authorNameProps={selectedAuthor}
                   conferencesProps={conferences}
                   selectedPublicationProp={handleSelectedPublication}
                 />
-              </Grid>
-              <Grid item lg={7} xs={12}>
-                <PublicationWordCloud PublicationProp={selectedPublication} />
+              </Grid> */}
+              <Grid item xs={12}>
+                <PublicationWordCloud
+                  authorNameProps={selectedAuthor}
+                  PublicationProp={selectedPublication}
+                  conferencesProps={conferences}
+                />
               </Grid>
             </Grid>
           </Paper>
