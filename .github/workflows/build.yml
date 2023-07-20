@@ -19,7 +19,7 @@ on:
         required: false
       timeout:
         type: number
-        default: 10
+        default: 60
         required: false
     secrets:
       registry_user:
