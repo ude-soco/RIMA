@@ -1,0 +1,26 @@
+image: python:3.9
+
+default: install
+
+tasks:
+  setup:
+    command: pip install pipenv
+
+  lock:
+    description: Resolve package dependencies and generate Pipfile.lock
+    dependencies:
+    - setup
+    input_paths:
+    - Pipfile
+    output_paths:
+    - Pipfile.lock
+    command: pipenv lock
+
+  install:
+    description: Install packages and display dependency tree
+    dependencies:
+    - lock
+    input_paths:
+    - Pipfile
+    - Pipfile.lock
+    command: pipenv install && pipenv graph
