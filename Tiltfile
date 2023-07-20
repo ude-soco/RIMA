@@ -18,6 +18,7 @@ docker_build('rima-frontend', './RIMA-Frontend',
     fall_back_on(['./RIMA-Frontend/nodejs/jsconfig.json']),
     sync('./RIMA-Frontend/nodejs', '/app'),
     run('cd /app && npm install', trigger = ['./package.json', './package-lock.json']),
+    restart_container()
   ]
 )
 
@@ -26,5 +27,6 @@ docker_build('rima-backend', './RIMA-Backend',
     fall_back_on(['./RIMA-Backend/Dockerfile']),
     sync('./RIMA-Backend', '/home/app'),
     run('cd /home/app && pipenv install', trigger = './RIMA-Backend/Pipfile'),
+    restart_container()
   ]
 )
