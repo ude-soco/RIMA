@@ -2,9 +2,10 @@
 FROM --platform=linux/amd64 python:3.7-slim AS python
 
 # Install dependencies
-ENV BUILD_DEPS "build-essential pkg-config gfortran libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
-ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3 "
-RUN --mount=type=cache,target=/var/cache/apt,rw --mount=type=cache,target=/var/lib/apt,rw <<EOF
+ENV BUILD_DEPS "build-essential pkg-config python3-dev gfortran default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
+ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3 libpq-dev"
+RUN --mount=type=cache,target=/var/cache/apt,rw \
+    --mount=type=cache,target=/var/lib/apt,rw <<EOF
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
   apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 $BUILD_DEPS $RUNTIME_DEPS
 EOF
@@ -29,7 +30,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install Python dependencies
 COPY --chown=app:app Pipfile* .
-RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 --mount=type=cache,target=/home/app/.cache/pipenv,uid=1000 <<EOF
+RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 \
+     --mount=type=cache,target=/home/app/.cache/pipenv,uid=1000 <<EOF
   pip install --no-color pipenv &&
   pipenv install --deploy
 EOF
