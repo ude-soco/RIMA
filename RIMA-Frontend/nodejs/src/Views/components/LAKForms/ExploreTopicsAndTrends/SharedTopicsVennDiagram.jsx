@@ -1,4 +1,4 @@
-// new class created by Islam
+// new class created by Islam Abdelghaffar
 import { Grid, Paper } from "@mui/material";
 import React, { useState } from "react";
 import InteractiveVennDiagram from "../../../Application/ReuseableComponents/InteractiveVennDiagram";

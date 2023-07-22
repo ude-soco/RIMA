@@ -1,3 +1,4 @@
+// new class created by Islam Abdelghaffar
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { BASE_URL_CONFERENCE } from "../../../../Services/constants";

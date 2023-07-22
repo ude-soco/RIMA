@@ -1,5 +1,6 @@
 //Done by Swarna
 // Updated by Basem Abughallya
+// updated by Islam Abdelghaffar -- new component created and used
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
 import {
@@ -456,13 +457,13 @@ export default function ConferenceBar(props) {
               conferences={conference}
             />
           </Grid>
-          <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
+          {/* <Grid item xs={12} className="main" style={{ ...Style.itemStyle }}>
             <TopRelevantTopicsInConf
               conferenceName={selectedOption.value}
               confEvents={confEvents}
               confEvent={confEvents[0].value}
             />{" "}
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
       <ScrollTopWrapper />
