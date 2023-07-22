@@ -23,7 +23,12 @@ const InteractiveVennDiagram = ({
   listContent,
   label,
   handleGetPublications,
+  selectedAuthorSet,
+  IsAuthor = false,
 }) => {
+  console.log("sets: ", sets);
+  console.log("listContent from interactive class: ", listContent);
+  console.log("label: ", label);
   const [selectedEventOriginal, setSelectedEventOriginal] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(selectedEventOriginal);
   const [selectedSet, setSelectedSet] = useState("");
@@ -70,7 +75,9 @@ const InteractiveVennDiagram = ({
           return (
             '<span style="color:' +
             this.point.color +
-            `">\u25CF</span> Total number of ${label}s in ` +
+            `">\u25CF</span> Total number of ${label}s ${
+              !IsAuthor ? "in" : "by"
+            } ` +
             this.point.name +
             ": " +
             this.point.value +
@@ -114,18 +121,26 @@ const InteractiveVennDiagram = ({
               const clickedSets = this.sets;
               clickedSets.sort();
               let clickedSetesName = clickedSets.join(" and ");
-              listContentRef.current.map((set) => {
-                if (set.name === clickedSetesName) {
-                  console.log("names equal");
-                  setSelectedSet(set.name);
-                  if (label == "author") {
-                    setSelectedEventOriginal(set.authors_names);
+              if (listContentRef.current) {
+                listContentRef.current.map((set) => {
+                  {
+                    selectedAuthorSet && selectedAuthorSet(clickedSetesName);
                   }
-                  if (label == "topic") {
-                    setSelectedEventOriginal(set.keywords);
+                  if (set.name === clickedSetesName) {
+                    console.log("names equal");
+                    setSelectedSet(set.name);
+                    if (label == "author") {
+                      setSelectedEventOriginal(set.authors_names);
+                    }
+                    if (label == "topic") {
+                      setSelectedEventOriginal(set.keywords);
+                    }
+                    if (label == "publication") {
+                      setSelectedEventOriginal(set.pubs_titles);
+                    }
                   }
-                }
-              });
+                });
+              }
             },
           },
         },
@@ -144,7 +159,8 @@ const InteractiveVennDiagram = ({
         <Grid container xs={12} md={8}>
           <Grid item>
             <Typography style={{ marginTop: "1%" }} variant="h6">
-              list of {label}s in {selectedSet}
+              list of {label}s {label == ""}
+              {!IsAuthor ? "in" : "by"} {selectedSet}
             </Typography>
           </Grid>
           <Grid item justify="center" alignItems="center">
@@ -167,37 +183,41 @@ const InteractiveVennDiagram = ({
             </i>
           </Grid>
         </Grid>
-        <TextField
-          label="search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          margin="normal"
-          variant="outlined"
-          fullWidth
-        />
-        <Paper style={{ maxHeight: "30vh", overflow: "scroll" }}>
-          <List>
-            {selectedEvent &&
-              selectedEvent.map((item) => (
-                <ListItem button>
-                  <ListItemText primary={item}></ListItemText>{" "}
-                  {label == "topic" && (
-                    <ListItemSecondaryAction>
-                      <Tooltip title="Publications">
-                        <IconButton
-                          onClick={() =>
-                            handleGetPublications(item, selectedSet)
-                          }
-                        >
-                          <ArticleIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  )}
-                </ListItem>
-              ))}
-          </List>
-        </Paper>
+        <Grid>
+          <TextField
+            label="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            fullWidth
+          />
+          <Paper style={{ maxHeight: "30vh", overflow: "scroll" }}>
+            <List>
+              {selectedEvent &&
+                selectedEvent.map((item) => (
+                  <ListItem button>
+                    <ListItemText primary={item}></ListItemText>{" "}
+                    {(label == "topic" ||
+                      label == "keyword" ||
+                      label == "publication") && (
+                      <ListItemSecondaryAction>
+                        <Tooltip title="Publications">
+                          <IconButton
+                            onClick={() =>
+                              handleGetPublications(item, selectedSet)
+                            }
+                          >
+                            <ArticleIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </ListItemSecondaryAction>
+                    )}
+                  </ListItem>
+                ))}
+            </List>
+          </Paper>
+        </Grid>
       </Grid>
     </Grid>
   );

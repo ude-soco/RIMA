@@ -1,25 +1,18 @@
-import {
-  Grid,
-  Typography,
-  Paper,
-  ListItem,
-  ListItemButton,
-  IconButton,
-  Box,
-} from "@mui/material";
+// created by Islam Abdelghaffar
+
+import { Grid, Typography, Paper, IconButton } from "@mui/material";
 import * as React from "react";
-import ListItemText from "@mui/material/ListItemText";
-import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import ReactWordcloud from "react-wordcloud";
-import List from "@mui/material/List";
-import InfoBox from "../ReuseableComponents/InfoBox";
-import ActiveLoader from "../ReuseableComponents/ActiveLoader";
-import ArticleIcon from "@mui/icons-material/Article";
 import { BASE_URL_CONFERENCE } from "Services/constants";
 import { useEffect } from "react";
+import RIMAAutoComplete from "./RIMAAutoComplete";
+import ArticleIcon from "@mui/icons-material/Article";
+import PublicationDialog from "../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
 
-const PublicationWordCloud = ({ PublicationProp }) => {
+const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+
   const options = {
     colors: ["#b39ddb", "#7e57c2", "#4fc3f7", "#03a9f4", "#0288d1", "#01579b"],
     enableTooltip: true,
@@ -50,28 +43,64 @@ const PublicationWordCloud = ({ PublicationProp }) => {
     { text: "learning activity design", value: 0.9270649279070103 },
     { text: "learning activity design", value: 0.9270649279070103 },
   ]);
-  const [selectedWord, setSelectedWord] = useState("");
-  const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
+  const [selectedWord, setSelectedWord] = useState(null);
   const [showWarning, setShowWarning] = useState(false);
-  useEffect(() => {
-    getTopicOfPublication();
-  }, []);
+  const [publicationList, setPublicationList] = useState([]);
+
+  const [publications, setPublications] = useState([
+    { title: "publication 1", id: "1" },
+    { title: "publication 2", id: "2" },
+    { title: "publication 3", id: "3" },
+  ]);
+  const [selectedPublication, setSelectedPublication] = useState({});
 
   useEffect(() => {
+    getAuthorPublications();
+  }, []);
+  useEffect(() => {
+    getAuthorPublications();
+  }, [authorNameProps]);
+  useEffect(() => {
     getTopicOfPublication();
-  }, [PublicationProp]);
+  }, [selectedPublication]);
+
   const getTopicOfPublication = async () => {
+    if (!selectedPublication) {
+      return;
+    }
     setShowWarning(false);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getPublicationKeywords/" + PublicationProp.id
+      BASE_URL_CONFERENCE + "getPublicationKeywords/" + selectedPublication.id
     );
     const response = await request.json();
     if (response.length === 0) {
       setShowWarning(true);
     }
     setSeries(response);
-
-    console.log("word cloud sereis: ", response);
+  };
+  const getSelectedPublication = async () => {
+    if (!selectedPublication) {
+      return;
+    }
+    const request = await fetch(
+      BASE_URL_CONFERENCE + "getPublicationByID/" + selectedPublication.id
+    );
+    const response = await request.json();
+    setPublicationList(response.publicationList);
+    setOpenDialog(true);
+  };
+  const getAuthorPublications = async () => {
+    const request = await fetch(
+      BASE_URL_CONFERENCE + "getAuthorPublications/" + authorNameProps.label
+    );
+    const response = await request.json();
+    setPublications(response);
+  };
+  const HandleSelectedPublication = (pubication) => {
+    setSelectedPublication(pubication);
+  };
+  const handleCloseDiaglog = () => {
+    setOpenDialog(false);
   };
   return (
     <Grid
@@ -84,15 +113,15 @@ const PublicationWordCloud = ({ PublicationProp }) => {
       }}
     >
       <Grid container xs={12} marginBottom={"6%"}>
-        <Grid item xs={12} marginBottom={"4%"}>
+        <Grid item xs={12}>
           <Typography
             style={{ fontWeight: "bold" }}
             variant="h5"
             component="h1"
             gutterBottom
-            marginBottom={"3%"}
           >
-            Most popular topics in {PublicationProp.title}
+            Most popular topics in{" "}
+            {selectedPublication && selectedPublication.title}
           </Typography>
         </Grid>
         <Grid container xs={12}>
@@ -104,43 +133,64 @@ const PublicationWordCloud = ({ PublicationProp }) => {
               to its significance. Larger words indicate topics of greater
               importance or influence.
             </Typography>
-            {showWarning && (
-              <Typography
-                style={{ fontWeight: "bold", color: "#BC211D" }}
-                variant="h6"
-                gutterBottom
-                marginBottom={"3%"}
-              >
-                {" "}
-                No topics available for this publication
-              </Typography>
-            )}
-            <Grid item justify="center" alignItems="center">
-              <i
-                className="fas fa-question-circle text-blue"
-                onMouseOver={() => setImageTooltipOpen(true)}
-                onMouseOut={() => setImageTooltipOpen(false)}
-              >
-                {imageTooltipOpen && (
-                  <InfoBox
-                    marginLeft={"50%"}
-                    style={{
-                      transform: "translateX(-50%)",
-                    }}
-                    Info={`By clicking on Topics icon in publication list,
-                      the word cloud will be generated`}
-                  />
-                )}
-              </i>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h6">
+            This list contains all of {authorNameProps.name}'s publications that
+            have been published in ({conferencesProps.join(", ")}) conferences.
+            Publications are ordered in descending order based on the number of
+            citations they have received, highlighting those with the greatest
+            academic impact at the top of the list.
+          </Typography>
+        </Grid>
+        <Grid container>
+          <Grid xs={8}>
+            <RIMAAutoComplete
+              PublicationsProps={publications}
+              setvalueProps={HandleSelectedPublication}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Grid container>
+              <Grid item xs={2}>
+                <IconButton
+                  aria-label="comment"
+                  onClick={() => {
+                    getSelectedPublication();
+                  }}
+                >
+                  <ArticleIcon />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid container xs={12} style={{ padding: "1%", marginTop: "1%" }}>
+      {showWarning && (
+        <Typography
+          style={{ fontWeight: "bold", color: "#BC211D" }}
+          variant="h6"
+          gutterBottom
+          marginBottom={"3%"}
+        >
+          {" "}
+          No topics available for this publication
+        </Typography>
+      )}
+      <Grid container xs={12} style={{ padding: "1%" }}>
         <Paper style={{ width: "100%", height: "450px", borderRadius: "40px" }}>
           <ReactWordcloud id="tpc_cloud" options={options} words={series} />
         </Paper>
       </Grid>
+      {publicationList && publicationList.length > 0 && (
+        <PublicationDialog
+          openDialogProps={openDialog}
+          papersProps={publicationList}
+          handleCloseDiaglog={handleCloseDiaglog}
+          originalKeywordsProps={[selectedWord]}
+        />
+      )}
     </Grid>
   );
 };
