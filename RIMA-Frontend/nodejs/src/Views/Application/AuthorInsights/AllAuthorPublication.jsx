@@ -40,7 +40,9 @@ export default function AllAuthorPublication({
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-
+  useEffect(() => {
+    
+  },[])
   const [loader, setLoader] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState({});
 
@@ -139,7 +141,7 @@ export default function AllAuthorPublication({
               <Grid item xs={12} style={{ marginBottom: "0%", margin: "2%" }}>
                 <TextField
                   fullWidth
-                  label="Search"
+                  label="Search by publication name"
                   variant="outlined"
                   onChange={handleSearch}
                 />

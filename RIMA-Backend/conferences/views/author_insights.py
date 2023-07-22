@@ -97,11 +97,44 @@ class getAuthorPublicatinInYear(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        author_name = url_splits_slash[-2]
+        author_id = url_splits_slash[-2]
         pub_year = url_splits_slash[-1]
         final_pubs_list = []
         publication_List = authorInsightsUtil.get_Author_Pubs_InYear(
-            author_name, pub_year)
+            author_id, pub_year)
+
+        if publication_List is not None:
+            final_pubs_list = [{
+                "paper_id": pub.paper_id,
+                "title": pub.title,
+                "authors": ', '.join([author.author_name for author in pub.authors]),
+                "abstract": pub.abstract,
+                "year": pub.years,
+                "url": pub.urls,
+                "event":pub.published_in[0].conference_event_name_abbr,
+            }for pub in publication_List]
+
+        print("publicationList", (final_pubs_list))
+
+        return Response({
+            "publicationList": final_pubs_list
+        })
+
+
+class getWordPublicationByYearAndAuthor(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        author_id = url_splits_slash[-4]
+        word = url_splits_slash[-3]
+        pub_year = url_splits_slash[-2]
+        print("author_name:", author_id)
+        print("word: ", word)
+        print("pub_year: ", pub_year)
+
+        final_pubs_list = []
+        publication_List = authorInsightsUtil.get_Author_Pubs_By_keyword_InYear(
+            author_id, word, pub_year)
 
         if publication_List is not None:
             final_pubs_list = [{
@@ -346,6 +379,64 @@ class getPublicationByID(APIView):
         publication_List = Publication.nodes.filter(
             paper_id=publication_id.strip())
 
+        if publication_List is not None:
+            final_pubs_list = [{
+                "paper_id": pub.paper_id,
+                "title": pub.title,
+                "authors": ', '.join([author.author_name for author in pub.authors]),
+                "abstract": pub.abstract,
+                "year": pub.years,
+                "url": pub.urls,
+                "event":pub.published_in[0].conference_event_name_abbr,
+            }for pub in publication_List]
+
+        print("publicationList", (final_pubs_list))
+
+        return Response({
+            "publicationList": final_pubs_list
+        })
+
+
+class getPublicationByTitle(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        publication_Title = url_splits_slash[-2]
+        final_pubs_list = []
+
+        publication_List = Publication.nodes.filter(
+            title=publication_Title.strip())
+
+        if publication_List is not None:
+            final_pubs_list = [{
+                "paper_id": pub.paper_id,
+                "title": pub.title,
+                "authors": ', '.join([author.author_name for author in pub.authors]),
+                "abstract": pub.abstract,
+                "year": pub.years,
+                "url": pub.urls,
+                "event":pub.published_in[0].conference_event_name_abbr,
+            }for pub in publication_List]
+
+        print("publicationList", (final_pubs_list))
+
+        return Response({
+            "publicationList": final_pubs_list
+        })
+
+
+class getPublicationByKeywordOfAuthor(APIView):
+    def get(self, request, *args, **kwargs):
+        url_splits_slash = confutils.split_restapi_url(
+            request.get_full_path(), r'/')
+        selectedKeyword = url_splits_slash[-3]
+        authors = url_splits_slash[-2].split("&")
+        print("authors: ", authors)
+        print("selectedKeyword: ", selectedKeyword)
+        final_pubs_list = []
+
+        publication_List = authorInsightsUtil.get_author_publications_keyword_based(
+            selectedKeyword, authors)
         if publication_List is not None:
             final_pubs_list = [{
                 "paper_id": pub.paper_id,

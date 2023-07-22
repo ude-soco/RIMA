@@ -44,8 +44,8 @@ class Publication(StructuredNode):
     years = StringProperty()
 
     published_in = RelationshipFrom("Event", "has_publication")
-    published_in_Confs = RelationshipFrom("Conference", "has_publication")
     keywords = RelationshipTo(Keyword, 'has_keyword', model=Has_keyword)
+    published_in_Confs = RelationshipFrom("Conference", "has_publication")
     topics = RelationshipTo(Topic, 'has_topic', model=Has_Topic)
     authors = RelationshipFrom("Author", "published")
 

@@ -12,6 +12,8 @@ urlpatterns = [
          getAuthorPublicationsOverYears.as_view()),
     path("getAuthorPublicatinListInYear/<pk1>/<pk2>",
          getAuthorPublicatinInYear.as_view()),
+    path("getWordPublicationByYearAndAuthor/<pk1>/<pk2>/<pk3>/",
+         getWordPublicationByYearAndAuthor.as_view()),
     path("getPublicationListBasedOnEventName/<pk1>/<pk2>",
          getPublicationListBasedOnEventName.as_view()),
     path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
@@ -31,8 +33,22 @@ urlpatterns = [
     path("getAuthorPublications/<pk1>/", getAuthorPublications.as_view()),
     path("getPublicationKeywords/<pk1>/", getPublicationKeywords.as_view()),
     path("getPublicationByID/<pk1>/", getPublicationByID.as_view()),
+    path("getPublicationByKeywordOfAuthor/<pk1>/<pk2>/",
+         getPublicationByKeywordOfAuthor.as_view()),
+    path("getPublicationByTitle/<pk1>/", getPublicationByTitle.as_view()),
     path("getAuthorInterestes/<pk1>/", getAuthorInterestes.as_view()),
-
+    path("coauthor_evolution_over_time/<pk1>/",
+         coauthor_evolution_over_time.as_view()),
+    path("compareAuthorsBasedPublicationCount/<pk1>/<pk2>",
+         compareAuthorsBasedPublicationCount.as_view()),
+    path("coauthorEvolutionOverTime/<pk1>",
+         coauthor_evolution_over_time.as_view()),
+    path("sharedInterestsBetweenAuthor/<pk1>/<pk2>/",
+         sharedInterestsBetweenAuthor.as_view()),
+    path("sharedPublicationBetweenAuthors/<pk1>/<pk2>/",
+         sharedPublicationBetweenAuthors.as_view()),
+    path("AuthorProductivityEvolution/<pk1>/<pk2>/",
+         AuthorProductivityEvolution.as_view()),
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################

@@ -423,12 +423,22 @@ def sort_authors(authors):
     return data
 
 
-def get_Author_Pubs_InYear(author_name, pub_year):
-    author_node = Author.nodes.filter(author_name=author_name.strip())
+def get_Author_Pubs_InYear(author_id, pub_year):
+    author_node = Author.nodes.filter(
+        semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
 
     pubs = [publication for publication in author_pubs
             if publication.years == pub_year.strip()]
+
+    return pubs
+
+
+def get_Author_Pubs_By_keyword_InYear(author_id, keyword, pub_year):
+    pubs = get_Author_Pubs_InYear(author_id, pub_year)
+    print("publications: ", pubs)
+    pubs = [pub for pub in pubs if keyword in [
+        keyword.keyword for keyword in pub.keywords.all()]]
 
     return pubs
 
@@ -483,9 +493,6 @@ def get_Author_Pubs_Citations_OverTime(selectedConferences, author_id):
 
 def get_publications_citation_count(author_pubs):
     print("get_publications_with_years_event_based2 called")
-
-    years = [pub.years for pub in author_pubs]
-    years = [year[:4] for year in years]
 
     events_pubs1 = [extract_year(pub.published_in[0].conference_event_name_abbr)
                     for pub in author_pubs]
@@ -596,3 +603,17 @@ def get_author_interests(author_id):
     print(data)
     print("***********************************************************************************")
     return data
+
+
+def get_author_publications_keyword_based(selectedKeyword, author_list):
+    publication_List = []
+    for author_id in author_list:
+        author_node = Author.nodes.get(
+            semantic_scolar_author_id=author_id.strip())
+        author_publication_List = author_node.published.all()
+        publications = [pub for pub in author_publication_List
+                        if selectedKeyword.strip()
+                        in [keyword.keyword for keyword in pub.keywords.all()]]
+        publication_List.extend(publications)
+
+    return publication_List
