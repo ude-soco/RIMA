@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import RIMAButton from "../ReuseableComponents/RIMAButton";
+import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 
 const AuthorsProductivityOverTime = () => {
   const [authors, setAuthors] = useState([{ name: "A1", label: 1 }]);
@@ -40,6 +41,7 @@ const AuthorsProductivityOverTime = () => {
     if (selectedAuthors.length == 0) {
       return;
     }
+    setActiveLoader(true);
     console.log("selectedAuthors: ", selectedAuthors);
     const request = await fetch(
       BASE_URL_CONFERENCE +
@@ -78,6 +80,7 @@ const AuthorsProductivityOverTime = () => {
       },
     });
     setSeries(extractedSeries);
+    setActiveLoader(false);
   };
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
@@ -191,6 +194,13 @@ const AuthorsProductivityOverTime = () => {
               borderRadius: "40px",
             }}
           >
+            <ActiveLoader
+              width={50}
+              height={50}
+              marginLeft="50%"
+              visible={loader}
+            />
+
             <ReactApexChart
               options={option}
               series={series}

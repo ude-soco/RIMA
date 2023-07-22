@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import RIMAButton from "../ReuseableComponents/RIMAButton";
+import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 
 const CoauthorEvolution = () => {
   const [authors, setAuthors] = useState([{ name: "A1", label: 1 }]);
@@ -40,6 +41,7 @@ const CoauthorEvolution = () => {
     if (selectedAuthors.length == 0) {
       return;
     }
+    setActiveLoader(true);
     console.log("selectedAuthors: ", selectedAuthors);
     const request = await fetch(
       BASE_URL_CONFERENCE +
@@ -76,6 +78,7 @@ const CoauthorEvolution = () => {
       },
     });
     setSeries(extractedSeries);
+    setActiveLoader(false);
   };
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
@@ -170,6 +173,12 @@ const CoauthorEvolution = () => {
               borderRadius: "40px",
             }}
           >
+            <ActiveLoader
+              width={50}
+              height={50}
+              marginLeft="50%"
+              visible={loader}
+            />
             <ReactApexChart
               options={option}
               series={series}

@@ -52,9 +52,6 @@ const CompareAuthorsNew = () => {
         <Grid item xs={12}>
           <CompareAuthorsStackedBarChart />
         </Grid>
-        <Grid item xs={12} md={5}>
-          <CompareAuthorTotalCitation />
-        </Grid>
       </Grid>
       <Grid container component={Paper} className={classes.cardHeight}>
         <Grid item xs={12}>

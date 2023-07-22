@@ -97,27 +97,44 @@ def get_publication_counts_each_conf(author_pubs):
     return publications_confs
 
 
-def get_authors_citations(author_list):
+def get_authors_citations(confs, author_list):
     data = []
+    total_citation = []
+    categoreis = []
+    final_data = []
     for author_id in author_list:
-        author_node = Author.nodes.filter(
+        author_node = Author.nodes.get(
             semantic_scolar_author_id=author_id)
         author_pubs = author_node.published.all()
+        author_pubs = [
+            pub for pub in author_pubs
+            if pub.published_in_Confs[0].conference_name_abbr in confs]
         citations = 0
         for pub in author_pubs:
             citationsString = pub.citiations
-            citations = citations + ast.literal_eval(citationsString)
+            citations = citations + len(ast.literal_eval(citationsString))
 
         pubs_in_confs = [
-            pub.published_in_Confs.conference_name_abbr for pub in author_pubs]
+            pub.published_in_Confs[0].conference_name_abbr for pub in author_pubs]
+
+        categoreis.append(author_node.author_name)
+        total_citation.append({
+            "name":author_node.author_name,
+            "data":[citations]
+        })
         data.append({
             "name": author_node.author_name,
             "data": citations,
             "conferences": pubs_in_confs,
             "pubs_count": len(author_pubs)
         })
+    final_data.append({
+        "categories": categoreis,
+        "citations": total_citation
+    })
 
-    return data
+    print("final_data: ", final_data)
+    return final_data
 
 
 def get_co_author_evolutions(author_list):

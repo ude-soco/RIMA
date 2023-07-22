@@ -49,6 +49,8 @@ urlpatterns = [
          sharedPublicationBetweenAuthors.as_view()),
     path("AuthorProductivityEvolution/<pk1>/<pk2>/",
          AuthorProductivityEvolution.as_view()),
+    path("compareAuthorsBasedCitationCountAllConf/<pk1>/<pk2>/",
+         compareAuthorsBasedCitationCountAllConf.as_view()),
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################

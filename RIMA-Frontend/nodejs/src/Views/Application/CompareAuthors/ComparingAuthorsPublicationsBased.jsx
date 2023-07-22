@@ -43,6 +43,10 @@ const CompareAuthorsStackedBarChart = () => {
       chart: {
         stacked: true,
       },
+      title: {
+        text: `Number of publication published in selected conferences`,
+        align: "center",
+      },
       plotOptions: {
         bar: {
           horizontal: false,
@@ -54,9 +58,7 @@ const CompareAuthorsStackedBarChart = () => {
         colors: ["#fff"],
       },
       xaxis: {
-        categories: [
-          2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021,
-        ],
+        categories: ["R. Baker", "R. Mohet"],
       },
       yaxis: {
         title: {
@@ -77,11 +79,61 @@ const CompareAuthorsStackedBarChart = () => {
     series: [
       {
         name: "edm",
-        data: [4, 5, 6, 8, 7, 6, 5, 4, 5, 4],
+        data: [4, 5],
       },
       {
         name: "lak",
-        data: [3, 5, 7, 9, 8, 7, 6, 5, 4, 3],
+        data: [3, 5],
+      },
+    ],
+  });
+  const [stackedCitationData, setBarCitationData] = useState({
+    options: {
+      chart: {
+        stacked: false,
+      },
+      title: {
+        text: `Citation count based 
+        on publications published in selected conferences`,
+        align: "center",
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+        },
+      },
+      height: 200,
+      stroke: {
+        width: 1,
+        colors: ["#fff"],
+      },
+      xaxis: {
+        categories: ["R. Baker", "R. Mohet"],
+      },
+      yaxis: {
+        title: {
+          text: undefined,
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + " Citation";
+          },
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+    },
+    series: [
+      {
+        name: "R. Baker",
+        data: [4],
+      },
+      {
+        name: "R. Mohet",
+        data: [4],
       },
     ],
   });
@@ -182,6 +234,68 @@ const CompareAuthorsStackedBarChart = () => {
     console.log("authors", response);
     setActiveLoader(false);
   };
+  const getBarCitationData = async () => {
+    if (selectedAuthor.length == 0 || selectedConferences.length == 0) {
+      console.log("getBarStackData  returened");
+      return;
+    }
+    setActiveButton(true);
+    setActiveLoader(true);
+    const request = await fetch(
+      BASE_URL_CONFERENCE +
+        "compareAuthorsBasedCitationCountAllConf/" +
+        selectedAuthor.join("&") +
+        "/" +
+        selectedConferences.join("&")
+    );
+
+    const response = await request.json();
+    console.log("responseLL : ", response[0].categories);
+    console.log("responseLL : ", response);
+    setBarCitationData({
+      options: {
+        chart: {
+          stacked: false,
+        },
+        title: {
+          text: `Citation count based 
+          on publications published in ${selectedConferences.join(",")}`,
+          align: "center",
+        },
+        height: 200,
+        plotOptions: {
+          bar: {
+            horizontal: false,
+          },
+        },
+        stroke: {
+          width: 1,
+          colors: ["#fff"],
+        },
+        xaxis: {
+          categories: response[0].categories,
+        },
+        yaxis: {
+          title: {
+            text: undefined,
+          },
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + "Citations";
+            },
+          },
+        },
+        fill: {
+          opacity: 1,
+        },
+      },
+      series: response[0].citations,
+    });
+    console.log("authors", response);
+    setActiveLoader(false);
+  };
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
       BASE_URL_CONFERENCE + "getAllAvailableConferences/"
@@ -233,6 +347,7 @@ const CompareAuthorsStackedBarChart = () => {
     setCompareClicked(true);
     getBarStackData();
     getSharedPublicationsCount();
+    getBarCitationData();
   };
   const handleCloseDiaglog = () => {
     setOpenDialog(false);
@@ -316,30 +431,55 @@ const CompareAuthorsStackedBarChart = () => {
             />
           </Box>
         </Grid>
-      </Grid>
-      <Grid>
-        <RIMAButton
-          name="Compare"
-          onClick={handleCompare}
-          activeButton={activeButton}
-        />
-      </Grid>
-      <Grid item xs={12} style={{ marginTop: "1%" }}>
-        <Paper
-          sx={{
-            width: "100%",
-            padding: "1%",
-            borderRadius: "40px",
-          }}
-        >
-          <ActiveLoader
-            marginLeft="35%"
-            height={50}
-            width={50}
-            visible={loader}
+        <Grid item xs={12}>
+          <RIMAButton
+            name="Compare"
+            onClick={handleCompare}
+            activeButton={activeButton}
           />
-          <StackedBarChart DataProps={stackedBarData} loader={false} />
-        </Paper>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        spacing={1}
+        alignContent={"center"}
+        alignItems={"center"}
+        alignSelf={"center"}
+      >
+        <Grid item md={7} xs={12} style={{ marginTop: "2%" }}>
+          <Paper
+            sx={{
+              width: "100%",
+              padding: "1%",
+              borderRadius: "40px",
+            }}
+          >
+            <ActiveLoader
+              marginLeft="20%"
+              height={50}
+              width={50}
+              visible={loader}
+            />
+            <StackedBarChart DataProps={stackedBarData} loader={false} />
+          </Paper>
+        </Grid>
+        <Grid item md={5} xs={12} style={{ marginTop: "2%" }}>
+          <Paper
+            sx={{
+              width: "100%",
+              padding: "1%",
+              borderRadius: "40px",
+            }}
+          >
+            <ActiveLoader
+              marginLeft="10%"
+              height={50}
+              width={50}
+              visible={loader}
+            />
+            <StackedBarChart DataProps={stackedCitationData} loader={false} />
+          </Paper>
+        </Grid>
       </Grid>
       <Grid
         item

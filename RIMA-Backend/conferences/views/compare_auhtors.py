@@ -30,8 +30,11 @@ class compareAuthorsBasedCitationCountAllConf(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        author_list = url_splits_slash[-1].splite("&")
-        authors_data = compareAuthorsUtils.get_authors_citations(author_list)
+        author_list = url_splits_slash[-3].split("&")
+        confs_list = url_splits_slash[-2].split("&")
+        print("confs: ", confs_list)
+        authors_data = compareAuthorsUtils.get_authors_citations(
+            confs_list, author_list)
 
         return Response(authors_data)
 
@@ -122,7 +125,8 @@ class AuthorProductivityEvolution(APIView):
 
         author_list = url_splits_slash[-3].split("&")
         confs = url_splits_slash[-2].split("&")
-        authors_data = compareAuthorsUtils.get_authors_pubs_evolutions(confs,author_list)
+        authors_data = compareAuthorsUtils.get_authors_pubs_evolutions(
+            confs, author_list)
 
         print("author data: ", authors_data)
 
