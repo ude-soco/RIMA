@@ -31,6 +31,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ThumbsUpDownIcon from "@material-ui/icons/ThumbsUpDown";
 import MeetingRoomOutlined from "@material-ui/icons/MeetingRoomOutlined";
 import CompareIcon from "@material-ui/icons/Compare";
+import InsightsIcon from "@mui/icons-material/Insights";
 
 const drawerWidth = 320;
 
@@ -105,6 +106,9 @@ export default function SideBar({ selection, setSelection }) {
         break;
       case "viewConference":
         history.push("/app/view-conference");
+        break;
+      case "CompareAuthorsNew":
+        history.push("/app/CompareAuthorsNew");
         break;
       case "viewAuthor":
         history.push({
@@ -376,13 +380,13 @@ export default function SideBar({ selection, setSelection }) {
 
           <ListItem
             button
-            id="conferenceNetwork"
-            selected={selectedList("conferenceNetwork")}
+            id="CompareAuthorsNew"
+            selected={selectedList("CompareAuthorsNew")}
             onClick={handleSelect}
-            className={selectedList("conferenceNetwork")}
+            className={selectedList("CompareAuthorsNew")}
           >
             <ListItemIcon className={classes.listIconNested}>
-              <GroupIcon className={selectedList("conferenceNetwork")} />
+              <GroupIcon className={selectedList("CompareAuthorsNew")} />
             </ListItemIcon>
             <ListItemText primary="Compare Authors" />
           </ListItem>
@@ -395,9 +399,10 @@ export default function SideBar({ selection, setSelection }) {
             onClick={handleSelect}
             className={selectedList("authorInsights")}
           >
-            <ListItemIcon className="classes.listIconNested">
-              <ListItemText primary="Author insights" />
+            <ListItemIcon className={classes.listIconNested}>
+              <InsightsIcon className={selectedList("conferenceNetwork")} />
             </ListItemIcon>
+            <ListItemText primary="Author insights" />
           </ListItem>
 
           {/* <ListItem
