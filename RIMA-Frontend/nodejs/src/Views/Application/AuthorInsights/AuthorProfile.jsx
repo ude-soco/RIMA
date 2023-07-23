@@ -39,6 +39,7 @@ const AuthorProfile = () => {
   let [networkData, setNetworkData] = useState([]);
   const [authorData, setAuthorData] = useState(null);
   const [mostPublisehd, setMostPublisehd] = useState(true);
+  const [authorToShowProfile, setAuthorsToShowProfile] = useState(null);
   const [selectedConferences, setSelectedConferences] = useState([
     { name: "All Conferences", label: "All Conferences" },
   ]);
@@ -53,6 +54,30 @@ const AuthorProfile = () => {
     getAuthorFilterBased();
     getAllAvailbelConfs();
   }, []);
+
+  useEffect(() => {
+    let urlParams = new URLSearchParams(window.location.search);
+    let authorParam = urlParams.get("author"); 
+    if (authorParam) {
+      let author = Object.fromEntries(new URLSearchParams(authorParam)); 
+      console.log("auhtor to show profile: ", author);
+      if (author.name !== null && author.label !== null) {
+        console.log("shown");
+        setAuthorsToShowProfile(author);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      authorToShowProfile !== null &&
+      authorToShowProfile.name !== null &&
+      authorToShowProfile.label !== null
+    ) {
+      console.log("author to show profile is set");
+      setSelectedAuthor(authorToShowProfile);
+    }
+  }, [authorToShowProfile]);
 
   useEffect(() => {
     handleGenerateGraph();
@@ -167,11 +192,10 @@ const AuthorProfile = () => {
     setSelectedPublication(publication);
   };
   const showCoAuthorPropfile = (author) => {
-    setSelectedAuthor(author);
-    window.scrollTo({
-      top: 10,
-      behavior: "smooth",
-    });
+    console.log("author to send", author);
+    let queryParam = new URLSearchParams(author).toString();
+    window.open(window.location.href + "?author=" + queryParam, "_blank");
+    //setSelectedAuthor(author);
   };
   const handleSetAuthorsToCompare = (author) => {
     let isExists = authorsToCompare.some((a) => a.label === author.label);

@@ -69,6 +69,7 @@ const SearchBarFilterOption = ({
       >
         <Grid item xs={5}>
           <Paper style={{ padding: "2%" }}>
+          <Typography variant="h6">Published in:</Typography>
             <Autocomplete
               id="tags-standard"
               options={conferences}
@@ -86,29 +87,12 @@ const SearchBarFilterOption = ({
             />
           </Paper>
         </Grid>
-        {/* <Grid item xs={6}>
-          <Paper style={{ padding: "2%" }}>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={event}
-              multiple={true}
-              defaultValue={selectedEvents}
-              getOptionLabel={(option) => option.name}
-              renderInput={(params) => <TextField {...params} label="Events" />}
-              onChange={(event, newInputValue) => {
-                if (newInputValue) {
-                  setSelectedConference(newInputValue);
-                }
-              }}
-            />
-          </Paper>
-        </Grid> */}
         <Grid item xs={5}>
           <Paper
             style={{ padding: "1%", marginLeft: "20%", marginBottom: "2%" }}
           >
             <FormGroup>
+              <Typography variant="h6">Sorted By:</Typography>
               <FormControlLabel
                 onChange={(e) => MostPublisehd(e.target.checked)}
                 control={<Checkbox defaultChecked />}
