@@ -330,7 +330,10 @@ else:
 
 # ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
 
-# ELMO_WEIGHT_FILE = os.environ.get("Elmo_Weight_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5")
+if os.environ.get("ELMO_WEIGHT_MODEL_FILE"):
+    ELMO_WEIGHT_FILE = os.path.join(MODEL_DIR, os.environ.get("ELMO_WEIGHT_FILE"))
+else:
+    ELMO_WEIGHT_FILE = None
 
 # ENWIKI_FILE = os.environ.get("Enwiki_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/enwiki_vocab_min200.txt")
 
