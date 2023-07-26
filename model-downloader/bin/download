@@ -22,20 +22,24 @@ else
   python -m nltk.downloader -d $MODEL_DIR/$NLTK_MODEL_DIR $NLTK_PACKAGES
 fi
 
-if [ -d "${MODEL_DIR}/stanford-corenlp/" ]; then
-  echo "${MODEL_DIR}/stanford-corenlp/ already present"
+# ENV CORE_NLP_MODEL_URL=http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip
+# ENV CORE_NLP_MODEL_DIR=stanford-corenlp
+if [ -d "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/" ]; then
+  echo "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/ already present"
 else
-  echo "${MODEL_DIR}/stanford-corenlp/ missing; downloading now ..."
-  wget --continue -O "${TEMP_DIR}/stanford-corenlp.zip" http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip
-  unzip -o "${TEMP_DIR}/stanford-corenlp.zip" -d "${MODEL_DIR}/stanford-corenlp/"
+  echo "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/ missing; downloading now ..."
+  wget --continue -O "${TEMP_DIR}/stanford-corenlp.zip" ${CORE_NLP_MODEL_URL}
+  unzip -o "${TEMP_DIR}/stanford-corenlp.zip" -d "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/"
 fi
 
-if [ -d "${MODEL_DIR}/msmarco/" ]; then
-  echo "${MODEL_DIR}/msmarco/ already present"
+# ENV MS_MARCO_MODEL_URL=https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download
+# ENV MS_MARCO_MODEL_DIR=msmarco
+if [ -d "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/" ]; then
+  echo "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/ already present"
 else
-  echo "${MODEL_DIR}/msmarco/ missing; downloading now ..."
-  wget --continue -O "${TEMP_DIR}/msmarco.zip" https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download
-  unzip -o "${TEMP_DIR}/msmarco.zip" -d "${MODEL_DIR}/msmarco/"
+  echo "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/ missing; downloading now ..."
+  wget --continue -O "${TEMP_DIR}/msmarco.zip" ${MS_MARCO_MODEL_URL}
+  unzip -o "${TEMP_DIR}/msmarco.zip" -d "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/"
 fi
 
 # ENV ELMO_WEIGHT_MODEL_URL=https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5
