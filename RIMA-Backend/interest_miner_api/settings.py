@@ -308,11 +308,10 @@ else:
 # use bellow line for USE_model after downloading it
 # USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
 
-# use line bellow if msmarco model is stored in the project
-# TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(configuration["transformer_model_file"])
-# TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","transformers/msmarco/")
-# use line bellow if msmarco model is not stored in the project
-# TRANSFORMER_MODEL_FILE_PATH = os.environ.get("TRANSFORMER_MODEL_FILE_PATH","msmarco-distilbert-base-tas-b")
+if os.environ.get("MS_MARCO_MODEL_FILE"):
+    TRANSFORMER_MODEL_FILE_PATH = os.path.join(MODEL_DIR, os.environ.get("MS_MARCO_MODEL_FILE"), "msmarco")
+else:
+    TRANSFORMER_MODEL_FILE_PATH = None
 
 # use bellow line if scibert is not used
 # BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
@@ -326,7 +325,10 @@ else:
 
 
 # SIF Rank model variables
-# STANFORDCORENLP = os.environ.get("STANFORDCORENLP", "interests/Keyword_Extractor/Algorithms/embedding_based/stanford-corenlp-full-2018-02-27")
+if os.environ.get("CORE_NLP_MODEL_DIR"):
+    STANFORDCORENLP = os.path.join(MODEL_DIR, os.environ.get("CORE_NLP_MODEL_DIR"))
+else:
+    STANFORDCORENLP = None
 
 # ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
 
