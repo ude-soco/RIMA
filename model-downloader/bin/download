@@ -29,7 +29,8 @@ if [ -d "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/" ]; then
 else
   echo "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/ missing; downloading now ..."
   wget --continue -O "${TEMP_DIR}/stanford-corenlp.zip" ${CORE_NLP_MODEL_URL}
-  unzip -o "${TEMP_DIR}/stanford-corenlp.zip" -d "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/"
+  mkdir -p "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/"
+  bsdtar --strip-components=1 -xv -f "${TEMP_DIR}/stanford-corenlp.zip" -C "${MODEL_DIR}/${CORE_NLP_MODEL_DIR}/"
 fi
 
 # ENV MS_MARCO_MODEL_URL=https://uni-duisburg-essen.sciebo.de/s/z1k3w8Oxb8RRd4M/download
@@ -39,7 +40,8 @@ if [ -d "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/" ]; then
 else
   echo "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/ missing; downloading now ..."
   wget --continue -O "${TEMP_DIR}/msmarco.zip" ${MS_MARCO_MODEL_URL}
-  unzip -o "${TEMP_DIR}/msmarco.zip" -d "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/"
+  mkdir -p "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/"
+  bsdtar --strip-components=1 -xv -f "${TEMP_DIR}/msmarco.zip" -C "${MODEL_DIR}/${MS_MARCO_MODEL_DIR}/"
 fi
 
 # ENV ELMO_WEIGHT_MODEL_URL=https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5

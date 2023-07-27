@@ -309,7 +309,7 @@ else:
 # USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
 
 if os.environ.get("MS_MARCO_MODEL_FILE"):
-    TRANSFORMER_MODEL_FILE_PATH = os.path.join(MODEL_DIR, os.environ.get("MS_MARCO_MODEL_FILE"), "msmarco")
+    TRANSFORMER_MODEL_FILE_PATH = os.path.join(MODEL_DIR, os.environ.get("MS_MARCO_MODEL_FILE"))
 else:
     TRANSFORMER_MODEL_FILE_PATH = None
 

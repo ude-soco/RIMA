@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.5
 FROM python:3.11-slim
 
-ENV APT_PACKAGES "make wget unzip"
+ENV APT_PACKAGES "make wget libarchive-tools"
 RUN --mount=type=cache,target=/var/cache/apt,rw \
     --mount=type=cache,target=/var/lib/apt,rw \
     apt-get update -q && \
