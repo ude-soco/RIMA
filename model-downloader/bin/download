@@ -50,7 +50,8 @@ if [ -f "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE}" ]; then
   echo "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE} already present"
 else
   echo "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE} missing; downloading now ..."
-  mkdir -p "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE}"
+  rm -rf "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE}"
+  mkdir -p $(dirname "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE}")
   wget --continue -O "${MODEL_DIR}/${ELMO_WEIGHT_MODEL_FILE}" $ELMO_WEIGHT_MODEL_URL
 fi
 
