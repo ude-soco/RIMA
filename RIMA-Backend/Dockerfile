@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.5
-FROM --platform=linux/amd64 python:3.9-slim AS python
+FROM python:3.9-slim AS python
 
 # Install dependencies
 ENV BUILD_DEPS "build-essential pkg-config gfortran libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
