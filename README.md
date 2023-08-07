@@ -106,7 +106,7 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
       celery -A interest_miner_api worker --concurrency=4 -l info -P eventlet
 
       # For Windows if you have less than 4 cores
-      celery -A server worker --pool=solo -l info
+      celery -A interest_miner_api worker --pool=solo -l info
 
       # For Linux: Atleast 4 cores. Set --concurrency value to 1 if you have less than 4 cores
       celery -A interest_miner_api worker --concurrency=4 -l info
