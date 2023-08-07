@@ -290,10 +290,10 @@ else:
 # use bellow line for USE_model after downloading it
 # USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
 
-if os.environ.get("MS_MARCO_MODEL_FILE"):
+if os.environ.get("MS_MARCO_MODEL_DIR"):
     # production
     TRANSFORMER_MODEL_FILE_PATH = os.path.join(
-        MODEL_DIR, os.environ.get("MS_MARCO_MODEL_FILE")
+        MODEL_DIR, os.environ.get("MS_MARCO_MODEL_DIR")
     )
 elif configuration["transformer_model_file"]:
     # development
