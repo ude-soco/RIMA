@@ -22,7 +22,7 @@ monthdelta = "==0.9.1"
 mysqlclient = "==2.0.3"
 nltk = "==3.8.1"
 pattern = "==3.6.0"
-psycopg2 = "*"
+psycopg2 = "~=2.8.6"
 python-dotenv = "*"
 pywin32 = {version = "*", sys_platform = "== 'win32'"}
 redis = "==3.4.1"
