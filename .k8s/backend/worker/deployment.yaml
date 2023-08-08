@@ -54,8 +54,8 @@ spec:
             name: configuration
         resources:
           requests:
+            cpu: 20m
             memory: 900Mi
-            cpu: 50m
           limits:
             memory: 2Gi
             cpu: 500m

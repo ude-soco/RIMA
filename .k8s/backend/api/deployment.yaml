@@ -82,8 +82,8 @@ spec:
           name: tmp
         resources:
           requests:
+            cpu: 20m
             memory: 600Mi
-            cpu: 100m
           limits:
             memory: 2Gi
             cpu: 750m
