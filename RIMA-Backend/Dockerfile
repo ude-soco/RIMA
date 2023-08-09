@@ -4,8 +4,8 @@ FROM --platform=linux/amd64 python:3.7-slim AS python
 # Install dependencies
 ENV BUILD_DEPS "build-essential pkg-config python3-dev gfortran default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
 ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3 libpq-dev default-jre"
-RUN --mount=type=cache,target=/var/cache/apt,rw \
-    --mount=type=cache,target=/var/lib/apt,rw <<EOF
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt <<EOF
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
   apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 $BUILD_DEPS $RUNTIME_DEPS
 EOF
