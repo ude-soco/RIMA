@@ -54,11 +54,11 @@ cleanall:
 
 # Build all container images
 build:
-	@docker buildx bake --progress=plain
+	@$(compose) build
 
 # Push container images to remote registry
 push:
-	@docker compose push
+	@$(compose) push
 
 ##
 ## Deploy the application to Kubernetes

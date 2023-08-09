@@ -3,9 +3,10 @@ FROM python:3.11-slim
 
 ENV APT_PACKAGES "make wget unzip"
 RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
-    apt-get update -q && \
-    apt-get install -qq --no-install-recommends $APT_PACKAGES
+    --mount=type=cache,target=/var/lib/apt <<EOF
+  DEBIAN_FRONTEND=noninteractive apt-get update -q &&
+  apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 $APT_PACKAGES
+EOF
 
 RUN adduser --disabled-login --gecos "" -u 101 app
 USER 101
