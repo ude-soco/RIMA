@@ -5,7 +5,6 @@ import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
 import Help from "./Help"
 import MoreFilters from "./MoreFilters"
-import arrow from "./Animations/arrow.gif";
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)

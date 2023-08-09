@@ -155,19 +155,19 @@ def getConnectData(id):
         authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames) #*1
         print("get authors Who I cited the most")
         authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
-        x = (authorsFilter(authorId=authorId, method="citations", filter = selectedNames))
+        filterList = (authorsFilter(authorId=authorId, method="citations", filter = selectedNames))
         #print("first")
-        #print(x)
-        x.update(authorsFilter(authorId=authorId, method="references", filter = selectedNames))
+        #print(filterList)
+        filterList.update(authorsFilter(authorId=authorId, method="references", filter = selectedNames))
         #print("second")
-        #print(x)
+        #print(filterList)
         
     else:
         authorsReferences = authorsCitedMe = [{"name": "Author 1", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },     #Author dummies with Explanations
                                               {"name": "Author 2", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },
                                               {"name": "Author 3", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" }]
-        x = (authorsFilter(authorId=authorId, method="citations", filter = selectedNames))
-        x.update(authorsFilter(authorId=authorId, method="references", filter = selectedNames))
+        filterList = (authorsFilter(authorId=authorId, method="citations", filter = selectedNames))
+        filterList.update(authorsFilter(authorId=authorId, method="references", filter = selectedNames))
         
         
     #Read sample Data in and out for faster loading times, authorsReferences and authorsCitedMe has to be outcommented (*1)
@@ -182,8 +182,8 @@ def getConnectData(id):
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
     """
-    #print(x)
-    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames, "noa": noa}
+    #print(filterList)
+    data={"citations":authorsCitedMe, "references":authorsReferences, "filter": filterList, "selectedNames": selectedNames, "noa": noa}
     return data
  
 def getWikiInfo(interestsData):
@@ -210,6 +210,6 @@ def authorsFilter(authorId, method, filter):
         listAuthors.remove(str(authorId))    
     topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
     #print(len(topN))
-    x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} #Id is importend to trace the authors back
-    print(x)
-    return x
+    authorList = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} #Id is importend to trace the authors back
+    print(authorList)
+    return authorList
