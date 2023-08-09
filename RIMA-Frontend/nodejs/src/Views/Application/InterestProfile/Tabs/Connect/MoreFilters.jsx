@@ -34,28 +34,28 @@ export default function MoreFilters(props) {
  
   const {data} = props
   
-  const [selectedNames, setSelectedNames] = useState(data.selectedNames);
+  const [selectedNames, setSelectedNames] = useState(data.selectedNames); //Filter list (consistet)
   
 
-  const nameId = data.filter
-  const namesList = Object.values(nameId).map((value) => value[0])
-  
+  const nameId = data.filter //AUthors id list
+  const namesList = Object.values(nameId).map((value) => value[0]) //map author id to names
+  /*
   console.log(namesList)
   console.log(nameId, "TEST")
   console.log(data, "DATAAAAAAAAAAAAAAA")
   console.log(data.citations.map(item => item.name))
-  console.log(namesList.map(name => name))
+  console.log(namesList.map(name => name))*/
   
 
   
   
 
-
+  //add names to list internal list
   const handleCheckboxChange = (event) => {
     const{value} = event.target
-    const id = (Object.entries(nameId).find(([key, value2]) => value2[0] === value))[0] //[0] cause its an array
-    console.log(id, "VALUE")
-    if(!(selectedNames.includes(id)))
+    const id = (Object.entries(nameId).find(([key, value2]) => value2[0] === value))[0] //[0] cause its an array, get id
+    //console.log(id, "VALUE")
+    if(!(selectedNames.includes(id))) //prevent duplicates and deltete unselected names which got selected before
     {
     setSelectedNames([...selectedNames, id])
     }
@@ -64,11 +64,11 @@ export default function MoreFilters(props) {
     }
   }
   
-  console.log(selectedNames, "selectedNames")
+  //console.log(selectedNames, "selectedNames")
 
   const classes = useStyles();
 
-  const handleApply = () => {
+  const handleApply = () => { //add names to global list 
     props.onSelectedNamesChange(selectedNames)
     //props.onClose(selectedNames);
   };
@@ -85,7 +85,7 @@ export default function MoreFilters(props) {
       <Typography variant="h6"  className={classes.title}>Select</Typography>
             <FormGroup className={classes.checkBox}>
             <Divider className={classes.divider}/>
-              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange} 
+              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange}  //map names to checkbox list and handle checking, find id in list
               value={name} checked={!selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
             </FormGroup>
                   

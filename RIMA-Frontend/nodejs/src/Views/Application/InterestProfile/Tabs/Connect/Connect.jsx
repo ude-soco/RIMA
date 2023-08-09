@@ -4,39 +4,38 @@ import {CircularProgress, Grid, Typography, Box, TextField, Button, Dialog, Dial
 import {useEffect, useState} from "react";
 import RestAPI from "../../../../../Services/api";
 import Help from "./Help"
-import FilterListIcon from "@material-ui/icons/FilterList";
 import MoreFilters from "./MoreFilters"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import arrow from "./Animations/arrow.gif";
 
 export default function Connect (props) {
     const [data, setData] = useState(props.data)
-    console.log(data.selectedNames, "const")
-    console.log(data, "useState")
-    const [dataCollected, setDataCollected]=useState(false)
+    //console.log(data.selectedNames, "const")
+    //console.log(data, "useState")
+    const [dataCollected, setDataCollected]=useState(false)                  //Statevar whether data is collected or not
     const [myInterests, setMyInterests]=useState([])
-    const [noa, setNoa] = useState(data.noa ? data.noa: 3)
-    const [papers, setPapers] = useState(true)
-    const [fetching, setFetch] = useState(true)
-    const [button, setButton] = useState(true)
-    const [changed, setChange] = useState(false)
-    const [selectedNames, setSelectedNames] = useState([data.selectedNames])
-    const [help, setHelp] = useState(false)
+    const [noa, setNoa] = useState(data.noa ? data.noa: 3)                   //Number of Authors (consistent)
+    const [papers, setPapers] = useState(true)                               //fetch papers
+    const [fetching, setFetch] = useState(true)                              //Statevar so data only gets fetch on at a time
+    const [button, setButton] = useState(true)                               //Statevar if button should be displayed
+    const [changed, setChange] = useState(false)                             //Statevar if filter got changed
+    const [selectedNames, setSelectedNames] = useState([data.selectedNames]) //List of filterd Authors
+    const [help, setHelp] = useState(false)                                  //statevar for helpwindow
+    const [open, setOpen] = useState(false)                                  //statevar for filters
     let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
-    console.log("test", fetching)
+    //console.log("test", fetching)
 
-    //ChatGPT
+    //Number of Authors gets submited an refetched with new amount
     const submitNumber = async() => {
         if(!fetching){
-        setFetch(true)
-        console.log("submit")
-        setDataCollected(false);
-        setButton(false)
-        RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames, papers})
+        setFetch(true)              //Statevar
+        //console.log("submit")
+        setDataCollected(false);    //show loading screen
+        setButton(false)            //Statevar
+        RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames, papers})   //api call
           .then((res) => {
             const {data}=res
             setData(data.data)
-            console.log(data, "useState2")
+            //console.log(data, "useState2")
           })
           .catch((error) => {
             console.log("Error fetching data:", error);
@@ -48,15 +47,15 @@ export default function Connect (props) {
     useEffect(()=>{
 
 
-        console.log(selectedNames, "selectedNames in Connect------------------------------");
+        //console.log(selectedNames, "selectedNames in Connect------------------------------");
         
-        if(data.length===0){
+        if(data.length===0){                        //define data
             setData(props.data)
             setDataCollected(false)
             
         }
         else{
-            RestAPI.longTermInterest(currentUser).then(res=>{
+            RestAPI.longTermInterest(currentUser).then(res=>{ //call api and fetch data
                 const {data} =res
                 let interests = []
                 data.map((d)=>{
@@ -74,9 +73,9 @@ export default function Connect (props) {
     },[data,props,selectedNames])
 
    
-    const [open, setOpen] = useState(false)
+    
 
-    const handleMoreFilters = () => {
+    const handleMoreFilters = () => { //open filter menu
         setOpen(true);
     }
     const closeFilter = () => {
@@ -86,10 +85,10 @@ export default function Connect (props) {
         setOpen(false);
     } 
 
-    const handleSelectedNamesChange = (names) => {
+    const handleSelectedNamesChange = (names) => { //add names to filter list
         console.log(names, "names")
         console.log(selectedNames.some(item => item === names))
-        if((names.some(item => !selectedNames.includes(item)))){setChange(true)}
+        if((names.some(item => !selectedNames.includes(item)))){setChange(true)} //deselect selected names, only call api if changes are done
         else {setChange(false)}
         setSelectedNames([...names]);
         
@@ -98,10 +97,10 @@ export default function Connect (props) {
     const closeHelp = () => {
         setHelp(false);
     }
-    console.log(selectedNames, "SlectedNames Connect")
+    /*console.log(selectedNames, "SlectedNames Connect")
     console.log(help)
 
-    console.log(data, "const3")
+    console.log(data, "const3")*/
     return (
         <>
 
@@ -111,7 +110,7 @@ export default function Connect (props) {
               <Grid item xs ={12} style={{padding:"8px"}}>
             
               
-                                
+                    {/*if Data is collected show Graph, else loading screen */}            
                     {dataCollected? (
                     
                     <>
@@ -128,7 +127,8 @@ export default function Connect (props) {
                     )}
                     
                     <Box display="flex"  justifyContent="flex-end" alignItems="center">
-                            <TextField id="noa"
+                            {/*TextFiled to configure the Number of Authors*/}
+                            <TextField id="noa" 
                                 label="Number"
                                 type="number"
                                 variant="outlined"
@@ -139,29 +139,26 @@ export default function Connect (props) {
                                 style={button? {width: "12%" } : {width: "25%" }}
                                 inputProps={{
                                     min: 0,
-                                    max: 10,
+                                    max: 10, //max 10, otherwise loading time would be too long
                                     step: 1,
                                 }} />
                             <Button onClick={submitNumber} id="submit" color="primary">Submit</Button>
                             <Button color="primary" onClick={handleMoreFilters}>
-                                MORE
-                                
+                                MORE                                
                             </Button>
                             <div>
                                     {button ? (
-                                        <Tooltip title="Test">
                                         <Button disabled>
-                                            <img src={arrow} alt="gif" style={{ width: '40px', height: '25px', transform: 'rotate(90deg)'}}/>
-                                            <Typography color="primary">Please Configure</Typography>
+                                            <Typography color="primary">Please Configure</Typography> {/*small advice on the first loadup of the page*/}
                                         </Button>
-                                        </Tooltip>
+                                        
                                     ) : (
                                         <></>
                                     )}
                                     </div>
                             <Dialog open={open} onClose={closeFilter} maxWidth="md" fullWidth>
                                 <DialogContent>
-                                    <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} />
+                                    <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} /> {/*Filter*/}
                                 </DialogContent>
                             </Dialog>
                            </Box></Box><ConnectedGraph data={data} myInterests={myInterests} button={button} />

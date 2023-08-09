@@ -4,8 +4,7 @@ from collections import Counter
 import random
 import wikipediaapi
 
-#test2 lukas bre embolo
-#test4
+
 
 def getPageData(interest):
     wiki = wikipediaapi.Wikipedia('en')
@@ -71,18 +70,18 @@ def getRefCitAuthorsPapers(authorId, method):
 
     return results
 
-def getMostCitedReferenced(authorId, method, n, filter):
+def getMostCitedReferenced(authorId, method, n, filter):  #n = Number of Authors, filter = List of filterd Authors
     
     allCitsRefs=getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors=allCitsRefs["listAllAuthors"]
     dictAuthorsName=allCitsRefs["authorsNames"]
      
-    for i in filter:                            #Filter known Authors, the User selected
+    for i in filter:                                      #Filter known Authors, the User selected
         while i in listAuthors:
             listAuthors.remove(i)
 
     topN=list(Counter(listAuthors).most_common(n))
-    print(topN)
+    #print(topN)
 
 
     api=SemanticScholarAPI()
@@ -127,7 +126,7 @@ def getMostCitedReferenced(authorId, method, n, filter):
             "paper":allPapers,
             "interests":interests,
             "score":len(allPapers),
-            "id": author,
+            "id": author,                                   #added the autor Id for better filter
         }
 
         allAuthors.append(authorData)
@@ -145,33 +144,33 @@ def getInterests(authorId):
 def getConnectData(id):
 
     authorId=id["data"]
-    noa = int(id["noa"])
-    doIt = bool(id["papers"]) #fetch papers not directly
-    print(doIt)
-    selectedNames = id["selectedNames"]
-    print(selectedNames)
-    print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
-    if(doIt):
+    noa = int(id["noa"])      #Number of Authors                  
+    fetchPapers = bool(id["papers"]) #fetch papers not directly
+    #print(fetchPapers)
+    selectedNames = id["selectedNames"] #Authors which get filterd
+    #print(selectedNames)
+    #print("------------------------------Noa: " + str(noa) + "----------------------------------------------")
+    if(fetchPapers):
         print("get most authors who cited me the most")
-        authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames)
+        authorsCitedMe= getMostCitedReferenced(authorId=authorId, method="citations", n = noa, filter = selectedNames) #*1
         print("get authors Who I cited the most")
         authorsReferences=getMostCitedReferenced(authorId=authorId, method="references", n = noa, filter = selectedNames)
-        x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
-        print("first")
-        print(x)
-        x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
-        print("second")
-        print(x)
+        x = (authorsFilter(authorId=authorId, method="citations", filter = selectedNames))
+        #print("first")
+        #print(x)
+        x.update(authorsFilter(authorId=authorId, method="references", filter = selectedNames))
+        #print("second")
+        #print(x)
         
     else:
-        authorsReferences = authorsCitedMe = [{"name": "Author 1", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },
+        authorsReferences = authorsCitedMe = [{"name": "Author 1", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },     #Author dummies with Explanations
                                               {"name": "Author 2", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" },
                                               {"name": "Author 3", "paper": [], "intrests": [],"score": "Number of Citations", "id": "1" }]
-        x = (testMet(authorId=authorId, method="citations", filter = selectedNames))
-        x.update(testMet(authorId=authorId, method="references", filter = selectedNames))
+        x = (authorsFilter(authorId=authorId, method="citations", filter = selectedNames))
+        x.update(authorsFilter(authorId=authorId, method="references", filter = selectedNames))
         
         
-
+    #Read sample Data in and out for faster loading times, authorsReferences and authorsCitedMe has to be outcommented (*1)
     """ 
     with open("authorsReferences2.json", "w") as myfile:
             json.dump(authorsReferences, myfile)
@@ -183,7 +182,7 @@ def getConnectData(id):
     with open("authorsCitedMe2.json", "r") as myfile:
            authorsCitedMe = json.load(myfile)
     """
-    print(x)
+    #print(x)
     data={"citations":authorsCitedMe, "references":authorsReferences, "filter": x, "selectedNames": selectedNames, "noa": noa}
     return data
  
@@ -202,15 +201,15 @@ def getWikiInfo(interestsData):
     return pageData
 
 
-#get the Top 10+x Authors the User could know
-def testMet(authorId, method, filter):
+#get the Top 10+x Authors the User could know, before the whole Data is fetched
+def authorsFilter(authorId, method, filter):
     allCitsRefs = getRefCitAuthorsPapers(authorId=authorId, method=method)
     listAuthors = allCitsRefs["listAllAuthors"]
     dictAuthorsName = allCitsRefs["authorsNames"]
     while authorId in listAuthors:
         listAuthors.remove(str(authorId))    
     topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
-    print(len(topN))
-    x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} 
+    #print(len(topN))
+    x = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} #Id is importend to trace the authors back
     print(x)
     return x

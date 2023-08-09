@@ -20,9 +20,9 @@ const SVGVenn = (props) => {
     const { authorInterest, authorName, userName } = props;
     let bothInterest = [];
     let posUser = 200;
-    let posAuthor = 420;
-    let radUser = 100;
-    const yPosText = 15;
+    let posAuthor = 420; //position
+    let radUser = 100; //radius
+    const yPosText = 15; //textposition
     let posTextBoth = 0;
     const [state, setState] = useState({
         event: null,
@@ -42,22 +42,8 @@ const SVGVenn = (props) => {
 
     
 
-    const newArray = (oldArr) => {
-        const outputArray = [];
-
-             oldArr.forEach((item) => {
-            const words = item.split(' ');
-            if (words.length > 2) {
-                const firstTwoWords = words.slice(0, 2).join(' ');
-                const remainingWords = '-' + words.slice(2).join(' ');
-                outputArray.push(firstTwoWords, remainingWords);
-            } else {
-                outputArray.push(item);
-            }
-            })
-            return outputArray
-    }
-
+    
+    //get the longest Intrest depending on the words
     const getHighestWordCount = (strings) => {
         let highestCount = 0;
       
@@ -72,8 +58,7 @@ const SVGVenn = (props) => {
       }
 
     console.log(authorInterest)
-    console.log(newArray(authorInterest))
-    let x = 40*getHighestWordCount(authorInterest)
+    let x = 40*getHighestWordCount(authorInterest) //scale the position
     const buttonStyle = {
         position: 'absolute',
         top: `${500+x}px`,
@@ -113,18 +98,7 @@ const SVGVenn = (props) => {
         let interests=await fetchKeywords()
         console.log(interests, "test explore.py get data")
         if (interests) {
-            /*const outputArray = [];
-
-                interests.forEach((item) => {
-                    const words = item.split(' ');
-                    if (words.length > 2) {
-                      const firstTwoWords = words.slice(0, 2).join(' ');
-                       const remainingWords = '-' + words.slice(2).join(' ');
-                      outputArray.push(firstTwoWords, remainingWords);
-                    } else {
-                      outputArray.push(item);
-                    }
-                  })*/
+           
             setUserInterest(interests)
             let allInterests=interests.concat(authorInterest)
             /*let pageData=await RestAPI.getWikiInfo({interests:allInterests})
@@ -244,7 +218,7 @@ const SVGVenn = (props) => {
             bothInterest.push(u);
         }
     });
-    const radAuthor = radUser * (authorInterest.length / userInterest.length);
+    const radAuthor = radUser * (authorInterest.length / userInterest.length); //scaling Authorside radius 
 
     if (bothInterest.length != 0) {
         posAuthor =
@@ -270,15 +244,15 @@ const SVGVenn = (props) => {
         posUser = posUser - 10;
     }
     
-    let xAu = 0
-    let xUs = 0
+    let xAu = 0 //Authors pos
+    let xUs = 0 //User pos
     return (
         <>
             {userInterest.length !== 0?<svg height="700" width="800">
                 <circle
                     cx={250}
                     cy="250"
-                    r={110+x+bothInterest.length}
+                    r={110+x+bothInterest.length    /*scaling*/}
                     fill="darkorange"
                     stroke="black"
                     class="circle"
@@ -287,7 +261,7 @@ const SVGVenn = (props) => {
                 <circle
                     cx={515}
                     cy="250"
-                    r={110+x+bothInterest.length}
+                    r={110+x+bothInterest.length    /*scaling*/}
                     fill="darkblue"
                     stroke="black"
                     class="circle"
@@ -295,14 +269,13 @@ const SVGVenn = (props) => {
                 <text fill="#522D00">
                     {userInterest.map((u, i) => {
                         if (!authorInterest.includes(u)) {
-                            const yPos = (270-x)+15*xUs//yPosText * xUs
-                            xUs ++
-                            console.log(u.split(/\s+/).length >= 2 ? u.replace(' ', "\n") : u)
+                            const yPos = (270-x)+15*xUs //scaling
+                            xUs ++ //prevent gaps for shared intrests
                             return (
                                 <tspan
                                     class="text"
-                                    x={170 - x}
-                                    y={yPos}
+                                    x={170 - x/*scalling*/} 
+                                    y={yPos/**scaling */}
                                     onClick={handleClickOnlyLearn}
                                 >
                                     {u}
@@ -314,8 +287,8 @@ const SVGVenn = (props) => {
                 <text fill="black">
                     {authorInterest.map((u, i) => {
                         if (!userInterest.includes(u)) {
-                            const yPos = (270-x)+15 * xAu;
-                            xAu ++
+                            const yPos = (270-x)+15 * xAu; //scaling
+                            xAu ++                          //prevent gaps for shared intrests
                             return (
                                 <tspan
                                     class="text"
@@ -334,8 +307,8 @@ const SVGVenn = (props) => {
                         return (
                             <tspan
                                 class="text"
-                                x={((450-x)+(250))/2}
-                                y={215 + yPosText * i}
+                                x={((450-x)+(250))/2/*scalling*/}
+                                y={215 + yPosText * i/*scalling*/}
                                 onClick={handleClickOnlyLearn}
                             >
                                 {u}
@@ -389,7 +362,7 @@ const SVGVenn = (props) => {
                 </DialogActions>
             </Dialog>
             <Button variant="outlined" style={buttonStyle}>
-                shared interests: {bothInterest.length}
+                shared interests: {bothInterest.length}   {/*Number of shared intrests for better overview */}
             </Button>
             
         </>
