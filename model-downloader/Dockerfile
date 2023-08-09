@@ -2,8 +2,8 @@
 FROM python:3.11-slim
 
 ENV APT_PACKAGES "make wget unzip"
-RUN --mount=type=cache,target=/var/cache/apt,rw \
-    --mount=type=cache,target=/var/lib/apt,rw \
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
     apt-get update -q && \
     apt-get install -qq --no-install-recommends $APT_PACKAGES
 
