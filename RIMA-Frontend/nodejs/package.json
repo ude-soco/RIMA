@@ -51,7 +51,7 @@
     "konva": "^8.4.3",
     "moment": "2.29.4",
     "node-sass": "4.14.1",
-    "re-resizable": "^6.9.9",
+    "re-resizable": "^6.9.10",
     "react": "^17.0.2",
     "react-apexcharts": "^1.4.1",
     "react-autosuggest": "^10.0.0",
