@@ -185,35 +185,7 @@ class ConferenceOverview extends Component {
     );
   };
   clickEvent = () => {
-    // var { series } = this.state;
-    // fetch(
-    //   BASE_URL_CONFERENCE +
-    //     "AuthorsPapersEvolutio/Authors/" +
-    //     "?" +
-    //     this.state.selectedConferences.join("&")
-    // )
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     series = [];
-    //     this.setState({
-    //       selectConference: this.state.selectedConferences,
-    //       series: series,
-    //       datalabels: {
-    //         enabled: true,
-    //       },
 
-    //       options: {
-    //         ...this.state.options,
-    //         xaxis: {
-    //           ...this.state.options.xaxis,
-    //           categories: json.years,
-    //         },
-    //       },
-    //       opacity: "0.9",
-    //     });
-    //     this.years = json.years;
-    //     console.log("json.years", json.years);
-    //   });
     this.get_Authors_Publications_Data();
     this.getEventNoForEachConf();
   };

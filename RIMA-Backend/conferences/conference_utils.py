@@ -45,32 +45,40 @@ def get_conference_general_data(conference_name_abbr):
     conference_papers_model_objs = session.execute_read(
         cql_get_conference_papers, conference_name_abbr)
 
-    author_has_papers_objs = session.execute_read(
-        cql_get_conference_authors, conference_name_abbr)
+    author_has_papers_objs = graphConference.nodes.get(
+        conference_name_abbr=conference_name_abbr)
+    conf_obj = graphConference.nodes.get(
+        conference_name_abbr=conference_name_abbr)
+
+    # author_has_papers_objs = session.execute_read(
+    #     cql_get_conference_authors, conference_name_abbr)
     conference_full_name = conference_preloaded_model_data[0].get(
         'conference_name_abbr')
-
-    conference_url = conference_preloaded_model_data[0].get('conference_url')
-    no_of_events = len(conference_events_model_objs)
-    no_of_all_papers = len(conference_papers_model_objs)
-    no_of_all_authors = len(author_has_papers_objs)
+    # islam update
+    conference_url = conf_obj.conference_url
+    no_of_events = len(conf_obj.events)
+    no_of_all_papers = len(conf_obj.publication)
+    no_of_all_authors = len(conf_obj.authors)
 
     event_based_papers_data = {'name': '', 'data': []}
     event_based_papers_data['name'] = 'number of papers'
     event_based_authors_data = {'name': '', 'data': []}
     event_based_authors_data['name'] = 'number of authors'
 
-    for conference_event in conference_events_model_objs:
-        no_of_event_papers = len(session.execute_write(
-            cql_get_event_papers, conference_event.get('conference_event_name_abbr')))
-        no_of_event_authors = len(session.execute_write(
-            cql_get_event_authors, conference_event.get('conference_event_name_abbr')))
+    for conference_event in conf_obj.events:
+        # no_of_event_papers = len(session.execute_write(
+        #     cql_get_event_papers, conference_event.get('conference_event_name_abbr')))
+        # no_of_event_authors = len(session.execute_write(
+        #     cql_get_event_authors, conference_event.get('conference_event_name_abbr')))
 
-        event_based_papers_data['data'].append(no_of_event_papers)
-        event_based_authors_data['data'].append(no_of_event_authors)
+        no_of_event_papers = conference_event.publications.all()
+        no_of_event_authors = conference_event.authors.all()
+
+        event_based_papers_data['data'].append(len(no_of_event_papers))
+        event_based_authors_data['data'].append(len(no_of_event_authors))
 
         conference_events_years.append(
-            conference_event.get('conference_event_name_abbr'))
+            conference_event.conference_event_name_abbr)
 
     result_data['series'].append(event_based_papers_data)
     result_data['series'] .append(event_based_authors_data)
@@ -298,7 +306,6 @@ def get_topics_from_models(conference_event_name_abbr):
     return sorted_data
 
 
-
 def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOrTopic):
     """reteives paper data containing a specific word within an event
     Args:
@@ -330,7 +337,6 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword, KeywordOr
     session.close()
 
     return titles_abstracts
-
 
 
 def get_shared_words_between_events(conference_events_list, keyword_or_topic):

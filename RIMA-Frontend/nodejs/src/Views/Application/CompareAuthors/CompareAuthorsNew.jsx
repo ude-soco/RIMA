@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core";
 
 import React from "react";
 import CompareAuthorsStackedBarChart from "./ComparingAuthorsPublicationsBased";
-import CompareAuthorTotalCitation from "./CompareAuhtorsTotalCitation";
 import CoauthorEvolution from "./CoauthorEvolution";
 import SharedInterestsBetweenAuthors from "../AuthorInsights/SharedInterestsBetweenAuthors";
 import AuthorsProductivityOverTime from "./AuthorsProductivityOverTime";

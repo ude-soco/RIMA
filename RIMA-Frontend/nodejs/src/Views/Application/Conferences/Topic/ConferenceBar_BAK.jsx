@@ -208,13 +208,6 @@ export default function ConferenceBar(props) {
   }
 
 
-  const navigateTop = () => {
-    window.scrollTo(0, 0)
-  }
-
-
-
-  //** GET ALL CONFERENCES **//
   const getConferencesNames = () => {
     RestAPI.getConferencesNames()
       .then((response) => {
@@ -225,10 +218,7 @@ export default function ConferenceBar(props) {
 
   // BAB:BEGIN 08/06/2021 :: cover other conferences.
   const handleChange = (selectedOption) => {
-    //this.forceUpdate();
     setselectedOption(selectedOption);
-    console.log("updated");
-    console.log(`Option selected:`, selectedOption);
     fetch(`${BASE_URL_CONFERENCE}confEvents/${selectedOption.value}`)
       .then(response => response.json())
       .then(json => {
@@ -252,50 +242,6 @@ export default function ConferenceBar(props) {
       });
   };
 
-
-  const handleSearchConferences = () => {
-    fetch(`${BASE_URL_CONFERENCE}` + "searchConf/")
-      .then(response => response.json())
-      .then(json => {
-        setconference(json)
-      });
-  };
-  function changeBackgroundYears(e) {
-    e.target.style.background = '#B0D4FF';
-  }
-    function changeBackgroundYears2(e) {
-      e.target.style.background = "#F5F5F2";
-      // if(openDrawerYears === false){
-      //   e.target.style.background = '#B0D4FF';
-      // }
-      // else {
-      //   e.target.style.background = '#F5F5F2';
-      // }
-    }
-    function handleClickYears(e) {
-      setOpenDrawerYears(!openDrawerYears);
-    }
-    function changeBackgroundh(e) {
-      e.target.style.background = '#B0D4FF';
-    }
-    function changeBackgroundh2(e) {
-      e.target.style.background = "white";
-      // if(openDrawerh === true){
-      //   e.target.style.background = '#B0D4FF';
-      // }
-      // else {
-      //   e.target.style.background = 'white';
-      // }
-  }
-    function changeBackgroundhh2(e) {
-      e.target.style.background = "white";
-      // if(openDrawerh2 === true){
-      //   e.target.style.background = '#B0D4FF';
-      // }
-      // else {
-      //   e.target.style.background = 'white';
-      // }
-  }
   return (
     <>
 

@@ -85,13 +85,6 @@ const ChartComponent = ({ AuthorName }) => {
         "/" +
         "All Conferences"
     );
-
-    // const request2 = await fetch(
-    //   BASE_URL_CONFERENCE +
-    //     "getAuthorPublicationsCitationsAnalysis/" +
-    //     AuthorName.label
-    // );
-
     const respone = await request.json();
 
     setSeries(respone.series);
@@ -260,10 +253,14 @@ const ChartComponent = ({ AuthorName }) => {
         {AuthorName.name}'s Academic Productivity and Impact Over Time
       </Typography>
       <Typography variant="h6" gutterBottom>
-        The bars represent the total number of publications published by{" "}
-        {AuthorName.name} in ( {filteredConfsName.join(", ")}) for each
-        year.Meanwhile, the line indicates the total number of citations that
-        all of the author's publications have received in that respective year.
+        The <b>bars </b>represent the total number of <b>publications</b>{" "}
+        published by{" "}
+        <b>
+          {AuthorName.name} in ( {filteredConfsName.join(", ")}){" "}
+        </b>
+        for each year.Meanwhile, the <b>line </b>indicates the
+        <b> total number of citations </b>that all of the author's publications
+        have <b>received in that respective year</b>.
       </Typography>
       <br />
 

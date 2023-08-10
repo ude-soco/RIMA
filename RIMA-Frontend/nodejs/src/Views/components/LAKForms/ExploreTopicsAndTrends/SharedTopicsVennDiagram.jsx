@@ -1,5 +1,5 @@
 // new class created by Islam Abdelghaffar
-import { Grid, Paper } from "@mui/material";
+import { Autocomplete, Box, Grid, Paper, TextField } from "@mui/material";
 import React, { useState } from "react";
 import InteractiveVennDiagram from "../../../Application/ReuseableComponents/InteractiveVennDiagram";
 import RIMAButton from "Views/Application/ReuseableComponents/RIMAButton";
@@ -7,6 +7,7 @@ import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import SelectWithCancelIcon from "../../../Application/ReuseableComponents/SelectWithCancelIcon.jsx";
 import { Typography } from "@material-ui/core";
 import PublicationDialog from "../../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
+import ActiveLoader from "Views/Application/ReuseableComponents/ActiveLoader";
 
 const SharedTopicsVennDiagram = ({
   conferenceName,
@@ -26,7 +27,8 @@ const SharedTopicsVennDiagram = ({
       name: "lak2011_lak2015_lak2021",
     },
   ]);
-
+  const [selectedEvents, setSelectedEvents] = useState([]);
+  const [loader, setLoader] = useState(false);
   const [firstSelectedEvent, setFirstSelectEvent] = useState("");
   const [secondSelectedEvent, setSecondSelectEvent] = useState("");
   const [thirdSelectedEvent, setthirdSelectEvent] = useState("");
@@ -40,85 +42,24 @@ const SharedTopicsVennDiagram = ({
   const [selectedWord, setSelectedWord] = useState("");
 
   const handleCompare = async () => {
+    setLoader(true);
     SetSets([]);
     setListContent([]);
-    const isOneEvent = oneEventSelected();
-    if (isOneEvent) {
-      setShowWarning(true);
-      setShowSimilarityWarning(false);
-      return;
-    }
-    const isSimilar = twoSimilarEventsSelected();
-    if (isSimilar) {
-      setShowWarning(false);
-      setShowSimilarityWarning(true);
-      return;
-    }
 
     setButtonActive(true);
-
+    console.log("selectedEvents: ", selectedEvents);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "getSharedTopicsBetweenEvents/" +
-        firstSelectedEvent +
-        "&" +
-        secondSelectedEvent +
-        "&" +
-        thirdSelectedEvent
+        selectedEvents.join("&")
     );
     const response = await request.json();
     SetSets(response.sets);
+    console.log("response.sets: ", response.sets)
     setListContent(response.names);
     setShowWarning(false);
     setShowSimilarityWarning(false);
-  };
-  const oneEventSelected = () => {
-    let firstSecond = firstSelectedEvent === "" && secondSelectedEvent === "";
-    let firstThird = firstSelectedEvent === "" && thirdSelectedEvent === "";
-    let secondThird = secondSelectedEvent === "" && thirdSelectedEvent === "";
-
-    if (firstSecond || firstThird) {
-      return true;
-    }
-    if (secondThird) {
-      return true;
-    }
-    return false;
-  };
-
-  const twoSimilarEventsSelected = () => {
-    if (
-      firstSelectedEvent === secondSelectedEvent ||
-      firstSelectedEvent === thirdSelectedEvent
-    ) {
-      setEventSelectedTwice(firstSelectedEvent);
-      return true;
-    }
-    if (secondSelectedEvent === thirdSelectedEvent) {
-      setEventSelectedTwice(secondSelectedEvent);
-      return true;
-    }
-    return false;
-  };
-
-  const clearSelectedEvent = (event) => {
-    let selectedEvent;
-    switch (event) {
-      case "firstEvent":
-        selectedEvent = firstSelectedEvent;
-        setFirstSelectEvent("");
-        break;
-      case "secondEvent":
-        selectedEvent = secondSelectedEvent;
-        setSecondSelectEvent("");
-        break;
-      case "thirdEvent":
-        selectedEvent = thirdSelectedEvent;
-        setthirdSelectEvent("");
-        break;
-      default:
-        break;
-    }
+    setLoader(false);
   };
 
   const handleCloseDiaglog = () => {
@@ -148,7 +89,7 @@ const SharedTopicsVennDiagram = ({
     setOpenDiaglog(true);
     setPublicationList(response["publicationList"]);
   };
-
+  console.log("confEvents: ", confEvents);
   return (
     <Grid container xs={12}>
       <Grid container xs={12}>
@@ -169,36 +110,23 @@ const SharedTopicsVennDiagram = ({
           </Typography>
         </Grid>
         <Grid container style={{ paddingTop: "3%" }}>
-          <SelectWithCancelIcon
-            InputLabelProps="First Event*"
-            SelectLabelIdProps="First Event"
-            SelectValueProps={firstSelectedEvent}
-            onChangeActionProps={(e) => {
-              setFirstSelectEvent(e.target.value);
-            }}
-            confEventsProps={confEvents}
-            clearSelectedEventProps={() => clearSelectedEvent("firstEvent")}
-          />
-          <SelectWithCancelIcon
-            InputLabelProps="Second Event*"
-            SelectLabelIdProps="Second Event"
-            SelectValueProps={secondSelectedEvent}
-            onChangeActionProps={(e) => {
-              setSecondSelectEvent(e.target.value);
-            }}
-            confEventsProps={confEvents}
-            clearSelectedEventProps={() => clearSelectedEvent("secondEvent")}
-          />
-          <SelectWithCancelIcon
-            InputLabelProps="Third Event (Optional)"
-            SelectLabelIdProps="Third Event"
-            SelectValueProps={thirdSelectedEvent}
-            onChangeActionProps={(e) => {
-              setthirdSelectEvent(e.target.value);
-            }}
-            confEventsProps={confEvents}
-            clearSelectedEventProps={() => clearSelectedEvent("thirdEvent")}
-          />
+          <Box sx={{ minWidth: "100%" }}>
+            <Autocomplete
+              disablePortal
+              multiple={true}
+              id="combo-box-demo"
+              options={confEvents}
+              getOptionLabel={(option) => option.label}
+              renderInput={(params) => <TextField {...params} label="Events" />}
+              sx={{ width: "100%", marginBottom: "1%" }}
+              onChange={(event, newInputValue) => {
+                if (newInputValue) {
+                  console.log("newInputValue: ", newInputValue);
+                  setSelectedEvents(newInputValue.map((x) => x.label));
+                }
+              }}
+            />
+          </Box>
           <Grid
             container
             item
@@ -233,6 +161,12 @@ const SharedTopicsVennDiagram = ({
           style={{ width: "100%", borderRadius: "40px", padding: "1%" }}
           elevation={10}
         >
+          <ActiveLoader
+            marginLeft="30%"
+            height={50}
+            width={50}
+            visible={loader}
+          />
           <InteractiveVennDiagram
             sets={sets}
             listContent={listContent}

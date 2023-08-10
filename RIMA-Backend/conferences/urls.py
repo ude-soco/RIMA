@@ -57,7 +57,7 @@ urlpatterns = [
 
     path('getTotalSharedAuthorsEvolution/',
          ShareAuthorCompareTrends.as_view()),
-    path('getSharedWordsNumber/', SharedKeywordCompareTrends.as_view()),
+    path('getConfsSimilarityTopicsBased/', GetConfsSimilarityTopicsBased.as_view()),
     path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
     path('commonAuthors/<pk1>',
          SharedAuthorsBetweenEventsView.as_view()),
@@ -72,7 +72,7 @@ urlpatterns = [
          NewconferencesSharedWordsBarView.as_view()),
     path('getSharedWordsBar/<pk1>/<pk2>/<pk3>',
          NewconferencesSharedWordsBarView.as_view()),
-    path('AuthorsPapersEvolutio/<pk1>/',
+    path('AuthorsPapersEvolution/<pk1>/',
          AuthorsPapersEvolutionView.as_view()),
     path('TotalAuthorsPublicationsEvolution/<pk1>/',
          TotalAuthorsPublicationsEvolution.as_view()),

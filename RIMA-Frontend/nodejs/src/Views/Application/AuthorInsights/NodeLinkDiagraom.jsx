@@ -21,6 +21,7 @@ const NodeLinkDiagram = ({
   networkDataProp,
   setAuthorProfileToShowProp,
   setAuthorsToCompareProp,
+  allAvailableConfProps,
 }) => {
   const [cy, setCy] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
@@ -207,7 +208,9 @@ const NodeLinkDiagram = ({
           }}
         >
           <CardHeader
-            title="Co-author network"
+            title={
+              " Co-author network " + `in (${allAvailableConfProps.join(",")})`
+            }
             titleTypographyProps={{
               variant: "h4",
               color: "primary",
@@ -215,6 +218,7 @@ const NodeLinkDiagram = ({
             }}
             sx={{ backgroundColor: "secondary", padding: "20px" }}
           />
+
           <CardContent sx={{ padding: "30px" }}>
             <Autocomplete
               disablePortal

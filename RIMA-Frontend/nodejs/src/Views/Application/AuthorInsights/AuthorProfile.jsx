@@ -38,18 +38,25 @@ const AuthorProfile = () => {
   const [authors, setAuthors] = useState([]);
   let [networkData, setNetworkData] = useState([]);
   const [authorData, setAuthorData] = useState(null);
-  const [mostPublisehd, setMostPublisehd] = useState(true);
+  const [mostPublisehd, setMostPublisehd] = useState(false);
   const [authorToShowProfile, setAuthorsToShowProfile] = useState(null);
   const [selectedConferences, setSelectedConferences] = useState([
     { name: "All Conferences", label: "All Conferences" },
   ]);
   const [conferences, setConferences] = useState([]);
   const [activeLoader, setActiveLoader] = useState(false);
-  const orderString = ` The authors are ordered based on their publication count, 
-      with the most published author appearing at the top of the list in descending order.
-      This ranking allows for easy identification of the most top contributors in  ${
-        conferences.length === 1 ? " this conference" : " these conferences."
-      }`;
+  const orderString = (
+    <>
+      The authors are ordered based on their publication count,
+      <strong>
+        with the most published author appearing at the top of the list
+      </strong>{" "}
+      in descending order. This ranking allows for easy identification of the
+      most top contributors in
+      {conferences.length === 1 ? " this conference" : " these conferences."}
+    </>
+  );
+
   useEffect(() => {
     getAuthorFilterBased();
     getAllAvailbelConfs();
@@ -57,9 +64,9 @@ const AuthorProfile = () => {
 
   useEffect(() => {
     let urlParams = new URLSearchParams(window.location.search);
-    let authorParam = urlParams.get("author"); 
+    let authorParam = urlParams.get("author");
     if (authorParam) {
-      let author = Object.fromEntries(new URLSearchParams(authorParam)); 
+      let author = Object.fromEntries(new URLSearchParams(authorParam));
       console.log("auhtor to show profile: ", author);
       if (author.name !== null && author.label !== null) {
         console.log("shown");
@@ -222,8 +229,8 @@ const AuthorProfile = () => {
             <Grid container xs={12}>
               <Grid item xs={12} style={{ margin: "1%" }}>
                 <Typography variant="h6">
-                  The list contains all authors who have published in (
-                  {conferences.join(",")}){" "}
+                  The list contains all authors who have published in
+                  <b> ({conferences.join(",")})</b>{" "}
                   {conferences.length === 1 ? "conference" : "conferences"}.
                   {mostPublisehd && orderString}
                 </Typography>
@@ -374,7 +381,10 @@ const AuthorProfile = () => {
               justify="center"
               alignItems="center"
             >
-              <InterestsAnalysis authorProp={selectedAuthor} />
+              <InterestsAnalysis
+                authorProp={selectedAuthor}
+                allAvailableConfProps={conferences}
+              />
             </Grid>
           </Paper>
         </Grid>
@@ -384,6 +394,7 @@ const AuthorProfile = () => {
           networkDataProp={networkData}
           setAuthorProfileToShowProp={showCoAuthorPropfile}
           setAuthorsToCompareProp={handleSetAuthorsToCompare}
+          allAvailableConfProps={conferences}
         />
       </Grid>
     </Grid>

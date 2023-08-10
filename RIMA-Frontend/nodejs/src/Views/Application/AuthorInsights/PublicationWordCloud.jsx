@@ -137,11 +137,14 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6">
-            This list contains all of {authorNameProps.name}'s publications that
-            have been published in ({conferencesProps.join(", ")}) conferences.
-            Publications are ordered in descending order based on the number of
-            citations they have received, highlighting those with the greatest
-            academic impact at the top of the list.
+            This list contains all of{" "}
+            <b>
+              {authorNameProps.name}'s publications that have been published in
+              ({conferencesProps.join(", ")}) conferences
+            </b>
+            .<b> Publications</b> are ordered in descending order based on the
+            number of citations they have received, highlighting those{" "}
+            <b>with the greatest academic impact at the top of the list</b>.
           </Typography>
         </Grid>
         <Grid container>

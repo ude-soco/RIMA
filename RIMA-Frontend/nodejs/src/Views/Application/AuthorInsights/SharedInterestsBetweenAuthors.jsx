@@ -79,7 +79,7 @@ const SharedInterestsBetweenAuthors = () => {
     return confs;
   };
 
-  const getSharedPublicationsCount = async () => {
+  const getSharedInterestsCount = async () => {
     if (selectedAuthor.length == 0 || selectedConferences.length == 0) {
       return;
     }
@@ -99,7 +99,7 @@ const SharedInterestsBetweenAuthors = () => {
 
   const handleCompare = () => {
     setCompareClicked(true);
-    getSharedPublicationsCount();
+    getSharedInterestsCount();
   };
   const handleGetPublications = async (keyword) => {
     try {

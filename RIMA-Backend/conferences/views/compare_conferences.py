@@ -142,7 +142,7 @@ class ShareAuthorCompareTrends(APIView):
 # new class by Islam Abdelghaffar
 
 
-class SharedKeywordCompareTrends(APIView):
+class GetConfsSimilarityTopicsBased(APIView):
     def get(self, request, *args, **kwargs):
         result_data = []
         url_splits_question_mark = confutils.split_restapi_url(
@@ -998,6 +998,7 @@ class getRelavantPublicationsList(APIView):
                 "authors": ', '.join([author.author_name for author in pub.authors]),
                 "abstract": pub.abstract,
                 "year": pub.years,
+                "event": pub.published_in[0].conference_event_name_abbr,
                 "url": pub.urls
             }for pub in publication_List]
 

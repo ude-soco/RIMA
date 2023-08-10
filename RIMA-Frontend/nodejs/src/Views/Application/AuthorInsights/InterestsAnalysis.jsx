@@ -9,7 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import PublicationDialog from "../../components/LAKForms/ExploreTopicsAndTrends/PublicationsDialog.jsx";
 
-const InterestsAnalysis = ({ authorProp }) => {
+const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
   const [minCount, setMinCount] = useState(1);
   const [publicationList, setPublicationList] = useState([]);
 
@@ -29,6 +29,15 @@ const InterestsAnalysis = ({ authorProp }) => {
       },
       legend: {
         position: "right",
+      },
+      tooltip: {
+        y: {
+          title: {
+            formatter: function () {
+              return "Click to get relevant publications";
+            },
+          },
+        },
       },
     },
   });
@@ -118,6 +127,14 @@ const InterestsAnalysis = ({ authorProp }) => {
         legend: {
           position: "right",
         },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return `${val} 
+               Click to get relevant publications`;
+            },
+          },
+        },
       },
     };
     if (response.categories.length == 0) {
@@ -181,6 +198,14 @@ const InterestsAnalysis = ({ authorProp }) => {
         legend: {
           position: "right",
         },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return `${val} 
+               Click to get relevant publications`;
+            },
+          },
+        },
       },
     };
 
@@ -236,11 +261,13 @@ const InterestsAnalysis = ({ authorProp }) => {
         <Grid container xs={12}>
           <Grid item xs={12}>
             <Typography variant="h6">
-              This stacked bar chart represents the frequency of an{" "}
-              {authorProp.name}'s topics across different years. Each bar in the
-              chart corresponds to a year, and each segment of a bar represents
-              a topic. The size of the segment reflects the number of
-              publications released by the
+              This stacked bar chart represents the frequency of{" "}
+              <b>{authorProp.name}'s topics across different years</b>. The
+              topics have extracted been from the publications published in{" "}
+              <b>({allAvailableConfProps.join(",")})</b> Each bar in the chart
+              corresponds to a year, and each segment of a bar represents a
+              topic. The size of the segment reflects the number of publications
+              released by the
               {authorProp.name} that mentioned the respective topic within that
               year.
             </Typography>
@@ -266,9 +293,9 @@ const InterestsAnalysis = ({ authorProp }) => {
                     style={{
                       transform: "translateX(-50%)",
                     }}
-                    Info={`Use the 'Minimum Count' dropdown to filter keywords
+                    Info={`Use the 'Minimum number of occurrence' dropdown to filter Interests
                      that appear in at least a certain number of years.
-                     For example, selecting '2' will only display keywords that
+                     For example, selecting '2' will only display Interests that
                      appear in two or more years. This feature helps to highlight
                      the most persistent interests of the author over time.`}
                   />
@@ -281,12 +308,14 @@ const InterestsAnalysis = ({ authorProp }) => {
       <Grid item xs={4} marginBottom="2%" borderRadius="40px">
         <Box sx={{ minWidth: "100%" }}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Minimun Count</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              Minimum number of occurrence
+            </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={minCount}
-              label="Minimun Count"
+              label="Minimum number of occurrence"
               onChange={handleCountChange}
             >
               <MenuItem value={1}>1</MenuItem>

@@ -70,9 +70,8 @@ const AuthorsProductivityOverTime = () => {
         categories: extractedOptions,
       },
       title: {
-        text: `Co-Author Evolution Comparison Between Authors in ${availableConfs.join(
-          " and "
-        )} conferences`,
+        text: `Comparing Academic Productivity Among Authors
+         in ${availableConfs.join(" and ")} conferences`,
         align: "center",
       },
       subtitle: {

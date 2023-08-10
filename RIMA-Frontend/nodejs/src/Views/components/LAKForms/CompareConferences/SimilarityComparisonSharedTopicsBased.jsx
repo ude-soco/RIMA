@@ -105,7 +105,7 @@ class SimilarityComparisonSharedTopicsBased extends Component {
         selectedConferences: value,
       },
       function () {
-        this.CompareSharedWordNumber();
+        this.CompareConferencesSimilarityTopicsBased();
       }
     );
   };
@@ -145,7 +145,7 @@ class SimilarityComparisonSharedTopicsBased extends Component {
     this.selectInputRef.current.select.clearValue();
   };
 
-  CompareSharedWordNumber = () => {
+  CompareConferencesSimilarityTopicsBased = () => {
     var { series, yaxis } = this.state;
     var selectedConfsCount = this.state.selectedConferences.length;
     if (selectedConfsCount == 0) {
@@ -202,7 +202,7 @@ class SimilarityComparisonSharedTopicsBased extends Component {
     }
     fetch(
       BASE_URL_CONFERENCE +
-        "getSharedWordsNumber/" +
+        "getConfsSimilarityTopicsBased/" +
         "?" +
         this.state.selectedConferences.join("&")
     )
@@ -210,21 +210,6 @@ class SimilarityComparisonSharedTopicsBased extends Component {
       .then((json) => {
         series = [];
         weights = [];
-        // for (let index = 0; index < 2; index++) {
-        //   for (let i = 0; i < json.weights.length; i++) {
-        //     weights[i] = json.weights[i][index];
-        //   }
-        //   if (index == 0) {
-        //     // series = series.concat([
-        //     //   { name: "No. of shared Topics", data: weights },
-        //     // ]);
-        //   } else {
-        //     series = series.concat([
-        //       { name: "No. of shared Topics", data: weights },
-        //     ]);
-        //   }
-        //   weights = [];
-        // }
         json.data.forEach((tuple) => {
           series = series.concat([
             { name: tuple[0]["name"], data: tuple[0]["data"] },

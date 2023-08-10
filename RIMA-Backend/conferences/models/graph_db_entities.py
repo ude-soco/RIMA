@@ -89,6 +89,7 @@ class Event(StructuredNode):
 
 class Conference(StructuredNode):
     conference_name_abbr = StringProperty()
+    conference_url = StringProperty()
     platform_name = StringProperty()
     platform_url = StringProperty()
 

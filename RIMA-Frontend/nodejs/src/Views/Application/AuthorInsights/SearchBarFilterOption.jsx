@@ -69,7 +69,7 @@ const SearchBarFilterOption = ({
       >
         <Grid item xs={5}>
           <Paper style={{ padding: "2%" }}>
-          <Typography variant="h6">Published in:</Typography>
+            <Typography variant="h6">Published in:</Typography>
             <Autocomplete
               id="tags-standard"
               options={conferences}
@@ -95,7 +95,7 @@ const SearchBarFilterOption = ({
               <Typography variant="h6">Sorted By:</Typography>
               <FormControlLabel
                 onChange={(e) => MostPublisehd(e.target.checked)}
-                control={<Checkbox defaultChecked />}
+                control={<Checkbox />}
                 label="Most Published Authors"
               />
             </FormGroup>

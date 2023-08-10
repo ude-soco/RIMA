@@ -347,7 +347,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={12}
+                      lg={6}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -363,7 +363,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={12}
+                      lg={5}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -379,6 +379,7 @@ export default function EducationalConferences(props) {
                   <Grid
                     container
                     md={12}
+                    spacing={1}
                     style={{
                       marginTop: "1%",
                     }}
@@ -388,7 +389,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={7}
+                      lg={6}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",
@@ -404,7 +405,7 @@ export default function EducationalConferences(props) {
                       ms={12}
                       xs={12}
                       md={12}
-                      lg={4}
+                      lg={5}
                       style={{
                         ...Style.itemStyle,
                         margin: "auto",

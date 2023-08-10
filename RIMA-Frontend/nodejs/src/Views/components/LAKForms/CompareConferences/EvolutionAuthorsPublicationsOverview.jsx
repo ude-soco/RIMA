@@ -178,7 +178,7 @@ class EvolutionAuthorsPublicationsOverview extends Component {
     console.log("BAB");
   };
 
-  selectSharedTopics = (e) => {
+  getAuthorEvolution = (e) => {
     this.setState(
       {
         active1: true,
@@ -187,12 +187,12 @@ class EvolutionAuthorsPublicationsOverview extends Component {
         key: "Authors",
       },
       function () {
-        this.clickEvent();
+        this.handleFetchData();
       }
     );
   };
 
-  selectSharedKeywords = (e) => {
+  getPublicationEvolution = (e) => {
     this.setState(
       {
         active1: false,
@@ -201,18 +201,18 @@ class EvolutionAuthorsPublicationsOverview extends Component {
         key: "Publications",
       },
       function () {
-        this.clickEvent();
+        this.handleFetchData();
       }
     );
   };
 
-  clickEvent = () => {
+  handleFetchData = () => {
     if (this.state.key == "Authors") {
       var { series } = this.state;
       var { weights } = this.state;
       fetch(
         BASE_URL_CONFERENCE +
-          "AuthorsPapersEvolutio/Authors/" +
+          "AuthorsPapersEvolution/Authors/" +
           "?" +
           this.state.selectedConferences.join("&")
       )
@@ -264,17 +264,15 @@ class EvolutionAuthorsPublicationsOverview extends Component {
       var { weights } = this.state;
       fetch(
         BASE_URL_CONFERENCE +
-          "AuthorsPapersEvolutio/Publications/" +
+          "AuthorsPapersEvolution/Publications/" +
           "?" +
           this.state.selectedConferences.join("&")
       )
         .then((response) => response.json())
         .then((json) => {
           console.log(json);
-          console.log("TEST 1]k");
           series = [];
           weights = [];
-          console.log("TEST 1]kkk");
           for (
             let index = 0;
             index < this.state.selectedConferences.length;
@@ -444,14 +442,14 @@ class EvolutionAuthorsPublicationsOverview extends Component {
             <Grid item>
               <RIMAButton
                 name={"Authors"}
-                onClick={this.selectSharedTopics}
+                onClick={this.getAuthorEvolution}
                 activeButton={this.state.active1}
               />
             </Grid>
             <Grid item>
               <RIMAButton
                 name={"Publications"}
-                onClick={this.selectSharedKeywords}
+                onClick={this.getPublicationEvolution}
                 activeButton={this.state.active2}
               />
             </Grid>
@@ -466,45 +464,6 @@ class EvolutionAuthorsPublicationsOverview extends Component {
           }}
           spacing={3}
         >
-          {/* <Grid item xs={12} lg={6}>
-            <Paper style={{ borderRadius: "40px" }} elevation={10}>
-              <Typography
-                variant="h5"
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                The total number of events in each conference
-              </Typography>
-              <ReactApexChart
-                options={this.state.barChartOptions}
-                series={this.state.BarChartEventsSeries}
-                type="bar"
-                height={350}
-                width="100%"
-              />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <Paper style={{ borderRadius: "40px" }} elevation={10}>
-              <Typography
-                variant="h5"
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                The total number of {this.state.space} {this.state.key} in each
-                conference
-              </Typography>
-              <ReactApexChart
-                options={this.state.barChartOptions}
-                series={this.state.BarChartSeries}
-                type="bar"
-                height={350}
-                width="100%"
-              />
-            </Paper>
-          </Grid> */}
           <Grid item xs={12}>
             <Paper
               style={{ borderRadius: "40px", padding: "1%" }}
