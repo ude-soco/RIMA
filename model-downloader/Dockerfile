@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.5
+# syntax=docker/dockerfile:1.6
 FROM python:3.11-slim
 
 ENV APT_PACKAGES "make wget unzip"
