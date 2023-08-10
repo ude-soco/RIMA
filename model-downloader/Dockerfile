@@ -2,8 +2,8 @@
 FROM python:3.11-slim
 
 ENV APT_PACKAGES "make wget libarchive-tools"
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt <<EOF
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,sharing=locked,target=/var/lib/apt <<EOF
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
   apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 $APT_PACKAGES
 EOF
