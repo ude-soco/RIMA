@@ -47,26 +47,6 @@ updates:
   - "dependencies"
   - "python"
   - "RIMA-Backend"
-  groups:
-    scipy-related:
-      patterns:
-      - "scipy"
-      - "numpy"
-    celery-related:
-      patterns:
-      - "celery"
-      - "billiard"
-      - "vine"
-      - "amqp"
-      - "kombu"
-    django-related:
-      patterns:
-      - "django"
-      - "django-cors-headers"
-      - "django-timezone-field"
-      - "django-celery-beat"
-      - "django-celery-results"
-      - "django-celerybeat-status"
 
 - package-ecosystem: "docker"
   directory: "/model-downloader"

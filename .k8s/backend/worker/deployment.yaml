@@ -9,7 +9,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: RollingUpdate
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/component: worker
@@ -52,8 +52,8 @@ spec:
             name: configuration
         resources:
           requests:
-            memory: 900Mi
             cpu: 20m
+            memory: 900Mi
           limits:
             memory: 2Gi
             cpu: 500m
