@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.5
+# syntax=docker/dockerfile:1.6
 FROM --platform=linux/amd64 python:3.7-slim AS python
 
 # Install dependencies
