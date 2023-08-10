@@ -3,9 +3,11 @@ FROM python:3.9-slim AS python
 
 # Install dependencies
 ENV BUILD_DEPS "build-essential pkg-config gfortran libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
-ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3 "
+ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3"
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt <<EOF
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
   apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 $BUILD_DEPS $RUNTIME_DEPS
 EOF
