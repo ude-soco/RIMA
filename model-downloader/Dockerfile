@@ -2,8 +2,8 @@
 FROM python:3.11-slim
 
 ENV APT_PACKAGES "make wget libarchive-tools"
-RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
-    --mount=type=cache,sharing=locked,target=/var/lib/apt <<EOF
+RUN --mount=type=cache,sharing=private,target=/var/cache/apt \
+    --mount=type=cache,sharing=private,target=/var/lib/apt <<EOF
   rm -f /etc/apt/apt.conf.d/docker-clean
   echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
