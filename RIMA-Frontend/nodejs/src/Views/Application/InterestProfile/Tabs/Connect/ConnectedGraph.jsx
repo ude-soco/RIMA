@@ -10,39 +10,35 @@ import {
     Button,
     DialogContent, Grid, CircularProgress
 } from "@material-ui/core";
-
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import nodeHtmlLabel from "cytoscape-node-html-label";
 import cxtmenu from "cytoscape-cxtmenu";
-//import data from "./dataConnect";
 import { useEffect, useState } from "react";
-
 import SVGVenn from "./SVGVenn";
-
 import WhyInterest from "../WhyInterest/WhyInterest";
-import RestAPI from "../../../../../Services/api";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import Contact from "./Contact";
-
-
-
 
 cytoscape.use(nodeHtmlLabel);
 cytoscape.use(cxtmenu);
 
+// Function to generate graph data
 function getGraphData(data) {
     let ids = [...Array(20).keys()];
 
-    console.log(data, "data getGraph")
+    //console.log(data, "data getGraph")
+    // Extract citations and references from input data
     let citations = data.citations
     let references = data.references
 
-    console.log(citations, references, "data get Graph cit, ref")
+    //console.log(citations, references, "data get Graph cit, ref")
     let y1 = 100;
     let y2 = 100;
+
     const label1 = "Authors who cited you the most";
     const label2 = "Authors most cited by you";
+
+    // Initialize an array of elements for the Cytoscape graph
     const elements = [
         {
             data: { id: -1, label: "You" },
@@ -60,9 +56,13 @@ function getGraphData(data) {
             position: { x: 500, y: 50 }
         }
     ];
+
+    // Map through citations
     citations.map((a) => {
         let id = ids.pop();
         console.log(a.paper);
+
+        // Create an author node element (we added authorId)
         let element = {
             data: {
                 id: id,
@@ -76,16 +76,23 @@ function getGraphData(data) {
             classes: ["multiline", "author", "citeMe"],
             position: { x: 550, y: y1 }
         };
+
+        // Create an edge between the author node the user
         let edge = {
             data: { target: id, source: -1 },
             classes: ["edge"]
         };
+
+        // Add the author node and edge to the elements array
         elements.push(element, edge);
         y1 = y1 + 75;
     });
 
+    // Map through references
     references.map((b) => {
         let id = ids.pop();
+
+        // Create an author node element (we added authorId)
         let element = {
             data: {
                 id: id,
@@ -99,10 +106,14 @@ function getGraphData(data) {
             classes: ["multiline", "author", "citedByMe"],
             position: { x: 50, y: y2 }
         };
+
+        // Create an edge between the author node the user
         let edge = {
             data: { target: -1, source: id },
             classes: ["edge"]
         };
+
+        // Add the author node and edge to the elements array
         elements.push(element, edge);
         y2 = y2 + 75;
     });
@@ -111,13 +122,9 @@ function getGraphData(data) {
     return elements;
 }
 
-
-
 const ConnectedGraph = (props) => {
+
     const {data, myInterests}=props
-
-     
-
     const [dialog, setDialog] = useState({
         openCompareInterest: false,
         openIamCited: false,
@@ -128,13 +135,17 @@ const ConnectedGraph = (props) => {
         userName: "You",
         openContact:false,
     });
+
     const [elements, setElements] = useState([]);
     const [paper, setPaper] = useState([]);
     const [authorId, setAuthorId] = useState("");
-    
+
+    // From each paper get the years they got published
     const years = paper.map(pap => pap.year);
+    // startYear is first year a paper got published, endYear ist the last year a paper got published
     const startYear = Math.min(...years);
     const endYear = Math.max(...years);
+
     const [yearRange, setYearRange] = useState([startYear,endYear]);
     const filteredPapers = paper.filter(pap => pap.year >= yearRange[0] && pap.year <= yearRange[1]);
     
@@ -143,23 +154,25 @@ const ConnectedGraph = (props) => {
         setYearRange([startYear, endYear]);
     }, [startYear, endYear]);
     
-
+    // Handle change in the start year input
     const handleStartYearChange = (startYear) => {
         const newStartYear = parseInt(startYear);
         const newEndYear = yearRange[1];
         
+        // Validate and update yearRange based on the input values, show altert if input is invalid
         if (startYear.length === 4 && (newStartYear > newEndYear)) {
           alert("Enter a valid value: startYear should be smaller than endYear");
-        } 
-        else {
+        } else {
           setYearRange([newStartYear, newEndYear]);
         }
       };
       
+      // Handle change in the end year input
       const handleEndYearChange = (endYear) => {
         const newEndYear = parseInt(endYear);
         const newStartYear = yearRange[0];
         
+        // Validate and update yearRange based on the input values, show altert if input is invalid
         if (endYear.length === 4 && (newStartYear > newEndYear)) {
           alert("Enter a valid value: endYear should be greater than startYear");
         } else {
@@ -167,21 +180,15 @@ const ConnectedGraph = (props) => {
         }
       };
       
-
-
-
     const getData = async ()=>{
-
         const currElements = getGraphData(data);
         setElements(currElements);
-
     }
+
     useEffect(() => {
         const currElements = getGraphData(data);
         setElements(currElements);
         setDialog({...dialog, myInterests: myInterests})
-
-
     }, [myInterests]);
 
     const handleOpenCompareInterests = (ele) => {
@@ -195,16 +202,16 @@ const ConnectedGraph = (props) => {
 
     const handleIhaveCited = (ele) => {
         setPaper(ele.data().paper);
-
         setDialog({ ...dialog, openIhaveCited: true, currNode: ele.data() });
     };
 
     const handleIamCited = (ele) => {
-        console.log(dialog.currNode, "test");
+        //console.log(dialog.currNode, "test");
         setPaper(ele.data().paper);
         setDialog({ ...dialog, openIamCited: true, currNode: ele.data() });
     };
 
+    // Open Contact Dialog with selected authorId
     const handleContact = (ele) => {
         setAuthorId(ele.data().authorId);
         //console.log(ele.data().authorId);
@@ -221,10 +228,6 @@ const ConnectedGraph = (props) => {
         });
         setYearRange([1990, 2023]);
     };
-
-   /* const testPrint2 = () => {
-        console.log(data.id);
-    };*/
 
     const layout = { name: "preset" };
     const stylesheet = [
@@ -266,13 +269,8 @@ const ConnectedGraph = (props) => {
         }
     ];
 
-
-
-    
-
     return (
         <>
-        
             <CytoscapeComponent
                 elements={elements}
                 style={{ width: "100%", height: "600px" }}
@@ -304,6 +302,7 @@ const ConnectedGraph = (props) => {
                                 enabled: true
                             },
                             {
+                                // Calls handleContact function and hands over the authorId from the selected Author
                                 content: "Contact",
                                 contentStyle: {},
                                 select: function (ele) {
@@ -351,6 +350,7 @@ const ConnectedGraph = (props) => {
                                 enabled: true
                             },
                             {
+                                // Calls handleContact function and hands over the authorId from the selected Author
                                 content: "Contact",
                                 contentStyle: {},
                                 select: function (ele) {
@@ -380,7 +380,6 @@ const ConnectedGraph = (props) => {
                         selector: ".header",
                         menuRadius: 50,
                         commands: [
-
                         ],
                         fillColor: "white",
                         activeFillColor: "white",
@@ -451,16 +450,15 @@ const ConnectedGraph = (props) => {
                     let menu2 = cy.cxtmenu(!props.button ? menuCitedByMe: "");  //no Menu without proper data
                     let menu1 = cy.cxtmenu(!props.button ? menuCiteMe : "");
                     let menu3 = cy.cxtmenu(menuheader)
-
-
                 }}
             />
 
-
-            <Dialog  open={dialog.openContact}  onClose={handleClose} >
+            {/* Open Contact Dialog depending on openContact */}
+            <Dialog  open={dialog.openContact} onClose={handleClose} >
                 <DialogContent>
                         <Grid container>
                         <Grid item xs>
+                            {/* Contact Component, hand over authorId as prop */}
                             <Contact authorId={authorId}/>
                         </Grid>
                         </Grid>
@@ -469,7 +467,6 @@ const ConnectedGraph = (props) => {
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
-
 
             <Dialog open={dialog.openCompareInterest} onClose={handleClose} maxWidth="md">
                 {dialog.currNode != null ? (
@@ -482,19 +479,15 @@ const ConnectedGraph = (props) => {
                 <DialogContent >
                     <Grid container>
                         <Grid item = {"xs"}>
+                            {/* SVGVenn Component, hand over compareInterests, currNode.name, userName as props*/}
                             <SVGVenn
-
                                 authorInterest={dialog.compareInterests}
                                 authorName={dialog.currNode.name}
                                 userName={dialog.userName}
                             />
                         </Grid>
-
-
                     </Grid>
-
                 </DialogContent>
-
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
@@ -502,7 +495,6 @@ const ConnectedGraph = (props) => {
 
             <Dialog open={dialog.openIamCited} onClose={handleClose} maxWidth="lg">
                 <DialogTitle>Where am I cited?</DialogTitle>
-
                 <DialogContent >
                     <Typography>
                         {" "}
@@ -512,6 +504,7 @@ const ConnectedGraph = (props) => {
                         Number of Papers found : {filteredPapers.length}
                     </Typography>
                    
+                   {/* TextFields for selecting startYear and endYear */}
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                         <TextField
                             label="StartYear"
@@ -544,14 +537,12 @@ const ConnectedGraph = (props) => {
                             }}  
                             /> 
                     </Box>
-
                     {dialog.currNode != null ? (
                         <WhyInterest papers={filteredPapers} originalKeywords={[]}/>
                     ) : (
                         <></>
                     )}
                 </DialogContent>
-
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
@@ -559,7 +550,6 @@ const ConnectedGraph = (props) => {
 
             <Dialog open={dialog.openIhaveCited} maxWidth="lg">
                 <DialogTitle>Where have I cited?</DialogTitle>
-
                 <DialogContent >
                     {console.log(dialog.currNode.name)}
                     <Typography>
@@ -569,6 +559,7 @@ const ConnectedGraph = (props) => {
                     <Typography>
                         Number of Papers found : {filteredPapers.length}
                     </Typography>
+                    {/* TextFields for selecting startYear and endYear */}
                     <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                             <TextField
                             type="number"
@@ -601,14 +592,12 @@ const ConnectedGraph = (props) => {
                             }}  
                             /> 
                         </Box>
-
                     {dialog.currNode != null ? (
                         <WhyInterest papers={filteredPapers} originalKeywords={[]}/>
                     ) : (
                         <></>
                     )}
                 </DialogContent>
-
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
@@ -619,6 +608,8 @@ const ConnectedGraph = (props) => {
 };
 
 export default ConnectedGraph;
+
+// Shown while data is being fetched and can not be displayed
 export const Loading = () => {
     return (
         <>

@@ -14,8 +14,10 @@ import {
   Button
 } from "@mui/material";
 
+// React component named 'Help' with props
 export default function Help(props) {
-  const [windows, setWindows] = useState([
+  // Define an array of 'windows', each window has an id, title and image
+  const [windows, setWindows] = useState([ 
     {
       id: 1,
       title: "The Connect page helps you get in touch with other researchers",
@@ -48,14 +50,17 @@ export default function Help(props) {
     }
   ]);
 
-  const [selectedWindow, setSelectedWindow] = useState({ id: 1 });//You can change the id to 0 to show the Pop ups just once
+  // State to keep track of the currently selected window
+  const [selectedWindow, setSelectedWindow] = useState({ id: 1 });
 
+  // Function to close the help dialog
   const handleClose = () => {
     props.closeHelp();
     setSelectedWindow({ id: 0 });
     
   };
 
+  // Function to move to the next window
   const handleNext = () => {
     setSelectedWindow((prevSelectedWindow) => {
       const nextWindowId = prevSelectedWindow.id + 1;
@@ -66,6 +71,7 @@ export default function Help(props) {
     });
   };
 
+  // Function to move to the previous window
   const handlePrevious = () => {
     setSelectedWindow((prevSelectedWindow) => {
       const previousWindowId = prevSelectedWindow.id - 1;
@@ -76,6 +82,7 @@ export default function Help(props) {
     });
   };
 
+  // Effect to determine whether to show the help dialog based on sessionStorage
   useEffect(() => {
     const isHelpShown = sessionStorage.getItem("helpShown");
     if (!isHelpShown) {
@@ -86,10 +93,12 @@ export default function Help(props) {
 
   return (
     <>
+      {/* Render the help dialog based on selectedWindow */}
       {selectedWindow.id !== 0 && (
         <Dialog open={true} onClose={handleClose}>
           <DialogTitle>{windows[selectedWindow.id - 1].title}</DialogTitle>
           <DialogContent>
+            {/* Display the image associated with the selected help window */}
             <img
               src={windows[selectedWindow.id - 1].image}
               style={{ width: "100%" }}
@@ -97,10 +106,13 @@ export default function Help(props) {
             />
           </DialogContent>
           <DialogActions>
+            {/* Button to navigate to the previous window */}
             <Button onClick={handlePrevious} disabled={selectedWindow.id === 1}>
               Previous
             </Button>
+            {/* Button to close the help dialog */}
             <Button onClick={handleClose}>Close</Button>
+            {/* Button to navigate to the next window */}
             <Button
               onClick={handleNext}
               disabled={selectedWindow.id === windows.length}
