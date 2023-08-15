@@ -87,8 +87,9 @@ export default function InterestOverview () {
                 setDataDiscover(["Sorry, we are experiencing an error"])
             })
 */
-        
-        RestAPI.getConnectData({data:currentUser.author_id, noa: 3, selectedNames: '', papers: false}).then(res=>{  //Data object got the number of auhtors, the selected names to filter and if papers should be fetched, res is the response from backend
+        /*Data object got the number of auhtors, the selected names to filter and if papers should be fetched, 
+        res is the response from backend*/
+        RestAPI.getConnectData({data:currentUser.author_id, noa: 3, selectedNames: '', papers: false}).then(res=>{  
             const {data}=res
             setDataConnect(data.data)
         })

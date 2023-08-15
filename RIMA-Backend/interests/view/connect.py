@@ -210,6 +210,6 @@ def authorsFilter(authorId, method, filter):
         listAuthors.remove(str(authorId))    
     topN = [tupel[0] for tupel in (list(Counter(listAuthors).most_common(10+len(filter))))]
     #print(len(topN))
-    authorList = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} #Id is importend to trace the authors back
+    authorList = {id: dictAuthorsName.get(id, 'Unknown') for id in topN} #Id is importent to trace the authors back
     print(authorList)
     return authorList
