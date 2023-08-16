@@ -44,7 +44,7 @@ COPY --chown=app:app Pipfile* .
 # EOF
 
 RUN pip install --no-color pipenv && \
-    ipenv install --deploy
+    pipenv install --deploy
 
 # Clean up build dependencies
 USER root
