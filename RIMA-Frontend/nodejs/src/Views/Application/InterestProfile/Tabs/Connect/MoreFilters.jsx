@@ -31,14 +31,11 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function MoreFilters(props) {
- 
+  
   const {data} = props
-  
-  const [selectedNames, setSelectedNames] = useState(data.selectedNames); //Filter list (consistet)
-  
-
   const nameId = data.filter //AUthors id list
   const namesList = Object.values(nameId).map((value) => value[0]) //map author id to names
+  const [selectedNames, setSelectedNames] = useState(data.selectedNames); //Filter list (consistet)
   /*
   console.log(namesList)
   console.log(nameId, "TEST")
@@ -85,8 +82,11 @@ export default function MoreFilters(props) {
       <Typography variant="h6"  className={classes.title}>Select</Typography>
             <FormGroup className={classes.checkBox}>
             <Divider className={classes.divider}/>
-              {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange}  //map names to checkbox list and handle checking, find id in list
-              value={name} checked={!selectedNames.includes((Object.entries(nameId).find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))} 
+            {namesList.map(name =>(<FormControlLabel key = {name} control={<Checkbox onChange={handleCheckboxChange}  
+              value={name} checked={!selectedNames.includes((Object.entries(nameId).
+              find(([key, value2]) => value2[0] === name))[0])}/>} label={name} />))
+              //map names to checkbox list and handle checking, find id in list
+            } 
             </FormGroup>
                   
           <Divider className={classes.divider}/>

@@ -302,11 +302,13 @@ const ConnectedGraph = (props) => {
                                 enabled: true
                             },
                             {
-                                // Calls handleContact function and hands over the authorId from the selected Author
+                                /*Calls handleContact function and
+                                hands over the authorId from the selected 
+                                Author*/
                                 content: "Contact",
                                 contentStyle: {},
                                 select: function (ele) {
-                                    handleContact(ele);
+                                handleContact(ele);
                                 },
                                 enabled: true
                             },

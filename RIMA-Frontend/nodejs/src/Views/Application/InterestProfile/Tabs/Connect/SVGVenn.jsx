@@ -56,8 +56,7 @@ const SVGVenn = (props) => {
       
         return highestCount;
       }
-
-    console.log(authorInterest)
+    //console.log(authorInterest)
     let x = 40*getHighestWordCount(authorInterest) //scale the position
     const buttonStyle = {
         position: 'absolute',
@@ -362,7 +361,8 @@ const SVGVenn = (props) => {
                 </DialogActions>
             </Dialog>
             <Button variant="outlined" style={buttonStyle}>
-                shared interests: {bothInterest.length}   {/*Number of shared intrests for better overview */}
+                shared interests: {bothInterest.length 
+                /*Number of shared intrests for better overview */}   
             </Button>
             
         </>

@@ -44,31 +44,23 @@ export default function Connect (props) {
       };
  
     useEffect(()=>{
-
-
         //console.log(selectedNames, "selectedNames in Connect------------------------------");
-        
-        if(data.length===0){                        //define data
+       if(data.length===0){                        //define data
             setData(props.data)
             setDataCollected(false)
-            
         }
         else{
-            RestAPI.longTermInterest(currentUser).then(res=>{ //call api and fetch data
-                const {data} =res
-                let interests = []
-                data.map((d)=>{
-                    interests.push(d.keyword)
-                })
-                setMyInterests(interests)
-            })
-                     
-
             setDataCollected(true)
             setFetch(false)
         }
-
-
+        RestAPI.longTermInterest(currentUser).then(res=>{ //call api and fetch data
+            const {data} =res
+            let interests = []
+            data.map((d)=>{
+                interests.push(d.keyword)
+            })
+            setMyInterests(interests)
+        })
     },[data,props,selectedNames])
 
    
@@ -85,8 +77,8 @@ export default function Connect (props) {
     } 
 
     const handleSelectedNamesChange = (names) => { //add names to filter list
-        console.log(names, "names")
-        console.log(selectedNames.some(item => item === names))
+        //console.log(names, "names")
+        //console.log(selectedNames.some(item => item === names))
         if((names.some(item => !selectedNames.includes(item)))){setChange(true)} //deselect selected names, only call api if changes are done
         else {setChange(false)}
         setSelectedNames([...names]);
