@@ -18,3 +18,5 @@ Description: Improvements to the "Connect" page of the RIMA-Application based on
 
 
 Libraries used: Python, JSON, HTML, CSS, Cytoscape, JavaScript, ReactJS, MaterialUI
+
+Screencast: https://www.youtube.com/watch?v=KUbD5Anv_lI
