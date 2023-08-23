@@ -193,7 +193,9 @@ const ConnectedGraph = (props) => {
 
     const handleOpenCompareInterests = (ele) => {
         setDialog({
-            ...dialog,
+            openIamCited: false,
+            openIhaveCited: false,
+            openContact:false,
             openCompareInterest: true,
             currNode: ele.data(),
             compareInterests: ele.data()["interests"]
@@ -202,20 +204,35 @@ const ConnectedGraph = (props) => {
 
     const handleIhaveCited = (ele) => {
         setPaper(ele.data().paper);
-        setDialog({ ...dialog, openIhaveCited: true, currNode: ele.data() });
+        setDialog({ 
+            ...dialog,
+            openCompareInterest: false,
+            openIamCited: false,
+            openContact:false, 
+            openIhaveCited: true, 
+            currNode: ele.data() });
     };
 
     const handleIamCited = (ele) => {
         //console.log(dialog.currNode, "test");
         setPaper(ele.data().paper);
-        setDialog({ ...dialog, openIamCited: true, currNode: ele.data() });
+        setDialog({ ...dialog,
+            openCompareInterest: false,
+            openIhaveCited: false,
+            openContact:false, 
+            openIamCited: true, 
+            currNode: ele.data() });
     };
 
     // Open Contact Dialog with selected authorId
     const handleContact = (ele) => {
         setAuthorId(ele.data().authorId);
         //console.log(ele.data().authorId);
-        setDialog({...dialog,  openContact: true});
+        setDialog({...dialog,
+            openCompareInterest: false,
+            openIamCited: false,
+            openIhaveCited: false,
+            openContact: true});
     };
 
     const handleClose = () => {
@@ -224,10 +241,11 @@ const ConnectedGraph = (props) => {
             openCompareInterest: false,
             openIamCited: false,
             openIhaveCited: false,
-            openContact:false,
+            openContact:false
         });
         setYearRange([1990, 2023]);
     };
+
 
     const layout = { name: "preset" };
     const stylesheet = [
@@ -414,7 +432,7 @@ const ConnectedGraph = (props) => {
                                     "<span class='nodetest'>" +
                                     data.name +
                                     "<br/>" +
-                                    (props.button ? '<b class="score">': '<b class="score2">') +  //So that the Textsize changes.
+                                    (props.firstLoad ? '<b class="score">': '<b class="score2">') +  //So that the Textsize changes.
                                     "<Tooltip title='Number of Citations' placement='right'>" + 
                                     data.score +
                                     "</Tooltip>" +
@@ -449,8 +467,8 @@ const ConnectedGraph = (props) => {
                         }
                     ]
                     let htmlLabel=cy.nodeHtmlLabel(labels);
-                    let menu2 = cy.cxtmenu(!props.button ? menuCitedByMe: "");  //no Menu without proper data
-                    let menu1 = cy.cxtmenu(!props.button ? menuCiteMe : "");
+                    let menu2 = cy.cxtmenu(!props.firstLoad ? menuCitedByMe: "");  //no Menu without proper data
+                    let menu1 = cy.cxtmenu(!props.firstLoad ? menuCiteMe : "");
                     let menu3 = cy.cxtmenu(menuheader)
                 }}
             />
@@ -550,7 +568,7 @@ const ConnectedGraph = (props) => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={dialog.openIhaveCited} maxWidth="lg">
+            <Dialog open={dialog.openIhaveCited} onClose={handleClose} maxWidth="lg">
                 <DialogTitle>Where have I cited?</DialogTitle>
                 <DialogContent >
                     {console.log(dialog.currNode.name)}

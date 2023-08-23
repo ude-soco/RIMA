@@ -15,7 +15,7 @@ export default function Connect (props) {
     const [noa, setNoa] = useState(data.noa ? data.noa: 3)                   //Number of Authors (consistent)
     const [papers, setPapers] = useState(true)                               //fetch papers
     const [fetching, setFetch] = useState(true)                              //Statevar so data only gets fetch on at a time
-    const [button, setButton] = useState(true)                               //Statevar if button should be displayed
+    const [firstLoad, setFirstLoad] = useState(true)                         //Statevar if its the first loadup of the page
     const [changed, setChange] = useState(false)                             //Statevar if filter got changed
     const [selectedNames, setSelectedNames] = useState([data.selectedNames]) //List of filterd Authors
     const [help, setHelp] = useState(false)                                  //statevar for helpwindow
@@ -29,7 +29,7 @@ export default function Connect (props) {
         setFetch(true)              //Statevar
         //console.log("submit")
         setDataCollected(false);    //show loading screen
-        setButton(false)            //Statevar
+        setFirstLoad(false)            //Statevar
         RestAPI.getConnectData({data: currentUser.author_id, noa, selectedNames, papers})   //api call
           .then((res) => {
             const {data}=res
@@ -70,7 +70,7 @@ export default function Connect (props) {
         setOpen(true);
     }
     const closeFilter = () => {
-       if(button || changed){    //prevent new api calls althoug no filters are done
+       if(firstLoad || changed){    //prevent new api calls althoug no filters are done
         submitNumber()
         setChange(false)}
         setOpen(false);
@@ -127,7 +127,7 @@ export default function Connect (props) {
                                 onChange={(e) => setNoa(parseInt(e.target.value, 10))}
                                 defaultValue={noa ? noa : parseInt(3)}
                                 color="primary"
-                                style={button? {width: "12%" } : {width: "25%" }}
+                                style={firstLoad? {width: "12%" } : {width: "25%" }}
                                 inputProps={{
                                     min: 0,
                                     max: 10, //max 10, otherwise loading time would be too long
@@ -138,7 +138,7 @@ export default function Connect (props) {
                                 MORE                                
                             </Button>
                             <div>
-                                    {button ? (
+                                    {firstLoad ? (
                                         <Button disabled>
                                             <Typography color="primary">Please Configure</Typography> {/*small advice on the first loadup of the page*/}
                                         </Button>
@@ -152,7 +152,7 @@ export default function Connect (props) {
                                     <MoreFilters onClose={closeFilter} data={data} onSelectedNamesChange={handleSelectedNamesChange} /> {/*Filter*/}
                                 </DialogContent>
                             </Dialog>
-                           </Box></Box><ConnectedGraph data={data} myInterests={myInterests} button={button} />
+                           </Box></Box><ConnectedGraph data={data} myInterests={myInterests} firstLoad={firstLoad} />
                         </>
                         
                         ):(<Loading/>)}
