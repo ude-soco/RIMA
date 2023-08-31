@@ -203,8 +203,9 @@ const AuthorProfile = () => {
   const showCoAuthorPropfile = (author) => {
     console.log("author to send", author);
     let queryParam = new URLSearchParams(author).toString();
-    window.open(window.location.href + "?author=" + queryParam, "_blank");
-    //setSelectedAuthor(author);
+    let currentURL = new URL(window.location.href);
+    let baseURL = currentURL.origin + currentURL.pathname;
+    window.open(baseURL + "?author=" + queryParam, "_blank");
   };
   const handleSetAuthorsToCompare = (author) => {
     let isExists = authorsToCompare.some((a) => a.label === author.label);
