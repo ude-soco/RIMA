@@ -53,7 +53,7 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
     { title: "publication 3", id: "3" },
   ]);
   const [selectedPublication, setSelectedPublication] = useState({});
-
+  const [authorConfs, setAuthorConfs] = useState([]);
   useEffect(() => {
     getAuthorPublications();
   }, []);
@@ -94,7 +94,8 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
       BASE_URL_CONFERENCE + "getAuthorPublications/" + authorNameProps.label
     );
     const response = await request.json();
-    setPublications(response);
+    setPublications(response.pubs);
+    setAuthorConfs(response.Confs);
   };
   const HandleSelectedPublication = (pubication) => {
     setSelectedPublication(pubication);
@@ -140,7 +141,7 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
             This list contains all of{" "}
             <b>
               {authorNameProps.name}'s publications that have been published in
-              ({conferencesProps.join(", ")}) conferences
+              ({authorConfs.join(", ")}) conferences
             </b>
             .<b> Publications</b> are ordered in descending order based on the
             number of citations they have received, highlighting those{" "}

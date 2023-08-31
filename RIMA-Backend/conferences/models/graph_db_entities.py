@@ -74,6 +74,7 @@ class Author(StructuredNode):
     topics = RelationshipTo(Topic, 'has_topic', model=Has_Topic)
     keywords = RelationshipTo(Keyword, 'has_keyword', model=Has_keyword)
     co_authors = Relationship("Author", 'co_author')
+    published_in_Confs = RelationshipFrom("Conference", "has_author")
 
 
 class Event(StructuredNode):

@@ -87,9 +87,10 @@ class getNetworkDataAuthor(APIView):
         author_id = url_splits_slash[-1]
 
         graphData = authorInsightsUtil.get_author_network(author_id)
-
+        confs=authorInsightsUtil.get_author_Conferences(author_id)
         return Response({
-            "data": graphData
+            "data": graphData,
+            "confs":confs
         })
 
 
@@ -347,15 +348,22 @@ class getAuthorPublications(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        autorId = url_splits_slash[-2]
+        authorId = url_splits_slash[-2]
 
         authorPublications = authorInsightsUtil.get_author_publications(
-            autorId)
+            authorId)
 
         sort_pubs = authorInsightsUtil.sort_publication_citation_based(
             authorPublications)
 
-        return Response(sort_pubs)
+        authorConfs = authorInsightsUtil.get_author_Conferences(authorId)
+
+        print("author conferences ", authorConfs)
+        data = {
+            "pubs": sort_pubs,
+            "Confs": authorConfs
+        }
+        return Response(data)
 
 
 class getPublicationKeywords(APIView):
@@ -463,5 +471,9 @@ class getAuthorInterestes(APIView):
 
         print("author_id", author_id)
         interests = authorInsightsUtil.get_author_interests(author_id)
-
-        return Response(interests)
+        confs = authorInsightsUtil.get_author_Conferences(author_id)
+        data = {
+            "interests": interests,
+            "confs": confs
+        }
+        return Response(data)

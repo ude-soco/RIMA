@@ -617,3 +617,11 @@ def get_author_publications_keyword_based(selectedKeyword, author_list):
         publication_List.extend(publications)
 
     return publication_List
+
+
+def get_author_Conferences(author_Id):
+    authorNode = Author.nodes.get(semantic_scolar_author_id=author_Id)
+    authorConfs = [
+        conf.conference_name_abbr for conf in authorNode.published_in_Confs]
+
+    return authorConfs

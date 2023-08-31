@@ -44,6 +44,7 @@ const AuthorProfile = () => {
     { name: "All Conferences", label: "All Conferences" },
   ]);
   const [conferences, setConferences] = useState([]);
+  const [authorConfs, setAuthorConfs] = useState([]);
   const [activeLoader, setActiveLoader] = useState(false);
   const orderString = (
     <>
@@ -122,6 +123,7 @@ const AuthorProfile = () => {
         );
         const result = await response.json();
         setNetworkData(result.data);
+        setAuthorConfs(result.confs);
         console.log(" result: ", result.data);
       }
     } catch (error) {
@@ -394,7 +396,7 @@ const AuthorProfile = () => {
           networkDataProp={networkData}
           setAuthorProfileToShowProp={showCoAuthorPropfile}
           setAuthorsToCompareProp={handleSetAuthorsToCompare}
-          allAvailableConfProps={conferences}
+          allAvailableConfProps={authorConfs}
         />
       </Grid>
     </Grid>

@@ -12,7 +12,7 @@ import PublicationDialog from "../../components/LAKForms/ExploreTopicsAndTrends/
 const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
   const [minCount, setMinCount] = useState(1);
   const [publicationList, setPublicationList] = useState([]);
-
+  const [authorConfs, setAuthorConfs] = useState([]);
   const [option, setOption] = useState({
     options: {
       chart: {
@@ -100,7 +100,8 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
           events: {
             dataPointSelection: function (event, chartContext, config) {
               const word = config.w.globals.labels[config.dataPointIndex];
-              const wordYear = response.series[config.seriesIndex].name;
+              const wordYear =
+                response.interests.series[config.seriesIndex].name;
               console.log("selected Segment", word);
               console.log("Segment", wordYear);
 
@@ -117,7 +118,7 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
           },
         },
         xaxis: {
-          categories: response.categories,
+          categories: response.interests.categories,
         },
         yaxis: {
           title: {
@@ -137,18 +138,21 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
         },
       },
     };
-    if (response.categories.length == 0) {
+    if (response.interests.categories.length == 0) {
       setShowWarning(true);
     }
     setOption(opt);
-    let seriesWithOriginalIndex = response.series.map((item, index) => ({
-      ...item,
-      originalIndex: index,
-    }));
+    let seriesWithOriginalIndex = response.interests.series.map(
+      (item, index) => ({
+        ...item,
+        originalIndex: index,
+      })
+    );
     setSeries(seriesWithOriginalIndex);
     setLoader(false);
-    setFetchedData(response);
+    setFetchedData(response.interests);
     setChartKey(Date.now());
+    setAuthorConfs(response.confs);
   };
 
   const updateChartData = (data) => {
@@ -263,8 +267,8 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
             <Typography variant="h6">
               This stacked bar chart represents the frequency of{" "}
               <b>{authorProp.name}'s topics across different years</b>. The
-              topics have extracted been from the publications published in{" "}
-              <b>({allAvailableConfProps.join(",")})</b> Each bar in the chart
+              topics have been extracted from the publications published in{" "}
+              <b>({authorConfs.join(",")})</b> Each bar in the chart
               corresponds to a year, and each segment of a bar represents a
               topic. The size of the segment reflects the number of publications
               released by the

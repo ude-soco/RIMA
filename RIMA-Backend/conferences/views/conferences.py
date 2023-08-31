@@ -557,9 +557,10 @@ class AuthorWordCloudView(APIView):
         author_id = url_splits[-1]
         inter_data = []
         result_data = []
+        print("url_splits :", url_splits)
         publications_list = confutils.get_author_publications_in_conf(
             author_id, conference_name_abbr)
-
+        print("publications_list data:", publications_list)
         # print('publications_list')
         # print(len(publications_list))
         # print('publications_list')
@@ -572,6 +573,8 @@ class AuthorWordCloudView(APIView):
         #         publications_list, author_id, keyword_or_topic)
         extracted_data = confutils.get_author_interests(
             publications_list, author_id, keyword_or_topic)
+        
+        print("extracted data:", extracted_data)
         if keyword_or_topic == "topic":
             for data in extracted_data:
                 inter_data.append({

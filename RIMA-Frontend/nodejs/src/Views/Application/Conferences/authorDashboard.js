@@ -208,7 +208,7 @@ class authorDashboard extends React.Component {
       isLoaded: true
     })
 
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "wordCloudAuthor/topic/" + this.state.count + "/" + conference_name + "/" + author_id)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordCloudAuthor/topic/" + this.state.count + "/" + conference_name + "/" + author_id)
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -229,7 +229,7 @@ class authorDashboard extends React.Component {
     console.log("count", this.state.count)
     console.log("conf", conference_name)
     console.log("id", author_id)
-    fetch(`${BASE_URL_CONFERENCE}/api/conferences/` + "wordCloudAuthor/keyword/" + this.state.count + "/" + conference_name + "/" + author_id)
+    fetch(`${BASE_URL_CONFERENCE}` + "wordCloudAuthor/keyword/" + this.state.count + "/" + conference_name + "/" + author_id)
       .then(response => response.json())
       .then(json => {
         this.setState({
