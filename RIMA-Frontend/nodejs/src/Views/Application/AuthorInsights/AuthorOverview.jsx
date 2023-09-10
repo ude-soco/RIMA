@@ -159,8 +159,9 @@ const AuthorOverview = ({ authorNameProps }) => {
     setFilterOptions([]);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getAuthorPublicationCountOverYears/" +
-        authorNameProps.label
+        "author/" +
+        authorNameProps.label +
+        "/publicationCountOverYears/"
     );
 
     const response = await request.json();
@@ -282,10 +283,11 @@ const AuthorOverview = ({ authorNameProps }) => {
     setFilteredConfsName(filteredConfs);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getAuthorPublicationCountBasedConfs/" +
+        "author/" +
         authorNameProps.label +
-        "/" +
-        filteredConfs.join("&")
+        "/publicationsCount/inConferences/" +
+        filteredConfs.join("&") +
+        "/"
     );
     const response = await request.json();
 
@@ -350,10 +352,11 @@ const AuthorOverview = ({ authorNameProps }) => {
     console.log("eventsName: ", eventsName);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getPublicationListBasedOnEventName/" +
+        "author/" +
         authorNameProps.label +
-        "/" +
-        selectedYear
+        "/eventYear/" +
+        selectedYear +
+        "/publication/"
     );
     setSelectedEvent(" ");
     const response = await request.json();

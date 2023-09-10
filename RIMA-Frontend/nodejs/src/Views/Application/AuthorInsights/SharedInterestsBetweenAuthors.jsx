@@ -54,7 +54,7 @@ const SharedInterestsBetweenAuthors = () => {
   };
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
-    const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailabeAuthors");
+    const request = await fetch(BASE_URL_CONFERENCE + "authors/allAuthors/");
 
     const response = await request.json();
     setAuthors(response);
@@ -64,7 +64,7 @@ const SharedInterestsBetweenAuthors = () => {
 
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+      BASE_URL_CONFERENCE + "conferences/allConferences/"
     );
     const response = await request.json();
     const confs = extractConfsNames(response);
@@ -85,10 +85,11 @@ const SharedInterestsBetweenAuthors = () => {
     }
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "sharedInterestsBetweenAuthor/" +
+        "authors/authorsId/" +
         selectedAuthor.join("&") +
-        "/" +
-        selectedConferences.join("&")
+        "/inConferences/" +
+        selectedConferences.join("&") +
+        "/sharedInterests/"
     );
     const response = await request.json();
     SetSets(response.sets);
@@ -106,10 +107,11 @@ const SharedInterestsBetweenAuthors = () => {
       setSelectedKeyword([keyword]);
       const request = await fetch(
         BASE_URL_CONFERENCE +
-          "getPublicationByKeywordOfAuthor/" +
+          "authors/authorsId/" +
+          selectedSet.join("&") +
+          "/interest/" +
           keyword +
-          "/" +
-          selectedSet.join("&")
+          "/"
       );
       const response = await request.json();
       console.log("resonse: ", response);

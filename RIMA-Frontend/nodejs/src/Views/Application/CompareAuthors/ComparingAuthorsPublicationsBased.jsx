@@ -161,7 +161,7 @@ const CompareAuthorsStackedBarChart = () => {
   }, []);
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
-    const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailabeAuthors");
+    const request = await fetch(BASE_URL_CONFERENCE + "authors/allAuthors/");
 
     const response = await request.json();
     setAuthors(response);
@@ -180,10 +180,11 @@ const CompareAuthorsStackedBarChart = () => {
     setActiveLoader(true);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "compareAuthorsBasedPublicationCount/" +
+        "authors/authorsId/" +
         selectedAuthor.join("&") +
-        "/" +
-        selectedConferences.join("&")
+        "/inConferences/" +
+        selectedConferences.join("&") +
+        "/publicationsComparison/"
     );
 
     const response = await request.json();
@@ -243,10 +244,11 @@ const CompareAuthorsStackedBarChart = () => {
     setActiveLoader(true);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "compareAuthorsBasedCitationCountAllConf/" +
+        "authors/authorsId/" +
         selectedAuthor.join("&") +
-        "/" +
-        selectedConferences.join("&")
+        "/inConferences/" +
+        selectedConferences.join("&") +
+        "/citationCountComparison/"
     );
 
     const response = await request.json();
@@ -298,7 +300,7 @@ const CompareAuthorsStackedBarChart = () => {
   };
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+      BASE_URL_CONFERENCE + "conferences/allConferences/"
     );
     const response = await request.json();
     const confs = extractConfsNames(response);
@@ -321,10 +323,11 @@ const CompareAuthorsStackedBarChart = () => {
     try {
       const request = await fetch(
         BASE_URL_CONFERENCE +
-          "sharedPublicationBetweenAuthors/" +
+          "authors/authorsId/" +
           selectedAuthor.join("&") +
-          "/" +
-          selectedConferences.join("&")
+          "/inConferences/" +
+          selectedConferences.join("&") +
+          "/sharedPublications/"
       );
       if (request) {
         const json = await request.json();
@@ -355,7 +358,7 @@ const CompareAuthorsStackedBarChart = () => {
   const handleGetPublications = async (publication) => {
     console.log("publication", publication);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getPublicationByTitle/" + publication
+      BASE_URL_CONFERENCE + "publicationTitle/" + publication
     );
     const response = await request.json();
 

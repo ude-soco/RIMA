@@ -45,10 +45,11 @@ const AuthorsProductivityOverTime = () => {
     console.log("selectedAuthors: ", selectedAuthors);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "AuthorProductivityEvolution/" +
+        "authors/authorsId/" +
         selectedAuthors.join("&") +
-        "/" +
-        selectedConferences.join("&")
+        "/inConferences/" +
+        selectedConferences.join("&") +
+        "/productivityEvolution/"
     );
     const response = await request.json();
     const extractedOptions = response[0].categories;
@@ -83,7 +84,7 @@ const AuthorsProductivityOverTime = () => {
   };
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
-    const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailabeAuthors");
+    const request = await fetch(BASE_URL_CONFERENCE + "authors/allAuthors/");
 
     const response = await request.json();
     setAuthors(response);
@@ -92,7 +93,7 @@ const AuthorsProductivityOverTime = () => {
   };
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+      BASE_URL_CONFERENCE + "conferences/allConferences/"
     );
     const response = await request.json();
     const confs = extractConfsNames(response);

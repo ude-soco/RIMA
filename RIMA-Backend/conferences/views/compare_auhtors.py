@@ -5,18 +5,14 @@ from conferences.utils import compare_authors_utils as compareAuthorsUtils
 from rest_framework.response import Response
 
 
-class compareAuthorsBasedPublicationCount(APIView):
+class CompareAuthorsBasedPublicationCount(APIView):
     def get(self, request, *args, **kwargs):
-        print("compareAuthorsBasedPublicationCount called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
 
-        author_list = url_splits_slash[-2].split("&")
-        conf = url_splits_slash[-1].split("&")
+        author_list = url_splits_slash[-5].split("&")
+        conf = url_splits_slash[-3].split("&")
         authors_data = []
-        print("url_splits_slash", url_splits_slash)
-        print("authors: ", author_list)
-        print("conf: ", conf)
         if "All Conferences" in conf:
             authors_data = compareAuthorsUtils.get_authors_publications_count_AllConf(
                 author_list)
@@ -26,12 +22,12 @@ class compareAuthorsBasedPublicationCount(APIView):
         return Response(authors_data)
 
 
-class compareAuthorsBasedCitationCountAllConf(APIView):
+class CompareAuthorsBasedCitationCountAllConf(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        author_list = url_splits_slash[-3].split("&")
-        confs_list = url_splits_slash[-2].split("&")
+        author_list = url_splits_slash[-5].split("&")
+        confs_list = url_splits_slash[-3].split("&")
         print("confs: ", confs_list)
         authors_data = compareAuthorsUtils.get_authors_citations(
             confs_list, author_list)
@@ -39,12 +35,12 @@ class compareAuthorsBasedCitationCountAllConf(APIView):
         return Response(authors_data)
 
 
-class coauthor_evolution_over_time(APIView):
+class CoauthorEvolutionOverTime(APIView):
     def get(self, request, *args, **kwargs):
-        print("coauthor_evolution_over_time called")
+        print("CoauthorEvolutionOverTime called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        author_list = url_splits_slash[-1].split("&")
+        author_list = url_splits_slash[-3].split("&")
         print("author list from fuc: ", author_list)
         authors_data = compareAuthorsUtils.get_co_author_evolutions(
             author_list)
@@ -54,13 +50,13 @@ class coauthor_evolution_over_time(APIView):
         return Response(authors_data)
 
 
-class sharedInterestsBetweenAuthor(APIView):
+class SharedInterestsBetweenAuthor(APIView):
     def get(self, request, *args, **kwargs):
         print("sharedInterestsBetweenAuthor called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        author_list = url_splits_slash[-3].split("&")
-        confs = url_splits_slash[-2].split("&")
+        author_list = url_splits_slash[-5].split("&")
+        confs = url_splits_slash[-3].split("&")
         final_sets = []
         pub_titles = []
         if len(author_list) == 0:
@@ -85,12 +81,12 @@ class sharedInterestsBetweenAuthor(APIView):
         })
 
 
-class sharedPublicationBetweenAuthors(APIView):
+class SharedPublicationBetweenAuthors(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        author_list = url_splits_slash[-3].split("&")
-        confs = url_splits_slash[-2].split("&")
+        author_list = url_splits_slash[-5].split("&")
+        confs = url_splits_slash[-3].split("&")
         final_sets = []
         pub_titles = []
         if len(author_list) == 0:
@@ -119,12 +115,12 @@ class sharedPublicationBetweenAuthors(APIView):
 
 class AuthorProductivityEvolution(APIView):
     def get(self, request, *args, **kwargs):
-        print("coauthor_evolution_over_time called")
+        print("CoauthorEvolutionOverTime called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
 
-        author_list = url_splits_slash[-3].split("&")
-        confs = url_splits_slash[-2].split("&")
+        author_list = url_splits_slash[-5].split("&")
+        confs = url_splits_slash[-3].split("&")
         authors_data = compareAuthorsUtils.get_authors_pubs_evolutions(
             confs, author_list)
 

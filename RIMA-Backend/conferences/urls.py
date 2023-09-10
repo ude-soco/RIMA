@@ -1,63 +1,34 @@
-from django.urls import path
+from django.urls import path, include
 from conferences.views import *
-
+from conferences import urls_author_insights
+from conferences import urls_compare_authors
+from conferences import urls_compare_conferences
+from conferences import urls_explore_topics_and_trends
 
 urlpatterns = [
 
     # TODO: All the author insights urls should be called in this block - START
-    path("getAuthorDetails/<pk1>", getAuthorDetails.as_view()),
-    path('getNetwokGraphEvents/<pk1>', getNetworkDataSpecificEvents.as_view()),
-    path('getNetwokGraphAuthor/<pk1>', getNetworkDataAuthor.as_view()),
-    path("getAuthorPublicationCountOverYears/<pk1>",
-         getAuthorPublicationsOverYears.as_view()),
+    path("author/<pk1>/", include(urls_author_insights)),
+    path("authors/", include(urls_compare_authors)),
+    path("conferences/", include(urls_compare_conferences)),
+    #  path("conference/", include(urls_explore_topics_and_trends)),
+
+    path("publication/<pk1>/keywords/", getPublicationKeywords.as_view()),
+
     path("getAuthorPublicatinListInYear/<pk1>/<pk2>",
          getAuthorPublicatinInYear.as_view()),
-    path("getWordPublicationByYearAndAuthor/<pk1>/<pk2>/<pk3>/",
-         getWordPublicationByYearAndAuthor.as_view()),
-    path("getPublicationListBasedOnEventName/<pk1>/<pk2>",
-         getPublicationListBasedOnEventName.as_view()),
-    path('getVennDiagramDate/<pk1>', getVennDiagramDate.as_view()),
-    path('getAllAvailabeAuthors/', getAllAvailableAuthors.as_view()),
-    path('getAllAvailabeAuthorsFilterBased/<pk1>/<pk2>/',
-         getAllAvailabeAuthorsFilterBased.as_view()),
-    path('getAuthorPublicationsCitations/<pk1>/<pk2>/',
-         getAuthorPublicationsCitations.as_view()),
-    path('getAuthorPublicationsCitationsAnalysis/<pk1>/',
-         getAuthorPublicationsCitationsAnalysis.as_view()),
-    path("getAuthorPublicationCountBasedConfs/<pk1>/<pk2>/",
-         getAuthorPublicationCountBasedConfs.as_view()),
-    path("getAllAuthorPublicationList/<pk1>/",
-         getAllAuthorPublicationList.as_view()),
-    path("getAllAvailableConferences/", getAllAvailabelConfs.as_view()),
-    path("getAllAvailableEvents/", getAllAvailabelEvents.as_view()),
-    path("getAuthorPublications/<pk1>/", getAuthorPublications.as_view()),
-    path("getPublicationKeywords/<pk1>/", getPublicationKeywords.as_view()),
-    path("getPublicationByID/<pk1>/", getPublicationByID.as_view()),
-    path("getPublicationByKeywordOfAuthor/<pk1>/<pk2>/",
-         getPublicationByKeywordOfAuthor.as_view()),
-    path("getPublicationByTitle/<pk1>/", getPublicationByTitle.as_view()),
-    path("getAuthorInterestes/<pk1>/", getAuthorInterestes.as_view()),
-    path("coauthor_evolution_over_time/<pk1>/",
-         coauthor_evolution_over_time.as_view()),
-    path("compareAuthorsBasedPublicationCount/<pk1>/<pk2>",
-         compareAuthorsBasedPublicationCount.as_view()),
-    path("coauthorEvolutionOverTime/<pk1>",
-         coauthor_evolution_over_time.as_view()),
-    path("sharedInterestsBetweenAuthor/<pk1>/<pk2>/",
-         sharedInterestsBetweenAuthor.as_view()),
-    path("sharedPublicationBetweenAuthors/<pk1>/<pk2>/",
-         sharedPublicationBetweenAuthors.as_view()),
-    path("AuthorProductivityEvolution/<pk1>/<pk2>/",
-         AuthorProductivityEvolution.as_view()),
-    path("compareAuthorsBasedCitationCountAllConf/<pk1>/<pk2>/",
-         compareAuthorsBasedCitationCountAllConf.as_view()),
+    path("publicationId/<pk1>/", getPublicationByID.as_view()),
+    path("publicationTitle/<pk1>/", getPublicationByTitle.as_view()),
+
+
     # TODO: All the author insights urls should be called in this block - END
 
     ############################################################# islam compare conf. Visulizations updated########################################################################
 
     path('getTotalSharedAuthorsEvolution/',
          ShareAuthorCompareTrends.as_view()),
-    path('getConfsSimilarityTopicsBased/', GetConfsSimilarityTopicsBased.as_view()),
+    path('getConfsSimilarityTopicsBased/',
+         GetConfsSimilarityTopicsBased.as_view()),
     path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
     path('commonAuthors/<pk1>',
          SharedAuthorsBetweenEventsView.as_view()),

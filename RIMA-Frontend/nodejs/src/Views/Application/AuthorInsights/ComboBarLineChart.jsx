@@ -80,10 +80,9 @@ const ChartComponent = ({ AuthorName }) => {
     setFilterOptions([]);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getAuthorPublicationsCitations/" +
+        "author/" +
         AuthorName.label +
-        "/" +
-        "All Conferences"
+        "/publications/citations/inConferences/All Conferences/"
     );
     const respone = await request.json();
 
@@ -141,10 +140,11 @@ const ChartComponent = ({ AuthorName }) => {
 
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getAuthorPublicationsCitations/" +
+        "author/" +
         AuthorName.label +
-        "/" +
-        filteredConfs.join("&")
+        "/publications/citations/inConferences/" +
+        filteredConfs.join("&") +
+        "/"
     );
     const response = await request.json();
     setOrigionalSeries(response.series);

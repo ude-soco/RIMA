@@ -41,61 +41,7 @@ const AuthorInsights = () => {
     "#d7ece2",
   ]);
 
-  const getVennDiagramData = async () => {
-    let i = 0;
-    try {
-      setSets([]);
-      const events = selectedEvents.join("&");
-      const response = await fetch(
-        BASE_URL_CONFERENCE + "getVennDiagramDate/" + events
-      );
-      const result = await response.json();
-      const intersection =
-        result.data.length > 1 &&
-        result.data.length <= 3 &&
-        result.data.slice(-1)[0]["label"].length !== 0;
-      setThereIntersection(intersection);
-      if (!intersection) {
-        return;
-      }
-      if (result.data) setConfColor([]);
-      for (let item of result.data) {
-        console.log("i :", i);
-        console.log("color number : ", colors[i]);
-        setSets((pervSets) => [
-          ...pervSets,
-          {
-            sets: item["sets"],
-            size: item["sets"].length == 1 ? 5 : 2,
-            label: item["label"].length >= 1 ? item["label"].join(",") : "",
-            fill: "#f00",
-          },
-        ]);
-        setConfColor((pervSets) => [
-          ...pervSets,
-          {
-            setName: item["sets"],
-            setColor: colors[i],
-          },
-        ]);
-        i++;
-      }
-    } catch (error) {
-      console.log("Error fetch Venn Diagram Data", error);
-    }
-  };
-  const updateVennSets = (nodeId) => {
-    let tempSets = [...sets];
-    tempSets.forEach((set) => {
-      if (set.label.includes(nodeId)) {
-        console.log("included node: ", nodeId);
-        set.label += " (selected)";
-      } else {
-        set.label = set.label.replace(" (selected)", "");
-      }
-    });
-    setSets(tempSets);
-  };
+
 
   useEffect(() => {
     const getConfs = async () => {
@@ -279,26 +225,7 @@ const AuthorInsights = () => {
     setSelectedEvents(["lak2011", "edm2011", "aied2011"]);
   }, []);
 
-  useEffect(() => {
-    handleGenerateGraph();
-  }, [selectedEvents]);
-  const handleGenerateGraph = async () => {
-    try {
-      if (selectedEvents.length >= 1) {
-        setNetworkData([]);
-        const selectedEv = selectedEvents.join("&");
-        console.log("selectedEv:", selectedEv);
-        const response = await fetch(
-          BASE_URL_CONFERENCE + "getNetwokGraphEvents/" + selectedEv
-        );
-        const result = await response.json();
-        setNetworkData(result.data);
-        console.log("result", result.data);
-      }
-    } catch (error) {
-      console.log("Error fetching network date", error);
-    }
-  };
+
 
   const selectOption = networkData
     .filter((el) => el.data.label)

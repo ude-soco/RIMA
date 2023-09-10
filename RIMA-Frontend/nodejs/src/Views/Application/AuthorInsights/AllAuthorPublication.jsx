@@ -40,15 +40,13 @@ export default function AllAuthorPublication({
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-  useEffect(() => {
-    
-  },[])
+  useEffect(() => {}, []);
   const [loader, setLoader] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState({});
 
   const getSelectedPublication = async (publication) => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getPublicationByID/" + publication.id
+      BASE_URL_CONFERENCE + "publicationId/" + publication.id
     );
     const response = await request.json();
 
@@ -67,7 +65,10 @@ export default function AllAuthorPublication({
 
   const getAuthorPublications = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAuthorPublications/" + authorNameProps.label
+      BASE_URL_CONFERENCE +
+        "author/" +
+        authorNameProps.label +
+        "/publicationsSorted/"
     );
     const response = await request.json();
     setPublications(response);

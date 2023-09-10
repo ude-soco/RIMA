@@ -38,14 +38,14 @@ const SearchBarFilterOption = ({
   }, []);
 
   const getAllAvailabelEvents = async () => {
-    const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailableEvents/");
+    const request = await fetch(BASE_URL_CONFERENCE + "conferences/allEvents/");
     const response = await request.json();
     setEvents(response);
   };
 
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+      BASE_URL_CONFERENCE + "conferences/allConferences/"
     );
     const response = await request.json();
     setConferences(response);

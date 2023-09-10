@@ -70,7 +70,10 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
     }
     setShowWarning(false);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getPublicationKeywords/" + selectedPublication.id
+      BASE_URL_CONFERENCE +
+        "publication/" +
+        selectedPublication.id +
+        "/keywords/"
     );
     const response = await request.json();
     if (response.length === 0) {
@@ -83,7 +86,7 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
       return;
     }
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getPublicationByID/" + selectedPublication.id
+      BASE_URL_CONFERENCE + "publicationId/" + selectedPublication.id
     );
     const response = await request.json();
     setPublicationList(response.publicationList);
@@ -91,7 +94,10 @@ const PublicationWordCloud = ({ authorNameProps, conferencesProps }) => {
   };
   const getAuthorPublications = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAuthorPublications/" + authorNameProps.label
+      BASE_URL_CONFERENCE +
+        "author/" +
+        authorNameProps.label +
+        "/publicationsSorted/"
     );
     const response = await request.json();
     setPublications(response.pubs);

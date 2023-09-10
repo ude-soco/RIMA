@@ -63,8 +63,8 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
   const [showWarning, setShowWarning] = useState(false);
   const [imageTooltipOpen, setImageTooltipOpen] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
-  const [selectedSegmentWord, setSelectedSegmentWord] = useState("");
-  const [selectedSegmentWorYear, setSelectedSegmentWordYear] = useState("");
+  const [selectedInterestYear, setselectedInterestYear] = useState("");
+  const [selectedInterest, setselectedInterestYearYear] = useState("");
   useEffect(() => {
     getData();
   }, []);
@@ -72,9 +72,9 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
     getData();
   }, [authorProp]);
   useEffect(() => {
-    if (selectedSegmentWord !== "" && selectedSegmentWorYear !== "")
+    if (selectedInterestYear !== "" && selectedInterest !== "")
       getWordPublication();
-  }, [selectedSegmentWord, selectedSegmentWorYear]);
+  }, [selectedInterestYear, selectedInterest]);
 
   useEffect(() => {
     if (fetchedData !== null) {
@@ -89,7 +89,7 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
     setShowWarning(false);
     setLoader(true);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAuthorInterestes/" + authorProp.label
+      BASE_URL_CONFERENCE + "author/" + authorProp.label + "/allInterests/"
     );
     const response = await request.json();
     let opt = {
@@ -105,8 +105,8 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
               console.log("selected Segment", word);
               console.log("Segment", wordYear);
 
-              setSelectedSegmentWord(word);
-              setSelectedSegmentWordYear(wordYear);
+              setselectedInterestYear(word);
+              setselectedInterestYearYear(wordYear);
             },
           },
         },
@@ -179,8 +179,8 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
               console.log("selected word after filter: ", word);
               console.log("selected year after filter:", wordYear);
 
-              setSelectedSegmentWord(word);
-              setSelectedSegmentWordYear(wordYear);
+              setselectedInterestYear(word);
+              setselectedInterestYearYear(wordYear);
             },
           },
         },
@@ -220,21 +220,21 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
   };
   const handleCloseDiaglog = () => {
     setOpenDialog(false);
-    setSelectedSegmentWord("");
-    setSelectedSegmentWordYear("");
+    setselectedInterestYear("");
+    setselectedInterestYearYear("");
   };
   const getWordPublication = async () => {
-    console.log(" selectedSegmentWord:  ", selectedSegmentWord);
-    console.log(" selectedSegmentWorYear:  ", selectedSegmentWorYear);
+    console.log(" selectedInterestYear:  ", selectedInterestYear);
+    console.log(" selectedInterest:  ", selectedInterest);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getWordPublicationByYearAndAuthor" +
-        "/" +
+        "author/" +
         authorProp.label +
-        "/" +
-        selectedSegmentWorYear +
-        "/" +
-        selectedSegmentWord
+        "/interest/" +
+        selectedInterest +
+        "/year/" +
+        selectedInterestYear +
+        "/publication/"
     );
     const response = await request.json();
     setPublicationList(response.publicationList);
@@ -268,10 +268,9 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
               This stacked bar chart represents the frequency of{" "}
               <b>{authorProp.name}'s topics across different years</b>. The
               topics have been extracted from the publications published in{" "}
-              <b>({authorConfs.join(",")})</b> Each bar in the chart
-              corresponds to a year, and each segment of a bar represents a
-              topic. The size of the segment reflects the number of publications
-              released by the
+              <b>({authorConfs.join(",")})</b> Each bar in the chart corresponds
+              to a year, and each segment of a bar represents a topic. The size
+              of the segment reflects the number of publications released by the
               {authorProp.name} that mentioned the respective topic within that
               year.
             </Typography>
@@ -353,7 +352,7 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
           openDialogProps={openDialog}
           papersProps={publicationList}
           handleCloseDiaglog={handleCloseDiaglog}
-          originalKeywordsProps={[selectedSegmentWord]}
+          originalKeywordsProps={[selectedInterestYear]}
         />
       )}
     </Grid>

@@ -24,7 +24,7 @@ const AuthorPublicationsEvents = ({ authorNameProps }) => {
   }, [authorNameProps]);
   const getAllAuthorPublicationList = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAuthorPublicationList/" + authorNameProps
+      BASE_URL_CONFERENCE + "author/" + authorNameProps + "/publications/"
     );
     const response = await request.json();
     setAllPublicationList(response["publicationList"]);

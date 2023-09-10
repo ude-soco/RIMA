@@ -96,16 +96,6 @@ const AuthorProfile = () => {
     getAuthorFilterBased();
   }, [mostPublisehd, selectedConferences]);
 
-  const getAllAuthorsDB = async () => {
-    setActiveLoader(true);
-    const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailabeAuthors");
-
-    const response = await request.json();
-    setAuthors(response);
-    console.log("authors", response);
-    setActiveLoader(false);
-  };
-
   const filterOptions = useCallback((option, state) => {
     const results = _filterOptions(option, state);
     if (optionCount !== results.length) {
@@ -119,7 +109,10 @@ const AuthorProfile = () => {
       if (selectedAuthor !== "") {
         setNetworkData([]);
         const response = await fetch(
-          BASE_URL_CONFERENCE + "getNetwokGraphAuthor/" + selectedAuthor.label
+          BASE_URL_CONFERENCE +
+            "author/" +
+            selectedAuthor.label +
+            "/coauthorNetwork/"
         );
         const result = await response.json();
         setNetworkData(result.data);
@@ -136,7 +129,7 @@ const AuthorProfile = () => {
       if (selectedAuthor !== "") {
         setAuthorData([]);
         const response = await fetch(
-          BASE_URL_CONFERENCE + "getAuthorDetails/" + selectedAuthor.label
+          BASE_URL_CONFERENCE + "author/" + selectedAuthor.label + "/details/"
         );
         const result = await response.json();
         setAuthorData(result.data);
@@ -148,7 +141,7 @@ const AuthorProfile = () => {
   };
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+      BASE_URL_CONFERENCE + "conferences/allConferences/"
     );
 
     const response = await request.json();
@@ -188,10 +181,11 @@ const AuthorProfile = () => {
     console.log("conf: ", confs);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getAllAvailabeAuthorsFilterBased/" +
+        "authors/allAuthors/filtered/" +
         mostPublisehd +
-        "/" +
-        confs.join("&")
+        "/conferences/" +
+        confs.join("&") +
+        "/"
     );
     const response = await request.json();
     setAuthors(response);
@@ -347,13 +341,6 @@ const AuthorProfile = () => {
               justify="center"
               alignItems="center"
             >
-              {/* <Grid item lg={5} xs={12}>
-                <AllAuthorPublication
-                  authorNameProps={selectedAuthor}
-                  conferencesProps={conferences}
-                  selectedPublicationProp={handleSelectedPublication}
-                />
-              </Grid> */}
               <Grid item xs={12}>
                 <PublicationWordCloud
                   authorNameProps={selectedAuthor}

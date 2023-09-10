@@ -45,8 +45,9 @@ const CoauthorEvolution = () => {
     console.log("selectedAuthors: ", selectedAuthors);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "coauthorEvolutionOverTime/" +
-        selectedAuthors.join("&")
+        "authors/authorsId/" +
+        selectedAuthors.join("&") +
+        "/authorshipEvolution/"
     );
     const response = await request.json();
     const extractedOptions = response[0].categories;
@@ -82,7 +83,7 @@ const CoauthorEvolution = () => {
   };
   const getAllAuthorsDB = async () => {
     setActiveLoader(true);
-    const request = await fetch(BASE_URL_CONFERENCE + "getAllAvailabeAuthors");
+    const request = await fetch(BASE_URL_CONFERENCE + "authors/allAuthors/");
 
     const response = await request.json();
     setAuthors(response);
@@ -91,7 +92,7 @@ const CoauthorEvolution = () => {
   };
   const getAllAvailbelConfs = async () => {
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getAllAvailableConferences/"
+      BASE_URL_CONFERENCE + "conferences/allConferences/"
     );
     const response = await request.json();
     const confs = extractConfsNames(response);
