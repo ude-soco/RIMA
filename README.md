@@ -23,9 +23,7 @@ Developed by ... at ... for ... since ...
 
 ### Container images
 
-* Backend: `ghcr.io/ude-soco/rima-backend`
-* Frontend: `ghcr.io/ude-soco/rima-frontend`
-* Model Downloader: `ghcr.io/ude-soco/rima-model-downloader`
+* see [GitHub Packages](https://github.com/orgs/ude-soco/packages?repo_name=RIMA)
 
 ### Live instances
 
