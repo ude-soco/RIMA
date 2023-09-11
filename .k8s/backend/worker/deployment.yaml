@@ -22,7 +22,7 @@ spec:
         runAsNonRoot: true
       initContainers:
       - name: setup
-        image: socialcomputing/rima-rima-backend
+        image: rima-rima-backend
         command: ['bin/model/download']
         env:
         - name: MODEL_SERVER
@@ -39,7 +39,7 @@ spec:
             ephemeral-storage: "1.2Gi"
       containers:
       - name: worker
-        image: socialcomputing/rima-rima-backend
+        image: rima-rima-backend
         command: ['bin/worker']
         env:
         - name: POSTGRES_HOST

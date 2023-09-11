@@ -14,7 +14,7 @@ spec:
         fsGroup: 101
       initContainers:
       - name: downloader
-        image: socialcomputing/rima-model-downloader
+        image: rima-model-downloader
         env:
         - name: TEMP_DIR
           value: /tmp
@@ -36,7 +36,7 @@ spec:
           mountPath: /htdocs
       containers:
       - name: server
-        image: socialcomputing/rima-model-server
+        image: rima-model-server
         ports:
         - containerPort: 8080
         readinessProbe:

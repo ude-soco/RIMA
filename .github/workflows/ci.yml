@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       services:        "[ 'model-downloader', 'model-server', 'RIMA-Backend', 'RIMA-Frontend' ]"
-      base_image_name: "socialcomputing/rima-"
+      base_image_name: "ghcr.io/ude-soco/rima-"
       push:            ${{ github.event_name != 'pull_request' }}
     secrets:
       registry_user:   ${{ secrets.DOCKERHUB_USERNAME }}

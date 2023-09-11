@@ -54,8 +54,8 @@ jobs:
       if:   ${{ inputs.push }}
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.registry_user }}
-        password: ${{ secrets.registry_token }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Determine latest semver tag
       id:   latest

@@ -6,7 +6,7 @@ volumes:
 services:
   frontend-web:
     build: RIMA-Frontend
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-frontend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-rima-frontend:${IMAGE_TAG:-latest}
     restart: always
     environment:
     - BASE_URL=http://127.0.0.1:8000
@@ -15,7 +15,7 @@ services:
 
   backend-api:
     build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-backend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-rima-backend:${IMAGE_TAG:-latest}
     command: bin/api
     restart: always
     environment:
@@ -35,7 +35,7 @@ services:
 
   backend-worker:
     build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-backend:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker
     restart: always
     environment:
@@ -71,7 +71,7 @@ services:
 
   model-downloader:
     build: model-downloader
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-downloader:${IMAGE_TAG:-master}
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-model-downloader:${IMAGE_TAG:-master}
     restart: on-failure
     environment:
     - MODEL_DIR=/home/app/.model
@@ -83,7 +83,7 @@ services:
 
   model-server:
     build: model-server
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-server:${IMAGE_TAG:-master}
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-model-server:${IMAGE_TAG:-master}
     restart: on-failure
     volumes:
     - ./tmp/model:/usr/share/nginx/html

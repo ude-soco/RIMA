@@ -23,9 +23,9 @@ Developed by ... at ... for ... since ...
 
 ### Container images
 
-* Backend: [socialcomputing/rima-backend](https://hub.docker.com/repository/docker/socialcomputing/rima-backend)
-* Frontend: [socialcomputing/rima-frontend](https://hub.docker.com/repository/docker/socialcomputing/rima-frontend)
-* Model Downloader: [socialcomputing/rima-model-downloader](https://hub.docker.com/repository/docker/socialcomputing/rima-model-downloader)
+* Backend: `ghcr.io/ude-soco/rima-backend`
+* Frontend: `ghcr.io/ude-soco/rima-frontend`
+* Model Downloader: `ghcr.io/ude-soco/rima-model-downloader`
 
 ### Live instances
 
