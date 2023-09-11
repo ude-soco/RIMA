@@ -175,9 +175,7 @@ A. Delete the python virtual environment, db.sqllite3 file inside RIMA-Backend f
 
 ### Container images
 
-- [RIMA-Backend](https://hub.docker.com/repository/docker/inko/soco-rima-backend)
-- [RIMA-Frontend](https://hub.docker.com/repository/docker/inko/soco-rima-frontend)
-- [model-downloader](https://hub.docker.com/repository/docker/inko/soco-rima-model-downloader)
+* see [GitHub Packages](https://github.com/orgs/ude-soco/packages?repo_name=RIMA)
 
 ### Live instances
 
