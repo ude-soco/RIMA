@@ -79,7 +79,7 @@ jobs:
           type=ref,event=branch,enable=${{ github.ref_name != 'master' }}
           type=ref,event=pr
         labels:
-          org.opencontainers.image.source=${{ GITHUB_SERVER_URL }}/${{ GITHUB_REPOSITORY }}
+          org.opencontainers.image.source=${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}
 
     - name: Build and push container image
       uses: docker/build-push-action@v4
