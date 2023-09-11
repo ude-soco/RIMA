@@ -109,10 +109,13 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
 
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getRelaventPublicationsList/keyword/" +
+        "conference/" +
+        " " +
+        "/event/" +
         selectedEvent +
-        "&" +
-        selectedWord
+        +"/word/" +
+        selectedWord +
+        "/publications"
     );
 
     const response = await request.json();
@@ -212,7 +215,7 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
             onClick={getPublicationsCounts}
           />
         </Grid>
-        <Grid item >
+        <Grid item>
           <i
             className="fas fa-question-circle text-blue"
             onMouseOver={() => handleToogle(true)}

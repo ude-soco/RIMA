@@ -11,7 +11,7 @@ urlpatterns = [
     path("author/<pk1>/", include(urls_author_insights)),
     path("authors/", include(urls_compare_authors)),
     path("conferences/", include(urls_compare_conferences)),
-    #  path("conference/", include(urls_explore_topics_and_trends)),
+    path("conference/<pk1>/", include(urls_explore_topics_and_trends)),
 
     path("publication/<pk1>/keywords/", getPublicationKeywords.as_view()),
 
@@ -190,20 +190,11 @@ urlpatterns = [
     path('updatealltopics/', UpdateAllTopics.as_view()),
 
     # ****************************************************Explore topics and trend new created by Islam ******************************
-    path('getRelevantPubsCountOfConf/<pk>/',
-         RelevantPubsCountOfConf.as_view()),
 
-    path('getSharedTopicsBetweenEvents/<pk1>/',
-         SharedTopicsBetweenEvents.as_view()),
 
     path('getRelaventPublicationsList/<pk1>/<pk2>',
-         getRelavantPublicationsList.as_view()),
+         GetRelavantPublicationsList.as_view()),
 
-    path('getTopicPopularityAcrossYears/<pk1>/<pk2>/<pk3>/',
-         TopicPopularityAcrossYears.as_view()),
-
-    path('getTopicPublicationsInConf/<pk1>/',
-         TopicPopularityInConf.as_view()),
 
 
 ]

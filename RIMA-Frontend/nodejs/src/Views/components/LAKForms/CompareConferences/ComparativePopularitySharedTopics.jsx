@@ -278,13 +278,13 @@ class ComparativePopularitySharedTopics extends Component {
       });
       const response = await fetch(
         BASE_URL_CONFERENCE +
-          "getRelaventPublicationsList" +
-          "/" +
+          "conference/" +
+          " " +
+          "/event/" +
           obj.eventname +
-          "&" +
-          this.state.keywordsOrTopic +
-          "&" +
-          obj.keywordTopic_name
+          "/word/" +
+          obj.keywordTopic_name +
+          "/publications"
       );
       const result = await response.json();
       this.setState({

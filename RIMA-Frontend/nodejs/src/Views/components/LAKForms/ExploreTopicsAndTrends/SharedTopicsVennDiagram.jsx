@@ -50,12 +50,15 @@ const SharedTopicsVennDiagram = ({
     console.log("selectedEvents: ", selectedEvents);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getSharedTopicsBetweenEvents/" +
-        selectedEvents.join("&")
+        "conference/" +
+        " " +
+        "/events/" +
+        selectedEvents.join("&") +
+        "/sharedTopics/"
     );
     const response = await request.json();
     SetSets(response.sets);
-    console.log("response.sets: ", response.sets)
+    console.log("response.sets: ", response.sets);
     setListContent(response.names);
     setShowWarning(false);
     setShowSimilarityWarning(false);
@@ -78,10 +81,13 @@ const SharedTopicsVennDiagram = ({
 
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getRelaventPublicationsList/keyword/" +
+        "conference/" +
+        " " +
+        "/event/" +
         Events +
-        "&" +
-        selectedWord
+        "/word/" +
+        selectedWord +
+        "/publications"
     );
 
     const response = await request.json();

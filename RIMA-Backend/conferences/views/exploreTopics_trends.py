@@ -13,10 +13,10 @@ from conferences.utils import explore_topics_trends_utils as expoTopicsUtils
 from conferences.utils import compare_conferences_utils as compConfUtils
 
 
-class SharedTopicsBetweenEvents(APIView):
+class GetSharedTopicsAcrossEvents(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-2]
+            request.get_full_path(), r'/')[-3]
         events = confutils.split_restapi_url(
             url_splits, r'&')
 
@@ -50,13 +50,13 @@ class SharedTopicsBetweenEvents(APIView):
 
 
 # new class by Islam
-class TopicPopularityAcrossYears(APIView):
+class GetSharedPopularTopicsAcrossYears(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'/')
         events_list = confutils.split_restapi_url(
-            url_splits_question_mark[-4], r'&')
-        number_of_keyphrase = url_splits_question_mark[-3]
+            url_splits_question_mark[-6], r'&')
+        number_of_keyphrase = url_splits_question_mark[-4]
         Keyword_or_topics = "keyword"
         shared_keyphrase = url_splits_question_mark[-2]
 
@@ -75,12 +75,10 @@ class TopicPopularityAcrossYears(APIView):
 # new class by Islam
 
 
-class TopicPopularityInConf(APIView):
+class GetTopPopularTopicsInConf(APIView):
     def get(self, request, *args, **kwargs):
-        print("TopicPopularityInConf calledcalledcalledcalledcalledcalledcalled")
         conf_name = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-2]
-        print("conf_name", conf_name)
+            request.get_full_path(), r'/')[-4]
         keyword_or_topic = "keyword"
         data = []
         number_of_keyphrase = "all"
@@ -101,11 +99,10 @@ class TopicPopularityInConf(APIView):
 # new class created by Islam
 
 
-class RelevantPubsCountOfConf(APIView):
+class GetEvolutionTopPopularTopicsInConf(APIView):
     def get(self, request, *args, **kwargs):
-        print("getRelevantPubsCountOfConf called")
         conf_name = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-2]
+            request.get_full_path(), r'/')[-4]
         print("conf_name", conf_name)
         keyword_or_topic = "keyword"
         data = []
@@ -121,4 +118,3 @@ class RelevantPubsCountOfConf(APIView):
             "data": sets,
             "years": all_years
         })
-    

@@ -121,13 +121,13 @@ export default function CustomizedDialogs(props) {
     try {
       const response = await fetch(
         BASE_URL_CONFERENCE +
-          "getRelaventPublicationsList" +
-          "/" +
-          eventName +
-          "&" +
-          keywordsOrTopic +
-          "&" +
-          keywordTopic_name
+        "conference/" +
+        " " +
+        "/event/" +
+        eventName +
+        "/word/" +
+        keywordTopic_name +
+        "/publications"
       );
       const result = await response.json();
       setFilteredPublications(result.publicationList);

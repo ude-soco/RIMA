@@ -30,7 +30,7 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const [publicationList, setPublicationList] = useState([]);
   const [openDialog, setOpenDiaglog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState("");
-  
+
   useEffect(() => {
     setSelectedConference(selectedConferencesProps);
     console.log("selected: ", selectedConference);
@@ -84,7 +84,10 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
   const getPublicationsCounts = async () => {
     setLoader(true);
     const request = await fetch(
-      BASE_URL_CONFERENCE + "getRelevantPubsCountOfConf/" + selectedConference
+      BASE_URL_CONFERENCE +
+        "conference/" +
+        selectedConference +
+        "/topics/popularityEvolution/"
     );
     const response = await request.json();
     console.log("response", response);
@@ -152,11 +155,14 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
     console.log("selectedWord: ", selectedWord);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getRelaventPublicationsList/keyword/" +
+        "conference/" +
+        " " +
+        "/event/" +
         selectedConferencesProps +
         selectedEvent +
-        "&" +
-        selectedWord
+        "/word/" +
+        selectedWord +
+        "/publications"
     );
 
     const response = await request.json();

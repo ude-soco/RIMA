@@ -106,11 +106,13 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
     setLoader(true);
     const request = await fetch(
       `${BASE_URL_CONFERENCE}` +
-        "getTopicPopularityAcrossYears/" +
+        "conference/" +
+        " " +
+        "/events/" +
         selectedEvents.join("&") +
-        "/" +
+        "/numberOfKeyphrases/" +
         selectedNumber +
-        "/" +
+        "/OnlyShared/" +
         checked
     );
     const response = await request.json();
@@ -185,10 +187,13 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
     console.log("selectedWord: ", selectedWord);
     const request = await fetch(
       BASE_URL_CONFERENCE +
-        "getRelaventPublicationsList/keyword/" +
+        "conference/" +
+        " " +
+        "/event/" +
         selectedEvent +
-        "&" +
-        selectedWord
+        "/word/" +
+        selectedWord +
+        "/publications"
     );
 
     const response = await request.json();

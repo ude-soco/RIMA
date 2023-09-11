@@ -971,18 +971,18 @@ class VennOverview(APIView):
 # new class created by Islam Abdelghaffar
 
 
-class getRelavantPublicationsList(APIView):
+class GetRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
 
         url_splits_question_mark = confutils.split_restapi_url(
             request.get_full_path(), r'/')
-        keyword_or_topic = url_splits_question_mark[-2]
+        keyword_or_topic = 'keyword'
 
         url_split_And_mark = confutils.split_restapi_url(
-            url_splits_question_mark[-1], r'&')
-
-        eventsList = url_split_And_mark[:len(url_split_And_mark)-1]
-        keywordTopic_name = url_split_And_mark[-1]
+            url_splits_question_mark[-5], r'&')
+        print('url:', url_splits_question_mark)
+        eventsList = url_split_And_mark
+        keywordTopic_name = url_splits_question_mark[-3]
 
         print("keyword_or_topic: ", keyword_or_topic)
         print("eventsList: ", eventsList)
