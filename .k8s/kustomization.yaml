@@ -13,3 +13,13 @@ namePrefix: rima-
 
 commonLabels:
   app.kubernetes.io/name: rima
+
+images:
+- name: rima-model-downloader
+  newName: ghcr.io/ude-soco/rima-model-downloader
+- name: rima-model-server
+  newName: ghcr.io/ude-soco/rima-model-server
+- name: rima-rima-frontend
+  newName: ghcr.io/ude-soco/rima-rima-frontend
+- name: rima-rima-backend
+  newName: ghcr.io/ude-soco/rima-rima-backend

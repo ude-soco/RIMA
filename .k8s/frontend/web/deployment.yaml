@@ -23,7 +23,7 @@ spec:
         runAsUser: 101
       containers:
       - name: web
-        image: socialcomputing/rima-rima-frontend
+        image: rima-rima-frontend
         ports:
         - containerPort: 8080
         readinessProbe:

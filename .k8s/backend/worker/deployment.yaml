@@ -22,7 +22,7 @@ spec:
         runAsNonRoot: true
       initContainers:
       - name: setup
-        image: socialcomputing/rima-rima-backend
+        image: rima-rima-backend
         command: ['bin/model/download']
         env:
         - name: MODEL_SERVER
@@ -32,9 +32,14 @@ spec:
         volumeMounts:
         - mountPath: /tmp/models
           name: tmp
+        resources:
+          requests:
+            cpu: 20m
+            memory: 128Mi
+            ephemeral-storage: "1.2Gi"
       containers:
       - name: worker
-        image: socialcomputing/rima-rima-backend
+        image: rima-rima-backend
         command: ['bin/worker']
         env:
         - name: POSTGRES_HOST
@@ -54,6 +59,7 @@ spec:
           requests:
             cpu: 20m
             memory: 900Mi
+            ephemeral-storage: "64Mi"
           limits:
             memory: 2Gi
             cpu: 500m
