@@ -27,9 +27,9 @@ Developed by ... at ... for ... since ...
 
 ### Live instances
 
-* Production: [rima.soco.inko.cloud](https://rima.soco.inko.cloud/) (latest [release](https://github.com/ude-soco/RIMA/releases))
-* Preview: [edge.rima.soco.inko.cloud](https://edge.rima.soco.inko.cloud/) ([branch `master`](https://github.com/ude-soco/CourseMapper-webserver/tree/master))
-* Preview: [development.rima.soco.inko.cloud](https://development.rima.soco.inko.cloud/) ([branch `development`](https://github.com/ude-soco/CourseMapper-webserver/tree/development))
+* Production: [rima.soco.inko.cloud](https://rima.soco.inko.cloud/) (latest [release](https://github.com/ude-soco/RIMA/releases)) ![status](https://argocd.cluster.soco.inko.cloud/api/badge?name=rima-prod)
+* Preview: [edge.rima.soco.inko.cloud](https://edge.rima.soco.inko.cloud/) ([branch `master`](https://github.com/ude-soco/CourseMapper-webserver/tree/master)) ![status](https://argocd.cluster.soco.inko.cloud/api/badge?name=rima-edge)
+* Preview: [development.rima.soco.inko.cloud](https://development.rima.soco.inko.cloud/) ([branch `development`](https://github.com/ude-soco/CourseMapper-webserver/tree/development)) ![status](https://argocd.cluster.soco.inko.cloud/api/badge?name=rima-development)
 
 
 ## Run on Docker
