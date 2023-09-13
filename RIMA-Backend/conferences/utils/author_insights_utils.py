@@ -39,7 +39,7 @@ def handle_coauthor_data(author_nodes):
     return event_authors_list + all_author_couthors_list
 
 
-def get_author_pubs_overYears(author_id):
+def get_author_pubs_over_years(author_id):
     author_node = Author.nodes.get_or_none(
         semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
@@ -49,7 +49,7 @@ def get_author_pubs_overYears(author_id):
     return pubs_counst
 
 
-def filter_publication_basedOn_confs(author_id, selectedConfs):
+def filter_publication_based_on_confs(author_id, selectedConfs):
     author_node = Author.nodes.get_or_none(
         semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
@@ -126,15 +126,6 @@ def get_author_publications(author_id):
     author_pubs = author_node.published.all()
     return author_pubs
 
-
-def get_event_author_set_VennDiagram(event_name):
-    event_authors_list = []
-    event_node = Event.nodes.filter(conference_event_name_abbr=event_name)
-    author_nodes = (event_node.authors.all())
-    for author_node in author_nodes:
-        event_authors_list.append(author_node.author_name)
-
-    return set(event_authors_list)
 
 
 def get_author_detailed_info(author_id):
@@ -371,7 +362,7 @@ def get_available_events():
     return events
 
 
-def getAllAuthors(conferences):
+def get_all_authors(conferences):
     if "All Conferences" in conferences:
         confs = Conference.nodes.all()
         conferences = [conf.conference_name_abbr for conf in confs]
@@ -390,7 +381,7 @@ def getAllAuthors(conferences):
     return authors_Names
 
 
-def get_Most_Published_authors(conferences):
+def get_most_published_authors(conferences):
     data = []
     if "All Conferences" in conferences:
         allAuthors = Author.nodes.all()
@@ -398,9 +389,7 @@ def get_Most_Published_authors(conferences):
 
     else:
         all_authors = []
-        print("conferences", conferences)
         for conf in conferences:
-            print("conf: ", conf)
             authors = Conference.nodes.filter(
                 conference_name_abbr=conf).authors
             all_authors.extend(authors)
@@ -423,7 +412,7 @@ def sort_authors(authors):
     return data
 
 
-def get_Author_Pubs_InYear(author_id, pub_year):
+def get_author_pubs_In_year(author_id, pub_year):
     author_node = Author.nodes.filter(
         semantic_scolar_author_id=author_id.strip())
     author_pubs = author_node.published.all()
@@ -434,16 +423,15 @@ def get_Author_Pubs_InYear(author_id, pub_year):
     return pubs
 
 
-def get_Author_Pubs_By_keyword_InYear(author_id, keyword, pub_year):
-    pubs = get_Author_Pubs_InYear(author_id, pub_year)
-    print("publications: ", pubs)
+def get_author_pubs_by_keyword_In_year(author_id, keyword, pub_year):
+    pubs = get_author_pubs_In_year(author_id, pub_year)
     pubs = [pub for pub in pubs if keyword in [
         keyword.keyword for keyword in pub.keywords.all()]]
 
     return pubs
 
 
-def filter_publication_basedOn_Events(publication_List, events):
+def filter_publication_based_on_events(publication_List, events):
     pattern = re.compile(r'(\D+\d+)(?:-\d+)?')
 
     pubs = [pub for pub in publication_List
@@ -464,18 +452,17 @@ def get_available_confs():
     return conferences
 
 
-def get_Author_Pubs_Citations_Analysis(author_name):
+def get_author_pubs_citations_analysis(author_name):
     pubs = get_author_publications(author_name)
     data = []
     for pub in pubs:
         citations_detalis = generate_pub_citations_info(pub)
         data.extend(citations_detalis)
 
-    print("ciatation detailss : ", data)
     return data
 
 
-def get_Author_Pubs_Citations_OverTime(selectedConferences, author_id):
+def get_author_pubs_citations_over_time(selectedConferences, author_id):
     pubs_counts = []
     pubs = get_author_publications(author_id)
 
@@ -492,7 +479,6 @@ def get_Author_Pubs_Citations_OverTime(selectedConferences, author_id):
 
 
 def get_publications_citation_count(author_pubs):
-    print("get_publications_with_years_event_based2 called")
 
     events_pubs1 = [extract_year(pub.published_in[0].conference_event_name_abbr)
                     for pub in author_pubs]
@@ -567,7 +553,6 @@ def get_publication_keywords(publication_id):
     keywords = [{"text": keyword.keyword, "value": publicaton.keywords.relationship(keyword).weight}
                 for keyword in keywords if keyword.keyword != "none"]
 
-    print("keyword with weight: ", keywords)
     return keywords
 
 
@@ -599,9 +584,6 @@ def get_author_interests(author_id):
         "series": final_data
     }
 
-    print("***********************************************************************************")
-    print(data)
-    print("***********************************************************************************")
     return data
 
 

@@ -1,4 +1,4 @@
-// Updated By Islam Abdelghaffar
+// Updated By Islam Abdelghaffar not used anymore need to be reviewed
 import React, { Component } from "react";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";
@@ -663,4 +663,4 @@ class NewCompareStackedBarChart extends Component {
   }
 }
 
-export default NewCompareStackedBarChart;
+export default getalltopicsevolutionNewCompareStackedBarChart;

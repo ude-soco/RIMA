@@ -1,3 +1,4 @@
+# created by Islam Abdelghaffar
 from django.http.response import HttpResponse
 from django.conf import settings
 from rest_framework.views import APIView
@@ -13,12 +14,8 @@ class GetAuthorDetails(APIView):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
         author_id = url_splits_slash[-3]
-        print("********************************************************************")
-        print("url_splits_slash:", url_splits_slash)
-        print("********************************************************************")
         author_data = authorInsightsUtil.get_author_detailed_info(author_id)
 
-        print("author_data11: ", author_data)
         return Response({
             "data": author_data
         })
@@ -29,8 +26,7 @@ class GetAuthorPublicationsOverYears(APIView):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
         author_id = url_splits_slash[-3]
-        author_data = authorInsightsUtil.get_author_pubs_overYears(author_id)
-        print("author_data: ", author_data)
+        author_data = authorInsightsUtil.get_author_pubs_over_years(author_id)
 
         return Response(author_data)
 
@@ -41,14 +37,10 @@ class GetAuthorPublicationCountBasedConfs(APIView):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
 
-        print("url_splits_slash", url_splits_slash)
         author_id = url_splits_slash[-5]
         selectedConfs = (url_splits_slash[-2]).split("&")
 
-        print("author_name: ", author_id)
-        print("selectedConfs: ", selectedConfs)
-
-        author_data = authorInsightsUtil.filter_publication_basedOn_confs(
+        author_data = authorInsightsUtil.filter_publication_based_on_confs(
             author_id, selectedConfs)
 
         return Response(author_data)
@@ -60,7 +52,6 @@ class GetAllAuthorPublicationList(APIView):
             request.get_full_path(), r'/')
 
         author_name = url_splits_slash[-2]
-        print("author_name ::", author_name)
         publication_List = authorInsightsUtil.get_author_publications(
             author_name)
 
@@ -75,14 +66,12 @@ class GetAllAuthorPublicationList(APIView):
                 "url": pub.urls
             }for pub in publication_List]
 
-        print("publicationList,::::::", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
 
 
-class getNetworkDataAuthor(APIView):
+class GetNetworkDataAuthor(APIView):
     def get(self, request, *args, **kwargs):
 
         url_splits_slash = confutils.split_restapi_url(
@@ -97,14 +86,14 @@ class getNetworkDataAuthor(APIView):
         })
 
 
-class getAuthorPublicatinInYear(APIView):
+class GetAuthorPublicatinInYear(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
         author_id = url_splits_slash[-2]
         pub_year = url_splits_slash[-1]
         final_pubs_list = []
-        publication_List = authorInsightsUtil.get_Author_Pubs_InYear(
+        publication_List = authorInsightsUtil.get_author_pubs_In_year(
             author_id, pub_year)
 
         if publication_List is not None:
@@ -118,8 +107,6 @@ class getAuthorPublicatinInYear(APIView):
                 "event":pub.published_in[0].conference_event_name_abbr,
             }for pub in publication_List]
 
-        print("publicationList", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
@@ -132,12 +119,9 @@ class GetWordPublicationByYearAndAuthor(APIView):
         author_id = url_splits_slash[-7]
         word = url_splits_slash[-5]
         pub_year = url_splits_slash[-3]
-        print("author_name:", author_id)
-        print("word: ", word)
-        print("pub_year: ", pub_year)
 
         final_pubs_list = []
-        publication_List = authorInsightsUtil.get_Author_Pubs_By_keyword_InYear(
+        publication_List = authorInsightsUtil.get_author_pubs_by_keyword_In_year(
             author_id, word, pub_year)
 
         if publication_List is not None:
@@ -151,8 +135,6 @@ class GetWordPublicationByYearAndAuthor(APIView):
                 "event":pub.published_in[0].conference_event_name_abbr,
             }for pub in publication_List]
 
-        print("publicationList", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
@@ -165,10 +147,9 @@ class GetPublicationListBasedOnEventName(APIView):
         author_id = url_splits_slash[-5]
         events = url_splits_slash[-3]
         final_pubs_list = []
-        print("pub_year: ", events.split("&"))
         publication_List = authorInsightsUtil.get_author_publications(
             author_id)
-        filteredlist = authorInsightsUtil.filter_publication_basedOn_Events(
+        filteredlist = authorInsightsUtil.filter_publication_based_on_events(
             publication_List, events)
         if filteredlist is not None:
             final_pubs_list = [{
@@ -181,96 +162,16 @@ class GetPublicationListBasedOnEventName(APIView):
                 "event":pub.published_in[0].conference_event_name_abbr,
             }for pub in filteredlist]
 
-        print("publicationList", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
 
 
-class getNetworkDataSpecificEvents(APIView):
-    def get(self, request, *args, **kwargs):
-        print("getNetworkData called")
-
-        url_splits_slash = confutils.split_restapi_url(
-            request.get_full_path(), r'/')
-        Events = url_splits_slash[-1].split('&')
-
-        graphData = []
-        for event in Events:
-            eventgraphData = authorInsightsUtil.get_event_coauthor_data(event)
-            graphData.append(eventgraphData)
-
-        allGraphData = list(chain(*graphData))
-        return Response({
-            "data": allGraphData
-        })
-
-
-class getNetworkDataAllConfs(APIView):
-    def get(self, request, *args, **kwargs):
-        print("getNetworkData called")
-
-        url_splits_slash = confutils.split_restapi_url(
-            request.get_full_path(), r'/')
-
-        events = authorInsightsUtil.get_available_events()
-        graphData = []
-        for event in events:
-            eventgraphData = authorInsightsUtil.get_event_coauthor_data(event)
-            graphData.append(eventgraphData)
-
-        allGraphData = list(chain(*graphData))
-        return Response({
-            "data": allGraphData
-        })
-
-
-class getVennDiagramDate(APIView):
-    def get(self, request, *args, **kwargs):
-        url_splits_slash = confutils.split_restapi_url(
-            request.get_full_path(), r'/')
-        Events = url_splits_slash[-1].split('&')
-
-        vennData = []
-        for event in Events:
-            eventAuthorList = authorInsightsUtil.get_event_author_set_VennDiagram(
-                event)
-            vennData.append({
-                'sets': [event],
-                'label': eventAuthorList,
-            })
-
-        if (len(vennData) == 1):
-            return Response({
-                'data': vennData})
-
-        intersection = vennData[0]['label']
-        for set in vennData[1:]:
-            intersection = intersection.intersection(set['label'])
-
-        vennData.append({
-            'sets': ([f"{event}" for event in Events]),
-            'label': '' if len(intersection) == 0 else intersection
-        })
-
-        vennDataUpdated = []
-        for set in vennData:
-            vennDataUpdated.append({
-                'sets': set['sets'],
-                'label': set['label'].difference(intersection) if len(set['sets']) == 1 else set['label']
-            })
-
-        print("vennData: ", vennDataUpdated)
-        return Response({
-            'data': vennDataUpdated})
-
-
-class getAllAvailableAuthors(APIView):
+class GetAllAvailableAuthors(APIView):
     def get(self, request, *args, **kwargs):
         confs = Conference.nodes.all()
         confs = [conf.conference_name_abbr for conf in confs]
-        authors = authorInsightsUtil.getAllAuthors(confs)
+        authors = authorInsightsUtil.get_all_authors(confs)
         return Response(authors)
 
 
@@ -279,30 +180,27 @@ class GetAllAvailabeAuthorsFilterBased(APIView):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
 
-        print("url_splits_slash: ", url_splits_slash)
         selectedConf = url_splits_slash[-2].split("&")
         mostPublished = url_splits_slash[-4]
-        print("selectedConf: ", selectedConf)
-        print("mostPublished: ", mostPublished)
         orderedAuthors = []
         if mostPublished == "true":
-            orderedAuthors = authorInsightsUtil.get_Most_Published_authors(
+            orderedAuthors = authorInsightsUtil.get_most_published_authors(
                 selectedConf)
 
         else:
 
-            orderedAuthors = authorInsightsUtil.getAllAuthors(selectedConf)
+            orderedAuthors = authorInsightsUtil.get_all_authors(selectedConf)
 
         return Response(orderedAuthors)
 
 
-class getAllAvailabelConfs(APIView):
+class GetAllAvailabelConfs(APIView):
     def get(self, request, *args, **kwargs):
         conferences = authorInsightsUtil.get_available_confs()
         return Response(conferences)
 
 
-class getAllAvailabelEvents(APIView):
+class GetAllAvailabelEvents(APIView):
     def get(self, request, *args, **kwargs):
 
         events = authorInsightsUtil.get_available_events()
@@ -318,32 +216,14 @@ class getAllAvailabelEvents(APIView):
 
 class GetAuthorPublicationsCitations(APIView):
     def get(self, request, *args, **kwargs):
-        print("getAuthorPublicationsCitations called")
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
         author_id = url_splits_slash[-6]
         selectedConfs = url_splits_slash[-2].split("&")
 
-        print("seelected: ", selectedConfs)
-
-        data = authorInsightsUtil.get_Author_Pubs_Citations_OverTime(
+        data = authorInsightsUtil.get_author_pubs_citations_over_time(
             selectedConfs, author_id)
 
-        print("data: ", data)
-        return Response(data)
-
-
-class getAuthorPublicationsCitationsAnalysis(APIView):
-    def get(self, request, *args, **kwargs):
-        print("getAuthorPublicationsCitations called")
-        url_splits_slash = confutils.split_restapi_url(
-            request.get_full_path(), r'/')
-        autorName = url_splits_slash[-2]
-       # selectedConfs = url_splits_slash[-2].split("&")
-
-        data = authorInsightsUtil.get_Author_Pubs_Citations_Analysis(autorName)
-
-        print("Citation Analysis: ", data)
         return Response(data)
 
 
@@ -361,7 +241,6 @@ class GetAuthorPublications(APIView):
 
         authorConfs = authorInsightsUtil.get_author_Conferences(authorId)
 
-        print("author conferences ", authorConfs)
         data = {
             "pubs": sort_pubs,
             "Confs": authorConfs
@@ -369,7 +248,7 @@ class GetAuthorPublications(APIView):
         return Response(data)
 
 
-class getPublicationKeywords(APIView):
+class GetPublicationKeywords(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
@@ -380,7 +259,7 @@ class getPublicationKeywords(APIView):
         return Response(keywords)
 
 
-class getPublicationByID(APIView):
+class GetPublicationByID(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
@@ -401,14 +280,12 @@ class getPublicationByID(APIView):
                 "event":pub.published_in[0].conference_event_name_abbr,
             }for pub in publication_List]
 
-        print("publicationList", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
 
 
-class getPublicationByTitle(APIView):
+class GetPublicationByTitle(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
             request.get_full_path(), r'/')
@@ -429,8 +306,6 @@ class getPublicationByTitle(APIView):
                 "event":pub.published_in[0].conference_event_name_abbr,
             }for pub in publication_List]
 
-        print("publicationList", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
@@ -442,8 +317,6 @@ class GetPublicationByKeywordOfAuthor(APIView):
             request.get_full_path(), r'/')
         selectedKeyword = url_splits_slash[-2]
         authors = url_splits_slash[-4].split("&")
-        print("authors: ", authors)
-        print("selectedKeyword: ", selectedKeyword)
         final_pubs_list = []
 
         publication_List = authorInsightsUtil.get_author_publications_keyword_based(
@@ -459,8 +332,6 @@ class GetPublicationByKeywordOfAuthor(APIView):
                 "event":pub.published_in[0].conference_event_name_abbr,
             }for pub in publication_List]
 
-        print("publicationList", (final_pubs_list))
-
         return Response({
             "publicationList": final_pubs_list
         })
@@ -472,7 +343,6 @@ class GetAuthorInterestes(APIView):
             request.get_full_path(), r'/')
         author_id = url_splits_slash[-3]
 
-        print("author_id", author_id)
         interests = authorInsightsUtil.get_author_interests(author_id)
         confs = authorInsightsUtil.get_author_Conferences(author_id)
         data = {

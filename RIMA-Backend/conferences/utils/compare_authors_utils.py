@@ -9,16 +9,14 @@ import ast
 import re
 
 
-def get_authors_publications_count_AllConf(author_list):
-    print("get_authors_publications_count_AllConf called")
+def get_authors_publications_count_all_confs(author_list):
     final_data = []
     authors_data = []
     for author_id in author_list:
         author_node = Author.nodes.get(
             semantic_scolar_author_id=author_id.strip())
         author_pubs = author_node.published.all()
-        print("author id: ", author_id)
-        print("author pubs length: ", len(author_pubs))
+
         publications_confs = get_publication_counts_each_conf(author_pubs)
 
         authors_data.append({
@@ -55,10 +53,6 @@ def get_series_categories(authors_data):
     series = [{'name': name, 'data': counts}
               for name, counts in series_data.items()]
 
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-    print("categories: ", categories)
-    print("series: ", series)
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
     final_data.append({
         "categories": categories,
         "series": series
@@ -66,7 +60,7 @@ def get_series_categories(authors_data):
     return final_data
 
 
-def get_authors_publications_count_Conf_based(author_list, conf_list):
+def get_authors_publications_count_conf_based(author_list, conf_list):
     authors_data = []
     final_data = []
     for author_id in author_list:
@@ -119,8 +113,8 @@ def get_authors_citations(confs, author_list):
 
         categoreis.append(author_node.author_name)
         total_citation.append({
-            "name":author_node.author_name,
-            "data":[citations]
+            "name": author_node.author_name,
+            "data": [citations]
         })
         data.append({
             "name": author_node.author_name,
@@ -133,11 +127,10 @@ def get_authors_citations(confs, author_list):
         "citations": total_citation
     })
 
-    print("final_data: ", final_data)
     return final_data
 
 
-def get_co_author_evolutions(author_list):
+def get_coauthor_evolutions(author_list):
     data = []
     for author_id in author_list:
         author_node = Author.nodes.get(
@@ -146,7 +139,7 @@ def get_co_author_evolutions(author_list):
         data.append({"name": author_node.author_name,
                      "data": get_coauthor_count(author_node, author_pubs)})
 
-    data_merged = mergeAuthorsData(data)
+    data_merged = merge_authors_data(data)
     return data_merged
 
 
@@ -161,8 +154,7 @@ def get_authors_pubs_evolutions(selected_confs, author_list):
         data.append({"name": author_node.author_name,
                      "data": get_publications_count(author_node, author_pubs)})
 
-    data_merged = mergeAuthorsDataForProductivity(data)
-    print("data_merged: ", data_merged)
+    data_merged = merge_authors_data_for_productivity(data)
 
     return data_merged
 
@@ -219,9 +211,7 @@ def get_coauthor_count(author_node, author_pubs):
     author_pubs = [pub for pub in author_pubs]
 
     publicationsConfs = set(publicationsConfs)
-    print("coauthors: ", coauthors)
-    print("categories: ", categories)
-    print("conferences: ", publicationsConfs)
+
     final_data = {
         "coauthors": [coauthors],
         "categories": categories,
@@ -231,7 +221,7 @@ def get_coauthor_count(author_node, author_pubs):
     return final_data
 
 
-def mergeAuthorsData(data):
+def merge_authors_data(data):
     final_categoreies = []
     fina_data = []
     data2 = []
@@ -244,7 +234,6 @@ def mergeAuthorsData(data):
         author_category = author["data"]["categories"]
         author_data = author["data"]["coauthors"][0]["data"]
         values_map = {k: v for k, v in zip(author_category, author_data)}
-        print("values_map: ", values_map)
         final_author_data = [values_map.get(k, 0) for k in final_categoreies]
         data2.append({
             "series": {
@@ -261,7 +250,7 @@ def mergeAuthorsData(data):
     return fina_data
 
 
-def mergeAuthorsDataForProductivity(data):
+def merge_authors_data_for_productivity(data):
     final_categoreies = []
     fina_data = []
     data2 = []
@@ -274,7 +263,6 @@ def mergeAuthorsDataForProductivity(data):
         author_category = author["data"]["categories"]
         author_data = author["data"]["publicationsCounts"][0]["data"]
         values_map = {k: v for k, v in zip(author_category, author_data)}
-        print("values_map: ", values_map)
         final_author_data = [values_map.get(k, 0) for k in final_categoreies]
         data2.append({
             "series": {
@@ -291,13 +279,12 @@ def mergeAuthorsDataForProductivity(data):
     return fina_data
 
 
-def getSharedInterestsBetweenAuthors(confs, author_list):
+def get_shared_interests_between_authors(confs, author_list):
     data = []
     for author_id in author_list:
         author_node = Author.nodes.get(semantic_scolar_author_id=author_id)
         author_pubs = [pub for pub in author_node.published.all()
                        if pub.published_in_Confs[0].conference_name_abbr in confs]
-        print("nu. of publications will be processed: ", len(author_pubs))
         author_pubs_keyword = [
             keyword.keyword for pub in author_pubs for keyword in pub.keywords.all()]
         author_pubs_keyword = list(set(author_pubs_keyword))
@@ -306,13 +293,11 @@ def getSharedInterestsBetweenAuthors(confs, author_list):
             "name": author_node.author_name,
             "keywords": author_pubs_keyword
         })
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-    print("data: ", data)
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+
     return data
 
 
-def getSharedPublicationBetweenAuthors(confs, author_list):
+def get_shared_publication_between_authors(confs, author_list):
     data = []
     for author_id in author_list:
         author_node = Author.nodes.get(semantic_scolar_author_id=author_id)
@@ -325,7 +310,6 @@ def getSharedPublicationBetweenAuthors(confs, author_list):
         else:
             author_pubs = [pub.paper_id for pub in author_node.published.all()
                            if pub.published_in_Confs[0].conference_name_abbr in confs]
-            print(" author published in ", author_pubs)
             data.append({
                 "name": author_node.author_name,
                 "publications": author_pubs
@@ -334,7 +318,7 @@ def getSharedPublicationBetweenAuthors(confs, author_list):
     return data
 
 
-def getIntersection(data):
+def get_intersection(data):
     intersection = set((data[0]))
     for lst in data[1:]:
         intersection.intersection_update(set(lst))
@@ -344,7 +328,7 @@ def getIntersection(data):
     return intersection_list
 
 
-def get_shared_keyword_basdOn_combs(authors_keywords, all_combs):
+def get_shared_keyword_basd_on_combs(authors_keywords, all_combs):
     result = []
     final_sets = []
     authors_name = []
@@ -376,16 +360,14 @@ def get_shared_keyword_basdOn_combs(authors_keywords, all_combs):
                 "name": " and ".join(names),
                 "keywords": shared_keywords_combs[0]["keywords"]
             })
-    print("***********************************************************")
-    print("shared_authors_combs: ", final_sets)
-    print("******************************************************")
+
     result.append(final_sets)
     result.append(authors_name)
 
     return result
 
 
-def get_shared_pubs_basdOn_combs(authors_publications, all_combs):
+def get_shared_pubs_basd_on_combs(authors_publications, all_combs):
     result = []
     final_sets = []
     authors_name = []
@@ -403,7 +385,6 @@ def get_shared_pubs_basdOn_combs(authors_publications, all_combs):
             "publications", relevant_confs)
 
         names = sorted(shared_pubs_combs[0]["name"])
-        print("names: ", names)
         value = shared_pubs_combs[0]["data"]
         if value != 0:
             sets.append({
@@ -418,9 +399,7 @@ def get_shared_pubs_basdOn_combs(authors_publications, all_combs):
                 "name": " and ".join(names),
                 "pubs_titles": shared_pubs_combs[0]["pubs_titles"]
             })
-    print("***********************************************************")
-    print("shared_authors_combs: ", final_sets)
-    print("******************************************************")
+
     result.append(final_sets)
     result.append(authors_name)
 
@@ -431,7 +410,6 @@ def get_shared_publications_combs(shared_based, authors_pubs):
     final = []
     authors_name = []
     authors_pubs_list = []
-    print("based comparison: ", shared_based)
     for author in authors_pubs:
         for obj in author:
             authors_name.append((obj["name"]))

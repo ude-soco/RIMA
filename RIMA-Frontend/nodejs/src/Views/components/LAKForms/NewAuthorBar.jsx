@@ -1,4 +1,4 @@
-// Updated By Islam Abdelghaffar
+// Updated By Islam Abdelghaffar not used any more need to be reviewed
 import React, { Component } from "react";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../Services/constants";

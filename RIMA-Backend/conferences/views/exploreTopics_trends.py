@@ -1,3 +1,4 @@
+# created by Islam Abdelghaffar
 import itertools
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,7 +8,6 @@ from conferences.models.graph_db_entities import *
 from neomodel import *
 from interests.Keyword_Extractor.extractor import getKeyword
 from conferences.conference_utils_cql import cql_get_conference_events
-import urllib.parse
 from itertools import combinations
 from conferences.utils import explore_topics_trends_utils as expoTopicsUtils
 from conferences.utils import compare_conferences_utils as compConfUtils
@@ -25,14 +25,13 @@ class GetSharedTopicsAcrossEvents(APIView):
         topicsKeywords_name = []
 
         filtered_events = [event for event in events if event != ""]
-        print("events: ", events)
         if len(events) == 0:
             return Response({
                 "sets": final_sets,
                 "names": topicsKeywords_name
             })
 
-        events_keywords = expoTopicsUtils.get_events_TopicsOrKeywords(
+        events_keywords = expoTopicsUtils.get_events_topics_or_keywords(
             Keyword_topics, filtered_events)
 
         all_combs = []
@@ -40,7 +39,7 @@ class GetSharedTopicsAcrossEvents(APIView):
         for r in range(1, len(event_names) + 1):
             all_combs.extend(combinations(event_names, r))
 
-        results = expoTopicsUtils.get_shared_keywordsOrTopics_basedOn_combs(
+        results = expoTopicsUtils.get_shared_keywords_or_topics_based_on_combs(
             events_keywords, all_combs)
 
         return Response({
@@ -61,11 +60,10 @@ class GetSharedPopularTopicsAcrossYears(APIView):
         shared_keyphrase = url_splits_question_mark[-2]
 
         number_of_keyphrase = int(number_of_keyphrase)
-        data = expoTopicsUtils.get_publication_count_for_Multi_events(
+        data = expoTopicsUtils.get_publication_count_for_multi_events(
             events_list, Keyword_or_topics, number_of_keyphrase, shared_keyphrase)
 
         sets = expoTopicsUtils.convert_data_to_barChart_sets(data)
-        print("sets", sets)
 
         return Response({
             "data": sets,
@@ -83,13 +81,12 @@ class GetTopPopularTopicsInConf(APIView):
         data = []
         number_of_keyphrase = "all"
         number_of_top_keyphrase = 10
-        data = expoTopicsUtils.get_Top_Keyphrase_In_Conf(
+        data = expoTopicsUtils.get_Top_Keyphrase_In_conf(
             conf_name, keyword_or_topic, number_of_keyphrase, number_of_top_keyphrase)
 
         names = [item[0] for item in data]
         values = [round(item[1]) for item in data]
 
-        print("TopicPopularityInConf:", data)
         return Response({
             "names": names,
             "values": {"data": values}
@@ -103,17 +100,15 @@ class GetEvolutionTopPopularTopicsInConf(APIView):
     def get(self, request, *args, **kwargs):
         conf_name = confutils.split_restapi_url(
             request.get_full_path(), r'/')[-4]
-        print("conf_name", conf_name)
         keyword_or_topic = "keyword"
         data = []
         number_of_keyphrase = "all"
         number_of_top_keyphrase = 5
-        data = expoTopicsUtils.get_relavant_pubsCount__keywordTopic_conf_based(
+        data = expoTopicsUtils.get_relavant_pubs_Count__keyword_topic_conf_based(
             conf_name, keyword_or_topic, number_of_keyphrase, number_of_top_keyphrase)
 
         sets = expoTopicsUtils.convert_data_to_barChart_sets(data)
-        all_years = compConfUtils.Conf_All_years(conf_name)
-       # print("sets", sets)
+        all_years = compConfUtils.conf_all_years(conf_name)
         return Response({
             "data": sets,
             "years": all_years

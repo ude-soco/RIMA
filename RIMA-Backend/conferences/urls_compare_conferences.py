@@ -3,9 +3,9 @@ from django.urls import path
 from conferences.views import *
 
 urlpatterns = [
-    path('allConferences/', getAllAvailabelConfs.as_view()),
+    path('allConferences/', GetAllAvailabelConfs.as_view()),
    
-    path("allEvents/", getAllAvailabelEvents.as_view()),
+    path("allEvents/", GetAllAvailabelEvents.as_view()),
 
     path('confsName/<pk1>/sharedAuthors/evolution/',
          GetShareAuthorCompareTrends.as_view()),
@@ -26,7 +26,7 @@ urlpatterns = [
          GetAuthorsPubsEvolutionBetweenConfs.as_view()),
 
     path('confsName/<pk1>/authors/publications/evolution/',
-         TotalAuthorsPublicationsEvolution.as_view()),
+         GetTotalAuthorsPublicationsEvolution.as_view()),
 
     path('confsName/<pk1>/events/totalNumber/',
          GetTotalEventsForEachConf.as_view()),

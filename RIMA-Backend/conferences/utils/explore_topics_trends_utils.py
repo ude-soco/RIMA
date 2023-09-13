@@ -14,7 +14,7 @@ from conferences.utils import compare_conferences_utils as compConfUtils
 from collections import defaultdict
 
 
-def get_event_publications_keywordsTopics(keyword_or_topic, event):
+def get_event_publications_keywords_topics(keyword_or_topic, event):
     pubs_keywordsTopics = []
     event_pubs = event.publications.all()
     for pub in event_pubs:
@@ -43,33 +43,32 @@ def convert_data_to_barChart_sets(data):
     final_data = []
     for keyword, counts in keyword_counts.items():
         final_data.append({'name': keyword, 'data': counts})
-    print("final data: ", final_data)
     return final_data
 
 
-def get_relavant_pubsCount__keywordTopic_conf_based(
+def get_relavant_pubs_Count__keyword_topic_conf_based(
         conf_name, keyword_or_topic, number_of_keyphrase, no_of_top_Kyphras):
 
     all_event = get_conf_events(conf_name)
 
-    events_Pubs_keywords = get_all_keywordsOrTopic_of_Event_Publications(
+    events_Pubs_keywords = get_all_keywords_topics_of_event_publications(
         keyword_or_topic, all_event, number_of_keyphrase)
 
     top_keyphrase = get_top_popular_keyphrase(
         events_Pubs_keywords, no_of_top_Kyphras)
 
-    events_Pubs_keywords = filter_event_pubs_keyword_basedOn_topKeyphrase(
+    events_Pubs_keywords = filter_event_pubs_keyword_based_on_topKeyphrase(
         events_Pubs_keywords, top_keyphrase)
 
     return events_Pubs_keywords
 
 
-def get_publication_count_for_Multi_events(
+def get_publication_count_for_multi_events(
         eventsList, Keyword_or_topic, number_of_keyphrase, shared_keyphrase):
 
-    events_nodes = get_eventsNode_for_eventsname(eventsList)
+    events_nodes = get_events_Node_for_events_name(eventsList)
 
-    events_Pubs_keywords = get_all_keywordsOrTopic_of_Event_Publications(
+    events_Pubs_keywords = get_all_keywords_topics_of_event_publications(
         Keyword_or_topic, events_nodes, number_of_keyphrase)
     if (shared_keyphrase == "true"):
         events_Pubs_keywords = get_shared_between_keyphrase(
@@ -88,7 +87,6 @@ def get_shared_between_keyphrase(events_Pubs_keywords):
         sets = [set(item["name"] for item in subset) for subset in keywords]
         shared_Keyphrase = set.intersection(*sets)
 
-        print("shared_Keyphrase", shared_Keyphrase)
         for item in events_Pubs_keywords:
             year = item["year"]
             Event_keywords = item["keywords"]
@@ -99,16 +97,15 @@ def get_shared_between_keyphrase(events_Pubs_keywords):
                 "keywords": final_kewords
             })
 
-        print("final results: ", final_results)
         return final_results
 
 
-def get_Top_Keyphrase_In_Conf(
+def get_Top_Keyphrase_In_conf(
         conf_name, keyword_or_topic, number_of_keyphrase, no_of_top_Kyphras):
 
     all_event = get_conf_events(conf_name)
 
-    events_Pubs_keywords = get_all_keywordsOrTopic_of_Event_Publications(
+    events_Pubs_keywords = get_all_keywords_topics_of_event_publications(
         keyword_or_topic, all_event, number_of_keyphrase)
 
     top_keyphrase = get_top_popular_keyphrase(
@@ -117,17 +114,16 @@ def get_Top_Keyphrase_In_Conf(
     return top_keyphrase
 
 
-def get_all_keywordsOrTopic_of_Event_Publications(
+def get_all_keywords_topics_of_event_publications(
         keyword_or_topic, all_event, number_of_keyphrase):
     events_keywordsOrTopic = []
     for event in all_event:
-        pubs_keywordsTopics = get_event_publications_keywordsTopics(
+        pubs_keywordsTopics = get_event_publications_keywords_topics(
             keyword_or_topic, event)
         counter = Counter(pubs_keywordsTopics)
         result = [{'name': key, 'count': value}
                   for key, value in counter.items()]
         result = sorted(result, key=lambda x: x['count'], reverse=True)
-        print("number_of_keyphrasenumber_of_keyphrase", number_of_keyphrase)
         result = result[:number_of_keyphrase] if number_of_keyphrase != "all" else result
 
         events_keywordsOrTopic.append({
@@ -140,7 +136,7 @@ def get_all_keywordsOrTopic_of_Event_Publications(
     return events_keywordsOrTopic
 
 
-def filter_event_pubs_keyword_basedOn_topKeyphrase(eventsKeyPhrase, topKeyphrase):
+def filter_event_pubs_keyword_based_on_topKeyphrase(eventsKeyPhrase, topKeyphrase):
     final_result = []
     top_keys = set([item[0] for item in topKeyphrase])
 
@@ -207,9 +203,8 @@ def get_relavant_publication(even_name, keyword_or_topic, keywordTopic_name):
         return publicationsList
 
 
-def get_eventsNode_for_eventsname(events_names):
+def get_events_Node_for_events_name(events_names):
     events_nodes = []
-    print("Event: ", events_names)
     for event in events_names:
         event_node = Event.nodes.filter(conference_event_name_abbr=event)
         if (event_node is not None):
@@ -218,7 +213,7 @@ def get_eventsNode_for_eventsname(events_names):
     return events_nodes
 
 
-def get_events_TopicsOrKeywords(Keyword_topics, events):
+def get_events_topics_or_keywords(Keyword_topics, events):
     results = []
     for event in events:
         if (Keyword_topics == "keyword"):
@@ -232,7 +227,7 @@ def get_events_TopicsOrKeywords(Keyword_topics, events):
     return results
 
 
-def get_shared_keywordsOrTopics_basedOn_combs(events_keywords, all_combs):
+def get_shared_keywords_or_topics_based_on_combs(events_keywords, all_combs):
     result = []
     final_sets = []
     authors_name = []
@@ -248,7 +243,6 @@ def get_shared_keywordsOrTopics_basedOn_combs(events_keywords, all_combs):
             events=relevant_confs)
 
         names = sorted(shared_keywordsOrTopics_combs[0]["name"])
-        print("names: ", names)
         value = shared_keywordsOrTopics_combs[0]["data"]
         if value != 0:
             sets.append({
@@ -263,10 +257,7 @@ def get_shared_keywordsOrTopics_basedOn_combs(events_keywords, all_combs):
                 "name": " and ".join(names),
                 "keywords": shared_keywordsOrTopics_combs[0]["keywords"]
             })
-    print("***********************************************************")
-    print("shared_keywords_combs: ", final_sets)
-    print("******************************************************")
-    print(": ", authors_name)
+
     result.append(final_sets)
     result.append(authors_name)
 

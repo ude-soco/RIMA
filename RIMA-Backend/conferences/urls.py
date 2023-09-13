@@ -7,25 +7,23 @@ from conferences import urls_explore_topics_and_trends
 
 urlpatterns = [
 
-    # TODO: All the author insights urls should be called in this block - START
+    # Conference Insights Endpoints in this block by Islam Abdelghaffar- START
     path("author/<pk1>/", include(urls_author_insights)),
     path("authors/", include(urls_compare_authors)),
     path("conferences/", include(urls_compare_conferences)),
     path("conference/<pk1>/", include(urls_explore_topics_and_trends)),
 
-    path("publication/<pk1>/keywords/", getPublicationKeywords.as_view()),
+    path("publication/<pk1>/keywords/", GetPublicationKeywords.as_view()),
+    path("publicationId/<pk1>/", GetPublicationByID.as_view()),
+    path("publicationTitle/<pk1>/", GetPublicationByTitle.as_view()),
 
-    path("getAuthorPublicatinListInYear/<pk1>/<pk2>",
-         getAuthorPublicatinInYear.as_view()),
-    path("publicationId/<pk1>/", getPublicationByID.as_view()),
-    path("publicationTitle/<pk1>/", getPublicationByTitle.as_view()),
+    path('confEvents/<pk1>', GetConfEvents.as_view()),
 
-
-    # TODO: All the author insights urls should be called in this block - END
+    # Conference Insights Endpoints  in this block - END
 
     ############################################################# compare conf. Visulizations updated########################################################################
 
-
+     #BAB need to be reviewed
     path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
 
     path('eventAuthors/<pk1>', AuthorEvents.as_view()),
@@ -42,7 +40,7 @@ urlpatterns = [
 
     ############################################################# compare conf. Visulizations########################################################################
 
-    # BAB Vis Compare Stackes Area
+    # BAB Vis Compare Stackes Area need to be reviewed
     path('constructDatabase/', constructDatabase.as_view()),
     path('conferencesNames/', conferencesNamesView.as_view()),  # BAB
     path('getSharedWords/<pk1>/', conferencesSharedWordsView.as_view()),
@@ -85,7 +83,6 @@ urlpatterns = [
 
     # BAB 08.06.2021 Extension for other conferences other than LAK
     # resued by abdalla
-    path('confEvents/<pk1>', confEvents.as_view()),
 
     path('alltopics/', AllTopicsViewDB.as_view()),
 
@@ -179,11 +176,4 @@ urlpatterns = [
     path('authorconfcomparison/<pk1>/<pk2>/<pk3>/<pk4>',
          AuthorConfComparisionView.as_view()),
     path('updatealltopics/', UpdateAllTopics.as_view()),
-
-    # ****************************************************Explore topics and trend new created by Islam ******************************
-
-
-
-
-
 ]

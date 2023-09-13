@@ -9,7 +9,7 @@ urlpatterns = [
     path("publications/",
          GetAllAuthorPublicationList.as_view()),
 
-    path('coauthorNetwork/', getNetworkDataAuthor.as_view()),
+    path('coauthorNetwork/', GetNetworkDataAuthor.as_view()),
     path("publicationCountOverYears/",
          GetAuthorPublicationsOverYears.as_view()),
 
