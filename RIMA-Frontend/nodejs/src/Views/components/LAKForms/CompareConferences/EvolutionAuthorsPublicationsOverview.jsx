@@ -212,9 +212,9 @@ class EvolutionAuthorsPublicationsOverview extends Component {
       var { weights } = this.state;
       fetch(
         BASE_URL_CONFERENCE +
-          "AuthorsPapersEvolution/Authors/" +
-          "?" +
-          this.state.selectedConferences.join("&")
+          "conferences/confsName/" +
+          this.state.selectedConferences.join("&") +
+          "/authors/authorsEvolution"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -257,16 +257,14 @@ class EvolutionAuthorsPublicationsOverview extends Component {
           });
           this.years = json.years;
         });
-      this.get_Authors_Publications_Data(this.state.key);
-      this.getEventNoForEachConf();
     } else {
       var { series } = this.state;
       var { weights } = this.state;
       fetch(
         BASE_URL_CONFERENCE +
-          "AuthorsPapersEvolution/Publications/" +
-          "?" +
-          this.state.selectedConferences.join("&")
+          "conferences/confsName/" +
+          this.state.selectedConferences.join("&") +
+          "/publications/publicationsEvolution/"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -310,8 +308,6 @@ class EvolutionAuthorsPublicationsOverview extends Component {
           });
           this.years = json.years;
         });
-      this.get_Authors_Publications_Data(this.state.key);
-      this.getEventNoForEachConf();
     }
   };
 
@@ -335,60 +331,6 @@ class EvolutionAuthorsPublicationsOverview extends Component {
     this.selectInputRef.current.select.clearValue();
   };
 
-  get_Authors_Publications_Data(authors_publications) {
-    fetch(
-      BASE_URL_CONFERENCE +
-        "TotalAuthorsPublicationsEvolution/" +
-        authors_publications +
-        "/" +
-        "?" +
-        this.state.selectedConferences.join("&")
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        if (json && json[0].conferences && json[0][authors_publications]) {
-          let newSeries = json[0].conferences.map((conf, i) => {
-            return {
-              name: `The total no. of ${authors_publications} 
-              in ${conf} conference ${this.firstYear}-${this.lastYear}`,
-              data: [json[0][authors_publications][i]],
-            };
-          });
-
-          this.setState({
-            barChartOptions: {
-              ...this.state.barChartOptions,
-              xaxis: {
-                ...this.state.barChartOptions.xaxis,
-                categories: json[0].conferences,
-              },
-            },
-            BarChartSeries: newSeries,
-          });
-        }
-      });
-  }
-  getEventNoForEachConf() {
-    fetch(
-      BASE_URL_CONFERENCE +
-        "TotalEventsForEachConf/" +
-        this.state.selectedConferences.join("&")
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        let newSeries = json.map((item) => {
-          console.log("s", item.data);
-          return {
-            name: `The total no. of events in ${item.name} conference`,
-            data: item.data,
-          };
-        });
-
-        this.setState({
-          BarChartEventsSeries: newSeries,
-        });
-      });
-  }
 
   handleMouseEnter = (e) => {
     if (e == "hovered1") {

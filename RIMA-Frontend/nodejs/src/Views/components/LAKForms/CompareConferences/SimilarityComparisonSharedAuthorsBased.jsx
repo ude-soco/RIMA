@@ -188,9 +188,9 @@ class SimilarityComparisonSharedAuthorsBased extends Component {
     }
     fetch(
       BASE_URL_CONFERENCE +
-        "getTotalSharedAuthorsEvolution/" +
-        "?" +
-        this.state.selectedConferences.join("&")
+        "conferences/confsName/" +
+        this.state.selectedConferences.join("&") +
+        "/sharedAuthors/evolution/"
     )
       .then((response) => response.json())
       .then((json) => {

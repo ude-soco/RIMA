@@ -1,5 +1,4 @@
 // Updated By Islam Abdelghaffar
-import NewAuthorBar from "../../../components/LAKForms/NewAuthorBar.jsx";
 import React, { useState, useEffect } from "react";
 import {
   Grid,
@@ -9,14 +8,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Button,
-  Tooltip,
-  IconButton,
-  Box,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Select,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
@@ -24,23 +15,14 @@ import SimilarityComparisonSharedAuthorsBased from "../../../components/LAKForms
 import EvolutionAuthorsPublicationsOverview from "../../../components/LAKForms/CompareConferences/EvolutionAuthorsPublicationsOverview.jsx";
 import SimilarityComparisonSharedTopicsBased from "../../../components/LAKForms/CompareConferences/SimilarityComparisonSharedTopicsBased.jsx";
 import SharedAuthorsiVennDiagram from "../../../components/LAKForms/CompareConferences/SharedAuthorsiVennDiagram.jsx";
-import NewEvolutionTopTopics from "../../../components/LAKForms/NewEvolutionTopTopics";
 import ComparativePopularitySharedTopics from "../../../components/LAKForms/CompareConferences/ComparativePopularitySharedTopics.jsx";
-import NewComparePapers from "../../../components/LAKForms/NewComparePapers.jsx";
-import NewSharedWords from "../../../components/LAKForms/NewSharedWords";
-import NewTopWordsInYears from "../../../components/LAKForms/NewTopWordsInYears";
-import NewSilmilarityEvolution from "../../../components/LAKForms/NewSilmilarityEvolution.jsx";
-import NewCompareStackedBarChart from "../../../components/LAKForms/NewCompareStackedBarChart.jsx";
+
 import ScrollTopWrapper from "../../ReuseableComponents/ScrollTopWrapper/ScrollTopWrapper";
 import { useHistory } from "react-router-dom";
-
-import CompareStackedAreaChart from "../../../components/LAKForms/compareStackedAreaChart.jsx";
-
 import RestAPI from "../../../../Services/api";
-
-import { CardHeader, Row, Col } from "reactstrap";
 import ConferenceOverview from "../../../components/LAKForms/CompareConferences/ConferenceOverview.jsx";
 window.$value = "";
+
 var selectInputRef = React.createRef();
 const useStyles = makeStyles((theme) => ({
   padding: {
@@ -451,17 +433,6 @@ export default function EducationalConferences(props) {
             <Fade unmountOnExit in={openDrawerYears}>
               <CardContent className="bg-transparent">
                 <Grid container xs={12}>
-                  {/* <Grid
-                    xs={12}
-                    item
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <NewCompareStackedBarChart
-                      conferencesNames={availableConferences}
-                    />
-                  </Grid> */}
                   <Grid
                     item
                     md={12}
@@ -491,90 +462,6 @@ export default function EducationalConferences(props) {
             </Fade>
           </Card>
         </Grid>
-
-        {/* publications */}
-        {/* <Grid container component={Paper} className={classes.cardHeight3}>
-          <h1
-            style={{ ...Style.h1Style }}
-            checked={openDrawerPaper}
-            onMouseEnter={changeBackgroundPaper}
-            onMouseLeave={changeBackgroundPaper2}
-            onClick={handleClickPaper}
-          >
-            {" "}
-            Publications{" "}
-          </h1>
-          <Card
-            className="bg-gradient-default1 shadow"
-            lg={openDrawerPaper ? 4 : ""}
-            style={{
-              display: openDrawerPaper ? "block" : "none",
-              width: "100%",
-              borderRadius: "40px",
-            }}
-          >
-            <Fade unmountOnExit in={openDrawerPaper}>
-              <CardContent className="bg-transparent">
-                <Grid container md={12} xs={12}>
-                  <Grid
-                    md={12}
-                    xs={12}
-                    item
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <NewComparePapers conferencesNames={availableConferences} />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Fade>
-          </Card>
-        </Grid> */}
-
-        {/* trends
-        <Grid container component={Paper} className={classes.cardHeight3}>
-          <h1
-            style={{ ...Style.h1Style }}
-            checked={openDrawerYears}
-            onMouseEnter={changeBackgroundYears}
-            onMouseLeave={changeBackgroundYears2}
-            onClick={handleClickYears}
-          >
-            {" "}
-            Trends{" "}
-          </h1>
-          <Card
-            className="bg-gradient-default1 shadow"
-            lg={openDrawerYears ? 4 : ""}
-            style={{
-              ...Style.cardStyle,
-              display: openDrawerYears ? "block" : "none",
-            }}
-          >
-            <Fade unmountOnExit in={openDrawerYears}>
-              <CardContent className="bg-transparent">
-                <Grid container className="bg-transparent">
-                  <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    style={{
-                      ...Style.itemStyle,
-                    }}
-                  >
-                    <CompareStackedAreaChart
-                      conferencesNames={availableConferences}
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Fade>
-          </Card>
-        </Grid> */}
-
-        {/* Authors */}
-
         <ScrollTopWrapper />
       </Grid>
     </>

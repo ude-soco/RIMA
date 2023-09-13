@@ -202,9 +202,9 @@ class SimilarityComparisonSharedTopicsBased extends Component {
     }
     fetch(
       BASE_URL_CONFERENCE +
-        "getConfsSimilarityTopicsBased/" +
-        "?" +
-        this.state.selectedConferences.join("&")
+        "conferences/confsName/" +
+        this.state.selectedConferences.join("&") +
+        "/sharedTopics/evolution/"
     )
       .then((response) => response.json())
       .then((json) => {

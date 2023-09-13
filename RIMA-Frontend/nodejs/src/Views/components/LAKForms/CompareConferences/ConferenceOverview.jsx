@@ -1,6 +1,5 @@
 // updated By Islam Abdelghaffar
 import React, { Component } from "react";
-import Loader from "react-loader-spinner";
 import Select from "react-select";
 import { BASE_URL_CONFERENCE } from "../../../../Services/constants";
 import "d3-transition";
@@ -8,10 +7,7 @@ import ReactApexChart from "react-apexcharts";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import { Box, Grid, InputLabel } from "@mui/material";
-import RIMAButton from "../../../Application/ReuseableComponents/RIMAButton";
 import { Paper, Typography } from "@material-ui/core";
-import { wrap } from "highcharts";
-import { json } from "d3";
 
 class ConferenceOverview extends Component {
   constructor(props) {
@@ -66,7 +62,6 @@ class ConferenceOverview extends Component {
             dataPointMouseEnter: function (event, chartContext, config) {
               const xAxisLabel = config.w.globals.labels[config.dataPointIndex];
               this.updateBarChartTooltip(xAxisLabel);
-              console.log("hoved");
             }.bind(this),
           },
         },
@@ -118,7 +113,6 @@ class ConferenceOverview extends Component {
   updateBarChartTooltip(hoveredConf) {
     const firstYear = this.years[0] ? this.years[0] : "1993";
     const lastYear = this.years.slice(-1)[0] ? this.years.slice(-1)[0] : "2014";
-    console.log("hovered: ", hoveredConf);
     this.setState((pervState) => ({
       BarChartSeries: [
         {
@@ -131,28 +125,20 @@ class ConferenceOverview extends Component {
     }));
   }
   wordhandleChange = (e) => {
-    console.log(e.value);
     this.setState({
       selectValue: e,
     });
-    console.log(this.state.selectValue);
   };
 
   conferenceshandleChange = (e) => {
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
-
-    console.log("Abdo");
-    console.log(value);
-    console.log("Abdo");
 
     this.setState({
       selectConference: Array.isArray(e) ? e.map((s) => s.value) : [],
       selectedConferences: value,
     });
 
-    console.log("BAB");
-    console.log(this.state.selectedConferences);
-    console.log("BAB");
+
     this.selectSharedAuthors();
     this.selectSharedPublications();
   };
@@ -185,14 +171,12 @@ class ConferenceOverview extends Component {
     );
   };
   clickEvent = () => {
-
     this.get_Authors_Publications_Data();
     this.getEventNoForEachConf();
   };
 
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log("imageTooltipOpen: ", this.state.imageTooltipOpen);
   };
 
   onClear = () => {
@@ -213,8 +197,9 @@ class ConferenceOverview extends Component {
   get_Authors_Publications_Data() {
     fetch(
       BASE_URL_CONFERENCE +
-        "TotalAuthorsPublicationsEvolution/" +
-        this.state.selectedConferences.join("&")
+        "conferences/confsName/" +
+        this.state.selectedConferences.join("&") +
+        "/authors/publications/evolution/"
     )
       .then((response) => response.json())
       .then((json) => {
@@ -249,13 +234,13 @@ class ConferenceOverview extends Component {
   getEventNoForEachConf() {
     fetch(
       BASE_URL_CONFERENCE +
-        "TotalEventsForEachConf/" +
-        this.state.selectedConferences.join("&")
+        "conferences/confsName/" +
+        this.state.selectedConferences.join("&") 
+        +'/events/totalNumber/'
     )
       .then((response) => response.json())
       .then((json) => {
         let newSeries = json.map((item) => {
-          console.log("s", item.data);
           return {
             name: `The total no. of events in ${item.name} conference`,
             data: item.data,

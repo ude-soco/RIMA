@@ -273,12 +273,13 @@ class SharedAuthorsiVennDiagram extends Component {
     }
     fetch(
       BASE_URL_CONFERENCE +
-        "commonAuthors/" +
+        "conferences/events/" +
         this.state.selectedEvent +
         "&" +
         this.state.selectedEventTwo +
         "&" +
-        this.state.selectedEventThird
+        this.state.selectedEventThird +
+        "/sharedAuthors/"
     )
       .then((response) => response.json())
       .then((json) => {

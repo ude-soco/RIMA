@@ -342,13 +342,13 @@ def get_author_interests2(author_obj, event, keyword_or_topic):
     return ""
 
 
-def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
+def get_AuthorPaper_weight_event_based(conference_event_objs, authorsOrPubs):
     """retrieves weights of a specific word in a list on conference events. If the word does not exist in an event, its weight is zero
 
     Args:
         conference_event_objs (list): list of conference event objects
         word (str): any topic or keyword
-        keyword_or_topic (str): decides the type of the word --> "topic" or "keyword"
+        authorsOrPubs (str): decides the type of the word --> "topic" or "keyword"
 
     Returns:
         list: list of data dictionaries of the weight of a word in every given conference event
@@ -358,7 +358,7 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
 
     # islam Updated
     for conference_event in conference_event_objs:
-        if keyword_or_topic == 'topic' or keyword_or_topic == 'Authors':
+        if authorsOrPubs == 'authorsEvolution':
             no_of_event_authors = 0
             one_event_authors = []
             # islam Updated
@@ -383,7 +383,7 @@ def get_AuthorPaper_weight_event_based(conference_event_objs, keyword_or_topic):
                     'year': re.sub("[^0-9]", "", conference_event.conference_event_name_abbr.split('-')[0])
                 })
 
-        elif keyword_or_topic == 'keyword' or keyword_or_topic == 'Publications':
+        elif authorsOrPubs == 'publicationsEvolution':
             # islam Updated
             check_exist = Event.nodes.get_or_none(
                 conference_event_name_abbr=conference_event.conference_event_name_abbr)

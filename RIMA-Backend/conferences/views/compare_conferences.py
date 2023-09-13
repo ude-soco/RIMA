@@ -106,13 +106,13 @@ class TotalSharedAuthorsEvolutionView(APIView):
 # new class by Islam Abdelghaffar
 
 
-class ShareAuthorCompareTrends(APIView):
+class GetShareAuthorCompareTrends(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
+            request.get_full_path(), r'/')
         try:
             conferences_list = confutils.split_restapi_url(
-                url_splits_question_mark[1], r'&')
+                url_splits_question_mark[-4], r'&')
         except Exception as e:
             return Response({"data": [[]],
                              "sharedYears": [[]]
@@ -146,10 +146,10 @@ class GetConfsSimilarityTopicsBased(APIView):
     def get(self, request, *args, **kwargs):
         result_data = []
         url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
+            request.get_full_path(), r'/')
         try:
             conferences_list = confutils.split_restapi_url(
-                url_splits_question_mark[1], r'&')
+                url_splits_question_mark[-4], r'&')
         except Exception as e:
             return Response({"data": [[]],
                              "sharedYears": [[]]
@@ -381,10 +381,10 @@ class CommonAuthorsview(APIView):
 # new class by Islam Abdelghaffar
 
 
-class SharedAuthorsBetweenEventsView(APIView):
+class GetSharedAuthorsBetweenEventsView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-1]
+            request.get_full_path(), r'/')[-3]
         events = url_splits.split('&')
         filtered_events = [event for event in events if event != ""]
         final_sets = []
@@ -569,7 +569,7 @@ class ComparePapersView(APIView):
 # updated by Islam Abdelghaffar
 
 
-class getPapersOfWords(APIView):
+class GetPopularityOfSharedTopicsBetweenEvents(APIView):
     def get(self, request, *args, **kwargs):
         abstract_title_str = ""
         abstracts_titles = []
@@ -581,23 +581,19 @@ class getPapersOfWords(APIView):
         result_dict['docs'] = []
 
         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
-        keyword_or_topic = url_splits[-1]
-        second_event_name_abbr = url_splits[-2]
-        first_event_name_abbr = url_splits[-3]
+        keyword_or_topic = 'keyword'
+        second_event_name_abbr = url_splits[-4]
+        first_event_name_abbr = url_splits[-6]
         events_list.append(first_event_name_abbr)
         events_list.append(second_event_name_abbr)
-        print("eventssss listtt")
-        print(events_list)
+
         # islam Updated
         returned_list = compConfUtils.get_shared_words_between_events(
             events_list, keyword_or_topic)
-        print("shared words")
-        print(len(returned_list[0]))
+
         sharedWords = sorted(
             returned_list[0], key=lambda k: k['weight'], reverse=True)
-        print(returned_list[0])
-        print("shared wordsssss ")
-        print(sharedWords)
+
         for words in sharedWords:
             list_of_shared_words.append(words["word"])
         print(list_of_shared_words)
@@ -607,19 +603,12 @@ class getPapersOfWords(APIView):
             abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
                 first_event_name_abbr, word)
             first_event_values.append(len(abstracts_titles))
-            print("list progresssss")
-            print(first_event_values)
         for word in list_of_shared_words:
             # islam Updated
             abstracts_titles = compConfUtils.get_abstract_based_on_keyword(
                 second_event_name_abbr, word)
-            print("here are the selected word")
-            print(word)
-            print(len(abstracts_titles))
-            print("here are the selected word")
+
             second_event_values.append(len(abstracts_titles))
-            print("second list progresssss")
-            print(second_event_values)
         return Response({
             "sharedWords": list_of_shared_words,
             "FirstEventValues": first_event_values,
@@ -678,7 +667,7 @@ class NewconferencesSharedWordsBarView(APIView):
 # updated by Islam Abdelghaffar
 
 
-class AuthorsPapersEvolutionView(APIView):
+class GetAuthorsPubsEvolutionBetweenConfs(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
         result_data = []
@@ -688,13 +677,10 @@ class AuthorsPapersEvolutionView(APIView):
         all_models_data = []
 
         url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'?')
+            request.get_full_path(), r'/')
         conferences_list = confutils.split_restapi_url(
-            url_splits_question_mark[1], r'&')
-        keyword_or_topic = confutils.split_restapi_url(
-            url_splits_question_mark[0], r'/')[-2]
-        print(conferences_list)
-        print(keyword_or_topic)
+            url_splits_question_mark[-4], r'&')
+        authorsOrPubs = url_splits_question_mark[-2]
 
         for conference in conferences_list:
             # islam Updated
@@ -703,11 +689,9 @@ class AuthorsPapersEvolutionView(APIView):
             conference_event_objs = Event.nodes.filter(
                 conference_event_name_abbr__icontains=conference_obj.conference_name_abbr)
 
-            print("conference_event_objs", conference_event_objs)
             # islam Updated
             models_data = compConfUtils.get_AuthorPaper_weight_event_based(
-                conference_event_objs, keyword_or_topic)
-            print('***'*50)
+                conference_event_objs, authorsOrPubs)
             for model_data in models_data:
                 years_range.append(model_data['year'])
             all_models_data.append(models_data)
@@ -750,8 +734,7 @@ class AuthorsPapersEvolutionView(APIView):
 class TotalAuthorsPublicationsEvolution(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-2]
-        print("url_splits_question_mark: ", url_splits_question_mark)
+            request.get_full_path(), r'/')[-5]
         conferences_list = confutils.split_restapi_url(
             url_splits_question_mark, r'&')
 
@@ -788,10 +771,10 @@ class TotalAuthorsPublicationsEvolution(APIView):
 # new class by Islam Abdelghaffar
 
 
-class TotalEventsForEachConf(APIView):
+class GetTotalEventsForEachConf(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
-            request.get_full_path(), r'/')[-2]
+            request.get_full_path(), r'/')[-4]
         conferences_list = confutils.split_restapi_url(
             url_splits_question_mark, r'&')
 

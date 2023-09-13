@@ -196,12 +196,11 @@ class ComparativePopularitySharedTopics extends Component {
     });
     fetch(
       BASE_URL_CONFERENCE +
-        "compareWordsInPapers/" +
+        "conferences/firstEvent/" +
         this.state.selectedEvent +
-        "/" +
+        "/secondEvent/" +
         this.state.selectedEventTwo +
-        "/" +
-        "keyword"
+        "/sharedTopics/comparePopularity/"
     )
       .then((response) => response.json())
       .then((json) => {
@@ -236,12 +235,11 @@ class ComparativePopularitySharedTopics extends Component {
     });
     fetch(
       BASE_URL_CONFERENCE +
-        "compareWordsInPapers/" +
+        "conferences/firstEvent/" +
         this.state.selectedEvent +
-        "/" +
+        "/secondEvent/" +
         this.state.selectedEventTwo +
-        "/" +
-        "keyword"
+        "/sharedTopics/comparePopularity/"
     )
       .then((response) => response.json())
       .then((json) => {
