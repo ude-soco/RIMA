@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from itertools import chain
 
 
+# The `GetAuthorDetails` class is an API view that retrieves detailed information about an author based on their ID.
 class GetAuthorDetails(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -21,6 +22,7 @@ class GetAuthorDetails(APIView):
         })
 
 
+# The `GetAuthorPublicationsOverYears` class is an API view that retrieves and returns the publication data of an author over the years.
 class GetAuthorPublicationsOverYears(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -31,6 +33,7 @@ class GetAuthorPublicationsOverYears(APIView):
         return Response(author_data)
 
 
+# The `GetAuthorPublicationCountBasedConfs` class is an API view that retrieves publication counts for a specific author based on selected conferences.
 class GetAuthorPublicationCountBasedConfs(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -46,6 +49,7 @@ class GetAuthorPublicationCountBasedConfs(APIView):
         return Response(author_data)
 
 
+# The GetAllAuthorPublicationList class is an API view that retrieves a list of publications for a given author and returns the list in a specific format.
 class GetAllAuthorPublicationList(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -71,6 +75,7 @@ class GetAllAuthorPublicationList(APIView):
         })
 
 
+# The `GetNetworkDataAuthor` class is an API view that retrieves network data and conference information for a specific author.
 class GetNetworkDataAuthor(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -86,6 +91,7 @@ class GetNetworkDataAuthor(APIView):
         })
 
 
+# The `GetAuthorPublicatinInYear` class is an API view that retrieves a list of publications by a specific author in a given year.
 class GetAuthorPublicatinInYear(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -112,6 +118,7 @@ class GetAuthorPublicatinInYear(APIView):
         })
 
 
+# The `GetWordPublicationByYearAndAuthor` class is an API view that retrieves a list of publications based on a given author, keyword, and publication year.
 class GetWordPublicationByYearAndAuthor(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -140,6 +147,7 @@ class GetWordPublicationByYearAndAuthor(APIView):
         })
 
 
+# The class `GetPublicationListBasedOnEventName` is an API view that retrieves a list of publications based on an event name.
 class GetPublicationListBasedOnEventName(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -167,6 +175,7 @@ class GetPublicationListBasedOnEventName(APIView):
         })
 
 
+# The `GetAllAvailableAuthors` class is an API view that retrieves all available authors from a list of conferences.
 class GetAllAvailableAuthors(APIView):
     def get(self, request, *args, **kwargs):
         confs = Conference.nodes.all()
@@ -175,6 +184,7 @@ class GetAllAvailableAuthors(APIView):
         return Response(authors)
 
 
+# The GetAllAvailabeAuthorsFilterBased class is an API view that retrieves a list of authors based on certain filters and returns the ordered list of authors.
 class GetAllAvailabeAuthorsFilterBased(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -194,12 +204,14 @@ class GetAllAvailabeAuthorsFilterBased(APIView):
         return Response(orderedAuthors)
 
 
+# The class `GetAllAvailableConfs` is an API view that retrieves and returns a list of available conferences.
 class GetAllAvailabelConfs(APIView):
     def get(self, request, *args, **kwargs):
         conferences = authorInsightsUtil.get_available_confs()
         return Response(conferences)
 
 
+# The `GetAllAvailableEvents` class is an API view that retrieves all available events and conferences and returns them as a response.
 class GetAllAvailabelEvents(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -214,6 +226,7 @@ class GetAllAvailabelEvents(APIView):
         return Response(confs)
 
 
+# The `GetAuthorPublicationsCitations` class is an API view that retrieves the publications and citations of an author over time based on selected conferences.
 class GetAuthorPublicationsCitations(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -227,6 +240,7 @@ class GetAuthorPublicationsCitations(APIView):
         return Response(data)
 
 
+# The `GetAuthorPublications` class is an API view that retrieves a specific author's publications and conferences and returns them in a sorted format.
 class GetAuthorPublications(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -248,6 +262,7 @@ class GetAuthorPublications(APIView):
         return Response(data)
 
 
+# The `GetPublicationKeywords` class is an API view that retrieves the keywords associated with a publication based on its ID.
 class GetPublicationKeywords(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -259,6 +274,7 @@ class GetPublicationKeywords(APIView):
         return Response(keywords)
 
 
+# The `GetPublicationByID` class is an API view that retrieves publication information based on a given publication ID.
 class GetPublicationByID(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -285,6 +301,7 @@ class GetPublicationByID(APIView):
         })
 
 
+# The `GetPublicationByTitle` class is an API view that retrieves a publication by its title and returns a list of relevant information about the publication.
 class GetPublicationByTitle(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -311,6 +328,7 @@ class GetPublicationByTitle(APIView):
         })
 
 
+# The `GetPublicationByKeywordOfAuthor` class is an API view that retrieves a list of publications based on a selected keyword and a list of authors.
 class GetPublicationByKeywordOfAuthor(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -337,6 +355,7 @@ class GetPublicationByKeywordOfAuthor(APIView):
         })
 
 
+# The `GetAuthorInterestes` class is an API view that retrieves the interests and conferences of an author based on their ID.
 class GetAuthorInterestes(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(

@@ -27,8 +27,8 @@ urlpatterns = [
     path('topTopicsInYears/<pk1>/<pk2>', topWordsOverYears.as_view()),
 
     path('eventAuthors/<pk1>', AuthorEvents.as_view()),
-    path('AuthorInterestsNew/<pk1>/<pk2>/<pk3>/<pk4>/<pk5>',
-         AuthorInterestsBar2.as_view()),
+#     path('AuthorInterestsNew/<pk1>/<pk2>/<pk3>/<pk4>/<pk5>',
+#          AuthorInterestsBar2.as_view()),
     path('EventPapers/<pk1>', ConfEventPapers.as_view()),
     path('comparePapers/<pk1>/<pk2>/<pk3>/<pk4>/<pk5>',
          ComparePapersView.as_view()),

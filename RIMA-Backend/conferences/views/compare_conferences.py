@@ -14,6 +14,7 @@ from itertools import combinations
 
 # new class by Islam Abdelghaffar
 
+# The `GetShareAuthorCompareTrends` class is an API view that retrieves shared authors and shared years based on conference events.
 class GetShareAuthorCompareTrends(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -50,6 +51,7 @@ class GetShareAuthorCompareTrends(APIView):
 # new class by Islam Abdelghaffar
 
 
+# The `GetConfsSimilarityTopicsBased` class is an API view that retrieves data related to shared authors and shared years based on conferences and events.
 class GetConfsSimilarityTopicsBased(APIView):
     def get(self, request, *args, **kwargs):
         result_data = []
@@ -88,6 +90,7 @@ class GetConfsSimilarityTopicsBased(APIView):
 # updated by Islam Abdelghaffar
 
 
+# The `topWordsOverYears` class is an API view that retrieves the top words over the last five events of a conference and returns the list of words and their corresponding weights.
 class topWordsOverYears(APIView):
     def get(self, request, *args, **kwargs):
         top_words_over_years = []
@@ -124,6 +127,7 @@ class topWordsOverYears(APIView):
 # new class by Islam Abdelghaffar
 
 
+# The `GetSharedAuthorsBetweenEventsView` class is an API view that retrieves shared authors between multiple events and returns the sets of shared authors and their names.
 class GetSharedAuthorsBetweenEventsView(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(
@@ -157,6 +161,7 @@ class GetSharedAuthorsBetweenEventsView(APIView):
 # updated by Islam Abdelghaffar
 
 
+# The `AuthorEvents` class is an API view that retrieves a list of authors associated with a specific conference event.
 class AuthorEvents(APIView):
     def get(self, request, *args, **kwargs):
         first_event_Authors = []
@@ -194,6 +199,7 @@ class AuthorEvents(APIView):
 # updated by Islam Abdelghaffar
 
 
+# The `GetPopularityOfSharedTopicsBetweenEvents` class is an API view that retrieves the popularity of shared topics between two events by counting the number of abstracts that contain each shared word in each event.
 class GetPopularityOfSharedTopicsBetweenEvents(APIView):
     def get(self, request, *args, **kwargs):
         abstract_title_str = ""
@@ -243,6 +249,7 @@ class GetPopularityOfSharedTopicsBetweenEvents(APIView):
 # updated by Islam Abdelghaffar
 
 
+# The `GetAuthorsPubsEvolutionBetweenConfs` class is an API view that retrieves data on the evolution of author publications between conferences.
 class GetAuthorsPubsEvolutionBetweenConfs(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -307,6 +314,7 @@ class GetAuthorsPubsEvolutionBetweenConfs(APIView):
 # updated by Islam Abdelghaffar
 
 
+# The `GetTotalAuthorsPublicationsEvolution` class is an API view that retrieves the total number of authors and publications for a list of conferences and returns the data in a response.
 class GetTotalAuthorsPublicationsEvolution(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -342,6 +350,7 @@ class GetTotalAuthorsPublicationsEvolution(APIView):
 
 # new class by Islam Abdelghaffar
 
+# The `GetTotalEventsForEachConf` class is an API view that retrieves the total number of events for each conference and returns the data in a response.
 class GetTotalEventsForEachConf(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -362,6 +371,7 @@ class GetTotalEventsForEachConf(APIView):
 
 # updated by Islam Abdelghaffar
 
+# The `GetConfEvents` class is an API view that retrieves conference events based on the URL path and returns them in JSON format.
 class GetConfEvents(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -400,6 +410,7 @@ class GetConfEvents(APIView):
 
 # new class created by Islam Abdelghaffar
 
+# The `GetRelavantPublicationsList` class is an API view that retrieves a list of relevant publications based on specified keywords or topics.
 class GetRelavantPublicationsList(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -433,6 +444,7 @@ class GetRelavantPublicationsList(APIView):
 # updated by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
 
+# The `VennOverview` class is an API view that generates a Venn diagram comparing topics or keywords from two events and returns the common topics or keywords.
 class VennOverview(APIView):
     def get(self, request, *args, **kwargs):
         words_first_event = []
@@ -483,6 +495,7 @@ class VennOverview(APIView):
 
 
 # new class created by Islam not used anymore in conference insights need to be reviewed
+# The class RelevantPublicationsOfKeywords is an API view that retrieves relevant publications based on conference name and keywords.
 class RelevantPublicationsOfKeywords(APIView):
     def get(self, request, *args, **kwargs):
 
@@ -510,6 +523,7 @@ class RelevantPublicationsOfKeywords(APIView):
 
 # updated by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
+# The `MultipleTopicAreaView` class is an API view that retrieves data based on multiple topics and returns the weights and years of the events related to those topics.
 class MultipleTopicAreaView(APIView):
     def get(self, request, *args, **kwargs):
         models_data = []
@@ -547,6 +561,7 @@ class MultipleTopicAreaView(APIView):
 # updated by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
 
+# The `NewconferencesSharedWordsBarView` class is an API view that retrieves shared words between events based on a given keyword or topic.
 class NewconferencesSharedWordsBarView(APIView):
     def get(self, request, *args, **kwargs):
         result_data = [[], []]
@@ -578,37 +593,37 @@ class NewconferencesSharedWordsBarView(APIView):
 # new class by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
 
-class AuthorInterestsBar2 (APIView):
-    def get(self, request, *args, **kwargs):
-        url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
-        second_author = url_splits[-1]
-        first_author = url_splits[-2]
-        keyword_or_topic = url_splits[-3]
-        second_event = url_splits[-4]
-        first_event = url_splits[-5]
+# class AuthorInterestsBar2 (APIView):
+#     def get(self, request, *args, **kwargs):
+#         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
+#         second_author = url_splits[-1]
+#         first_author = url_splits[-2]
+#         keyword_or_topic = url_splits[-3]
+#         second_event = url_splits[-4]
+#         first_event = url_splits[-5]
 
-        first_author_data = compConfUtils.get_author_keywordTopic_event_based(
-            author_name=first_author,
-            event_name=first_event,
-            keyword_or_topic=keyword_or_topic)
+#         first_author_data = compConfUtils.get_author_keywordTopic_event_based(
+#             author_name=first_author,
+#             event_name=first_event,
+#             keyword_or_topic=keyword_or_topic)
 
-        second_author_data = compConfUtils.get_author_keywordTopic_event_based(
-            author_name=second_author,
-            event_name=second_event,
-            keyword_or_topic=keyword_or_topic)
+#         second_author_data = compConfUtils.get_author_keywordTopic_event_based(
+#             author_name=second_author,
+#             event_name=second_event,
+#             keyword_or_topic=keyword_or_topic)
 
-        intersection = compConfUtils.get_commen_keywords_or_topics(
-            first_author_data, second_author_data)
+#         intersection = compConfUtils.get_commen_keywords_or_topics(
+#             first_author_data, second_author_data)
 
-        return Response({
-            "first_author_data": first_author_data,
-            "second_author_data": second_author_data,
-            "common_data": intersection
-        })
+#         return Response({
+#             "first_author_data": first_author_data,
+#             "second_author_data": second_author_data,
+#             "common_data": intersection
+#         })
 
 # updated by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
-
+# The `ConfEventPapers` class is an API view that retrieves event papers data for a conference event and returns it in JSON format.
 class ConfEventPapers(APIView):
     def get(self, request, *args, **kwargs):
         Event_papers_JSON = []
@@ -641,6 +656,7 @@ class ConfEventPapers(APIView):
 # new class by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
 
+# The `ComparePapersView` class is an API view that compares two papers based on their keywords or topics and returns the common keywords/topics and their details if they exist.
 class ComparePapersView(APIView):
     def get(self, request, *args, **kwargs):
         data = []

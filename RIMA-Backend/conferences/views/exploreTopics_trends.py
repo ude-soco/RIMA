@@ -13,6 +13,7 @@ from conferences.utils import explore_topics_trends_utils as expoTopicsUtils
 from conferences.utils import compare_conferences_utils as compConfUtils
 
 
+# The `GetSharedTopicsAcrossEvents` class is an API view that retrieves shared topics across multiple events.
 class GetSharedTopicsAcrossEvents(APIView):
     def get(self, request, *args, **kwargs):
         url_splits = confutils.split_restapi_url(
@@ -48,7 +49,7 @@ class GetSharedTopicsAcrossEvents(APIView):
         })
 
 
-# new class by Islam
+# The `GetSharedPopularTopicsAcrossYears` class is an API view that retrieves shared popular topics across multiple years based on specified events, number of keyphrases, and a shared keyphrase.
 class GetSharedPopularTopicsAcrossYears(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_question_mark = confutils.split_restapi_url(
@@ -70,9 +71,9 @@ class GetSharedPopularTopicsAcrossYears(APIView):
             "years": events_list
         })
 
-# new class by Islam
 
 
+# The `GetTopPopularTopicsInConf` class is an API view that retrieves the top popular topics in a conference and returns the names and values of these topics.
 class GetTopPopularTopicsInConf(APIView):
     def get(self, request, *args, **kwargs):
         conf_name = confutils.split_restapi_url(
@@ -93,9 +94,9 @@ class GetTopPopularTopicsInConf(APIView):
         })
 
 
-# new class created by Islam
 
 
+# The class `GetEvolutionTopPopularTopicsInConf` is an API view that retrieves the evolution of the top popular topics in a conference based on keywords or topics.
 class GetEvolutionTopPopularTopicsInConf(APIView):
     def get(self, request, *args, **kwargs):
         conf_name = confutils.split_restapi_url(

@@ -62,6 +62,12 @@ def get_years_range_of_conferences(conferences_list, all_or_shared):
 
 
 def get_total_shared_authors_between_conferences(conference_event_objs):
+    """
+    The function `get_total_shared_authors_between_conferences` retrieves the total number of shared authors between different conference events.
+    
+    :param conference_event_objs: The parameter `conference_event_objs` is a list of conference event objects. Each conference event object represents a conference event and contains information such as the conference event name abbreviation, authors, and year
+    :return: a list of dictionaries. Each dictionary contains information about a conference event, including the number of authors, the conference event abbreviation, the list of event authors, and the year of the conference event.
+    """
     result_data = []
     for conference_event in conference_event_objs:
         one_event_authors = []
@@ -540,6 +546,12 @@ def get_abstract_based_on_keyword(conference_event_name_abbr, keyword):
 
 
 def get_conf_total_authors(conf_name):
+    """
+    The function `get_conf_total_authors` returns the total number of authors associated with a given conference name abbreviation.
+    
+    :param conf_name: The parameter `conf_name` is a string that represents the abbreviation of a conference name
+    :return: The number of authors associated with the specified conference name.
+    """
     authors_number = 0
     conf_node = Conference.nodes.filter(conference_name_abbr=conf_name)
     if conf_node:
@@ -548,6 +560,12 @@ def get_conf_total_authors(conf_name):
 
 
 def get_conf_total_publications(conf_name):
+    """
+    The function `get_conf_total_publications` returns the total number of publications associated with a given conference name abbreviation.
+    
+    :param conf_name: The parameter `conf_name` is a string that represents the abbreviation of a conference name
+    :return: The number of publications associated with the conference specified by the `conf_name` parameter.
+    """
     publications_number = 0
     conf_node = Conference.nodes.filter(conference_name_abbr=conf_name)
     if conf_node:
@@ -558,6 +576,14 @@ def get_conf_total_publications(conf_name):
 
 
 def get_relavant_publication(event_list, keyword_or_topic, keywordTopic_name):
+    """
+    The function `get_relavant_publication` takes in a list of events, a keyword or topic, and a keyword or topic name, and returns a list of relevant publications based on the keyword or topic.
+    
+    :param event_list: A list of events
+    :param keyword_or_topic: The parameter "keyword_or_topic" is a string that specifies whether the search should be based on a keyword or a topic. It can have two possible values: "keyword" or "topic"
+    :param keywordTopic_name: The keyword or topic name that you want to search for in the publications
+    :return: a list of relevant publications based on the given event list, keyword or topic, and keyword or topic name.
+    """
     publicationList = []
     for event in event_list:
         event_obj_publications = Event.nodes.filter(
@@ -581,6 +607,13 @@ def get_relavant_publication(event_list, keyword_or_topic, keywordTopic_name):
 
 # new func by Islam Abdelghaffar
 def get_publication_keywords_count(publication_name, keywords_or_topics):
+    """
+    The function `get_publication_keywords_count` takes a publication name and a choice between "keywords" or "topics" as input, and returns a list of dictionaries containing the text and count of each keyword or topic found in the publication's title and abstract.
+    
+    :param publication_name: The name of the publication for which you want to get the keyword or topic counts
+    :param keywords_or_topics: The parameter "keywords_or_topics" is a string that specifies whether you want to count the occurrences of keywords or topics in the publication. It can have two possible values: "keywords" or "topics"
+    :return: a list of dictionaries, where each dictionary contains the text of a keyword or topic and its corresponding count in the publication.
+    """
     keywords_topics_counts = []
     publication_node = Publication.nodes.get(title=publication_name)
     content_words = (str(publication_node.title) +
@@ -604,6 +637,13 @@ def get_publication_keywords_count(publication_name, keywords_or_topics):
 
 
 def get_commen_keywords_or_topics(first_paper_keywordsCount, second_paper_keywordsCount):
+    """
+    The function `get_commen_keywords_or_topics` takes two lists of dictionaries representing keyword counts in two papers, and returns a list containing the intersection of keywords/topics between the two papers along with their respective counts.
+    
+    :param first_paper_keywordsCount: A list of dictionaries containing the keywords and their respective counts in the first paper
+    :param second_paper_keywordsCount: The `second_paper_keywordsCount` parameter is a list of dictionaries. Each dictionary represents a keyword or topic from the second paper and contains two key-value pairs: "text" and "value". "text" represents the keyword or topic text, and "value" represents the count or frequency of that
+    :return: a list containing a dictionary with two keys: "intersection" and "intersectionDetails". The value of "intersection" is a list of dictionaries, where each dictionary represents a common keyword or topic between the two papers and includes the text of the keyword or topic and the combined value from both papers. The value of "intersectionDetails" is also a list of dictionaries, where each dictionary represents
+    """
     final_intersection = []
     keywords_topics_first_paper = {d['text']
                                    for d in first_paper_keywordsCount}
@@ -648,43 +688,55 @@ def get_commen_keywords_or_topics(first_paper_keywordsCount, second_paper_keywor
 # new fun implemented by islam abdelghaffar
 
 
-def get_author_keywordTopic_event_based(author_name, event_name, keyword_or_topic):
-    author_node = Author.nodes.get(author_name=author_name)
-    event_node = Event.nodes.filter(conference_event_name_abbr=event_name)
+# def get_author_keywordTopic_event_based(author_name, event_name, keyword_or_topic):
+#     author_node = Author.nodes.get(author_name=author_name)
+#     event_node = Event.nodes.filter(conference_event_name_abbr=event_name)
 
-    if keyword_or_topic == "keyword":
-        author_keywords = author_node.keywords.all()
-        event_keywords = set(k.keyword for k in event_node.keywords.all())
-        author_event_keywords_weights = [
-            {
-                "text": author_keyword.keyword,
-                'value': author_node.keywords.relationship(author_keyword).weight
-            }
-            for author_keyword in author_keywords
-            if author_keyword.keyword in event_keywords]
+#     if keyword_or_topic == "keyword":
+#         author_keywords = author_node.keywords.all()
+#         event_keywords = set(k.keyword for k in event_node.keywords.all())
+#         author_event_keywords_weights = [
+#             {
+#                 "text": author_keyword.keyword,
+#                 'value': author_node.keywords.relationship(author_keyword).weight
+#             }
+#             for author_keyword in author_keywords
+#             if author_keyword.keyword in event_keywords]
 
-        return author_event_keywords_weights
+#         return author_event_keywords_weights
 
-    elif keyword_or_topic == "topic":
-        author_topics = author_node.topics.all()
-        event_topics = set(t.topic for t in event_node.topics.all())
-        author_event_topics_weights = [
-            {
-                "text": author_topic.topic,
-                "value": author_node.topics.relationship(author_topic).weight
-            } for author_topic in author_topics
-            if author_topic.topic in event_topics]
+#     elif keyword_or_topic == "topic":
+#         author_topics = author_node.topics.all()
+#         event_topics = set(t.topic for t in event_node.topics.all())
+#         author_event_topics_weights = [
+#             {
+#                 "text": author_topic.topic,
+#                 "value": author_node.topics.relationship(author_topic).weight
+#             } for author_topic in author_topics
+#             if author_topic.topic in event_topics]
 
-        return author_event_topics_weights
+#         return author_event_topics_weights
 
 
 def get_conf_events(conf_name):
+    """
+    The function `get_conf_events` retrieves conference event objects based on a given conference name abbreviation.
+    
+    :param conf_name: The `conf_name` parameter is a string that represents the abbreviation or prefix of a conference event name
+    :return: a list of conference event objects that have a name abbreviation starting with the given conference name.
+    """
     conference_event_objs = Event.nodes.filter(
         conference_event_name_abbr__startswith=conf_name)
     return conference_event_objs
 
 
 def get_author_keywordTopic_event_based(confs_events_list):
+    """
+    The function "get_author_keywordTopic_event_based" takes a list of conferences and their associated events, extracts the years of each event, finds the common years across all conferences, and returns a sorted list of those common years.
+    
+    :param confs_events_list: A list of dictionaries where each dictionary represents a conference and its associated events. Each dictionary has two keys: "conference" which represents the name of the conference, and "events" which represents a list of events associated with that conference
+    :return: a sorted list of common years from the given list of conference events.
+    """
     confs_years = []
     for conf in confs_events_list:
         conf_event_name = conf["conference"]
@@ -699,6 +751,12 @@ def get_author_keywordTopic_event_based(confs_events_list):
 
 
 def get_years_of_conf(conf_events_list):
+    """
+    The function `get_years_of_conf` extracts the years from a list of conference event names and returns them as a list.
+    
+    :param conf_events_list: The `conf_events_list` parameter is a list of conference events. Each conference event has a `conference_event_name_abbr` attribute, which is a string representing the abbreviated name of the conference event
+    :return: a list of unique years extracted from the conference event names in the given list.
+    """
     conf_years = set()
     for event in conf_events_list:
         match = re.search(r'\d{4}', event.conference_event_name_abbr)
@@ -717,6 +775,13 @@ def get_common_years(confs_years):
 
 
 def get_shared_events_based_on_shared_years(confs_events_list, common_years):
+    """
+    The function `get_shared_events_based_on_shared_years` takes a list of conference events and a list of common years as input, and returns a list of shared events between conferences based on the common years.
+    
+    :param confs_events_list: The `confs_events_list` parameter is a list of dictionaries. Each dictionary represents a conference and its associated events. The structure of each dictionary is as follows:
+    :param common_years: The parameter "common_years" is a list of years that represent the common years for which you want to find shared events
+    :return: a list of dictionaries. Each dictionary represents a conference and its shared events. The dictionary contains the conference name and a list of shared events. Each shared event is represented by a dictionary containing the event name and a list of authors.
+    """
     conf_shared_events = []
 
     for conf in confs_events_list:
@@ -748,6 +813,14 @@ def get_shared_events_based_on_shared_years(confs_events_list, common_years):
 
 
 def get_shared_events_keyword_based_on_shared_years(shared_based, confs_events_list, common_years):
+    """
+    The function `get_shared_events_keyword_based_on_shared_years` retrieves shared events based on common years and organizes them by conference and event name, along with their associated keywords.
+    
+    :param shared_based: The parameter "shared_based" is a string that represents the type of shared information we are interested in. It could be "shared_keywords", "shared_topics", or any other relevant information that we want to extract based on the shared years
+    :param confs_events_list: confs_events_list is a list of dictionaries, where each dictionary represents a conference and its associated events. Each dictionary has two keys: 'conference_name' and 'events'. 'conference_name' is a string representing the name of the conference, and 'events' is a list of dictionaries representing the
+    :param common_years: The parameter "common_years" is a list of years that are considered common or shared years. These years are used to filter the events based on their conference event name abbreviation. Only events that have a year in their abbreviation that matches one of the common years will be included in the shared events list
+    :return: a list of dictionaries. Each dictionary represents a conference and its shared events. The dictionary contains the conference name and a list of shared events. Each shared event is represented by a dictionary containing the event name and a list of keywords.
+    """
     conf_shared_events = []
 
     for conf in confs_events_list:
@@ -780,6 +853,13 @@ def get_shared_events_keyword_based_on_shared_years(shared_based, confs_events_l
 
 
 def get_shared_authors_from_events(shared_years, shared_years_events):
+    """
+    The function `get_shared_authors_from_events` takes in a list of shared years and a list of events from those years, and returns a list of combinations of conferences that have shared authors between them.
+    
+    :param shared_years: The shared_years parameter is a list of years that represent the years in which the events took place. For example, [2019, 2020, 2021]
+    :param shared_years_events: The parameter `shared_years_events` is a list of dictionaries. Each dictionary represents a conference event and contains the following keys:
+    :return: a list of dictionaries. Each dictionary represents a combination of conferences and contains the conference name and the number of authors shared between the conferences.
+    """
     final_data = []
     shared_years_events_length = len(shared_years_events)
     if shared_years_events_length == 1:
@@ -818,6 +898,13 @@ def get_shared_authors_from_events(shared_years, shared_years_events):
 
 
 def get_shared_authors_between_combs(shared_years, relevant_confs):
+    """
+    The function `get_shared_authors_between_combs` takes in a list of shared years and a list of relevant conferences, and returns the number of shared authors between events in each year.
+    
+    :param shared_years: The shared_years parameter is a list of years that represent the years in which the events occurred. For example, [2019, 2020, 2021]
+    :param relevant_confs: The parameter "relevant_confs" is a list of dictionaries. Each dictionary represents a conference and contains information about the conference, including a list of events. Each event is represented by a dictionary with keys "event_name" and "event_authors"
+    :return: a final array that contains information about the shared authors between combinations of events. Each element in the final array has a "name" field that represents the names of the events being compared, and a "data" field that represents the number of shared authors between those events.
+    """
     events_to_compare = []
     for year in shared_years:
         events_in_year = []
@@ -845,6 +932,15 @@ def get_shared_authors_between_combs(shared_years, relevant_confs):
 
 
 def get_shared_between_combs(full_name, shared_based, shared_years, shared_years_events):
+    """
+    The function `get_shared_between_combs` takes in a full name, a shared base, a list of shared years, and a list of shared years events, and returns a final array containing the names and the number of shared elements between the events.
+    
+    :param full_name: The parameter `full_name` is a boolean value that determines whether the full event name or just the year should be used in the comparison. If `full_name` is `True`, the full event name will be used. If `full_name` is `False`, only the year will be used
+    :param shared_based: The parameter "shared_based" is a string that represents the attribute based on which we want to find shared elements. It could be "authors", "keywords", or any other attribute that is present in the events data
+    :param shared_years: The shared_years parameter is a list of years that represent the years in which the events occurred
+    :param shared_years_events: The parameter `shared_years_events` is a list of dictionaries. Each dictionary represents a conference and contains information about the events that occurred in that conference. The events are stored in a list under the key "events". Each event is represented by a dictionary with keys such as "event_name" and "
+    :return: the final array, which contains the names of the events and the number of shared elements in the data array.
+    """
     events_to_compare = []
     for year in shared_years:
         events_in_year = []
@@ -874,6 +970,16 @@ def get_shared_between_combs(full_name, shared_based, shared_years, shared_years
 
 
 def get_shared_between_events_combs(shared_based, events):
+    """
+    The function `get_shared_between_events_combs` takes a list of events and a shared attribute as input, and returns the number of common authors between the events along with their names.
+    
+    :param shared_based: The parameter "shared_based" is a string that represents the key in the event objects that contains the shared information
+    :param events: The "events" parameter is a list of lists. Each inner list represents an event and contains dictionaries with information about the event. Each dictionary has a key "event_name" which represents the name of the event, and a key "shared_based" which represents the shared attribute between events
+    :return: a list containing a dictionary. The dictionary has the following keys:
+    - "name": a list of event names
+    - "data": the number of common authors between the events
+    - "authors_names": a list of the common authors' names
+    """
     final = []
     events_name = []
     events_authors_list = []
@@ -891,6 +997,12 @@ def get_shared_between_events_combs(shared_based, events):
 
 
 def common_elements_in_set(lst):
+    """
+    The function `common_elements_in_set` takes a list of sets as input and returns a set containing the common elements present in all the sets.
+    
+    :param lst: The parameter `lst` is a list of sets. Each set represents a collection of elements. The function `common_elements_in_set` finds the common elements that are present in all sets in the list
+    :return: a set of common elements in the input list.
+    """
     if (len(lst) == 0):
         return set()
     common_elements_in_set = set(lst[0])
@@ -902,6 +1014,12 @@ def common_elements_in_set(lst):
 
 
 def add_all_data_in_one_array(final_array):
+    """
+    The function takes an array of dictionaries, groups them by the 'name' key, and returns a new array with the grouped data.
+    
+    :param final_array: The `final_array` parameter is a list of dictionaries. Each dictionary in the list represents an item and has two keys: 'name' and 'data'. The value of the 'name' key is a list of strings, and the value of the 'data' key can be any data type
+    :return: a modified version of the input array, where the data is grouped together based on the name. Each unique name is used as a key in the output dictionary, and the corresponding data is appended to the list associated with that key. The function then converts the dictionary back into a list of dictionaries, where each dictionary has a 'name' key and a 'data' key.
+    """
     output_data = {}
 
     for item in final_array:
@@ -917,6 +1035,14 @@ def add_all_data_in_one_array(final_array):
 
 
 def get_shared_from_events(shared_based, shared_years, shared_years_events):
+    """
+    The function `get_shared_from_events` takes in shared-based criteria, shared years, and shared years events, and returns a list of combinations of relevant conferences and their shared authors.
+    
+    :param shared_based: The parameter `shared_based` is a string that specifies the basis for determining shared authors. It can take values like "keywords", "affiliations", or any other criteria based on which shared authors are determined
+    :param shared_years: The parameter "shared_years" is a list of years for which you want to calculate shared authors
+    :param shared_years_events: The parameter "shared_years_events" is a list of dictionaries. Each dictionary represents a conference and contains two keys: "conference_name" and "events". The value of "conference_name" is a string representing the name of the conference. The value of "events" is a list of dictionaries,
+    :return: a list of dictionaries. Each dictionary contains the name of a conference and the data associated with it. The data represents the count of authors for each event in the conference.
+    """
     final_data = []
     shared_years_events_length = len(shared_years_events)
     if shared_years_events_length == 1:
@@ -958,6 +1084,12 @@ def get_shared_from_events(shared_based, shared_years, shared_years_events):
 
 
 def get_events_authors(events):
+    """
+    The function `get_events_authors` takes a list of event names as input and returns a list of dictionaries, where each dictionary contains the event name and a list of authors associated with that event.
+    
+    :param events: A list of event names
+    :return: a list of dictionaries. Each dictionary contains the event name and a list of authors associated with that event.
+    """
     results = []
     for event in events:
         event_authors = Event.nodes.get(
@@ -971,6 +1103,13 @@ def get_events_authors(events):
 
 
 def get_shared_authors_based_on_combs(events_authors, all_combs):
+    """
+    The function `get_shared_authors_based_on_combs` takes in a list of events and authors, and a list of combinations of events. It calculates the shared authors between each combination of events and returns the result as a list of sets and a list of authors' names.
+    
+    :param events_authors: A list of dictionaries where each dictionary represents an event and its authors. Each dictionary has two keys: "event_name" (string) and "authors" (list of strings)
+    :param all_combs: The parameter "all_combs" is a list of lists. Each inner list represents a combination of events. For example, if there are three events A, B, and C, one possible combination could be [A, B]
+    :return: a list containing two elements. The first element is a list of dictionaries, each representing a set of shared authors between events. Each dictionary contains the names of the shared authors, the value of the shared authors, and the name of the set. The second element is a list of dictionaries, each representing a set of shared authors between events. Each dictionary contains the name of the set
+    """
     result = []
     final_sets = []
     authors_name = []
@@ -1009,6 +1148,13 @@ def get_shared_authors_based_on_combs(events_authors, all_combs):
 
 # new Func by Islam
 def get_relavant_publication_for_aList(conf_name, list_of_keywords_topics):
+    """
+    The function `get_relavant_publication_for_aList` returns the count of relevant publications based on a conference name and a list of keywords/topics.
+    
+    :param conf_name: The name of the conference or event for which you want to find relevant publications
+    :param list_of_keywords_topics: A list of keywords or topics that you want to search for in the publications
+    :return: the count of relevant publications based on a given conference name and a list of keywords/topics.
+    """
     if (len(list_of_keywords_topics) != 0):
         keyphrase_events = get_keyphrase_events(
             conf_name, list_of_keywords_topics)
@@ -1020,6 +1166,13 @@ def get_relavant_publication_for_aList(conf_name, list_of_keywords_topics):
 
 # new func by Islam
 def get_keyphrase_events(conf_name, list_of_keywords_topics):
+    """
+    The function `get_keyphrase_events` takes a conference name and a list of keywords/topics as input, retrieves the conference events, and returns a list of dictionaries containing the keyphrase and the events associated with that keyphrase.
+    
+    :param conf_name: The `conf_name` parameter is the name of the conference for which you want to retrieve events
+    :param list_of_keywords_topics: A list of keywords or topics that you want to search for in the conference events
+    :return: a list of dictionaries. Each dictionary contains a keyphrase and a list of events associated with that keyphrase.
+    """
     conf_events = get_conf_events(conf_name=conf_name)
     data = []
     for keyphrase in list_of_keywords_topics:
@@ -1036,6 +1189,13 @@ def get_keyphrase_events(conf_name, list_of_keywords_topics):
 
 
 def get_keyphrase_publications_based_event(conf_name, keyphrase_events):
+    """
+    The function `get_keyphrase_publications_based_event` retrieves the number of relevant publications for each keyphrase event in a given conference.
+    
+    :param conf_name: The `conf_name` parameter represents the name of a conference
+    :param keyphrase_events: A list of dictionaries where each dictionary contains two keys: "keyphrase" and "events". "keyphrase" is a string representing a specific keyphrase, and "events" is a list of strings representing the events related to that keyphrase
+    :return: a list of dictionaries, where each dictionary contains the name of a keyword topic and the corresponding data (a list of publication counts) associated with that keyword topic.
+    """
     data_dict = {}
     all_event = get_conf_events(conf_name)
     if keyphrase_events:
@@ -1063,6 +1223,12 @@ def get_keyphrase_publications_based_event(conf_name, keyphrase_events):
 
 
 def conf_all_years(conf_name):
+    """
+    The function `conf_all_years` takes a conference name as input and returns a list of years corresponding to all the events of that conference.
+    
+    :param conf_name: The `conf_name` parameter is the name of a conference
+    :return: a list of years.
+    """
     years = []
     all_event = get_conf_events(conf_name)
     for event in all_event:

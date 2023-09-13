@@ -1,3 +1,4 @@
+#created by Islam Abdelghaffar
 from itertools import combinations
 from rest_framework.views import APIView
 from conferences import conference_utils as confutils  # type: ignore
@@ -5,6 +6,7 @@ from conferences.utils import compare_authors_utils as compareAuthorsUtils
 from rest_framework.response import Response
 
 
+# The `GetCompareAuthorsBasedPublicationCount` class is an API view that retrieves publication counts for a list of authors based on either all conferences or a specific conference.
 class GetCompareAuthorsBasedPublicationCount(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -22,6 +24,7 @@ class GetCompareAuthorsBasedPublicationCount(APIView):
         return Response(authors_data)
 
 
+# The class `GetCompareAuthorsBasedCitationCountAllConf` is an API view that retrieves and compares the citation counts of multiple authors across multiple conferences.
 class GetCompareAuthorsBasedCitationCountAllConf(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -34,6 +37,7 @@ class GetCompareAuthorsBasedCitationCountAllConf(APIView):
         return Response(authors_data)
 
 
+# The `GetCoauthorEvolutionOverTime` class is an API view that retrieves the co-author evolution data for a list of authors.
 class GetCoauthorEvolutionOverTime(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -45,6 +49,7 @@ class GetCoauthorEvolutionOverTime(APIView):
         return Response(authors_data)
 
 
+# The `GetSharedInterestsBetweenAuthor` class is an API view that retrieves shared interests between authors based on conference and author lists.
 class GetSharedInterestsBetweenAuthor(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -75,6 +80,7 @@ class GetSharedInterestsBetweenAuthor(APIView):
         })
 
 
+# The `GetSharedPublicationBetweenAuthors` class is an API view that retrieves shared publications between authors based on given parameters.
 class GetSharedPublicationBetweenAuthors(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
@@ -106,6 +112,7 @@ class GetSharedPublicationBetweenAuthors(APIView):
         })
 
 
+# The `GetAuthorProductivityEvolution` class is an API view that retrieves and returns the productivity evolution data for a list of authors based on the specified conference and author parameters.
 class GetAuthorProductivityEvolution(APIView):
     def get(self, request, *args, **kwargs):
         url_splits_slash = confutils.split_restapi_url(
