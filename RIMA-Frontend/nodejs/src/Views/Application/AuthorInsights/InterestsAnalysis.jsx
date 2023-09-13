@@ -102,8 +102,6 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
               const word = config.w.globals.labels[config.dataPointIndex];
               const wordYear =
                 response.interests.series[config.seriesIndex].name;
-              console.log("selected Segment", word);
-              console.log("Segment", wordYear);
 
               setselectedInterestYear(word);
               setselectedInterestYearYear(wordYear);
@@ -176,9 +174,6 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
             dataPointSelection: function (event, chartContext, config) {
               const word = config.w.globals.labels[config.dataPointIndex];
               const wordYear = filteredSeries[config.seriesIndex].name;
-              console.log("selected word after filter: ", word);
-              console.log("selected year after filter:", wordYear);
-
               setselectedInterestYear(word);
               setselectedInterestYearYear(wordYear);
             },
@@ -224,8 +219,6 @@ const InterestsAnalysis = ({ authorProp, allAvailableConfProps }) => {
     setselectedInterestYearYear("");
   };
   const getWordPublication = async () => {
-    console.log(" selectedInterestYear:  ", selectedInterestYear);
-    console.log(" selectedInterest:  ", selectedInterest);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "author/" +

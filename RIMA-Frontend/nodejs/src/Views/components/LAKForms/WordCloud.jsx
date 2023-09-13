@@ -86,7 +86,6 @@ class WordCloud extends Component {
 
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log(this.state.imageTooltipOpen);
   };
 
   componentDidUpdate(prevProps) {
@@ -126,11 +125,9 @@ class WordCloud extends Component {
   };
 
   getYearValue(e) {
-    console.log(e.value);
     this.setState({
       selectValue: e.value,
     });
-    console.log(this.state.selectValue);
   }
 
   // BAB 08.06.2021
@@ -152,14 +149,10 @@ class WordCloud extends Component {
           active2: false,
         });
       });
-    console.log("BAB");
-    console.log(this.props.conferenceName);
-    console.log("BAB");
   }
   // BAB 08.06.2021
 
   selectKeyword(e) {
-    console.log("count", this.state.count);
     fetch(
       `${BASE_URL_CONFERENCE}` +
         "wordcloud/keyword/" +
@@ -192,7 +185,6 @@ class WordCloud extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         this.setState({
           modal: true,
           scroll: true,

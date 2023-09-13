@@ -215,7 +215,6 @@ class SimilarityComparisonSharedTopicsBased extends Component {
             { name: tuple[0]["name"], data: tuple[0]["data"] },
           ]);
         });
-        console.log("json.sharedYears: ", json.sharedYears);
         this.setState({
           selectConference: this.state.selectedConferences,
           active1: true,

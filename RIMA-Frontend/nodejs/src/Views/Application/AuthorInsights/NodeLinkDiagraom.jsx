@@ -51,7 +51,6 @@ const NodeLinkDiagram = ({
           {
             content: "show profile",
             select: (element) => {
-              console.log("element : ", element.data("label"));
               setAuthorProfileToShowProp({
                 label: element.data("id"),
                 name: element.data("label"),
@@ -77,7 +76,6 @@ const NodeLinkDiagram = ({
   };
 
   const highlightNode = (nodeId) => {
-    console.log("node: ", nodeId);
     let node = cy.$(`#${nodeId}`);
     let directlyConnectedNodes = node.connectedNodes();
     let connectedEdges = node.connectedEdges();

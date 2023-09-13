@@ -68,9 +68,7 @@ const AuthorProfile = () => {
     let authorParam = urlParams.get("author");
     if (authorParam) {
       let author = Object.fromEntries(new URLSearchParams(authorParam));
-      console.log("auhtor to show profile: ", author);
       if (author.name !== null && author.label !== null) {
-        console.log("shown");
         setAuthorsToShowProfile(author);
       }
     }
@@ -82,7 +80,6 @@ const AuthorProfile = () => {
       authorToShowProfile.name !== null &&
       authorToShowProfile.label !== null
     ) {
-      console.log("author to show profile is set");
       setSelectedAuthor(authorToShowProfile);
     }
   }, [authorToShowProfile]);
@@ -105,7 +102,6 @@ const AuthorProfile = () => {
   });
   const handleGenerateGraph = async () => {
     try {
-      console.log("selected Author: ", selectedAuthor);
       if (selectedAuthor !== "") {
         setNetworkData([]);
         const response = await fetch(
@@ -117,15 +113,12 @@ const AuthorProfile = () => {
         const result = await response.json();
         setNetworkData(result.data);
         setAuthorConfs(result.confs);
-        console.log(" result: ", result.data);
       }
     } catch (error) {
-      console.log("Error fetching network date", error);
     }
   };
   const handleAuhtorData = async () => {
     try {
-      console.log("selected Author: ", selectedAuthor);
       if (selectedAuthor !== "") {
         setAuthorData([]);
         const response = await fetch(
@@ -136,7 +129,6 @@ const AuthorProfile = () => {
         setOpenFilter(false);
       }
     } catch (error) {
-      console.log("Error fetching Author date", error);
     }
   };
   const getAllAvailbelConfs = async () => {
@@ -165,7 +157,6 @@ const AuthorProfile = () => {
     setSelectedConferences(selectedConfs);
     const confs = extractConfsNames(selectedConfs);
     setConferences(confs);
-    console.log("selectedConfs", selectedConfs);
   };
 
   const getAuthorFilterBased = async () => {
@@ -178,7 +169,6 @@ const AuthorProfile = () => {
       confs = ["All Conferences"];
     }
     setAuthors([]);
-    console.log("conf: ", confs);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "authors/allAuthors/filtered/" +
@@ -195,7 +185,6 @@ const AuthorProfile = () => {
     setSelectedPublication(publication);
   };
   const showCoAuthorPropfile = (author) => {
-    console.log("author to send", author);
     let queryParam = new URLSearchParams(author).toString();
     let currentURL = new URL(window.location.href);
     let baseURL = currentURL.origin + currentURL.pathname;

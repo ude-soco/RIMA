@@ -26,9 +26,6 @@ const InteractiveVennDiagram = ({
   selectedAuthorSet,
   IsAuthor = false,
 }) => {
-  console.log("sets: ", sets);
-  console.log("listContent from interactive class: ", listContent);
-  console.log("label: ", label);
   const [selectedEventOriginal, setSelectedEventOriginal] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(selectedEventOriginal);
   const [selectedSet, setSelectedSet] = useState("");
@@ -127,7 +124,6 @@ const InteractiveVennDiagram = ({
                     selectedAuthorSet && selectedAuthorSet(clickedSetesName);
                   }
                   if (set.name === clickedSetesName) {
-                    console.log("names equal");
                     setSelectedSet(set.name);
                     if (label == "author") {
                       setSelectedEventOriginal(set.authors_names);
@@ -148,7 +144,6 @@ const InteractiveVennDiagram = ({
     ],
   };
 
-  console.log("listContent: ", listContent);
 
   return (
     <Grid container={12} spacing={2}>

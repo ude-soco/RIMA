@@ -183,8 +183,6 @@ urlpatterns = [
     # ****************************************************Explore topics and trend new created by Islam ******************************
 
 
-    path('getRelaventPublicationsList/<pk1>/<pk2>',
-         GetRelavantPublicationsList.as_view()),
 
 
 

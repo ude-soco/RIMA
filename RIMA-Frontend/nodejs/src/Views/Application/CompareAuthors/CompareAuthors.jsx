@@ -88,12 +88,10 @@ export default function CompareAuthors() {
     setTabValue(0);
     if (values !== null) {
       RestAPI.getScore(values.id).then(res => {
-        console.log(res.data)
         setSimilarityScores({...res.data})
       }).catch(err => handleServerErrors(err, toast.error));
 
       RestAPI.getUserProfile(values.id).then(res => {
-        // console.log(res.data)
         setCompareAuthor({...res.data});
       }).catch(err => handleServerErrors(err, toast.error))
     }

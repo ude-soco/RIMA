@@ -100,18 +100,13 @@ class SimilarityComparisonSharedAuthorsBased extends Component {
   }
 
   wordhandleChange = (e) => {
-    console.log(e.value);
     this.setState({
       selectValue: e,
     });
-    console.log(this.state.selectValue);
   };
 
   conferenceshandleChange = (e) => {
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
-
-    console.log(value);
-
     this.setState(
       {
         loader: true,
@@ -122,13 +117,10 @@ class SimilarityComparisonSharedAuthorsBased extends Component {
         this.compareSharedTotalAuthors();
       }
     );
-
-    console.log(this.state.selectedConferences);
   };
 
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log(this.state.imageTooltipOpen);
   };
 
   onClear = () => {
@@ -194,15 +186,12 @@ class SimilarityComparisonSharedAuthorsBased extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         series = [];
         json.data.forEach((tuple) => {
-          console.log("tuple", tuple[0]["name"], ",", tuple[0]["data"]);
           series = series.concat([
             { name: tuple[0]["name"], data: tuple[0]["data"] },
           ]);
         });
-        console.log("json.sharedYears: ", json.sharedYears);
         this.setState({
           selectConference: this.state.selectedConferences,
           active1: true,

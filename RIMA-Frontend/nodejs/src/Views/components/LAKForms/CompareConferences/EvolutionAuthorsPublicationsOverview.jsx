@@ -154,28 +154,18 @@ class EvolutionAuthorsPublicationsOverview extends Component {
     }));
   }
   wordhandleChange = (e) => {
-    console.log(e.value);
     this.setState({
       selectValue: e,
     });
-    console.log(this.state.selectValue);
   };
 
   conferenceshandleChange = (e) => {
     const value = Array.isArray(e) ? e.map((s) => s.value) : [];
 
-    console.log("Abdo");
-    console.log(value);
-    console.log("Abdo");
-
     this.setState({
       selectConference: Array.isArray(e) ? e.map((s) => s.value) : [],
       selectedConferences: value,
     });
-
-    console.log("BAB");
-    console.log(this.state.selectedConferences);
-    console.log("BAB");
   };
 
   getAuthorEvolution = (e) => {
@@ -268,7 +258,6 @@ class EvolutionAuthorsPublicationsOverview extends Component {
       )
         .then((response) => response.json())
         .then((json) => {
-          console.log(json);
           series = [];
           weights = [];
           for (
@@ -283,7 +272,6 @@ class EvolutionAuthorsPublicationsOverview extends Component {
               { name: this.state.selectedConferences[index], data: weights },
             ]);
 
-            console.log("weights", weights);
             weights = [];
           }
           this.setState({
@@ -313,7 +301,6 @@ class EvolutionAuthorsPublicationsOverview extends Component {
 
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log("imageTooltipOpen: ", this.state.imageTooltipOpen);
   };
 
   onClear = () => {

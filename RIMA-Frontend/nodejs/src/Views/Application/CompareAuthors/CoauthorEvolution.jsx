@@ -42,7 +42,6 @@ const CoauthorEvolution = () => {
       return;
     }
     setActiveLoader(true);
-    console.log("selectedAuthors: ", selectedAuthors);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "authors/authorsId/" +
@@ -55,8 +54,6 @@ const CoauthorEvolution = () => {
       name: item.series.name,
       data: item.series.data,
     }));
-    console.log("extractedOptions: ", extractedOptions);
-    console.log("extractedSeries: ", extractedSeries);
     setOption({
       chart: {
         id: "co-author-evolution",
@@ -87,7 +84,6 @@ const CoauthorEvolution = () => {
 
     const response = await request.json();
     setAuthors(response);
-    console.log("authors", response);
     setActiveLoader(false);
   };
   const getAllAvailbelConfs = async () => {

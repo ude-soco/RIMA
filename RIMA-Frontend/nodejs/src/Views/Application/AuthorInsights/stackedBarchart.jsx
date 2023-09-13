@@ -5,7 +5,6 @@ import ActiveLoader from "../ReuseableComponents/ActiveLoader";
 import ReactApexChart from "react-apexcharts";
 
 const StackedBarChart = ({ DataProps, loader }) => {
-  console.log("DataProps", DataProps);
   const [chartData, setChartData] = useState(DataProps);
   useEffect(() => {
     setChartData(DataProps);

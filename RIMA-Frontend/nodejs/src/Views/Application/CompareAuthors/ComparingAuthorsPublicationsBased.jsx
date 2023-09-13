@@ -165,17 +165,13 @@ const CompareAuthorsStackedBarChart = () => {
 
     const response = await request.json();
     setAuthors(response);
-    console.log("authors", response);
     setActiveLoader(false);
   };
 
   const getBarStackData = async () => {
     if (selectedAuthor.length == 0 || selectedConferences.length == 0) {
-      console.log("getBarStackData  returened");
       return;
     }
-    console.log("author selected: ", selectedAuthor);
-    console.log("conferences selected: ", selectedConferences);
     setActiveButton(true);
     setActiveLoader(true);
     const request = await fetch(
@@ -188,8 +184,6 @@ const CompareAuthorsStackedBarChart = () => {
     );
 
     const response = await request.json();
-    console.log("responseLL : ", response[0].categories);
-    console.log("responseLL : ", response);
     setStackedBarData({
       options: {
         chart: {
@@ -232,12 +226,10 @@ const CompareAuthorsStackedBarChart = () => {
       },
       series: response[0].series,
     });
-    console.log("authors", response);
     setActiveLoader(false);
   };
   const getBarCitationData = async () => {
     if (selectedAuthor.length == 0 || selectedConferences.length == 0) {
-      console.log("getBarStackData  returened");
       return;
     }
     setActiveButton(true);
@@ -252,8 +244,6 @@ const CompareAuthorsStackedBarChart = () => {
     );
 
     const response = await request.json();
-    console.log("responseLL : ", response[0].categories);
-    console.log("responseLL : ", response);
     setBarCitationData({
       options: {
         chart: {
@@ -295,7 +285,6 @@ const CompareAuthorsStackedBarChart = () => {
       },
       series: response[0].citations,
     });
-    console.log("authors", response);
     setActiveLoader(false);
   };
   const getAllAvailbelConfs = async () => {
@@ -317,7 +306,6 @@ const CompareAuthorsStackedBarChart = () => {
 
   const getSharedPublicationsCount = async () => {
     if (selectedAuthor.length == 0 || selectedConferences.length == 0) {
-      console.log("getSharedPublicationsCount reterned ");
       return;
     }
     try {
@@ -332,7 +320,6 @@ const CompareAuthorsStackedBarChart = () => {
       if (request) {
         const json = await request.json();
         if (json) {
-          console.log("response : ", json);
           SetSets(json.sets);
           setListContent(json.names);
           setShowWarning(false);
@@ -356,14 +343,12 @@ const CompareAuthorsStackedBarChart = () => {
     setOpenDialog(false);
   };
   const handleGetPublications = async (publication) => {
-    console.log("publication", publication);
     const request = await fetch(
       BASE_URL_CONFERENCE + "publicationTitle/" + publication
     );
     const response = await request.json();
 
     setPublicationList(response.publicationList);
-    console.log("responpes: ", response);
     setOpenDialog(true);
   };
   return (

@@ -126,7 +126,6 @@ const ChartComponent = ({ AuthorName }) => {
   const getAuthorPublicationCitationFilterBased = async () => {
     setLoader(true);
     let selectedIndex = getSelectedEvents();
-    console.log("selectedIndex : ", selectedIndex);
     if (selectedIndex.length == 0) {
       setOption(origionalOptions);
       setSeries(origionalSeries);
@@ -135,7 +134,6 @@ const ChartComponent = ({ AuthorName }) => {
       return;
     }
     let filteredConfs = selectedIndex.map((index) => filterOptions[index]);
-    console.log("filteredConfs: ", filteredConfs);
     setFilteredConfsName(filteredConfs);
 
     const request = await fetch(
@@ -216,7 +214,6 @@ const ChartComponent = ({ AuthorName }) => {
     setLoader(false);
   };
   const handleToggle = (index) => {
-    console.log("optionChecked", optionChecked);
     const newOptionChecked = [...optionChecked];
     newOptionChecked[index] = !newOptionChecked[index];
     setOptionChecked(newOptionChecked);

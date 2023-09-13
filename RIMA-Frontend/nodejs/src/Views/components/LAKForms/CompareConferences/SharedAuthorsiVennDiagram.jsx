@@ -94,11 +94,9 @@ class SharedAuthorsiVennDiagram extends Component {
   }
   handleToogle = (status) => {
     this.setState({ imageTooltipOpen: status });
-    console.log(this.state.imageTooltipOpen);
   };
 
   componentDidMount() {
-    //console.log("the json is ******************")
     this.setState({
       display1: "block",
       loader: true,
@@ -128,7 +126,6 @@ class SharedAuthorsiVennDiagram extends Component {
   }
 
   conferenceshandleChange = (e) => {
-    console.log("here chooseeen 1");
     this.setState(
       {
         selectedConferences: e.value,
@@ -137,9 +134,6 @@ class SharedAuthorsiVennDiagram extends Component {
         this.selectConfEvent(this.state.selectedConferences);
       }
     );
-    console.log("here chooseeen");
-
-    console.log("choosen conf ", this.state.selectedConferences);
   };
 
   selectConfEvent = (val) => {
@@ -157,14 +151,9 @@ class SharedAuthorsiVennDiagram extends Component {
       selectedEvent: e.value,
       isLoading: true,
     });
-    console.log("here chooseeen 2");
-
-    console.log("choosen event 2", this.state.selectedEvent);
-    console.log("choosen conf of that 2", this.state.selectedConferences);
   };
 
   conferenceshandleChangeTwo = (e) => {
-    console.log("second seleeeeect on change");
     this.setState(
       {
         selectedConferencesTwo: e.value,
@@ -173,7 +162,6 @@ class SharedAuthorsiVennDiagram extends Component {
         this.selectConfEventTwo(this.state.selectedConferencesTwo);
       }
     );
-    console.log("choosen conf i ", this.state.selectedConferencesTwo);
   };
 
   conferenceshandleChangeThird = (e) => {
@@ -211,9 +199,6 @@ class SharedAuthorsiVennDiagram extends Component {
       selectedEventTwo: e.value,
       isLoading: true,
     });
-    console.log("here chooseeen 2i");
-
-    console.log("choosen event 2i", this.state.selectedEventTwo);
   };
   setSelectedEventThird = (e) => {
     this.setState({
@@ -283,8 +268,6 @@ class SharedAuthorsiVennDiagram extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log("json:", json);
-        console.log("json.sets:", json.sets);
         this.setState({
           active1: true,
           selectValue: e,

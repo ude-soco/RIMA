@@ -21,12 +21,10 @@ const TopPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
 
   useEffect(() => {
     setSelectedConference(selectedConferencesProps);
-    console.log("selected: ", selectedConference);
   }, [selectedConferencesProps]);
 
   useEffect(() => {
     getTopPublicationsCounts();
-    console.log(" get publications called");
   }, [selectedConference]);
 
   const [options, setOptions] = useState({
@@ -108,9 +106,6 @@ const TopPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
 
     var names = response.names;
     var values = response.values;
-    console.log("names: ", names);
-    console.log("values: ", values);
-
     setOptions({
       chart: {
         type: "bar",

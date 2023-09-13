@@ -4,9 +4,7 @@ import VennModule from 'highcharts/modules/venn'
 
 VennModule(Highcharts); // Initialize the Venn module
 
-const SharedAuthorVennDiagram = ({ sets, selectedNode,setsColor }) => {
-    console.log("selectedNode: ", selectedNode)
-    
+const SharedAuthorVennDiagram = ({ sets, selectedNode,setsColor }) => {    
     const getColor = (set) => {
         let color = '#808080';
         for (let item of setsColor) {
@@ -19,11 +17,9 @@ const SharedAuthorVennDiagram = ({ sets, selectedNode,setsColor }) => {
                 color= item.setColor
             }
         }
-        console.log("color returned: ",color)
         return color;
     }
     useEffect(() => {
-        console.log("Sets: ", sets, "Selected node: ", selectedNode); // Add this line
         Highcharts.chart('venn', {
            
             chart: {

@@ -1,13 +1,6 @@
 import {
-  Card,
-  CardContent,
-  IconButton,
-  Tooltip,
   Grid,
-  Typography,
-  Box,
   Paper,
-  CardHeader,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import WhyInterest from "../../Application/InterestProfile/Tabs/WhyInterest/WhyInterest";
@@ -28,7 +21,6 @@ const AuthorPublicationsEvents = ({ authorNameProps }) => {
     );
     const response = await request.json();
     setAllPublicationList(response["publicationList"]);
-    console.log("response[]: ", response["publicationList"]);
   };
 
   return (

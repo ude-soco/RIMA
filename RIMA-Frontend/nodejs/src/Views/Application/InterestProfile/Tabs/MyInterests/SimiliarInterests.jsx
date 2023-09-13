@@ -55,7 +55,6 @@ function getColor(currColors) {
 
 function getElements(dataOrg) {
     let ids = [...Array(200).keys()];
-    console.log(dataOrg, "test data getElements")
     if(dataOrg){
         const data=dataOrg[0]
         let elements = [

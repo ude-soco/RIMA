@@ -6,8 +6,6 @@ import SchoolIcon from '@material-ui/icons/School';
 const useStyles = makeStyles(theme => ({
   card: {
     "&:hover": {
-      // webkitBoxShadow: '-2px -1px 15px 7px rgba(0,0,0,0.5)',
-      // mozBoxShadow: "-3px -2px 30px 14px rgba(0,0,0,0.425)",
       boxShadow: "2px 1px 5px 2px rgba(0,0,0,0.35)"
     }
   }
@@ -21,7 +19,6 @@ const PublicationList = (props) => {
     setOpen((prevState) => !prevState);
   };
 
-  // console.log(publication)
 
   const getRandomColor = () => {
     const colors = [

@@ -25,7 +25,6 @@ const TotalSharedTopicsKeywordsCloud = ({
   comparisonBetween,
   common_keywords_topics_details,
 }) => {
-  console.log("commonCloudData: ", commonCloudData);
   const [selectedWord, setSelectedWord] = useState("");
   const [selectedWordCloudData, setSelectedWordCloudData] = useState([]);
 

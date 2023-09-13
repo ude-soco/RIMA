@@ -26,7 +26,6 @@ export default function AddConference() {
   };
 
   const handleSubmit = (e) => {
-   console.log(details);
    e.preventDefault();
     
     let data = {
@@ -39,7 +38,6 @@ export default function AddConference() {
         }, 
     ],    
     };
-    console.log(data);
     setIsLoading(true);
    
     RestAPI.addConference (data).then((response) => {

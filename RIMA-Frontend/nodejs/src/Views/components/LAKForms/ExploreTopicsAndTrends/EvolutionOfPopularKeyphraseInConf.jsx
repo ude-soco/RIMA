@@ -33,12 +33,10 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
 
   useEffect(() => {
     setSelectedConference(selectedConferencesProps);
-    console.log("selected: ", selectedConference);
   }, [selectedConferencesProps]);
 
   useEffect(() => {
     getPublicationsCounts();
-    console.log(" get publications called");
   }, [selectedConference]);
 
   useEffect(() => {
@@ -90,7 +88,6 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
         "/topics/popularityEvolution/"
     );
     const response = await request.json();
-    console.log("response", response);
     setSeries(response.data);
     setOptions({
       chart: { type: "bar", height: 350 },
@@ -150,9 +147,7 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
     if (selectedEvent == "" || selectedWord == "") {
       return;
     }
-    console.log("selectedConferencesProps: ", selectedConferencesProps);
-    console.log("selectedEvent: ", selectedEvent);
-    console.log("selectedWord: ", selectedWord);
+    setPublicationList([]);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "conference/" +
@@ -166,7 +161,6 @@ const EvolutionOfPopularKeyphraseInConf = ({ selectedConferencesProps }) => {
     );
 
     const response = await request.json();
-    console.log("response00: ", response["publicationList"]);
     setOpenDiaglog(true);
     setPublicationList(response["publicationList"]);
   };

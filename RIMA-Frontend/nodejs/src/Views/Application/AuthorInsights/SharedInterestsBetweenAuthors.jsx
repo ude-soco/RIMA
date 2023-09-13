@@ -58,7 +58,6 @@ const SharedInterestsBetweenAuthors = () => {
 
     const response = await request.json();
     setAuthors(response);
-    console.log("authors", response);
     setActiveLoader(false);
   };
 
@@ -114,7 +113,6 @@ const SharedInterestsBetweenAuthors = () => {
           "/"
       );
       const response = await request.json();
-      console.log("resonse: ", response);
       setPublicationList(response.publicationList);
       setOpenDialog(true);
     } catch (erroe) {

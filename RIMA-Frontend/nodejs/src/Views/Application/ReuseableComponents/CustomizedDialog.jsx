@@ -76,13 +76,7 @@ export default function CustomizedDialogs(props) {
     keywordsOrTopicProp,
     firstEvent,
     secondEvent,
-  } = props; // access items from props
-  console.log(
-    keywordsOrTopicsProp,
-    selectedKeywordTopicProp,
-    eventnameProp,
-    keywordsOrTopicProp
-  );
+  } = props; 
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = useState({ title: "", data: [] });
   const [searchTerm, setSearchTerm] = useState("");
@@ -105,7 +99,6 @@ export default function CustomizedDialogs(props) {
         publication.title.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-    console.log("searchTerm", searchTerm);
   }, [publications, searchTerm]);
 
   const handleClickOpen = () => {
@@ -131,7 +124,6 @@ export default function CustomizedDialogs(props) {
       );
       const result = await response.json();
       setFilteredPublications(result.publicationList);
-      console.log("getPublicationList", result.publicationList);
     } catch (error) {}
   };
   const getPublicatoinListAuthorBased = async () => {
@@ -148,11 +140,9 @@ export default function CustomizedDialogs(props) {
       );
       const result = await response.json();
       setFilteredPublications(result.publicationList);
-      console.log("getPublicationList", result.publicationList);
     } catch (error) {}
   };
   useEffect(() => {
-    console.log("keywordTopic_name:", keywordTopic_name);
     getPublicationList();
   }, [keywordTopic_name]);
 

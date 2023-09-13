@@ -104,7 +104,6 @@ const AuthorOverview = ({ authorNameProps }) => {
       events: {
         dataPointSelection: function (event, chartContext, config) {
           const selectedYear = config.w.globals.labels[config.dataPointIndex];
-          console.log("selectedYear", selectedYear);
           setSelectedEvent(selectedYear);
         },
       },
@@ -146,7 +145,6 @@ const AuthorOverview = ({ authorNameProps }) => {
     setOpenDiaglog(false);
   };
   const handleToggle = (index) => {
-    console.log("optionChecked", optionChecked);
     const newOptionChecked = [...optionChecked];
     newOptionChecked[index] = !newOptionChecked[index];
     setOptionChecked(newOptionChecked);
@@ -165,7 +163,6 @@ const AuthorOverview = ({ authorNameProps }) => {
     );
 
     const response = await request.json();
-    console.log("response: ", response);
     setStackedBarData({
       options: {
         chart: {
@@ -176,8 +173,6 @@ const AuthorOverview = ({ authorNameProps }) => {
                 config.w.globals.labels[config.dataPointIndex];
               const selectedSeriesName =
                 response.series[config.seriesIndex].name;
-              console.log("selectedYear", selectedYear);
-              console.log("selectedSeriesName", selectedSeriesName);
               setSelectedEvent(selectedSeriesName + selectedYear);
             },
           },
@@ -225,8 +220,7 @@ const AuthorOverview = ({ authorNameProps }) => {
                 config.w.globals.labels[config.dataPointIndex];
               const selectedSeriesName =
                 response.series[config.seriesIndex].name;
-              console.log("selectedYear", selectedYear);
-              console.log("selectedSeriesName", selectedSeriesName);
+
               setSelectedEvent(selectedYear);
             },
           },
@@ -279,7 +273,6 @@ const AuthorOverview = ({ authorNameProps }) => {
     }
     let filteredConfs = selectedIndex.map((index) => filterOptions[index]);
 
-    console.log("years: ", filteredConfs);
     setFilteredConfsName(filteredConfs);
     const request = await fetch(
       BASE_URL_CONFERENCE +
@@ -301,10 +294,6 @@ const AuthorOverview = ({ authorNameProps }) => {
                 config.w.globals.labels[config.dataPointIndex];
               const selectedSeriesName =
                 response.series[config.seriesIndex].name;
-              console.log(
-                "selectedSeriesName",
-                selectedSeriesName + selectedYear
-              );
               setSelectedEvent(selectedSeriesName + selectedYear);
             },
           },
@@ -349,7 +338,6 @@ const AuthorOverview = ({ authorNameProps }) => {
 
   // get pubs in specific events
   const getPublicationListBasedOnEventName = async () => {
-    console.log("eventsName: ", eventsName);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "author/" +

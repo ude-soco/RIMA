@@ -51,12 +51,10 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
 
   useEffect(() => {
     setSelectedConference(selectedConferenceProps);
-    console.log("selected: ", selectedConference);
   }, [selectedConferenceProps]);
 
   useEffect(() => {
     getPublicationsCounts();
-    console.log(" get publications called");
   }, [selectedConference]);
 
   useEffect(() => {
@@ -116,7 +114,6 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
         checked
     );
     const response = await request.json();
-    console.log("response", response);
     setSeries(response.data);
     setOptions({
       chart: { type: "bar", height: 350 },
@@ -183,8 +180,8 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
     if (selectedEvent == "" || selectedWord == "") {
       return;
     }
-    console.log("selectedEvent: ", selectedEvent);
-    console.log("selectedWord: ", selectedWord);
+
+    setPublicationList([]);
     const request = await fetch(
       BASE_URL_CONFERENCE +
         "conference/" +
@@ -197,7 +194,6 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
     );
 
     const response = await request.json();
-    console.log("response00: ", response["publicationList"]);
     setOpenDiaglog(true);
     setPublicationList(response["publicationList"]);
   };
@@ -233,7 +229,6 @@ const TopicPopularityOverYears = ({ selectedConferenceProps, confEvents }) => {
                 value={selectedEvents}
                 onChange={(e) => {
                   setSelectedEvents(e.target.value || []);
-                  console.log("events: ", selectedEvents);
                 }}
                 renderValue={(selected) => selected.join(", ")}
                 multiple

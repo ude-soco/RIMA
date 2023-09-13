@@ -98,7 +98,6 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
         selectedEvent
     );
     const response = await request.json();
-    console.log("response", response);
     setSeries(response.words);
   };
 
@@ -119,7 +118,6 @@ const TopRelevantTopicsInConf = ({ selectedConferenceProps, confEvents }) => {
     );
 
     const response = await request.json();
-    console.log("response00: ", response["publicationList"]);
     setOpenDiaglog(true);
     setPublicationList(response["publicationList"]);
   };
