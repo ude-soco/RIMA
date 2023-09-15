@@ -12,7 +12,7 @@ class HasTopic(StructuredRel):
 
 # The class "Haskeyword" is a subclass of "StructuredRel" and has a property
 #  called "weight" of type float.
-class Haskeyword(StructuredRel):
+class HasKeyword(StructuredRel):
     weight = FloatProperty()
 
 
@@ -22,8 +22,8 @@ class Topic(StructuredNode):
     algorithm = StringProperty()
     topic = StringProperty()
 
-    event = RelationshipFrom('Event', 'HasTopic', model=HasTopic)
-    authors = RelationshipFrom('Author', 'HasTopic', model=HasTopic)
+    event = RelationshipFrom('Event', 'has_topic', model=HasTopic)
+    authors = RelationshipFrom('Author', 'has_topic', model=HasTopic)
 
 
 # The above class represents a keyword in a Python program, with properties for
@@ -31,8 +31,8 @@ class Topic(StructuredNode):
 class Keyword(StructuredNode):
     algorithm = StringProperty()
     keyword = StringProperty()
-    event = RelationshipFrom('Event', 'Haskeyword', model=Haskeyword)
-    author = RelationshipFrom('Author', 'Haskeyword', model=Haskeyword)
+    event = RelationshipFrom('Event', 'has_keyword', model=HasKeyword)
+    author = RelationshipFrom('Author', 'has_keyword', model=HasKeyword)
 
 
 # The `Publication` class represents a publication with properties such as 
@@ -49,9 +49,9 @@ class Publication(StructuredNode):
     years = StringProperty()
 
     published_in = RelationshipFrom("Event", "has_publication")
-    keywords = RelationshipTo(Keyword, 'Haskeyword', model=Haskeyword)
+    keywords = RelationshipTo(Keyword, 'has_keyword', model=HasKeyword)
     published_in_Confs = RelationshipFrom("Conference", "has_publication")
-    topics = RelationshipTo(Topic, 'HasTopic', model=HasTopic)
+    topics = RelationshipTo(Topic, 'has_topic', model=HasTopic)
     authors = RelationshipFrom("Author", "published")
 
 
@@ -68,8 +68,8 @@ class Author(StructuredNode):
     author_url = StringProperty()
 
     published = RelationshipTo(Publication, "published")
-    topics = RelationshipTo(Topic, 'HasTopic', model=HasTopic)
-    keywords = RelationshipTo(Keyword, 'Haskeyword', model=Haskeyword)
+    topics = RelationshipTo(Topic, 'has_topic', model=HasTopic)
+    keywords = RelationshipTo(Keyword, 'has_keyword', model=HasKeyword)
     co_authors = Relationship("Author", 'co_author')
     published_in_Confs = RelationshipFrom("Conference", "has_author")
 
@@ -85,8 +85,8 @@ class Event(StructuredNode):
     authors = RelationshipTo(Author, 'has_author')
     publications = RelationshipTo(Publication, "has_publication")
 
-    topics = RelationshipTo(Topic, 'HasTopic', model=HasTopic)
-    keywords = RelationshipTo(Keyword, 'Haskeyword', model=Haskeyword)
+    topics = RelationshipTo(Topic, 'has_topic', model=HasTopic)
+    keywords = RelationshipTo(Keyword, 'has_keyword', model=HasKeyword)
 
 
 # The Conference class represents a conference and its associated properties

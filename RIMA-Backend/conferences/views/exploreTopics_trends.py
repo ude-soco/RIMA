@@ -72,7 +72,6 @@ class GetSharedPopularTopicsAcrossYears(APIView):
         })
 
 
-
 # The `GetTopPopularTopicsInConf` class is an API view that retrieves the top popular topics in a conference and returns the names and values of these topics.
 class GetTopPopularTopicsInConf(APIView):
     def get(self, request, *args, **kwargs):
@@ -92,8 +91,6 @@ class GetTopPopularTopicsInConf(APIView):
             "names": names,
             "values": {"data": values}
         })
-
-
 
 
 # The class `GetEvolutionTopPopularTopicsInConf` is an API view that retrieves the evolution of the top popular topics in a conference based on keywords or topics.
