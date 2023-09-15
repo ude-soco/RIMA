@@ -590,37 +590,6 @@ class NewconferencesSharedWordsBarView(APIView):
 
         return Response({'Topiclist': result_data})
 
-# new class by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
-
-
-# class AuthorInterestsBar2 (APIView):
-#     def get(self, request, *args, **kwargs):
-#         url_splits = confutils.split_restapi_url(request.get_full_path(), r'/')
-#         second_author = url_splits[-1]
-#         first_author = url_splits[-2]
-#         keyword_or_topic = url_splits[-3]
-#         second_event = url_splits[-4]
-#         first_event = url_splits[-5]
-
-#         first_author_data = compConfUtils.get_author_keywordTopic_event_based(
-#             author_name=first_author,
-#             event_name=first_event,
-#             keyword_or_topic=keyword_or_topic)
-
-#         second_author_data = compConfUtils.get_author_keywordTopic_event_based(
-#             author_name=second_author,
-#             event_name=second_event,
-#             keyword_or_topic=keyword_or_topic)
-
-#         intersection = compConfUtils.get_commen_keywords_or_topics(
-#             first_author_data, second_author_data)
-
-#         return Response({
-#             "first_author_data": first_author_data,
-#             "second_author_data": second_author_data,
-#             "common_data": intersection
-#         })
-
 # updated by Islam Abdelghaffar not used anymore in conference insights need to be reviewed
 
 # The `ConfEventPapers` class is an API view that retrieves event papers data for a conference event and returns it in JSON format.
