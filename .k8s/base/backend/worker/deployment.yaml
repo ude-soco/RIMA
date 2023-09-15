@@ -52,15 +52,13 @@ spec:
           value: /tmp/models
         - name: MODEL_SERVER
           value: "http://$(MODEL_SERVER_SERVICE):8080"
-        - name: GLOVE_MODEL_FILE
-          value: glove/datatest_word2vec.txt
         envFrom:
         - secretRef:
             name: configuration
         resources:
           requests:
             cpu: 20m
-            memory: 1400Mi
+            memory: 900Mi
             ephemeral-storage: "64Mi"
           limits:
             memory: 2Gi
