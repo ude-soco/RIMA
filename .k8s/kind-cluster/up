@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -eu
+cd "$(dirname "$0")" > /dev/null
+KUBECONFIG="$(realpath ./config/kubeconfig.yaml)"
+
+echo "Starting kind cluster ..."
+kind create cluster --name rima --config=./config/cluster.yaml --wait 1m | true
+echo
+
+echo "Installing ingress-nginx ..."
+kubectl apply -f ./config/ingress-nginx.yaml > /dev/null
+kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=2m > /dev/null
+echo
+
+echo "Installing application ..."
+kubectl apply -f ./config/namespace.yaml
+kubectl apply -k ../local

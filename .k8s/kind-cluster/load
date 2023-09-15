@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -eu
+cd "$(dirname "$0")" > /dev/null
+
+docker-compose -f ../../compose.yaml config | \
+  yq -r ".services.*.image" | \
+  xargs kind  --name rima load docker-image

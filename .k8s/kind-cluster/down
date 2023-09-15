@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")" > /dev/null
+KUBECONFIG="$(realpath ./config/kubeconfig.yaml)"
+
+kind delete cluster --name rima
