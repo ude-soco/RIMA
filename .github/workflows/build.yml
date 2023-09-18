@@ -65,7 +65,7 @@ jobs:
 
     - name: Get tagging metadata
       id:   meta
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v5
       with:
         images: ${{ inputs.base_image_name }}${{ matrix.service }}
         flavor:
