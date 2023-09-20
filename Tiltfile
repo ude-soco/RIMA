@@ -8,11 +8,11 @@ dc_resource("backend-worker", labels = ["Backend"])
 dc_resource("model-downloader", labels = ["Model"])
 dc_resource("model-server", labels = ["Model"])
 
-docker_build('model-downloader', './model-downloader')
+docker_build('rima-model-downloader', './model-downloader')
 
-docker_build('model-server', './model-server')
+docker_build('rima-model-server', './model-server')
 
-docker_build('rima-frontend', './RIMA-Frontend',
+docker_build('rima-rima-frontend', './RIMA-Frontend',
   dockerfile = './RIMA-Frontend/Dockerfile-dev',
   live_update = [
     fall_back_on(['./RIMA-Frontend/nodejs/jsconfig.json']),
@@ -22,7 +22,7 @@ docker_build('rima-frontend', './RIMA-Frontend',
   ]
 )
 
-docker_build('rima-backend', './RIMA-Backend',
+docker_build('rima-rima-backend', './RIMA-Backend',
   live_update = [
     fall_back_on(['./RIMA-Backend/Dockerfile']),
     sync('./RIMA-Backend', '/home/app'),
