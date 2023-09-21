@@ -232,6 +232,7 @@ zipp = "==3.8.0"
 selenium = "*"
 neo4j = "*"
 python-dotenv = "*"
+django-neomodel = "*"
 
 [dev-packages]
 

@@ -79,19 +79,23 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 11. Download the [GloVe model](https://drive.google.com/file/d/1FfQgEjR6q1NyFsD_-kOdBCHMXB2QmNxN/view?usp=sharing) and copy the model inside the `RIMA-Backend`
 
-12. In the command prompt to create the database
+12. Download [Neo4J Desktop](https://neo4j.com/download/) and create a new database. Choose version 5.3.0 and write the password down.
+
+13. Go to the .env file in RIMA/RIMA-Backend and change NEO4J_PASS to the password you have chosen in 12. Also change NEO4J_BOLT_URL to contain your password ("bolt://neo4j:PASSWORD@127.0.0.1:7687").
+
+14. In the command prompt to create the database
 
     ```
     python manage.py migrate
     ```
 
-13. Run the django server and do not close it
+15. Run the django server and do not close it
 
     ```
     python manage.py runserver
     ```
 
-14. Open a new command prompt with admin rights or terminal
+16. Open a new command prompt with admin rights or terminal
 
     - Move to the `RIMA-Backend` in your command prompt
 
@@ -117,19 +121,19 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 4. Type the command in the command prompt/terminal to install node packages
 
-    ```bash
-    npm ci
-    ```
+   ```bash
+   npm ci
+   ```
 
-    If you face issue with `npm ci` command, try `npm install` or `npm install --force` command. Caution: `npm install` and `npm install --force` will delete all the existing node packages, install the new ones and update the `package-lock.json` file. Please make sure you DO NOT push your changes to the `package-lock.json` file.
+   If you face issue with `npm ci` command, try `npm install` or `npm install --force` command. Caution: `npm install` and `npm install --force` will delete all the existing node packages, install the new ones and update the `package-lock.json` file. Please make sure you DO NOT push your changes to the `package-lock.json` file.
 
 5. After the packages are installed, type the following command to run the server
 
-    ```bash
-    npm start
-    ```
+   ```bash
+   npm start
+   ```
 
-    The server will run at [http://localhost:8080](http://localhost:8080)
+   The server will run at [http://localhost:8080](http://localhost:8080)
 
 6. Stop the server by pressing `Cntl + c` inside the command prompt
 
