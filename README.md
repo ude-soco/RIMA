@@ -11,69 +11,69 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 #### Step 1: Installation Guide for RIMA-Backend
 
-1. Download Python (v3.7.1) from [the official website](https://www.python.org/downloads/release/python-371/)
+1.  Download Python (v3.7.1) from [the official website](https://www.python.org/downloads/release/python-371/)
 
-2. Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
+2.  Download [IntelliJ Ultimate](https://www.jetbrains.com/de-de/idea/download/#section=windows) or [Visual Studio Code](https://code.visualstudio.com/download) and install one of the code editors
 
-3. Install and activate python virtual environment for Windows
+3.  Install and activate python virtual environment for Windows
 
-   - Open a command prompt with **administration rights**
+    - Open a command prompt with **administration rights**
 
-   - Move to the directory `RIMA-Backend` in your command prompt
+    - Move to the directory `RIMA-Backend` in your command prompt
 
-   - Type the following commands to install and activate the virtual environment:
+    - Type the following commands to install and activate the virtual environment:
 
-     - Install python virtual environment
+      - Install python virtual environment
 
-       ```
-       pip install pipenv
-       ```
+        ```
+        pip install pipenv
+        ```
 
-       For Mac/Linux users follow the instructions here: [Pipenv Installation](https://pipenv-fork.readthedocs.io/en/latest/install.html#installing-pipenv)
+        For Mac/Linux users follow the instructions here: [Pipenv Installation](https://pipenv-fork.readthedocs.io/en/latest/install.html#installing-pipenv)
 
-     - Install python package
+      - Install python package
 
-       ```
-       pipenv install
-       ```
+        ```
+        pipenv install
+        ```
 
-     - Activate the virtual environment
+      - Activate the virtual environment
 
-       ```
-       pipenv shell
-       ```
+        ```
+        pipenv shell
+        ```
 
-       (Optional) To check the location of your virtual environment, type the following command in your command prompt
+        (Optional) To check the location of your virtual environment, type the following command in your command prompt
 
-       ```
-       pipenv --venv
-       ```
+        ```
+        pipenv --venv
+        ```
 
-   - Download the spacy package
+    - Download the spacy package
 
-     ```
-     python -m spacy download en
-     ```
+      ```
+      python -m spacy download en
+      ```
 
-   - Download the necessary nltk packages
+    - Download the necessary nltk packages
 
-     ```
-     python -c "import nltk;nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
-     ```
+      ```
+      python -c "import nltk;nltk.download('stopwords'); nltk.download('punkt'); nltk.download('sentiwordnet')"
+      ```
 
-4. Using your file explorer, go inside the directory `RIMA-Backend\config`, copy the twitter config file `rename_twitter_config.yaml` and paste it in the same folder. Rename the copied twitter config file to `twitter_config.yaml`
+4.  Using your file explorer, go inside the directory `RIMA-Backend\config`, copy the twitter config file `rename_twitter_config.yaml` and paste it in the same folder. Rename the copied twitter config file to `twitter_config.yaml`
 
-   - (Optional) Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
+    - (Optional) Make an account on [Twitter Developer Platform](https://developer.twitter.com/en) and copy the necessary API keys and access tokens in the `twitter_config.yaml` file
 
-5. Install [Visual Studio Community 2017](https://visualstudio.microsoft.com/de/thank-you-downloading-visual-studio/?sku=Community&rel=15). Make sure to install the package `Desktop development with C++`. Set `VCINSTALLER` system variable to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC` ([Read more](https://stackoverflow.com/questions/57541402/node-gyp-configure-got-gyp-err-find-vs/70799513#70799513)). For Linux users, check [GCC Installation guide for Linux](https://linuxize.com/post/how-to-install-gcc-compiler-on-ubuntu-18-04/)
+5.  Install [Visual Studio Community 2017](https://visualstudio.microsoft.com/de/thank-you-downloading-visual-studio/?sku=Community&rel=15). Make sure to install the package `Desktop development with C++`. Set `VCINSTALLER` system variable to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC` ([Read more](https://stackoverflow.com/questions/57541402/node-gyp-configure-got-gyp-err-find-vs/70799513#70799513)). For Linux users, check [GCC Installation guide for Linux](https://linuxize.com/post/how-to-install-gcc-compiler-on-ubuntu-18-04/)
 
-6. Download and install [Redis for Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi)
+6.  Download and install [Redis for Windows](https://github.com/MicrosoftArchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.msi)
 
-7. Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
+7.  Download [Elmo](https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5) and copy it inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data`
 
-8. Download [StanfordCoreNLP](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip) and extract the ZIP file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
+8.  Download [StanfordCoreNLP](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-02-27.zip) and extract the ZIP file inside `RIMA-Backend/interests/Keyword_Extractor/Algorithms/embedding_based`
 
-9. Download [MSmarco model](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in the location `RIMA-Backend/transformers`
+9.  Download [MSmarco model](https://1drv.ms/u/s!AokEy2_vaKbhgddabiUyea8NDznodA?e=NwX2CR). Create a folder named "transformers" in "RIMA-Backend" folder. Unzip the downloaded file and save it in the location `RIMA-Backend/transformers`
 
 10. Download and install [Java JDK](https://www.oracle.com/java/technologies/downloads/)
 
@@ -97,19 +97,29 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 16. Open a new command prompt with admin rights or terminal
 
-    - Move to the `RIMA-Backend` in your command prompt
+        - Move to the `RIMA-Backend` in your command prompt
 
-    - Activate the virtual environment
+- Activate the virtual environment
 
-      ```
-      pipenv shell
-      ```
+  ```
+  pipenv shell
+  ```
 
-    - Start the celery workers and do not close the command prompt
+- Start the celery workers and do not close the command prompt
 
-      ```
-      celery worker --app=interest_miner_api -l info -P eventlet
-      ```
+  ```
+  # For Windows if you have more than 4 cores
+
+  celery -A interest_miner_api worker --concurrency=4 -l info -P eventlet
+
+  # For Windows if you have less than 4 cores
+
+  celery -A server worker --pool=solo -l info
+
+  # For Linux: Atleast 4 cores. Set --concurrency value to 1 if you have less than 4 cores
+
+  celery -A interest_miner_api worker --concurrency=4 -l info
+  ```
 
 #### Step 2: Installation Guide for RIMA-Frontend
 
