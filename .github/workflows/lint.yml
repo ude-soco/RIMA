@@ -1,0 +1,28 @@
+name: Lint
+
+on:
+  workflow_call:
+    inputs:
+      services:
+        type: string
+        required: true
+
+jobs:
+  build:
+    name: Lint Dockerfile
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(inputs.services) }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run Hadolint
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: ${{ matrix.service }}/Dockerfile

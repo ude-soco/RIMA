@@ -17,7 +17,7 @@ WORKDIR /home/app
 ENV  PYTHONUNBUFFERED 1
 ENV  PATH "$PATH:/home/app/.local/bin"
 COPY Pipfile* .
-RUN  pip install --no-color --quiet --no-cache-dir --user pipenv && \
+RUN  pip install --no-color --quiet --no-cache-dir --user pipenv==2023.9.8 && \
      pipenv install --system --deploy
 
 COPY --link --chown=101 . ./

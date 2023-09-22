@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1.6
+# hadolint global ignore=DL3008,DL3042,DL3008,SC2086
 FROM python:3.9-slim AS python
 
 # Install dependencies
@@ -34,7 +35,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY --chown=app:app Pipfile* .
 RUN  --mount=type=cache,sharing=private,target=/home/app/.cache/pip,uid=1000 \
      --mount=type=cache,sharing=private,target=/home/app/.cache/pipenv,uid=1000 <<EOF
-  pip install --no-color pipenv &&
+  pip install --no-color pipenv==2023.9.8 &&
   pipenv install --deploy
 EOF
 

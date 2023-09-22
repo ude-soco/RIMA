@@ -8,7 +8,13 @@ on:
     branches:   [ master ]
 
 jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+    with:
+      services:        "[ 'model-downloader', 'model-server', 'RIMA-Backend', 'RIMA-Frontend' ]"
+
   images:
+    needs: [ lint ]
     uses: ./.github/workflows/build.yml
     with:
       services:        "[ 'model-downloader', 'model-server', 'RIMA-Backend', 'RIMA-Frontend' ]"
