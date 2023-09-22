@@ -2,12 +2,6 @@ help:
 	@cat $(MAKEFILE_LIST) | docker run --rm -i --platform linux/amd64 xanders/make-help
 
 ##
-## Run application processes locally
-##
-
-# :TODO:
-
-##
 ## Run container images locally
 ##
 
@@ -57,21 +51,9 @@ build: lint
 	@$(compose) build
 
 # Push container images to remote registry
-push:
+push: build
 	@$(compose) push
 
-
-##
-## Deploy the application to Kubernetes
-##
-
-# Deploy dev overlay
-k8s-dev:
-	@kubectl apply --wait -k .k8s/dev
-
-# Deploy prod overlay
-k8s-prod:
-	@kubectl apply --wait -k .k8s/prod
 
 ##
 ## Test the application
@@ -89,4 +71,4 @@ lint:
 	@docker run --quiet --rm -i hadolint/hadolint < RIMA-Frontend/Dockerfile
 
 
-.PHONY: help all dev tilt run start up model stop down clean cleanall build push k8s-dev k8s-prod lint
+.PHONY: help all dev tilt run start up model stop down clean cleanall build push lint
