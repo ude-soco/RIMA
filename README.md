@@ -81,21 +81,23 @@ A transparent Recommendation and Interest Modeling Application. Developed by Soc
 
 12. Download [Neo4J Desktop](https://neo4j.com/download/) and create a new database. Choose version 5.3.0 and write the password down.
 
-13. Go to the .env file in RIMA/RIMA-Backend and change NEO4J_PASS to the password you have chosen in 12. Also change NEO4J_BOLT_URL to contain your password ("bolt://neo4j:PASSWORD@127.0.0.1:7687").
+13. Copy the example.env file, paste it in the same folder, and rename the copy to .env.
 
-14. In the command prompt to create the database
+14. Go to the .env file in RIMA/RIMA-Backend and change NEO4J_PASS to the password you have chosen in 12. Also change NEO4J_BOLT_URL to contain your password ("bolt://neo4j:PASSWORD@127.0.0.1:7687").
+
+15. In the command prompt to create the database
 
     ```
     python manage.py migrate
     ```
 
-15. Run the django server and do not close it
+16. Run the django server and do not close it
 
     ```
     python manage.py runserver
     ```
 
-16. Open a new command prompt with admin rights or terminal
+17. Open a new command prompt with admin rights or terminal
 
         - Move to the `RIMA-Backend` in your command prompt
 
