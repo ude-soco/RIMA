@@ -34,6 +34,7 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
     const [authors, setAuthors] = useState([]);
     const [allTopics, setAllTopics] = useState([]);
     const [selectedTopics, setSelectedTopics] = useState([]);
+    
 
     const [filters, setFilters] = useState({
         startYear: null,
@@ -52,10 +53,13 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
                 paper.authors.forEach((author) => {
                     all_authors.add(author.name);
                 });
+                if (paper.topics && paper.topics.length>0){
                 paper.topics.forEach((topic) => {
                     all_topics.add(topic);
                 }
-                );
+            
+            );
+                }
             });
 
             setRelatedPapers(input_papers);
@@ -68,8 +72,9 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
         // Fetch related papers using Axios
         async function fetchRelatedPapers() {
             try {
+                console.log("try fetching relatd papers")
                 const response = await axios.post(
-                    "http://localhost:8000/api/paper-explorer/add_paper/",
+                    "http://localhost:8001/api/paper-explorer/add_paper/",
                     { paper_id: main_paper.paper_id },
                     {
                         headers: {
@@ -77,7 +82,9 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
                         },
                     }
                 );
+                console.log("related papers fetched");
                 const references = response.data.references;
+                console.log(references)
                 const citations = response.data.citations;
                 let relatedPapers = [];
                 switch (by_option) {
@@ -99,10 +106,10 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
                         all_authors.add(author.name);
                     }
                     );
-                    paper.topics.forEach((topic) => {
+                   /*  paper.topics.forEach((topic) => {
                         all_topics.add(topic);
-                    }
-                    );
+                    } 
+                    ); */
                 });
 
                 setAllTopics([...all_topics]);
@@ -135,33 +142,48 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
         // Your callback logic here
     };
 
-    const handleAddtoNetwork = (paper) => {
+    const handleAddtoNetwork = async (paper) => {
         // check already in network (cytoElements)
         const alreadyInNetwork = cytoElements.find((element) => element.data.id === paper.paper_id);
+        let unique_topics = new Set();
+        if (!paper.paper_id) return;
+        const apiResponse = await axios.post(
+        "http://localhost:8001/api/paper-explorer/add_to_network/",
+            { paper_id: paper.paper_id },
+        {
+            headers: {
+          "Content-Type": "application/json",
+             },
+        }
+         );
+        const { data } = apiResponse;
         if (alreadyInNetwork) {
             alert("Already in network");
             return;
         }
         console.log("add >>>", paper);
+        console.log("similarity >>>", paper.similarity);
+        console.log("similarity >>>", data.similarity);
         cytoElements.push({
             data: {
-                id: paper.paper_id,
-                label: paper.title,
+                id: data.paper_id,
+                label: data.title,
                 raduis: 10,
                 color: "black",
                 level: 1,
-                allData: paper,
+                allData: data,
             },
         },
             {
                 data: {
                     source: main_paper.paper_id,
-                    target: paper.paper_id,
+                    target: data.paper_id,
                     width: ((paper.similarity + 1) ** 7) / 3,
                 }
             }
         );
         get_set_elements(cytoElements);
+
     };
 
     const getRelatedPapers = () => {
@@ -175,7 +197,7 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
         if (filters.author !== 'All') {
             related_papers_temp = related_papers_temp.filter((paper) => paper.authors.map((item) => { return item.name }).includes(filters.author));
         }
-        related_papers_temp = related_papers_temp.filter((paper) => paper.topics.some((topic) => filters.topics.includes(topic)));
+        //related_papers_temp = related_papers_temp.filter((paper) => paper.topics.some((topic) => filters.topics.includes(topic)));
         return related_papers_temp;
     };
 
@@ -254,7 +276,7 @@ const ExploreComponent = ({ main_paper, by_option, setCytoElements, cytoElements
                             {paper.authors.map((item) => { return item.name }).join(", ")} ({paper.year})
                         </Typography>
                         <Typography>Citation Count: {paper.citation_count}</Typography>
-                        <Typography>Topics: {paper.topics.join(", ")}</Typography>
+                        {/* <Typography>Topics: {paper.topics.join(", ")}</Typography> */}
                         {paper.abstract ?
                             <Box>
                                 <Typography>

@@ -10,19 +10,40 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Tooltip from './Tooltip';
 import { Paper, Typography, Box } from '@mui/material';
-
+import cise from 'cytoscape-cise';
+import Button from '@mui/material/Button';
+import axios from "axios";
+import { color } from "highcharts";
 
 cytoscape.use(contextMenus, cytoscape);
 cytoscape.use(cxtmenu);
+cytoscape.use( cise );
 
-const PaperGraphCanvas = memo(({ elements, onViewDetails, onExploreMore }) => {
+const PaperGraphCanvas = memo(({ elements,layoutGraph,layoutValue,onViewDetails, onExploreMore }) => {
 
   const [tooltip, setTooltip] = useState({ show: false, position: { x: 0, y: 0 }, content: '' });
-  const [isNodeDragging, setIsNodeDragging] = useState(false);
-  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
-
-
-  const layoutGraph = {
+  const allColors = [
+    // "#397367",
+    // "#160C28",
+    // "#EFCB68",
+    // "#C89FA3",
+    "#368F8B",
+    "#232E21",
+    "#B6CB9E",
+    "#92B4A7",
+    "#8C8A93",
+    "#8C2155",
+    "#22577A",
+    "#7FD8BE",
+    "#875C74",
+    "#9E7682",
+    "#FCAB64",
+    "#EDCB96",
+    "#231942",
+    "#98B9F2"
+  ];
+  //const [elements, setElements] = useState(elements);
+  /* const [layoutGraph,setLayoutGraph]=useState({
     name: "concentric",
     concentric: function (node) {
       return 10 - node.data("level");
@@ -30,7 +51,57 @@ const PaperGraphCanvas = memo(({ elements, onViewDetails, onExploreMore }) => {
     levelWidth: function () {
       return 1;
     },
-  };
+  }); */
+  /* const [layoutValue,setLayoutValue]=useState(true) */
+  const [isNodeDragging, setIsNodeDragging] = useState(false);
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+/* 
+  const clusterData = async () => {
+    alert('clicked');
+    console.log(elements);
+
+    const cluster_info = await axios.post(
+      "http://localhost:8001/api/paper-explorer/cluster_papers/",
+      { elements },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(cluster_info);
+    if (layoutValue)
+    { setLayoutGraph({name:"cise",
+      cluster_info: function(node){
+        const node_id=node.data('id');
+        console.log(cluster_info.data(node_id))
+        return cluster_info.data(node_id);
+      },
+      animate:false});
+      setLayoutValue(false);
+      const newElements=elements.map((element)=>{
+      const node_id=element.data['id'];
+      const index=cluster_info.data[node_id];
+      element.data.color=allColors[index];
+      return element;
+      })
+      //onChangeElements(newElements);
+    }
+    else{
+      setLayoutGraph({
+        name: "concentric",
+        concentric: function (node) {
+          return 10 - node.data("level");
+        },
+        levelWidth: function () {
+          return 1;
+        },
+      });
+      setLayoutValue(true);
+    }
+  }; */
+
+
 
   const initCytoscapeContextMenu = (cy, onViewDetails, onExploreMore) => {
     cy.contextMenus({

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {BASE_URL} from "./constants";
+import {BASE_URL,BASE_URL_EXPLORER} from "./constants";
 import {getItem} from "./utils/localStorage";
 
 

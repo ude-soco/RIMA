@@ -51,12 +51,14 @@ const PaperGraph = () => {
   const [paperDetail, setPaperDetail] = useState([]);
   const [paperExplore, setPaperExplore] = useState([]);
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElTopic, setAnchorElTopic] = useState(null);
+  const [anchorElKeyword, setAnchorElKeyword] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [topicSearchPapers, setTopicSearchPapers] = useState([]);
 
   const [alltopics, setAllTopics] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
+
 
   // new for view details
   const [openDialog, setOpenDialog] = useState({
@@ -64,6 +66,82 @@ const PaperGraph = () => {
     openExplore: null,
     openRelated: null,
   });
+
+  const [layoutGraph,setLayoutGraph]=useState({
+    name: "concentric",
+    concentric: function (node) {
+      return 10 - node.data("level");
+    },
+    levelWidth: function () {
+      return 1;
+    },
+  });
+  const [layoutValue,setLayoutValue]=useState(true)
+
+  const clusterData = async () => {
+    alert('clicked');
+    console.log(elements);
+
+    const cluster_info = await axios.post(
+      "http://localhost:8001/api/paper-explorer/cluster_papers/",
+      { elements },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(cluster_info);
+    if (layoutValue)
+    { setLayoutGraph({name:"cise",
+      cluster_info: function(node){
+        const node_id=node.data('id');
+        const temp_array=cluster_info.data(node_id);
+        return temp_array[0];
+      },
+      animate:false});
+      setLayoutValue(false);
+      const newElements=elements.map((element)=>{
+      const node_id=element.data['id'];
+      const temp_array=cluster_info.data[node_id];
+      console.log(temp_array)
+      if (temp_array){
+      const index=temp_array[0];
+      element.data.color=allColors[index];
+    
+      element.data.allData.topics=temp_array[1];
+      }
+      return element;
+      })
+
+      let unique_topics = new Set();
+      newElements.forEach((element) => {
+      if (!element.data.allData) return;
+      if (element.data.allData.topics) {
+        unique_topics.add(element.data.allData.topics)
+      }
+    });
+    console.log(unique_topics);
+      setAllTopics([...unique_topics]);
+      setElements(newElements);
+    }
+    else{
+      setLayoutGraph({
+        name: "concentric",
+        concentric: function (node) {
+          return 10 - node.data("level");
+        },
+        levelWidth: function () {
+          return 1;
+        },
+      });
+      setLayoutValue(true);
+    }
+  };
+
+  /* const onChangeElements=newElements=>{
+    setElements(newElements);
+  }; */
 
   const get_set_elements = (temp_elemnts) => {
     let unique_topics = new Set();
@@ -103,12 +181,21 @@ const PaperGraph = () => {
 
 
   const handleExploreByTopicClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorElTopic(event.currentTarget);
   };
 
   const handleExploreByTopicClose = () => {
-    setAnchorEl(null);
+    setAnchorElTopic(null);
   };
+
+  const handleExploreByKeywordsClick = (event) => {
+    setAnchorElKeyword(event.currentTarget);
+  };
+
+  const handleExploreByKeywordsClose = () => {
+    setAnchorElKeyword(null);
+  };
+
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -182,7 +269,8 @@ const PaperGraph = () => {
     let papers = other_papers.map((paper) => {
       return {
         ...paper,
-        topics: paper.fieldsOfStudy,
+        topics: paper.topics,
+        keywords: paper.keywords, //add keywords
         similarity: cosineSimilarity(main_paper.embedding.vector, paper.embedding.vector),
         paper_id: paper.paperId,
         citation_count: paper.citationCount,
@@ -190,11 +278,120 @@ const PaperGraph = () => {
     });
     papers.sort((a, b) => b.similarity - a.similarity);
     setTopicSearchPapers(papers);
-    setAnchorEl(null);
+    setAnchorElTopic(null);
     setOpenDialog({ ...openDialog, openRelated: true, openExplore: false });
 
     handleExploreByTopicClose();
   };
+
+  const handleKeywordSelect1 = (topic) => {
+    console.log("Selected topic:", topic);
+    try {
+      axios.get(
+        `https://api.semanticscholar.org/graph/v1/paper/autocomplete?query=${topic}`
+      ).then(response => {
+        console.log('Topic query')
+        let paper_ids = response.data.matches.map((match) => match.id);
+        paper_ids.unshift(paperExplore.paper_id);
+        const paper_fields = ['paperId', 'title', 'abstract', 'year', 'authors',
+          'referenceCount', 'citationCount', 'fieldsOfStudy',
+          'publicationTypes', 'embedding', 'tldr']
+        console.log(response.data.matches.length)
+        console.log(paper_ids.length)
+        try {
+
+          axios.post('https://api.semanticscholar.org/graph/v1/paper/batch', {
+            params: {
+              fields: paper_fields.join(','),
+            },
+            data:
+              { ids: paper_ids },
+          }).then(apiResponse => {
+            const main_paper = apiResponse.data[0];
+            console.log('response >>>> ', main_paper.embedding.vector);
+            const other_papers = apiResponse.data.slice(1);
+            let papers = other_papers.map((paper) => {
+              return {
+                ...paper,
+                topics: paper.fieldsOfStudy,
+                keywords: paper.keywords, //add keywords
+                similarity: cosineSimilarity(main_paper.embedding.vector, paper.embedding.vector),
+                paper_id: paper.paperId,
+                citation_count: paper.citationCount,
+              }
+            });
+            papers.sort((a, b) => b.similarity - a.similarity);
+            setTopicSearchPapers(papers);
+            setAnchorElKeyword(null);
+            setOpenDialog({ ...openDialog, openRelated: true, openExplore: false });
+
+            handleExploreByKeywordsClose();
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleKeywordSelect = async (topic) => {
+     // Implement your topic handling logic
+     console.log("Selected topic:", topic);
+     const paper_fields = ['paperId', 'title', 'abstract', 'year', 'authors',
+     'referenceCount', 'citationCount', 'fieldsOfStudy',
+     'publicationTypes', 'embedding', 'tldr']
+     const response = await axios.get(
+       `https://api.semanticscholar.org/graph/v1/paper/search?query=${topic}&fields=`+paper_fields.join(','),
+       {
+        headers: {
+          "Content-Type": "application/json",
+        }}
+     );
+ 
+     //let paper_ids = response.data.matches.map((match) => match.paperId);
+     // push paperExplore.paper_id at first
+     //paper_ids.unshift(paperExplore.paper_id);
+ 
+     // 'https://api.semanticscholar.org/graph/v1/paper/batch',
+     // json={"ids": [...]}
+ 
+ 
+     /* const apiResponse = await axios.post(
+       "https://api.semanticscholar.org/graph/v1/paper/batch?fields=" + paper_fields.join(','),
+       { ids: paper_ids },
+       {
+         headers: {
+           "Content-Type": "application/json",
+         }
+       }); */
+ 
+ 
+ 
+     const main_paper =paperExplore;
+     console.log('response >>>> ', main_paper);
+     const main_paper_response=await axios.get("https://api.semanticscholar.org/graph/v1/paper/"+main_paper.paper_id+"?fields=embedding")
+     console.log(main_paper_response.data)
+     main_paper.embedding=main_paper_response.data.embedding;
+     console.log(main_paper.embedding)
+     const other_papers = response.data.data;
+     console.log(other_papers)
+     let papers = other_papers.map((paper) => {
+       return {
+         ...paper,
+         similarity: cosineSimilarity(main_paper.embedding, paper.embedding),
+         paper_id: paper.paperId,
+         citation_count: paper.citationCount,
+       }
+     });
+     papers.sort((a, b) => b.similarity - a.similarity);
+     setTopicSearchPapers(papers);
+     setAnchorElKeyword(null);
+     setOpenDialog({ ...openDialog, openRelated: true, openExplore: false });
+ 
+     handleExploreByTopicClose();
+  }
 
   const handleExploreByRelatedPapers = (option) => {
     setSelectedOption(option);
@@ -223,6 +420,7 @@ const PaperGraph = () => {
       citation_count: data.allData.citation_count,
       abstract: data.allData.abstract,
       topics: data.allData.topics,
+      keywords: data.allData.keywords //add keywords
     })
     setOpenDialog({ ...openDialog, openDetail: true, openExplore: false });
   }, []
@@ -240,6 +438,7 @@ const PaperGraph = () => {
       citation_count: data.allData.citation_count,
       abstract: data.allData.abstract,
       topics: data.allData.topics,
+      keywords: data.allData.keywords //add keyword
     })
     console.log("paperExplore");
     console.log(paperExplore);
@@ -284,7 +483,7 @@ const PaperGraph = () => {
     let unique_topics = new Set();
     if (!paperId) return;
     const apiResponse = await axios.post(
-      "http://localhost:8000/api/paper-explorer/add_paper/",
+      "http://localhost:8001/api/paper-explorer/add_paper/",
       { paper_id: paperId },
       {
         headers: {
@@ -386,6 +585,10 @@ const PaperGraph = () => {
     handleIrrelevantStateChange();
   };
 
+
+
+
+
   return (
     <>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
@@ -407,6 +610,9 @@ const PaperGraph = () => {
                     key={irrelevantState}
                     // elements={get_elements()}
                     elements={elements}
+                    layoutGraph={layoutGraph}
+                    layoutValue={layoutValue}
+                    //onChangeElements={onChangeElements}
                     onViewDetails={handleOpenDetail}
                     onExploreMore={handleOpenExplore}
                   />
@@ -454,17 +660,31 @@ const PaperGraph = () => {
               </Box>
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="h6" component="h3">Topics</Typography>
-                {paperDetail.topics ? (
-                  paperDetail.topics.map((topic, index) => (
+                <Typography variant="h6" component="h3">fields of study</Typography>
+                {paperDetail.fieldsOfStudy ? (
+                  paperDetail.fieldsOfStudy.map((fieldOfStudy, index) => (
                     <Typography key={index} paragraph>
-                      {topic}
+                      {fieldOfStudy}
                     </Typography>
                   ))
                 ) : (
-                  <Typography paragraph>Topics not available</Typography>
+                  <Typography paragraph>Fields of study not available</Typography>
                 )}
               </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="h6" component="h3">Keywords</Typography>
+                {paperDetail.keywords ? (
+                  paperDetail.keywords.map((keyword, index) => (
+                    <Typography key={index} paragraph>
+                      {keyword}
+                    </Typography>
+                  ))
+                ) : (
+                  <Typography paragraph>Keywords not available</Typography>
+                )}
+              </Box>
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseDetail}>Close</Button>
@@ -473,12 +693,35 @@ const PaperGraph = () => {
           <Dialog open={openDialog.openExplore} onClose={() => setOpenDialog({ ...openDialog, openExplore: false })}>
             <DialogTitle>Explore</DialogTitle>
             <DialogContent>
-              <Button onClick={handleExploreByTopicClick}>Explore by Topic</Button>
+              <Button onClick={handleExploreByKeywordsClick}>Explore by Keywords</Button>
+              {paperExplore.keywords &&
+                <Menu
+                  anchorEl={anchorElKeyword}
+                  keepMounted
+                  open={Boolean(anchorElKeyword)}
+                  onClose={handleExploreByKeywordsClose}
+                >
+                  {paperExplore.keywords && paperExplore.keywords.map((keyword, index) => (
+                    <MenuItem key={index} onClick={() => handleKeywordSelect(keyword)}>
+                      {/* <MenuItem key={index} onClick={() => handleKeywordSelect(keyword)}> */}
+                      {keyword}
+                    </MenuItem>
+                  ))}
+                  {!paperExplore.keywords &&
+                    <MenuItem disabled>
+                      No keywords available
+                    </MenuItem>
+                  }
+
+                </Menu>
+              }
+
+               {/* <Button onClick={handleExploreByTopicClick}>Explore by Topic</Button>
               {paperExplore.topics &&
                 <Menu
-                  anchorEl={anchorEl}
+                  anchorEl={anchorElTopic}
                   keepMounted
-                  open={Boolean(anchorEl)}
+                  open={Boolean(anchorElTopic)}
                   onClose={handleExploreByTopicClose}
                 >
                   {paperExplore.topics && paperExplore.topics.map((topic, index) => (
@@ -493,7 +736,8 @@ const PaperGraph = () => {
                   }
 
                 </Menu>
-              }
+              } 
+ */}
 
               <Button
                 aria-controls="related-papers-menu"
@@ -578,7 +822,13 @@ const PaperGraph = () => {
                   ))}
                 </FormGroup>
               </FormControl>
+              <div style={{ position: 'flex', bottom: 20, right: 100 }}>
+        <Button onClick={() =>clusterData()} variant="contained" color="primary">
+          Cluster papers according to topics
+        </Button>
+      </div>
             </Paper>
+      
           </Box>
         )}
       </Box>

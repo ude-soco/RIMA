@@ -10,10 +10,14 @@ function magnitude(a) {
 }
 
 function cosineSimilarity(a, b) {
+  if(!a || !b)
+  {
+    return 0.5
+  }
   if (a.length !== b.length) {
     throw new Error('Vectors must have the same length');
   }
-  return dotProduct(a, b) / (magnitude(a) * magnitude(b));
+  return dotProduct(a.vector, b.vector) / (magnitude(a.vector) * magnitude(b.vector));
 }
 
 export default cosineSimilarity;

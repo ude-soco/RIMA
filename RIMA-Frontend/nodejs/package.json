@@ -61,6 +61,7 @@
     "chart.js": "^2.9.3",
     "classnames": "2.2.6",
     "cytoscape": "^3.21.1",
+    "cytoscape-cise": "^1.0.0",
     "cytoscape-context-menus": "^4.1.0",
     "cytoscape-cxtmenu": "^3.4.0",
     "cytoscape-node-html-label": "^1.2.2",
