@@ -6,6 +6,10 @@ on:
       services:
         type: string
         required: true
+      timeout:
+        type: number
+        default: 3
+        required: false
 
 jobs:
   build:
