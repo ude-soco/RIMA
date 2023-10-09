@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.6
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 ENV APT_PACKAGES "make wget unzip"
 RUN --mount=type=cache,sharing=private,target=/var/cache/apt \
