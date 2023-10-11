@@ -36,10 +36,10 @@ from common.views import clear_all_app_data
 # )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('reset-app-data/', clear_all_app_data),
-    path('api/accounts/', include('accounts.urls')),
-    path('api/interests/', include('interests.urls')),
+    path("admin/", admin.site.urls),
+    path("reset-app-data/", clear_all_app_data),
+    path("api/accounts/", include("accounts.urls")),
+    path("api/interests/", include("interests.urls")),
     # path(
     #     'swagger(?P<format>\.json|\.yaml)',
     #     schema_view.without_ui(cache_timeout=0),
@@ -50,7 +50,5 @@ urlpatterns = [
     #     schema_view.with_ui('swagger', cache_timeout=0),
     #     name='schema-swagger-ui',
     # ),
-    path('api/conferences/', include('conferences.urls')),
-    path('api/paper-explorer/', include('paper_explorer.urls')),
-
+    path("api/conferences/", include("conferences.urls")),
 ]
