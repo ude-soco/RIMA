@@ -228,51 +228,141 @@ if not os.environ.get("NLTK_DATA"):
         os.environ["NLTK_DATA"] = os.path.join(
             MODEL_DIR, os.environ.get("NLTK_MODEL_DIR")
         )
+        print("=====================================")
+        print("NLTK Data Location...")
+        print(os.environ["NLTK_DATA"] )
+        print("=====================================")
+print("=====================================")
+print("Model Directory Location...")
+print(MODEL_DIR)
+print("=====================================")
 
-if not configuration["elmo_option_file"]:
-    ELMO_OPTIONS_FILE = None
-else:
-    ELMO_OPTIONS_FILE = os.path.abspath(configuration["elmo_option_file"])
 
 if not configuration["enwiki_file"]:
     ENWIKI_FILE = None
 else:
     ENWIKI_FILE = os.path.abspath(configuration["enwiki_file"])
+    print("=====================================")
+    print("Loading ENWIKI file...")
+    print(ENWIKI_FILE)
+    print("=====================================")
 
 if not configuration["inspec_file"]:
     INSPEC = None
 else:
     INSPEC = os.path.abspath(configuration["inspec_file"])
+    print("=====================================")
+    print("Loading INSPEC file...")
+    print(INSPEC)
+    print("=====================================")
 
 if not configuration["semeval2017vocab_file"]:
     SEMEVALVOCAB2017 = None
 else:
     SEMEVALVOCAB2017 = os.path.abspath(configuration["semeval2017vocab_file"])
+    print("=====================================")
+    print("Loading SEMEVALVOCAB2017 file...")
+    print(SEMEVALVOCAB2017)
+    print("=====================================")
 
 if not configuration["duc2001_file"]:
     DUC2001 = None
 else:
     DUC2001 = os.path.abspath(configuration["duc2001_file"])
-
-if not configuration["sif_model_file"]:
-    SIF_MODEL_FILE_PATH = None
+    print("=====================================")
+    print("Loading DUC2001 file...")
+    print(DUC2001)
+    print("=====================================")
+    
+if not configuration["elmo_option_file"]:
+    ELMO_OPTIONS_FILE = None
 else:
-    SIF_MODEL_FILE_PATH = configuration["sif_model_file"]
+    ELMO_OPTIONS_FILE = os.path.abspath(configuration["elmo_option_file"])
+    print("=====================================")
+    print("Loading ELMO option file...")
+    print(ELMO_OPTIONS_FILE)
+    print("=====================================")
 
-if not configuration["use_model_file"]:
-    USE_MODEL_FILE_PATH = None
+if os.environ.get("MS_MARCO_MODEL_DIR"):
+    # production
+    TRANSFORMER_MODEL_FILE_PATH = os.path.join(
+        MODEL_DIR, os.environ.get("MS_MARCO_MODEL_DIR")
+    )
+    print("=====================================")
+    print("Loading MSMarco Transformer Model...")
+    print(TRANSFORMER_MODEL_FILE_PATH)
+    print("=====================================")
+elif configuration["transformer_model_file"]:
+    TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(
+        configuration["transformer_model_file"]
+    )
+    # development
+    print("=====================================")
+    print("Loading MSMarco Transformer Model...")
+    print(TRANSFORMER_MODEL_FILE_PATH)
+    print("=====================================")
 else:
-    USE_MODEL_FILE_PATH = configuration["use_model_file"]
+    TRANSFORMER_MODEL_FILE_PATH = None
 
-if not configuration["bert_model_file"]:
-    BERT_MODEL_FILE_PATH = None
+# SIF Rank model variables
+if os.environ.get("CORE_NLP_MODEL_DIR"):
+    # production
+    STANFORDCORENLP = os.path.join(MODEL_DIR, os.environ.get("CORE_NLP_MODEL_DIR"))
+    print("===========================")
+    print("Loading StanfordCoreNLP...")
+    print(STANFORDCORENLP)    
+    print("===========================")
+elif configuration["stanfordcorenlp_file"]:
+    # development
+    STANFORDCORENLP = os.path.abspath(configuration["stanfordcorenlp_file"])
+    print("===========================")
+    print("Loading StanfordCoreNLP...")
+    print(STANFORDCORENLP) 
+    print("===========================")
 else:
-    BERT_MODEL_FILE_PATH = configuration["bert_model_file"]
+    STANFORDCORENLP = None
 
-if not configuration["specter_model_file"]:
-    SPECTER_MODEL_FILE_PATH = None
+
+if os.environ.get("ELMO_WEIGHT_MODEL_FILE"):
+    # production
+    ELMO_WEIGHT_FILE = os.path.join(MODEL_DIR, os.environ.get("ELMO_WEIGHT_MODEL_FILE"))
+    print("============================")
+    print("Loading ELMO Weight File...")
+    print(ELMO_WEIGHT_FILE)
+    print("============================")
+elif configuration["elmo_weight_file"]:
+    # development
+    ELMO_WEIGHT_FILE = os.path.abspath(configuration["elmo_weight_file"])
+    print("============================")
+    print("Loading ELMO Weight File...")
+    print(ELMO_WEIGHT_FILE)
+    print("============================")
 else:
-    SPECTER_MODEL_FILE_PATH = configuration["specter_model_file"]
+    ELMO_WEIGHT_FILE = None    
+
+
+# if not configuration["sif_model_file"]:
+#     SIF_MODEL_FILE_PATH = None
+# else:
+#     SIF_MODEL_FILE_PATH = configuration["sif_model_file"]
+
+# if not configuration["use_model_file"]:
+#     USE_MODEL_FILE_PATH = None
+# else:
+#     USE_MODEL_FILE_PATH = configuration["use_model_file"]
+
+# if not configuration["bert_model_file"]:
+#     BERT_MODEL_FILE_PATH = None
+# else:
+#     BERT_MODEL_FILE_PATH = configuration["bert_model_file"]
+
+# if not configuration["specter_model_file"]:
+#     SPECTER_MODEL_FILE_PATH = None
+# else:
+#     SPECTER_MODEL_FILE_PATH = configuration["specter_model_file"]
+
+
+# ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
 
 # Sif_model is used for keyword extraction
 # SIF_MODEL_FILE_PATH = os.environ.get("SIF_MODEL_FILE_PATH", "squeezebert/squeezebert-mnli")
@@ -285,23 +375,6 @@ else:
 #     os.environ.get("LDA_MODEL_FILE", "keyword_extractor/lda-1000-semeval2010.py3.pickle.gz")
 # )
 
-# use bellow line if use_model is not used
-# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
-# use bellow line for USE_model after downloading it
-# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
-
-if os.environ.get("MS_MARCO_MODEL_DIR"):
-    # production
-    TRANSFORMER_MODEL_FILE_PATH = os.path.join(
-        MODEL_DIR, os.environ.get("MS_MARCO_MODEL_DIR")
-    )
-elif configuration["transformer_model_file"]:
-    # development
-    TRANSFORMER_MODEL_FILE_PATH = os.path.abspath(
-        configuration["transformer_model_file"]
-    )
-else:
-    TRANSFORMER_MODEL_FILE_PATH = None
 
 # use bellow line if scibert is not used
 # BERT_MODEL_FILE_PATH = os.environ.get("BERT_MODEL_FILE_PATH","")
@@ -313,27 +386,10 @@ else:
 # use bellow line for specter model
 # SPECTER_MODEL_FILE_PATH = os.environ.get("SPECTER_MODEL_FILE_PATH","allenai/specter")
 
-
-# SIF Rank model variables
-if os.environ.get("CORE_NLP_MODEL_DIR"):
-    # production
-    STANFORDCORENLP = os.path.join(MODEL_DIR, os.environ.get("CORE_NLP_MODEL_DIR"))
-elif configuration["stanfordcorenlp_file"]:
-    # development
-    STANFORDCORENLP = os.path.abspath(configuration["stanfordcorenlp_file"])
-else:
-    STANFORDCORENLP = None
-
-# ELMO_OPTIONS_FILE = os.environ.get("Elmo_Options_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/elmo_2x4096_512_2048cnn_2xhighway_options.json")
-
-if os.environ.get("ELMO_WEIGHT_MODEL_FILE"):
-    # production
-    ELMO_WEIGHT_FILE = os.path.join(MODEL_DIR, os.environ.get("ELMO_WEIGHT_MODEL_FILE"))
-elif configuration["elmo_weight_file"]:
-    # development
-    ELMO_WEIGHT_FILE = os.path.abspath(configuration["elmo_weight_file"])
-else:
-    ELMO_WEIGHT_FILE = None
+# use bellow line if use_model is not used
+# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "")
+# use bellow line for USE_model after downloading it
+# USE_MODEL_FILE_PATH = os.environ.get("USE_MODEL_FILE_PATH", "USE_model")
 
 # ENWIKI_FILE = os.environ.get("Enwiki_File", "./interests/Keyword_Extractor/Algorithms/embedding_based/auxiliary_data/enwiki_vocab_min200.txt")
 

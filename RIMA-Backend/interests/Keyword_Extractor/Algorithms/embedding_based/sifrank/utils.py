@@ -42,4 +42,5 @@ def get_POSTagger(tagger_model) -> BasePOSTagger:
         return FlairTagger(tagger_model)
     if isinstance(tagger_model, StanfordCoreNLP):
         return StanfordCoreNLPTagger(tagger_model)
+
     return StanfordCoreNLPTagger(StanfordCoreNLP(settings.STANFORDCORENLP, quiet=True))
