@@ -24,8 +24,8 @@ class KeyphraseExtractor:
         self.embeddings_type = str(type(self.wordembedding_model)).lower()
 
     # close the stanfordcorenlp connection in the destructor
-    def __del__(self):
-        self.tagger_model.close()
+    # def __del__(self):
+    #     self.tagger_model.close()
 
     def extract_keyphrases(self,
                            text: str,

@@ -17,6 +17,23 @@ from nltk.corpus import stopwords
 
 
 def getKeyword(text, model, num=10):
+    
+    def keSifRank(num):
+    
+        keyphrases = SIF_RANK.extract_keyphrases(text, top_n=num)
+        # # method 1 : the weight is the frequency of word in text
+        # keyphrase = []
+        # for kp in keyphrases:
+        #     keyphrase.append(kp[0])
+
+        # return keyphrase
+
+        # method 2: the weight is the weight returned by the algorithm
+        
+        # convert the returned list of tuples to dictionary 
+        keyphrases_dict = dict(keyphrases)
+        return keyphrases_dict
+    
     def keTopicRank(num):
         extractor = TopicRank()
         extractor.load_document(input=text, language='en')
@@ -134,21 +151,6 @@ def getKeyword(text, model, num=10):
 
         return keyphrase
 
-    def keSifRank(num):
-    
-        keyphrases = SIF_RANK.extract_keyphrases(text, top_n=num)
-        # # method 1 : the weight is the frequency of word in text
-        # keyphrase = []
-        # for kp in keyphrases:
-        #     keyphrase.append(kp[0])
-
-        # return keyphrase
-
-        # method 2: the weight is the weight returned by the algorithm
-        
-        # convert the returned list of tuples to dictionary 
-        keyphrases_dict = dict(keyphrases)
-        return keyphrases_dict
 
     if model == "TopicRank":
         keywords = keTopicRank(num)
