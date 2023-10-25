@@ -21,6 +21,7 @@ import WhyExplanation from "./WhyExplanation";
 import BarChartOutlinedIcon from "@material-ui/icons/BarChartOutlined";
 import TuneIcon from "@material-ui/icons/Tune";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 // Jaleh start
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
+  console.log("test", children);
   return (
     <Grid
       role="tabpanel"
@@ -65,6 +66,7 @@ TabPanel.propTypes = {
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
+
 // Jaleh end
 export default function ExpansionPanel(props) {
   // Tannaz start
@@ -103,6 +105,7 @@ export default function ExpansionPanel(props) {
     setValue(newValue);
   };
   // Jaleh end
+  console.log("test", paper);
   return (
     // Tannaz start
     <>
@@ -130,6 +133,24 @@ export default function ExpansionPanel(props) {
             style={howExpanded ? { color: "white" } : { color: "#333fa1" }}
           >
             How?
+          </Typography>
+        </ButtonMUI>
+        <ButtonMUI
+          variant="outlined"
+          color="primary"
+          size="small"
+          className="m-2"
+          target="_blank"
+          href={paper.url}
+        >
+          <OpenInNewIcon style={{ color: "#333fa1" }} fontSize="small" />
+          <Typography
+            align="center"
+            variant="subtitle2"
+            className="ml-1"
+            style={{ color: "#333fa1" }}
+          >
+            Paper on Semantic Scholar
           </Typography>
         </ButtonMUI>
         {/* <ButtonGroup color="primary" size="small">
