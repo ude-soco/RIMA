@@ -22,6 +22,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import WhyInterest from "../../WhyInterest/WhyInterest";
 import SimiliarInterests from "../SimiliarInterests";
 
+const width = { width: window.innerWidth / 1.5 }
 const WordCloud = (props) => {
   const { keywords, setWordCloudInterest, setOpen } = props;
   const [openSimiliar, setOpenSimiliar] = useState(false);
@@ -72,7 +73,7 @@ const WordCloud = (props) => {
 
   return (
     <>
-      <Grid container style={{ width: window.innerWidth / 1.5 }}>
+      <Grid container style={width}>
         <ReactWordcloud
           words={keywords}
           options={{
