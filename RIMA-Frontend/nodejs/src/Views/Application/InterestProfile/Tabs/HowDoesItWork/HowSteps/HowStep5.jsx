@@ -31,11 +31,11 @@ const HowStep5 = (props) => {
                 <BarChartHow keywords={keywords}/> :
                 <Loading/>}
             </Box>
-            <Box style={{backgroundColor: "#fff"}}>
+            {/*<Box style={{backgroundColor: "#fff"}}>
               {keywords.length !== 0 ?
                 <CirclePackingHow keywords={keywords}/> :
                 <Loading/>}
-            </Box>
+            </Box>*/}
           </AwesomeSlider>
 
         </Grid>

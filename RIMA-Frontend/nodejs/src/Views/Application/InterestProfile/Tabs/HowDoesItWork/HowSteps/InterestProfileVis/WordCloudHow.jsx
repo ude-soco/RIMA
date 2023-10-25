@@ -4,12 +4,15 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 import {Grid} from "@material-ui/core";
 
+const width = window.innerWidth / 2
+const height = "600px"
+
 const WordCloud = (props) => {
   const {keywords} = props;
 
   return (
     <>
-      <Grid container style={{width: window.innerWidth / 2}}>
+      <Grid container style={{width: width, height: height}}>
         <ReactWordcloud
           words={keywords}
           options={{
