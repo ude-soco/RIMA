@@ -169,8 +169,8 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
 .showMoreText{
   display: contents;
-  color: #2d3985;
-  font-style: italic;
+  /*color: #2d3985;
+  font-style: italic;*/
 }
 /*Hoda start*/
 /* Interest top-bar */
