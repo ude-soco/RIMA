@@ -2,8 +2,16 @@ import requests
 from requests.auth import HTTPBasicAuth
 from langdetect import detect
 from django.conf import settings
+import os
+from django.core.management.utils import get_random_secret_key
+import yaml
 
-print(settings.SEMANTIC_SCHOLAR)
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+with open(os.path.join(BASE_DIR, "config", "config.yaml"), "r") as file:
+    configuration = file.read()
+configuration = yaml.safe_load(configuration)
+
 
 class SemanticScholarAPI:
     def __init__(self):
@@ -11,7 +19,10 @@ class SemanticScholarAPI:
         self.API_URL_NEW = "https://api.semanticscholar.org/graph/v1"
         self.API_Search_URL = "https://api.semanticscholar.org/graph/v1/paper/search"  # API url for getting papers by keyword #LK
         auth = HTTPBasicAuth("", "")
-        headers = {"x-api-key": settings.SEMANTIC_SCHOLAR}
+        if not configuration["semantic_scholar"]:
+            headers = {"x-api-key": ""}
+        else:
+            headers = {"x-api-key": configuration["semantic_scholar"]}
         self.HEADERS = headers
         self.AUTH = auth
 
