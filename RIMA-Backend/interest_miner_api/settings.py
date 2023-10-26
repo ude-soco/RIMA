@@ -230,7 +230,7 @@ if not os.environ.get("NLTK_DATA"):
         )
         print("=====================================")
         print("NLTK Data Location...")
-        print(os.environ["NLTK_DATA"] )
+        print(os.environ["NLTK_DATA"])
         print("=====================================")
 print("=====================================")
 print("Model Directory Location...")
@@ -273,7 +273,7 @@ else:
     print("Loading DUC2001 file...")
     print(DUC2001)
     print("=====================================")
-    
+
 if not configuration["elmo_option_file"]:
     ELMO_OPTIONS_FILE = None
 else:
@@ -310,14 +310,14 @@ if os.environ.get("CORE_NLP_MODEL_DIR"):
     STANFORDCORENLP = os.path.join(MODEL_DIR, os.environ.get("CORE_NLP_MODEL_DIR"))
     print("===========================")
     print("Loading StanfordCoreNLP...")
-    print(STANFORDCORENLP)    
+    print(STANFORDCORENLP)
     print("===========================")
 elif configuration["stanfordcorenlp_file"]:
     # development
     STANFORDCORENLP = os.path.abspath(configuration["stanfordcorenlp_file"])
     print("===========================")
     print("Loading StanfordCoreNLP...")
-    print(STANFORDCORENLP) 
+    print(STANFORDCORENLP)
     print("===========================")
 else:
     STANFORDCORENLP = None
@@ -338,7 +338,7 @@ elif configuration["elmo_weight_file"]:
     print(ELMO_WEIGHT_FILE)
     print("============================")
 else:
-    ELMO_WEIGHT_FILE = None    
+    ELMO_WEIGHT_FILE = None
 
 
 # if not configuration["sif_model_file"]:
