@@ -136,12 +136,34 @@ def get_recommended_publications_updated(user_interest_model, limit=10):
         user_interest_model_dict[interest["text"]] = interest["weight"]
     response = API.search_papers_by_keyword(user_interest_model_dict.keys(), limit)
     papers = response["data"]
+    new_papers = []
+    for p in papers:
+        abstract = p["abstract"]
+        if abstract == None:
+            new_papers.append(p)
+            continue
+        elif len(abstract.split(" ")) > 300:
+            lst_abstract = [w.lower() for w in abstract.split(" ")]
+            try:
+                i = lst_abstract.index("introduction")
+                lst_abstract = abstract.split(" ")[:i]
+                abstract = " ".join(lst_abstract)
+                p["abstract"] = abstract
+                new_papers.append(p)
+
+            except:
+                if len(abstract.split(" ")) > 1000:
+                    lst_abstract = abstract.split(" ")[:300]
+                    abstract = " ".join(lst_abstract)
+                    p["abstract"] = abstract
+                new_papers.append(p)
+
     user_interest_model_vector = get_vector_representation(
         USER, user_interest_model_dict, EMBEDDING_TECHNIQUE
     )
     user_interest_model_vector = user_interest_model_vector.tolist()
     unique_papers = {
-        each["paperId"]: each for each in papers if each["abstract"]
+        each["paperId"]: each for each in new_papers if each["abstract"]
     }.values()
     tasks = group(
         process_publication.s(paper, user_interest_model_vector, user_interest_model)  # type: ignore
