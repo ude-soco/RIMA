@@ -119,3 +119,4 @@ deploy.sh
 requirements*.txt
 static/*
 venv
+RIMA-Frontend/nodejs/build
