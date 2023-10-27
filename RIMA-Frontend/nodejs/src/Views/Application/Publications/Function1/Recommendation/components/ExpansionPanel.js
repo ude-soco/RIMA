@@ -21,6 +21,7 @@ import WhyExplanation from "./WhyExplanation";
 import BarChartOutlinedIcon from "@material-ui/icons/BarChartOutlined";
 import TuneIcon from "@material-ui/icons/Tune";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,8 +109,31 @@ export default function ExpansionPanel(props) {
     <>
       <CssBaseline />
 
-      {/* <Grid container spacing={2} className={classes.collapseButton}>
-        <ButtonGroup color="primary" size="small">
+      <Grid container spacing={2} className={classes.collapseButton}>
+        <Grid item xs={12}>
+          <Box display="flex" justifyContent="flex-start">
+            <ButtonMUI
+              variant="outlined"
+              color="primary"
+              size="small"
+              className="m-2"
+              target="_blank"
+              href={paper.url}
+            >
+              <OpenInNewIcon style={{ color: "#333fa1" }} fontSize="small" />
+              <Typography
+                align="center"
+                variant="subtitle2"
+                className="ml-1"
+                style={{ color: "#333fa1" }}
+              >
+                Paper on Semantic Scholar
+              </Typography>
+            </ButtonMUI>
+          </Box>
+        </Grid>
+      </Grid>
+      {/*  <ButtonGroup color="primary" size="small">
           <ButtonMUI
             variant={whyExpanded ? "contained" : "outlined"}
             onClick={() => {
