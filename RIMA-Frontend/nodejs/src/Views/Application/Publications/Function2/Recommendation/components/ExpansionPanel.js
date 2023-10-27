@@ -112,47 +112,58 @@ export default function ExpansionPanel(props) {
       <CssBaseline />
 
       <Grid container spacing={2} className={classes.collapseButton}>
-        <ButtonMUI
-          variant={howExpanded ? "contained" : "outlined"}
-          color="primary"
-          size="small"
-          className="m-2"
-          onClick={() => {
-            setHowExpanded(!howExpanded);
-          }}
-        >
-          {howExpanded ? (
-            <AccountTreeIcon style={{ color: "white" }} fontSize="small" />
-          ) : (
-            <AccountTreeIcon style={{ color: "#333fa1" }} fontSize="small" />
-          )}
-          <Typography
-            align="center"
-            variant="subtitle2"
-            className="ml-1"
-            style={howExpanded ? { color: "white" } : { color: "#333fa1" }}
-          >
-            How?
-          </Typography>
-        </ButtonMUI>
-        <ButtonMUI
-          variant="outlined"
-          color="primary"
-          size="small"
-          className="m-2"
-          target="_blank"
-          href={paper.url}
-        >
-          <OpenInNewIcon style={{ color: "#333fa1" }} fontSize="small" />
-          <Typography
-            align="center"
-            variant="subtitle2"
-            className="ml-1"
-            style={{ color: "#333fa1" }}
-          >
-            Paper on Semantic Scholar
-          </Typography>
-        </ButtonMUI>
+        <Grid item xs={6}>
+          <Box display="flex" justifyContent="flex-start">
+            <ButtonMUI
+              variant="outlined"
+              color="primary"
+              size="small"
+              className="m-2"
+              target="_blank"
+              href={paper.url}
+            >
+              <OpenInNewIcon style={{ color: "#333fa1" }} fontSize="small" />
+              <Typography
+                align="center"
+                variant="subtitle2"
+                className="ml-1"
+                style={{ color: "#333fa1" }}
+              >
+                Paper on Semantic Scholar
+              </Typography>
+            </ButtonMUI>
+          </Box>
+        </Grid>
+        <Grid item xs={6}>
+          <Box display="flex" justifyContent="flex-end">
+            <ButtonMUI
+              variant={howExpanded ? "contained" : "outlined"}
+              color="primary"
+              size="small"
+              className="m-2"
+              onClick={() => {
+                setHowExpanded(!howExpanded);
+              }}
+            >
+              {howExpanded ? (
+                <AccountTreeIcon style={{ color: "white" }} fontSize="small" />
+              ) : (
+                <AccountTreeIcon
+                  style={{ color: "#333fa1" }}
+                  fontSize="small"
+                />
+              )}
+              <Typography
+                align="center"
+                variant="subtitle2"
+                className="ml-1"
+                style={howExpanded ? { color: "white" } : { color: "#333fa1" }}
+              >
+                How?
+              </Typography>
+            </ButtonMUI>
+          </Box>
+        </Grid>
         {/* <ButtonGroup color="primary" size="small">
           <ButtonMUI
             variant={whyExpanded ? "contained" : "outlined"}
