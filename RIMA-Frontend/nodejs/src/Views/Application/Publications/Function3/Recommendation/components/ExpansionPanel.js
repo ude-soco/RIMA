@@ -21,6 +21,7 @@ import WhyExplanation from "./WhyExplanation";
 import BarChartOutlinedIcon from "@material-ui/icons/BarChartOutlined";
 import TuneIcon from "@material-ui/icons/Tune";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,34 +110,60 @@ export default function ExpansionPanel(props) {
       <CssBaseline />
 
       <Grid container spacing={2} className={classes.collapseButton}>
-        <ButtonGroup color="primary" size="small">
-          <ButtonMUI
-            variant={whyExpanded ? "contained" : "outlined"}
-            onClick={() => {
-              handleWhyExpandClick();
-            }}
-          >
-            {whyExpanded ? (
-              <BarChartOutlinedIcon
-                style={{ color: "white" }}
-                fontSize="small"
-              />
-            ) : (
-              <BarChartOutlinedIcon
-                style={{ color: "#333fa1" }}
-                fontSize="small"
-              />
-            )}
-            <Typography
-              align="center"
-              variant="subtitle2"
-              className="ml-1"
-              style={whyExpanded ? { color: "white" } : { color: "#333fa1" }}
+        <Grid item xs={6}>
+          <Box display="flex" justifyContent="flex-start">
+            <ButtonMUI
+              variant="outlined"
+              color="primary"
+              size="small"
+              className="m-2"
+              target="_blank"
+              href={paper.url}
             >
-              Why?
-            </Typography>
-          </ButtonMUI>
-          {/* <ButtonMUI
+              <OpenInNewIcon style={{ color: "#333fa1" }} fontSize="small" />
+              <Typography
+                align="center"
+                variant="subtitle2"
+                className="ml-1"
+                style={{ color: "#333fa1" }}
+              >
+                Paper on Semantic Scholar
+              </Typography>
+            </ButtonMUI>
+          </Box>
+        </Grid>
+        <Grid item xs={6}>
+          <Box display="flex" justifyContent="flex-end">
+            {/* <ButtonGroup color="primary" size="small"> */}
+            <ButtonMUI
+              variant={whyExpanded ? "contained" : "outlined"}
+              onClick={() => {
+                handleWhyExpandClick();
+              }}
+            >
+              {whyExpanded ? (
+                <BarChartOutlinedIcon
+                  style={{ color: "white" }}
+                  fontSize="small"
+                />
+              ) : (
+                <BarChartOutlinedIcon
+                  style={{ color: "#333fa1" }}
+                  fontSize="small"
+                />
+              )}
+              <Typography
+                align="center"
+                variant="subtitle2"
+                className="ml-1"
+                style={whyExpanded ? { color: "white" } : { color: "#333fa1" }}
+              >
+                Why?
+              </Typography>
+            </ButtonMUI>
+          </Box>
+        </Grid>
+        {/* <ButtonMUI
             variant={whatIfExpanded ? "contained" : "outlined"}
             onClick={() => {
               handleWhatIfExpandClick();
@@ -155,8 +182,8 @@ export default function ExpansionPanel(props) {
             >
               What-If?
             </Typography>
-          </ButtonMUI>  */}
-        </ButtonGroup>
+          </ButtonMUI>  
+        </ButtonGroup>*/}
       </Grid>
 
       {/* Handling th Back button */}

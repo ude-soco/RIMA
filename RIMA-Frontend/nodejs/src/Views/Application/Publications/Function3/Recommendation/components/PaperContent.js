@@ -149,13 +149,13 @@ function Title({ paper, similarityScore }) {
             />
           </Grid>
           <Grid item xs>
-            <a
+            {/*  <a
               href={"https://www.semanticscholar.org/paper/" + paper.paperId}
               target="_blank"
               title="open paper in the semantic scholar website"
             >
               <OpenInNewIcon />
-            </a>
+            </a> */}
           </Grid>
         </Grid>
         <Grid item xs>
