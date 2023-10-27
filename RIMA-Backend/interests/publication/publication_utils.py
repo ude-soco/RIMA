@@ -157,6 +157,8 @@ def get_recommended_publications_updated(user_interest_model, limit=10):
                     abstract = " ".join(lst_abstract)
                     p["abstract"] = abstract
                 new_papers.append(p)
+        else:
+            new_papers.append(p)
 
     user_interest_model_vector = get_vector_representation(
         USER, user_interest_model_dict, EMBEDDING_TECHNIQUE
