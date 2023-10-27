@@ -15,7 +15,7 @@ const HowStep4 = (props) => {
 
         <Typography style={{paddingBottom: 24}}>
           The final interest profile is generated using similarities between
-          keywords. Only the data from your top 5 keywords is shown
+          keywords. The data of up to five keywords are shown.
         </Typography>
 
         <CreateNodeLink data={keywords} step4={true}/>

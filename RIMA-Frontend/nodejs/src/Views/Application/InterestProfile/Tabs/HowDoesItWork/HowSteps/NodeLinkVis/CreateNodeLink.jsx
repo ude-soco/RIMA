@@ -50,7 +50,6 @@ function getNodesReal(data, x, y, step4) {
     elements.push(element);
 
     idTarget = idTarget - 1;
-    yTarget = yTarget + 75;
   }
 
   idSource = idSource + 1;
@@ -58,7 +57,6 @@ function getNodesReal(data, x, y, step4) {
   let numKeywords = 0
   let setExtractedKeywords=[]
   data.map((d) => {
-    yTarget=y
     let color=possColors.pop()
     let label = d.text;
     let tooltipSource = "This keyword was extracted using the following papers: ";
@@ -101,8 +99,11 @@ function getNodesReal(data, x, y, step4) {
             classes: ["edge"]
           };
           if (numOriginalKeywords > 1) {
-            yTarget = (yTarget +  numOriginalKeywords*75)/2;
-            console.log(yTarget, "data y target")
+            yTarget = y -  (numOriginalKeywords*75/2);
+    
+          }
+          else {
+            yTarget = y
           }
 
           y = y + 75;
@@ -144,7 +145,7 @@ function getNodesReal(data, x, y, step4) {
 
 
   });
-  console.log("data set extracted",[...new Set(setExtractedKeywords)])
+  console.log("data set extracted",elements)
   return elements;
 }
 

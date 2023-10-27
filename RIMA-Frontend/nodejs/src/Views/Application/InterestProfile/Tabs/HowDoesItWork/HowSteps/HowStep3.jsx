@@ -15,7 +15,7 @@ const HowStep3 = (props) => {
 
         <Typography style={{paddingBottom: 24}}>
           From your provided data sources, the system is extracting possible
-          keywords and their weights. Only the data from your top 5 keywords is shown
+          keywords and their weights. The data of up to five keywords are shown.
         </Typography>
 
         <CreateNodeLink data={keywords}/>
