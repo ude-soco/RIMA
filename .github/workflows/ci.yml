@@ -3,9 +3,9 @@ name: Continuous Integration
 on:
   push:
     tags:       [ v*.*.* ]
-    branches:   [ master, development ]
-  pull_request:
     branches:   [ master ]
+  pull_request:
+    branches:   [ * ]
 
 jobs:
   lint:
