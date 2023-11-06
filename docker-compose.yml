@@ -32,6 +32,8 @@ services:
     - backend-db
     - backend-redis
     - model-server
+    ports:
+    - 8000:8080
 
   backend-worker:
     build: RIMA-Backend
