@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.6
-FROM python:3.7-slim AS python
+FROM python:3.7.2-slim AS python
 
 # Install dependencies
 ENV BUILD_DEPS "build-essential pkg-config python3-dev gfortran default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
