@@ -4,6 +4,7 @@
 .gitignore
 **/*.pyc
 /*.md
+compose.yaml
 Dockerfile
 requirements*.txt
 venv

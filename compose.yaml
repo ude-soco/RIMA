@@ -1,0 +1,6 @@
+name: rima
+include:
+- ./model-downloader/compose.yaml
+- ./model-server/compose.yaml
+- ./RIMA-Backend/compose.yaml
+- ./RIMA-Frontend/compose.yaml

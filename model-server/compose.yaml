@@ -1,0 +1,12 @@
+services:
+  model-server:
+    build: .
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-model-server:${IMAGE_TAG:-master}
+    restart: on-failure
+    volumes:
+    - ../tmp/model:/usr/share/nginx/html
+    healthcheck:
+      test: curl --fail http://localhost:8080/ || exit 1
+    depends_on:
+      model-downloader:
+        condition: service_completed_successfully

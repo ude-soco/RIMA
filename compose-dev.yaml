@@ -1,6 +1,6 @@
 version: '3'
 
-# Overwrites docker-compose.yml values for development
+# Overwrites compose.yaml values for development
 services:
   frontend-web:
     build:

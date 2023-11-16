@@ -2,6 +2,7 @@
 .dockerignore
 *.example
 CHANGELOG.md
+compose.yaml
 Dockerfile
 node_modules
 README.md

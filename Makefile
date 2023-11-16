@@ -5,8 +5,8 @@ help:
 ## Run container images locally
 ##
 
-compose     = docker compose -f docker-compose.yml
-compose-dev = docker compose -f docker-compose.yml -f docker-compose-dev.yml
+compose     = docker compose -f compose.yaml
+compose-dev = docker compose -f compose.yaml -f compose-dev.yaml
 
 # Clean, rebuild and run
 all: clean build run
