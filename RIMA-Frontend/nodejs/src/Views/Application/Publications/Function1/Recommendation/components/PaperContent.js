@@ -164,7 +164,7 @@ function Title({ paper, similarityScore }) {
               <Authors authorsList={paper.authors} />
             </Grid>
             <Grid item style={{ paddingLeft: "6px" }}>
-              <Typography variant="body2">- ({paper.year})</Typography>
+              <Typography variant="subtitle2">- ({paper.year})</Typography>
             </Grid>
           </Grid>
         </Grid>

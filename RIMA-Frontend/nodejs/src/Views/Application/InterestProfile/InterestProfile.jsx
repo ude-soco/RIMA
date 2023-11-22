@@ -64,7 +64,7 @@ export default function InterestProfile() {
         </Grid>
       </paper>
 
-      <paper className={classes.paperContainer}>
+      {/*<paper className={classes.paperContainer}>
         <Typography variant="h5" gutterBottom>
             Generated interest profile:
         </Typography>
@@ -107,11 +107,11 @@ export default function InterestProfile() {
 
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            {/*<InterestTrends classes={classes} show={true} elevation={true}/>*/}
+            <InterestTrends classes={classes} show={true} elevation={true}/>
             <InterestTrends classes={classes} show={true} elevation={true}/>
           </Grid>
         </Grid>
-      </paper>
+      </paper>*/}
         {/*
         <Grid item xs={12}>
           <PotentialInterests classes={classes} />
