@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 amqp = "*"
 asgiref = "*"
-celery = "<5.0.0"
+celery = "<6.0.0"
 chardet = "*"
 decorator = "*"
 django-celery-beat = "*"
