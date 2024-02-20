@@ -1,0 +1,12 @@
+services:
+  model-downloader:
+    build: .
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-model-downloader:${IMAGE_TAG:-master}
+    restart: on-failure
+    environment:
+    - MODEL_DIR=/home/app/.model
+    - TEMP_DIR=/tmp
+    env_file:
+    - ../configuration.env
+    volumes:
+    - ../tmp/model:/home/app/.model

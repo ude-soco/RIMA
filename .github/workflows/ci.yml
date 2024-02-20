@@ -3,16 +3,22 @@ name: Continuous Integration
 on:
   push:
     tags:       [ v*.*.* ]
-    branches:   [ master, development ]
-  pull_request:
     branches:   [ master ]
+  pull_request:
+    branches:   [ "*" ]
 
 jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+    with:
+      services:        "[ 'model-downloader', 'model-server', 'RIMA-Backend', 'RIMA-Frontend' ]"
+
   images:
+    needs: [ lint ]
     uses: ./.github/workflows/build.yml
     with:
       services:        "[ 'model-downloader', 'model-server', 'RIMA-Backend', 'RIMA-Frontend' ]"
-      base_image_name: "socialcomputing/rima-"
+      base_image_name: "ghcr.io/ude-soco/rima-"
       push:            ${{ github.event_name != 'pull_request' }}
     secrets:
       registry_user:   ${{ secrets.DOCKERHUB_USERNAME }}

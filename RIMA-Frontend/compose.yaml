@@ -1,0 +1,11 @@
+services:
+  frontend-web:
+    build: .
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-rima-frontend:${IMAGE_TAG:-latest}
+    restart: always
+    environment:
+    - BASE_URL=http://127.0.0.1:8000
+    ports:
+    - 8080:8080
+    depends_on:
+    - backend-api

@@ -1,19 +1,19 @@
 version: '3'
 
-# Overwrites docker-compose.yml values for development
+# Overwrites compose.yaml values for development
 services:
   frontend-web:
     build:
       context: RIMA-Frontend
       dockerfile: Dockerfile-dev
-    image: rima-frontend
+    image: rima-rima-frontend
     stdin_open: true
     volumes:
     - npm-cache:/root/.npm
     restart: "no"
 
   backend-api:
-    image: rima-backend
+    image: rima-rima-backend
     ports:
     - 8000:8080
     environment:
@@ -21,19 +21,19 @@ services:
     restart: "no"
 
   backend-worker:
-    image: rima-backend
+    image: rima-rima-backend
     environment:
     - PRELOAD_MODELS="false"
     restart: "no"
 
   model-downloader:
-    image: model-downloader
+    image: rima-model-downloader
     restart: "no"
     volumes:
     - ./tmp/download:/tmp
 
   model-server:
-    image: model-server
+    image: rima-model-server
     ports:
     - 8001:8080
     restart: "no"

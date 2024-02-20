@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.6
 FROM node:18.16.1 as build
 WORKDIR /app
 

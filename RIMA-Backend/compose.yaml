@@ -1,21 +1,8 @@
-version: '3'
-
-volumes:
-  database-data:
-
 services:
-  frontend-web:
-    build: RIMA-Frontend
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-frontend:${IMAGE_TAG:-latest}
-    restart: always
-    environment:
-    - BASE_URL=http://127.0.0.1:8000
-    ports:
-    - 8080:8080
-
   backend-api:
-    build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-backend:${IMAGE_TAG:-latest}
+    platform: linux/x86_64
+    build: .
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-rima-backend:${IMAGE_TAG:-latest}
     command: bin/api
     restart: always
     environment:
@@ -27,15 +14,18 @@ services:
     - MODEL_DIR=/home/app/.model
     - MODEL_SERVER=http://model-server:8080/
     env_file:
-    - configuration.env
+    - ../configuration.env
     depends_on:
     - backend-db
     - backend-redis
     - model-server
+    ports:
+    - 8000:8080
 
   backend-worker:
-    build: RIMA-Backend
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-backend:${IMAGE_TAG:-latest}
+    platform: linux/x86_64
+    build: .
+    image: ${IMAGE_NAME_PREFIX:-ghcr.io/ude-soco/}rima-rima-backend:${IMAGE_TAG:-latest}
     command: bin/worker
     restart: always
     environment:
@@ -48,7 +38,7 @@ services:
     - MODEL_SERVER=http://model-server:8080/
     - PRELOAD_MODELS="true"
     env_file:
-    - configuration.env
+    - ../configuration.env
     depends_on:
     - backend-db
     - backend-redis
@@ -60,7 +50,7 @@ services:
     environment:
     - PRELOAD_MODELS="true"
     env_file:
-    - configuration.env
+    - ../configuration.env
     volumes:
     - database-data:/var/lib/postgresql/data/
 
@@ -69,23 +59,5 @@ services:
     command: redis-server --loglevel warning --save "" --appendonly no
     restart: on-failure
 
-  model-downloader:
-    build: model-downloader
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-downloader:${IMAGE_TAG:-master}
-    restart: on-failure
-    environment:
-    - MODEL_DIR=/home/app/.model
-    - TEMP_DIR=/tmp
-    env_file:
-    - configuration.env
-    volumes:
-    - ./tmp/model:/home/app/.model
-
-  model-server:
-    build: model-server
-    image: ${IMAGE_NAME_PREFIX:-socialcomputing/}rima-model-server:${IMAGE_TAG:-master}
-    restart: on-failure
-    volumes:
-    - ./tmp/model:/usr/share/nginx/html
-    depends_on:
-    - model-downloader
+volumes:
+  database-data:

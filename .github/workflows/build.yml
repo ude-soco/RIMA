@@ -40,22 +40,23 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
       with:
         platforms:  ${{ inputs.platforms }}
 
     - name: Login to container registry
       if:   ${{ inputs.push }}
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
-        username: ${{ secrets.registry_user }}
-        password: ${{ secrets.registry_token }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Determine latest semver tag
       id:   latest
@@ -64,7 +65,7 @@ jobs:
 
     - name: Get tagging metadata
       id:   meta
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v5
       with:
         images: ${{ inputs.base_image_name }}${{ matrix.service }}
         flavor:
@@ -77,9 +78,11 @@ jobs:
           type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
           type=ref,event=branch,enable=${{ github.ref_name != 'master' }}
           type=ref,event=pr
+        labels:
+          org.opencontainers.image.source=${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}
 
     - name: Build and push container image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         platforms:  ${{ inputs.platforms }}
         context:    ${{ matrix.service }}
@@ -88,16 +91,3 @@ jobs:
         push:       ${{ inputs.push }}
         cache-from: type=gha
         cache-to:   type=gha,mode=max
-
-    - name: Update registry description
-      if:   ${{ github.ref_type == 'tag' && github.ref_name == steps.latest.outputs.version }}
-      uses: christian-korneck/update-container-description-action@v1
-      env:
-        DOCKER_USER: ${{ secrets.registry_user }}
-        DOCKER_PASS: ${{ secrets.registry_token }}
-      with:
-        destination_container_repo: ${{ inputs.base_image_name }}${{ matrix.service }}
-        provider: dockerhub
-        short_description: CourseMapper-webserver, ${{ matrix.service }} service
-        readme_file: 'README.md'
-      continue-on-error: true

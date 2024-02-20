@@ -2,17 +2,11 @@ help:
 	@cat $(MAKEFILE_LIST) | docker run --rm -i --platform linux/amd64 xanders/make-help
 
 ##
-## Run application processes locally
-##
-
-# :TODO:
-
-##
 ## Run container images locally
 ##
 
-compose     = docker compose -f docker-compose.yml
-compose-dev = docker compose -f docker-compose.yml -f docker-compose-dev.yml
+compose     = docker compose -f compose.yaml
+compose-dev = docker compose -f compose.yaml -f compose-dev.yaml
 
 # Clean, rebuild and run
 all: clean build run
@@ -53,23 +47,28 @@ cleanall:
 	@$(compose) down --volumes --remove-orphans --rmi all
 
 # Build all container images
-build:
-	@docker buildx bake --progress=plain
+build: lint
+	@$(compose) build
 
 # Push container images to remote registry
-push:
-	@docker compose push
+push: build
+	@$(compose) push
+
 
 ##
-## Deploy the application to Kubernetes
+## Test the application
 ##
 
-# Deploy dev overlay
-k8s-dev:
-	@kubectl apply --wait -k .k8s/dev
+# Check Dockerfile for best practices
+lint:
+	# Linting model-downloader ...
+	@docker run --quiet --rm -i hadolint/hadolint < model-downloader/Dockerfile
+	# Linting model-server ...
+	@docker run --quiet --rm -i hadolint/hadolint < model-server/Dockerfile
+	# Linting RIMA-Backend ...
+	@docker run --quiet --rm -i hadolint/hadolint < RIMA-Backend/Dockerfile
+	# Linting RIMA-Frontend ...
+	@docker run --quiet --rm -i hadolint/hadolint < RIMA-Frontend/Dockerfile
 
-# Deploy prod overlay
-k8s-prod:
-	@kubectl apply --wait -k .k8s/prod
 
-.PHONY: help all dev tilt run start up model stop down clean cleanall build push k8s-dev k8s-prod
+.PHONY: help all dev tilt run start up model stop down clean cleanall build push lint

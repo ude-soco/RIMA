@@ -1,10 +1,14 @@
-# syntax=docker/dockerfile:1.5
-FROM --platform=linux/amd64 python:3.9-slim AS python
+# syntax=docker/dockerfile:1.6
+# hadolint global ignore=DL3008,DL3042,DL3008,SC2086
+FROM python:3.9-slim AS python
 
 # Install dependencies
 ENV BUILD_DEPS "build-essential pkg-config gfortran libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
-ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3 "
-RUN --mount=type=cache,target=/var/cache/apt,rw --mount=type=cache,target=/var/lib/apt,rw <<EOF
+ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3"
+RUN --mount=type=cache,sharing=private,target=/var/cache/apt \
+    --mount=type=cache,sharing=private,target=/var/lib/apt <<EOF
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
   DEBIAN_FRONTEND=noninteractive apt-get update -q &&
   apt-get install -qq --no-install-recommends -o=Dpkg::Use-Pty=0 $BUILD_DEPS $RUNTIME_DEPS
 EOF
@@ -29,8 +33,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install Python dependencies
 COPY --chown=app:app Pipfile* .
-RUN  --mount=type=cache,target=/home/app/.cache/pip,uid=1000 --mount=type=cache,target=/home/app/.cache/pipenv,uid=1000 <<EOF
-  pip install --no-color pipenv &&
+RUN  --mount=type=cache,sharing=private,target=/home/app/.cache/pip,uid=1000 \
+     --mount=type=cache,sharing=private,target=/home/app/.cache/pipenv,uid=1000 <<EOF
+  pip install --no-color pipenv==2023.9.8 &&
   pipenv install --deploy
 EOF
 

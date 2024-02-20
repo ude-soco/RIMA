@@ -119,7 +119,7 @@ class Login extends React.Component {
                   <div style={{display: "flex", justifyContent: "space-between"}}>
                     <div style={{marginTop: "32px"}}>
                       <Link style={{color: "black"}} to="/auth/register">
-                        <medium>Create new account</medium>
+                        Create new account
                       </Link>
                     </div>
                     <div>

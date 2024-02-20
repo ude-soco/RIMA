@@ -23,7 +23,7 @@ spec:
         runAsUser: 101
       containers:
       - name: web
-        image: socialcomputing/rima-rima-frontend
+        image: rima-rima-frontend
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -44,7 +44,7 @@ spec:
         resources:
           requests:
             memory: 110Mi
-            cpu: 100m
+            cpu: 10m
           limits:
             memory: 256Mi
             cpu: 1

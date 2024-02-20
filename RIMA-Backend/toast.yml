@@ -4,7 +4,11 @@ default: install
 
 tasks:
   setup:
-    command: pip install pipenv
+    command: |
+      apt update &&\
+      apt install -yqq --no-install-recommends -o=Dpkg::Use-Pty=0 \
+        build-essential python3-dev gfortran liblapack-dev libblas-dev libatlas-base-dev libblas3 liblapack3 &&\
+      pip install pipenv
 
   lock:
     description: Resolve package dependencies and generate Pipfile.lock
