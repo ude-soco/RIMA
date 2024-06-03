@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.6
-FROM nginxinc/nginx-unprivileged:1.25
+FROM nginxinc/nginx-unprivileged:1.27
 
 COPY ./entrypoint/* /docker-entrypoint.d/
 
