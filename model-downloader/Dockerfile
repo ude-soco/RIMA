@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.6
 # hadolint global ignore=DL3008
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 ENV BUILD_DEPS "build-essential"
 ENV RUNTIME_DEPS "make wget unzip"
