@@ -44,7 +44,7 @@
     "@sweetalert/with-react": "^0.1.1",
     "apexcharts": "^3.54.1",
     "axios": "^0.28.1",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.0.0",
     "chart.js": "^2.9.3",
     "classnames": "2.5.1",
     "d3": "^5.5.0",
