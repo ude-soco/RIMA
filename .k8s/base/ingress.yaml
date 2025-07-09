@@ -9,7 +9,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-  - host: rima.sc.inko.cloud
+  - host: rima.sc.ude.systems
     http:
       paths:
       - pathType: Prefix
@@ -63,5 +63,5 @@ spec:
               number: 8080
   tls:
   - hosts:
-    - rima.sc.inko.cloud
+    - rima.sc.ude.systems
     secretName: web-tls-crt
