@@ -3,7 +3,7 @@ import wikipediaapi
 import wikipediaapi
 import requests
 import json
-from pattern.text.en import singularize
+from inflection import singularize
 
 
 def wikifilter(keyword):

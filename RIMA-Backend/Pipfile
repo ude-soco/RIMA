@@ -29,7 +29,6 @@ mpld3 = "*"
 networkx = "*"
 nltk = "*"
 pandas = "*"
-pattern = "*"
 psycopg2 = "*"
 pysocks = "*"
 redis = "<5.0.0"  # for Python <3.10
