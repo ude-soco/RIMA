@@ -20,6 +20,6 @@ COPY --link --from=build --chown=101 /app/build/ ./
 COPY --link ./nginx/conf.d/* /etc/nginx/conf.d/
 COPY --link ./nginx/docker-entrypoint.d/* /docker-entrypoint.d/
 
-ENV NGINX_ENTRYPOINT_QUIET_LOGS 1
+ENV NGINX_ENTRYPOINT_QUIET_LOGS=1
 
 EXPOSE 8080

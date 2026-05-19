@@ -7,7 +7,7 @@ tasks:
     command: |
       apt update &&\
       apt install -yqq --no-install-recommends -o=Dpkg::Use-Pty=0 \
-        build-essential python3-dev gfortran liblapack-dev libblas-dev libatlas-base-dev libblas3 liblapack3 &&\
+        build-essential python3-dev gfortran liblapack-dev libblas-dev libopenblas-dev libblas3 liblapack3 &&\
       pip install pipenv
 
   lock:

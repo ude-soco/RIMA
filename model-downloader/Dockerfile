@@ -2,8 +2,8 @@
 # hadolint global ignore=DL3008
 FROM python:3.13-slim
 
-ENV BUILD_DEPS "build-essential"
-ENV RUNTIME_DEPS "make wget unzip"
+ENV BUILD_DEPS="build-essential"
+ENV RUNTIME_DEPS="make wget unzip"
 RUN --mount=type=cache,sharing=private,target=/var/cache/apt \
     --mount=type=cache,sharing=private,target=/var/lib/apt <<EOF
   rm -f /etc/apt/apt.conf.d/docker-clean
@@ -16,8 +16,8 @@ RUN adduser --disabled-login --gecos "" -u 101 app
 USER 101
 WORKDIR /home/app
 
-ENV  PYTHONUNBUFFERED 1
-ENV  PATH "$PATH:/home/app/.local/bin"
+ENV PYTHONUNBUFFERED=1
+ENV PATH="$PATH:/home/app/.local/bin"
 
 # Install Python dependencies
 COPY Pipfile* .
