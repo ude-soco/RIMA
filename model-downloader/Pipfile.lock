@@ -177,11 +177,12 @@
         },
         "filelock": {
             "hashes": [
-                "sha256:521f5f56c50f8426f5e03ad3b281b490a87ef15bc6c526f168290f0c7148d44e",
-                "sha256:57dbda9b35157b05fb3e58ee91448612eb674172fab98ee235ccb0b5bee19a1c"
+                "sha256:18c57ee915c7ec61cff0ecf7f0f869936c7c30191bb0cf406f1341778d0834e1",
+                "sha256:4b0dda527ee31078689fc205ec4f1c1bf7d56cf88b6dc9426c4f230e46c2dce1"
             ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.13.1"
+            "index": "pypi",
+            "markers": "python_version >= '3.10'",
+            "version": "==3.20.3"
         },
         "gdown": {
             "hashes": [
