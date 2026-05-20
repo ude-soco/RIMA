@@ -10,7 +10,7 @@ RUN  npm run build 2>&1
 
 
 
-FROM nginxinc/nginx-unprivileged:1.27
+FROM nginxinc/nginx-unprivileged:1.31
 USER root
 WORKDIR /usr/share/nginx/html
 RUN chown -R nginx:nginx .
@@ -20,6 +20,6 @@ COPY --link --from=build --chown=101 /app/build/ ./
 COPY --link ./nginx/conf.d/* /etc/nginx/conf.d/
 COPY --link ./nginx/docker-entrypoint.d/* /docker-entrypoint.d/
 
-ENV NGINX_ENTRYPOINT_QUIET_LOGS 1
+ENV NGINX_ENTRYPOINT_QUIET_LOGS=1
 
 EXPOSE 8080

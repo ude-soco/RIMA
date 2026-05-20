@@ -3,7 +3,7 @@
 FROM python:3.9-slim AS python
 
 # Install dependencies
-ENV BUILD_DEPS "build-essential pkg-config gfortran libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libatlas-base-dev"
+ENV BUILD_DEPS "build-essential pkg-config gfortran libpq-dev default-libmysqlclient-dev liblapack-dev libblas-dev libopenblas-dev"
 ENV RUNTIME_DEPS "nginx curl wget libblas3 liblapack3"
 RUN --mount=type=cache,sharing=private,target=/var/cache/apt \
     --mount=type=cache,sharing=private,target=/var/lib/apt <<EOF
@@ -23,10 +23,10 @@ USER 1000
 WORKDIR /home/app
 
 # Configure Python environment
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV PIPENV_VENV_IN_PROJECT 1
-ENV PIPENV_VERBOSITY -1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIPENV_VENV_IN_PROJECT=1
+ENV PIPENV_VERBOSITY=-1
 ENV VIRTUAL_ENV=/home/app/.venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
@@ -53,6 +53,6 @@ COPY --chown=app:app . ./
 RUN  python manage.py collectstatic --no-input
 
 # Run web application
-ENV GUNICORN_LOG_LEVEL info
+ENV GUNICORN_LOG_LEVEL=info
 EXPOSE 8080
 CMD ["bin/api"]
