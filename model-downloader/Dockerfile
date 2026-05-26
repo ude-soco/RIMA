@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.6
 # hadolint global ignore=DL3008
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 ENV BUILD_DEPS="build-essential"
 ENV RUNTIME_DEPS="make wget unzip"
@@ -21,7 +21,7 @@ ENV PATH="$PATH:/home/app/.local/bin"
 
 # Install Python dependencies
 COPY Pipfile* .
-RUN  pip install --no-color --quiet --no-cache-dir --user pipenv==2023.9.8 && \
+RUN  pip install --no-color --quiet --no-cache-dir --user pipenv==2026.6.1 && \
      pipenv install --system --deploy
 
 # Clean up build dependencies
