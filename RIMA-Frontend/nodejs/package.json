@@ -69,7 +69,7 @@
     "react-konva": "^16.13.0-0",
     "react-loader-spinner": "^3.1.14",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^5.0.1",
     "react-select": "^2.4.4",
     "react-spinner-timer": "^1.1.0",
     "react-tabs": "^3.2.3",
@@ -88,11 +88,11 @@
     "cross-env": "^5.0.5",
     "eslint-plugin-flowtype": "3.13.0",
     "gulp-append-prepend": "1.0.9",
-    "gulp": "4.0.2",
+    "gulp": "5.0.1",
     "increase-memory-limit": "^1.0.3",
     "typescript": "3.7.7",
-    "webpack-dev-server": "^3.11.3",
-    "webpack": "^4.42.0",
+    "webpack-dev-server": "^6.0.0",
+    "webpack": "^5.109.0",
     "ws": "3.3.3"
   }
 }
